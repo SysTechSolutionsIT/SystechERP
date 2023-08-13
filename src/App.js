@@ -6,11 +6,6 @@ import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom
 
 function App() {
   return (
-    // <div>
-    //   <Sidebar/>
-    //   <Header/>
-    //   <EMPTabs/>
-    // </div>
     <Router>
       <Routes>
         <Route element={

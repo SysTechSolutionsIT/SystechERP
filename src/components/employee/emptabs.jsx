@@ -1,28 +1,29 @@
 import React from "react";
+import Academic from "../forms/academic";
+import Family from "../forms/family";
 import Personal from "../forms/personal";
+import Professional from "../forms/professional";
 
 export default function EMPTabs() {
   const [openTab, setOpenTab] = React.useState(1);
 
   return (
     <>
-      <div className="w-full">
-        <div className="mx-24">
-          <ul className="flex mb-0 list-none flex-wrap pt-3 pb-4 flex-row justify-between">
-            <li className="-mb-px mr-2 cursor-pointer">
+      <div className="flex font-[Inter]">
+        <div className="ml-24">
+          <ul className="flex mb-0 list-none flex-wrap pt-3 pb-4 flex-row">
+          <li className="-mb-px mr-2 ml-2 cursor-pointer">
               <p
                 className={
                   "inline-block p-4 " +
                   (openTab === 1
-                    ? "text-s font-bold uppercase text-blue-600 bg-gray-100 rounded-t-lg active"
-                    : "hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300"
-                  )
+                    ? "text-s font-bold uppercase text-blue-900 bg-gray-100 rounded-lg active"
+                    :"hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
                 }
                 onClick={(e) => {
                   e.preventDefault();
                   setOpenTab(1);
                 }}
-
               >
                 Personal Profile
               </p>
@@ -30,11 +31,10 @@ export default function EMPTabs() {
             <li className="-mb-px mr-2 ml-2 cursor-pointer">
               <p
                 className={
-                  "inline-block p-4 rounded-t-lg " +
+                  "inline-block p-4 rounded-lg " +
                   (openTab === 2
-                    ? "text-s font-bold uppercase text-blue-600 bg-gray-100 rounded-t-lg active"
-                    : "hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300"
-                  )
+                    ? "text-s font-bold uppercase text-blue-900 bg-gray-100 rounded-lg active"
+                    : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
                 }
                 onClick={(e) => {
                   e.preventDefault();
@@ -48,11 +48,10 @@ export default function EMPTabs() {
             <li className="-mb-px mr-2 cursor-pointer">
               <p
                 className={
-                  "inline-block p-4 rounded-t-lg " +
+                  "inline-block p-4 rounded-lg " +
                   (openTab === 3
-                    ? "text-s font-bold uppercase text-blue-600 bg-gray-100 rounded-t-lg active"
-                    : "hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300"
-                  )
+                    ? "text-s font-bold uppercase text-blue-900 bg-gray-100 rounded-lg active"
+                    : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
                 }
                 onClick={(e) => {
                   e.preventDefault();
@@ -66,11 +65,10 @@ export default function EMPTabs() {
             <li className="-mb-px mr-2 cursor-pointer">
               <p
                 className={
-                  "inline-block p-4 rounded-t-lg " +
+                  "inline-block p-4 rounded-lg " +
                   (openTab === 4
-                    ? "text-s font-bold uppercase text-blue-600 bg-gray-100 rounded-t-lg active"
-                    : "hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300"
-                  )
+                    ? "text-s font-bold uppercase text-blue-900 bg-gray-100 rounded-lg active"
+                    : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
                 }
                 onClick={(e) => {
                   e.preventDefault();
@@ -84,11 +82,10 @@ export default function EMPTabs() {
             <li className="-mb-px mr-2 cursor-pointer">
               <p
                 className={
-                  "inline-block p-4 rounded-t-lg " +
+                  "inline-block p-4 rounded-lg " +
                   (openTab === 5
-                    ? "text-s font-bold uppercase text-blue-600 bg-gray-100 rounded-t-lg active"
-                    : "hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300"
-                  )
+                    ? "text-s font-bold uppercase text-blue-900 bg-gray-100 rounded-lg active"
+                    : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
                 }
                 onClick={(e) => {
                   e.preventDefault();
@@ -102,11 +99,10 @@ export default function EMPTabs() {
             <li className="-mb-px mr-2 cursor-pointer">
               <p
                 className={
-                  "inline-block p-4 rounded-t-lg " +
+                  "inline-block p-4 rounded-lg " +
                   (openTab === 6
-                    ? "text-s font-bold uppercase text-blue-600 bg-gray-100 rounded-t-lg active"
-                    : "hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300"
-                  )
+                    ? "text-s font-bold uppercase text-blue-900 bg-gray-100 rounded-lg active"
+                    : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
                 }
                 onClick={(e) => {
                   e.preventDefault();
@@ -120,11 +116,10 @@ export default function EMPTabs() {
             <li className="-mb-px mr-2 cursor-pointer">
               <p
                 className={
-                  "inline-block p-4 rounded-t-lg " +
+                  "inline-block p-4 rounded-lg " +
                   (openTab === 7
-                    ? "text-s font-bold uppercase text-blue-600 bg-gray-100 rounded-t-lg active"
-                    : "hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300"
-                  )
+                    ? "text-s font-bold uppercase text-blue-900 bg-gray-100 rounded-lg active"
+                    : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
                 }
                 onClick={(e) => {
                   e.preventDefault();
@@ -136,7 +131,7 @@ export default function EMPTabs() {
               </p>
             </li>
           </ul>
-          <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded">
+          <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded-xl">
             <div className="px-4 py-5 flex-auto">
               <div className="tab-content tab-space">
                 <div className={openTab === 1 ? "block" : "hidden"}>
@@ -145,11 +140,7 @@ export default function EMPTabs() {
 
                 {/* Family Profile Tab */}
                 <div className={openTab === 2 ? "block" : "hidden"}>
-                  <p>
-                    In hac habitasse platea dictumst. Ut eget nisl quis erat
-                    elementum dapibus. Nulla facilisi. Maecenas ac purus auctor,
-                    efficitur elit eu, gravida elit.
-                  </p>
+                  <Family/>
                 </div>
 
                 {/* Work Profile Tab */}
@@ -163,21 +154,12 @@ export default function EMPTabs() {
 
                 {/* Academic Profile Tab */}
                 <div className={openTab === 4 ? "block" : "hidden"}>
-                  <p>
-                    Pellentesque habitant morbi tristique senectus et netus et
-                    malesuada fames ac turpis egestas. Quisque ac turpis eu ante
-                    placerat facilisis. Nullam sit amet justo eu nisl laoreet
-                    elementum.
-                  </p>
+                  <Academic/>
                 </div>
 
                 {/* Professional Profile Tab */}
                 <div className={openTab === 5 ? "block" : "hidden"}>
-                  <p>
-                    Integer eu justo nec diam convallis malesuada. Praesent
-                    hendrerit justo eu est facilisis, sit amet varius turpis
-                    auctor. Etiam et mauris eu mi bibendum blandit nec eu odio.
-                  </p>
+                  <Professional/>
                 </div>
 
                 {/* Training Profile Tab */}
