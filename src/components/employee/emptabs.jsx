@@ -6,136 +6,141 @@ export default function EMPTabs() {
 
   return (
     <>
-      <div className="flex">
-        <div className="ml-24">
-          <ul className="flex mb-0 list-none flex-wrap pt-3 pb-4 flex-row">
-            <li className="-mb-px mr-2">
-              <a
+      <div className="w-full">
+        <div className="mx-24">
+          <ul className="flex mb-0 list-none flex-wrap pt-3 pb-4 flex-row justify-between">
+            <li className="-mb-px mr-2 cursor-pointer">
+              <p
                 className={
                   "inline-block p-4 " +
                   (openTab === 1
                     ? "text-s font-bold uppercase text-blue-600 bg-gray-100 rounded-t-lg active"
-                    : "hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300")
+                    : "hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300"
+                  )
                 }
                 onClick={(e) => {
                   e.preventDefault();
                   setOpenTab(1);
                 }}
-                href="#"
+
               >
                 Personal Profile
-              </a>
+              </p>
             </li>
-            <li className="-mb-px mr-2 ml-2">
-              <a
+            <li className="-mb-px mr-2 ml-2 cursor-pointer">
+              <p
                 className={
                   "inline-block p-4 rounded-t-lg " +
                   (openTab === 2
                     ? "text-s font-bold uppercase text-blue-600 bg-gray-100 rounded-t-lg active"
-                    : "hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300")
+                    : "hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300"
+                  )
                 }
                 onClick={(e) => {
                   e.preventDefault();
                   setOpenTab(2);
                 }}
-                href="#"
+
               >
                 Family Profile
-              </a>
+              </p>
             </li>
-            <li className="-mb-px mr-2">
-              <a
+            <li className="-mb-px mr-2 cursor-pointer">
+              <p
                 className={
                   "inline-block p-4 rounded-t-lg " +
                   (openTab === 3
                     ? "text-s font-bold uppercase text-blue-600 bg-gray-100 rounded-t-lg active"
-                    : "hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300")
+                    : "hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300"
+                  )
                 }
                 onClick={(e) => {
                   e.preventDefault();
                   setOpenTab(3);
                 }}
-                href="#"
+
               >
                 Work Profile
-              </a>
+              </p>
             </li>
-            <li className="-mb-px mr-2">
-              <a
+            <li className="-mb-px mr-2 cursor-pointer">
+              <p
                 className={
                   "inline-block p-4 rounded-t-lg " +
                   (openTab === 4
                     ? "text-s font-bold uppercase text-blue-600 bg-gray-100 rounded-t-lg active"
-                    : "hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300")
+                    : "hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300"
+                  )
                 }
                 onClick={(e) => {
                   e.preventDefault();
                   setOpenTab(4);
                 }}
-                href="#"
+
               >
                 Academic Profile
-              </a>
+              </p>
             </li>
-            <li className="-mb-px mr-2">
-              <a
+            <li className="-mb-px mr-2 cursor-pointer">
+              <p
                 className={
                   "inline-block p-4 rounded-t-lg " +
                   (openTab === 5
                     ? "text-s font-bold uppercase text-blue-600 bg-gray-100 rounded-t-lg active"
-                    : "hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300")
+                    : "hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300"
+                  )
                 }
                 onClick={(e) => {
                   e.preventDefault();
                   setOpenTab(5);
                 }}
-                href="#"
+
               >
                 Professional Profile
-              </a>
+              </p>
             </li>
-            <li className="-mb-px mr-2">
-              <a
+            <li className="-mb-px mr-2 cursor-pointer">
+              <p
                 className={
                   "inline-block p-4 rounded-t-lg " +
                   (openTab === 6
                     ? "text-s font-bold uppercase text-blue-600 bg-gray-100 rounded-t-lg active"
-                    : "hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300")
+                    : "hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300"
+                  )
                 }
                 onClick={(e) => {
                   e.preventDefault();
                   setOpenTab(6);
                 }}
-                href="#"
+
               >
                 Training Profile
-              </a>
+              </p>
             </li>
-            <li className="-mb-px mr-2">
-              <a
+            <li className="-mb-px mr-2 cursor-pointer">
+              <p
                 className={
                   "inline-block p-4 rounded-t-lg " +
                   (openTab === 7
                     ? "text-s font-bold uppercase text-blue-600 bg-gray-100 rounded-t-lg active"
-                    : "hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300")
+                    : "hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300"
+                  )
                 }
                 onClick={(e) => {
                   e.preventDefault();
                   setOpenTab(7);
                 }}
-                href="#"
+
               >
                 Asset Profile
-              </a>
+              </p>
             </li>
           </ul>
           <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded">
             <div className="px-4 py-5 flex-auto">
               <div className="tab-content tab-space">
                 <div className={openTab === 1 ? "block" : "hidden"}>
-                  <p>
-                    <Personal />
-                  </p>
+                  <Personal />
                 </div>
 
                 {/* Family Profile Tab */}
