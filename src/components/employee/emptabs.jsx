@@ -1,5 +1,8 @@
 import React from "react";
+import Academic from "../forms/academic";
+import Family from "../forms/family";
 import Personal from "../forms/personal";
+import Professional from "../forms/professional";
 
 export default function EMPTabs() {
   const [openTab, setOpenTab] = React.useState(1);
@@ -9,8 +12,8 @@ export default function EMPTabs() {
       <div className="flex font-[Inter]">
         <div className="ml-24">
           <ul className="flex mb-0 list-none flex-wrap pt-3 pb-4 flex-row">
-            <li className="-mb-px mr-2">
-              <a
+          <li className="-mb-px mr-2 ml-2 cursor-pointer">
+              <p
                 className={
                   "inline-block p-4 " +
                   (openTab === 1
@@ -21,13 +24,12 @@ export default function EMPTabs() {
                   e.preventDefault();
                   setOpenTab(1);
                 }}
-                href="#"
               >
                 Personal Profile
-              </a>
+              </p>
             </li>
-            <li className="-mb-px mr-2 ml-2">
-              <a
+            <li className="-mb-px mr-2 ml-2 cursor-pointer">
+              <p
                 className={
                   "inline-block p-4 rounded-lg " +
                   (openTab === 2
@@ -38,13 +40,13 @@ export default function EMPTabs() {
                   e.preventDefault();
                   setOpenTab(2);
                 }}
-                href="#"
+
               >
                 Family Profile
-              </a>
+              </p>
             </li>
-            <li className="-mb-px mr-2">
-              <a
+            <li className="-mb-px mr-2 cursor-pointer">
+              <p
                 className={
                   "inline-block p-4 rounded-lg " +
                   (openTab === 3
@@ -55,13 +57,13 @@ export default function EMPTabs() {
                   e.preventDefault();
                   setOpenTab(3);
                 }}
-                href="#"
+
               >
                 Work Profile
-              </a>
+              </p>
             </li>
-            <li className="-mb-px mr-2">
-              <a
+            <li className="-mb-px mr-2 cursor-pointer">
+              <p
                 className={
                   "inline-block p-4 rounded-lg " +
                   (openTab === 4
@@ -72,13 +74,13 @@ export default function EMPTabs() {
                   e.preventDefault();
                   setOpenTab(4);
                 }}
-                href="#"
+
               >
                 Academic Profile
-              </a>
+              </p>
             </li>
-            <li className="-mb-px mr-2">
-              <a
+            <li className="-mb-px mr-2 cursor-pointer">
+              <p
                 className={
                   "inline-block p-4 rounded-lg " +
                   (openTab === 5
@@ -89,13 +91,13 @@ export default function EMPTabs() {
                   e.preventDefault();
                   setOpenTab(5);
                 }}
-                href="#"
+
               >
                 Professional Profile
-              </a>
+              </p>
             </li>
-            <li className="-mb-px mr-2">
-              <a
+            <li className="-mb-px mr-2 cursor-pointer">
+              <p
                 className={
                   "inline-block p-4 rounded-lg " +
                   (openTab === 6
@@ -106,13 +108,13 @@ export default function EMPTabs() {
                   e.preventDefault();
                   setOpenTab(6);
                 }}
-                href="#"
+
               >
                 Training Profile
-              </a>
+              </p>
             </li>
-            <li className="-mb-px mr-2">
-              <a
+            <li className="-mb-px mr-2 cursor-pointer">
+              <p
                 className={
                   "inline-block p-4 rounded-lg " +
                   (openTab === 7
@@ -123,28 +125,22 @@ export default function EMPTabs() {
                   e.preventDefault();
                   setOpenTab(7);
                 }}
-                href="#"
+
               >
                 Asset Profile
-              </a>
+              </p>
             </li>
           </ul>
-          <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded">
+          <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded-xl">
             <div className="px-4 py-5 flex-auto">
               <div className="tab-content tab-space">
                 <div className={openTab === 1 ? "block" : "hidden"}>
-                  <p>
-                    <Personal />
-                  </p>
+                  <Personal />
                 </div>
 
                 {/* Family Profile Tab */}
                 <div className={openTab === 2 ? "block" : "hidden"}>
-                  <p>
-                    In hac habitasse platea dictumst. Ut eget nisl quis erat
-                    elementum dapibus. Nulla facilisi. Maecenas ac purus auctor,
-                    efficitur elit eu, gravida elit.
-                  </p>
+                  <Family/>
                 </div>
 
                 {/* Work Profile Tab */}
@@ -158,21 +154,12 @@ export default function EMPTabs() {
 
                 {/* Academic Profile Tab */}
                 <div className={openTab === 4 ? "block" : "hidden"}>
-                  <p>
-                    Pellentesque habitant morbi tristique senectus et netus et
-                    malesuada fames ac turpis egestas. Quisque ac turpis eu ante
-                    placerat facilisis. Nullam sit amet justo eu nisl laoreet
-                    elementum.
-                  </p>
+                  <Academic/>
                 </div>
 
                 {/* Professional Profile Tab */}
                 <div className={openTab === 5 ? "block" : "hidden"}>
-                  <p>
-                    Integer eu justo nec diam convallis malesuada. Praesent
-                    hendrerit justo eu est facilisis, sit amet varius turpis
-                    auctor. Etiam et mauris eu mi bibendum blandit nec eu odio.
-                  </p>
+                  <Professional/>
                 </div>
 
                 {/* Training Profile Tab */}

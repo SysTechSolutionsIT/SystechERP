@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { Button } from "react-bootstrap";
+import { Icon } from "@iconify/react";
+import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 
 export default function Personal() {
@@ -50,7 +53,7 @@ export default function Personal() {
   return (
     <form onSubmit={formik.handleSubmit}>
       <div className="p-8">
-        <div className="p-8 bg-white rounded-xl shadow-md">
+        <div className="p-8">
           <div className="grid grid-cols-3 gap-4">
             <div>
               <p className="mb-3 capitalize">Employee ID</p>
@@ -95,100 +98,100 @@ export default function Personal() {
               </label>
             </div>
 
-          <div className="flex flex-col">
-            <p className="mb-3">Employee Type Group</p>
-            <label>
+            <div className="flex flex-col">
+              <p className="mb-3">Employee Type Group</p>
+              <label>
+                <input
+                  type="radio"
+                  name="EmpTypeGroup"
+                  value="Worker"
+                  onChange={formik.handleChange}
+                />
+                Worker
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="EmpTypeGroup"
+                  value="Staff"
+                  style={{ marginTop: "10px" }}
+                  onChange={formik.handleChange}
+                />
+                Staff
+              </label>
+            </div>
+            <div className="col-span-2">
+              <p className="mb-3 capitalize">Name</p>
               <input
-                type="radio"
-                name="EmpTypeGroup"
-                value="Worker"
+                id="EmployeeName"
+                type="text"
+                className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
-              Worker
-            </label>
-            <label>
+            </div>
+            <div>
+              <p className="mb-3 capitalize">Aadhar Card No</p>
               <input
-                type="radio"
-                name="EmpTypeGroup"
-                value="Staff"
-                style={{ marginTop: "10px" }}
+                id="AadharCardNo"
+                type="text"
+                className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
                 onChange={formik.handleChange}
               />
-              Staff
-            </label>
-          </div>
-          <div className="col-span-2">
-            <p className="mb-3 capitalize">Name</p>
-            <input
-              id="EmployeeName"
-              type="text"
-              className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
-              onChange={formik.handleChange}
-            />
-          </div>
-          <div>
-            <p className="mb-3 capitalize">Aadhar Card No</p>
-            <input
-              id="AadharCardNo"
-              type="text"
-              className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
-              onChange={formik.handleChange}
-            />
-          </div>
-          <div>
-            <p className="mb-3 capitalize">PAN Card No</p>
-            <input
-              id="PANNo"
-              type="text"
-              className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
-              onChange={formik.handleChange}
-            />
-          </div>
-          <div>
-            <p className="mb-3 capitalize">Passport No</p>
-            <input
-              id="PassportNo"
-              type="text"
-              className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
-              onChange={formik.handleChange}
-            />
-          </div>
-          <div>
-            <p className="mb-3 capitalize">Passport Issue Date</p>
-            <input
-              id="PassportIssueDate"
-              type="date"
-              className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
-              onChange={formik.handleChange}
-            />
-          </div>
-          <div>
-            <p className="mb-3 capitalize">Passport Expiry Date</p>
-            <input
-              id="PassportExpireDate"
-              type="date"
-              className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
-              onChange={formik.handleChange}
-            />
-          </div>
-          <div className="col-span-2">
-            <p className="mb-3 capitalize">Current Address</p>
-            <input
-              id="CurretAddress"
-              type="text"
-              className="w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
-              onChange={formik.handleChange}
-            />
-          </div>
-          <div>
-            <p className="mb-3 capitalize">Pincode</p>
-            <input
-              id="CurrentPinCode"
-              type="text"
-              className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
-              onChange={formik.handleChange}
-            />
-          </div>
+            </div>
+            <div>
+              <p className="mb-3 capitalize">PAN Card No</p>
+              <input
+                id="PANNo"
+                type="text"
+                className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
+                onChange={formik.handleChange}
+              />
+            </div>
+            <div>
+              <p className="mb-3 capitalize">Passport No</p>
+              <input
+                id="PassportNo"
+                type="text"
+                className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
+                onChange={formik.handleChange}
+              />
+            </div>
+            <div>
+              <p className="mb-3 capitalize">Passport Issue Date</p>
+              <input
+                id="PassportIssueDate"
+                type="date"
+                className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
+                onChange={formik.handleChange}
+              />
+            </div>
+            <div>
+              <p className="mb-3 capitalize">Passport Expiry Date</p>
+              <input
+                id="PassportExpireDate"
+                type="date"
+                className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
+                onChange={formik.handleChange}
+              />
+            </div>
+            <div className="col-span-2">
+              <p className="mb-3 capitalize">Current Address</p>
+              <input
+                id="CurretAddress"
+                type="text"
+                className="w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
+                onChange={formik.handleChange}
+              />
+            </div>
+            <div>
+              <p className="mb-3 capitalize">Pincode</p>
+              <input
+                id="CurrentPinCode"
+                type="text"
+                className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
+                onChange={formik.handleChange}
+              />
+            </div>
 
             <div className="col-span-2">
               <p className="mb-3 capitalize">Permanent Address</p>
@@ -470,7 +473,7 @@ export default function Personal() {
             type="submit"
             className="px-8 py-2 bg-[#20A0D8] text-white text-lg rounded-md"
           >
-            Add Patient
+            Save Details
           </button>
         </div>
       </div>
