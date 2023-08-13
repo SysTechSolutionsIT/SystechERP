@@ -24,17 +24,16 @@ IFSCCode1
 BankId2
 AccountNo2
 IFSCCode2
-
 AcFlag
 CategoryId
 CasteId
-// MaritalStatus 
+MaritalStatus 
+
 Referenced
 EmployeePhoto
 DestinationId
 ReligionId
 Gender
 // BloodGroup
-Driving License 
-Photo
+Driving License Photo
 Finance Account No

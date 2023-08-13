@@ -1,4 +1,5 @@
 import React from "react";
+import Personal from "../forms/personal";
 
 export default function EMPTabs() {
   const [openTab, setOpenTab] = React.useState(1);
@@ -133,10 +134,7 @@ export default function EMPTabs() {
               <div className="tab-content tab-space">
                 <div className={openTab === 1 ? "block" : "hidden"}>
                   <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                    ut tortor sed metus bibendum tincidunt at nec ex. Nullam sit
-                    amet velit at est cursus tincidunt. Aenean eu tristique
-                    quam.
+                    <Personal />
                   </p>
                 </div>
 

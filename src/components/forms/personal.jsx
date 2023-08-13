@@ -2,68 +2,73 @@ import React, { useContext, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { Icon } from "@iconify/react";
 import { useNavigate } from "react-router-dom";
-import InputField from "../InputField";
 import { useFormik } from "formik";
 
 export default function Personal() {
   const formik = useFormik({
-    EmployeeID: 0,
-    EmpType: "",
-    EmpTypeGroup: "",
-    EmployeeName: "",
-    MEmployeeName: "",
-    AadharCardNo: "",
-    PANNo: "",
-    PassportNo: "",
-    PassportIssueDate: "",
-    PassportExpireDate: "",
-    CurrentAddress: "",
-    CurrentPinCode: "",
-    PermanentAddress: "",
-    PermanentPinCode: "",
-    DOB: "",
-    PhoneNo: "",
-    CellNo1: "",
-    CellNo2: "",
-    EmailId1: "",
-    EmailId2: "",
-    BankId1: "",
-    AccountNo1: "",
-    IFSCCode1: "",
-    BankId2: "",
-    AccountNo2: "",
-    IFSCCode2: "",
-    AcFlag: "",
-    CategoryId: "",
-    CasteId: "",
-    MaritalStatus: "",
-    Referenced: "",
-    EmployeePhoto: "",
-    DestinationId: "",
-    ReligionId: "",
-    Gender: "",
-    BloodGroup: "",
-    "Driving License": "",
-    Photo: "",
-    "Finance Account No": "",
+    initialValues: {
+      EmployeeID: "",
+      EmpType: "",
+      EmpTypeGroup: "",
+      EmployeeName: "",
+      AadharCardNo: "",
+      PANNo: "",
+      PassportNo: "",
+      PassportIssueDate: "",
+      PassportExpireDate: "",
+      CurrentAddress: "",
+      CurrentPinCode: "",
+      PermanentAddress: "",
+      PermanentPinCode: "",
+      DOB: "",
+      PhoneNo: "",
+      CellNo1: "",
+      CellNo2: "",
+      EmailID1: "",
+      EmailID2: "",
+      BankId1: "",
+      AccountNo1: "",
+      IFSCCode1: "",
+      BankId2: "",
+      AccountNo2: "",
+      IFSCCode2: "",
+      AcFlag: "",
+      CategoryId: "",
+      CasteId: "",
+      MaritalStatus: "",
+      Referenced: "",
+      EmployeePhoto: "",
+      ReligionId: "",
+      Gender: "",
+      BloodGroup: "",
+      DrivingLicense: "",
+      Photo: "",
+      FinanceAccountNo: "",
+    },
+    onSubmit: (values, { resetForm }) => {
+      console.log(values);
+      // Your other submission logic
+
+      // Reset the form to its initial state
+      resetForm();
+    },
   });
 
   return (
-    <form>
+    <form onSubmit={formik.handleSubmit}>
       <div className="p-8">
         <div className="p-8 bg-white rounded-xl shadow-md">
           <div className="grid grid-cols-3 gap-4">
             <div>
               <p className="mb-3 capitalize">Employee ID</p>
               <input
-                id="Eid"
+                id="EmployeeID"
                 type="number"
                 value={formik.values.EmployeeID}
                 className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
                 onChange={formik.handleChange}
               />
             </div>
-
             <div className="flex flex-col">
               <p className="mb-3">Employee Type</p>
               <label>
@@ -122,7 +127,7 @@ export default function Personal() {
             <div className="col-span-2">
               <p className="mb-3 capitalize">Name</p>
               <input
-                id="name"
+                id="EmployeeName"
                 type="text"
                 className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
                 onChange={formik.handleChange}
@@ -222,7 +227,7 @@ export default function Personal() {
             <div>
               <p className="mb-3 capitalize">Phone</p>
               <input
-                id="Phone"
+                id="PhoneNo"
                 type="number"
                 className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
                 onChange={formik.handleChange}
@@ -318,65 +323,40 @@ export default function Personal() {
                 onChange={formik.handleChange}
               />
             </div>
-
             <div>
-              <p className="mb-3">Blood Group</p>
+              <p className="mb-3 capitalize">Account Flag</p>
               <input
-                id="bloodGroup"
+                id="AcFlag"
                 type="text"
-                className={`addRecord-textareaBG ${
-                  !isValidBloodGroup ? "invalid" : ""
-                }`}
-                onChange={handleBloodGroupChange}
-              />
-              {!isValidBloodGroup && (
-                <p className="text-[#c71f37]">
-                  Please enter a valid blood group (e.g., A+, B-, AB+, O-).
-                </p>
-              )}
-            </div>
-            <div className="col-span-2">
-              <p className="mb-3 capitalize">Address</p>
-              <input
-                id="address"
-                type="text"
-                className="w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
+                className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
+                onChange={formik.handleChange}
               />
             </div>
             <div>
-              <p className="mb-3 capitalize">Pincode</p>
+              <p className="mb-3 capitalize">Category ID</p>
               <input
-                id="pincode"
+                id="CategoryId"
                 type="text"
-                className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg ${
-                  !isValidPinCode ? "border-[#c71f37]" : "mb-6"
-                }`}
-                onChange={handlePinCodeChange}
+                className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
+                onChange={formik.handleChange}
               />
-              {!isValidPinCode && (
-                <p className="text-[#c71f37] mb-6">
-                  Please enter a valid 6 digit Indian pincode.
-                </p>
-              )}
             </div>
-          </div>
-          <div className="grid grid-cols-3 gap-4">
             <div>
-              <p className="mb-3 capitalize">Nationality</p>
+              <p className="mb-3 capitalize">Caste ID</p>
               <input
-                id="nationality"
+                id="CasteId"
                 type="text"
-                className="w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
+                className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
+                onChange={formik.handleChange}
               />
             </div>
-
             <div>
               <div className="flex flex-col mb-3">
                 <p className="mb-3 capitalize">Marital Status</p>
                 <div>
                   <input
                     type="radio"
-                    name="maritalStatus"
+                    name="MaritalStatus"
                     value="true"
                     onChange={formik.handleChange}
                   />
@@ -385,7 +365,7 @@ export default function Personal() {
                 <div>
                   <input
                     type="radio"
-                    name="maritalStatus"
+                    name="MaritalStatus"
                     value="false"
                     style={{ marginTop: "10px" }}
                     onChange={formik.handleChange}
@@ -395,48 +375,110 @@ export default function Personal() {
               </div>
             </div>
           </div>
-          <div className="w-2/3 grid grid-cols-2 gap-4">
-            <div>
-              <p className="mb-3 capitalize">Email</p>
+          <div className="flex flex-col">
+            <p className="mb-3">Referenced</p>
+            <label>
               <input
-                id="emailID"
-                type="text"
-                className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg ${
-                  !isValidEmail ? "border-[#c71f37]" : "mb-6"
-                }`}
-                onChange={handleEmailChange}
+                type="radio"
+                name="Referenced"
+                value="Yes"
+                onChange={formik.handleChange}
               />
-              {!isValidEmail && (
-                <p className="text-[#c71f37] mb-6">
-                  Please enter a valid email address.
-                </p>
-              )}
-            </div>
-            <div>
-              <p className="mb-3 capitalize">Healthcard ID</p>
+              Yes
+            </label>
+            <label>
               <input
-                id="healthCardID"
-                type="text"
-                className="w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
+                type="radio"
+                name="Referenced"
+                value="No"
+                style={{ marginTop: "10px" }}
+                onChange={formik.handleChange}
               />
-            </div>
+              No
+            </label>
           </div>
-          <div className="flex justify-center gap-4">
-            <button
-              onClick={AddPatient}
-              type="button"
-              className="px-8 py-2 bg-[#20A0D8] text-white text-lg rounded-md"
-            >
-              Add Patient
-            </button>
-            <button
-              onClick={navDash}
-              type="button"
-              className="px-8 py-2 bg-[#20A0D8] text-white text-lg rounded-md"
-            >
-              Cancel
-            </button>
+          <div className="col-span-2">
+            <p className="mb-3 capitalize">Employee Photo</p>
+            <input
+              id="EmployeePhoto"
+              type="text"
+              className="w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
+            />
           </div>
+          <div className="col-span-2">
+            <p className="mb-3 capitalize">Religion</p>
+            <input
+              id="ReligionId"
+              type="text"
+              className="w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
+            />
+          </div>
+          <div className="flex flex-col">
+            <p className="mb-3">Gender</p>
+            <label>
+              <input
+                type="radio"
+                name="Gender"
+                value="Male"
+                onChange={formik.handleChange}
+              />
+              Male
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="Gender"
+                value="Female"
+                style={{ marginTop: "10px" }}
+                onChange={formik.handleChange}
+              />
+              Female
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="Gender"
+                value="Other"
+                style={{ marginTop: "10px" }}
+                onChange={formik.handleChange}
+              />
+              Other
+            </label>
+          </div>
+          <div>
+            <p className="mb-3">Blood Group</p>
+            <input
+              id="BloodGroup"
+              type="text"
+              className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
+              onChange={formik.handleChange}
+            />
+          </div>
+          <div className="col-span-2">
+            <p className="mb-3 capitalize">Driving License Photo</p>
+            <input
+              id="DrivingLicense"
+              type="text"
+              className="w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
+            />
+          </div>
+          <div>
+            <p className="mb-3 capitalize">Finance Account No</p>
+            <input
+              id="FinanceAccountNo"
+              type="text"
+              className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
+              onChange={formik.handleChange}
+            />
+          </div>
+        </div>
+        <div className="flex justify-center gap-4">
+          <button
+            type="submit"
+            className="px-8 py-2 bg-[#20A0D8] text-white text-lg rounded-md"
+          >
+            Add Patient
+          </button>
         </div>
       </div>
     </form>
