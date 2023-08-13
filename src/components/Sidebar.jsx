@@ -11,9 +11,9 @@ const Sidebar = () => {
     }
 
     return (
-        <div className='flex h-screen'>
-            <div className={`${open ? 'w-[250px]' : 'w-[85px] overflow-hidden'} bg-blue-900 sidebar stcky top-0 bottom-0 lg:left-0 p-2 overflow-y-hidden overflow-x-hidden text-center border-0 border-radius-xl ease-in-out duration-300`}>
-                <div className='text-white-100 text-xl'>
+        <div className='flex'>
+            <div className={`${open ? 'w-[250px]' : 'w-[85px] overflow-hidden'} bg-blue-900 sidebar bottom-0 lg:left-0 p-2 overflow-y-hidden overflow-x-hidden text-center border-0 border-radius-xl ease-in-out duration-300`}>
+                <div className='text-white-100 text-xl fixed'>
                     <div className='p-2.5 mt-1 flex items-center'>
                         <img src='/apple-icon.png' alt='icon' />
                         {open && (
@@ -26,7 +26,7 @@ const Sidebar = () => {
                         <div className='p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white'>
                             <Icon icon="ic:round-dashboard" color="white" width="30" height="30" />
                             {open && (
-                                <div class="flex justify-between w-full items-center">
+                                <div className="flex justify-between w-full items-center">
                                     <span className='font-[Inter] font-semibold text-[15px] ml-4 text-white-200'>Dashboard</span>
                                 </div>)}
                         </div>
@@ -35,7 +35,7 @@ const Sidebar = () => {
             cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white'>
                             <Icon icon="clarity:employee-group-line" color="white" width="30" height="30" />
                             {open && (
-                                <div class="flex justify-between w-full items-center" onClick={toggleSubMenu}>
+                                <div className="flex justify-between w-full items-center" onClick={toggleSubMenu}>
                                     <span className='font-[Inter] font-semibold text-[15px] ml-4 text-white-200'>HRM</span>
                                     <span className={`text-sm ${isSubMenuOpen ? '' : 'rotate-180'} ease-linear duration-200`} id="arrow">
                                         <Icon icon="iconamoon:arrow-up-2" color="white" width="30" height="30" />
@@ -44,10 +44,10 @@ const Sidebar = () => {
                             )}
                         </div>
                         {isSubMenuOpen && (
-                            <div class=" leading-7 text-left text-sm font-thin mt-2 w-4/5 mx-auto ease-linear duration-200" id="submenu">
-                                <h1 class="font-[Inter] text-white font-semibold text-[15px] cursor-pointer p-2 hover:bg-gray-300 hover:bg-opacity-25 rounded-md mt-1">Employee List</h1>
-                                <h1 class="font-[Inter] text-white font-semibold text-[15px] cursor-pointer p-2 hover:bg-gray-300 hover:bg-opacity-25 rounded-md mt-1">Attendance</h1>
-                                <h1 class="font-[Inter] text-white font-semibold text-[15px] cursor-pointer p-2 hover:bg-gray-300 hover:bg-opacity-25 rounded-md mt-1">Compliances</h1>
+                            <div className=" leading-7 text-left text-sm font-thin mt-2 w-4/5 mx-auto ease-linear duration-200" id="submenu">
+                                <h1 className="font-[Inter] text-white font-semibold text-[15px] cursor-pointer p-2 hover:bg-gray-300 hover:bg-opacity-25 rounded-md mt-1">Employee List</h1>
+                                <h1 className="font-[Inter] text-white font-semibold text-[15px] cursor-pointer p-2 hover:bg-gray-300 hover:bg-opacity-25 rounded-md mt-1">Attendance</h1>
+                                <h1 className="font-[Inter] text-white font-semibold text-[15px] cursor-pointer p-2 hover:bg-gray-300 hover:bg-opacity-25 rounded-md mt-1">Compliances</h1>
                             </div>
                         )}
 
