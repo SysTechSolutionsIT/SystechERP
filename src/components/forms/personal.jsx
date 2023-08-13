@@ -45,19 +45,15 @@ export default function Personal() {
       Photo: "",
       FinanceAccountNo: "",
     },
-    onSubmit: (values, { resetForm }) => {
+    onSubmit: (values) => {
       console.log(values);
-      // Your other submission logic
-
-      // Reset the form to its initial state
-      resetForm();
     },
   });
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <div className="p-8">
-        <div className="p-8 bg-white rounded-xl shadow-md">
+      <div className="p-8 rounded-2xl shadow-md">
+        <div className="p-8 bg-transparent rounded-lg">
           <div className="grid grid-cols-3 gap-4">
             <div>
               <p className="mb-3 capitalize">Employee ID</p>
@@ -477,7 +473,7 @@ export default function Personal() {
             type="submit"
             className="px-8 py-2 bg-[#20A0D8] text-white text-lg rounded-md"
           >
-            Add Patient
+            Save Details
           </button>
         </div>
       </div>

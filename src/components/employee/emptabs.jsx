@@ -6,7 +6,7 @@ export default function EMPTabs() {
 
   return (
     <>
-      <div className="flex">
+      <div className="flex font-[Inter]">
         <div className="ml-24">
           <ul className="flex mb-0 list-none flex-wrap pt-3 pb-4 flex-row">
             <li className="-mb-px mr-2">
@@ -14,8 +14,8 @@ export default function EMPTabs() {
                 className={
                   "inline-block p-4 " +
                   (openTab === 1
-                    ? "text-s font-bold uppercase text-blue-600 bg-gray-100 rounded-t-lg active"
-                    : "hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300")
+                    ? "text-s font-bold uppercase text-blue-900 bg-gray-100 rounded-lg active"
+                    :"hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
                 }
                 onClick={(e) => {
                   e.preventDefault();
@@ -29,10 +29,10 @@ export default function EMPTabs() {
             <li className="-mb-px mr-2 ml-2">
               <a
                 className={
-                  "inline-block p-4 rounded-t-lg " +
+                  "inline-block p-4 rounded-lg " +
                   (openTab === 2
-                    ? "text-s font-bold uppercase text-blue-600 bg-gray-100 rounded-t-lg active"
-                    : "hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300")
+                    ? "text-s font-bold uppercase text-blue-900 bg-gray-100 rounded-lg active"
+                    : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
                 }
                 onClick={(e) => {
                   e.preventDefault();
@@ -46,10 +46,10 @@ export default function EMPTabs() {
             <li className="-mb-px mr-2">
               <a
                 className={
-                  "inline-block p-4 rounded-t-lg " +
+                  "inline-block p-4 rounded-lg " +
                   (openTab === 3
-                    ? "text-s font-bold uppercase text-blue-600 bg-gray-100 rounded-t-lg active"
-                    : "hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300")
+                    ? "text-s font-bold uppercase text-blue-900 bg-gray-100 rounded-lg active"
+                    : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
                 }
                 onClick={(e) => {
                   e.preventDefault();
@@ -63,10 +63,10 @@ export default function EMPTabs() {
             <li className="-mb-px mr-2">
               <a
                 className={
-                  "inline-block p-4 rounded-t-lg " +
+                  "inline-block p-4 rounded-lg " +
                   (openTab === 4
-                    ? "text-s font-bold uppercase text-blue-600 bg-gray-100 rounded-t-lg active"
-                    : "hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300")
+                    ? "text-s font-bold uppercase text-blue-900 bg-gray-100 rounded-lg active"
+                    : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
                 }
                 onClick={(e) => {
                   e.preventDefault();
@@ -80,10 +80,10 @@ export default function EMPTabs() {
             <li className="-mb-px mr-2">
               <a
                 className={
-                  "inline-block p-4 rounded-t-lg " +
+                  "inline-block p-4 rounded-lg " +
                   (openTab === 5
-                    ? "text-s font-bold uppercase text-blue-600 bg-gray-100 rounded-t-lg active"
-                    : "hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300")
+                    ? "text-s font-bold uppercase text-blue-900 bg-gray-100 rounded-lg active"
+                    : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
                 }
                 onClick={(e) => {
                   e.preventDefault();
@@ -97,10 +97,10 @@ export default function EMPTabs() {
             <li className="-mb-px mr-2">
               <a
                 className={
-                  "inline-block p-4 rounded-t-lg " +
+                  "inline-block p-4 rounded-lg " +
                   (openTab === 6
-                    ? "text-s font-bold uppercase text-blue-600 bg-gray-100 rounded-t-lg active"
-                    : "hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300")
+                    ? "text-s font-bold uppercase text-blue-900 bg-gray-100 rounded-lg active"
+                    : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
                 }
                 onClick={(e) => {
                   e.preventDefault();
@@ -114,10 +114,10 @@ export default function EMPTabs() {
             <li className="-mb-px mr-2">
               <a
                 className={
-                  "inline-block p-4 rounded-t-lg " +
+                  "inline-block p-4 rounded-lg " +
                   (openTab === 7
-                    ? "text-s font-bold uppercase text-blue-600 bg-gray-100 rounded-t-lg active"
-                    : "hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300")
+                    ? "text-s font-bold uppercase text-blue-900 bg-gray-100 rounded-lg active"
+                    : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
                 }
                 onClick={(e) => {
                   e.preventDefault();
