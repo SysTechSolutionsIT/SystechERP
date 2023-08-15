@@ -88,7 +88,7 @@ const Sidebar = () => {
                                     <SubMenuEntry title="Company Master" onClick={()=> navigate('/company-masters')}/>
                                     <SubMenuEntry title="Financial Year Master" />
                                     <SubMenuEntry title="Company Configuration" />
-                                    <SubMenuEntry title="Bank Master" />
+                                    <SubMenuEntry title="Bank Master" onClick={()=> navigate('/bank-master')} />
                                     <SubMenuEntry title="Cost Center Master" />
                                     <SubMenuEntry title="Department Master" />
                                     <SubMenuEntry title="Destination Master" />
