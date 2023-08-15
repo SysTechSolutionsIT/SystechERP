@@ -3,7 +3,7 @@ import { Icon } from '@iconify/react'
 
 const Header = () => {
     return (
-        <nav className='top-0 sticky bg-blue-900 p-4 border-b-2 z-20'>
+        <nav className='top-0 bg-blue-900 p-4 border-b-2 z-20'>
             <div className='md:grid grid-cols-3'>
                 <div />
                 <div className='py-2 md:px-6 px-2 hidden md:flex items-center bg-gray-100 rounded-full'>
