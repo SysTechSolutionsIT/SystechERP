@@ -3,7 +3,9 @@ import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import EMPTabs from "./components/employee/emptabs";
 import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
-import CompMaster from "./components/company settings/master";
+import CompMaster from "./components/company settings/CompMaster";
+import FinMaster from './components/company settings/FinMaster';
+import CompConfig from './components/company settings/CompConfig';
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
           </div>
         }>
           <Route path='/company-masters' element={<CompMaster/>} />
+          <Route path='/financial-masters' element={<FinMaster/>} />
+          <Route path='/company-configurations' element={<CompConfig/>} />
         </Route>
       </Routes>
     </Router>

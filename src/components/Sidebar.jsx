@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Icon } from "@iconify/react";
 import { useNavigate } from "react-router-dom";
-import CompMaster from "./company settings/master";
 
 const Sidebar = () => {
   const [isSubMenuOpen, setSubMenuOpen] = useState(false);
@@ -14,9 +13,7 @@ const Sidebar = () => {
   const [isSalarySubmenuOpen, setSalarySubmenuOpen] = useState(false);
   const [isRegisterSubmenuOpen, setRegisterSubmenuOpen] = useState(false);
   const [open, setOpen] = useState(true);
-
-  //Rendering Elements
-  const [isCompMastersOpen, setCompMastersOpen] = useState(false);
+  const navigate = useNavigate();
 
   const SubMenuMain = ({ title, isOpen = false, onClick }) => (
     <span
@@ -28,13 +25,16 @@ const Sidebar = () => {
       <h1 className="font-[Inter] text-white font-semibold text-[15px] cursor-pointer py-2 px-2 rounded-md mt-1 whitespace-normal">
         {title}
       </h1>
-      <Icon
-        icon="iconamoon:arrow-up-2"
-        color="white"
-        width="30"
-        height="30"
-        rotate={isOpen ? "" : 2}
-      />
+      <span
+        className={`${isOpen ? "" : "rotate-180"} ease-linear duration-200`}
+      >
+        <Icon
+          icon="iconamoon:arrow-up-2"
+          color="white"
+          width="30"
+          height="30"
+        />
+      </span>
     </span>
   );
 
@@ -44,19 +44,23 @@ const Sidebar = () => {
     </div>
   );
 
-  const SubMenuEntry = ({ title, isOpen = false, onClick }) => (
-    <span className="flex justify-between w-full items-center hover:bg-gray-300 hover:bg-opacity-25 rounded-lg cursor-pointer">
+  const SubMenuEntry = ({ title, onClick }) => (
+    <span
+      className="flex justify-between w-full items-center hover:bg-gray-300 hover:bg-opacity-25 rounded-lg cursor-pointer"
+      onClick={onClick}
+    >
       <h1 className="font-[Inter] text-white text-[15px] cursor-pointer py-2 px-3 items-center rounded-md mt-1 whitespace-normal">
         {title}
       </h1>
     </span>
   );
+
   return (
     <div className="flex">
       <div
         className={`${
           open ? "w-[250px]" : "w-[85px]"
-        } bg-blue-900 overflow-auto sidebar bottom-0 lg:left-0 p-2 text-center border-0 border-radius-xl ease-in-out duration-300`}
+        } bg-blue-900 overflow-x-hidden sidebar bottom-0 lg:left-0 p-2 text-center border-0 border-radius-xl ease-in-out duration-300`}
       >
         <div className="text-white-100 text-xl">
           <div className="p-2.5 mt-1 flex items-center">
@@ -151,14 +155,20 @@ const Sidebar = () => {
                   <SubMenuGroup>
                     <SubMenuEntry
                       title="Company Master"
-                      onClick={() =>
-                        setCompMastersOpen((prevState) => !prevState)
-                      }
+                      onClick={() => navigate("/company-masters")}
                     />
-                    {isCompMastersOpen && <CompMaster />}
-                    <SubMenuEntry title="Financial Year Master" />
-                    <SubMenuEntry title="Company Configuration" />
-                    <SubMenuEntry title="Bank Master" />
+                    <SubMenuEntry
+                      title="Financial Year Master"
+                      onClick={() => navigate("/financial-masters")}
+                    />
+                    <SubMenuEntry
+                      title="Company Configuration"
+                      onClick={() => navigate("/company-configurations")}
+                    />
+                    <SubMenuEntry
+                      title="Bank Master"
+                      onClick={() => navigate("/bank-master")}
+                    />
                     <SubMenuEntry title="Cost Center Master" />
                     <SubMenuEntry title="Department Master" />
                     <SubMenuEntry title="Destination Master" />
