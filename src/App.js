@@ -4,6 +4,7 @@ import Sidebar from "./components/Sidebar";
 import EMPTabs from "./components/employee/emptabs";
 import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
 import CompMaster from "./components/company settings/master";
+import BankMaster from "./components/company settings/BankMaster";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           </div>
         }>
           <Route path='/company-masters' element={<CompMaster/>} />
+          <Route path='/bank-master' element={<BankMaster/>}/>
         </Route>
       </Routes>
     </Router>
