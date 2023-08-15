@@ -9,7 +9,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path ='/' element={
+        <Route path='/' element={
           <div className="flex min-h-screen">
             <Sidebar />
             <main className="flex-1 mx-auto">
@@ -18,7 +18,8 @@ function App() {
             </main>
           </div>
         }>
-          <Route path='/company-masters' element={<CompMaster/>} />
+          <Route path='/company-masters' element={<CompMaster />} />
+          <Route path='/company-masters' element={<CompMaster />} />
         </Route>
       </Routes>
     </Router>
