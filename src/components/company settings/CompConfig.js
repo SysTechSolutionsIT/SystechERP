@@ -164,7 +164,7 @@ export default function EMPTabs() {
             </li>
           </ul>
           <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded-xl">
-            <div className="px-4 py-5 flex-auto">
+            <div className="px-4 py-5 flex-auto overflow-y-auto max-h-[500px]">
               <div className="tab-content tab-space">
                 {/*General */}
                 <div className={openTab === 1 ? "block" : "hidden"}>
