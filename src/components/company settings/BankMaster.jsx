@@ -94,7 +94,7 @@ const BankMaster = () => {
   const [filteredData, setFilteredData] = useState([]);
 
   const handleSearchChange = (title, searchWord) => {
-    const newFilter = finData.filter((item) => {
+    const newFilter = bankData.filter((item) => {
       const value = item[title];
       return value && value.toLowerCase().includes(searchWord.toLowerCase());
     });
@@ -275,7 +275,7 @@ const BankMaster = () => {
                   ))
                 : bankData.map((entry, index) => (
                     <tr key={index}>
-                      <td>
+                      <td className="border-2">
                         <div className="flex items-center gap-2  text-center justify-center">
                           <Icon
                             icon="lucide:eye"

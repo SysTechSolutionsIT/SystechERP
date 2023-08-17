@@ -114,47 +114,126 @@ const CostCenterMaster = () => {
         <div className="my-4 rounded-2xl bg-white p-4 pr-12">
           <table className="min-w-full text-center">
             <thead>
-              <tr>
-                <th className="p-4 font-bold text-black border-2">Actions</th>
-                <th className="p-4 font-bold text-black border-2">
-                  Cost Center ID
+              <tr className="bg-blue-200">
+                <th className="px-1 font-semibold text-black border-2 border-gray-400">
+                  Actions
                 </th>
-                <th className="p-4 font-bold text-black border-2">
+                <th className="px-1 font-semibold text-black border-2 border-gray-400">
+                  CC ID
+                </th>
+                <th className="px-1 font-semibold text-black border-2 border-gray-400">
                   Cost Center Name
                 </th>
-                <th className="p-4 font-bold text-black border-2">Status</th>
+                <th className="px-1 font-semibold text-black border-2 border-gray-400">
+                  Status
+                </th>
+              </tr>
+              <tr>
+                <th className="border-2"></th>
+                <th className="p-2 font-semibold text-black border-2 ">
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    className="w-32 border-2 border-slate-500 rounded-lg justify-center text-center"
+                    onChange={(e) =>
+                      handleSearchChange("costCenterID", e.target.value)
+                    }
+                  />
+                </th>
+                <th className="p-2 font-semibold text-black border-2">
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    className="w-32 border-2 border-slate-500 rounded-lg justify-center text-center"
+                    onChange={(e) =>
+                      handleSearchChange("costCenterName", e.target.value)
+                    }
+                  />
+                </th>
+                <th className="p-2 font-semibold text-black border-2">
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    className="w-32 border-2 border-slate-500 rounded-lg justify-center text-center"
+                    onChange={(e) =>
+                      handleSearchChange("status", e.target.value)
+                    }
+                  />
+                </th>
               </tr>
             </thead>
             <tbody className="">
-              {costCenters.map((entry, index) => (
-                <tr key={index}>
-                  <td className="border-2">
-                    <div className="flex items-center gap-2 text-center justify-center">
-                      <Icon
-                        icon="lucide:eye"
-                        color="#556987"
-                        width="27"
-                        height="27"
-                      />
-                      <Icon
-                        icon="mdi:edit"
-                        color="#556987"
-                        width="27"
-                        height="27"
-                      />
-                      <Icon
-                        icon="material-symbols:delete-outline"
-                        color="#556987"
-                        width="27"
-                        height="27"
-                      />
-                    </div>
-                  </td>
-                  <td className="p-4 border-2">{entry.costCenterID}</td>
-                  <td className="p-4 border-2">{entry.costCenterName}</td>
-                  <td className="p-4 border-2">{entry.status}</td>
-                </tr>
-              ))}
+              {filteredData.length > 0
+                ? filteredData.map((result, key) => (
+                    <tr key={key}>
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                          />
+                          <Icon
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                          />
+                          <Icon
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-center">
+                        {result.costCenterID}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left">
+                        {result.costCenterName}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left">
+                        {result.status}
+                      </td>
+                    </tr>
+                  ))
+                : costCenters.map((entry, index) => (
+                    <tr key={index}>
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                          />
+                          <Icon
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                          />
+                          <Icon
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-center">
+                        {entry.costCenterID}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left">
+                        {entry.costCenterName}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left">
+                        {entry.status}
+                      </td>
+                    </tr>
+                  ))}
             </tbody>
           </table>
         </div>
