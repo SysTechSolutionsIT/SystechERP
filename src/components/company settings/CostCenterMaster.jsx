@@ -59,6 +59,20 @@ export const costCenters = [
 const CostCenterMaster = () => {
    
     const [isModalOpen, setModalOpen] = useState(false)
+    const [filteredData, setFilteredData] = useState([]);
+
+    const handleSearchChange = (title, searchWord) => {
+      const newFilter = costCenters.filter((item) => {
+        const value = item[title];
+        return value && value.toLowerCase().includes(searchWord.toLowerCase());
+      });
+  
+      if (searchWord === "") {
+        setFilteredData([]);
+      } else {
+        setFilteredData(newFilter);
+      }
+    };
 
   return (
     <div className='p-8'>

@@ -86,11 +86,25 @@ export const departments = [
 const DepartmentMaster = () => {
 
     const [isModalOpen, setModalOpen] = useState(false)
+    const [filteredData, setFilteredData] = useState([]);
+
+    const handleSearchChange = (title, searchWord) => {
+      const newFilter = costCenters.filter((item) => {
+        const value = item[title];
+        return value && value.toLowerCase().includes(searchWord.toLowerCase());
+      });
+  
+      if (searchWord === "") {
+        setFilteredData([]);
+      } else {
+        setFilteredData(newFilter);
+      }
+    };
 
   return (
     <div className='p-8'>
     <div className='bg-blue-900 text-white font-semibold text-lg py-4 px-8 w-full rounded-lg'>
-      Cost Center Master
+      Department Master
     </div>
     <div className='flex justify-between items-center mt-4'>
       <div className='flex gap-2'>
@@ -133,6 +147,65 @@ const DepartmentMaster = () => {
                             <th className='px-1 font-semibold text-black border-2 border-gray-400'>Parent Department</th>
                             <th className='px-1 font-semibold text-black border-2 border-gray-400'>Department Head Name</th>
                         </tr>
+                        <tr>
+                <th className='border-2'></th>
+                <th className="p-2 font-semibold text-black border-2 ">
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    className="w-32 border-2 border-slate-500 rounded-lg justify-center text-center"
+                    onChange={(e) => handleSearchChange("ID", e.target.value)}
+                  />
+                </th>
+                <th className="p-2 font-semibold text-black border-2">
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    className="w-32 border-2 border-slate-500 rounded-lg justify-center text-center"
+                    onChange={(e) => handleSearchChange("Name", e.target.value)}
+                  />
+                </th>
+                <th className="p-2 font-semibold text-black border-2">
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    className="w-32 border-2 border-slate-500 rounded-lg justify-center text-center"
+                    onChange={(e) =>
+                      handleSearchChange("ShortName", e.target.value)
+                    }
+                  />
+                </th>
+                <th className="p-2 font-semibold text-black border-2">
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    className="w-32  border-2 border-slate-500 rounded-lg justify-center text-center"
+                    onChange={(e) =>
+                      handleSearchChange("SectorDetails", e.target.value)
+                    }
+                  />
+                </th>
+                <th className="p-2 font-semibold text-black border-2">
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    className="w-32  border-2 border-slate-500 rounded-lg justify-center text-center"
+                    onChange={(e) =>
+                      handleSearchChange("NatureOfBusiness", e.target.value)
+                    }
+                  />
+                </th>
+                <th className="p-2 font-semibold text-black border-2">
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    className="w-32 border-2 border-slate-500 rounded-lg justify-center text-center"
+                    onChange={(e) =>
+                      handleSearchChange("Status", e.target.value)
+                    }
+                  />
+                </th>
+              </tr>
                     </thead>
                     <tbody className=''>
                         {departments.map((entry, index) => (
@@ -144,12 +217,12 @@ const DepartmentMaster = () => {
                                     <Icon icon="material-symbols:delete-outline" color="#556987" width="20" height="20" />
                                     </div>
                                 </td>
-                                <td className='px-4 border-2'>{entry.deptID}</td>
-                                <td className='px-4 border-2'>{entry.deptName}</td>
-                                <td className='px-4 border-2'>{entry.companyBranchName}</td>
-                                <td className='px-4 border-2'>{entry.deptType}</td>
-                                <td className='px-4 border-2'>{entry.parentDept}</td>
-                                <td className='px-4 border-2'>{entry.deptHead}</td>
+                                <td className='px-4 border-2 whitespace-normal'>{entry.deptID}</td>
+                                <td className='px-4 border-2 whitespace-normal'>{entry.deptName}</td>
+                                <td className='px-4 border-2 whitespace-normal'>{entry.companyBranchName}</td>
+                                <td className='px-4 border-2 whitespace-normal'>{entry.deptType}</td>
+                                <td className='px-4 border-2 whitespace-normal'>{entry.parentDept}</td>
+                                <td className='px-4 border-2 whitespace-normal'>{entry.deptHead}</td>
                             </tr>
                         ))}
                     </tbody>
