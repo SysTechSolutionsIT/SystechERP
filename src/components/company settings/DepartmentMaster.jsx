@@ -230,93 +230,93 @@ const DepartmentMaster = () => {
             <tbody className="">
               {filteredData.length > 0
                 ? filteredData.map((result, key) => (
-                    <tr key={key}>
-                      <td className="px-2 border-2">
-                        <div className="flex items-center gap-2 text-center justify-center">
-                          <Icon
-                            icon="lucide:eye"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                          />
-                          <Icon
-                            icon="mdi:edit"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                          />
-                          <Icon
-                            icon="material-symbols:delete-outline"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                          />
-                        </div>
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal">
-                        {result.deptID}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal">
-                        {result.deptName}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal">
-                        {result.companyBranchName}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal">
-                        {result.deptType}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal">
-                        {result.parentDept}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal">
-                        {result.deptHead}
-                      </td>
-                    </tr>
-                  ))
+                  <tr key={key}>
+                    <td className="px-2 border-2">
+                      <div className="flex items-center gap-2 text-center justify-center">
+                        <Icon
+                          icon="lucide:eye"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                        />
+                        <Icon
+                          icon="mdi:edit"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                        />
+                        <Icon
+                          icon="material-symbols:delete-outline"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                        />
+                      </div>
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal">
+                      {result.deptID}
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal">
+                      {result.deptName}
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal">
+                      {result.companyBranchName}
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal">
+                      {result.deptType}
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal">
+                      {result.parentDept}
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal">
+                      {result.deptHead}
+                    </td>
+                  </tr>
+                ))
                 : departments.map((entry, index) => (
-                    <tr key={index}>
-                      <td className="px-2 border-2">
-                        <div className="flex items-center gap-2 text-center justify-center">
-                          <Icon
-                            icon="lucide:eye"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                          />
-                          <Icon
-                            icon="mdi:edit"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                          />
-                          <Icon
-                            icon="material-symbols:delete-outline"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                          />
-                        </div>
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal">
-                        {entry.deptID}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal">
-                        {entry.deptName}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal">
-                        {entry.companyBranchName}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal">
-                        {entry.deptType}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal">
-                        {entry.parentDept}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal">
-                        {entry.deptHead}
-                      </td>
-                    </tr>
-                  ))}
+                  <tr key={index}>
+                    <td className="px-2 border-2">
+                      <div className="flex items-center gap-2 text-center justify-center">
+                        <Icon
+                          icon="lucide:eye"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                        />
+                        <Icon
+                          icon="mdi:edit"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                        />
+                        <Icon
+                          icon="material-symbols:delete-outline"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                        />
+                      </div>
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal">
+                      {entry.deptID}
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal">
+                      {entry.deptName}
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal">
+                      {entry.companyBranchName}
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal">
+                      {entry.deptType}
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal">
+                      {entry.parentDept}
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal">
+                      {entry.deptHead}
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
