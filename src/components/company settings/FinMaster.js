@@ -96,7 +96,7 @@ const FinMaster = () => {
                         {finData.map((entry, index) => (
                             <tr key={index}>
                                 <td>
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-2 justify-center">
                                     <Icon icon="lucide:eye" color="#556987" width="27" height="27" />
                                     <Icon icon="mdi:edit" color="#556987" width="27" height="27"/>
                                     <Icon icon="material-symbols:delete-outline" color="#556987" width="27" height="27" />

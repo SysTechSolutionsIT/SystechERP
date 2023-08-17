@@ -154,6 +154,10 @@ const Sidebar = () => {
                 {isCompanySubmenuOpen && (
                   <SubMenuGroup>
                     <SubMenuEntry
+                      title="Company Configuration"
+                      onClick={() => navigate("/company-configurations")}
+                    />
+                    <SubMenuEntry
                       title="Company Master"
                       onClick={() => navigate("/company-masters")}
                     />
@@ -162,15 +166,15 @@ const Sidebar = () => {
                       onClick={() => navigate("/financial-masters")}
                     />
                     <SubMenuEntry
-                      title="Company Configuration"
-                      onClick={() => navigate("/company-configurations")}
-                    />
-                    <SubMenuEntry
                       title="Bank Master"
                       onClick={() => navigate("/bank-master")}
                     />
-                    <SubMenuEntry title="Cost Center Master" />
-                    <SubMenuEntry title="Department Master" />
+                    <SubMenuEntry 
+                    title="Cost Center Master"
+                    onClick={()=> navigate('/costcenter-master')}/>
+                    <SubMenuEntry 
+                    title="Department Master" 
+                    onClick={()=> navigate('/department-master')}/>
                     <SubMenuEntry title="Destination Master" />
                     <SubMenuEntry title="Three Fields Master" />
                     <SubMenuEntry title="Two Fields Master" />

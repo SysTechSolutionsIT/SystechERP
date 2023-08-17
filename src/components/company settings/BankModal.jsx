@@ -1,6 +1,7 @@
 import React from "react";
 import { Icon } from "@iconify/react";
 import { useFormik } from "formik";
+import { bankData } from "./BankMaster";
 
 const BankModal = ({visible, onClick}) =>{
     
@@ -26,11 +27,13 @@ const BankModal = ({visible, onClick}) =>{
         },
         onSubmit:(values) =>{
             console.log(values)
+            bankData.push(values)
         },
     })
     
     if(!visible) return null
     return (
+      <form onSubmit={formik.handleSubmit}>
         <div className="fixed overflow-y-scroll inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center w-full h-full">
         <div className="bg-gray-200 w-[60%] mt-96 p-8 rounded-lg">
           <div className="bg-blue-900 text-white text-center font-semibold text-lg py-4 px-8 rounded-lg">
@@ -337,7 +340,7 @@ const BankModal = ({visible, onClick}) =>{
         </div>
         </div>
         <div className="flex gap-10 justify-center">
-        <button className='bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg w-36'>
+        <button type="submit" className='bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg w-36'>
         Save
       </button>
       <button className='bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg w-36' onClick={onClick}>
@@ -346,6 +349,7 @@ const BankModal = ({visible, onClick}) =>{
         </div>
         </div>
       </div>
+      </form>
       
     );
   }
