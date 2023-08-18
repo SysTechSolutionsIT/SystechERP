@@ -95,6 +95,7 @@ const BankMaster = () => {
 
   const handleSearchChange = (title, searchWord) => {
     const newFilter = bankData.filter((item) => {
+    const newFilter = bankData.filter((item) => {
       const value = item[title];
       return value && value.toLowerCase().includes(searchWord.toLowerCase());
     });
@@ -230,49 +231,49 @@ const BankMaster = () => {
             <tbody className="">
               {filteredData.length > 0
                 ? filteredData.map((result, key) => (
-                    <tr key={key}>
-                      <td className="px-2 border-2">
-                        <div className="flex items-center gap-2 text-center justify-center">
-                          <Icon
-                            icon="lucide:eye"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                          />
-                          <Icon
-                            icon="mdi:edit"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                          />
-                          <Icon
-                            icon="material-symbols:delete-outline"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                          />
-                        </div>
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-center">
-                        {result.bankId}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left">
-                        {result.bankName}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left">
-                        {result.branchName}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left">
-                        {result.accountType}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left">
-                        {result.accountNo}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left">
-                        {result.ifscCode}
-                      </td>
-                    </tr>
-                  ))
+                  <tr key={key}>
+                    <td className="px-2 border-2">
+                      <div className="flex items-center gap-2 text-center justify-center">
+                        <Icon
+                          icon="lucide:eye"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                        />
+                        <Icon
+                          icon="mdi:edit"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                        />
+                        <Icon
+                          icon="material-symbols:delete-outline"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                        />
+                      </div>
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-center">
+                      {result.bankId}
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-left">
+                      {result.bankName}
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-left">
+                      {result.branchName}
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-left">
+                      {result.accountType}
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-left">
+                      {result.accountNo}
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-left">
+                      {result.ifscCode}
+                    </td>
+                  </tr>
+                ))
                 : bankData.map((entry, index) => (
                     <tr key={index}>
                       <td className="border-2">
