@@ -14,6 +14,7 @@ import CompConfig from "./components/company settings/CompConfig";
 import BankMaster from "./components/company settings/BankMaster"
 import CostCenterMaster from "./components/company settings/CostCenterMaster";
 import DepartmentMaster from "./components/company settings/DepartmentMaster";
+import DestinationMaster from "./components/company settings/DestinationMaster";
 
 function App() {
   return (
@@ -36,9 +37,10 @@ function App() {
           <Route path="/company-masters" element={<CompMaster />} />
           <Route path="/financial-masters" element={<FinMaster />} />
           <Route path="/company-configurations" element={<CompConfig />} />
-          <Route path="/bank-master" element={<BankMaster/>}/>
-          <Route path="/costcenter-master" element={<CostCenterMaster/>}/>
-          <Route path="/department-master" element={<DepartmentMaster/>}/>
+          <Route path="/bank-master" element={<BankMaster />} />
+          <Route path="/costcenter-master" element={<CostCenterMaster />} />
+          <Route path="/department-master" element={<DepartmentMaster />} />
+          <Route path="/destination-master" element={<DestinationMaster />} />
         </Route>
       </Routes>
     </Router>

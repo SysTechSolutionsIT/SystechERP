@@ -78,32 +78,39 @@ const CompMaster = () => {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-8">
       <div className="bg-blue-900 text-white font-semibold text-lg py-4 px-8 w-full rounded-lg">
         Company Master
       </div>
       <div className="flex justify-between items-center mt-4">
-        <div className="flex gap-4">
-          <button className="bg-white text-blue-900 border border-blue-900 font-semibold py-2 px-4 rounded-lg">
+        <div className="flex gap-2">
+          <button className="bg-white text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg">
             Copy
           </button>
-          <button className="bg-white text-blue-900 border border-blue-900 font-semibold py-2 px-4 rounded-lg">
+          <button className="bg-white text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg">
             CSV
           </button>
-          <button className="bg-white text-blue-900 border border-blue-900 font-semibold py-2 px-4 rounded-lg">
+          <button className="bg-white text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg">
             Excel
           </button>
-          <button className="bg-white text-blue-900 border border-blue-900 font-semibold py-2 px-4 rounded-lg">
+          <button className="bg-white text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg">
             PDF
           </button>
-          <button className="bg-white text-blue-900 border border-blue-900 font-semibold py-2 px-4 rounded-lg">
+          <button className="bg-white text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg">
             Print
           </button>
-          <button className='flex bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold py-2 px-4 rounded-lg'>
+            <button className="flex bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold py-2 px-4 rounded-lg">
+            Column Visibility
+            <Icon icon="fe:arrow-up" className="mt-1.5 ml-2" rotate={2} />
+          </button>
+        <button className='flex bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold py-2 px-4 rounded-lg'>
           Column Visibility
         <Icon icon="fe:arrow-up" className='mt-1.5 ml-2'  rotate={2}/>
         </button>
-        <button className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg" onClick={()=> setModalOpen(true)}>
+        <button
+          className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg" onClick={()=> setModalOpen(true)}
+          // onClick={() => setModalOpen(true)}
+        >
           Add Company
         </button>
         </div>
@@ -123,14 +130,22 @@ const CompMaster = () => {
                 <th className="p-2 font-semibold text-black">
                   Nature of Business
                 </th>
-                <th className="p-2 font-semibold text-black">Status</th>
-                <th className="p-2 font-semibold text-black">Created by</th>
-                <th className="p-2 font-semibold text-black">Created on</th>
-                <th className="p-2 font-semibold text-black">Modified by</th>
+                <th className="px-1 font-semibold text-black border-2 border-gray-400">
+                  Status
+                </th>
+                <th className="px-1 font-semibold text-black border-2 border-gray-400">
+                  Created By
+                </th>
+                <th className="px-1 font-semibold text-black border-2 border-gray-400">
+                  Created On
+                </th>
+                <th className="px-1 font-semibold text-black border-2 border-gray-400">
+                  Modified By
+                </th>
               </tr>
               <tr>
-                <th></th>
-                <th className="p-2 font-semibold text-black ">
+                <th className="border-2"></th>
+                <th className="p-2 font-semibold text-black border-2 ">
                   <input
                     type="text"
                     placeholder="Search"
@@ -138,7 +153,7 @@ const CompMaster = () => {
                     onChange={(e) => handleSearchChange("ID", e.target.value)}
                   />
                 </th>
-                <th className="p-2 font-semibold text-black">
+                <th className="p-2 font-semibold text-black border-2">
                   <input
                     type="text"
                     placeholder="Search"
@@ -146,7 +161,7 @@ const CompMaster = () => {
                     onChange={(e) => handleSearchChange("Name", e.target.value)}
                   />
                 </th>
-                <th className="p-2 font-semibold text-black">
+                <th className="p-2 font-semibold text-black border-2">
                   <input
                     type="text"
                     placeholder="Search"
@@ -156,7 +171,7 @@ const CompMaster = () => {
                     }
                   />
                 </th>
-                <th className="p-2 font-semibold text-black">
+                <th className="p-2 font-semibold text-black border-2">
                   <input
                     type="text"
                     placeholder="Search"
@@ -166,7 +181,7 @@ const CompMaster = () => {
                     }
                   />
                 </th>
-                <th className="p-2 font-semibold text-black">
+                <th className="p-2 font-semibold text-black border-2">
                   <input
                     type="text"
                     placeholder="Search"
@@ -176,7 +191,7 @@ const CompMaster = () => {
                     }
                   />
                 </th>
-                <th className="p-2 font-semibold text-black">
+                <th className="p-2 font-semibold text-black border-2">
                   <input
                     type="text"
                     placeholder="Search"
@@ -186,7 +201,7 @@ const CompMaster = () => {
                     }
                   />
                 </th>
-                <th className="p-2 font-semibold text-black">
+                <th className="p-2 font-semibold text-black border-2">
                   <input
                     type="text"
                     placeholder="Search"
@@ -196,7 +211,7 @@ const CompMaster = () => {
                     }
                   />
                 </th>
-                <th className="p-2 font-semibold text-black">
+                <th className="p-2 font-semibold text-black border-2">
                   <input
                     type="text"
                     placeholder="Search"
@@ -206,7 +221,7 @@ const CompMaster = () => {
                     }
                   />
                 </th>
-                <th className="p-2 font-semibold text-black">
+                <th className="p-2 font-semibold text-black border-2">
                   <input
                     type="text"
                     placeholder="Search"
@@ -222,72 +237,108 @@ const CompMaster = () => {
               {filteredData.length > 0
                 ? filteredData.map((result, key) => (
                     <tr key={key}>
-                      <td>
-                        <div className="flex items-center">
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
                           <Icon
                             icon="lucide:eye"
                             color="#556987"
-                            width="27"
-                            height="27"
+                            width="20"
+                            height="20"
                           />
                           <Icon
                             icon="mdi:edit"
                             color="#556987"
-                            width="27"
-                            height="27"
+                            width="20"
+                            height="20"
                           />
                           <Icon
                             icon="material-symbols:delete-outline"
                             color="#556987"
-                            width="27"
-                            height="27"
+                            width="20"
+                            height="20"
                           />
                         </div>
                       </td>
-                      <td className="p-2">{result.ID}</td>
-                      <td className="p-2">{result.Name}</td>
-                      <td className="p-2">{result.ShortName}</td>
-                      <td className="p-2">{result.SectorDetails}</td>
-                      <td className="p-2">{result.NatureOfBusiness}</td>
-                      <td className="p-2">{result.Status}</td>
-                      <td className="p-2">{result.CreatedBy}</td>
-                      <td className="p-2">{result.CreatedOn}</td>
-                      <td className="p-2">{result.ModifiedBy}</td>
+                      <td className="px-4 border-2 whitespace-normal text-center">
+                        {result.ID}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left">
+                        {result.Name}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left">
+                        {result.ShortName}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left">
+                        {result.SectorDetails}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left">
+                        {result.NatureOfBusiness}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left">
+                        {result.Status}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left">
+                        {result.CreatedBy}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left">
+                        {result.CreatedOn}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left">
+                        {result.ModifiedBy}
+                      </td>
                     </tr>
                   ))
                 : compData.map((entry, index) => (
                     <tr key={index}>
-                      <td>
-                        <div className="flex items-center">
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
                           <Icon
                             icon="lucide:eye"
                             color="#556987"
-                            width="27"
-                            height="27"
+                            width="20"
+                            height="20"
                           />
                           <Icon
                             icon="mdi:edit"
                             color="#556987"
-                            width="27"
-                            height="27"
+                            width="20"
+                            height="20"
                           />
                           <Icon
                             icon="material-symbols:delete-outline"
                             color="#556987"
-                            width="27"
-                            height="27"
+                            width="20"
+                            height="20"
                           />
                         </div>
                       </td>
-                      <td className="p-2">{entry.ID}</td>
-                      <td className="p-2">{entry.Name}</td>
-                      <td className="p-2">{entry.ShortName}</td>
-                      <td className="p-2">{entry.SectorDetails}</td>
-                      <td className="p-2">{entry.NatureOfBusiness}</td>
-                      <td className="p-2">{entry.Status}</td>
-                      <td className="p-2">{entry.CreatedBy}</td>
-                      <td className="p-2">{entry.CreatedOn}</td>
-                      <td className="p-2">{entry.ModifiedBy}</td>
+                      <td className="px-4 border-2 whitespace-normal text-center">
+                        {entry.ID}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left">
+                        {entry.Name}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left">
+                        {entry.ShortName}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left">
+                        {entry.SectorDetails}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left">
+                        {entry.NatureOfBusiness}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left">
+                        {entry.Status}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left">
+                        {entry.CreatedBy}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left">
+                        {entry.CreatedOn}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left">
+                        {entry.ModifiedBy}
+                      </td>
                     </tr>
                   ))}
             </tbody>
