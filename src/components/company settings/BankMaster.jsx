@@ -95,7 +95,6 @@ const BankMaster = () => {
 
   const handleSearchChange = (title, searchWord) => {
     const newFilter = bankData.filter((item) => {
-    const newFilter = bankData.filter((item) => {
       const value = item[title];
       return value && value.toLowerCase().includes(searchWord.toLowerCase());
     });
@@ -105,7 +104,8 @@ const BankMaster = () => {
     } else {
       setFilteredData(newFilter);
     }
-  };
+  }
+
   return (
     <div className="p-8">
       <div className="bg-blue-900 text-white font-semibold text-lg py-4 px-8 w-full rounded-lg">
@@ -324,6 +324,6 @@ const BankMaster = () => {
       </div>
     </div>
   );
-};
+}
 
-export default BankMaster;
+export default BankMaster
