@@ -1,6 +1,7 @@
 import { Icon } from "@iconify/react";
 import React, { useState } from "react";
 import { Button } from "react-bootstrap";
+import CompanyModal from "./CompanyModal";
 export const compData = [
   {
     ID: 1,
@@ -61,6 +62,7 @@ export const compData = [
 
 const CompMaster = () => {
   const [filteredData, setFilteredData] = useState([]);
+  const [isModalOpen, setModalOpen] = useState(false)
 
   const handleSearchChange = (title, searchWord) => {
     const newFilter = compData.filter((item) => {
@@ -97,11 +99,16 @@ const CompMaster = () => {
           <button className="bg-white text-blue-900 border border-blue-900 font-semibold py-2 px-4 rounded-lg">
             Print
           </button>
-        </div>
-        <button className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg mr-20">
+          <button className='flex bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold py-2 px-4 rounded-lg'>
+          Column Visibility
+        <Icon icon="fe:arrow-up" className='mt-1.5 ml-2'  rotate={2}/>
+        </button>
+        <button className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg" onClick={()=> setModalOpen(true)}>
           Add Company
         </button>
+        </div>
       </div>
+      <CompanyModal visible={isModalOpen} onClick={()=> setModalOpen(false)}/>
 
       <div className="grid gap-2">
         <div className="my-4 rounded-2xl bg-white p-2 pr-8">

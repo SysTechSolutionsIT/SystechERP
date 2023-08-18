@@ -89,7 +89,7 @@ const DepartmentMaster = () => {
     const [filteredData, setFilteredData] = useState([]);
 
     const handleSearchChange = (title, searchWord) => {
-      const newFilter = costCenters.filter((item) => {
+      const newFilter = departments.filter((item) => {
         const value = item[title];
         return value && value.toLowerCase().includes(searchWord.toLowerCase());
       });
