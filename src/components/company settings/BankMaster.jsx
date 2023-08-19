@@ -113,14 +113,6 @@ const BankMaster = () => {
       setFilteredData(newFilter);
     }
   };
-
-  const toggleColumnVisibility = (column) => {
-    setColumnVisibility((prevVisibility) => ({
-      ...prevVisibility,
-      [column]: !prevVisibility[column],
-    }));
-  };
-
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedColumns, setSelectedColumns] = useState([
     ...Object.keys(columnVisibility),
@@ -149,30 +141,46 @@ const BankMaster = () => {
   };
   return (
     <div className="p-8">
-      <div className="bg-blue-900 text-white font-semibold text-lg py-4 px-8 w-full rounded-lg">
+      <div className="bg-blue-900 text-white font-bold text-lg py-4 px-8 w-full rounded-lg">
         Bank Master
       </div>
       <div className="flex justify-between items-center mt-4">
         <div className="flex gap-2">
-          <button className="bg-white text-blue-900 border border-blue-900 font-semibold py-2 px-4 rounded-lg">
+          <button
+            className="bg-white text-blue-900 border border-blue-900 font-bold py-2 px-4 rounded-lg"
+            style={{ fontSize: "13px" }}
+          >
             Copy
           </button>
-          <button className="bg-white text-blue-900 border border-blue-900 font-semibold py-2 px-4 rounded-lg">
+          <button
+            className="bg-white text-blue-900 border border-blue-900 font-bold py-2 px-4 rounded-lg"
+            style={{ fontSize: "13px" }}
+          >
             CSV
           </button>
-          <button className="bg-white text-blue-900 border border-blue-900 font-semibold py-2 px-4 rounded-lg">
+          <button
+            className="bg-white text-blue-900 border border-blue-900 font-bold py-2 px-4 rounded-lg"
+            style={{ fontSize: "13px" }}
+          >
             Excel
           </button>
-          <button className="bg-white text-blue-900 border border-blue-900 font-semibold py-2 px-4 rounded-lg">
+          <button
+            className="bg-white text-blue-900 border border-blue-900 font-bold py-2 px-4 rounded-lg"
+            style={{ fontSize: "13px" }}
+          >
             PDF
           </button>
-          <button className="bg-white text-blue-900 border border-blue-900 font-semibold py-2 px-4 rounded-lg">
+          <button
+            className="bg-white text-blue-900 border border-blue-900 font-bold py-2 px-4 rounded-lg"
+            style={{ fontSize: "13px" }}
+          >
             Print
           </button>
           <div className="relative">
             <button
               onClick={() => setShowDropdown(!showDropdown)}
-              className="flex bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold py-2 px-4 rounded-lg"
+              className="flex bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-bold py-2 px-4 rounded-lg"
+              style={{ fontSize: "13px" }}
             >
               Column Visibility
               <Icon
@@ -199,7 +207,7 @@ const BankMaster = () => {
                 {Object.keys(columnVisibility).map((columnName) => (
                   <label
                     key={columnName}
-                    className="flex items-center capitalize"
+                    className="flex items-center capitalize text-xs"
                   >
                     <input
                       type="checkbox"
@@ -209,9 +217,7 @@ const BankMaster = () => {
                     />
                     <span
                       className={
-                        selectedColumns.includes(columnName)
-                          ? "font-semibold"
-                          : ""
+                        selectedColumns.includes(columnName) ? "font-bold" : ""
                       }
                     >
                       {columnName}
@@ -223,7 +229,8 @@ const BankMaster = () => {
           </div>
         </div>
         <button
-          className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg mr-20"
+          className="bg-blue-900 text-white font-bold py-2 px-4 rounded-lg mr-20"
+          style={{ fontSize: "13px" }}
           onClick={() => setModalOpen(true)}
         >
           Add Bank
@@ -235,18 +242,25 @@ const BankMaster = () => {
           <table className="min-w-full text-center rounded-lg">
             <thead>
               <tr className="bg-blue-200">
-                <th className="px-1 font-semibold text-black border-2 border-gray-400">
+                <th
+                  className="px-1 font-bold text-black border-2 border-gray-400"
+                  style={{ fontSize: "13px" }}
+                >
                   Actions
                 </th>
-                <th className="px-1 font-semibold text-black border-2 border-gray-400">
+                <th
+                  className="px-1 font-bold text-black border-2 border-gray-400"
+                  style={{ fontSize: "13px" }}
+                >
                   Bank ID
                 </th>
                 {selectedColumns.map((columnName) => (
                   <th
                     key={columnName}
-                    className={`px-1 font-semibold text-black border-2 border-gray-400 ${
+                    className={`px-1 font-bold text-black border-2 border-gray-400 capitalize ${
                       columnVisibility[columnName] ? "" : "hidden"
                     }`}
+                    style={{ fontSize: "13px" }}
                   >
                     {columnName}
                   </th>
@@ -254,11 +268,11 @@ const BankMaster = () => {
               </tr>
               <tr>
                 <th className="border-2"></th>
-                <th className="p-2 font-semibold text-black border-2 ">
+                <th className="p-2 font-bold text-black border-2 ">
                   <input
                     type="text"
                     placeholder="Search"
-                    className="w-32 border-2 border-slate-500 rounded-lg justify-center text-center"
+                    className="w-20  h-5 border-2 border-slate-500 rounded-lg justify-center text-center"
                     onChange={(e) =>
                       handleSearchChange("bankId", e.target.value)
                     }
@@ -267,12 +281,12 @@ const BankMaster = () => {
                 {selectedColumns.map((columnName) => (
                   <th
                     key={columnName}
-                    className="p-2 font-semibold text-black border-2"
+                    className="p-2 font-bold text-black border-2"
                   >
                     <input
                       type="text"
                       placeholder={`Search `}
-                      className="w-32 border-2 border-slate-500 rounded-lg justify-center text-center"
+                      className="w-24 h-5 border-2 border-slate-500 rounded-lg justify-center text-center"
                       onChange={(e) =>
                         handleSearchChange(columnName, e.target.value)
                       }
@@ -307,15 +321,19 @@ const BankMaster = () => {
                           />
                         </div>
                       </td>
-                      <td className="px-4 border-2 whitespace-normal text-center">
+                      <td
+                        className="px-4 border-2 whitespace-normal text-center text-xs"
+                        style={{ fontSize: "11px" }}
+                      >
                         {result.bankId}
                       </td>
                       {selectedColumns.map((columnName) => (
                         <td
                           key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-left${
+                          className={`px-4 border-2 whitespace-normal text-left capitalize text-xs ${
                             columnVisibility[columnName] ? "" : "hidden"
                           }`}
+                          style={{ fontSize: "11px" }}
                         >
                           {result[columnName]}
                         </td>
@@ -329,32 +347,36 @@ const BankMaster = () => {
                           <Icon
                             icon="lucide:eye"
                             color="#556987"
-                            width="27"
-                            height="27"
+                            width="20"
+                            height="20"
                           />
                           <Icon
                             icon="mdi:edit"
                             color="#556987"
-                            width="27"
-                            height="27"
+                            width="20"
+                            height="20"
                           />
                           <Icon
                             icon="material-symbols:delete-outline"
                             color="#556987"
-                            width="27"
-                            height="27"
+                            width="20"
+                            height="20"
                           />
                         </div>
                       </td>
-                      <td className="px-4 border-2 whitespace-normal text-center">
+                      <td
+                        className="px-4 border-2 whitespace-normal text-center"
+                        style={{ fontSize: "11px" }}
+                      >
                         {entry.bankId}
                       </td>
                       {selectedColumns.map((columnName) => (
                         <td
                           key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-left${
+                          className={`px-4 border-2 whitespace-normal text-left capitalize${
                             columnVisibility[columnName] ? "" : "hidden"
                           }`}
+                          style={{ fontSize: "11px" }}
                         >
                           {entry[columnName]}
                         </td>

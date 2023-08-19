@@ -72,7 +72,6 @@ const CostCenterMaster = () => {
       setFilteredData(newFilter);
     }
   };
-
   return (
     <div className="p-8">
       <div className="bg-blue-900 text-white font-semibold text-lg py-4 px-8 w-full rounded-lg">
@@ -80,28 +79,41 @@ const CostCenterMaster = () => {
       </div>
       <div className="flex justify-between items-center mt-4">
         <div className="flex gap-4">
-          <button className="bg-white text-blue-900 border border-blue-900 font-semibold py-2 px-4 rounded-lg">
+          <button
+            className="bg-white text-blue-900 border border-blue-900 font-semibold py-2 px-4 rounded-lg"
+            style={{ fontSize: "13px" }}
+          >
             Copy
           </button>
-          <button className="bg-white text-blue-900 border border-blue-900 font-semibold py-2 px-4 rounded-lg">
+          <button
+            className="bg-white text-blue-900 border border-blue-900 font-semibold py-2 px-4 rounded-lg"
+            style={{ fontSize: "13px" }}
+          >
             CSV
           </button>
-          <button className="bg-white text-blue-900 border border-blue-900 font-semibold py-2 px-4 rounded-lg">
+          <button
+            className="bg-white text-blue-900 border border-blue-900 font-semibold py-2 px-4 rounded-lg"
+            style={{ fontSize: "13px" }}
+          >
             Excel
           </button>
-          <button className="bg-white text-blue-900 border border-blue-900 font-semibold py-2 px-4 rounded-lg">
+          <button
+            className="bg-white text-blue-900 border border-blue-900 font-semibold py-2 px-4 rounded-lg"
+            style={{ fontSize: "13px" }}
+          >
             PDF
           </button>
-          <button className="bg-white text-blue-900 border border-blue-900 font-semibold py-2 px-4 rounded-lg">
+          <button
+            className="bg-white text-blue-900 border border-blue-900 font-semibold py-2 px-4 rounded-lg"
+            style={{ fontSize: "13px" }}
+          >
             Print
-          </button>
-          <button className="bg-white text-blue-900 border border-blue-900 font-semibold py-2 px-4 rounded-lg">
-            Column Visibility
           </button>
         </div>
         <button
           className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg mr-20"
           onClick={() => setModalOpen(true)}
+          style={{ fontSize: "13px" }}
         >
           Add
         </button>
@@ -111,20 +123,29 @@ const CostCenterMaster = () => {
         onClick={() => setModalOpen(false)}
       />
       <div className="grid gap-4">
-        <div className="my-4 rounded-2xl bg-white p-4 pr-12">
+        <div className="my-2 rounded-2xl bg-white p-2 pr-8">
           <table className="min-w-full text-center">
             <thead>
               <tr className="bg-blue-200">
-                <th className="px-1 font-semibold text-black border-2 border-gray-400">
+                <th
+                  className=" w-16 px-1 font-semibold text-black border-2 border-gray-400"
+                  style={{ fontSize: "13px" }}
+                >
                   Actions
                 </th>
-                <th className="px-1 font-semibold text-black border-2 border-gray-400">
+                <th
+                  className=" w-10 px-1 font-semibold text-black border-2 border-gray-400"
+                  style={{ fontSize: "13px" }}
+                >
                   CC ID
                 </th>
-                <th className="px-1 font-semibold text-black border-2 border-gray-400">
+                <th className="w-28 px-1 font-semibold text-black text-[13px] border-2 border-gray-400">
                   Cost Center Name
                 </th>
-                <th className="px-1 font-semibold text-black border-2 border-gray-400">
+                <th
+                  className="w-10 px-1 font-semibold text-black border-2 border-gray-400"
+                  style={{ fontSize: "13px" }}
+                >
                   Status
                 </th>
               </tr>
@@ -134,7 +155,7 @@ const CostCenterMaster = () => {
                   <input
                     type="text"
                     placeholder="Search"
-                    className="w-32 border-2 border-slate-500 rounded-lg justify-center text-center"
+                    className="w-20  h-6 border-2 border-slate-500 rounded-lg justify-center text-center"
                     onChange={(e) =>
                       handleSearchChange("costCenterID", e.target.value)
                     }
@@ -144,7 +165,7 @@ const CostCenterMaster = () => {
                   <input
                     type="text"
                     placeholder="Search"
-                    className="w-32 border-2 border-slate-500 rounded-lg justify-center text-center"
+                    className="w-32 h-6 border-2 border-slate-500 rounded-lg justify-center text-center"
                     onChange={(e) =>
                       handleSearchChange("costCenterName", e.target.value)
                     }
@@ -154,7 +175,7 @@ const CostCenterMaster = () => {
                   <input
                     type="text"
                     placeholder="Search"
-                    className="w-32 border-2 border-slate-500 rounded-lg justify-center text-center"
+                    className="w-20 h-6 border-2 border-slate-500 rounded-lg justify-center text-center"
                     onChange={(e) =>
                       handleSearchChange("status", e.target.value)
                     }
@@ -188,13 +209,13 @@ const CostCenterMaster = () => {
                           />
                         </div>
                       </td>
-                      <td className="px-4 border-2 whitespace-normal text-center">
+                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
                         {result.costCenterID}
                       </td>
-                      <td className="px-4 border-2 whitespace-normal text-left">
+                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
                         {result.costCenterName}
                       </td>
-                      <td className="px-4 border-2 whitespace-normal text-left">
+                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
                         {result.status}
                       </td>
                     </tr>
@@ -223,13 +244,13 @@ const CostCenterMaster = () => {
                           />
                         </div>
                       </td>
-                      <td className="px-4 border-2 whitespace-normal text-center">
+                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
                         {entry.costCenterID}
                       </td>
-                      <td className="px-4 border-2 whitespace-normal text-left">
+                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
                         {entry.costCenterName}
                       </td>
-                      <td className="px-4 border-2 whitespace-normal text-left">
+                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
                         {entry.status}
                       </td>
                     </tr>

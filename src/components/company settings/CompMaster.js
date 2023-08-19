@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import CompanyModal from "./CompanyModal";
 export const compData = [
@@ -62,7 +62,18 @@ export const compData = [
 
 const CompMaster = () => {
   const [filteredData, setFilteredData] = useState([]);
-  const [isModalOpen, setModalOpen] = useState(false)
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const [columnVisibility, setColumnVisibility] = useState({
+    Name: true,
+    ShortName: true,
+    SectorDetails: true,
+    NatureOfBusiness: true,
+    Status: true,
+    CreatedBy: true,
+    CreatedOn: true,
+    ModifiedBy: true,
+  });
 
   const handleSearchChange = (title, searchWord) => {
     const newFilter = compData.filter((item) => {
@@ -76,6 +87,33 @@ const CompMaster = () => {
       setFilteredData(newFilter);
     }
   };
+  //Toggle
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedColumns, setSelectedColumns] = useState([
+    ...Object.keys(columnVisibility),
+  ]);
+
+  const toggleColumn = (columnName) => {
+    if (selectedColumns.includes(columnName)) {
+      setSelectedColumns((prevSelected) =>
+        prevSelected.filter((col) => col !== columnName)
+      );
+    } else {
+      setSelectedColumns((prevSelected) => [...prevSelected, columnName]);
+    }
+  };
+
+  useEffect(() => {
+    console.log("Selected Columns:", selectedColumns);
+  }, [selectedColumns]);
+
+  const selectAllColumns = () => {
+    setSelectedColumns([...Object.keys(columnVisibility)]);
+  };
+
+  const deselectAllColumns = () => {
+    setSelectedColumns([]);
+  };
 
   return (
     <div className="p-8">
@@ -84,153 +122,155 @@ const CompMaster = () => {
       </div>
       <div className="flex justify-between items-center mt-4">
         <div className="flex gap-2">
-          <button className="bg-white text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg">
+          <button
+            className="bg-white text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg"
+            style={{ fontSize: "13px" }}
+          >
             Copy
           </button>
-          <button className="bg-white text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg">
+          <button
+            className="bg-white text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg"
+            style={{ fontSize: "13px" }}
+          >
             CSV
           </button>
-          <button className="bg-white text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg">
+          <button
+            className="bg-white text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg"
+            style={{ fontSize: "13px" }}
+          >
             Excel
           </button>
-          <button className="bg-white text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg">
+          <button
+            className="bg-white text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg"
+            style={{ fontSize: "13px" }}
+          >
             PDF
           </button>
-          <button className="bg-white text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg">
+          <button
+            className="bg-white text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg"
+            style={{ fontSize: "13px" }}
+          >
             Print
           </button>
-            <button className="flex bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold py-2 px-4 rounded-lg">
-            Column Visibility
-            <Icon icon="fe:arrow-up" className="mt-1.5 ml-2" rotate={2} />
+          <div className="relative">
+            <button
+              onClick={() => setShowDropdown(!showDropdown)}
+              className="flex bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold py-2 px-4 rounded-lg"
+              style={{ fontSize: "13px" }}
+            >
+              Column Visibility
+              <Icon
+                icon="fe:arrow-down"
+                className={`mt-1.5 ml-2 ${showDropdown ? "rotate-180" : ""}`}
+              />
+            </button>
+            {showDropdown && (
+              <div className="absolute top-10 right-0 bg-white border border-gray-300 shadow-md rounded-lg p-2">
+                <div className="flex items-center mb-2">
+                  <button
+                    className="text-blue-500 hover:text-blue-700 underline mr-2"
+                    onClick={selectAllColumns}
+                  >
+                    Select All
+                  </button>
+                  <button
+                    className="text-blue-500 hover:text-blue-700 underline"
+                    onClick={deselectAllColumns}
+                  >
+                    Deselect All
+                  </button>
+                </div>
+                {Object.keys(columnVisibility).map((columnName) => (
+                  <label
+                    key={columnName}
+                    className="flex items-center capitalize"
+                  >
+                    <input
+                      type="checkbox"
+                      className="mr-2 "
+                      checked={selectedColumns.includes(columnName)}
+                      onChange={() => toggleColumn(columnName)}
+                    />
+                    <span
+                      className={
+                        selectedColumns.includes(columnName)
+                          ? "font-semibold"
+                          : ""
+                      }
+                    >
+                      {columnName}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            )}
+          </div>
+          <button
+            className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg"
+            style={{ fontSize: "13px" }}
+            onClick={() => setModalOpen(true)}
+            // onClick={() => setModalOpen(true)}
+          >
+            Add Company
           </button>
-        <button className='flex bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold py-2 px-4 rounded-lg'>
-          Column Visibility
-        <Icon icon="fe:arrow-up" className='mt-1.5 ml-2'  rotate={2}/>
-        </button>
-        <button
-          className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg" onClick={()=> setModalOpen(true)}
-          // onClick={() => setModalOpen(true)}
-        >
-          Add Company
-        </button>
         </div>
       </div>
-      <CompanyModal visible={isModalOpen} onClick={()=> setModalOpen(false)}/>
+      <CompanyModal visible={isModalOpen} onClick={() => setModalOpen(false)} />
 
       <div className="grid gap-2">
         <div className="my-4 rounded-2xl bg-white p-2 pr-8">
           <table className="min-w-full text-center">
             <thead className="border-b-2">
               <tr>
-                <th className="p-2 font-semibold text-black">Actions</th>
-                <th className="p-2 font-semibold text-black">Company ID</th>
-                <th className="p-2 font-semibold text-black">Company Name</th>
-                <th className="p-2 font-semibold text-black">ShortName</th>
-                <th className="p-2 font-semibold text-black">Sector Details</th>
-                <th className="p-2 font-semibold text-black">
-                  Nature of Business
+                <th
+                  className="px-1 font-bold text-black border-2 border-gray-400"
+                  style={{ fontSize: "13px" }}
+                >
+                  Actions
                 </th>
-                <th className="px-1 font-semibold text-black border-2 border-gray-400">
-                  Status
+                <th
+                  className="w-24 px-1 font-bold text-black border-2 border-gray-400"
+                  style={{ fontSize: "13px" }}
+                >
+                  Company ID
                 </th>
-                <th className="px-1 font-semibold text-black border-2 border-gray-400">
-                  Created By
-                </th>
-                <th className="px-1 font-semibold text-black border-2 border-gray-400">
-                  Created On
-                </th>
-                <th className="px-1 font-semibold text-black border-2 border-gray-400">
-                  Modified By
-                </th>
+                {selectedColumns.map((columnName) => (
+                  <th
+                    key={columnName}
+                    className={`px-1 font-bold text-black border-2 border-gray-400 ${
+                      columnVisibility[columnName] ? "" : "hidden"
+                    }`}
+                    style={{ fontSize: "13px" }}
+                  >
+                    {columnName}
+                  </th>
+                ))}
               </tr>
               <tr>
                 <th className="border-2"></th>
-                <th className="p-2 font-semibold text-black border-2 ">
+                <th className="p-2 font-bold text-black border-2 ">
                   <input
                     type="text"
                     placeholder="Search"
-                    className="w-32 border-2 border-slate-500 rounded-lg justify-center text-center"
+                    className="w-20  h-6 border-2 border-slate-500 rounded-lg justify-center text-center"
                     onChange={(e) => handleSearchChange("ID", e.target.value)}
                   />
                 </th>
-                <th className="p-2 font-semibold text-black border-2">
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    className="w-32 border-2 border-slate-500 rounded-lg justify-center text-center"
-                    onChange={(e) => handleSearchChange("Name", e.target.value)}
-                  />
-                </th>
-                <th className="p-2 font-semibold text-black border-2">
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    className="w-32 border-2 border-slate-500 rounded-lg justify-center text-center"
-                    onChange={(e) =>
-                      handleSearchChange("ShortName", e.target.value)
-                    }
-                  />
-                </th>
-                <th className="p-2 font-semibold text-black border-2">
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    className="w-32  border-2 border-slate-500 rounded-lg justify-center text-center"
-                    onChange={(e) =>
-                      handleSearchChange("SectorDetails", e.target.value)
-                    }
-                  />
-                </th>
-                <th className="p-2 font-semibold text-black border-2">
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    className="w-32  border-2 border-slate-500 rounded-lg justify-center text-center"
-                    onChange={(e) =>
-                      handleSearchChange("NatureOfBusiness", e.target.value)
-                    }
-                  />
-                </th>
-                <th className="p-2 font-semibold text-black border-2">
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    className="w-32 border-2 border-slate-500 rounded-lg justify-center text-center"
-                    onChange={(e) =>
-                      handleSearchChange("Status", e.target.value)
-                    }
-                  />
-                </th>
-                <th className="p-2 font-semibold text-black border-2">
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    className="w-32  border-2 border-slate-500 rounded-lg justify-center text-center"
-                    onChange={(e) =>
-                      handleSearchChange("CreatedBy", e.target.value)
-                    }
-                  />
-                </th>
-                <th className="p-2 font-semibold text-black border-2">
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    className="w-32  border-2 border-slate-500 rounded-lg justify-center text-center"
-                    onChange={(e) =>
-                      handleSearchChange("CreatedOn", e.target.value)
-                    }
-                  />
-                </th>
-                <th className="p-2 font-semibold text-black border-2">
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    className="w-32  border-2 border-slate-500 rounded-lg justify-center text-center"
-                    onChange={(e) =>
-                      handleSearchChange("ModifiedBy", e.target.value)
-                    }
-                  />
-                </th>
+                {selectedColumns.map((columnName) => (
+                  <th
+                    key={columnName}
+                    className="p-2 font-bold text-black border-2"
+                  >
+                    <input
+                      type="text"
+                      placeholder={`Search `}
+                      className="w-24 h-6 border-2 border-slate-500 rounded-lg justify-center text-center"
+                      onChange={(e) =>
+                        handleSearchChange(columnName, e.target.value)
+                      }
+                    />
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody className="">
@@ -259,33 +299,23 @@ const CompMaster = () => {
                           />
                         </div>
                       </td>
-                      <td className="px-4 border-2 whitespace-normal text-center">
+                      <td
+                        className="px-4 border-2 whitespace-normal text-center"
+                        style={{ fontSize: "11px" }}
+                      >
                         {result.ID}
                       </td>
-                      <td className="px-4 border-2 whitespace-normal text-left">
-                        {result.Name}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left">
-                        {result.ShortName}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left">
-                        {result.SectorDetails}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left">
-                        {result.NatureOfBusiness}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left">
-                        {result.Status}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left">
-                        {result.CreatedBy}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left">
-                        {result.CreatedOn}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left">
-                        {result.ModifiedBy}
-                      </td>
+                      {selectedColumns.map((columnName) => (
+                        <td
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-left${
+                            columnVisibility[columnName] ? "" : "hidden"
+                          }`}
+                          style={{ fontSize: "11px" }}
+                        >
+                          {result[columnName]}
+                        </td>
+                      ))}
                     </tr>
                   ))
                 : compData.map((entry, index) => (
@@ -312,33 +342,23 @@ const CompMaster = () => {
                           />
                         </div>
                       </td>
-                      <td className="px-4 border-2 whitespace-normal text-center">
+                      <td
+                        className="px-4 border-2 whitespace-normal text-center"
+                        style={{ fontSize: "11px" }}
+                      >
                         {entry.ID}
                       </td>
-                      <td className="px-4 border-2 whitespace-normal text-left">
-                        {entry.Name}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left">
-                        {entry.ShortName}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left">
-                        {entry.SectorDetails}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left">
-                        {entry.NatureOfBusiness}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left">
-                        {entry.Status}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left">
-                        {entry.CreatedBy}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left">
-                        {entry.CreatedOn}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left">
-                        {entry.ModifiedBy}
-                      </td>
+                      {selectedColumns.map((columnName) => (
+                        <td
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-left${
+                            columnVisibility[columnName] ? "" : "hidden"
+                          }`}
+                          style={{ fontSize: "11px" }}
+                        >
+                          {entry[columnName]}
+                        </td>
+                      ))}
                     </tr>
                   ))}
             </tbody>
