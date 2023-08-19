@@ -1,6 +1,7 @@
 import { Icon } from "@iconify/react";
 import React, { useState } from "react";
 import { Button } from "react-bootstrap";
+import CompanyModal from "./CompanyModal";
 export const compData = [
   {
     ID: 1,
@@ -61,6 +62,7 @@ export const compData = [
 
 const CompMaster = () => {
   const [filteredData, setFilteredData] = useState([]);
+  const [isModalOpen, setModalOpen] = useState(false)
 
   const handleSearchChange = (title, searchWord) => {
     const newFilter = compData.filter((item) => {
@@ -97,43 +99,35 @@ const CompMaster = () => {
           <button className="bg-white text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg">
             Print
           </button>
-          <button className="flex bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold py-2 px-4 rounded-lg">
+            <button className="flex bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold py-2 px-4 rounded-lg">
             Column Visibility
             <Icon icon="fe:arrow-up" className="mt-1.5 ml-2" rotate={2} />
           </button>
-        </div>
+        <button className='flex bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold py-2 px-4 rounded-lg'>
+          Column Visibility
+        <Icon icon="fe:arrow-up" className='mt-1.5 ml-2'  rotate={2}/>
+        </button>
         <button
-          className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg mr-20"
+          className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg" onClick={()=> setModalOpen(true)}
           // onClick={() => setModalOpen(true)}
         >
           Add Company
         </button>
+        </div>
       </div>
-      {/* <DepartmentModal
-        visible={isModalOpen}
-        onClick={() => setModalOpen(false)}
-      /> */}
-      <div className="grid gap-4">
-        <div className="my-4 rounded-2xl bg-white p-4 pr-12">
-          <table className="min-w-full text-center rounded-lg">
-            <thead>
-              <tr className="bg-blue-200">
-                <th className="px-1 font-semibold text-black border-2 border-gray-400">
-                  Actions
-                </th>
-                <th className="px-1 font-semibold text-black border-2 border-gray-400">
-                  Company ID
-                </th>
-                <th className="px-1 font-semibold text-black border-2 border-gray-400">
-                  Company Name
-                </th>
-                <th className="px-1 font-semibold text-black border-2 border-gray-400">
-                  ShortName
-                </th>
-                <th className="px-1 font-semibold text-black border-2 border-gray-400">
-                  Sector Details
-                </th>
-                <th className="px-1 font-semibold text-black border-2 border-gray-400">
+      <CompanyModal visible={isModalOpen} onClick={()=> setModalOpen(false)}/>
+
+      <div className="grid gap-2">
+        <div className="my-4 rounded-2xl bg-white p-2 pr-8">
+          <table className="min-w-full text-center">
+            <thead className="border-b-2">
+              <tr>
+                <th className="p-2 font-semibold text-black">Actions</th>
+                <th className="p-2 font-semibold text-black">Company ID</th>
+                <th className="p-2 font-semibold text-black">Company Name</th>
+                <th className="p-2 font-semibold text-black">ShortName</th>
+                <th className="p-2 font-semibold text-black">Sector Details</th>
+                <th className="p-2 font-semibold text-black">
                   Nature of Business
                 </th>
                 <th className="px-1 font-semibold text-black border-2 border-gray-400">

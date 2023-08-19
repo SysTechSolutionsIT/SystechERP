@@ -82,8 +82,9 @@ export const departments = [
 ];
 
 const DepartmentMaster = () => {
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [filteredData, setFilteredData] = useState([]);
+
+    const [isModalOpen, setModalOpen] = useState(false)
+    const [filteredData, setFilteredData] = useState([]);
 
   const handleSearchChange = (title, searchWord) => {
     const newFilter = departments.filter((item) => {
