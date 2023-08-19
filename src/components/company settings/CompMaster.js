@@ -99,10 +99,6 @@ const CompMaster = () => {
           <button className="bg-white text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg">
             Print
           </button>
-            <button className="flex bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold py-2 px-4 rounded-lg">
-            Column Visibility
-            <Icon icon="fe:arrow-up" className="mt-1.5 ml-2" rotate={2} />
-          </button>
         <button className='flex bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold py-2 px-4 rounded-lg'>
           Column Visibility
         <Icon icon="fe:arrow-up" className='mt-1.5 ml-2'  rotate={2}/>

@@ -1,6 +1,7 @@
 import { Icon } from "@iconify/react";
 import React, { useState } from "react";
 import { Button } from "react-bootstrap";
+import FinancialModal from "./FinancialModal";
 
 export const finData = [
   {
@@ -49,6 +50,7 @@ export const finData = [
 
 const FinMaster = () => {
   const [filteredData, setFilteredData] = useState([]);
+  const [isModalOpen, setModalOpen] = useState(false)
 
   const handleSearchChange = (title, searchWord) => {
     const newFilter = finData.filter((item) => {
@@ -92,15 +94,12 @@ const FinMaster = () => {
         </div>
         <button
           className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg mr-20"
-          // onClick={() => setModalOpen(true)}
+          onClick={() => setModalOpen(true)}
         >
           Add Company
         </button>
       </div>
-      {/* <DepartmentModal
-      visible={isModalOpen}
-      onClick={() => setModalOpen(false)}
-    /> */}
+      <FinancialModal visible={isModalOpen} onClick={()=> setModalOpen(false)}/>
       <div className="grid gap-4">
         <div className="my-4 rounded-2xl bg-white p-4 pr-12">
           <table className="min-w-full text-center rounded-lg">

@@ -1,6 +1,7 @@
 import { useFormik } from 'formik'
 import React from 'react'
 import { useState } from 'react'
+import { compData } from './CompMaster'
 
 const CompanyModal = ({visible, onClick}) => {
   const [statusCheck, setStatusCheck] = useState(false);
@@ -19,6 +20,7 @@ const CompanyModal = ({visible, onClick}) => {
         },
         onSubmit:(values) =>{
             console.log(values)
+            compData.push(values)
         },
     })
 
@@ -31,7 +33,7 @@ if(!visible) return null
           <div className="bg-blue-900 text-white text-center font-semibold text-lg py-4 px-8 rounded-lg">
             Company Master
           </div>
-          <div className="py-4">
+        <div className="py-4">
         <div className='grid grid-cols-2 gap-4'>
         <div>
             <p className='capatilize font-semibold'>Company ID</p>
