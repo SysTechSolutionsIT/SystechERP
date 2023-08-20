@@ -11,7 +11,7 @@ import {
 import CompMaster from "./components/company settings/CompMaster";
 import FinMaster from "./components/company settings/FinMaster";
 import CompConfig from "./components/company settings/CompConfig";
-import BankMaster from "./components/company settings/BankMaster"
+import BankMaster from "./components/company settings/BankMaster";
 import CostCenterMaster from "./components/company settings/CostCenterMaster";
 import DepartmentMaster from "./components/company settings/DepartmentMaster";
 import DestinationMaster from "./components/company settings/DestinationMaster";

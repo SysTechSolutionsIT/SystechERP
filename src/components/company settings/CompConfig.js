@@ -1,8 +1,4 @@
 import React, { useState } from "react";
-import Academic from "../forms/academic";
-import Family from "../forms/family";
-import Personal from "../forms/personal";
-import Professional from "../forms/professional";
 import { useFormik } from "formik";
 
 export default function EMPTabs() {
@@ -41,8 +37,75 @@ export default function EMPTabs() {
     setIsActive(!isActive);
   };
 
+  //Currencies - Tab 1
+  const currencies = [
+    { abbreviation: "INR", name: "Indian Rupees" },
+    { abbreviation: "USD", name: "United States Dollar" },
+    { abbreviation: "EUR", name: "Euro" },
+    { abbreviation: "JPY", name: "Japanese Yen" },
+    { abbreviation: "GBP", name: "British Pound Sterling" },
+    { abbreviation: "AUD", name: "Australian Dollar" },
+    { abbreviation: "CAD", name: "Canadian Dollar" },
+    { abbreviation: "CHF", name: "Swiss Franc" },
+    { abbreviation: "CNY", name: "Chinese Yuan" },
+  ];
+
+  //Formik for Form Submission
+  const formik = useFormik({
+    initialValues: {
+      currency: "INR",
+      theme: "",
+      date: "",
+      sessionTM: 0,
+      remarks: "",
+      status: "inactive",
+
+      empID: "",
+      cmulti: "",
+
+      att: "",
+      aProcess: "",
+      atap: "",
+      shiftFlag: "",
+      jobApp: "",
+      holiday: "",
+      odFlag: "",
+      otFlag: "",
+      LAFlag: "",
+
+      otCalc: "",
+      esicSal: "",
+      pfSal: "",
+      gratuity: "",
+      mlwf1: "",
+      mlwf2: "",
+      salLock: "",
+      minWages: "",
+      remarks1: "",
+      salstat: "",
+
+      email: "",
+      smtpHost: "",
+      sender: "",
+      username: "",
+      password: "",
+
+      message: "",
+
+      smsUrl: "",
+      sms: "",
+    },
+    onSubmit: (values, { resetForm }) => {
+      console.log(values);
+      // Your other submission logic
+
+      // Reset the form to its initial state
+      resetForm();
+    },
+  });
+
   return (
-    <>
+    <form onSubmit={formik.handleSubmit}>
       <div className="p-8">
         <div className="bg-blue-900 text-white font-semibold text-lg py-4 px-8 w-full rounded-lg">
           Company Configurations
@@ -171,27 +234,39 @@ export default function EMPTabs() {
                 <div className={openTab === 1 ? "block" : "hidden"}>
                   <div className="flex ">
                     <div className="flex flex-col p-2 w-1/2">
-                      <label htmlFor="currency" className="mb-1 font-semibold">
+                      <label
+                        htmlFor="currency"
+                        className="mb-1 font-semibold text-[13px]"
+                      >
                         Currency
                       </label>
                       <select
                         id="currency"
-                        className="w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
+                        name="currency"
+                        className="text-[13px] w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
+                        default="Indian Rupees"
+                        value={formik.values.currency}
+                        onChange={formik.handleChange}
                       >
-                        {months.map((month, index) => (
-                          <option key={index} value={month}>
-                            {month}
+                        {currencies.map((currency, index) => (
+                          <option key={index} value={currency.abbreviation}>
+                            {currency.name}
                           </option>
                         ))}
                       </select>
                     </div>
                     <div className="flex flex-col p-2 w-1/2">
-                      <label htmlFor="dropdown2" className="mb-1 font-semibold">
+                      <label
+                        htmlFor="dropdown2"
+                        className="mb-1 font-semibold text-[13px]"
+                      >
                         Themes
                       </label>
                       <select
                         id="Theme"
-                        className="w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
+                        name="theme"
+                        className="w-full text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
+                        onChange={formik.handleChange}
                       >
                         {months.map((month, index) => (
                           <option key={index} value={month}>
@@ -203,51 +278,60 @@ export default function EMPTabs() {
                   </div>
                   <div className="flex mb-6">
                     <div className="w-1/2 pr-4">
-                      <p className="mb-3 capitalize mt-1 font-semibold">
+                      <p className="mb-3 capitalize mt-1 font-semibold text-[13px]">
                         Date Format
                       </p>
                       <input
                         id="DateF"
                         type="text"
-                        className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                        name="date"
+                        className={`text-[13px] w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
                         placeholder="dd/mm/yyyy"
+                        onChange={formik.handleChange}
                       />
                     </div>
                     <div className="w-1/2">
-                      <p className="mb-3 capitalize font-semibold">
+                      <p className="mb-3 capitalize font-semibold text-[13px]">
                         Session Timeout
                       </p>
                       <input
                         id="SessTM"
                         type="number"
-                        className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                        name="sessionTM"
+                        className={`w-full text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                        onChange={formik.handleChange}
                       />
                     </div>
                   </div>
                   <div className="flex mb-6">
                     <div className="w-1/2 pr-4">
-                      <p className="mb-3 capitalize mt-1 font-semibold">
+                      <p className="mb-3 capitalize mt-1 font-semibold text-[13px]">
                         Remarks
                       </p>
                       <input
                         id="remarks"
+                        name="remarks"
                         type="text"
-                        className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                        className={`text-[13px] w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                        onChange={formik.handleChange}
                       />
                     </div>
                     <div className="w-1/2">
-                      <p className="mb-3 capitalize font-semibold">Status</p>
-                      <div className="flex items-center">
+                      <p className="mb-3 capitalize font-semibold text-[13px]">
+                        Status
+                      </p>
+                      <div className="flex items-center text-[13px]">
                         <input
                           type="checkbox"
                           id="activeCheckbox"
+                          name="status"
                           className="form-checkbox h-5 w-5 text-blue-600"
                           checked={isActive}
-                          onChange={handleCheckboxChange}
+                          onChange={formik.handleChange}
                         />
                         <label
                           htmlFor="activeCheckbox"
-                          className="ml-2 text-gray-700"
+                          className="ml-2 text-gray-700 text-[13px]"
                         >
                           Active
                         </label>
@@ -257,38 +341,56 @@ export default function EMPTabs() {
                 </div>
                 {/* Company Tab*/}
                 <div className={openTab === 2 ? "block" : "hidden"}>
-                  <div className="flex space-x-8 justify-around">
-                    <div className="flex flex-col p-2">
-                      <p className="mb-3 font-semibold">Employee ID Prefex</p>
-                      <label>
-                        <input type="radio" name="sms" value="Yes" />
-                        Yes
-                      </label>
-                      <label>
-                        <input
-                          type="radio"
-                          name="sms"
-                          value="No"
-                          style={{ marginTop: "10px" }}
-                        />
-                        No
-                      </label>
-                    </div>
-                    <div className="flex space-x-8 justify-around">
-                      <div className="flex flex-col p-2">
-                        <p className="mb-3 font-semibold">
-                          Company Multibranch
-                        </p>
-                        <label>
-                          <input type="radio" name="sms" value="Yes" />
-                          Yes
-                        </label>
-                        <label>
+                  <div className="flex justify-between">
+                    <div className="flex flex-col p-2 space-x-2">
+                      <p className="mb-3 font-semibold text-[13px]">
+                        Employee ID Prefix
+                      </p>
+                      <div className="flex">
+                        <label className="flex items-center text-[13px]">
                           <input
                             type="radio"
-                            name="sms"
+                            name="empID"
+                            value="Yes"
+                            className="mr-2"
+                            onChange={formik.handleChange}
+                          />
+                          Yes
+                        </label>
+                        <label className="flex items-center text-[13px]">
+                          <input
+                            type="radio"
+                            name="empID"
                             value="No"
-                            style={{ marginTop: "10px" }}
+                            className="mr-2 ml-2"
+                            onChange={formik.handleChange}
+                          />
+                          No
+                        </label>
+                      </div>
+                    </div>
+                    <div className="flex flex-col p-2">
+                      <p className="mb-3 font-semibold text-[13px]">
+                        Company Multibranch
+                      </p>
+                      <div className="flex space-x-2">
+                        <label className="flex items-center text-[13px]">
+                          <input
+                            type="radio"
+                            name="cmulti"
+                            value="Yes"
+                            className="mr-2 ml-2"
+                            onChange={formik.handleChange}
+                          />
+                          Yes
+                        </label>
+                        <label className="flex items-center text-[13px]">
+                          <input
+                            type="radio"
+                            name="cmulti"
+                            value="No"
+                            className="mr-2"
+                            onChange={formik.handleChange}
                           />
                           No
                         </label>
@@ -299,284 +401,297 @@ export default function EMPTabs() {
 
                 {/* Attendance Tab */}
                 <div className={openTab === 3 ? "block" : "hidden"}>
-                  <div className="py-4">
-                    <div className='grid grid-cols-2 gap-4'>
-                    <div>
-                    <p className='capitalize font-semibold'>Attendance Flag</p>
-                    <div className=" flex items-center gap-4 mt-2">
-                    <label className="flex items-center">
-                        <input
-                        type="radio"
-                        id="deptType"
-                        value="Main"
-                        // checked={formik.values.deptType === "Main"}
-                        // onChange={formik.handleChange}
-                        className="mr-2 h-5 w-5"
-                        />
-                        Daily
-                    </label>
-                    <label className="flex items-center">
-                        <input
-                        type="radio"
-                        id="deptType"
-                        value="Sub"
-                        // checked={formik.values.deptType === "Sub"}
-                        // onChange={formik.handleChange}
-                        className="mr-3 h-5 w-5"
-                        />
-                        Monthly
-                    </label>
-                    </div>
-                    </div>
-                    <div>
-                    <p className='capitalize font-semibold'>Attendance Process</p>
-                    <div className=" flex items-center gap-4 mt-2">
-                    <label className="flex items-center">
-                        <input
-                        type="radio"
-                        id="deptType"
-                        value="Main"
-                        // checked={formik.values.deptType === "Main"}
-                        // onChange={formik.handleChange}
-                        className="mr-2 h-5 w-5"
-                        />
-                        All
-                    </label>
-                    <label className="flex items-center">
-                        <input
-                        type="radio"
-                        id="deptType"
-                        value="Sub"
-                        // checked={formik.values.deptType === "Sub"}
-                        // onChange={formik.handleChange}
-                        className="mr-3 h-5 w-5"
-                        />
-                        Manual
-                    </label>
-                    <label className="flex items-center">
-                        <input
-                        type="radio"
-                        id="deptType"
-                        value="Sub"
-                        // checked={formik.values.deptType === "Sub"}
-                        // onChange={formik.handleChange}
-                        className="mr-3 h-5 w-5"
-                        />
-                        Excel Import
-                    </label>
-                    <label className="flex items-center">
-                        <input
-                        type="radio"
-                        id="deptType"
-                        value="Sub"
-                        // checked={formik.values.deptType === "Sub"}
-                        // onChange={formik.handleChange}
-                        className="mr-3 h-5 w-5"
-                        />
-                        Auto Download
-                    </label>
-                    </div>
-                    </div>
-                    <div>
-                    <p className='capitalize font-semibold'>Attendance Approval Flag</p>
-                    <div className=" flex items-center gap-4 mt-2">
-                    <label className="flex items-center">
-                        <input
-                        type="radio"
-                        id="deptType"
-                        value="Main"
-                        // checked={formik.values.deptType === "Main"}
-                        // onChange={formik.handleChange}
-                        className="mr-2 h-5 w-5"
-                        />
-                        Yes
-                    </label>
-                    <label className="flex items-center">
-                        <input
-                        type="radio"
-                        id="deptType"
-                        value="Sub"
-                        // checked={formik.values.deptType === "Sub"}
-                        // onChange={formik.handleChange}
-                        className="mr-3 h-5 w-5"
-                        />
-                        No
-                    </label>
-                    </div>
-                    </div>
-                    <div>
-                    <p className='capitalize font-semibold'>Fix Shift Flag</p>
-                    <div className=" flex items-center gap-4 mt-2">
-                    <label className="flex items-center">
-                        <input
-                        type="radio"
-                        id="deptType"
-                        value="Main"
-                        // checked={formik.values.deptType === "Main"}
-                        // onChange={formik.handleChange}
-                        className="mr-2 h-5 w-5"
-                        />
-                        Yes
-                    </label>
-                    <label className="flex items-center">
-                        <input
-                        type="radio"
-                        id="deptType"
-                        value="Sub"
-                        // checked={formik.values.deptType === "Sub"}
-                        // onChange={formik.handleChange}
-                        className="mr-3 h-5 w-5"
-                        />
-                        No
-                    </label>
-                    </div>
-                    </div>
-                    <div>
-                    <p className='capitalize font-semibold'>Job Allocation</p>
-                    <div className=" flex items-center gap-4 mt-2">
-                    <label className="flex items-center">
-                        <input
-                        type="radio"
-                        id="deptType"
-                        value="Main"
-                        // checked={formik.values.deptType === "Main"}
-                        // onChange={formik.handleChange}
-                        className="mr-2 h-5 w-5"
-                        />
-                        Yes
-                    </label>
-                    <label className="flex items-center">
-                        <input
-                        type="radio"
-                        id="deptType"
-                        value="Sub"
-                        // checked={formik.values.deptType === "Sub"}
-                        // onChange={formik.handleChange}
-                        className="mr-3 h-5 w-5"
-                        />
-                        No
-                    </label>
-                    </div>
-                    </div>
-                    <div>
-                    <p className='capitalize font-semibold'>Paid Holiday Logic</p>
-                    <div className=" flex items-center gap-4 mt-2">
-                    <label className="flex items-center">
-                        <input
-                        type="radio"
-                        id="deptType"
-                        value="Main"
-                        // checked={formik.values.deptType === "Main"}
-                        // onChange={formik.handleChange}
-                        className="mr-2 h-5 w-5"
-                        />
-                        Add 1 Day in Presenty
-                    </label>
-                    <label className="flex items-center">
-                        <input
-                        type="radio"
-                        id="deptType"
-                        value="Sub"
-                        // checked={formik.values.deptType === "Sub"}
-                        // onChange={formik.handleChange}
-                        className="mr-3 h-5 w-5"
-                        />
-                        Gice C-Off
-                    </label>
-                    </div>
-                    </div>
-                    <div>
-                    <p className='capitalize font-semibold'>OD Approval Flag</p>
-                    <div className=" flex items-center gap-4 mt-2">
-                    <label className="flex items-center">
-                        <input
-                        type="radio"
-                        id="deptType"
-                        value="Main"
-                        // checked={formik.values.deptType === "Main"}
-                        // onChange={formik.handleChange}
-                        className="mr-2 h-5 w-5"
-                        />
-                        Yes
-                    </label>
-                    <label className="flex items-center">
-                        <input
-                        type="radio"
-                        id="deptType"
-                        value="Sub"
-                        // checked={formik.values.deptType === "Sub"}
-                        // onChange={formik.handleChange}
-                        className="mr-3 h-5 w-5"
-                        />
-                        No
-                    </label>
-                    </div>
-                    </div>
-                    <div>
-                    <p className='capitalize font-semibold'>OT Approval Flag</p>
-                    <div className=" flex items-center gap-4 mt-2">
-                    <label className="flex items-center">
-                        <input
-                        type="radio"
-                        id="deptType"
-                        value="Main"
-                        // checked={formik.values.deptType === "Main"}
-                        // onChange={formik.handleChange}
-                        className="mr-2 h-5 w-5"
-                        />
-                        Yes
-                    </label>
-                    <label className="flex items-center">
-                        <input
-                        type="radio"
-                        id="deptType"
-                        value="Sub"
-                        // checked={formik.values.deptType === "Sub"}
-                        // onChange={formik.handleChange}
-                        className="mr-3 h-5 w-5"
-                        />
-                        No
-                    </label>
-                    </div>
-                    </div>
-                    <div>
-                    <p className='capitalize font-semibold'>Leave Approval Flag</p>
-                    <div className=" flex items-center gap-4 mt-2">
-                    <label className="flex items-center">
-                        <input
-                        type="radio"
-                        id="deptType"
-                        value="Main"
-                        // checked={formik.values.deptType === "Main"}
-                        // onChange={formik.handleChange}
-                        className="mr-2 h-5 w-5"
-                        />
-                        Yes
-                    </label>
-                    <label className="flex items-center">
-                        <input
-                        type="radio"
-                        id="deptType"
-                        value="Sub"
-                        // checked={formik.values.deptType === "Sub"}
-                        // onChange={formik.handleChange}
-                        className="mr-3 h-5 w-5"
-                        />
-                        No
-                    </label>
-                    </div>
-                    </div>
-                    <div>
-                        <p className='capatilize font-semibold'>Attendance Lock Day</p>
-                        <input
-                            id="deptName"
-                            type="text"
-                            placeholder="Enter Department Name"
-                            // value={formik.values.deptName}
-                            className={`w-full px-4 py-2 mt-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
-                            // onChange={formik.handleChange}
+                  <div className="flex justify-between">
+                    <div className="flex flex-col p-2 w-1/2">
+                      <p className="mb-3 font-semibold text-[13px]">
+                        Attendance Flag
+                      </p>
+                      <div className="flex space-x-2">
+                        <label className="flex items-center text-[13px]">
+                          <input
+                            type="radio"
+                            name="att"
+                            value="daily"
+                            className="mr-2 ml-2"
+                            onChange={formik.handleChange}
                           />
+                          Daily
+                        </label>
+                        <label className="flex items-center text-[13px]">
+                          <input
+                            type="radio"
+                            name="att"
+                            value="monthly"
+                            className="mr-2"
+                            onChange={formik.handleChange}
+                          />
+                          Monthly
+                        </label>
+                      </div>
                     </div>
+                    <div className="flex justify-between w-1/2">
+                      <div className="flex flex-col p-2">
+                        <p className="mb-3 font-semibold text-[13px]">
+                          Attendance Process
+                        </p>
+                        <div className="flex space-x-2">
+                          <label className="flex items-center text-[13px]">
+                            <input
+                              type="radio"
+                              name="atProcess"
+                              value="all"
+                              className="mr-2 ml-2"
+                              onChange={formik.handleChange}
+                            />
+                            All
+                          </label>
+                          <label className="flex items-center text-[13px]">
+                            <input
+                              type="radio"
+                              name="atProcess"
+                              value="manual"
+                              className="mr-2"
+                              onChange={formik.handleChange}
+                            />
+                            Manual
+                          </label>
+                          <label className="flex items-center text-[13px]">
+                            <input
+                              type="radio"
+                              name="atProcess"
+                              value="excel"
+                              className="mr-2"
+                              onChange={formik.handleChange}
+                            />
+                            Excel Import
+                          </label>
+                          <label className="flex items-center text-[13px]">
+                            <input
+                              type="radio"
+                              name="atProcess"
+                              value="autoD"
+                              className="mr-2"
+                              onChange={formik.handleChange}
+                            />
+                            Auto Download
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex space-x-8 justify-between">
+                    <div className="flex flex-col p-2 w-1/2">
+                      <p className="mb-3 font-semibold text-[13px]">
+                        Attendance Approval Flag
+                      </p>
+                      <div className="flex space-x-2">
+                        <label className="flex items-center text-[13px]">
+                          <input
+                            type="radio"
+                            name="atap"
+                            value="yes"
+                            className="mr-2 ml-2"
+                            onChange={formik.handleChange}
+                          />
+                          Yes
+                        </label>
+                        <label className="flex items-center text-[13px]">
+                          <input
+                            type="radio"
+                            name="atap"
+                            value="no"
+                            className="mr-2"
+                            onChange={formik.handleChange}
+                          />
+                          No
+                        </label>
+                      </div>
+                    </div>
+                    <div className="flex space-x-8 justify-between w-1/2">
+                      <div className="flex flex-col p-2 ">
+                        <p className="mb-3 font-semibold text-[13px]">
+                          Fix Shift Flag{" "}
+                        </p>
+                        <div className="flex space-x-2">
+                          <label className="flex items-center text-[13px]">
+                            <input
+                              type="radio"
+                              name="shiftFlag"
+                              value="yes"
+                              className="mr-2 ml-2"
+                              onChange={formik.handleChange}
+                            />
+                            Yes
+                          </label>
+                          <label className="flex items-center text-[13px]">
+                            <input
+                              type="radio"
+                              name="shiftFlag"
+                              value="no"
+                              className="mr-2"
+                              onChange={formik.handleChange}
+                            />
+                            No
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex space-x-8 justify-between">
+                    <div className="flex flex-col p-2 w-1/2">
+                      <p className="mb-3 font-semibold text-[13px]">
+                        Job Approval
+                      </p>
+                      <div className="flex space-x-2">
+                        <label className="flex items-center text-[13px]">
+                          <input
+                            type="radio"
+                            name="jobApp"
+                            value="yes"
+                            className="mr-2 ml-2"
+                            onChange={formik.handleChange}
+                          />
+                          Yes
+                        </label>
+                        <label className="flex items-center text-[13px]">
+                          <input
+                            type="radio"
+                            name="jobApp"
+                            value="no"
+                            className="mr-2"
+                            onChange={formik.handleChange}
+                          />
+                          No
+                        </label>
+                      </div>
+                    </div>
+                    <div className="flex space-x-8 justify-between w-1/2">
+                      <div className="flex flex-col p-2 ">
+                        <p className="mb-3 font-semibold text-[13px]">
+                          Paid Holiday Logic{" "}
+                        </p>
+                        <div className="flex space-x-2">
+                          <label className="flex items-center text-[13px]">
+                            <input
+                              type="radio"
+                              name="holiday"
+                              value="Add1"
+                              className="mr-2 ml-2 whitespace-nowrap"
+                              onChange={formik.handleChange}
+                            />
+                            Add 1 day in Presenty
+                          </label>
+                          <label className="flex items-center text-[13px]">
+                            <input
+                              type="radio"
+                              name="holiday"
+                              value="coff"
+                              className="mr-2 whitespace-nowrap"
+                              onChange={formik.handleChange}
+                            />
+                            Give C-Off
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex space-x-8 justify-between">
+                    <div className="flex flex-col p-2 w-1/2">
+                      <p className="mb-3 font-semibold text-[13px]">
+                        OD Approval Flag
+                      </p>
+                      <div className="flex space-x-2">
+                        <label className="flex items-center text-[13px]">
+                          <input
+                            type="radio"
+                            name="odFlag"
+                            value="yes"
+                            className="mr-2 ml-2"
+                            onChange={formik.handleChange}
+                          />
+                          Yes
+                        </label>
+                        <label className="flex items-center text-[13px]">
+                          <input
+                            type="radio"
+                            name="odFlag"
+                            value="no"
+                            className="mr-2"
+                            onChange={formik.handleChange}
+                          />
+                          No
+                        </label>
+                      </div>
+                    </div>
+                    <div className="flex space-x-8 justify-between w-1/2">
+                      <div className="flex flex-col p-2">
+                        <p className="mb-3 font-semibold text-[13px]">
+                          OT Approval Flag{" "}
+                        </p>
+                        <div className="flex space-x-2">
+                          <label className="flex items-center text-[13px]">
+                            <input
+                              type="radio"
+                              name="otFlag"
+                              value="yes"
+                              className="mr-2 ml-2"
+                              onChange={formik.handleChange}
+                            />
+                            Yes
+                          </label>
+                          <label className="flex items-center text-[13px]">
+                            <input
+                              type="radio"
+                              name="otFlag"
+                              value="no"
+                              className="mr-2"
+                              onChange={formik.handleChange}
+                            />
+                            No
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex space-x-8 justify-between">
+                    <div className="flex flex-col p-2 w-1/2">
+                      <p className="mb-3 font-semibold text-[13px]">
+                        Leave Approval Flag
+                      </p>
+                      <div className="flex space-x-2">
+                        <label className="flex items-center text-[13px]">
+                          <input
+                            type="radio"
+                            name="LAFlag"
+                            value="yes"
+                            className="mr-2 ml-2"
+                            onChange={formik.handleChange}
+                          />
+                          Yes
+                        </label>
+                        <label className="flex items-center text-[13px]">
+                          <input
+                            type="radio"
+                            name="LAFlag"
+                            value="no"
+                            className="mr-2"
+                            onChange={formik.handleChange}
+                          />
+                          No
+                        </label>
+                      </div>
+                    </div>
+                    <div className="flex flex-col p-2 w-1/2">
+                      <p className="mb-3 font-semibold mr-4 text-[13px]">
+                        Attendance Lock day
+                      </p>
+                      <input
+                        id="AlockDay"
+                        name="ALockDay"
+                        type="text"
+                        className={`px-4 h-10 text-[13px] py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
+                        onChange={formik.handleChange}
+                      />
                     </div>
                   </div>
                 </div>
@@ -585,62 +700,83 @@ export default function EMPTabs() {
                 <div className={openTab === 4 ? "block" : "hidden"}>
                   <div className="flex p-2">
                     <div className="flex flex-col p-2  w-1/2 pr-4">
-                      <p className="mb-3 font-semibold">OT Calculation Flag</p>
-                      <label>
-                        <input type="radio" name="otCalc" value="Daily" />
-                        Daily
-                      </label>
-                      <label>
-                        <input
-                          type="radio"
-                          name="otCalc"
-                          value="Monthly"
-                          style={{ marginTop: "10px" }}
-                        />
-                        Monthly
-                      </label>
+                      <p className="mb-3 font-semibold text-[13px]">
+                        OT Calculation Flag
+                      </p>
+                      <div className="flex space-x-2">
+                        <label className="flex items-center text-[13px]">
+                          <input
+                            type="radio"
+                            name="otCalc"
+                            value="daily"
+                            className="mr-2 ml-2"
+                            onChange={formik.handleChange}
+                          />
+                          Daily
+                        </label>
+                        <label className="flex items-center text-[13px]">
+                          <input
+                            type="radio"
+                            name="otCalc"
+                            value="monthly"
+                            className="mr-2"
+                            onChange={formik.handleChange}
+                          />
+                          Monthly
+                        </label>
+                      </div>
                     </div>
                     <div className="flex flex-col p-2 w-1/2 pr-4">
-                      <p className="mb-3 font-semibold mr-4">
+                      <p className="mb-3 font-semibold mr-4 text-[13px]">
                         ESIC Salary Limit
                       </p>
                       <input
-                        id="smsUrl"
+                        name="esicSal"
                         type="text"
-                        className={`px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
+                        className={`text-[13px] px-4 h-10 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6 text-[13px]`}
+                        onChange={formik.handleChange}
                       />
                     </div>
                   </div>
                   <div className="flex mb-6">
                     <div className="w-1/2 pr-4">
-                      <p className="mb-3 capitalize mt-1 font-semibold">
+                      <p className="mb-3 capitalize mt-1 font-semibold text-[13px]">
                         PF Salary Limit
                       </p>
                       <input
                         id="PFSalaryLimit"
+                        name="pfSal"
                         type="text"
-                        className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                        className={` w-full h-10 text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                        onChange={formik.handleChange}
                       />
                     </div>
                     <div className="w-1/2">
-                      <p className="mb-3 capitalize font-semibold">
+                      <p className="mb-3 capitalize font-semibold text-[13px]">
                         Gratuity Years Limit
                       </p>
                       <input
                         id="gratuity"
+                        name="gratuity"
                         type="text"
-                        className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                        className={` w-full h-10 text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                        onChange={formik.handleChange}
                       />
                     </div>
                   </div>
-                  <div className="flex space-x-6">
+                  <div className="flex space-x-6 mb-4">
                     <div className="flex flex-col p-2 w-1/2">
-                      <label htmlFor="dropdown1" className="mb-1 font-semibold">
+                      <label
+                        htmlFor="dropdown1"
+                        className="mb-1 font-semibold text-[13px]"
+                      >
                         MLWF Month 1
                       </label>
                       <select
                         id="mlwf1"
-                        className="w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
+                        name="mlwf1"
+                        className="w-full  h-10 text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
+                        onChange={formik.handleChange}
                       >
                         {months.map((month, index) => (
                           <option key={index} value={month}>
@@ -650,12 +786,16 @@ export default function EMPTabs() {
                       </select>
                     </div>
                     <div className="flex flex-col p-2 w-1/2">
-                      <label htmlFor="dropdown2" className="mb-1 font-semibold">
+                      <label
+                        htmlFor="dropdown2"
+                        className="mb-1 font-semibold text-[13px]"
+                      >
                         MLWF Month 2
                       </label>
                       <select
                         id="mlwf2"
-                        className="w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
+                        className="w-full h-10 text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
+                        onChange={formik.handleChange}
                       >
                         {months.map((month, index) => (
                           <option key={index} value={month}>
@@ -667,49 +807,57 @@ export default function EMPTabs() {
                   </div>
                   <div className="flex mb-6">
                     <div className="w-1/2 pr-4">
-                      <p className="mb-3 capitalize mt-1 font-semibold">
+                      <p className="mb-3 capitalize mt-1 font-semibold text-[13px]">
                         Salary Lock Day
                       </p>
                       <input
                         id="SLockday"
+                        name="salLock"
                         type="text"
-                        className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                        className={`w-full h-10 text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                        onChange={formik.handleChange}
                       />
                     </div>
                     <div className="w-1/2">
-                      <p className="mb-3 capitalize font-semibold">
+                      <p className="mb-3 capitalize font-semibold text-[13px]">
                         Salary Minimum Wages
                       </p>
                       <input
                         id="MinWages"
+                        name="minWages"
                         type="text"
-                        className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                        className={`w-full h-10 text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                        onChange={formik.handleChange}
                       />
                     </div>
                   </div>
                   <div className="flex mb-6">
                     <div className="w-1/2 pr-4">
-                      <p className="mb-3 capitalize mt-1 font-semibold">
+                      <p className="mb-3 capitalize mt-1 font-semibold text-[13px]">
                         Remarks
                       </p>
                       <input
                         id="remarks"
+                        name="remarks1"
                         type="text"
-                        className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                        className={`w-full  h-10 text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
                       />
                     </div>
                     <div className="w-1/2">
-                      <p className="mb-3 capitalize font-semibold">Status</p>
+                      <p className="mb-3 capitalize font-semibold text-[13px]">
+                        Status
+                      </p>
                       <input
                         type="checkbox"
                         id="activeCheckbox"
+                        name="salstat"
                         className="form-checkbox h-5 w-5 text-blue-600"
                         checked={isActive}
-                        onChange={handleCheckboxChange}
+                        onChange={formik.handleChange}
                       />
                       <label
                         htmlFor="activeCheckbox"
-                        className="ml-2 text-gray-700"
+                        className="ml-2 text-gray-700 text-[13px]"
                       >
                         Active
                       </label>
@@ -721,56 +869,81 @@ export default function EMPTabs() {
                 <div className={openTab === 5 ? "block" : "hidden"}>
                   <div className="flex p-2">
                     <div className="flex flex-col p-2  w-1/2 pr-4">
-                      <p className="mb-3 font-semibold">Email Service</p>
-                      <label>
-                        <input type="radio" name="sms" value="Yes" />
-                        Yes
-                      </label>
-                      <label>
-                        <input
-                          type="radio"
-                          name="sms"
-                          value="No"
-                          style={{ marginTop: "10px" }}
-                        />
-                        No
-                      </label>
+                      <p className="mb-3 font-semibold text-[13px]">
+                        Email Service
+                      </p>
+                      <div className="flex space-x-2">
+                        <label className="flex items-center text-[13px]">
+                          <input
+                            type="radio"
+                            name="email"
+                            value="yes"
+                            className="mr-2 ml-2"
+                            onChange={formik.handleChange}
+                          />
+                          Yes
+                        </label>
+                        <label className="flex items-center text-[13px]">
+                          <input
+                            type="radio"
+                            name="email"
+                            value="no"
+                            className="mr-2"
+                            onChange={formik.handleChange}
+                          />
+                          No
+                        </label>
+                      </div>
                     </div>
                     <div className="flex flex-col p-2 w-1/2 pr-4">
-                      <p className="mb-3 font-semibold mr-4">SMTP Host</p>
+                      <p className="mb-3 font-semibold mr-4 text-[13px]">
+                        SMTP Host
+                      </p>
                       <input
-                        id="smsUrl"
+                        id="smtpHost"
+                        name="smtpHost"
                         type="text"
-                        className={`px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
+                        onChange={formik.handleChange}
+                        className={`px-4 py-2 h-10 text-[13px] font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
                       />
                     </div>
                   </div>
                   <div className="flex mb-6">
                     <div className="w-1/2 pr-4">
-                      <p className="mb-3 capitalize mt-1 font-semibold">
+                      <p className="mb-3 capitalize mt-1 font-semibold text-[13px]">
                         From Email ID
                       </p>
                       <input
                         id="sender"
+                        name="sender"
                         type="text"
-                        className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                        onChange={formik.handleChange}
+                        className={`w-full h-10 text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
                       />
                     </div>
                     <div className="w-1/2">
-                      <p className="mb-3 capitalize font-semibold">MUserName</p>
+                      <p className="mb-3 capitalize font-semibold text-[13px]">
+                        MUserName
+                      </p>
                       <input
                         id="username"
+                        name="username"
                         type="text"
-                        className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                        onChange={formik.handleChange}
+                        className={`w-full h-10 text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
                       />
                     </div>
                   </div>
                   <div className="w-1/2">
-                    <p className="mb-3 capitalize font-semibold">MPassword</p>
+                    <p className="mb-3 capitalize font-semibold text-[13px]">
+                      MPassword
+                    </p>
                     <input
                       id="password"
+                      name="password"
                       type="text"
-                      className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                      onChange={formik.handleChange}
+                      className={`w-full text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
                     />
                   </div>
                 </div>
@@ -785,37 +958,49 @@ export default function EMPTabs() {
                   </label>
                   <textarea
                     id="message"
+                    name="message"
                     rows="4"
-                    className="block p-2.5 w-full text-m text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                    className="block p-2.5 w-full text-[13px] text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 resize-none"
                     placeholder="Write your Welcome Message here..."
                   />
                 </div>
 
                 {/* Asset Profile Tab */}
                 <div className={openTab === 7 ? "block" : "hidden"}>
-                  <div className="flex space-x-8 justify-around">
-                    <div className="flex flex-col p-2">
-                      <p className="mb-3 font-semibold">SMS Service</p>
-                      <label>
-                        <input type="radio" name="sms" value="Yes" />
-                        Yes
-                      </label>
-                      <label>
-                        <input
-                          type="radio"
-                          name="sms"
-                          value="No"
-                          style={{ marginTop: "10px" }}
-                        />
-                        No
-                      </label>
+                  <div className="flex justify-between">
+                    <div className="flex flex-col w-1/2">
+                      <p className="mb-3 font-semibold text-[13px]">
+                        SMS Service
+                      </p>
+                      <div className="flex space-x-2">
+                        <label className="flex items-center text-[13px]">
+                          <input
+                            type="radio"
+                            name="sms"
+                            value="yes"
+                            className="mr-2 ml-2"
+                            onChange={formik.handleChange}
+                          />
+                          Yes
+                        </label>
+                        <label className="flex items-center text-[13px]">
+                          <input
+                            type="radio"
+                            name="sms"
+                            value="no"
+                            className="mr-2"
+                            onChange={formik.handleChange}
+                          />
+                          No
+                        </label>
+                      </div>
                     </div>
-                    <div className="flex flex-col p-2">
-                      <p className="mb-3 font-semibold mr-4">SMS URL</p>
+                    <div className="flex flex-col w-1/2">
+                      <p className="mb-3 font-semibold text-[13px]">SMS URL</p>
                       <input
                         id="smsUrl"
                         type="text"
-                        className={`px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
+                        className={`w-full px-4 py-2 h-10 text-[13px] font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
                       />
                     </div>
                   </div>
@@ -825,6 +1010,6 @@ export default function EMPTabs() {
           </div>
         </div>
       </div>
-    </>
+    </form>
   );
 }
