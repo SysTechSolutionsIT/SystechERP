@@ -3,6 +3,7 @@ import Academic from "../forms/academic";
 import Family from "../forms/family";
 import Personal from "../forms/personal";
 import Professional from "../forms/professional";
+import { useFormik } from "formik";
 
 export default function EMPTabs() {
   const [openTab, setOpenTab] = React.useState(1);
@@ -298,11 +299,286 @@ export default function EMPTabs() {
 
                 {/* Attendance Tab */}
                 <div className={openTab === 3 ? "block" : "hidden"}>
-                  <p>
-                    Vivamus vel elit ac elit congue eleifend. Quisque nec ligula
-                    et tortor tincidunt volutpat. Nunc et tristique purus. Fusce
-                    non lorem et odio tristique sodales.
-                  </p>
+                  <div className="py-4">
+                    <div className='grid grid-cols-2 gap-4'>
+                    <div>
+                    <p className='capitalize font-semibold'>Attendance Flag</p>
+                    <div className=" flex items-center gap-4 mt-2">
+                    <label className="flex items-center">
+                        <input
+                        type="radio"
+                        id="deptType"
+                        value="Main"
+                        // checked={formik.values.deptType === "Main"}
+                        // onChange={formik.handleChange}
+                        className="mr-2 h-5 w-5"
+                        />
+                        Daily
+                    </label>
+                    <label className="flex items-center">
+                        <input
+                        type="radio"
+                        id="deptType"
+                        value="Sub"
+                        // checked={formik.values.deptType === "Sub"}
+                        // onChange={formik.handleChange}
+                        className="mr-3 h-5 w-5"
+                        />
+                        Monthly
+                    </label>
+                    </div>
+                    </div>
+                    <div>
+                    <p className='capitalize font-semibold'>Attendance Process</p>
+                    <div className=" flex items-center gap-4 mt-2">
+                    <label className="flex items-center">
+                        <input
+                        type="radio"
+                        id="deptType"
+                        value="Main"
+                        // checked={formik.values.deptType === "Main"}
+                        // onChange={formik.handleChange}
+                        className="mr-2 h-5 w-5"
+                        />
+                        All
+                    </label>
+                    <label className="flex items-center">
+                        <input
+                        type="radio"
+                        id="deptType"
+                        value="Sub"
+                        // checked={formik.values.deptType === "Sub"}
+                        // onChange={formik.handleChange}
+                        className="mr-3 h-5 w-5"
+                        />
+                        Manual
+                    </label>
+                    <label className="flex items-center">
+                        <input
+                        type="radio"
+                        id="deptType"
+                        value="Sub"
+                        // checked={formik.values.deptType === "Sub"}
+                        // onChange={formik.handleChange}
+                        className="mr-3 h-5 w-5"
+                        />
+                        Excel Import
+                    </label>
+                    <label className="flex items-center">
+                        <input
+                        type="radio"
+                        id="deptType"
+                        value="Sub"
+                        // checked={formik.values.deptType === "Sub"}
+                        // onChange={formik.handleChange}
+                        className="mr-3 h-5 w-5"
+                        />
+                        Auto Download
+                    </label>
+                    </div>
+                    </div>
+                    <div>
+                    <p className='capitalize font-semibold'>Attendance Approval Flag</p>
+                    <div className=" flex items-center gap-4 mt-2">
+                    <label className="flex items-center">
+                        <input
+                        type="radio"
+                        id="deptType"
+                        value="Main"
+                        // checked={formik.values.deptType === "Main"}
+                        // onChange={formik.handleChange}
+                        className="mr-2 h-5 w-5"
+                        />
+                        Yes
+                    </label>
+                    <label className="flex items-center">
+                        <input
+                        type="radio"
+                        id="deptType"
+                        value="Sub"
+                        // checked={formik.values.deptType === "Sub"}
+                        // onChange={formik.handleChange}
+                        className="mr-3 h-5 w-5"
+                        />
+                        No
+                    </label>
+                    </div>
+                    </div>
+                    <div>
+                    <p className='capitalize font-semibold'>Fix Shift Flag</p>
+                    <div className=" flex items-center gap-4 mt-2">
+                    <label className="flex items-center">
+                        <input
+                        type="radio"
+                        id="deptType"
+                        value="Main"
+                        // checked={formik.values.deptType === "Main"}
+                        // onChange={formik.handleChange}
+                        className="mr-2 h-5 w-5"
+                        />
+                        Yes
+                    </label>
+                    <label className="flex items-center">
+                        <input
+                        type="radio"
+                        id="deptType"
+                        value="Sub"
+                        // checked={formik.values.deptType === "Sub"}
+                        // onChange={formik.handleChange}
+                        className="mr-3 h-5 w-5"
+                        />
+                        No
+                    </label>
+                    </div>
+                    </div>
+                    <div>
+                    <p className='capitalize font-semibold'>Job Allocation</p>
+                    <div className=" flex items-center gap-4 mt-2">
+                    <label className="flex items-center">
+                        <input
+                        type="radio"
+                        id="deptType"
+                        value="Main"
+                        // checked={formik.values.deptType === "Main"}
+                        // onChange={formik.handleChange}
+                        className="mr-2 h-5 w-5"
+                        />
+                        Yes
+                    </label>
+                    <label className="flex items-center">
+                        <input
+                        type="radio"
+                        id="deptType"
+                        value="Sub"
+                        // checked={formik.values.deptType === "Sub"}
+                        // onChange={formik.handleChange}
+                        className="mr-3 h-5 w-5"
+                        />
+                        No
+                    </label>
+                    </div>
+                    </div>
+                    <div>
+                    <p className='capitalize font-semibold'>Paid Holiday Logic</p>
+                    <div className=" flex items-center gap-4 mt-2">
+                    <label className="flex items-center">
+                        <input
+                        type="radio"
+                        id="deptType"
+                        value="Main"
+                        // checked={formik.values.deptType === "Main"}
+                        // onChange={formik.handleChange}
+                        className="mr-2 h-5 w-5"
+                        />
+                        Add 1 Day in Presenty
+                    </label>
+                    <label className="flex items-center">
+                        <input
+                        type="radio"
+                        id="deptType"
+                        value="Sub"
+                        // checked={formik.values.deptType === "Sub"}
+                        // onChange={formik.handleChange}
+                        className="mr-3 h-5 w-5"
+                        />
+                        Gice C-Off
+                    </label>
+                    </div>
+                    </div>
+                    <div>
+                    <p className='capitalize font-semibold'>OD Approval Flag</p>
+                    <div className=" flex items-center gap-4 mt-2">
+                    <label className="flex items-center">
+                        <input
+                        type="radio"
+                        id="deptType"
+                        value="Main"
+                        // checked={formik.values.deptType === "Main"}
+                        // onChange={formik.handleChange}
+                        className="mr-2 h-5 w-5"
+                        />
+                        Yes
+                    </label>
+                    <label className="flex items-center">
+                        <input
+                        type="radio"
+                        id="deptType"
+                        value="Sub"
+                        // checked={formik.values.deptType === "Sub"}
+                        // onChange={formik.handleChange}
+                        className="mr-3 h-5 w-5"
+                        />
+                        No
+                    </label>
+                    </div>
+                    </div>
+                    <div>
+                    <p className='capitalize font-semibold'>OT Approval Flag</p>
+                    <div className=" flex items-center gap-4 mt-2">
+                    <label className="flex items-center">
+                        <input
+                        type="radio"
+                        id="deptType"
+                        value="Main"
+                        // checked={formik.values.deptType === "Main"}
+                        // onChange={formik.handleChange}
+                        className="mr-2 h-5 w-5"
+                        />
+                        Yes
+                    </label>
+                    <label className="flex items-center">
+                        <input
+                        type="radio"
+                        id="deptType"
+                        value="Sub"
+                        // checked={formik.values.deptType === "Sub"}
+                        // onChange={formik.handleChange}
+                        className="mr-3 h-5 w-5"
+                        />
+                        No
+                    </label>
+                    </div>
+                    </div>
+                    <div>
+                    <p className='capitalize font-semibold'>Leave Approval Flag</p>
+                    <div className=" flex items-center gap-4 mt-2">
+                    <label className="flex items-center">
+                        <input
+                        type="radio"
+                        id="deptType"
+                        value="Main"
+                        // checked={formik.values.deptType === "Main"}
+                        // onChange={formik.handleChange}
+                        className="mr-2 h-5 w-5"
+                        />
+                        Yes
+                    </label>
+                    <label className="flex items-center">
+                        <input
+                        type="radio"
+                        id="deptType"
+                        value="Sub"
+                        // checked={formik.values.deptType === "Sub"}
+                        // onChange={formik.handleChange}
+                        className="mr-3 h-5 w-5"
+                        />
+                        No
+                    </label>
+                    </div>
+                    </div>
+                    <div>
+                        <p className='capatilize font-semibold'>Attendance Lock Day</p>
+                        <input
+                            id="deptName"
+                            type="text"
+                            placeholder="Enter Department Name"
+                            // value={formik.values.deptName}
+                            className={`w-full px-4 py-2 mt-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                            // onChange={formik.handleChange}
+                          />
+                    </div>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Payroll Tab */}
