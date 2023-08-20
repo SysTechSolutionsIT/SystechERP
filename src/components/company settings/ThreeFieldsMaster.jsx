@@ -1,30 +1,22 @@
-import { Icon } from '@iconify/react'
+import { Icon } from '@iconify/react';
 import React, { useEffect, useState } from 'react'
-import DestinationModal from './DestinationModal';
 
-export const destData = [
-    {
-        ID: 1,
-        Name: "Pune",
-        ContractorName: "Company Employee",
-        Distance: 0,
-        EmployeeFare: 0
-    },
+export const TFData = [
     {
         ID: 2,
-        Name: "NA",
-        ContractorName: "Company Employee",
-        Distance: 0,
-        EmployeeFare: 0
-    },
+        Name: "CompanySector",
+        FieldDetails1: "Information Technology",
+        FieldDetails2: "Graphics",
+        Status: "Y"
+    }
 ];
 
-const DestinationMaster = () => {
+const ThreeFieldsMaster = () => {
     const [isModalOpen, setModalOpen] = useState(false);
     const [filteredData, setFilteredData] = useState([]);
 
     const handleSearchChange = (title, searchWord) => {
-        const newFilter = destData.filter((item) => {
+        const newFilter = TFData.filter((item) => {
             const value = item[title];
             return value && value.toLowerCase().includes(searchWord.toLowerCase());
         });
@@ -38,9 +30,9 @@ const DestinationMaster = () => {
 
     const [columnVisibility, setColumnVisibility] = useState({
         Name: true,
-        ContractorName: true,
-        Distance: true,
-        EmployeeFare: true
+        FieldDetails1: true,
+        FieldDetails2: true,
+        Status: true
     });
 
     const [showDropdown, setShowDropdown] = useState(false);
@@ -166,10 +158,10 @@ const DestinationMaster = () => {
                     Add Destination
                 </button>
             </div>
-            <DestinationModal
+            {/* <DestinationModal
                 visible={isModalOpen}
                 onClick={() => setModalOpen(false)}
-            />
+            /> */}
             <div className="my-4">
                 <table className="w-full table-auto">
                     <thead className='text-center'>
@@ -264,7 +256,7 @@ const DestinationMaster = () => {
                                 <td className="px-4 border-2 whitespace-normal">{entry.EmployeeFare}</td> */}
                             </tr>
                         )) : (
-                            destData.slice(0).reverse().map((entry, index) => (
+                            TFData.slice(0).reverse().map((entry, index) => (
                                 <tr key={index}>
                                     <td className="px-2 text-[11px] border-2">
                                         <div className="flex items-center gap-2 text-center justify-center">
@@ -318,4 +310,4 @@ const DestinationMaster = () => {
     )
 }
 
-export default DestinationMaster
+export default ThreeFieldsMaster

@@ -15,6 +15,7 @@ import BankMaster from "./components/company settings/BankMaster"
 import CostCenterMaster from "./components/company settings/CostCenterMaster";
 import DepartmentMaster from "./components/company settings/DepartmentMaster";
 import DestinationMaster from "./components/company settings/DestinationMaster";
+import ThreeFieldsMaster from "./components/company settings/ThreeFieldsMaster";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
           <Route path="/costcenter-master" element={<CostCenterMaster />} />
           <Route path="/department-master" element={<DepartmentMaster />} />
           <Route path="/destination-master" element={<DestinationMaster />} />
+          <Route path="/three-fields-master" element={<ThreeFieldsMaster />} />
         </Route>
       </Routes>
     </Router>
