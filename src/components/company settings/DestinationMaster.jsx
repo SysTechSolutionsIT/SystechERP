@@ -175,12 +175,12 @@ const DestinationMaster = () => {
                     <thead className='text-center'>
                         <tr className="bg-blue-200">
                             <th
-                                className="px-1 text-[13px] font-semibold text-black border-2 border-gray-400"
+                                className="px-1 text-[13px] font-bold text-black border-2 border-gray-400"
                             >
                                 Actions
                             </th>
                             <th
-                                className="px-1 text-[13px] font-semibold text-black border-2 border-gray-400"
+                                className="px-1 text-[13px] font-bold text-black border-2 border-gray-400"
                             >
                                 ID
                             </th>

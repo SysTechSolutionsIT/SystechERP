@@ -1,10 +1,11 @@
 import { Icon } from '@iconify/react';
 import React, { useEffect, useState } from 'react'
+import ThreeFieldsModal from './ThreeFieldsModal';
 
 export const ThreeFData = [
     {
         ID: 2,
-        Name: "CompanySector",
+        MasterName: "CompanySector",
         FieldDetails1: "Information Technology",
         FieldDetails2: "Graphics",
         Status: "Y"
@@ -29,7 +30,7 @@ const ThreeFieldsMaster = () => {
     };
 
     const [columnVisibility, setColumnVisibility] = useState({
-        Name: true,
+        MasterName: true,
         FieldDetails1: true,
         FieldDetails2: true,
         Status: true
@@ -158,21 +159,21 @@ const ThreeFieldsMaster = () => {
                     Add Field
                 </button>
             </div>
-            {/* <DestinationModal
+            <ThreeFieldsModal
                 visible={isModalOpen}
                 onClick={() => setModalOpen(false)}
-            /> */}
+            />
             <div className="my-4">
                 <table className="w-full table-auto">
                     <thead className='text-center'>
                         <tr className="bg-blue-200">
                             <th
-                                className="px-1 text-[13px] font-semibold text-black border-2 border-gray-400"
+                                className="px-1 text-[13px] font-bold text-black border-2 border-gray-400"
                             >
                                 Actions
                             </th>
                             <th
-                                className="px-1 text-[13px] font-semibold text-black border-2 border-gray-400"
+                                className="px-1 text-[13px] font-bold text-black border-2 border-gray-400"
                             >
                                 ID
                             </th>
