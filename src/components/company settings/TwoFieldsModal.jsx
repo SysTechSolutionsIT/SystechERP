@@ -1,19 +1,19 @@
-import { useFormik } from 'formik';
+import { useFormik } from 'formik'
 import React, { useState } from 'react'
-import { ThreeFData } from './ThreeFieldsMaster';
+import { TwoFData } from './TwoFieldsMaster'
 
-const ThreeFieldsModal = ({ visible, onClick }) => {
+const TwoFieldsModal = ({ visible, onClick }) => {
     const formik = useFormik({
         initialValues: {
             ID: "",
             MasterName: "",
-            FieldDetails: "",
+            FieldDetails1: "",
             Status: "",
             remark: ""
         },
         onSubmit: (values) => {
             console.log(values)
-            ThreeFData.push(values)
+            TwoFData.push(values)
             alert('Added Successfully')
         },
     })
@@ -57,23 +57,12 @@ const ThreeFieldsModal = ({ visible, onClick }) => {
                                 />
                             </div>
                             <div>
-                                <p className='capatilize font-semibold'>Field Details 1</p>
+                                <p className='capatilize font-semibold'>Field Details</p>
                                 <input
-                                    id="FieldDetails1"
+                                    id="FieldDetails"
                                     type="text"
-                                    placeholder="Enter Field Details 1"
-                                    value={formik.values.FieldDetails1}
-                                    className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
-                                    onChange={formik.handleChange}
-                                />
-                            </div>
-                            <div>
-                                <p className='capatilize font-semibold'>Field Details 2</p>
-                                <input
-                                    id="FieldDetails2"
-                                    type="text"
-                                    placeholder="Enter Field Details 2"
-                                    value={formik.values.FieldDetails2}
+                                    placeholder="Enter Field Details"
+                                    value={formik.values.FieldDetails}
                                     className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
                                     onChange={formik.handleChange}
                                 />
@@ -119,4 +108,4 @@ const ThreeFieldsModal = ({ visible, onClick }) => {
     )
 }
 
-export default ThreeFieldsModal
+export default TwoFieldsModal

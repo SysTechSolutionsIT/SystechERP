@@ -1,52 +1,53 @@
 import { Icon } from '@iconify/react';
 import React, { useEffect, useState } from 'react'
+import TwoFieldsModal from './TwoFieldsModal';
 
 export const TwoFData = [
     {
         ID: 1,
-        Name: "EmployeeGroupType",
+        MasterName: "EmployeeGroupType",
         FieldDetails: "Staff",
         Status: "Y"
     },
     {
         ID: 2,
-        Name: "EmployeeGroupType",
+        MasterName: "EmployeeGroupType",
         FieldDetails: "Worker",
         Status: "Y"
     },
     {
         ID: 13,
-        Name: "Salutation",
+        MasterName: "Salutation",
         FieldDetails: "Mr.",
         Status: "Y"
     },
     {
         ID: 14,
-        Name: "Salutation",
+        MasterName: "Salutation",
         FieldDetails: "Ms.",
         Status: "Y"
     },
     {
         ID: 15,
-        Name: "Salutation",
+        MasterName: "Salutation",
         FieldDetails: "Mrs.",
         Status: "Y"
     },
     {
         ID: 16,
-        Name: "Salutation",
+        MasterName: "Salutation",
         FieldDetails: "Miss",
         Status: "Y"
     },
     {
         ID: 17,
-        Name: "Salutation",
+        MasterName: "Salutation",
         FieldDetails: "Dr.",
         Status: "Y"
     },
     {
         ID: 16,
-        Name: "Salutation",
+        MasterName: "Salutation",
         FieldDetails: "Prof.",
         Status: "Y"
     },
@@ -70,7 +71,7 @@ const TwoFieldsMaster = () => {
     };
 
     const [columnVisibility, setColumnVisibility] = useState({
-        Name: true,
+        MasterName: true,
         FieldDetails: true,
         Status: true
     });
@@ -198,21 +199,21 @@ const TwoFieldsMaster = () => {
                     Add Field
                 </button>
             </div>
-            {/* <DestinationModal
+            <TwoFieldsModal
                 visible={isModalOpen}
                 onClick={() => setModalOpen(false)}
-            /> */}
+            />
             <div className="my-4">
                 <table className="w-full table-auto">
                     <thead className='text-center'>
                         <tr className="bg-blue-200">
                             <th
-                                className="px-1 text-[13px] font-semibold text-black border-2 border-gray-400"
+                                className="px-1 text-[13px] font-bold text-black border-2 border-gray-400"
                             >
                                 Actions
                             </th>
                             <th
-                                className="px-1 text-[13px] font-semibold text-black border-2 border-gray-400"
+                                className="px-1 text-[13px] font-bold text-black border-2 border-gray-400"
                             >
                                 ID
                             </th>
