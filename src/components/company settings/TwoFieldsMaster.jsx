@@ -1,22 +1,63 @@
 import { Icon } from '@iconify/react';
 import React, { useEffect, useState } from 'react'
 
-export const ThreeFData = [
+export const TwoFData = [
+    {
+        ID: 1,
+        Name: "EmployeeGroupType",
+        FieldDetails: "Staff",
+        Status: "Y"
+    },
     {
         ID: 2,
-        Name: "CompanySector",
-        FieldDetails1: "Information Technology",
-        FieldDetails2: "Graphics",
+        Name: "EmployeeGroupType",
+        FieldDetails: "Worker",
         Status: "Y"
-    }
+    },
+    {
+        ID: 13,
+        Name: "Salutation",
+        FieldDetails: "Mr.",
+        Status: "Y"
+    },
+    {
+        ID: 14,
+        Name: "Salutation",
+        FieldDetails: "Ms.",
+        Status: "Y"
+    },
+    {
+        ID: 15,
+        Name: "Salutation",
+        FieldDetails: "Mrs.",
+        Status: "Y"
+    },
+    {
+        ID: 16,
+        Name: "Salutation",
+        FieldDetails: "Miss",
+        Status: "Y"
+    },
+    {
+        ID: 17,
+        Name: "Salutation",
+        FieldDetails: "Dr.",
+        Status: "Y"
+    },
+    {
+        ID: 16,
+        Name: "Salutation",
+        FieldDetails: "Prof.",
+        Status: "Y"
+    },
 ];
 
-const ThreeFieldsMaster = () => {
+const TwoFieldsMaster = () => {
     const [isModalOpen, setModalOpen] = useState(false);
     const [filteredData, setFilteredData] = useState([]);
 
     const handleSearchChange = (title, searchWord) => {
-        const newFilter = ThreeFData.filter((item) => {
+        const newFilter = TwoFData.filter((item) => {
             const value = item[title];
             return value && value.toLowerCase().includes(searchWord.toLowerCase());
         });
@@ -30,8 +71,7 @@ const ThreeFieldsMaster = () => {
 
     const [columnVisibility, setColumnVisibility] = useState({
         Name: true,
-        FieldDetails1: true,
-        FieldDetails2: true,
+        FieldDetails: true,
         Status: true
     });
 
@@ -65,7 +105,7 @@ const ThreeFieldsMaster = () => {
     return (
         <div className="p-8">
             <div className="bg-blue-900 text-white font-semibold text-lg py-4 px-8 w-full rounded-lg">
-                Three Field Master
+                Two Field Master
             </div>
             <div className="flex justify-between items-center mt-4">
                 <div className="flex gap-2">
@@ -256,7 +296,7 @@ const ThreeFieldsMaster = () => {
                                 <td className="px-4 border-2 whitespace-normal">{entry.EmployeeFare}</td> */}
                             </tr>
                         )) : (
-                            ThreeFData.slice(0).reverse().map((entry, index) => (
+                            TwoFData.slice(0).reverse().map((entry, index) => (
                                 <tr key={index}>
                                     <td className="px-2 text-[11px] border-2">
                                         <div className="flex items-center gap-2 text-center justify-center">
@@ -310,4 +350,4 @@ const ThreeFieldsMaster = () => {
     )
 }
 
-export default ThreeFieldsMaster
+export default TwoFieldsMaster
