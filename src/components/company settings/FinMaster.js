@@ -2,6 +2,7 @@ import { Icon } from "@iconify/react";
 import React, { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import FinancialModal from "./FinancialModal";
+import VEFModal from "./ViewFin";
 
 export const finData = [
   {
@@ -51,6 +52,9 @@ export const finData = [
 const FinMaster = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [veFin, setFin] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const [Fid, setFid] = useState();
 
   const handleSearchChange = (title, searchWord) => {
     const newFilter = finData.filter((item) => {
@@ -106,28 +110,16 @@ const FinMaster = () => {
       </div>
       <div className="flex justify-between items-center mt-4">
         <div className="flex gap-2">
-          <button
-            className="bg-white text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg"
-            style={{ fontSize: "13px" }}
-          >
+          <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg">
             Copy
           </button>
-          <button
-            className="bg-white text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg"
-            style={{ fontSize: "13px" }}
-          >
+          <button className="bg-white  text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg">
             CSV
           </button>
-          <button
-            className="bg-white text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg"
-            style={{ fontSize: "13px" }}
-          >
+          <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg">
             Excel
           </button>
-          <button
-            className="bg-white text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg"
-            style={{ fontSize: "13px" }}
-          >
+          <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg">
             PDF
           </button>
           <button
@@ -270,12 +262,34 @@ const FinMaster = () => {
                             color="#556987"
                             width="20"
                             height="20"
+                            onClick={() => {
+                              setFin(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setFid(result.ID); // Pass ID to VEModal
+                            }}
+                          />
+                          <VEFModal
+                            visible={veFin}
+                            onClick={() => setFin(false)}
+                            edit={edit}
+                            ID={Fid}
                           />
                           <Icon
                             icon="mdi:edit"
                             color="#556987"
                             width="20"
                             height="20"
+                            onClick={() => {
+                              setFin(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setFid(result.ID); // Pass ID to VEModal
+                            }}
+                          />
+                          <VEFModal
+                            visible={veFin}
+                            onClick={() => setFin(false)}
+                            edit={edit}
+                            ID={Fid}
                           />
                           <Icon
                             icon="material-symbols:delete-outline"
@@ -313,12 +327,35 @@ const FinMaster = () => {
                             color="#556987"
                             width="20"
                             height="20"
+                            onClick={() => {
+                              setFin(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setFid(entry.ID); // Pass ID to VEModal
+                            }}
                           />
+                          <VEFModal
+                            visible={veFin}
+                            onClick={() => setFin(false)}
+                            edit={edit}
+                            ID={Fid}
+                          />
+
                           <Icon
                             icon="mdi:edit"
                             color="#556987"
                             width="20"
                             height="20"
+                            onClick={() => {
+                              setFin(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setFid(entry.ID); // Pass ID to VEModal
+                            }}
+                          />
+                          <VEFModal
+                            visible={veFin}
+                            onClick={() => setFin(false)}
+                            edit={edit}
+                            ID={Fid}
                           />
                           <Icon
                             icon="material-symbols:delete-outline"

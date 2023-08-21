@@ -1,64 +1,63 @@
 import { useFormik } from "formik";
 import React from "react";
 import { useState, useEffect } from "react";
-import { compData } from "./CompMaster";
+import { finData } from "./FinMaster";
 
-const VEModal = ({ visible, onClick, edit, ID }) => {
-  const [statusCheck, setStatusCheck] = useState(false);
-  const [singleBranchCheck, setSingleBranchCheck] = useState(false);
+const VEFModal = ({ visible, onClick, edit, ID }) => {
+  const [YearCloseCheck, setYearCloseCheck] = useState(false);
+  const [StatusCheck, setStatusCheck] = useState(false);
   const [details, setDetails] = useState([]);
+
   const formik = useFormik({
     initialValues: {
-      companyId: "",
-      companyName: "",
-      shortName: "",
-      companySector: "",
-      status: statusCheck,
-      natureOfBusiness: "",
-      logo: "",
-      singleBranch: singleBranchCheck,
+      FinID: "",
+      Name: "",
+      StartDate: "",
+      EndDate: "",
+      ShortName: "",
+      YearClose: YearCloseCheck,
+      Remark: "",
+      Status: StatusCheck,
     },
     onSubmit: (values) => {
       console.log(values);
-      compData.push(values);
+      finData.push(values);
     },
   });
-
   useEffect(() => {
-    const selectedCompany = compData.find((company) => company.ID === ID);
-    if (selectedCompany) {
-      setDetails(selectedCompany);
+    const selected = finData.find((data) => data.FinID === ID);
+    if (selected) {
+      setDetails(selected);
     }
   }, [ID]);
-
   if (!visible) return null;
   return (
     <form onSubmit={formik.handleSubmit}>
-      <div className="fixed overflow-y-scroll inset-0 bg-transparent bg-opacity-25 backdrop-blur-sm flex items-center justify-center w-full h-full">
+      <div className="fixed overflow-y-scroll inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center w-full h-full">
         <div className="bg-gray-200 w-[60%] p-8 rounded-lg">
           <div className="bg-blue-900 text-white text-center font-semibold text-lg py-4 px-8 rounded-lg">
-            Company Master
+            Financial Master
           </div>
           <div className="py-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="capatilize font-semibold">Company ID</p>
+                <p className="capatilize font-semibold">Financial Year ID</p>
                 <input
-                  id="companyId"
+                  id="FinID"
                   type="number"
-                  placeholder="Enter Company ID"
-                  value={details.ID}
+                  placeholder="Enter Financial Year ID"
+                  value={details.FinID}
                   className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
               </div>
               <div>
-                <p className="capatilize font-semibold">Company Name</p>
+                <p className="capatilize font-semibold">Name</p>
                 <input
-                  id="companyName"
+                  id="Name"
                   type="text"
-                  placeholder="Enter Company Name"
+                  placeholder="Enter Name"
                   value={details.Name}
                   className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
                   onChange={formik.handleChange}
@@ -66,11 +65,35 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                 />
               </div>
               <div>
-                <p className="capatilize font-semibold">Company Short Name</p>
+                <p className="capatilize font-semibold">Start Date</p>
                 <input
-                  id="shortName"
+                  id="StartDate"
+                  type="date"
+                  placeholder="Enter Start Date"
+                  value={details.StartDate}
+                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                  onChange={formik.handleChange}
+                  disabled={!edit}
+                />
+              </div>
+              <div>
+                <p className="capatilize font-semibold">End Date</p>
+                <input
+                  id="EndDate"
+                  type="date"
+                  placeholder="Enter End Date"
+                  value={details.EndDate}
+                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                  onChange={formik.handleChange}
+                  disabled={!edit}
+                />
+              </div>
+              <div>
+                <p className="capatilize font-semibold">Short Name</p>
+                <input
+                  id="ShortName"
                   type="text"
-                  placeholder="Enter Company Short Name"
+                  placeholder="Enter Short Name"
                   value={details.ShortName}
                   className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
                   onChange={formik.handleChange}
@@ -78,23 +101,25 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                 />
               </div>
               <div>
-                <p className="capatilize font-semibold">Company Sector</p>
-                <input
-                  id="companySector"
-                  type="text"
-                  placeholder="Enter Company Sector"
-                  value={details.SectorDetails}
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
-                  onChange={formik.handleChange}
-                  disabled={!edit}
-                />
+                <p className="capitalize font-semibold">Year Active</p>
+                <label className="capitalize font-semibold">
+                  <input
+                    id="YearClose"
+                    type="checkbox"
+                    checked={YearCloseCheck}
+                    className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border-2 rounded-lg`}
+                    onChange={() => setYearCloseCheck(!YearCloseCheck)}
+                    disabled={!edit}
+                  />
+                  Active
+                </label>
               </div>
               <div>
-                <p className="capatilize font-semibold">Nature of Business</p>
+                <p className="capatilize font-semibold">Remarks</p>
                 <textarea
-                  id="natureOfBusiness"
-                  placeholder="Enter Nature of Business"
-                  value={details.NatureOfBusiness}
+                  id="Remark"
+                  placeholder="Enter Remark"
+                  value={details.Remark}
                   className={`w-full px-4 py-2 h-32 font-normal focus:outline-gray-300 resize-none rounded-lg break-words`}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -104,39 +129,12 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                 <p className="capitalize font-semibold">Status</p>
                 <label className="capitalize font-semibold">
                   <input
-                    id="status"
+                    id="Status"
                     type="checkbox"
-                    checked={statusCheck}
+                    checked={StatusCheck}
                     className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border-2 rounded-lg`}
-                    onChange={() => {
-                      console.log("Status checkbox clicked");
-                      setStatusCheck(!statusCheck);
-                      console.log("Status after updating", statusCheck);
-                    }}
-                  />
-                  Active
-                </label>
-              </div>
-              <div>
-                <p className="capatilize font-semibold">Logo</p>
-                <input
-                  id="logo"
-                  type="file"
-                  placeholder="Upload File"
-                  value={details.File}
-                  className={`w-full px-4 py-2 font-[10px] bg-white focus:outline-gray-300 border-2 rounded-lg `}
-                  onChange={formik.handleChange}
-                />
-              </div>
-              <div>
-                <p className="capitalize font-semibold">Single Branch</p>
-                <label className="capitalize font-semibold">
-                  <input
-                    id="singleBranch"
-                    type="checkbox"
-                    checked={singleBranchCheck}
-                    className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border-2 rounded-lg`}
-                    onChange={() => setSingleBranchCheck(!singleBranchCheck)}
+                    onChange={() => setStatusCheck(!StatusCheck)}
+                    disabled={!edit}
                   />
                   Active
                 </label>
@@ -165,4 +163,4 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
   );
 };
 
-export default VEModal;
+export default VEFModal;
