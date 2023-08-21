@@ -2,6 +2,7 @@ import { Icon } from "@iconify/react";
 import React, { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import CompanyModal from "./CompanyModal";
+import VEModal from "./ViewComp";
 export const compData = [
   {
     ID: 1,
@@ -63,6 +64,9 @@ export const compData = [
 const CompMaster = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [VE, setVE] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const [Cid, setCid] = useState();
 
   const [columnVisibility, setColumnVisibility] = useState({
     Name: true,
@@ -122,34 +126,19 @@ const CompMaster = () => {
       </div>
       <div className="flex justify-between items-center mt-4">
         <div className="flex gap-2">
-          <button
-            className="bg-white text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg"
-            style={{ fontSize: "13px" }}
-          >
+          <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg">
             Copy
           </button>
-          <button
-            className="bg-white text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg"
-            style={{ fontSize: "13px" }}
-          >
+          <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg">
             CSV
           </button>
-          <button
-            className="bg-white text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg"
-            style={{ fontSize: "13px" }}
-          >
+          <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg">
             Excel
           </button>
-          <button
-            className="bg-white text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg"
-            style={{ fontSize: "13px" }}
-          >
+          <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg">
             PDF
           </button>
-          <button
-            className="bg-white text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg"
-            style={{ fontSize: "13px" }}
-          >
+          <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg">
             Print
           </button>
           <div className="relative">
@@ -209,7 +198,6 @@ const CompMaster = () => {
             className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg"
             style={{ fontSize: "13px" }}
             onClick={() => setModalOpen(true)}
-            // onClick={() => setModalOpen(true)}
           >
             Add Company
           </button>
@@ -237,10 +225,9 @@ const CompMaster = () => {
                 {selectedColumns.map((columnName) => (
                   <th
                     key={columnName}
-                    className={`px-1 font-bold text-black border-2 border-gray-400 ${
+                    className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 ${
                       columnVisibility[columnName] ? "" : "hidden"
                     }`}
-                    style={{ fontSize: "13px" }}
                   >
                     {columnName}
                   </th>
@@ -284,12 +271,34 @@ const CompMaster = () => {
                             color="#556987"
                             width="20"
                             height="20"
+                            onClick={() => {
+                              setVE(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setCid(result.ID); // Pass ID to VEModal
+                            }}
+                          />
+                          <VEModal
+                            visible={VE}
+                            onClick={() => setVE(false)}
+                            edit={edit}
+                            ID={Cid}
                           />
                           <Icon
                             icon="mdi:edit"
                             color="#556987"
                             width="20"
                             height="20"
+                            onClick={() => {
+                              setVE(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setCid(result.ID); // Pass ID to VEModal
+                            }}
+                          />
+                          <VEModal
+                            visible={VE}
+                            onClick={() => setVE(false)}
+                            edit={edit}
+                            ID={Cid}
                           />
                           <Icon
                             icon="material-symbols:delete-outline"
@@ -327,13 +336,37 @@ const CompMaster = () => {
                             color="#556987"
                             width="20"
                             height="20"
+                            onClick={() => {
+                              setVE(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setCid(entry.ID); // Pass ID to VEModal
+                            }}
                           />
+                          <VEModal
+                            visible={VE}
+                            onClick={() => setVE(false)}
+                            edit={edit}
+                            ID={Cid}
+                          />
+
                           <Icon
                             icon="mdi:edit"
                             color="#556987"
                             width="20"
                             height="20"
+                            onClick={() => {
+                              setVE(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setCid(entry.ID); // Pass ID to VEModal
+                            }}
                           />
+                          <VEModal
+                            visible={VE}
+                            onClick={() => setVE(false)}
+                            edit={edit}
+                            ID={Cid}
+                          />
+
                           <Icon
                             icon="material-symbols:delete-outline"
                             color="#556987"
