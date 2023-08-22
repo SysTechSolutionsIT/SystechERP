@@ -55,7 +55,7 @@ const Sidebar = () => {
     );
 
     return (
-        <div className="flex">
+        <div className="flex text-[13px]">
             <div
                 className={`${open ? "w-[250px]" : "w-[85px]"
                     } bg-blue-900 overflow-x-hidden sidebar bottom-0 lg:left-0 p-2 text-center border-0 border-radius-xl ease-in-out duration-300`}
@@ -70,6 +70,15 @@ const Sidebar = () => {
                         )}
                     </div>
                     <hr className="text-gray-600 my-2" />
+                    <div className='md:px-6 px-0 hidden md:flex items-center bg-gray-100 rounded-lg'>
+                    <Icon className='w-5 h-5 mr-4' icon="ic:baseline-search" color="#556987" />
+                    <input
+                        type='text'
+                        id='search'
+                        placeholder='Search something...'
+                        className='bg-gray-100 focus:outline-none w-full text-[13px]'
+                    />
+                    </div>
                     <div>
                         <div className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white">
                             <Icon
@@ -105,7 +114,7 @@ const Sidebar = () => {
 
                         <div
                             className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300
-            cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white"
+            cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white whitespace-nowrap"
                         >
                             <Icon
                                 icon="clarity:employee-group-line"
@@ -116,13 +125,14 @@ const Sidebar = () => {
                             {open && (
                                 <div
                                     className="flex justify-between w-full items-center"
-                                    onClick={() => setSubMenuOpen((prevState) => !prevState)}
-                                >
+                                    onClick={() =>
+                                        setCompanySubmenuOpen((prevState) => !prevState)
+                                    }                                >
                                     <span className="font-[Inter] font-semibold text-[15px] ml-4 text-white-200">
-                                        HRM
+                                        Company Settings
                                     </span>
                                     <span
-                                        className={`text-sm ${isSubMenuOpen ? "" : "rotate-180"
+                                        className={`text-sm ${isCompanySubmenuOpen ? "" : "rotate-180"
                                             } ease-linear duration-200`}
                                         id="arrow"
                                     >
@@ -136,19 +146,7 @@ const Sidebar = () => {
                                 </div>
                             )}
                         </div>
-                        {isSubMenuOpen && (
-                            <div
-                                className="leading-7 text-left text-sm font-thin mt-2 px-2 w-full ease-in-out duration-200 whitespace-nowrap"
-                                id="submenu"
-                            >
-                                <SubMenuMain
-                                    title="Company Settings"
-                                    isOpen={isCompanySubmenuOpen}
-                                    onClick={() =>
-                                        setCompanySubmenuOpen((prevState) => !prevState)
-                                    }
-                                />
-                                {isCompanySubmenuOpen && (
+                        {isCompanySubmenuOpen && (
                                     <SubMenuGroup>
                                         <SubMenuEntry
                                             title="Company Configuration"
@@ -189,6 +187,45 @@ const Sidebar = () => {
                                         <SubMenuEntry title="Project Master" />
                                     </SubMenuGroup>
                                 )}
+
+                        <div
+                            className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300
+            cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white"
+                        >
+                            <Icon
+                                icon="clarity:employee-group-line"
+                                color="white"
+                                width="30"
+                                height="30"
+                            />
+                            {open && (
+                                <div
+                                    className="flex justify-between w-full items-center"
+                                    onClick={() => setSubMenuOpen((prevState) => !prevState)}
+                                >
+                                    <span className="font-[Inter] font-semibold text-[15px] ml-4 text-white-200">
+                                        HRM
+                                    </span>
+                                    <span
+                                        className={`text-sm ${isSubMenuOpen ? "" : "rotate-180"
+                                            } ease-linear duration-200`}
+                                        id="arrow"
+                                    >
+                                        <Icon
+                                            icon="iconamoon:arrow-up-2"
+                                            color="white"
+                                            width="30"
+                                            height="30"
+                                        />
+                                    </span>
+                                </div>
+                            )}
+                        </div>
+                        {isSubMenuOpen && (
+                            <div
+                                className="leading-7 text-left text-sm font-thin mt-2 px-2 w-full ease-in-out duration-200 whitespace-nowrap"
+                                id="submenu"
+                            >
                                 <SubMenuMain
                                     title="Employee Settings"
                                     isOpen={isEmployeeSubmenuOpen}

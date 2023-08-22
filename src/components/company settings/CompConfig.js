@@ -733,7 +733,7 @@ export default function EMPTabs() {
                       <input
                         name="esicSal"
                         type="text"
-                        className={`text-[13px] px-4 h-10 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6 text-[13px]`}
+                        className={`px-4 h-10 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6 text-[13px]`}
                         onChange={formik.handleChange}
                       />
                     </div>

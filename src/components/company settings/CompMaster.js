@@ -120,7 +120,7 @@ const CompMaster = () => {
   };
 
   return (
-    <div className="p-8">
+    <div className="p-4">
       <div className="bg-blue-900 text-white font-semibold text-lg py-4 px-8 w-full rounded-lg">
         Company Master
       </div>
