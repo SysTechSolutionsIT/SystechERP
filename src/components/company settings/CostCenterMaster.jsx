@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Icon } from "@iconify/react";
 import CostCenterModal from "./CostCenterModal";
 
@@ -72,100 +72,127 @@ const CostCenterMaster = () => {
       setFilteredData(newFilter);
     }
   };
+
+  const [veCost, setVeCost] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const [CCid, setCCid] = useState();
+
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  //Max Searchbar width
+  const getColumnMaxWidth = (columnName) => {
+    let maxWidth = 0;
+    const allRows = [...costCenters];
+
+    allRows.forEach((row) => {
+      const cellContent = row[columnName];
+      const cellWidth = getTextWidth(cellContent, "11px"); // You can adjust the font size here
+      maxWidth = Math.max(maxWidth, cellWidth);
+    });
+
+    return maxWidth + 10; // Adding some padding to the width
+  };
+
+  const getTextWidth = (text, fontSize) => {
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+    context.font = fontSize + " sans-serif";
+    return context.measureText(text).width;
+  };
+
   return (
-    <div className="p-8">
-      <div className="bg-blue-900 text-white font-semibold text-lg py-4 px-8 w-full rounded-lg">
-        Cost Center Master
-      </div>
-      <div className="flex justify-between items-center mt-4">
-        <div className="flex gap-4">
-          <button
-            className="bg-white text-blue-900 border border-blue-900 font-semibold py-2 px-4 rounded-lg"
-            style={{ fontSize: "13px" }}
-          >
-            Copy
-          </button>
-          <button
-            className="bg-white text-blue-900 border border-blue-900 font-semibold py-2 px-4 rounded-lg"
-            style={{ fontSize: "13px" }}
-          >
-            CSV
-          </button>
-          <button
-            className="bg-white text-blue-900 border border-blue-900 font-semibold py-2 px-4 rounded-lg"
-            style={{ fontSize: "13px" }}
-          >
-            Excel
-          </button>
-          <button
-            className="bg-white text-blue-900 border border-blue-900 font-semibold py-2 px-4 rounded-lg"
-            style={{ fontSize: "13px" }}
-          >
-            PDF
-          </button>
-          <button
-            className="bg-white text-blue-900 border border-blue-900 font-semibold py-2 px-4 rounded-lg"
-            style={{ fontSize: "13px" }}
-          >
-            Print
-          </button>
+    <>
+      <div className="bg-blue-900 h-15 absolute top-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-2">
+        <div className="flex items-center gap-4">
+          <div className="mr-auto">Cost Center Master</div>
+          <div className="relative ml-96">
+            <button
+              className="text-white font-semibold py-1 px-4 rounded-lg text-[13px] border border-white"
+              onClick={() => setModalOpen(true)}
+            >
+              Add Record
+            </button>
+          </div>
         </div>
-        <button
-          className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg mr-20"
-          onClick={() => setModalOpen(true)}
-          style={{ fontSize: "13px" }}
-        >
-          Add
-        </button>
+        <div className="flex items-center mb-2 ml-4">
+          <button
+            className=" cursor-pointer"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <Icon icon="carbon:menu" color="white" width="27" height="27" />
+          </button>
+          {menuOpen && (
+            <div
+              ref={menuRef}
+              className="w-24 flex flex-col absolute top-8 right-0 bg-white border border-gray-300 shadow-md rounded-lg p-1 items-center mb-2"
+            >
+              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+                Copy
+              </button>
+              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+                CSV
+              </button>
+              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+                Excel
+              </button>
+              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+                PDF
+              </button>
+              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+                Print
+              </button>
+            </div>
+          )}
+        </div>
       </div>
       <CostCenterModal
         visible={isModalOpen}
         onClick={() => setModalOpen(false)}
       />
-      <div className="grid gap-4">
+      <div className="grid gap-4  justify-center flex">
         <div className="my-2 rounded-2xl bg-white p-2 pr-8">
-          <table className="min-w-full text-center">
+          <table className="min-w-full text-center  rounded-lg justify-center whitespace-normal">
             <thead>
-              <tr className="bg-blue-200">
-                <th
-                  className=" w-16 px-1 font-semibold text-black border-2 border-gray-400"
-                  style={{ fontSize: "13px" }}
-                >
+              <tr>
+                <th className=" px-1 text-[13px] font-bold text-black border-2 border-gray-400">
                   Actions
                 </th>
-                <th
-                  className=" w-10 px-1 font-semibold text-black border-2 border-gray-400"
-                  style={{ fontSize: "13px" }}
-                >
-                  CC ID
+                <th className=" w-auto px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
+                  ID
                 </th>
-                <th className="w-28 px-1 font-semibold text-black text-[13px] border-2 border-gray-400">
+                <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px]">
                   Cost Center Name
                 </th>
-                <th
-                  className="w-10 px-1 font-semibold text-black border-2 border-gray-400"
-                  style={{ fontSize: "13px" }}
-                >
+                <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px]">
                   Status
                 </th>
               </tr>
               <tr>
                 <th className="border-2"></th>
-                <th className="p-2 font-semibold text-black border-2 ">
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    className="w-20  h-6 border-2 border-slate-500 rounded-lg justify-center text-center"
-                    onChange={(e) =>
-                      handleSearchChange("costCenterID", e.target.value)
-                    }
-                  />
-                </th>
+                <th className="p-2 font-semibold text-black border-2 " />
                 <th className="p-2 font-semibold text-black border-2">
                   <input
                     type="text"
                     placeholder="Search"
-                    className="w-32 h-6 border-2 border-slate-500 rounded-lg justify-center text-center"
+                    className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
+                    style={{
+                      maxWidth: getColumnMaxWidth("costCenterName") + "px",
+                    }}
                     onChange={(e) =>
                       handleSearchChange("costCenterName", e.target.value)
                     }
@@ -175,7 +202,8 @@ const CostCenterMaster = () => {
                   <input
                     type="text"
                     placeholder="Search"
-                    className="w-20 h-6 border-2 border-slate-500 rounded-lg justify-center text-center"
+                    className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
+                    style={{ maxWidth: getColumnMaxWidth("status") + "px" }}
                     onChange={(e) =>
                       handleSearchChange("status", e.target.value)
                     }
@@ -194,13 +222,35 @@ const CostCenterMaster = () => {
                             color="#556987"
                             width="20"
                             height="20"
+                            onClick={() => {
+                              setVeCost(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setCCid(result.ID); // Pass ID to VEModal
+                            }}
                           />
+                          {/* <VEFModal
+                            visible={veCost}
+                            onClick={() => setVeCost(false)}
+                            edit={edit}
+                            ID={CCid}
+                          /> */}
                           <Icon
                             icon="mdi:edit"
                             color="#556987"
                             width="20"
                             height="20"
+                            onClick={() => {
+                              setVeCost(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setCCid(result.ID); // Pass ID to VEModal
+                            }}
                           />
+                          {/* <VEFModal
+                            visible={veCost}
+                            onClick={() => setVeCost(false)}
+                            edit={edit}
+                            ID={CCid}
+                          /> */}
                           <Icon
                             icon="material-symbols:delete-outline"
                             color="#556987"
@@ -229,13 +279,35 @@ const CostCenterMaster = () => {
                             color="#556987"
                             width="20"
                             height="20"
+                            onClick={() => {
+                              setVeCost(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setCCid(entry.ID); // Pass ID to VEModal
+                            }}
                           />
+                          {/* <VEFModal
+                            visible={veCost}
+                            onClick={() => setVeCost(false)}
+                            edit={edit}
+                            ID={CCid}
+                          /> */}
                           <Icon
                             icon="mdi:edit"
                             color="#556987"
                             width="20"
                             height="20"
+                            onClick={() => {
+                              setVeCost(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setCCid(entry.ID); // Pass ID to VEModal
+                            }}
                           />
+                          {/* <VEFModal
+                            visible={veCost}
+                            onClick={() => setVeCost(false)}
+                            edit={edit}
+                            ID={CCid}
+                          /> */}
                           <Icon
                             icon="material-symbols:delete-outline"
                             color="#556987"
@@ -259,7 +331,7 @@ const CostCenterMaster = () => {
           </table>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

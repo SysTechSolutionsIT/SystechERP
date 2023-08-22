@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button } from "react-bootstrap";
 import CompanyModal from "./CompanyModal";
 import VEModal from "./ViewComp";
@@ -63,10 +63,15 @@ export const compData = [
 
 const CompMaster = () => {
   const [filteredData, setFilteredData] = useState([]);
-  const [isModalOpen, setModalOpen] = useState(false);
+  const [isModalOpen, setModalOpen] = useState(false); //Add Modal
+  //View and Edit
   const [VE, setVE] = useState(false);
   const [edit, setEdit] = useState(false);
   const [Cid, setCid] = useState();
+
+  //Hamburger Menu
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
 
   const [columnVisibility, setColumnVisibility] = useState({
     Name: true,
@@ -119,33 +124,51 @@ const CompMaster = () => {
     setSelectedColumns([]);
   };
 
+  //Menu
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  //Max Searchbar width
+  const getColumnMaxWidth = (columnName) => {
+    let maxWidth = 0;
+    const allRows = [...compData, ...filteredData];
+
+    allRows.forEach((row) => {
+      const cellContent = row[columnName];
+      const cellWidth = getTextWidth(cellContent, "11px"); // You can adjust the font size here
+      maxWidth = Math.max(maxWidth, cellWidth);
+    });
+
+    return maxWidth + 10; // Adding some padding to the width
+  };
+
+  const getTextWidth = (text, fontSize) => {
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+    context.font = fontSize + " sans-serif";
+    return context.measureText(text).width;
+  };
+
   return (
-    <div className="p-8">
-      <div className="bg-blue-900 text-white font-semibold text-lg py-4 px-8 w-full rounded-lg">
-        Company Master
-      </div>
-      <div className="flex justify-between items-center mt-4">
-        <div className="flex gap-2">
-          <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg">
-            Copy
-          </button>
-          <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg">
-            CSV
-          </button>
-          <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg">
-            Excel
-          </button>
-          <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg">
-            PDF
-          </button>
-          <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-2 px-4 rounded-lg">
-            Print
-          </button>
+    <>
+      <div className="bg-blue-900 h-15 absolute top-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-2">
+        <div className="flex items-center gap-4">
+          <div className="mr-auto">Company Master</div>
           <div className="relative">
             <button
               onClick={() => setShowDropdown(!showDropdown)}
-              className="flex bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold py-2 px-4 rounded-lg"
-              style={{ fontSize: "13px" }}
+              className="flex text-[13px] bg-white text-blue-900 ml-96 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold py-1 px-4 rounded-lg cursor-pointer"
             >
               Column Visibility
               <Icon
@@ -154,7 +177,7 @@ const CompMaster = () => {
               />
             </button>
             {showDropdown && (
-              <div className="absolute top-10 right-0 bg-white border border-gray-300 shadow-md rounded-lg p-2">
+              <div className="absolute right-0 bg-white border border-gray-300 shadow-md rounded-lg p-2">
                 <div className="flex items-center mb-2">
                   <button
                     className="text-blue-500 hover:text-blue-700 underline mr-2"
@@ -172,11 +195,11 @@ const CompMaster = () => {
                 {Object.keys(columnVisibility).map((columnName) => (
                   <label
                     key={columnName}
-                    className="flex items-center capitalize"
+                    className="flex items-center capitalize text-black text-[13px]"
                   >
                     <input
                       type="checkbox"
-                      className="mr-2 "
+                      className="mr-2"
                       checked={selectedColumns.includes(columnName)}
                       onChange={() => toggleColumn(columnName)}
                     />
@@ -195,32 +218,55 @@ const CompMaster = () => {
             )}
           </div>
           <button
-            className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg"
-            style={{ fontSize: "13px" }}
+            className="text-white font-semibold py-1 px-4 rounded-lg text-[13px] border border-white"
             onClick={() => setModalOpen(true)}
           >
             Add Company
           </button>
         </div>
+        <div className="flex items-center mb-2 ml-4">
+          <button
+            className=" cursor-pointer"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <Icon icon="carbon:menu" color="white" width="27" height="27" />
+          </button>
+          {menuOpen && (
+            <div
+              ref={menuRef}
+              className="w-24 flex flex-col absolute top-8 right-0 bg-white border border-gray-300 shadow-md rounded-lg p-1 items-center mb-2"
+            >
+              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+                Copy
+              </button>
+              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+                CSV
+              </button>
+              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+                Excel
+              </button>
+              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+                PDF
+              </button>
+              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+                Print
+              </button>
+            </div>
+          )}
+        </div>
       </div>
       <CompanyModal visible={isModalOpen} onClick={() => setModalOpen(false)} />
 
-      <div className="grid gap-2">
+      <div className="grid gap-2 justify-center flex mt-4">
         <div className="my-4 rounded-2xl bg-white p-2 pr-8">
-          <table className="min-w-full text-center">
+          <table className="min-w-full text-center justify-center whitespace-normal">
             <thead className="border-b-2">
               <tr>
-                <th
-                  className="px-1 font-bold text-black border-2 border-gray-400"
-                  style={{ fontSize: "13px" }}
-                >
+                <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px]">
                   Actions
                 </th>
-                <th
-                  className="w-24 px-1 font-bold text-black border-2 border-gray-400"
-                  style={{ fontSize: "13px" }}
-                >
-                  Company ID
+                <th className="w-auto text-[13px] px-1 font-bold text-black border-2 border-gray-400">
+                  ID
                 </th>
                 {selectedColumns.map((columnName) => (
                   <th
@@ -235,23 +281,17 @@ const CompMaster = () => {
               </tr>
               <tr>
                 <th className="border-2"></th>
-                <th className="p-2 font-bold text-black border-2 ">
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    className="w-20  h-6 border-2 border-slate-500 rounded-lg justify-center text-center"
-                    onChange={(e) => handleSearchChange("ID", e.target.value)}
-                  />
-                </th>
+                <th className="p-2 font-bold text-black border-2 " />
                 {selectedColumns.map((columnName) => (
                   <th
                     key={columnName}
-                    className="p-2 font-bold text-black border-2"
+                    className="p-2 font-bold text-black border-2 text-[11px]"
                   >
                     <input
                       type="text"
                       placeholder={`Search `}
-                      className="w-24 h-6 border-2 border-slate-500 rounded-lg justify-center text-center"
+                      className="w-auto text-[11px] h-6 border-2 border-slate-500 rounded-lg justify-center text-center whitespace-normal"
+                      style={{ maxWidth: getColumnMaxWidth(columnName) + "px" }}
                       onChange={(e) =>
                         handleSearchChange(columnName, e.target.value)
                       }
@@ -308,19 +348,15 @@ const CompMaster = () => {
                           />
                         </div>
                       </td>
-                      <td
-                        className="px-4 border-2 whitespace-normal text-center"
-                        style={{ fontSize: "11px" }}
-                      >
+                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
                         {result.ID}
                       </td>
                       {selectedColumns.map((columnName) => (
                         <td
                           key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-left${
+                          className={`px-4 border-2 whitespace-normal text-[11px] text-left${
                             columnVisibility[columnName] ? "" : "hidden"
                           }`}
-                          style={{ fontSize: "11px" }}
                         >
                           {result[columnName]}
                         </td>
@@ -375,19 +411,15 @@ const CompMaster = () => {
                           />
                         </div>
                       </td>
-                      <td
-                        className="px-4 border-2 whitespace-normal text-center"
-                        style={{ fontSize: "11px" }}
-                      >
+                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
                         {entry.ID}
                       </td>
                       {selectedColumns.map((columnName) => (
                         <td
                           key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-left${
+                          className={`px-4 border-2 whitespace-normal text-left text-[11px]${
                             columnVisibility[columnName] ? "" : "hidden"
                           }`}
-                          style={{ fontSize: "11px" }}
                         >
                           {entry[columnName]}
                         </td>
@@ -398,7 +430,7 @@ const CompMaster = () => {
           </table>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
