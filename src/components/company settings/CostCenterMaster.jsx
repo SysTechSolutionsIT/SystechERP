@@ -119,7 +119,7 @@ const CostCenterMaster = () => {
     <>
       <div className="bg-blue-900 h-15 absolute top-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-2">
         <div className="flex items-center gap-4">
-          <div className="mr-auto">Cost Center Master</div>
+          <div className="mr-auto">Company Settings / Cost Center Master</div>
           <div className="relative ml-96">
             <button
               className="text-white font-semibold py-1 px-4 rounded-lg text-[13px] border border-white"

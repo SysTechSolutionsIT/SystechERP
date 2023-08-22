@@ -163,7 +163,7 @@ const FinMaster = () => {
     <>
       <div className="bg-blue-900 h-15 absolute top-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-2">
         <div className="flex items-center gap-4">
-          <div className="mr-auto">Financial Master</div>
+          <div className="mr-auto">Company Settings / Financial Master</div>
           <div className="relative">
             <button
               onClick={() => setShowDropdown(!showDropdown)}
