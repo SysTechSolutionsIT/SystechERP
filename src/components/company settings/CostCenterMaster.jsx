@@ -2,56 +2,67 @@ import React from "react";
 import { useState, useEffect, useRef } from "react";
 import { Icon } from "@iconify/react";
 import CostCenterModal from "./CostCenterModal";
+import VECost from "./ViewCost";
 
 export const costCenters = [
   {
     costCenterID: "0003",
     costCenterName: "Human Resources",
+    Remarks: "",
     status: "Y",
   },
   {
     costCenterID: "0004",
     costCenterName: "IT Department",
+    Remarks: "",
     status: "Y",
   },
   {
     costCenterID: "0005",
     costCenterName: "Operations",
+    Remarks: "",
     status: "N",
   },
   {
     costCenterID: "0006",
     costCenterName: "Research and Development",
+    Remarks: "",
     status: "Y",
   },
   {
     costCenterID: "0007",
     costCenterName: "Customer Service",
+    Remarks: "",
     status: "Y",
   },
   {
     costCenterID: "0008",
     costCenterName: "Production",
+    Remarks: "",
     status: "N",
   },
   {
     costCenterID: "0009",
     costCenterName: "Quality Assurance",
+    Remarks: "",
     status: "Y",
   },
   {
     costCenterID: "0010",
     costCenterName: "Supply Chain",
+    Remarks: "",
     status: "Y",
   },
   {
     costCenterID: "0011",
     costCenterName: "Legal",
+    Remarks: "",
     status: "N",
   },
   {
     costCenterID: "0012",
     costCenterName: "Public Relations",
+    Remarks: "",
     status: "Y",
   },
 ];
@@ -225,15 +236,15 @@ const CostCenterMaster = () => {
                             onClick={() => {
                               setVeCost(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setCCid(result.ID); // Pass ID to VEModal
+                              setCCid(result.costCenterID); // Pass ID to VEModal
                             }}
                           />
-                          {/* <VEFModal
+                          <VECost
                             visible={veCost}
                             onClick={() => setVeCost(false)}
                             edit={edit}
                             ID={CCid}
-                          /> */}
+                          />
                           <Icon
                             icon="mdi:edit"
                             color="#556987"
@@ -242,15 +253,15 @@ const CostCenterMaster = () => {
                             onClick={() => {
                               setVeCost(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setCCid(result.ID); // Pass ID to VEModal
+                              setCCid(result.costCenterID); // Pass ID to VEModal
                             }}
                           />
-                          {/* <VEFModal
+                          <VECost
                             visible={veCost}
                             onClick={() => setVeCost(false)}
                             edit={edit}
                             ID={CCid}
-                          /> */}
+                          />
                           <Icon
                             icon="material-symbols:delete-outline"
                             color="#556987"
@@ -282,15 +293,15 @@ const CostCenterMaster = () => {
                             onClick={() => {
                               setVeCost(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setCCid(entry.ID); // Pass ID to VEModal
+                              setCCid(entry.costCenterID); // Pass ID to VEModal
                             }}
                           />
-                          {/* <VEFModal
+                          <VECost
                             visible={veCost}
                             onClick={() => setVeCost(false)}
                             edit={edit}
                             ID={CCid}
-                          /> */}
+                          />
                           <Icon
                             icon="mdi:edit"
                             color="#556987"
@@ -299,15 +310,15 @@ const CostCenterMaster = () => {
                             onClick={() => {
                               setVeCost(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setCCid(entry.ID); // Pass ID to VEModal
+                              setCCid(entry.costCenterID); // Pass ID to VEModal
                             }}
                           />
-                          {/* <VEFModal
+                          <VECost
                             visible={veCost}
                             onClick={() => setVeCost(false)}
                             edit={edit}
                             ID={CCid}
-                          /> */}
+                          />
                           <Icon
                             icon="material-symbols:delete-outline"
                             color="#556987"

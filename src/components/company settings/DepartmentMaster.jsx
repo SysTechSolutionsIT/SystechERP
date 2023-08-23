@@ -2,13 +2,13 @@ import React from "react";
 import { useState, useEffect, useRef } from "react";
 import { Icon } from "@iconify/react";
 import DepartmentModal from "./DepartmentModal";
-
+import VEDept from "./ViewDept";
 export const departments = [
   {
     deptID: 1,
     deptName: "Payroll Department",
     companyBranchName: "Main Office",
-    parentDept: "Human Resource department",
+    parentDept: "Human Resource Department",
     deptType: "Sub",
     deptGroup: "Engineering",
     deptHead: "John Doe",
@@ -53,7 +53,7 @@ export const departments = [
     deptID: 4,
     deptName: "Sales",
     companyBranchName: "Main Office",
-    parentDept: "NA",
+    parentDept: "Procurement Department",
     deptType: "main",
     deptGroup: "Sales",
     deptHead: "Alex Turner",
@@ -68,7 +68,7 @@ export const departments = [
     deptID: 5,
     deptName: "Finance",
     companyBranchName: "Main Office",
-    parentDept: "NA",
+    parentDept: "Dispatch Department",
     deptType: "main",
     deptGroup: "Finance",
     deptHead: "William Brown",
@@ -331,15 +331,15 @@ const DepartmentMaster = () => {
                             onClick={() => {
                               setVeDept(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setDid(result.ID); // Pass ID to VEModal
+                              setDid(result.deptID); // Pass ID to VEModal
                             }}
                           />
-                          {/* <VEFModal
+                          <VEDept
                             visible={veDept}
                             onClick={() => setVeDept(false)}
                             edit={edit}
                             ID={Did}
-                          /> */}
+                          />
                           <Icon
                             icon="mdi:edit"
                             color="#556987"
@@ -348,15 +348,15 @@ const DepartmentMaster = () => {
                             onClick={() => {
                               setVeDept(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setDid(result.ID); // Pass ID to VEModal
+                              setDid(result.deptID); // Pass ID to VEModal
                             }}
                           />
-                          {/* <VEFModal
+                          <VEDept
                             visible={veDept}
                             onClick={() => setVeDept(false)}
                             edit={edit}
                             ID={Did}
-                          /> */}
+                          />
                           <Icon
                             icon="material-symbols:delete-outline"
                             color="#556987"
@@ -392,15 +392,15 @@ const DepartmentMaster = () => {
                             onClick={() => {
                               setVeDept(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setDid(entry.ID); // Pass ID to VEModal
+                              setDid(entry.deptID); // Pass ID to VEModal
                             }}
                           />
-                          {/* <VEFModal
+                          <VEDept
                             visible={veDept}
                             onClick={() => setVeDept(false)}
                             edit={edit}
                             ID={Did}
-                          /> */}
+                          />
                           <Icon
                             icon="mdi:edit"
                             color="#556987"
@@ -409,15 +409,15 @@ const DepartmentMaster = () => {
                             onClick={() => {
                               setVeDept(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setDid(entry.ID); // Pass ID to VEModal
+                              setDid(entry.deptID); // Pass ID to VEModal
                             }}
                           />
-                          {/* <VEFModal
+                          <VEDept
                             visible={veDept}
                             onClick={() => setVeDept(false)}
                             edit={edit}
                             ID={Did}
-                          /> */}
+                          />
                           <Icon
                             icon="material-symbols:delete-outline"
                             color="#556987"
