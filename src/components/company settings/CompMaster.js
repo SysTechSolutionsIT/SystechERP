@@ -167,13 +167,13 @@ const CompMaster = () => {
           <div className="mr-auto">Company Settings / Company Master</div>
           <div className="relative">
             <button
-              onClick={() => setShowDropdown(!showDropdown)}
               className="flex text-[13px] bg-white text-blue-900 ml-96 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold py-1 px-4 rounded-lg cursor-pointer"
+              onClick={() => setShowDropdown(!showDropdown)}
             >
               Column Visibility
               <Icon
                 icon="fe:arrow-down"
-                className={`mt-1.5 ml-2 ${showDropdown ? "rotate-180" : ""}`}
+                className={`mt-1.5 ml-2 ${showDropdown ? "rotate-180" : ""} cursor-pointer`}
               />
             </button>
             {showDropdown && (
@@ -257,7 +257,7 @@ const CompMaster = () => {
       </div>
       <CompanyModal visible={isModalOpen} onClick={() => setModalOpen(false)} />
 
-      <div className="grid gap-2 justify-center flex mt-4">
+      <div className="grid gap-2 justify-center mt-4">
         <div className="my-4 rounded-2xl bg-white p-2 pr-8">
           <table className="min-w-full text-center justify-center whitespace-normal">
             <thead className="border-b-2">

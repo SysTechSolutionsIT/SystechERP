@@ -2,6 +2,7 @@ import React from "react";
 import { Icon } from "@iconify/react";
 import BankModal from "./BankModal";
 import { useState, useEffect, useRef } from "react";
+import ViewBank from "./ViewBank";
 
 export const bankData = [
   {
@@ -279,7 +280,7 @@ const BankMaster = () => {
         </div>
       </div>
       <BankModal visible={isModalOpen} onClick={handleModalClose} />
-      <div className="grid gap-4 justify-center flex">
+      <div className="grid gap-4 justify-center">
         <div className="my-4 rounded-2xl bg-white p-2 pr-8">
           <table className="min-w-full text-center rounded-lg whitespace-normal">
             <thead>
@@ -339,12 +340,12 @@ const BankMaster = () => {
                               setBid(result.ID); // Pass ID to VEModal
                             }}
                           />
-                          {/* <VEFModal
+                          <ViewBank
                             visible={vebank}
                             onClick={() => setVeBank(false)}
                             edit={edit}
                             ID={bid}
-                          /> */}
+                          />
                           <Icon
                             icon="mdi:edit"
                             color="#556987"
@@ -356,12 +357,12 @@ const BankMaster = () => {
                               setBid(result.ID); // Pass ID to VEModal
                             }}
                           />
-                          {/* <VEFModal
+                          <ViewBank
                             visible={vebank}
                             onClick={() => setVeBank(false)}
                             edit={edit}
                             ID={bid}
-                          /> */}
+                          />
                           <Icon
                             icon="material-symbols:delete-outline"
                             color="#556987"
@@ -371,7 +372,7 @@ const BankMaster = () => {
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {result.bankId}
+                        {result.ID}
                       </td>
                       {selectedColumns.map((columnName) => (
                         <td
@@ -388,7 +389,7 @@ const BankMaster = () => {
                 : bankData.map((entry, index) => (
                     <tr key={index}>
                       <td className="border-2">
-                        <div className="flex items-center gap-2  text-center justify-center">
+                        <div className="flex items-center gap-2">
                           <Icon
                             icon="lucide:eye"
                             color="#556987"
@@ -400,12 +401,12 @@ const BankMaster = () => {
                               setBid(entry.ID); // Pass ID to VEModal
                             }}
                           />
-                          {/* <VEFModal
+                          <ViewBank
                             visible={vebank}
                             onClick={() => setVeBank(false)}
                             edit={edit}
-                            ID={Bid}
-                          /> */}
+                            ID={bid}
+                          />
                           <Icon
                             icon="mdi:edit"
                             color="#556987"
@@ -417,12 +418,12 @@ const BankMaster = () => {
                               setBid(entry.ID); // Pass ID to VEModal
                             }}
                           />
-                          {/* <VEFModal
+                          <ViewBank
                             visible={vebank}
                             onClick={() => setVeBank(false)}
                             edit={edit}
                             ID={bid}
-                          /> */}
+                          />
                           <Icon
                             icon="material-symbols:delete-outline"
                             color="#556987"
