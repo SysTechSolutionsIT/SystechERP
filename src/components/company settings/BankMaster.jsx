@@ -337,7 +337,7 @@ const BankMaster = () => {
                             onClick={() => {
                               setVeBank(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setBid(result.ID); // Pass ID to VEModal
+                              setBid(result.bankId); // Pass ID to VEModal
                             }}
                           />
                           <ViewBank
@@ -354,7 +354,7 @@ const BankMaster = () => {
                             onClick={() => {
                               setVeBank(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setBid(result.ID); // Pass ID to VEModal
+                              setBid(result.bankId); // Pass ID to VEModal
                             }}
                           />
                           <ViewBank
@@ -372,7 +372,7 @@ const BankMaster = () => {
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {result.ID}
+                        {result.bankId}
                       </td>
                       {selectedColumns.map((columnName) => (
                         <td
@@ -398,7 +398,7 @@ const BankMaster = () => {
                             onClick={() => {
                               setVeBank(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setBid(entry.ID); // Pass ID to VEModal
+                              setBid(entry.bankId); // Pass ID to VEModal
                             }}
                           />
                           <ViewBank
@@ -415,7 +415,7 @@ const BankMaster = () => {
                             onClick={() => {
                               setVeBank(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setBid(entry.ID); // Pass ID to VEModal
+                              setBid(entry.bankId); // Pass ID to VEModal
                             }}
                           />
                           <ViewBank

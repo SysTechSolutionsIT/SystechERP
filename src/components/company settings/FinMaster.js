@@ -315,7 +315,7 @@ const FinMaster = () => {
                             onClick={() => {
                               setFin(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setFid(result.ID); // Pass ID to VEModal
+                              setFid(result.FinID); // Pass ID to VEModal
                             }}
                           />
                           <VEFModal
@@ -332,7 +332,7 @@ const FinMaster = () => {
                             onClick={() => {
                               setFin(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setFid(result.ID); // Pass ID to VEModal
+                              setFid(result.FinID); // Pass ID to VEModal
                             }}
                           />
                           <VEFModal
@@ -376,7 +376,7 @@ const FinMaster = () => {
                             onClick={() => {
                               setFin(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setFid(entry.ID); // Pass ID to VEModal
+                              setFid(entry.FinID); // Pass ID to VEModal
                             }}
                           />
                           <VEFModal
@@ -394,7 +394,7 @@ const FinMaster = () => {
                             onClick={() => {
                               setFin(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setFid(entry.ID); // Pass ID to VEModal
+                              setFid(entry.FinID); // Pass ID to VEModal
                             }}
                           />
                           <VEFModal
