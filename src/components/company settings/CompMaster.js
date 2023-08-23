@@ -261,7 +261,7 @@ const CompMaster = () => {
         <div className="my-4 rounded-2xl bg-white p-2 pr-8">
           <table className="min-w-full text-center justify-center whitespace-normal">
             <thead className="border-b-2">
-              <tr className="bg-blue-200">
+              <tr className="">
                 <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px]">
                   Actions
                 </th>
