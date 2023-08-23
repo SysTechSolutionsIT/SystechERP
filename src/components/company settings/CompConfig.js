@@ -106,20 +106,20 @@ export default function EMPTabs() {
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <div className="p-8">
+      <div className="p-4">
         <div className="bg-blue-900 text-white font-semibold text-lg py-4 px-8 w-full rounded-lg">
           Company Configurations
         </div>
       </div>
-      <div className="flex font-[Inter]">
-        <div className="ml-24">
+      <div className="flex font-[Inter] justify-center">
+        <div className="ml-0">
           <ul className="flex mb-0 list-none flex-wrap pt-3 pb-4 flex-row">
             <li className="-mb-px mr-2 ml-2 cursor-pointer">
               <p
                 className={
-                  "inline-block p-4 " +
+                  "inline-block p-4 font-bold " +
                   (openTab === 1
-                    ? "text-s font-bold uppercase text-blue-900 bg-gray-100 rounded-lg active"
+                    ? "text-s font-bold uppercase text-white bg-blue-900 rounded-lg active"
                     : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
                 }
                 onClick={(e) => {
@@ -127,15 +127,15 @@ export default function EMPTabs() {
                   setOpenTab(1);
                 }}
               >
-                General
+                GENERAL
               </p>
             </li>
             <li className="-mb-px mr-2 ml-2 cursor-pointer">
               <p
                 className={
-                  "inline-block p-4 rounded-lg " +
+                  "inline-block p-4 font-semibold  rounded-lg " +
                   (openTab === 2
-                    ? "text-s font-bold uppercase text-blue-900 bg-gray-100 rounded-lg active"
+                    ? "text-s font-bold uppercase text-white bg-blue-900 rounded-lg active"
                     : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
                 }
                 onClick={(e) => {
@@ -143,15 +143,15 @@ export default function EMPTabs() {
                   setOpenTab(2);
                 }}
               >
-                Company
+                COMPANY
               </p>
             </li>
             <li className="-mb-px mr-2 cursor-pointer">
               <p
                 className={
-                  "inline-block p-4 rounded-lg " +
+                  "inline-block p-4 font-semibold  rounded-lg " +
                   (openTab === 3
-                    ? "text-s font-bold uppercase text-blue-900 bg-gray-100 rounded-lg active"
+                    ? "text-s font-bold uppercase text-white bg-blue-900 rounded-lg active"
                     : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
                 }
                 onClick={(e) => {
@@ -159,15 +159,15 @@ export default function EMPTabs() {
                   setOpenTab(3);
                 }}
               >
-                Attendance
+                ATTENDANCE
               </p>
             </li>
             <li className="-mb-px mr-2 cursor-pointer">
               <p
                 className={
-                  "inline-block p-4 rounded-lg " +
+                  "inline-block p-4 font-semibold  rounded-lg " +
                   (openTab === 4
-                    ? "text-s font-bold uppercase text-blue-900 bg-gray-100 rounded-lg active"
+                    ? "text-s font-bold uppercase text-white bg-blue-900 rounded-lg active"
                     : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
                 }
                 onClick={(e) => {
@@ -175,15 +175,15 @@ export default function EMPTabs() {
                   setOpenTab(4);
                 }}
               >
-                Payroll
+                PAYROLL
               </p>
             </li>
             <li className="-mb-px mr-2 cursor-pointer">
               <p
                 className={
-                  "inline-block p-4 rounded-lg " +
+                  "inline-block p-4 font-semibold  rounded-lg " +
                   (openTab === 5
-                    ? "text-s font-bold uppercase text-blue-900 bg-gray-100 rounded-lg active"
+                    ? "text-s font-bold uppercase text-white bg-blue-900 rounded-lg active"
                     : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
                 }
                 onClick={(e) => {
@@ -191,15 +191,15 @@ export default function EMPTabs() {
                   setOpenTab(5);
                 }}
               >
-                Email Settings
+                EMAIL SETTINGS
               </p>
             </li>
             <li className="-mb-px mr-2 cursor-pointer">
               <p
                 className={
-                  "inline-block p-4 rounded-lg " +
+                  "inline-block p-4 font-semibold  rounded-lg " +
                   (openTab === 6
-                    ? "text-s font-bold uppercase text-blue-900 bg-gray-100 rounded-lg active"
+                    ? "text-s font-bold uppercase text-white bg-blue-900 rounded-lg active"
                     : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
                 }
                 onClick={(e) => {
@@ -207,15 +207,15 @@ export default function EMPTabs() {
                   setOpenTab(6);
                 }}
               >
-                Email Format
+                EMAIL FORMAT
               </p>
             </li>
             <li className="-mb-px mr-2 cursor-pointer">
               <p
                 className={
-                  "inline-block p-4 rounded-lg " +
+                  "inline-block p-4 font-semibold  rounded-lg " +
                   (openTab === 7
-                    ? "text-s font-bold uppercase text-blue-900 bg-gray-100 rounded-lg active"
+                    ? "text-s font-bold uppercase text-white bg-blue-900 rounded-lg active"
                     : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
                 }
                 onClick={(e) => {
@@ -223,7 +223,7 @@ export default function EMPTabs() {
                   setOpenTab(7);
                 }}
               >
-                SMS Format
+                SMS FORMAT
               </p>
             </li>
           </ul>
@@ -232,8 +232,8 @@ export default function EMPTabs() {
               <div className="tab-content tab-space">
                 {/*General */}
                 <div className={openTab === 1 ? "block" : "hidden"}>
-                  <div className="flex ">
-                    <div className="flex flex-col p-2 w-1/2">
+                  <div className="flex gap-7 ">
+                    <div className="flex flex-col py-2 w-1/2">
                       <label
                         htmlFor="currency"
                         className="mb-1 font-semibold text-[13px]"
@@ -255,7 +255,7 @@ export default function EMPTabs() {
                         ))}
                       </select>
                     </div>
-                    <div className="flex flex-col p-2 w-1/2">
+                    <div className="flex flex-col py-2 w-1/2">
                       <label
                         htmlFor="dropdown2"
                         className="mb-1 font-semibold text-[13px]"
