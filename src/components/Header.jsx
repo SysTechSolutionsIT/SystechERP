@@ -13,7 +13,7 @@ const Header = () => {
                     className='bg-gray-100 focus:outline-none w-full'
                 />
             </div> */}
-      <div className="flex items-center justify-end sticky z-10">
+      <div className="flex items-center justify-end sticky ">
         <div className="mr-10 flex items-center">
           <Icon
             className="w-6 h-6 mx-2"

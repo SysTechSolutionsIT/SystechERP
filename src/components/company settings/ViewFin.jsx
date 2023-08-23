@@ -33,7 +33,7 @@ const VEFModal = ({ visible, onClick, edit, ID }) => {
   if (!visible) return null;
   return (
     <form onSubmit={formik.handleSubmit}>
-      <div className="fixed overflow-y-scroll inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center w-full h-full">
+      <div className="fixed overflow-y-scroll inset-0 bg-black bg-opacity-5 backdrop-blur-sm flex items-center justify-center w-full h-full">
         <div className="bg-gray-200 w-[60%] p-8 rounded-lg">
           <div className="bg-blue-900 text-white text-center font-semibold text-lg py-4 px-8 rounded-lg">
             Financial Master
