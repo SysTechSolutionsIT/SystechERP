@@ -30,11 +30,11 @@ const Sidebar = () => {
 
     const SubMenuMain = ({ title, isOpen = false, onClick }) => (
         <span
-            className={`flex justify-between w-full items-center hover:bg-gray-300 hover:bg-opacity-25 rounded-lg cursor-pointer ${isOpen ? "mb-1" : ""
+            className={`flex justify-between w-full items-center hover:bg-gray-300  hover:bg-opacity-25 rounded-lg cursor-pointer ${isOpen ? "mb-0" : ""
                 }`}
             onClick={onClick}
         >
-            <h1 className="font-[Inter] text-white font-semibold text-[14px] cursor-pointer py-1.5 px-2 rounded-md mt-1 whitespace-normal">
+            <h1 className="font-[Inter] text-white font-semibold text-[14px] cursor-pointer py-1.5 px-2 rounded-md mt-0 whitespace-normal">
                 {title}
             </h1>
             <span
@@ -53,17 +53,17 @@ const Sidebar = () => {
     );
 
     const SubMenuGroup = ({ children }) => (
-        <div className="leading-7 text-left text-sm font-thin mt-2 px-2 w-full ease-linear duration-200 whitespace-nowrap">
+        <div className="text-left text-sm font-thin px-2 w-full ease-linear duration-200 whitespace-nowrap">
             {children}
         </div>
     );
 
     const SubMenuEntry = ({ title, onClick }) => (
         <span
-            className="flex justify-between w-full items-center hover:bg-gray-300 hover:bg-opacity-25 rounded-lg cursor-pointer"
+            className="flex justify-between mt-1 w-full items-center hover:bg-gray-300 hover:bg-opacity-25 rounded-lg cursor-pointer"
             onClick={onClick}
         >
-            <h1 className="font-[Inter] text-white text-[14px] cursor-pointer py-1 px-3 items-center rounded-md mt-1 whitespace-normal">
+            <h1 className="font-[Inter] text-white text-[14px] cursor-pointer py-0.5 px-3 items-center rounded-md mt-1 whitespace-normal">
                 {title}
             </h1>
         </span>
@@ -72,10 +72,10 @@ const Sidebar = () => {
     return (
         <div className="flex">
             <div
-                className={`${open ? "w-[250px]" : "w-[85px]"
-                    } bg-blue-900 overflow-x-hidden sidebar bottom-0 lg:left-0 p-2 text-center border-0 border-radius-xl ease-in-out duration-300`}
+                className={`${open ? "w-[250px]" : "w-[80px]"
+                    } bg-blue-900 overflow-x-hidden sidebar bottom-0 lg:left-0 p-0 text-center border-0 border-radius-xl ease-in-out duration-300`}
             >
-                <div className="text-white-100 text-xl">
+                <div className="text-white-100 text-xl items-center px-2">
                     <div className="p-2.5 mt-1 flex items-center">
                         <img src="/apple-icon.png" alt="icon" />
                         {open && (
@@ -84,19 +84,21 @@ const Sidebar = () => {
                             </h1>
                         )}
                     </div>
-                    <hr className="text-gray-600 my-2" />
-                    <div className='md:px-4 px-0 hidden md:flex items-center bg-gray-100 rounded-lg'>
-                    <Icon className='w-5 h-5 mr-4' icon="ic:baseline-search" color="#556987" />
+                    <hr className="text-gray-600" />
+                    <div className='md:px-4 px-0 mt-3 hidden md:flex items-center w-full bg-gray-100 rounded-lg cursor-pointer' >
+                    <Icon className='w-5 h-5 ml-1' icon="ic:baseline-search" color="#556987" onClick={()=> setOpen(true)} />
+                    {open && (
                     <input
                         type='text'
                         id='search'
                         placeholder='Search something...'
-                        className='bg-gray-100 focus:outline-none w-full text-[13px]'
+                        className='bg-gray-100 focus:outline-none w-full text-[13px] ml-1'
                         onClick={()=> setOpen(true)}
                     />
+                    )}
                     </div>
                     <div>
-                        <div className="p-1 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white">
+                        <div className="mt-1 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white">
                             <Icon
                                 icon="ic:round-dashboard"
                                 color="white"
@@ -113,7 +115,7 @@ const Sidebar = () => {
                         </div>
                         {/* <hr className="text-gray-200 text-opacity-25" /> */}
 
-                        <div className="p-1 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white">
+                        <div className="mt-1 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white">
                             <Icon
                                 icon="akar-icons:person-add"
                                 color="white"
@@ -131,7 +133,7 @@ const Sidebar = () => {
                         </div>
 
                         <div
-                            className="p-1 mt-3 flex items-center rounded-md px-4 duration-300
+                            className="mt-1 flex items-center rounded-md px-4 duration-300
             cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white whitespace-nowrap"
                         >
                             <Icon
@@ -208,7 +210,7 @@ const Sidebar = () => {
                                 )}
 
                         <div
-                            className="p-1 mt-3 flex items-center rounded-md px-4 duration-300
+                            className="mt-1 flex items-center rounded-md px-4 duration-300
             cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white"
                         >
                             <Icon
@@ -367,7 +369,7 @@ const Sidebar = () => {
                         )}
 
                         <div
-                            className="p-1 mt-3 flex items-center rounded-md px-4 duration-300
+                            className="mt-1 flex items-center rounded-md px-4 duration-300
             cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white"
                         >
                             <Icon
@@ -384,7 +386,7 @@ const Sidebar = () => {
                         </div>
 
                         <div
-                            className="p-1 mt-3 flex items-center rounded-md px-4 duration-300
+                            className="mt-1 flex items-center rounded-md px-4 duration-300
             cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white"
                         >
                             <Icon
@@ -401,7 +403,7 @@ const Sidebar = () => {
                         </div>
 
                         <div
-                            className="p-1 mt-3 flex items-center rounded-md px-4 duration-300
+                            className="mt-1 flex items-center rounded-md px-4 duration-300
             cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white"
                         >
                             <Icon
@@ -418,7 +420,7 @@ const Sidebar = () => {
                         </div>
 
                         <div
-                            className="p-1 mt-3 flex items-center rounded-md px-4 duration-300
+                            className="mt-1 flex items-center rounded-md px-4 duration-300
             cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white"
                         >
                             <Icon
@@ -435,7 +437,7 @@ const Sidebar = () => {
                         </div>
 
                         <div
-                            className="p-1 mt-3 flex items-center rounded-md px-4 duration-300
+                            className="mt-1 flex items-center rounded-md px-4 duration-300
             cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white"
                         >
                             <Icon
@@ -452,7 +454,7 @@ const Sidebar = () => {
                         </div>
 
                         <div
-                            className="p-1 mt-3 flex items-center rounded-md px-4 duration-300
+                            className="mt-1 flex items-center rounded-md px-4 duration-300
             cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white"
                         >
                             <Icon icon="ep:sell" color="white" width="24" height="24" />

@@ -56,9 +56,9 @@ export default function Personal() {
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <div className="p-8">
-        <div className="p-8 bg-white rounded-xl shadow-md">
-          <div className="grid grid-cols-3 gap-4">
+      <div className="p-0font-[Inter]">
+        <div className="p-4 bg-white">
+          <div className="grid grid-cols-3 gap-x-4">
             <div>
               <p className="mb-3 capitalize font-semibold">Employee ID</p>
               <input
@@ -74,6 +74,7 @@ export default function Personal() {
               <label>
                 <input
                   type="radio"
+                  className="mr-2"
                   name="EmpType"
                   value="Probation"
                   onChange={formik.handleChange}
@@ -83,6 +84,7 @@ export default function Personal() {
               <label>
                 <input
                   type="radio"
+                  className="mr-2"
                   name="EmpType"
                   value="Permanent"
                   style={{ marginTop: "10px" }}
@@ -93,6 +95,7 @@ export default function Personal() {
               <label>
                 <input
                   type="radio"
+                  className="mr-2"
                   name="EmpType"
                   value="Contract"
                   style={{ marginTop: "10px" }}
@@ -107,6 +110,7 @@ export default function Personal() {
               <label>
                 <input
                   type="radio"
+                  className="mr-2"
                   name="EmpTypeGroup"
                   value="Worker"
                   onChange={formik.handleChange}
@@ -116,6 +120,7 @@ export default function Personal() {
               <label>
                 <input
                   type="radio"
+                  className="mr-2"
                   name="EmpTypeGroup"
                   value="Staff"
                   style={{ marginTop: "10px" }}
@@ -165,6 +170,7 @@ export default function Personal() {
               <label>
                 <input
                   type="radio"
+                  className="mr-2"
                   name="Gender"
                   value="Male"
                   onChange={formik.handleChange}
@@ -174,6 +180,7 @@ export default function Personal() {
               <label>
                 <input
                   type="radio"
+                  className="mr-2"
                   name="Gender"
                   value="Female"
                   style={{ marginTop: "10px" }}
@@ -184,6 +191,7 @@ export default function Personal() {
               <label>
                 <input
                   type="radio"
+                  className="mr-2"
                   name="Gender"
                   value="Other"
                   style={{ marginTop: "10px" }}
@@ -198,6 +206,7 @@ export default function Personal() {
                 <div>
                   <input
                     type="radio"
+                    className="mr-2"
                     name="MaritalStatus"
                     value="true"
                     onChange={formik.handleChange}
@@ -207,6 +216,7 @@ export default function Personal() {
                 <div>
                   <input
                     type="radio"
+                    className="mr-2"
                     name="MaritalStatus"
                     value="false"
                     style={{ marginTop: "10px" }}
@@ -227,10 +237,10 @@ export default function Personal() {
               onChange={formik.handleChange}
             />
             <div>
-              <p className="text-s font-bold uppercase text-blue-600">
+              <p className="text-s font-bold uppercase text-blue-900">
                 Document Details
               </p>
-              <hr className="h-1 bg-blue-300 border-0 rounded md:my-2 dark:bg-gray-700" />
+              <hr className="bg-blue-300 border-1 rounded md:my-2 border-gray-500" />
 
               <div className="flex mb-6">
                 <div className="w-1/2 pr-4">
@@ -376,10 +386,10 @@ export default function Personal() {
               </div>
             </div>
 
-            <p className="text-s font-bold uppercase text-blue-600">
+            <p className="text-s font-bold uppercase text-blue-900">
               Account Details
             </p>
-            <hr className="h-1 bg-blue-300 border-0 rounded md:my-2 dark:bg-gray-700" />
+            <hr className="bg-blue-300 border-1 rounded md:my-2 border-gray-500" />
             <div className="flex mb-6">
               <div className="w-1/3 pr-4">
                 <p className="mb-3 capitalize font-semibold">Bank ID 1</p>
@@ -494,6 +504,7 @@ export default function Personal() {
               <label>
                 <input
                   type="radio"
+                  className="mr-2"
                   name="Referenced"
                   value="Yes"
                   onChange={formik.handleChange}
@@ -503,6 +514,7 @@ export default function Personal() {
               <label>
                 <input
                   type="radio"
+                  className="mr-2"
                   name="Referenced"
                   value="No"
                   style={{ marginTop: "10px" }}
@@ -512,7 +524,7 @@ export default function Personal() {
               </label>
             </div>
             <div className="flex col-span-2 mb-6 w-1/2 pr-4">
-              <p className="mb-3 capitalize font-semibold">Employee Photo</p>
+              <p className="mb-3 capitalize font-semibold ">Employee Photo</p>
               <input
                 id="EmployeePhoto"
                 type="text"
@@ -524,7 +536,7 @@ export default function Personal() {
         <div className="flex justify-center gap-4">
           <button
             type="submit"
-            className="px-8 py-2 bg-[#20A0D8] text-white text-lg rounded-md"
+            className="px-8 py-2 bg-blue-900 text-white text-lg rounded-md"
           >
             Save Details
           </button>
