@@ -127,11 +127,13 @@ const CostCenterMaster = () => {
   };
 
   return (
-    <>
-      <div className="bg-blue-900 h-15 absolute top-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-2">
+    <div className="top-25">
+      <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 max-h-20 overflow-y-auto">
         <div className="flex items-center gap-4">
-          <div className="mr-auto">Company Settings / Cost Center Master</div>
-          <div className="relative ml-96">
+          <div className="mr-auto text-[15px] whitespace-normal">
+            Company Settings / Cost Center Master
+          </div>
+          <div className="relative ml-32">
             <button
               className="text-white font-semibold py-1 px-4 rounded-lg text-[13px] border border-white"
               onClick={() => setModalOpen(true)}
@@ -175,8 +177,8 @@ const CostCenterMaster = () => {
         visible={isModalOpen}
         onClick={() => setModalOpen(false)}
       />
-      <div className="grid gap-4  justify-center">
-        <div className="my-2 rounded-2xl bg-white p-2 pr-8">
+      <div className="grid gap-4  justify-between">
+        <div className="my-1 rounded-2xl bg-white p-2 pr-8">
           <table className="min-w-full text-center  rounded-lg justify-center whitespace-normal">
             <thead>
               <tr>
@@ -342,7 +344,7 @@ const CostCenterMaster = () => {
           </table>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

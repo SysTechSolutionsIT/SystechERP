@@ -3,7 +3,7 @@ import { Icon } from "@iconify/react";
 
 const Header = () => {
   return (
-    <nav className="top-0 w-full bg-blue-900 p-2 border-b-2 z-20 h-15">
+    <nav className="top-0 w-full bg-blue-900 p-2 border-b-2 z-20 h-15 mb-2">
       <div className="flex justify-end sticky ">
         <p className="p-2 flex items-center gap-2">
           <img
