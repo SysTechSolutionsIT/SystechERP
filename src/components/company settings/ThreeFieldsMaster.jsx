@@ -122,9 +122,8 @@ const ThreeFieldsMaster = () => {
               Column Visibility
               <Icon
                 icon="fe:arrow-down"
-                className={`mt-1.5 ml-2 ${
-                  showDropdown ? "rotate-180" : ""
-                } cursor-pointer`}
+                className={`mt-1.5 ml-2 ${showDropdown ? "rotate-180" : ""
+                  } cursor-pointer`}
               />
             </button>
           </div>
@@ -214,13 +213,8 @@ const ThreeFieldsMaster = () => {
         visible={isModalOpen}
         onClick={() => setModalOpen(false)}
       />
-<<<<<<< HEAD
-      <div className="grid gap-4 justify-center">
-        <div className="my-4 rounded-2xl bg-white p-2 pr-8">
-=======
-      <div className="grid gap-4 justify-center justify-between">
+      <div className="grid gap-4 justify-between">
         <div className="my-1 rounded-2xl bg-white p-2 pr-8">
->>>>>>> 02d81bd9a6300810fdaa73143ee0924af54d332e
           <table className="min-w-full text-center rounded-lg  whitespace-normal">
             <thead>
               <tr>
