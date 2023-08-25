@@ -1,23 +1,32 @@
 import { useFormik } from 'formik'
-import React, { useState } from 'react'
-import { TwoFData } from './TwoFieldsMaster'
+import React, { useEffect, useState } from 'react'
+import { ThreeFData } from './ThreeFieldsMaster'
 import { Icon } from '@iconify/react'
 
-const TwoFieldsModal = ({ visible, onClick }) => {
+const ViewThreeF = ({ visible, onClick, edit, ID }) => {
+    const [details, setDetails] = useState([]);
     const formik = useFormik({
         initialValues: {
             ID: "",
             MasterName: "",
-            FieldDetails: "",
-            Status: "",
+            FieldDetails1: "",
+            FieldDetails2: "",
+            status: "",
             remark: ""
         },
         onSubmit: (values) => {
             console.log(values)
-            TwoFData.push(values)
+            ThreeFData.push(values)
             alert('Added Successfully')
         },
-    })
+    });
+
+    useEffect(() => {
+        const selectedField = ThreeFData.find((dest) => dest.ID === ID);
+        if (selectedField) {
+            setDetails(selectedField);
+        }
+    }, [ID]);
 
     const [status, setStatus] = useState(false);
 
@@ -31,7 +40,7 @@ const TwoFieldsModal = ({ visible, onClick }) => {
             <div className="fixed overflow-y-scroll inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center w-full h-full">
                 <div className="bg-white w-[50%] p-4 rounded-lg">
                     <div className="bg-blue-900 py-2 px-4 rounded-lg flex justify-between items-center">
-                        <p className='text-white text-[13px] font-semibold'>Two Fields Master</p>
+                        <p className='text-white text-[13px] font-semibold'>Three Fields Master</p>
                         <Icon
                             icon="maki:cross"
                             color='white'
@@ -47,9 +56,10 @@ const TwoFieldsModal = ({ visible, onClick }) => {
                                     id="ID"
                                     type="number"
                                     placeholder="Enter Field ID"
-                                    value={formik.values.ID}
+                                    value={details.ID}
                                     className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
                                     onChange={formik.handleChange}
+                                    disabled={!edit}
                                 />
                             </div>
                             <div>
@@ -58,20 +68,34 @@ const TwoFieldsModal = ({ visible, onClick }) => {
                                     id="MasterName"
                                     type="text"
                                     placeholder="Enter Master Name"
-                                    value={formik.values.MasterName}
+                                    value={details.MasterName}
                                     className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
                                     onChange={formik.handleChange}
+                                    disabled={!edit}
                                 />
                             </div>
                             <div>
-                                <p className='text-[13px] font-semibold'>Field Details</p>
+                                <p className='text-[13px] font-semibold'>Field Details 1</p>
                                 <input
-                                    id="FieldDetails"
+                                    id="FieldDetails1"
                                     type="text"
-                                    placeholder="Enter Field Details"
-                                    value={formik.values.FieldDetails}
+                                    placeholder="Enter Field Details 1"
+                                    value={details.FieldDetails1}
                                     className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
                                     onChange={formik.handleChange}
+                                    disabled={!edit}
+                                />
+                            </div>
+                            <div>
+                                <p className='text-[13px] font-semibold'>Field Details 2</p>
+                                <input
+                                    id="FieldDetails2"
+                                    type="text"
+                                    placeholder="Enter Field Details 2"
+                                    value={details.FieldDetails2}
+                                    className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
+                                    onChange={formik.handleChange}
+                                    disabled={!edit}
                                 />
                             </div>
                             <div>
@@ -80,9 +104,10 @@ const TwoFieldsModal = ({ visible, onClick }) => {
                                     id="remark"
                                     type="text"
                                     placeholder="Enter Remarks"
-                                    value={formik.values.remark}
+                                    value={details.remark}
                                     className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
                                     onChange={formik.handleChange}
+                                    disabled={!edit}
                                 />
                             </div>
                             <div>
@@ -92,7 +117,7 @@ const TwoFieldsModal = ({ visible, onClick }) => {
                                         id="status"
                                         type="checkbox"
                                         checked={status}
-                                        value={formik.values.Status}
+                                        value={formik.values.status}
                                         className={` relative w-4 h-4 mr-2 peer shrink-0 appearance-none checked:bg-blue-800 border-2 border-blue-900 rounded-sm`}
                                         onChange={handleStatusChange}
                                     />
@@ -122,4 +147,4 @@ const TwoFieldsModal = ({ visible, onClick }) => {
     )
 }
 
-export default TwoFieldsModal
+export default ViewThreeF
