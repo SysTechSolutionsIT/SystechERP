@@ -42,72 +42,82 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
           <div className="py-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="capatilize font-semibold">Company ID</p>
+                <p className="capatilize font-semibold text-[13px]">
+                  Company ID
+                </p>
                 <input
                   id="companyId"
                   type="number"
                   placeholder="Enter Company ID"
                   value={details.ID}
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg`}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
               </div>
               <div>
-                <p className="capatilize font-semibold">Company Name</p>
+                <p className="capatilize font-semibold text-[13px]">
+                  Company Name
+                </p>
                 <input
                   id="companyName"
                   type="text"
                   placeholder="Enter Company Name"
                   value={details.Name}
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
               </div>
               <div>
-                <p className="capatilize font-semibold">Company Short Name</p>
+                <p className="capatilize font-semibold text-[13px]">
+                  Company Short Name
+                </p>
                 <input
                   id="shortName"
                   type="text"
                   placeholder="Enter Company Short Name"
                   value={details.ShortName}
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg`}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
               </div>
               <div>
-                <p className="capatilize font-semibold">Company Sector</p>
+                <p className="capatilize font-semibold text-[13px]">
+                  Company Sector
+                </p>
                 <input
                   id="companySector"
                   type="text"
                   placeholder="Enter Company Sector"
                   value={details.SectorDetails}
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
               </div>
               <div>
-                <p className="capatilize font-semibold">Nature of Business</p>
+                <p className="capatilize font-semibold text-[13px]">
+                  Nature of Business
+                </p>
                 <textarea
                   id="natureOfBusiness"
                   placeholder="Enter Nature of Business"
                   value={details.NatureOfBusiness}
-                  className={`w-full px-4 py-2 h-32 font-normal focus:outline-gray-300 resize-none rounded-lg break-words`}
+                  className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg break-words`}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
               </div>
               <div>
-                <p className="capitalize font-semibold">Status</p>
-                <label className="capitalize font-semibold">
+                <p className="capitalize font-semibold text-[13px]">Status</p>
+                <label className="capitalize font-semibold text-[11px]">
                   <input
                     id="status"
                     type="checkbox"
                     checked={statusCheck}
-                    className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border-2 rounded-lg`}
+                    className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border-2 rounded-lg  border-blue-900`}
                     onChange={() => {
                       console.log("Status checkbox clicked");
                       setStatusCheck(!statusCheck);
@@ -118,24 +128,26 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                 </label>
               </div>
               <div>
-                <p className="capatilize font-semibold">Logo</p>
+                <p className="capatilize font-semibold text-[13px]">Logo</p>
                 <input
                   id="logo"
                   type="file"
                   placeholder="Upload File"
                   value={details.File}
-                  className={`w-full px-4 py-2 font-[10px] bg-white focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 font-[10px] bg-white focus:outline-gray-300 border-2 rounded-lg border-blue-900`}
                   onChange={formik.handleChange}
                 />
               </div>
               <div>
-                <p className="capitalize font-semibold">Single Branch</p>
-                <label className="capitalize font-semibold">
+                <p className="capitalize font-semibold text-[13px]">
+                  Single Branch
+                </p>
+                <label className="capitalize font-semibold text-[11px]">
                   <input
                     id="singleBranch"
                     type="checkbox"
                     checked={singleBranchCheck}
-                    className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border-2 rounded-lg`}
+                    className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border-2 rounded-lg  border-blue-900 text-[11px]`}
                     onChange={() => setSingleBranchCheck(!singleBranchCheck)}
                   />
                   Active

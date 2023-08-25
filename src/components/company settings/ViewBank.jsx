@@ -2,6 +2,7 @@ import React from "react";
 import { bankData } from "./BankMaster";
 import { useFormik } from "formik";
 import { useState, useEffect } from "react";
+import { Icon } from "@iconify/react";
 
 const ViewBank = ({ visible, onClick, edit, ID }) => {
   const [details, setDetails] = useState([]);
@@ -44,30 +45,38 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
       <div className="fixed overflow-y-scroll inset-0 bg-black bg-opacity-5 backdrop-blur-sm flex items-center justify-center w-full h-full">
         <div className="bg-gray-200 w-[60%] mt-96 p-8 rounded-lg">
           <div className="bg-blue-900 text-white text-center font-semibold text-lg py-4 px-8 rounded-lg">
-            Bank Master
+            <p className="text-white font-semibold">Destination Master</p>
+            <Icon
+              icon="maki:cross"
+              color="white"
+              className="cursor-pointer"
+              onClick={onClick}
+            />
           </div>
           <div className="py-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="capatilize font-semibold">Bank ID</p>
+                <p className="capatilize font-semibold text-[13px]">Bank ID</p>
                 <input
                   id="bankId"
                   type="number"
                   placeholder="Bank ID"
                   value={details.bankId}
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg`}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
               </div>
               <div>
-                <p className="capatilize font-semibold">Bank Name</p>
+                <p className="capatilize font-semibold text-[13px] ">
+                  Bank Name
+                </p>
                 <input
                   id="bankName"
                   type="text"
                   placeholder="Enter Bank Name"
                   value={details.bankName}
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
@@ -79,7 +88,7 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                   type="text"
                   placeholder="Enter Branch Name"
                   value={details.branchName}
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
@@ -91,7 +100,7 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                   type="text"
                   placeholder=" Enter Branch Address"
                   value={details.branchAddress}
-                  className={`w-full px-4 py-5 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
@@ -101,7 +110,7 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                 <select
                   id="accountType"
                   value={details.accountType}
-                  className="w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg whitespace-normal"
+                  className="w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg"
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
@@ -126,7 +135,7 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                   type="number"
                   placeholder=" Enter Account No."
                   value={details.accountNo}
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
@@ -138,7 +147,7 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                   type="text"
                   placeholder=" Enter IFSC Code"
                   value={details.ifscCode}
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
@@ -150,7 +159,7 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                   type="text"
                   placeholder=" Enter SWIFT Code"
                   value={details.swiftCode}
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
@@ -162,7 +171,7 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                   type="text"
                   placeholder=" Enter Registered Email"
                   value={details.registeredEmail}
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
@@ -176,7 +185,7 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                   type="number"
                   placeholder=" Enter Registered Contact No."
                   value={details.registeredContact}
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg  `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
@@ -186,7 +195,7 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                 <select
                   id="currencyType"
                   value={details.currencyType}
-                  className="w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg whitespace-normal"
+                  className="w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg "
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
@@ -210,7 +219,7 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                   type="text"
                   placeholder=" Enter Bank GST"
                   value={details.bankGst}
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg  `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
@@ -224,7 +233,7 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                   type="number"
                   placeholder=" Enter Authorized Person Count."
                   value={details.authPersonCount}
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
@@ -236,7 +245,7 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                   type="text"
                   placeholder=" Enter Remarks."
                   value={details.remark}
-                  className={`w-full px-4 py-5 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg  `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
@@ -246,7 +255,7 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                 <select
                   id="authPerson1"
                   value={details.authPerson1}
-                  className="w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg whitespace-normal"
+                  className="w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg "
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
@@ -259,7 +268,7 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="capitalize font-semibold">Authorized Person 1</p>
                 <div className="space-y-2">
-                  <label className="flex items-center">
+                  <label className="flex items-center text-[11px]">
                     <input
                       type="radio"
                       id="authPerson1"
@@ -271,7 +280,7 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                     />
                     View
                   </label>
-                  <label className="flex items-center">
+                  <label className="flex items-center text-[11px]">
                     <input
                       type="radio"
                       id="authPerson1"
@@ -290,7 +299,7 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                 <select
                   id="authPerson2"
                   value={details.authPerson2}
-                  className="w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg whitespace-normal"
+                  className="w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg "
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
@@ -303,7 +312,7 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="capitalize font-semibold">Authorized Person 2</p>
                 <div className="space-y-2">
-                  <label className="flex items-center">
+                  <label className="flex items-center text-[11px]">
                     <input
                       type="radio"
                       id="authPerson2"
@@ -315,7 +324,7 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                     />
                     View
                   </label>
-                  <label className="flex items-center">
+                  <label className="flex items-center text-[11px]">
                     <input
                       type="radio"
                       id="authPerson2"
@@ -334,7 +343,7 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                 <select
                   id="authPerson3"
                   value={details.authPerson3}
-                  className="w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg whitespace-normal"
+                  className="w-full px-4 py-2  border-blue-900 focus:outline-gray-300 border-2 rounded-lg "
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
@@ -347,7 +356,7 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="capitalize font-semibold">Authorized Person 3</p>
                 <div className="space-y-2">
-                  <label className="flex items-center">
+                  <label className="flex items-center text-[11px]">
                     <input
                       type="radio"
                       id="authPerson3"
@@ -355,11 +364,11 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                       checked={details.authPerson3 === "View"}
                       onChange={formik.handleChange}
                       disabled={!edit}
-                      className="mr-2"
+                      className="mr-2 text-[11px]"
                     />
                     View
                   </label>
-                  <label className="flex items-center">
+                  <label className="flex items-center text-[11px]">
                     <input
                       type="radio"
                       id="authPerson3"
@@ -367,7 +376,7 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                       checked={details.authPerson3 === "Operation"}
                       onChange={formik.handleChange}
                       disabled={!edit}
-                      className="mr-2"
+                      className="mr-2 "
                     />
                     Operation
                   </label>

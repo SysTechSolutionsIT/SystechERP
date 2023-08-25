@@ -162,18 +162,20 @@ const CompMaster = () => {
 
   return (
     <>
-      <div className="bg-blue-900 h-15 absolute top-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-2">
+      <div className="flex bg-blue-900 h-15 top-4 absolute px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-2">
         <div className="flex items-center gap-4">
           <div className="mr-auto">Company Settings / Company Master</div>
           <div className="relative">
             <button
-              className="flex text-[13px] bg-white text-blue-900 ml-96 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold py-1 px-4 rounded-lg cursor-pointer"
+              className="flex text-[13px] bg-white text-blue-900 ml-32 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold py-1 px-4 rounded-lg cursor-pointer"
               onClick={() => setShowDropdown(!showDropdown)}
             >
               Column Visibility
               <Icon
                 icon="fe:arrow-down"
-                className={`mt-1.5 ml-2 ${showDropdown ? "rotate-180" : ""} cursor-pointer`}
+                className={`mt-1.5 ml-2 ${
+                  showDropdown ? "rotate-180" : ""
+                } cursor-pointer`}
               />
             </button>
             {showDropdown && (
@@ -257,15 +259,15 @@ const CompMaster = () => {
       </div>
       <CompanyModal visible={isModalOpen} onClick={() => setModalOpen(false)} />
 
-      <div className="grid gap-2 justify-center mt-4">
-        <div className="my-4 rounded-2xl bg-white p-2 pr-8">
-          <table className="min-w-full text-center justify-center whitespace-normal">
+      <div className="grid gap-2 justify-between">
+        <div className="my-1 rounded-2xl bg-white p-2 pr-8 ">
+          <table className="min-w-full text-center whitespace-normal">
             <thead className="border-b-2">
               <tr className="">
-                <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px]">
+                <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
                   Actions
                 </th>
-                <th className="w-auto text-[13px] px-1 font-bold text-black border-2 border-gray-400">
+                <th className="w-auto text-[13px] px-1 font-bold text-black border-2 border-gray-400 whitespace-normal">
                   ID
                 </th>
                 {selectedColumns.map((columnName) => (

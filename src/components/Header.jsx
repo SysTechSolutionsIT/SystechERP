@@ -3,17 +3,16 @@ import { Icon } from "@iconify/react";
 
 const Header = () => {
   return (
-    <nav className="top-0 w-full bg-blue-900 p-4 border-b-2 z-20 h-15">
-      {/* <div className='py-2 md:px-6 px-2 hidden md:flex items-center bg-gray-100 rounded-full'>
-                <Icon className='w-5 h-5 mr-4' icon="ic:baseline-search" color="#556987" />
-                <input
-                    type='text'
-                    id='search'
-                    placeholder='Search something...'
-                    className='bg-gray-100 focus:outline-none w-full'
-                />
-            </div> */}
-      <div className="flex items-center justify-end sticky ">
+    <nav className="top-0 w-full bg-blue-900 p-2 border-b-2 z-20 h-15">
+      <div className="flex justify-end sticky ">
+        <p className="p-2 flex items-center gap-2">
+          <img
+            src="/defaultuser2.png"
+            alt="UserName"
+            className="rounded-full w-8 h-auto"
+          />
+          <p className="text-white">Sandeep Patil</p>
+        </p>
         <div className="mr-10 flex items-center">
           <Icon
             className="w-6 h-6 mx-2"

@@ -29,7 +29,7 @@ function App() {
               <Sidebar />
               <main className="flex-1 mx-auto">
                 <Header />
-                <div className="bg-gray-50">
+                <div className="bg-white">
                   <Outlet />
                 </div>
               </main>

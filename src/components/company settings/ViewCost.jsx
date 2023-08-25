@@ -41,7 +41,7 @@ const VECost = ({ visible, onClick, edit, ID }) => {
                   type="number"
                   placeholder="Enter Financial Year ID"
                   value={details.costCenterID}
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg  border-blue-900 `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
@@ -53,7 +53,7 @@ const VECost = ({ visible, onClick, edit, ID }) => {
                   type="text"
                   placeholder="Enter Name"
                   value={details.costCenterName}
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg  border-blue-900`}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
@@ -64,7 +64,7 @@ const VECost = ({ visible, onClick, edit, ID }) => {
                   id="Remark"
                   placeholder="Enter Remark"
                   value={details.Remarks}
-                  className={`w-full px-4 py-2 h-32 font-normal focus:outline-gray-300 resize-none rounded-lg break-words`}
+                  className={`w-full px-4 py-2 h-32 font-normal focus:outline-gray-300 resize-none rounded-lg break-words border-blue-900`}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
