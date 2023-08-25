@@ -273,12 +273,12 @@ const DestinationMaster = () => {
                             setid(entry.ID); // Pass ID to VEModal
                           }}
                         />
-                        <ViewDestination
+                        {/* <ViewDestination
                           visible={veDest}
                           onClick={() => setVeDest(false)}
                           edit={edit}
                           ID={id}
-                        />
+                        /> */}
                         <Icon
                           className="cursor-pointer"
                           icon="mdi:edit"
@@ -336,13 +336,14 @@ const DestinationMaster = () => {
                             setid(entry.ID); // Pass ID to VEModal
                           }}
                         />
-                        <ViewDestination
+                        {/* <ViewDestination
                           visible={veDest}
                           onClick={() => setVeDest(false)}
                           edit={edit}
                           ID={id}
-                        />
+                        /> */}
                         <Icon
+                          className="cursor-pointer"
                           icon="mdi:edit"
                           color="#556987"
                           width="20"
