@@ -212,7 +212,7 @@ const DestinationMaster = () => {
         visible={isModalOpen}
         onClick={() => setModalOpen(false)}
       />
-      <div className="grid gap-4 justify-center flex">
+      <div className="grid gap-4 justify-center">
         <div className="my-4 rounded-2xl bg-white p-2 pr-8">
           <table className="min-w-full text-center rounded-lg  whitespace-normal">
             <thead>

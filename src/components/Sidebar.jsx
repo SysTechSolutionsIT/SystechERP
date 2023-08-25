@@ -254,7 +254,8 @@ const Sidebar = () => {
                                 />
                                 {isEmployeeSubmenuOpen && (
                                     <SubMenuGroup>
-                                        <SubMenuEntry title="Employee Master" />
+                                        <SubMenuEntry title="Employee Master"
+                                                      onClick={()=> navigate('employee-master')}/>
                                         <SubMenuEntry title="Employee Type Master" />
                                         <SubMenuEntry title="Employee Grade Master" />
                                         <SubMenuEntry title="Designation Master" />
