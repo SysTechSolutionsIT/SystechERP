@@ -1,7 +1,6 @@
 import React from "react";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
-import EMPTabs from "./components/employee/emptabs";
 import {
   BrowserRouter as Router,
   Routes,
@@ -17,6 +16,8 @@ import DepartmentMaster from "./components/company settings/DepartmentMaster";
 import DestinationMaster from "./components/company settings/DestinationMaster";
 import ThreeFieldsMaster from "./components/company settings/ThreeFieldsMaster";
 import TwoFieldsMaster from "./components/company settings/TwoFieldsMaster";
+import EmployeeMaster from "./components/employee settings/EmployeeMaster";
+import EMPTabs from "./components/employee settings/emptabs";
 
 function App() {
   return (
@@ -45,6 +46,8 @@ function App() {
           <Route path="/destination-master" element={<DestinationMaster />} />
           <Route path="/three-fields-master" element={<ThreeFieldsMaster />} />
           <Route path="/two-fields-master" element={<TwoFieldsMaster />} />
+          <Route path="/employee-master" element={<EmployeeMaster/>}/>
+          <Route path="/add-employee" element={<EMPTabs/>}/>
         </Route>
       </Routes>
     </Router>
