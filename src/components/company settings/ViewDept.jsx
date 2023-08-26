@@ -2,6 +2,7 @@ import { useFormik } from "formik";
 import React from "react";
 import { useState, useEffect } from "react";
 import { departments } from "./DepartmentMaster";
+import { Icon } from "@iconify/react";
 
 const VEDept = ({ visible, onClick, edit, ID }) => {
   const [StatusCheck, setStatusCheck] = useState(false);
@@ -39,41 +40,57 @@ const VEDept = ({ visible, onClick, edit, ID }) => {
     <form onSubmit={formik.handleSubmit}>
       <div className="fixed overflow-y-scroll inset-0 bg-black bg-opacity-5 backdrop-blur-sm flex items-center justify-center w-full h-full">
         <div className="bg-gray-200 w-[60%] p-8 rounded-lg">
-          <div className="bg-blue-900 text-white text-center font-semibold text-lg py-4 px-8 rounded-lg">
-            Department Master
+          <div className="bg-blue-900 py-2 px-4 rounded-lg flex justify-between items-center">
+            <p className="text-white text-[13px] font-semibold text-center">
+              Department Master
+            </p>
+            <Icon
+              icon="maki:cross"
+              color="white"
+              className="cursor-pointer"
+              onClick={onClick}
+              width="24"
+              height="24"
+            />
           </div>
           <div className="py-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="capatilize font-semibold">Department ID</p>
+                <p className="capatilize font-semibold text-[13px]">
+                  Department ID
+                </p>
                 <input
                   id="deptID"
                   type="number"
                   placeholder="Enter Department ID"
                   value={details.deptID}
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
               </div>
               <div>
-                <p className="capatilize font-semibold">Department Name</p>
+                <p className="capatilize font-semibold text-[13px]">
+                  Department Name
+                </p>
                 <input
                   id="deptName"
                   type="text"
                   placeholder="Enter Department Name"
                   value={details.deptName}
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
               </div>
               <div>
-                <p className="capatilize font-semibold">Company Branch Name</p>
+                <p className="capatilize font-semibold text-[13px]">
+                  Company Branch Name
+                </p>
                 <select
                   id="companyBranchName"
                   value={details.companyBranchName}
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
@@ -82,13 +99,13 @@ const VEDept = ({ visible, onClick, edit, ID }) => {
                 </select>
               </div>
               <div>
-                <p className="capatilize font-semibold">
+                <p className="capatilize font-semibold text-[13px]">
                   Parent Department Name
                 </p>
                 <select
                   id="parentDept"
                   value={details.parentDept}
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
@@ -120,8 +137,10 @@ const VEDept = ({ visible, onClick, edit, ID }) => {
                 </select>
               </div>
               <div>
-                <p className="capitalize font-semibold">Department Type</p>
-                <div className=" flex items-center gap-4 mt-1">
+                <p className="capitalize font-semibold text-[13px]">
+                  Department Type
+                </p>
+                <div className=" flex items-center gap-4 mt-1  text-[11px]">
                   <label className="flex items-center">
                     <input
                       type="radio"
@@ -149,11 +168,13 @@ const VEDept = ({ visible, onClick, edit, ID }) => {
                 </div>
               </div>
               <div>
-                <p className="capatilize font-semibold">Department Group</p>
+                <p className="capatilize font-semibold text-[13px]">
+                  Department Group
+                </p>
                 <select
                   id="deptGroup"
                   value={details.deptGroup}
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
@@ -166,11 +187,13 @@ const VEDept = ({ visible, onClick, edit, ID }) => {
                 </select>
               </div>
               <div>
-                <p className="capatilize font-semibold">Department Head</p>
+                <p className="capatilize font-semibold text-[13px]">
+                  Department Head
+                </p>
                 <select
                   id="deptHead"
                   value={details.deptHead}
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
@@ -183,11 +206,13 @@ const VEDept = ({ visible, onClick, edit, ID }) => {
                 </select>
               </div>
               <div>
-                <p className="capatilize font-semibold">Department Sub Head</p>
+                <p className="capatilize font-semibold text-[13px]">
+                  Department Sub Head
+                </p>
                 <select
                   id="deptSubHead"
                   value={details.deptSubHead}
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
@@ -200,11 +225,13 @@ const VEDept = ({ visible, onClick, edit, ID }) => {
                 </select>
               </div>
               <div>
-                <p className="capatilize font-semibold">Select Cost Center</p>
+                <p className="capatilize font-semibold text-[13px]">
+                  Select Cost Center
+                </p>
                 <select
                   id="costCenter"
                   value={details.costCenter}
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
@@ -218,7 +245,7 @@ const VEDept = ({ visible, onClick, edit, ID }) => {
                 </select>
               </div>
               <div>
-                <p className="capatilize font-semibold">
+                <p className="capatilize font-semibold text-[13px]">
                   Standard Staff Strength
                 </p>
                 <input
@@ -226,13 +253,13 @@ const VEDept = ({ visible, onClick, edit, ID }) => {
                   type="text"
                   placeholder="Enter Standard Staff Strength"
                   value={details.standardStaffStrength}
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
               </div>
               <div>
-                <p className="capatilize font-semibold">
+                <p className="capatilize font-semibold text-[13px]">
                   Standard Worker Strength
                 </p>
                 <input
@@ -240,26 +267,26 @@ const VEDept = ({ visible, onClick, edit, ID }) => {
                   type="text"
                   placeholder="Enter Standard worker Strength"
                   value={details.standardWorkerStrength}
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
               </div>
               <div>
-                <p className="capatilize font-semibold">Remarks</p>
+                <p className="capatilize font-semibold text-[13px]">Remarks</p>
                 <input
                   id="remark"
                   type="text"
                   placeholder="Enter Remarks"
                   value={details.remark}
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
               </div>
               <div>
-                <p className="capitalize font-semibold">Status</p>
-                <label className="capitalize font-semibold">
+                <p className="capitalize font-semibold text-[13px]">Status</p>
+                <label className="capitalize font-semibold text-[11px]">
                   <input
                     id="status"
                     type="checkbox"

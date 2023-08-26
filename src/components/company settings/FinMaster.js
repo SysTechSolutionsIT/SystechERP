@@ -161,12 +161,12 @@ const FinMaster = () => {
 
   return (
     <div className="top-25 min-w-[40%]">
-      <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
+      <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-x-auto">
         <div className="flex items-center gap-4 whitespace-normal">
           <div className="mr-auto text-[15px] whitespace-normal min-w-fit">
             Company Settings / Financial Master
           </div>
-          <div className="relative sticky lg:ml-96 sm:ml-64">
+          <div className="relative sticky lg:ml-96 sm:ml-8">
             <button
               onClick={() => setShowDropdown(!showDropdown)}
               className="flex text-[13px] bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap"
@@ -181,7 +181,7 @@ const FinMaster = () => {
             </button>
           </div>
           {showDropdown && (
-            <div className="absolute top-[16%] lg:ml-[42%] sm:ml-[70%] bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50 top-[calc(100% + 10px)]">
+            <div className="absolute top-[16%] lg:ml-[42%] sm:mr-[20%] bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50 top-[calc(100% + 10px)]">
               {/* Dropdown content */}
               <div className="flex items-center mb-2">
                 <button
@@ -231,7 +231,7 @@ const FinMaster = () => {
             </button>
           </div>
         </div>
-        <div className="flex items-center mb-2 lg:mr-[210px] sm:mr-[60px]">
+        <div className="flex items-center mb-2 lg:mr-[240px] sm:ml-[230px]">
           <button
             className=" cursor-pointer"
             onClick={() => setMenuOpen(!menuOpen)}
@@ -387,13 +387,6 @@ const FinMaster = () => {
                               setFid(entry.FinID); // Pass ID to VEModal
                             }}
                           />
-                          <VEFModal
-                            visible={veFin}
-                            onClick={() => setFin(false)}
-                            edit={edit}
-                            ID={Fid}
-                          />
-
                           <Icon
                             icon="mdi:edit"
                             color="#556987"
