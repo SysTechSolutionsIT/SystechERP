@@ -252,7 +252,7 @@ const BankMaster = () => {
               className="text-white font-semibold px-4 rounded-lg text-[13px] border border-white"
               onClick={() => setModalOpen(true)}
             >
-              Add Company
+              Add Bank
             </button>
           </div>
         </div>

@@ -133,7 +133,7 @@ const CostCenterMaster = () => {
           <div className="mr-auto text-[15px] whitespace-normal">
             Company Settings / Cost Center Master
           </div>
-          <div className="relative ml-32">
+          <div className="relative ml-96">
             <button
               className="text-white font-semibold py-1 px-4 rounded-lg text-[13px] border border-white"
               onClick={() => setModalOpen(true)}
@@ -142,7 +142,7 @@ const CostCenterMaster = () => {
             </button>
           </div>
         </div>
-        <div className="flex items-center mb-2 ml-4">
+        <div className="flex items-center mb-2 mr-96">
           <button
             className=" cursor-pointer"
             onClick={() => setMenuOpen(!menuOpen)}
@@ -152,7 +152,7 @@ const CostCenterMaster = () => {
           {menuOpen && (
             <div
               ref={menuRef}
-              className="w-24 flex flex-col absolute top-8 right-0 bg-white border border-gray-300 shadow-md rounded-lg p-1 items-center mb-2"
+              className="w-24 flex flex-col absolute lg:top-[16%] lg:right-[23%] bg-white border border-gray-300 shadow-md rounded-lg p-1 items-center mb-2"
             >
               <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
                 Copy
