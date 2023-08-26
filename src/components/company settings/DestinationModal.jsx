@@ -117,8 +117,13 @@ const DestinationModal = ({ visible, onClick }) => {
                                         type="checkbox"
                                         checked={status}
                                         value={formik.values.status}
-                                        className={`w-5 h-5 mr-2 border-blue-900 focus:outline-gray-300 border-2 rounded-lg`}
+                                        className={` relative w-4 h-4 mr-2 peer shrink-0 appearance-none checked:bg-blue-800 border-2 border-blue-900 rounded-sm`}
                                         onChange={handleStatusChange}
+                                    />
+                                    <Icon
+                                        className='absolute w-4 h-4 hidden peer-checked:block'
+                                        icon="gg:check"
+                                        color='white'
                                     />
                                     <label for='status' className="text-[11px] font-semibold">
                                         Active

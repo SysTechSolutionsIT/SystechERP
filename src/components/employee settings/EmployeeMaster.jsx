@@ -12,7 +12,15 @@ const EmployeeMaster = () => {
 
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef(null);
-  
+    const [columnVisibility, setColumnVisibility] = useState({
+      EmployeeId: true,
+      EmployeeType: true,
+      EmployeeName: true,
+      CellNo: true,
+      EmailId: true,
+      Status: true,
+    });
+
     useEffect(() => {
       const handleClickOutside = (event) => {
         if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -42,6 +50,49 @@ const EmployeeMaster = () => {
       }
     };
 
+    const [showDropdown, setShowDropdown] = useState(false);
+    const [selectedColumns, setSelectedColumns] = useState([
+      ...Object.keys(columnVisibility),
+    ]);
+  
+    const toggleColumn = (columnName) => {
+      if (selectedColumns.includes(columnName)) {
+        setSelectedColumns((prevSelected) =>
+          prevSelected.filter((col) => col !== columnName)
+        );
+      } else {
+        setSelectedColumns((prevSelected) => [...prevSelected, columnName]);
+      }
+    };
+  
+    useEffect(() => {
+      console.log("Selected Columns:", selectedColumns);
+    }, [selectedColumns]);
+  
+    const selectAllColumns = () => {
+      setSelectedColumns([...Object.keys(columnVisibility)]);
+    };
+  
+    const deselectAllColumns = () => {
+      setSelectedColumns([]);
+    };
+  
+    //Menu
+    useEffect(() => {
+      const handleClickOutside = (event) => {
+        if (menuRef.current && !menuRef.current.contains(event.target)) {
+          setMenuOpen(false);
+        }
+      };
+  
+      document.addEventListener("mousedown", handleClickOutside);
+  
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, []);
+  
+
     const getColumnMaxWidth = (columnName) => {
         let maxWidth = 0;
         const allRows = [...employeeData];
@@ -63,45 +114,93 @@ const EmployeeMaster = () => {
       };
     
   return (
-    <>
-    <div className="bg-blue-900 h-15 sm:h-10 ml-1 mt-1 w-[99%] sm: px-8 text-white font-semibold text-lg rounded-lg flex mb-2">
-      <div className="flex items-center gap-4">
-        <div className="mr-auto whitespace-nowrap">HRMS/ Employee Settings / Employee Master</div>
-        <div className="flex">
+    <div className="top-25 min-w-[40%]">
+      <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-clip overflow-clip">
+      <div className="flex items-center gap-4 whitespace-normal">
+      <div className="mr-auto text-[15px] whitespace-normal min-w-fit">
+            HRMS / Employee Settings / Employee Master
+          </div>
+        <div className="relative sticky ">
         <button
-            className="flex text-[13px] bg-white text-center text-blue-900 ml-96 pr-2 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold py-1 px-4 rounded-lg cursor-pointer"
-            onClick={()=> navigate('/add-employee')}
-          >
-            Column Visibility
-            <Icon
+              onClick={() => setShowDropdown(!showDropdown)}
+              className="flex text-[13px] bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap"
+            >
+              Column Visibility
+              <Icon
                 icon="fe:arrow-down"
-                className='mt-2 ml-2'
+                className={`mt-1.5 ml-2 ${
+                  showDropdown ? "rotate-180" : ""
+                } cursor-pointer`}
               />
-          </button>
-          <button
-            className="text-white font-semibold h-9 sm:h-8 mt-0.5 ml-2 text-center sm:py-0 whitespace-nowrap px-4 rounded-lg text-[13px] border border-white hover:bg-white hover:text-blue-900 ease-linear duration-200"
-            onClick={()=> navigate('/add-employee')}
-          >
-            Add Record
-          </button>
-        </div>
+            </button>
+            </div>
+          {showDropdown && (
+            <div className="absolute top-[16%] lg:ml-[42%] sm:ml-[70%] bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50 top-[calc(100% + 10px)]">
+              {/* Dropdown content */}
+              <div className="flex items-center mb-2">
+                <button
+                  className="text-blue-500 hover:text-blue-700 underline mr-2 text-[13px]"
+                  onClick={selectAllColumns}
+                >
+                  Select All
+                </button>
+                <button
+                  className="text-blue-500 hover:text-blue-700 underline text-[13px]"
+                  onClick={deselectAllColumns}
+                >
+                  Deselect All
+                </button>
+              </div>
+              {Object.keys(columnVisibility).map((columnName) => (
+                <label
+                  key={columnName}
+                  className="flex items-center capitalize text-black text-[13px]"
+                >
+                  <input
+                    type="checkbox"
+                    className="mr-2"
+                    checked={selectedColumns.includes(columnName)}
+                    onChange={() => toggleColumn(columnName)}
+                  />
+                  <span
+                    className={
+                      selectedColumns.includes(columnName)
+                        ? "font-semibold"
+                        : ""
+                    }
+                  >
+                    {columnName}
+                  </span>
+                </label>
+              ))}
+            </div>
+          )}
+
+          <div className="min-w-[40%]">
+            <button
+              className="text-white font-semibold px-4 rounded-lg text-[13px] border border-white"
+              onClick={() => navigate('/add-employee')}
+            >
+              Add Record
+            </button>
+            </div>
       </div>
-      <div className="flex items-center mb-2 ml-4">
-        <button
-          className=" cursor-pointer mt-1.5"
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
-          <Icon icon="carbon:menu" color="white" width="27" height="27" />
-        </button>
-        {menuOpen && (
+        <div className="flex items-center">
+          <button
+            className=" cursor-pointerm"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <Icon className='' icon="carbon:menu" color="white" width="27" height="27" />
+          </button>
+          {menuOpen && (
             <div
               ref={menuRef}
-              className="w-24 flex flex-col top-[150px] right-[60px] relative bg-white border border-gray-300 shadow-md rounded-lg p-1 items-center mb-2"
+              className="w-24 flex flex-col absolute lg:top-28 lg:right-0 bg-white border border-gray-300 shadow-md rounded-lg p-1 items-center mb-2"
             >
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2 z-50">
                 Copy
               </button>
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2 z-50">
                 CSV
               </button>
               <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
@@ -116,7 +215,7 @@ const EmployeeMaster = () => {
             </div>
           )}
         </div>
-        </div>
+      </div>
         <div className="grid gap-4">
         <div className="my-0 rounded-2xl bg-white p-2">
           <table className="min-w-full text-center  rounded-lg justify-center whitespace-normal">
@@ -257,37 +356,30 @@ const EmployeeMaster = () => {
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
                         {result.EmployeeId}
                       </td>
-                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {result.EmployeeType}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {result.EmployeeName}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-right text-[11px]">
-                        {result.CellNo}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {result.EmailId}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {result.Status}
-                      </td>
-                    </tr>
-                  ))
-                : employeeData.map((entry, index) => (
+                      {selectedColumns.map((columnName) => (
+                        <td
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-[11px] text-left${
+                            columnVisibility[columnName] ? "" : "hidden"
+                          }`}
+                        >
+                          {result[columnName]}
+                        </td>
+                      ))}
+                      </tr>
+                    ))
+                  : employeeData.map((entry, index) => (
                     <tr key={index}>
                       <td className="px-0 border-2">
-                        <div className="flex items-center gap-2 text-center justify-center">
+                        <div className="flex items-center gap-2 text-center justify-center cur">
                           <Icon
                             icon="lucide:eye"
                             color="#556987"
                             width="20"
                             height="20"
-                            // onClick={() => {
-                            //   setVeCost(true); // Open VEModal
-                            //   setEdit(false); // Disable edit mode for VEModal
-                            //   setCCid(entry.EmployeeId); // Pass ID to VEModal
-                            // }}
+                            onClick={()=>
+                              navigate(`/view-employee/${entry.EmployeeId}`)
+                            }
                           />
                           {/* <VECost
                             visible={veCost}
@@ -301,9 +393,7 @@ const EmployeeMaster = () => {
                             width="20"
                             height="20"
                             onClick={() => {
-                              setVeCost(true); // Open VEModal
-                              setEdit(true); // Disable edit mode for VEModal
-                              setCCid(entry.EmployeeId); // Pass ID to VEModal
+                              navigate(`/edit-employee/${entry.EmployeeId}`)
                             }}
                           />
                           {/* <VECost
@@ -323,28 +413,23 @@ const EmployeeMaster = () => {
                       <td className="px-2 border-2 whitespace-normal text-center text-[11px]">
                         {entry.EmployeeId}
                       </td>
-                      <td className="px-2 border-2 whitespace-normal text-left text-[11px]">
-                        {entry.EmployeeType}
-                      </td>
-                      <td className="px-2 border-2 whitespace-normal text-left text-[11px]">
-                        {entry.EmployeeName}
-                      </td>
-                      <td className="px-2 border-2 whitespace-normal text-right text-[11px]">
-                        {entry.CellNo}
-                      </td>
-                      <td className="px-2 border-2 whitespace-normal text-left text-[11px]">
-                        {entry.EmailId}
-                      </td>
-                      <td className="px-2 border-2 whitespace-normal text-left text-[11px]">
-                        {entry.Status}
-                      </td>
+                      {selectedColumns.map((columnName) => (
+                        <td
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-left text-[11px]${
+                            columnVisibility[columnName] ? "" : "hidden"
+                          }`}
+                        >
+                          {entry[columnName]}
+                        </td>
+                      ))}
                     </tr>
                   ))}
             </tbody>
             </table>
             </div>
             </div>
-        </>
+        </div>
   )
 }
 

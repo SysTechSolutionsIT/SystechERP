@@ -48,6 +48,7 @@ function App() {
           <Route path="/two-fields-master" element={<TwoFieldsMaster />} />
           <Route path="/employee-master" element={<EmployeeMaster/>}/>
           <Route path="/add-employee" element={<EMPTabs/>}/>
+          <Route path="/edit-employee/:empid" element={<EMPTabs/>}/>
         </Route>
       </Routes>
     </Router>
