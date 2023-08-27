@@ -37,8 +37,8 @@ const ViewDestination = ({ visible, onClick, edit, ID }) => {
   if (!visible) return null;
   return (
     <form onSubmit={formik.handleSubmit}>
-      <div className="fixed overflow-y-scroll inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center w-full h-full">
-        <div className="bg-gray-200 w-[50%] p-4 rounded-lg">
+      <div className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center w-full">
+        <div className="bg-gray-200 w-[60%] p-8 rounded-lg max-h-[80%] overflow-y-scroll">
           <div className="bg-blue-900 py-2 px-4 rounded-lg flex justify-between items-center">
             <p className="text-white text-[13px] font-semibold">
               Destination Master
