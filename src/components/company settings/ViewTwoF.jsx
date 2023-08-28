@@ -56,7 +56,7 @@ const ViewTwoF = ({ visible, onClick, edit, ID }) => {
                   type="number"
                   placeholder="Enter Field ID"
                   value={details.ID}
-                  className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 text-[11px] focus:outline-blue-900 border-gray-300 border-2 rounded-lg `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
@@ -68,7 +68,7 @@ const ViewTwoF = ({ visible, onClick, edit, ID }) => {
                   type="text"
                   placeholder="Enter Master Name"
                   value={details.MasterName}
-                  className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 text-[11px] focus:outline-blue-900 border-gray-300 border-2 rounded-lg `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
@@ -80,7 +80,7 @@ const ViewTwoF = ({ visible, onClick, edit, ID }) => {
                   type="text"
                   placeholder="Enter Field Details"
                   value={details.FieldDetails}
-                  className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 text-[11px] focus:outline-blue-900 border-gray-300 border-2 rounded-lg `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
@@ -92,7 +92,7 @@ const ViewTwoF = ({ visible, onClick, edit, ID }) => {
                   type="text"
                   placeholder="Enter Remarks"
                   value={details.remark}
-                  className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 text-[11px] focus:outline-blue-900 border-gray-300 border-2 rounded-lg `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
@@ -105,7 +105,7 @@ const ViewTwoF = ({ visible, onClick, edit, ID }) => {
                     type="checkbox"
                     checked={status}
                     value={details.Status}
-                    className={` relative w-4 h-4 mr-2 peer shrink-0 appearance-none checked:bg-blue-800 border-2 border-blue-900 rounded-sm`}
+                    className={`relative w-4 h-4 mr-2 peer shrink-0 checked:appearance-none checked:bg-blue-900 border-2 border-blue-900 rounded-sm`}
                     onChange={handleStatusChange}
                   />
                   <Icon
