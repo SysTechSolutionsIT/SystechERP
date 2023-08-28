@@ -3,13 +3,14 @@ import Academic from "../forms/academic";
 import Family from "../forms/family";
 import Personal from "../forms/personal";
 import Professional from "../forms/professional";
+import { Icon } from "@iconify/react";
 
 export default function EMPTabs() {
   const [openTab, setOpenTab] = React.useState(1);
 
   return (
     <>
-      <div className="flex font-[Inter] justify-center">
+      <div className="flex font-[Inter] justify-center ">
         <div className="">
           <ul className="flex mb-0 list-none flex-wrap pt-0 pb-4 flex-row">
           <li className="-mb-px mr-2 ml-2 cursor-pointer">
