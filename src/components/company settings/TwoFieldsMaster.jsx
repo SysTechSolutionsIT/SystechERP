@@ -249,7 +249,7 @@ const TwoFieldsMaster = () => {
         visible={isModalOpen}
         onClick={() => setModalOpen(false)}
       />
-      <div className="grid gap-4 justify-between flex">
+      <div className="gap-4 justify-between flex">
         <div className="my-1 rounded-2xl bg-white p-2 pr-8">
           <table className="min-w-full text-center rounded-lg  whitespace-normal">
             <thead>

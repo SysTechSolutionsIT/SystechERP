@@ -107,7 +107,7 @@ const ThreeFieldsModal = ({ visible, onClick }) => {
                     type="checkbox"
                     checked={status}
                     value={formik.values.status}
-                    className={` relative w-4 h-4 mr-2 peer shrink-0 appearance-none checked:bg-blue-800 border-2 border-blue-900 rounded-sm`}
+                    className={`relative w-4 h-4 mr-2 peer shrink-0 checked:appearance-none checked:bg-blue-900 border-2 border-blue-900 rounded-sm`}
                     onChange={handleStatusChange}
                   />
                   <Icon

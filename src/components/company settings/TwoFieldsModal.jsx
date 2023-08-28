@@ -48,7 +48,7 @@ const TwoFieldsModal = ({ visible, onClick }) => {
                                     type="number"
                                     placeholder="Enter Field ID"
                                     value={formik.values.ID}
-                                    className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
+                                    className={`w-full px-4 py-2 text-[11px] focus:outline-blue-900 border-gray-300 border-2 rounded-lg `}
                                     onChange={formik.handleChange}
                                 />
                             </div>
@@ -59,7 +59,7 @@ const TwoFieldsModal = ({ visible, onClick }) => {
                                     type="text"
                                     placeholder="Enter Master Name"
                                     value={formik.values.MasterName}
-                                    className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
+                                    className={`w-full px-4 py-2 text-[11px] focus:outline-blue-900 border-gray-300 border-2 rounded-lg `}
                                     onChange={formik.handleChange}
                                 />
                             </div>
@@ -70,7 +70,7 @@ const TwoFieldsModal = ({ visible, onClick }) => {
                                     type="text"
                                     placeholder="Enter Field Details"
                                     value={formik.values.FieldDetails}
-                                    className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
+                                    className={`w-full px-4 py-2 text-[11px] focus:outline-blue-900 border-gray-300 border-2 rounded-lg `}
                                     onChange={formik.handleChange}
                                 />
                             </div>
@@ -81,7 +81,7 @@ const TwoFieldsModal = ({ visible, onClick }) => {
                                     type="text"
                                     placeholder="Enter Remarks"
                                     value={formik.values.remark}
-                                    className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
+                                    className={`w-full px-4 py-2 text-[11px] focus:outline-blue-900 border-gray-300 border-2 rounded-lg `}
                                     onChange={formik.handleChange}
                                 />
                             </div>
@@ -93,7 +93,7 @@ const TwoFieldsModal = ({ visible, onClick }) => {
                                         type="checkbox"
                                         checked={status}
                                         value={formik.values.Status}
-                                        className={` relative w-4 h-4 mr-2 peer shrink-0 appearance-none checked:bg-blue-800 border-2 border-blue-900 rounded-sm`}
+                                        className={`relative w-4 h-4 mr-2 peer shrink-0 checked:appearance-none checked:bg-blue-900 border-2 border-blue-900 rounded-sm`}
                                         onChange={handleStatusChange}
                                     />
                                     <Icon
