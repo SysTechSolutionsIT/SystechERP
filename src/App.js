@@ -44,11 +44,11 @@ function App() {
           <Route path="/costcenter-master" element={<CostCenterMaster />} />
           <Route path="/department-master" element={<DepartmentMaster />} />
           <Route path="/destination-master" element={<DestinationMaster />} />
-          <Route path="/three-fields-master" element={<ThreeFieldsMaster />} />
-          <Route path="/two-fields-master" element={<TwoFieldsMaster />} />
-          <Route path="/employee-master" element={<EmployeeMaster/>}/>
-          <Route path="/add-employee" element={<EMPTabs/>}/>
-          <Route path="/edit-employee/:empid" element={<EMPTabs/>}/>
+          <Route path="/three-field-master" element={<ThreeFieldsMaster />} />
+          <Route path="/two-field-master" element={<TwoFieldsMaster />} />
+          <Route path="/employee-master" element={<EmployeeMaster />} />
+          <Route path="/add-employee" element={<EMPTabs />} />
+          <Route path="/edit-employee/:empid" element={<EMPTabs />} />
         </Route>
       </Routes>
     </Router>

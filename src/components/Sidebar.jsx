@@ -38,17 +38,17 @@ const Sidebar = () => {
                 {title}
             </h1>
             <span
-            className={`text-sm ${isOpen ? "" : "rotate-180 ease-linear duration-200"}`}
-            id="arrow"
+                className={`text-sm ${isOpen ? "" : "rotate-180 ease-linear duration-200"}`}
+                id="arrow"
             >
-            <Icon
-                icon="iconamoon:arrow-up-2"
-                color="white"
-                width="30"
-                height="30"
-                className=""
-            />
-        </span>
+                <Icon
+                    icon="iconamoon:arrow-up-2"
+                    color="white"
+                    width="30"
+                    height="30"
+                    className=""
+                />
+            </span>
         </span>
     );
 
@@ -86,16 +86,16 @@ const Sidebar = () => {
                     </div>
                     <hr className="text-gray-600" />
                     <div className='md:px-4 px-0 mt-3 hidden md:flex items-center w-full bg-gray-100 rounded-lg cursor-pointer' >
-                    <Icon className='w-5 h-5 ml-1' icon="ic:baseline-search" color="#556987" onClick={()=> setOpen(true)} />
-                    {open && (
-                    <input
-                        type='text'
-                        id='search'
-                        placeholder='Search something...'
-                        className='bg-gray-100 focus:outline-none w-full text-[13px] ml-1'
-                        onClick={()=> setOpen(true)}
-                    />
-                    )}
+                        <Icon className='w-5 h-5 ml-1' icon="ic:baseline-search" color="#556987" onClick={() => setOpen(true)} />
+                        {open && (
+                            <input
+                                type='text'
+                                id='search'
+                                placeholder='Search something...'
+                                className='bg-gray-100 focus:outline-none w-full text-[13px] ml-1'
+                                onClick={() => setOpen(true)}
+                            />
+                        )}
                     </div>
                     <div>
                         <div className="mt-1 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white">
@@ -122,7 +122,7 @@ const Sidebar = () => {
                                 width="24"
                                 height="24"
                             />
-                            
+
                             {open && (
                                 <div className="flex justify-between w-full items-center">
                                     <span className="font-[Inter] font-semibold text-[15px] ml-4 text-white-200">
@@ -168,46 +168,46 @@ const Sidebar = () => {
                             )}
                         </div>
                         {isCompanySubmenuOpen && (
-                                    <SubMenuGroup>
-                                        <SubMenuEntry
-                                            title="Company Configuration"
-                                            onClick={() => navigate("/company-configurations")}
-                                        />
-                                        <SubMenuEntry
-                                            title="Company Master"
-                                            onClick={() => navigate("/company-masters")}
-                                        />
-                                        <SubMenuEntry
-                                            title="Financial Year Master"
-                                            onClick={() => navigate("/financial-masters")}
-                                        />
-                                        <SubMenuEntry
-                                            title="Bank Master"
-                                            onClick={() => navigate("/bank-master")}
-                                        />
-                                        <SubMenuEntry
-                                            title="Cost Center Master"
-                                            onClick={() => navigate('/costcenter-master')}
-                                        />
-                                        <SubMenuEntry
-                                            title="Department Master"
-                                            onClick={() => navigate('/department-master')}
-                                        />
-                                        <SubMenuEntry
-                                            title="Destination Master"
-                                            onClick={() => navigate('/destination-master')}
-                                        />
-                                        <SubMenuEntry
-                                            title="Three Fields Master"
-                                            onClick={() => navigate('/three-fields-master')}
-                                        />
-                                        <SubMenuEntry
-                                            title="Two Fields Master"
-                                            onClick={() => navigate('/two-fields-master')}
-                                        />
-                                        <SubMenuEntry title="Project Master" />
-                                    </SubMenuGroup>
-                                )}
+                            <SubMenuGroup>
+                                <SubMenuEntry
+                                    title="Company Configuration"
+                                    onClick={() => navigate("/company-configurations")}
+                                />
+                                <SubMenuEntry
+                                    title="Company Master"
+                                    onClick={() => navigate("/company-masters")}
+                                />
+                                <SubMenuEntry
+                                    title="Financial Year Master"
+                                    onClick={() => navigate("/financial-masters")}
+                                />
+                                <SubMenuEntry
+                                    title="Bank Master"
+                                    onClick={() => navigate("/bank-master")}
+                                />
+                                <SubMenuEntry
+                                    title="Cost Center Master"
+                                    onClick={() => navigate('/costcenter-master')}
+                                />
+                                <SubMenuEntry
+                                    title="Department Master"
+                                    onClick={() => navigate('/department-master')}
+                                />
+                                <SubMenuEntry
+                                    title="Destination Master"
+                                    onClick={() => navigate('/destination-master')}
+                                />
+                                <SubMenuEntry
+                                    title="Three Field Master"
+                                    onClick={() => navigate('/three-field-master')}
+                                />
+                                <SubMenuEntry
+                                    title="Two Field Master"
+                                    onClick={() => navigate('/two-field-master')}
+                                />
+                                <SubMenuEntry title="Project Master" />
+                            </SubMenuGroup>
+                        )}
 
                         <div
                             className="mt-1 flex items-center rounded-md px-4 duration-300
@@ -257,7 +257,7 @@ const Sidebar = () => {
                                 {isEmployeeSubmenuOpen && (
                                     <SubMenuGroup>
                                         <SubMenuEntry title="Employee Master"
-                                                      onClick={()=> navigate('employee-master')}/>
+                                            onClick={() => navigate('employee-master')} />
                                         <SubMenuEntry title="Employee Type Master" />
                                         <SubMenuEntry title="Employee Grade Master" />
                                         <SubMenuEntry title="Designation Master" />

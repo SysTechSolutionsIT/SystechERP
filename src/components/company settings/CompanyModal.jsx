@@ -31,7 +31,7 @@ const CompanyModal = ({ visible, onClick }) => {
       <div className="fixed overflow-y-scroll inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center w-full h-full">
         <div className="bg-gray-200 w-[60%] p-8 rounded-lg">
           <div className="bg-blue-900 py-2 px-4 rounded-lg flex justify-between items-center">
-            <p className="text-white text-[13px] font-semibold">
+            <p className="text-white text-[13px] font-semibold text-center">
               Company Master
             </p>
             <Icon
@@ -54,7 +54,7 @@ const CompanyModal = ({ visible, onClick }) => {
                   type="number"
                   placeholder="Enter Company ID"
                   value={formik.values.companyId}
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border border-blue-900 rounded-lg text-[11px] `}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
               </div>
@@ -67,7 +67,7 @@ const CompanyModal = ({ visible, onClick }) => {
                   type="text"
                   placeholder="Enter Company Name"
                   value={formik.values.companyName}
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border border-blue-900 rounded-lg text-[11px]`}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
               </div>
@@ -80,7 +80,7 @@ const CompanyModal = ({ visible, onClick }) => {
                   type="text"
                   placeholder="Enter Company Short Name"
                   value={formik.values.shortName}
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg text-[11px] `}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
               </div>
@@ -93,7 +93,7 @@ const CompanyModal = ({ visible, onClick }) => {
                   type="text"
                   placeholder="Enter Company Sector"
                   value={formik.values.companySector}
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border border-blue-900 rounded-lg text-[11px] `}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
               </div>
@@ -105,7 +105,7 @@ const CompanyModal = ({ visible, onClick }) => {
                   id="natureOfBusiness"
                   placeholder="Enter Nature of Business"
                   value={formik.values.natureOfBusiness}
-                  className={`w-full px-4 py-2 text-[11px] focus:outline-gray-300 resize-none rounded-lg break-words border border-blue-900`}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
               </div>
@@ -133,7 +133,7 @@ const CompanyModal = ({ visible, onClick }) => {
                   type="file"
                   placeholder="Upload File"
                   value={formik.values.file}
-                  className={`w-full px-4 py-2 font-[10px] bg-white focus:outline-gray-300 border border-blue-900 rounded-lg `}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
               </div>

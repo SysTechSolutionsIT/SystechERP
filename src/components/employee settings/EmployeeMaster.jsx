@@ -1,123 +1,121 @@
-import React from 'react'
-import { Icon } from '@iconify/react'
-import { useState, useRef, useEffect } from 'react';
-import { employeeData } from './EmployeeData';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { Icon } from "@iconify/react";
+import { useState, useRef, useEffect } from "react";
+import { employeeData } from "./EmployeeData";
+import { useNavigate } from "react-router-dom";
 
 const EmployeeMaster = () => {
-    const [veCost, setVeCost] = useState(false);
-    const [edit, setEdit] = useState(false);
-    const [CCid, setCCid] = useState();
-    const navigate = useNavigate()
+  const [veCost, setVeCost] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const [CCid, setCCid] = useState();
+  const navigate = useNavigate();
 
-    const [menuOpen, setMenuOpen] = useState(false);
-    const menuRef = useRef(null);
-    const [columnVisibility, setColumnVisibility] = useState({
-      EmployeeType: true,
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+  const [columnVisibility, setColumnVisibility] = useState({
+    EmployeeType: true,
+    EmployeeName: true,
+    CellNo: true,
+    EmailId: true,
+    Status: true,
+  });
 
-      EmployeeName: true,
-      CellNo: true,
-      EmailId: true,
-      Status: true,
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const [filteredData, setFilteredData] = useState([]);
+
+  const handleSearchChange = (title, searchWord) => {
+    const newFilter = employeeData.filter((item) => {
+      const value = item[title];
+      return value && value.toLowerCase().includes(searchWord.toLowerCase());
     });
 
-    useEffect(() => {
-      const handleClickOutside = (event) => {
-        if (menuRef.current && !menuRef.current.contains(event.target)) {
-          setMenuOpen(false);
-        }
-      };
-  
-      document.addEventListener("mousedown", handleClickOutside);
-  
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }, []);
+    if (searchWord === "") {
+      setFilteredData([]);
+    } else {
+      setFilteredData(newFilter);
+    }
+  };
 
-    const [filteredData, setFilteredData] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedColumns, setSelectedColumns] = useState([
+    ...Object.keys(columnVisibility),
+  ]);
 
-    const handleSearchChange = (title, searchWord) => {
-      const newFilter = employeeData.filter((item) => {
-        const value = item[title];
-        return value && value.toLowerCase().includes(searchWord.toLowerCase());
-      });
-  
-      if (searchWord === "") {
-        setFilteredData([]);
-      } else {
-        setFilteredData(newFilter);
+  const toggleColumn = (columnName) => {
+    if (selectedColumns.includes(columnName)) {
+      setSelectedColumns((prevSelected) =>
+        prevSelected.filter((col) => col !== columnName)
+      );
+    } else {
+      setSelectedColumns((prevSelected) => [...prevSelected, columnName]);
+    }
+  };
+
+  useEffect(() => {
+    console.log("Selected Columns:", selectedColumns);
+  }, [selectedColumns]);
+
+  const selectAllColumns = () => {
+    setSelectedColumns([...Object.keys(columnVisibility)]);
+  };
+
+  const deselectAllColumns = () => {
+    setSelectedColumns([]);
+  };
+
+  //Menu
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuOpen(false);
       }
     };
 
-    const [showDropdown, setShowDropdown] = useState(false);
-    const [selectedColumns, setSelectedColumns] = useState([
-      ...Object.keys(columnVisibility),
-    ]);
-  
-    const toggleColumn = (columnName) => {
-      if (selectedColumns.includes(columnName)) {
-        setSelectedColumns((prevSelected) =>
-          prevSelected.filter((col) => col !== columnName)
-        );
-      } else {
-        setSelectedColumns((prevSelected) => [...prevSelected, columnName]);
-      }
-    };
-  
-    useEffect(() => {
-      console.log("Selected Columns:", selectedColumns);
-    }, [selectedColumns]);
-  
-    const selectAllColumns = () => {
-      setSelectedColumns([...Object.keys(columnVisibility)]);
-    };
-  
-    const deselectAllColumns = () => {
-      setSelectedColumns([]);
-    };
-  
-    //Menu
-    useEffect(() => {
-      const handleClickOutside = (event) => {
-        if (menuRef.current && !menuRef.current.contains(event.target)) {
-          setMenuOpen(false);
-        }
-      };
-  
-      document.addEventListener("mousedown", handleClickOutside);
-  
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }, []);
-  
+    document.addEventListener("mousedown", handleClickOutside);
 
-    const getColumnMaxWidth = (columnName) => {
-        let maxWidth = 0;
-        const allRows = [...employeeData];
-    
-        allRows.forEach((row) => {
-          const cellContent = row[columnName];
-          const cellWidth = getTextWidth(cellContent, "11px"); // You can adjust the font size here
-          maxWidth = Math.max(maxWidth, cellWidth);
-        });
-    
-        return maxWidth + 10; // Adding some padding to the width
-      };
-    
-      const getTextWidth = (text, fontSize) => {
-        const canvas = document.createElement("canvas");
-        const context = canvas.getContext("2d");
-        context.font = fontSize + " sans-serif";
-        return context.measureText(text).width;
-      };
-    
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const getColumnMaxWidth = (columnName) => {
+    let maxWidth = 0;
+    const allRows = [...employeeData];
+
+    allRows.forEach((row) => {
+      const cellContent = row[columnName];
+      const cellWidth = getTextWidth(cellContent, "11px"); // You can adjust the font size here
+      maxWidth = Math.max(maxWidth, cellWidth);
+    });
+
+    return maxWidth + 10; // Adding some padding to the width
+  };
+
+  const getTextWidth = (text, fontSize) => {
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+    context.font = fontSize + " sans-serif";
+    return context.measureText(text).width;
+  };
+
   return (
     <div className="top-25 min-w-[40%]">
       <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-clip overflow-clip">
-      <div className="flex items-center gap-4 whitespace-normal">
-      <div className="mr-auto text-[15px] whitespace-normal min-w-fit">
+        <div className="flex items-center gap-4 whitespace-normal">
+          <div className="mr-auto text-[15px] whitespace-normal min-w-fit">
             HRMS / Employee Settings / Employee Master
           </div>
         <div className="sticky ">
@@ -133,7 +131,7 @@ const EmployeeMaster = () => {
                 } cursor-pointer`}
               />
             </button>
-            </div>
+          </div>
           {showDropdown && (
             <div className="absolute top-[16%] lg:ml-[42%] sm:ml-[70%] bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50 top-[calc(100% + 10px)]">
               {/* Dropdown content */}
@@ -179,18 +177,24 @@ const EmployeeMaster = () => {
           <div className="min-w-[40%]">
             <button
               className="text-white font-semibold px-4 rounded-lg text-[13px] border border-white"
-              onClick={() => navigate('/add-employee')}
+              onClick={() => navigate("/add-employee")}
             >
               Add Record
             </button>
-            </div>
-      </div>
+          </div>
+        </div>
         <div className="flex items-center">
           <button
             className=" cursor-pointerm"
             onClick={() => setMenuOpen(!menuOpen)}
           >
-            <Icon className='' icon="carbon:menu" color="white" width="27" height="27" />
+            <Icon
+              className=""
+              icon="carbon:menu"
+              color="white"
+              width="27"
+              height="27"
+            />
           </button>
           {menuOpen && (
             <div
@@ -216,7 +220,7 @@ const EmployeeMaster = () => {
           )}
         </div>
       </div>
-        <div className="grid gap-4 justify-between">
+      <div className="grid gap-4 justify-between">
         <div className="my-0 rounded-2xl bg-white p-2">
           <table className="min-w-full text-center  rounded-lg justify-center whitespace-normal">
             <thead>
@@ -264,7 +268,9 @@ const EmployeeMaster = () => {
                     type="text"
                     placeholder="Search"
                     className="w-auto h-6 border-2 whitespace-normal border-slate-500 rounded-lg justify-center text-center text-[13px]"
-                    style={{ maxWidth: getColumnMaxWidth("EmployeeName") + "px" }}
+                    style={{
+                      maxWidth: getColumnMaxWidth("EmployeeName") + "px",
+                    }}
                     onChange={(e) =>
                       handleSearchChange("EmployeeName", e.target.value)
                     }
@@ -304,8 +310,8 @@ const EmployeeMaster = () => {
                   />
                 </th>
               </tr>
-              </thead>
-              <tbody className="">
+            </thead>
+            <tbody className="">
               {filteredData.length > 0
                 ? filteredData.map((result, key) => (
                     <tr key={key}>
@@ -366,9 +372,9 @@ const EmployeeMaster = () => {
                           {result[columnName]}
                         </td>
                       ))}
-                      </tr>
-                    ))
-                  : employeeData.map((entry, index) => (
+                    </tr>
+                  ))
+                : employeeData.map((entry, index) => (
                     <tr key={index}>
                       <td className="px-4 border-2">
                         <div className="flex items-center gap-2 text-center justify-center cur">
@@ -377,7 +383,7 @@ const EmployeeMaster = () => {
                             color="#556987"
                             width="20"
                             height="20"
-                            onClick={()=>
+                            onClick={() =>
                               navigate(`/view-employee/${entry.EmployeeId}`)
                             }
                           />
@@ -393,7 +399,7 @@ const EmployeeMaster = () => {
                             width="20"
                             height="20"
                             onClick={() => {
-                              navigate(`/edit-employee/${entry.EmployeeId}`)
+                              navigate(`/edit-employee/${entry.EmployeeId}`);
                             }}
                           />
                           {/* <VECost
@@ -426,11 +432,11 @@ const EmployeeMaster = () => {
                     </tr>
                   ))}
             </tbody>
-            </table>
-            </div>
-            </div>
+          </table>
         </div>
-  )
-}
+      </div>
+    </div>
+  );
+};
 
-export default EmployeeMaster
+export default EmployeeMaster;

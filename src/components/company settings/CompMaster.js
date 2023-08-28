@@ -162,7 +162,7 @@ const CompMaster = () => {
 
   return (
     <div className="top-25 min-w-[40%]">
-      <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
+      <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-x-clip">
         <div className="flex items-center gap-4 whitespace-normal">
           <div className="mr-auto text-[15px] whitespace-normal min-w-fit">
             Company Settings / Company Master
@@ -182,7 +182,7 @@ const CompMaster = () => {
             </button>
           </div>
           {showDropdown && (
-            <div className="absolute top-[16%] lg:ml-[42%] sm:ml-[70%] bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50 top-[calc(100% + 10px)]">
+            <div className="absolute top-[16%] lg:ml-[42%] sm:mr-[20%] bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50 top-[calc(100% + 10px)]">
               {/* Dropdown content */}
               <div className="flex items-center mb-2">
                 <button
@@ -325,12 +325,6 @@ const CompMaster = () => {
                               setCid(result.ID); // Pass ID to VEModal
                             }}
                           />
-                          <VEModal
-                            visible={VE}
-                            onClick={() => setVE(false)}
-                            edit={edit}
-                            ID={Cid}
-                          />
                           <Icon
                             icon="mdi:edit"
                             color="#556987"
@@ -385,12 +379,6 @@ const CompMaster = () => {
                               setEdit(false); // Disable edit mode for VEModal
                               setCid(entry.ID); // Pass ID to VEModal
                             }}
-                          />
-                          <VEModal
-                            visible={VE}
-                            onClick={() => setVE(false)}
-                            edit={edit}
-                            ID={Cid}
                           />
 
                           <Icon
