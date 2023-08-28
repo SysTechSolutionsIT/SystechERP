@@ -64,7 +64,7 @@ export default function Personal() {
       <div className="p-0 font-[Inter]">
         <div className="p-4 bg-white">
           <div className="grid grid-cols-3 gap-x-4">
-            <div>
+            <div className="py-1">
               <p className="mb-1 capitalize font-semibold text-[13px]">Employee ID</p>
               <input
                 id="EmployeeID"

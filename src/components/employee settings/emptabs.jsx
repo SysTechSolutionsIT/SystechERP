@@ -3,6 +3,7 @@ import Academic from "../forms/academic";
 import Family from "../forms/family";
 import Personal from "../forms/personal";
 import Professional from "../forms/professional";
+import Work from "../forms/work";
 import { Icon } from "@iconify/react";
 
 export default function EMPTabs() {
@@ -146,11 +147,7 @@ export default function EMPTabs() {
 
                 {/* Work Profile Tab */}
                 <div className={openTab === 3 ? "block" : "hidden"}>
-                  <p>
-                    Vivamus vel elit ac elit congue eleifend. Quisque nec ligula
-                    et tortor tincidunt volutpat. Nunc et tristique purus. Fusce
-                    non lorem et odio tristique sodales.
-                  </p>
+                  <Work/>
                 </div>
 
                 {/* Academic Profile Tab */}
