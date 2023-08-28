@@ -13,8 +13,8 @@ const EmployeeMaster = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef(null);
     const [columnVisibility, setColumnVisibility] = useState({
-      EmployeeId: true,
       EmployeeType: true,
+
       EmployeeName: true,
       CellNo: true,
       EmailId: true,
@@ -120,7 +120,7 @@ const EmployeeMaster = () => {
       <div className="mr-auto text-[15px] whitespace-normal min-w-fit">
             HRMS / Employee Settings / Employee Master
           </div>
-        <div className="relative sticky ">
+        <div className="sticky ">
         <button
               onClick={() => setShowDropdown(!showDropdown)}
               className="flex text-[13px] bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap"
@@ -216,7 +216,7 @@ const EmployeeMaster = () => {
           )}
         </div>
       </div>
-        <div className="grid gap-4">
+        <div className="grid gap-4 justify-between">
         <div className="my-0 rounded-2xl bg-white p-2">
           <table className="min-w-full text-center  rounded-lg justify-center whitespace-normal">
             <thead>
@@ -309,7 +309,7 @@ const EmployeeMaster = () => {
               {filteredData.length > 0
                 ? filteredData.map((result, key) => (
                     <tr key={key}>
-                      <td className="px-2 border-2">
+                      <td className="px-4 border-2">
                         <div className="flex items-center gap-2 text-center justify-center">
                           <Icon
                             icon="lucide:eye"
@@ -370,7 +370,7 @@ const EmployeeMaster = () => {
                     ))
                   : employeeData.map((entry, index) => (
                     <tr key={index}>
-                      <td className="px-0 border-2">
+                      <td className="px-4 border-2">
                         <div className="flex items-center gap-2 text-center justify-center cur">
                           <Icon
                             icon="lucide:eye"

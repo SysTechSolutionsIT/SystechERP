@@ -56,22 +56,22 @@ export default function Personal() {
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <div className="p-0font-[Inter]">
+      <div className="p-0 font-[Inter]">
         <div className="p-4 bg-white">
-          <div className="grid grid-cols-3 gap-x-4">
+          <div className="grid grid-cols-5 gap-x-4 gap-y-0">
             <div>
-              <p className="mb-3 capitalize font-semibold">Employee ID</p>
+              <p className="mb-3 capitalize font-semibold text-[13px]">Employee ID</p>
               <input
                 id="EmployeeID"
                 type="number"
                 value={formik.values.EmployeeID}
-                className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg `}
+                className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg `}
                 onChange={formik.handleChange}
               />
             </div>
             <div className="flex flex-col">
-              <p className="mb-3 font-semibold">Employee Type</p>
-              <label>
+              <p className="mb-3 font-semibold text-[13px]">Employee Type</p>
+              <label className="text-[13px]">
                 <input
                   type="radio"
                   className="mr-2"
@@ -81,7 +81,7 @@ export default function Personal() {
                 />
                 Probation
               </label>
-              <label>
+              <label className="text-[13px]">
                 <input
                   type="radio"
                   className="mr-2"
@@ -92,7 +92,7 @@ export default function Personal() {
                 />
                 Permanent
               </label>
-              <label>
+              <label className="text-[13px]">
                 <input
                   type="radio"
                   className="mr-2"
@@ -106,8 +106,8 @@ export default function Personal() {
             </div>
 
             <div className="flex flex-col">
-              <p className="mb-3 font-semibold">Employee Type Group</p>
-              <label>
+              <p className="mb-3 font-semibold text-[13px]">Employee Type Group</p>
+              <label className="text-[13px]">
                 <input
                   type="radio"
                   className="mr-2"
@@ -117,7 +117,7 @@ export default function Personal() {
                 />
                 Worker
               </label>
-              <label>
+              <label className="text-[13px]">
                 <input
                   type="radio"
                   className="mr-2"
@@ -130,44 +130,44 @@ export default function Personal() {
               </label>
             </div>
             <div className="col-span-2">
-              <p className="mb-3 capitalize font-semibold">Name</p>
+              <p className="mb-3 capitalize font-semibold text-[13px]">Name</p>
               <input
                 id="EmployeeName"
                 type="text"
-                className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
             </div>
             <div>
-              <p className="mb-3 capitalize font-semibold">Phone</p>
+              <p className="mb-3 capitalize font-semibold text-[13px]">Phone</p>
               <input
                 id="PhoneNo"
                 type="number"
-                className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
+                className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg mb-6`}
                 onChange={formik.handleChange}
               />
             </div>
             <div>
-              <p className="mb-3 capitalize  font-semibold">Email ID</p>
+              <p className="mb-3 capitalize  font-semibold text-[13px]">Email ID</p>
               <input
                 id="EmailID1"
                 type="email"
-                className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
+                className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg mb-6`}
                 onChange={formik.handleChange}
               />
             </div>
             <div>
-              <p className="mb-3 capitalize  font-semibold">Date of Birth</p>
+              <p className="mb-3 capitalize  font-semibold text-[13px]">Date of Birth</p>
               <input
                 id="DOB"
                 type="date"
-                className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
+                className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg mb-6`}
                 onChange={formik.handleChange}
               />
             </div>
             <div className="flex flex-col">
-              <p className="mb-3 font-semibold">Gender</p>
-              <label>
+              <p className="mb-3 font-semibold text-[13px]">Gender</p>
+              <label className="text-[13px]">
                 <input
                   type="radio"
                   className="mr-2"
@@ -177,7 +177,7 @@ export default function Personal() {
                 />
                 Male
               </label>
-              <label>
+              <label className="text-[13px]">
                 <input
                   type="radio"
                   className="mr-2"
@@ -188,7 +188,7 @@ export default function Personal() {
                 />
                 Female
               </label>
-              <label>
+              <label className="text-[13px]">
                 <input
                   type="radio"
                   className="mr-2"
@@ -202,7 +202,7 @@ export default function Personal() {
             </div>
             <div>
               <div className="flex flex-col mb-3">
-                <p className="mb-3 capitalize">Marital Status</p>
+                <p className="mb-3 capitalize font-semibold text-[13px]">Marital Status</p>
                 <div>
                   <input
                     type="radio"
@@ -211,7 +211,7 @@ export default function Personal() {
                     value="true"
                     onChange={formik.handleChange}
                   />
-                  <label>Married</label>
+                  <label className="text-[13px]">Married</label>
                 </div>
                 <div>
                   <input
@@ -222,18 +222,18 @@ export default function Personal() {
                     style={{ marginTop: "10px" }}
                     onChange={formik.handleChange}
                   />
-                  <label>Unmarried</label>
+                  <label className="text-[13px]">Unmarried</label>
                 </div>
               </div>
             </div>
           </div>
 
           <div>
-            <p className="mb-3">Blood Group</p>
+            <p className="mb-3 text-[13px] font-semibold">Blood Group</p>
             <input
               id="BloodGroup"
               type="text"
-              className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
+              className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg mb-6`}
               onChange={formik.handleChange}
             />
             <div>
@@ -244,22 +244,22 @@ export default function Personal() {
 
               <div className="flex mb-6">
                 <div className="w-1/2 pr-4">
-                  <p className="mb-3 capitalize mt-1 font-semibold">
+                  <p className="mb-3 capitalize mt-1 font-semibold text-[13px]">
                     Aadhar Card No
                   </p>
                   <input
                     id="AadharCardNo"
                     type="text"
-                    className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                    className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                     onChange={formik.handleChange}
                   />
                 </div>
                 <div className="w-1/2">
-                  <p className="mb-3 capitalize font-semibold">PAN Card No</p>
+                  <p className="mb-3 capitalize font-semibold text-[13px]">PAN Card No</p>
                   <input
                     id="PANNo"
                     type="text"
-                    className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                    className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                     onChange={formik.handleChange}
                   />
                 </div>
@@ -267,65 +267,65 @@ export default function Personal() {
               <div className="mb-6">
                 <div className="flex">
                   <div className="w-1/3 pr-4">
-                    <p className="mb-3 capitalize font-semibold">Passport No</p>
+                    <p className="mb-3 capitalize font-semibold text-[13px]">Passport No</p>
                     <input
                       id="PassportNo"
                       type="text"
-                      className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                      className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                       onChange={formik.handleChange}
                     />
                   </div>
                   <div className="w-1/3 pr-4">
-                    <p className="mb-3 capitalize font-semibold">
+                    <p className="mb-3 capitalize font-semibold text-[13px]">
                       Passport Issue Date
                     </p>
                     <input
                       id="PassportIssueDate"
                       type="date"
-                      className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                      className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                       onChange={formik.handleChange}
                     />
                   </div>
                   <div className="w-1/3">
-                    <p className="mb-3 capitalize font-semibold">
+                    <p className="mb-3 capitalize font-semibold text-[13px]">
                       Passport Expiry Date
                     </p>
                     <input
                       id="PassportExpireDate"
                       type="date"
-                      className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                      className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                       onChange={formik.handleChange}
                     />
                   </div>
                 </div>
               </div>
               <div className="col-span-2">
-                <p className="mb-3 capitalize font-semibold">
+                <p className="mb-3 capitalize font-semibold text-[13px]">
                   Driving License Photo
                 </p>
                 <input
                   id="DrivingLicense"
                   type="text"
-                  className="w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
+                  className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
                 />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-x-4 mb-6 mt-4">
               <div className="col-span-1">
-                <p className="mb-3 capitalize font-semibold">Current Address</p>
+                <p className="mb-3 capitalize font-semibold text-[13px]">Current Address</p>
                 <input
                   id="CurretAddress"
                   type="text"
-                  className="w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
+                  className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
                   onChange={formik.handleChange}
                 />
               </div>
               <div className="col-span-1">
-                <p className="mb-3 capitalize font-semibold">Pincode</p>
+                <p className="mb-3 capitalize font-semibold text-[13px]">Pincode</p>
                 <input
                   id="CurrentPinCode"
                   type="text"
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                  className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                   onChange={formik.handleChange}
                 />
               </div>
@@ -333,24 +333,24 @@ export default function Personal() {
 
             <div className="grid grid-cols-2 gap-x-4 mb-6">
               <div className="col-span-1">
-                <p className="mb-3 capitalize font-semibold">
+                <p className="mb-3 capitalize font-semibold text-[13px]">
                   Permanent Address
                 </p>
                 <input
                   id="PermanentAddress"
                   type="text"
-                  className="w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
+                  className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
                   onChange={formik.handleChange}
                 />
               </div>
               <div className="col-span-1">
-                <p className="mb-3 capitalize font-semibold">
+                <p className="mb-3 capitalize font-semibold text-[13px]">
                   Permanent Pincode
                 </p>
                 <input
                   id="PermanentPinCode"
                   type="text"
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                  className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                   onChange={formik.handleChange}
                 />
               </div>
@@ -358,29 +358,29 @@ export default function Personal() {
 
             <div className="flex mb-6">
               <div className="w-1/3 pr-4">
-                <p className="mb-3 capitalize font-semibold">Cell 1</p>
+                <p className="mb-3 capitalize font-semibold text-[13px]">Cell 1</p>
                 <input
                   id="CellNo1"
                   type="number"
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                  className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                   onChange={formik.handleChange}
                 />
               </div>
               <div className="w-1/3 pr-4">
-                <p className="mb-3 capitalize font-semibold">Cell 2</p>
+                <p className="mb-3 capitalize font-semibold text-[13px]">Cell 2</p>
                 <input
                   id="CellNo2"
                   type="number"
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                  className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                   onChange={formik.handleChange}
                 />
               </div>
               <div className="w-1/3">
-                <p className="mb-3 capitalize font-semibold">Email ID 2</p>
+                <p className="mb-3 capitalize font-semibold text-[13px]">Email ID 2</p>
                 <input
                   id="EmailID2"
                   type="email"
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                  className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                   onChange={formik.handleChange}
                 />
               </div>
@@ -392,29 +392,29 @@ export default function Personal() {
             <hr className="bg-blue-300 border-1 rounded md:my-2 border-gray-500" />
             <div className="flex mb-6">
               <div className="w-1/3 pr-4">
-                <p className="mb-3 capitalize font-semibold">Bank ID 1</p>
+                <p className="mb-3 capitalize font-semibold text-[13px]">Bank ID 1</p>
                 <input
                   id="BankID1"
                   type="number"
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                  className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                   onChange={formik.handleChange}
                 />
               </div>
               <div className="w-1/3 pr-4">
-                <p className="mb-3 capitalize  font-semibold">Account No 1</p>
+                <p className="mb-3 capitalize  font-semibold text-[13px]">Account No 1</p>
                 <input
                   id="AccountNo1"
                   type="number"
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                  className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                   onChange={formik.handleChange}
                 />
               </div>
               <div className="w-1/3">
-                <p className="mb-3 capitalize  font-semibold">IFSC Code 1</p>
+                <p className="mb-3 capitalize  font-semibold text-[13px]">IFSC Code 1</p>
                 <input
                   id="IFSCCode1"
                   type="text"
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                  className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                   onChange={formik.handleChange}
                 />
               </div>
@@ -422,86 +422,86 @@ export default function Personal() {
 
             <div className="flex mb-6">
               <div className="w-1/3 pr-4">
-                <p className="mb-3 capitalize  font-semibold">Bank ID 2</p>
+                <p className="mb-3 capitalize  font-semibold text-[13px]">Bank ID 2</p>
                 <input
                   id="BankID2"
                   type="number"
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                  className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                   onChange={formik.handleChange}
                 />
               </div>
               <div className="w-1/3 pr-4">
-                <p className="mb-3 capitalize  font-semibold">Account No 2</p>
+                <p className="mb-3 capitalize  font-semibold text-[13px]">Account No 2</p>
                 <input
                   id="AccountNo2"
                   type="number"
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                  className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                   onChange={formik.handleChange}
                 />
               </div>
               <div className="w-1/3">
-                <p className="mb-3 capitalize  font-semibold">IFSC Code 2</p>
+                <p className="mb-3 capitalize  font-semibold text-[13px]">IFSC Code 2</p>
                 <input
                   id="IFSCCode2"
                   type="text"
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                  className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                   onChange={formik.handleChange}
                 />
               </div>
             </div>
             <div className="flex mb-6">
               <div className="w-1/2 pr-4">
-                <p className="mb-3 capitalize  font-semibold">Account Flag</p>
+                <p className="mb-3 capitalize  font-semibold text-[13px]">Account Flag</p>
                 <input
                   id="AcFlag"
                   type="text"
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                  className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                   onChange={formik.handleChange}
                 />
               </div>
               <div className="w-1/2">
-                <p className="mb-3 capitalize font-semibold">
+                <p className="mb-3 capitalize font-semibold text-[13px]">
                   Finance Account No
                 </p>
                 <input
                   id="FinanceAccountNo"
                   type="text"
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                  className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                   onChange={formik.handleChange}
                 />
               </div>
             </div>
             <div className="flex mb-6">
               <div className="w-1/3 pr-4">
-                <p className="mb-3 capitalize  font-semibold">Category ID</p>
+                <p className="mb-3 capitalize  font-semibold text-[13px]">Category ID</p>
                 <input
                   id="CategoryId"
                   type="text"
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                  className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                   onChange={formik.handleChange}
                 />
               </div>
               <div className="w-1/3 pr-4">
-                <p className="mb-3 capitalize  font-semibold">Caste ID</p>
+                <p className="mb-3 capitalize  font-semibold text-[13px]">Caste ID</p>
                 <input
                   id="CasteId"
                   type="text"
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                  className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                   onChange={formik.handleChange}
                 />
               </div>
               <div className="w-1/3">
-                <p className="mb-3 capitalize font-semibold">Religion</p>
+                <p className="mb-3 capitalize font-semibold text-[13px]">Religion</p>
                 <input
                   id="ReligionId"
                   type="text"
-                  className={`w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                  className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 />
               </div>
             </div>
             <div className="flex flex-col mb-6 w-1/2">
-              <p className="mb-3 font-semibold">Referenced</p>
-              <label>
+              <p className="mb-3 font-semibold text-[13px]">Referenced</p>
+              <label className="text-[13px]">
                 <input
                   type="radio"
                   className="mr-2"
@@ -511,7 +511,7 @@ export default function Personal() {
                 />
                 Yes
               </label>
-              <label>
+              <label className="text-[13px]">
                 <input
                   type="radio"
                   className="mr-2"
@@ -524,11 +524,11 @@ export default function Personal() {
               </label>
             </div>
             <div className="flex col-span-2 mb-6 w-1/2 pr-4">
-              <p className="mb-3 capitalize font-semibold ">Employee Photo</p>
+              <p className="mb-3 capitalize font-semibold text-[13px] ">Employee Photo</p>
               <input
                 id="EmployeePhoto"
                 type="text"
-                className="w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
+                className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
               />
             </div>
           </div>
