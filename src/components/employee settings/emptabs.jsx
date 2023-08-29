@@ -3,38 +3,40 @@ import Academic from "../forms/academic";
 import Family from "../forms/family";
 import Personal from "../forms/personal";
 import Professional from "../forms/professional";
+import Work from "../forms/work";
+import { Icon } from "@iconify/react";
 
 export default function EMPTabs() {
   const [openTab, setOpenTab] = React.useState(1);
 
   return (
     <>
-      <div className="flex font-[Inter] justify-center">
+      <div className="flex font-[Inter] justify-center ">
         <div className="">
-          <ul className="flex mb-0 list-none flex-wrap pt-3 pb-4 flex-row">
+          <ul className="flex mb-0 list-none flex-wrap pt-0 pb-4 flex-row">
           <li className="-mb-px mr-2 ml-2 cursor-pointer">
               <p
                 className={
-                  "inline-block p-4 " +
+                  "inline-block p-0 py-1 px-1.5 " +
                   (openTab === 1
-                    ? "text-s font-bold uppercase text-blue-900 bg-gray-100 rounded-lg active"
-                    :"hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
+                    ? "text-s font-bold uppercase text-white bg-blue-900 rounded-lg active"
+                    :"hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg font-semibold")
                 }
                 onClick={(e) => {
                   e.preventDefault();
                   setOpenTab(1);
                 }}
               >
-                Personal Profile
+                PERSONAL PROFILE
               </p>
             </li>
             <li className="-mb-px mr-2 ml-2 cursor-pointer">
               <p
                 className={
-                  "inline-block p-4 rounded-lg " +
+                  "inline-block p-0 py-1 px-1.5 rounded-lg " +
                   (openTab === 2
-                    ? "text-s font-bold uppercase text-blue-900 bg-gray-100 rounded-lg active"
-                    : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
+                    ? "text-s font-bold uppercase text-white bg-blue-900 rounded-lg active"
+                    : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg font-semibold")
                 }
                 onClick={(e) => {
                   e.preventDefault();
@@ -42,16 +44,16 @@ export default function EMPTabs() {
                 }}
 
               >
-                Family Profile
+                FAMILY PROFILE
               </p>
             </li>
             <li className="-mb-px mr-2 cursor-pointer">
               <p
                 className={
-                  "inline-block p-4 rounded-lg " +
+                  "inline-block p-0 py-1 px-1.5 rounded-lg " +
                   (openTab === 3
-                    ? "text-s font-bold uppercase text-blue-900 bg-gray-100 rounded-lg active"
-                    : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
+                    ? "text-s font-bold uppercase text-white bg-blue-900 rounded-lg active"
+                    : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg font-semibold")
                 }
                 onClick={(e) => {
                   e.preventDefault();
@@ -59,16 +61,16 @@ export default function EMPTabs() {
                 }}
 
               >
-                Work Profile
+                WORK PROFILE
               </p>
             </li>
             <li className="-mb-px mr-2 cursor-pointer">
               <p
                 className={
-                  "inline-block p-4 rounded-lg " +
+                  "inline-block p-0 py-1 px-1.5 rounded-lg " +
                   (openTab === 4
-                    ? "text-s font-bold uppercase text-blue-900 bg-gray-100 rounded-lg active"
-                    : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
+                    ? "text-s font-bold uppercase text-white bg-blue-900 rounded-lg active"
+                    : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg font-semibold")
                 }
                 onClick={(e) => {
                   e.preventDefault();
@@ -76,16 +78,16 @@ export default function EMPTabs() {
                 }}
 
               >
-                Academic Profile
+                ACADEMIC PROFILE
               </p>
             </li>
             <li className="-mb-px mr-2 cursor-pointer">
               <p
                 className={
-                  "inline-block p-4 rounded-lg " +
+                  "inline-block p-0 py-1 px-1.5 rounded-lg " +
                   (openTab === 5
-                    ? "text-s font-bold uppercase text-blue-900 bg-gray-100 rounded-lg active"
-                    : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
+                    ? "text-s font-bold uppercase text-white bg-blue-900 rounded-lg active"
+                    : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg font-semibold")
                 }
                 onClick={(e) => {
                   e.preventDefault();
@@ -93,16 +95,16 @@ export default function EMPTabs() {
                 }}
 
               >
-                Professional Profile
+                PROFESSIONAL PROFILE
               </p>
             </li>
             <li className="-mb-px mr-2 cursor-pointer">
               <p
                 className={
-                  "inline-block p-4 rounded-lg " +
+                  "inline-block p-0 py-1 px-1.5 rounded-lg " +
                   (openTab === 6
-                    ? "text-s font-bold uppercase text-blue-900 bg-gray-100 rounded-lg active"
-                    : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
+                    ? "text-s font-bold uppercase text-white bg-blue-900 rounded-lg active"
+                    : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg font-semibold")
                 }
                 onClick={(e) => {
                   e.preventDefault();
@@ -110,16 +112,16 @@ export default function EMPTabs() {
                 }}
 
               >
-                Training Profile
+                TRAINING PROFILE
               </p>
             </li>
             <li className="-mb-px mr-2 cursor-pointer">
               <p
                 className={
-                  "inline-block p-4 rounded-lg " +
+                  "inline-block p-0 py-1 px-1.5 rounded-lg " +
                   (openTab === 7
-                    ? "text-s font-bold uppercase text-blue-900 bg-gray-100 rounded-lg active"
-                    : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
+                    ? "text-s font-bold uppercase text-white bg-blue-900 rounded-lg active"
+                    : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg font-semibold")
                 }
                 onClick={(e) => {
                   e.preventDefault();
@@ -127,7 +129,7 @@ export default function EMPTabs() {
                 }}
 
               >
-                Asset Profile
+                ASSET PROFILE
               </p>
             </li>
           </ul>
@@ -145,11 +147,7 @@ export default function EMPTabs() {
 
                 {/* Work Profile Tab */}
                 <div className={openTab === 3 ? "block" : "hidden"}>
-                  <p>
-                    Vivamus vel elit ac elit congue eleifend. Quisque nec ligula
-                    et tortor tincidunt volutpat. Nunc et tristique purus. Fusce
-                    non lorem et odio tristique sodales.
-                  </p>
+                  <Work/>
                 </div>
 
                 {/* Academic Profile Tab */}

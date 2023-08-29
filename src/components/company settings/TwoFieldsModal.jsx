@@ -50,7 +50,7 @@ const TwoFieldsModal = ({ visible, onClick }) => {
                   type="number"
                   placeholder="Enter Field ID"
                   value={formik.values.ID}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                  className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
                   onChange={formik.handleChange}
                 />
               </div>
@@ -61,7 +61,7 @@ const TwoFieldsModal = ({ visible, onClick }) => {
                   type="text"
                   placeholder="Enter Master Name"
                   value={formik.values.MasterName}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                  className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
                   onChange={formik.handleChange}
                 />
               </div>
@@ -72,7 +72,7 @@ const TwoFieldsModal = ({ visible, onClick }) => {
                   type="text"
                   placeholder="Enter Field Details"
                   value={formik.values.FieldDetails}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                  className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
                   onChange={formik.handleChange}
                 />
               </div>
@@ -83,7 +83,7 @@ const TwoFieldsModal = ({ visible, onClick }) => {
                   type="text"
                   placeholder="Enter Remarks"
                   value={formik.values.remark}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                  className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
                   onChange={formik.handleChange}
                 />
               </div>
@@ -129,5 +129,3 @@ const TwoFieldsModal = ({ visible, onClick }) => {
     </form>
   );
 };
-
-export default TwoFieldsModal;
