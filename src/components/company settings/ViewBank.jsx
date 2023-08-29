@@ -42,8 +42,8 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
   if (!visible) return null;
   return (
     <form onSubmit={formik.handleSubmit}>
-      <div className="fixed overflow-y-scroll inset-0 bg-black bg-opacity-5 backdrop-blur-sm flex items-center justify-center w-full h-full">
-        <div className="bg-gray-200 w-[60%] mt-96 p-8 rounded-lg">
+      <div className="fixed overflow-y-scroll inset-0 bg-black bg-opacity-5 backdrop-blur-sm flex items-center justify-center w-full">
+        <div className="bg-gray-200 w-[60%]  p-8 rounded-lg max-h-[90%] overflow-y-scroll">
           <div className="bg-blue-900 py-2 px-4 rounded-lg flex justify-between items-center">
             <p className="text-white text-[15px] font-semibold text-center">
               Bank Master

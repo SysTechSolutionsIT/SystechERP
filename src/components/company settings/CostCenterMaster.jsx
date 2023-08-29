@@ -241,12 +241,12 @@ const CostCenterMaster = () => {
                               setCCid(result.costCenterID); // Pass ID to VEModal
                             }}
                           />
-                          <VECost
+                          {/* <VECost
                             visible={veCost}
                             onClick={() => setVeCost(false)}
                             edit={edit}
                             ID={CCid}
-                          />
+                          /> */}
                           <Icon
                             icon="mdi:edit"
                             color="#556987"
@@ -298,12 +298,12 @@ const CostCenterMaster = () => {
                               setCCid(entry.costCenterID); // Pass ID to VEModal
                             }}
                           />
-                          <VECost
+                          {/* <VECost
                             visible={veCost}
                             onClick={() => setVeCost(false)}
                             edit={edit}
                             ID={CCid}
-                          />
+                          /> */}
                           <Icon
                             icon="mdi:edit"
                             color="#556987"

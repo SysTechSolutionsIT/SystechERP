@@ -18,6 +18,8 @@ import ThreeFieldsMaster from "./components/company settings/ThreeFieldsMaster";
 import TwoFieldsMaster from "./components/company settings/TwoFieldsMaster";
 import EmployeeMaster from "./components/employee settings/EmployeeMaster";
 import EMPTabs from "./components/employee settings/emptabs";
+import JobTypeMaster from "./components/attendance settings/jobTypeMaster";
+import ShiftMaster from "./components/attendance settings/shiftMaster";
 
 function App() {
   return (
@@ -48,6 +50,8 @@ function App() {
           <Route path="/two-field-master" element={<TwoFieldsMaster />} />
           <Route path="/employee-master" element={<EmployeeMaster />} />
           <Route path="/add-employee" element={<EMPTabs />} />
+          <Route path="/shift-master" element={<ShiftMaster />} />
+          <Route path="/job-type-master" element={<JobTypeMaster />} />
           <Route path="/edit-employee/:empid" element={<EMPTabs />} />
         </Route>
       </Routes>
