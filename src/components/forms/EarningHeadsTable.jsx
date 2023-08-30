@@ -88,7 +88,7 @@ const EarningHeadsTable = () => {
   return (
     <div className="gap-4 justify-between">
         <div className="my-1 rounded-2xl bg-white p-2 pr-8">
-        <table className="text-center h-auto text-[13px] rounded-lg justify-center whitespace-normal">
+        <table className="text-center h-auto text-[11px] rounded-lg justify-center whitespace-normal">
             <thead>
                 <tr>
                     <th colSpan='6' className='bg-blue-900 text-white font-semibold border-white border-2'>
@@ -96,55 +96,55 @@ const EarningHeadsTable = () => {
                     </th>
                 </tr>
                 <tr>
-                    <th className='text-[13px]  font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
+                    <th className='text-[11px]  font-semibold border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
                             Select
                     </th>
-                    <th className='text-[13px]  font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
-                        Earning Head
+                    <th className='text-[11px]  font-semibold border-r-2 border-white py-1 px-2 bg-blue-900 text-white '>
+                        Earning <br/> Head
                     </th>
-                    <th className='text-[13px]  font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
-                        Short Name
+                    <th className='text-[11px]  font-semibold border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
+                        Short <br/> Name
                     </th>
-                    <th className='text-[13px]  font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
-                        Calculation Type
+                    <th className='text-[11px]  font-semibold border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
+                        Calculation <br/> Type
                     </th>
-                    <th className='text-[13px]  font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
-                        Calculation Value
+                    <th className='text-[11px]  font-semibold border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
+                        Calculation <br/> Value
                     </th>
-                    <th className='text-[13px]  font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
+                    <th className='text-[11px]  font-semibold border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
                         Formula
                     </th>
                 </tr>
             </thead>
             <tbody>
-                {earningHeadsData.map((item, index)=>{
-                    <tr key={index}>
-                        <td>
-                        <label className="capitalize font-semibold text-[13px]">
-                            <input
-                            type="checkbox"
-                            className='w-5 h-5 mr-2 mt-2 focus:outline-gray-300 border border-blue-900 rounded-lg'
-                            checked={item.Selected}
-                            />
-                        </label>
-                        </td>
-                        <td className='px-4 border-2 whitespace-normal text-left text-[11px]'>
-                            {item.EarningHead}
-                        </td>
-                        <td className='px-4 border-2 whitespace-normal text-left text-[11px]'>
-                            {item.ShortName}
-                        </td>
-                        <td className='px-4 border-2 whitespace-normal text-left text-[11px]'>
-                            {item.CalculationType}
-                        </td>
-                        <td className='px-4 border-2 whitespace-normal text-left text-[11px]'>
-                            {item.CalculationValue}
-                        </td>
-                        <td className='px-4 border-2 whitespace-normal text-left text-[11px]'>
-                            {item.Formula}
-                        </td>
-                    </tr>
-                })}
+            {earningHeadsData.map((item, index) => (
+            <tr key={index} className={`${item.Selected ? '' : 'bg-gray-100'} `}>
+                <td>
+                <label className="capitalize font-semibold text-[11px]">
+                    <input
+                    type="checkbox"
+                    className='w-5 h-5 mr-2 mt-2 focus:outline-gray-300 border border-blue-900 rounded-lg'
+                    checked={item.Selected}
+                    />
+                </label>
+                </td>
+                <td className='px-4 border-2 whitespace-normal text-left text-[11px]'>
+                {item.EarningHead}
+                </td>
+                <td className='px-4 border-2 whitespace-normal text-left text-[11px]'>
+                {item.ShortName}
+                </td>
+                <td className='px-4 border-2 whitespace-normal text-left text-[11px]'>
+                {item.CalculationType}
+                </td>
+                <td className='px-4 border-2 whitespace-normal text-left text-[11px]'>
+                {item.CalculationValue}
+                </td>
+                <td className='px-4 border-2 whitespace-normal text-left text-[11px]'>
+                {item.Formula}
+                </td>
+            </tr>
+            ))}
             </tbody>
         </table>
         </div>

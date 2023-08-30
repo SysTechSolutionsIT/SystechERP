@@ -129,3 +129,5 @@ const TwoFieldsModal = ({ visible, onClick }) => {
     </form>
   );
 };
+
+export default TwoFieldsModal
