@@ -267,7 +267,10 @@ const Sidebar = () => {
                       title="Employee Master"
                       onClick={() => navigate("employee-master")}
                     />
-                    <SubMenuEntry title="Employee Type Master" />
+                    <SubMenuEntry
+                    title="Employee Type Master"
+                    onClick={() => navigate("employee-type-master")}
+                    />
                     <SubMenuEntry title="Employee Grade Master" />
                     <SubMenuEntry title="Designation Master" />
                     <SubMenuEntry title="KRA Master" />

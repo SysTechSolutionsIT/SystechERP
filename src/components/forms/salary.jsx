@@ -1,6 +1,7 @@
 import { useFormik } from 'formik'
 import React from 'react'
 import { useState } from 'react';
+import DeductionHeadsTable from './DeductionHeadsTable';
 import EarningHeadsTable from './EarningHeadsTable';
 
 const SalaryStructure = () => {
@@ -288,7 +289,10 @@ const SalaryStructure = () => {
                 </label>
         </div>
         </div> 
+        <div className='flex flex-wrap'>
         <EarningHeadsTable/>
+        <DeductionHeadsTable/>
+        </div>
         <div className="flex mt-5 justify-center gap-4">
           <button
             type="submit"

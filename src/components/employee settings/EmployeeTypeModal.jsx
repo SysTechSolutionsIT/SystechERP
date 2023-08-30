@@ -1,20 +1,21 @@
-import { useFormik } from "formik";
-import React, { useState } from "react";
-import { TwoFData } from "./TwoFieldsMaster";
-import { Icon } from "@iconify/react";
+import { useFormik } from 'formik';
+import React, { useState } from 'react'
+import { EmployeeTypeData } from './EmployeeTypeMaster';
+import { Icon } from '@iconify/react';
 
-const TwoFieldsModal = ({ visible, onClick }) => {
+const EmployeeTypeModal = ({ visible, onClick }) => {
   const formik = useFormik({
     initialValues: {
       ID: "",
-      MasterName: "",
-      FieldDetails: "",
+      EmployeeType: "",
+      EmployeeTypeGroup: "",
+      ShortName: "",
       Status: "",
-      remark: "",
+      Remark: ""
     },
     onSubmit: (values) => {
       console.log(values);
-      TwoFData.push(values);
+      EmployeeTypeData.push(values);
       alert("Added Successfully");
     },
   });
@@ -32,7 +33,7 @@ const TwoFieldsModal = ({ visible, onClick }) => {
         <div className="bg-gray-200 w-[60%] p-8 rounded-lg max-h-[80%] overflow-y-scroll">
           <div className="bg-blue-900 py-2 px-4 rounded-lg flex justify-between items-center">
             <p className="text-white text-[13px] font-semibold">
-              Two Fields Master
+              Employee Type Master
             </p>
             <Icon
               icon="maki:cross"
@@ -44,35 +45,48 @@ const TwoFieldsModal = ({ visible, onClick }) => {
           <div className="py-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-[13px] font-semibold">Field ID</p>
+                <p className="text-[13px] font-semibold">Employee Type ID</p>
                 <input
                   id="ID"
                   type="number"
-                  placeholder="Enter Field ID"
+                  placeholder="Enter Employee Type ID"
                   value={formik.values.ID}
-                  className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
               </div>
               <div>
-                <p className="text-[13px] font-semibold">Master Name</p>
+                <p className="text-[13px] font-semibold">Employee Type</p>
                 <input
-                  id="MasterName"
+                  id="EmployeeType"
                   type="text"
-                  placeholder="Enter Master Name"
-                  value={formik.values.MasterName}
-                  className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
+                  placeholder="Enter Employee Type"
+                  value={formik.values.EmployeeType}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
               </div>
               <div>
-                <p className="text-[13px] font-semibold">Field Details</p>
+                <p className="text-[13px] font-semibold">Employee Type Group</p>
+                <select
+                  id="EmployeeTypeGroup"
+                  value={formik.values.EmployeeTypeGroup}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  onChange={formik.handleChange}
+                >
+                  <option value="">Select Employee Type Group</option>
+                  <option value="Worker">Worker</option>
+                  <option value="Staff">Staff</option>
+                </select>
+              </div>
+              <div>
+                <p className="text-[13px] font-semibold">Short Name</p>
                 <input
-                  id="FieldDetails"
+                  id="ShortName"
                   type="text"
-                  placeholder="Enter Field Details"
-                  value={formik.values.FieldDetails}
-                  className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
+                  placeholder="Enter Short Name"
+                  value={formik.values.ShortName}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
               </div>
@@ -82,8 +96,8 @@ const TwoFieldsModal = ({ visible, onClick }) => {
                   id="remark"
                   type="text"
                   placeholder="Enter Remarks"
-                  value={formik.values.remark}
-                  className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
+                  value={formik.values.Remark}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
               </div>
@@ -95,7 +109,7 @@ const TwoFieldsModal = ({ visible, onClick }) => {
                     type="checkbox"
                     checked={status}
                     value={formik.values.Status}
-                    className={` relative w-4 h-4 mr-2 peer shrink-0 appearance-none checked:bg-blue-800 border-2 border-blue-900 rounded-sm`}
+                    className={`relative w-4 h-4 mr-2 peer shrink-0 checked:appearance-none checked:bg-blue-900 border-2 border-blue-900 rounded-sm`}
                     onChange={handleStatusChange}
                   />
                   <Icon
@@ -128,6 +142,6 @@ const TwoFieldsModal = ({ visible, onClick }) => {
       </div>
     </form>
   );
-};
+}
 
-export default TwoFieldsModal 
+export default EmployeeTypeModal
