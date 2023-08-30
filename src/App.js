@@ -21,6 +21,7 @@ import EMPTabs from "./components/employee settings/emptabs";
 import JobTypeMaster from "./components/attendance settings/jobTypeMaster";
 import ShiftMaster from "./components/attendance settings/shiftMaster";
 import WeeklyOffMaster from "./components/attendance settings/WeeklyOffMaster";
+import HolidayMaster from "./components/attendance settings/Holidaymaster";
 
 function App() {
   return (
@@ -52,6 +53,7 @@ function App() {
           <Route path="/employee-master" element={<EmployeeMaster />} />
           <Route path="/add-employee" element={<EMPTabs />} />
           <Route path="/shift-master" element={<ShiftMaster />} />
+          <Route path="/holiday-master" element={<HolidayMaster />} />
           <Route path="/weeklyoff-master" element={<WeeklyOffMaster />} />
           <Route path="/job-type-master" element={<JobTypeMaster />} />
           <Route path="/edit-employee/:empid" element={<EMPTabs />} />

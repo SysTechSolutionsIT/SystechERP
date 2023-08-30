@@ -25,9 +25,9 @@ const ViewJob = ({ visible, onClick, edit, ID }) => {
   });
 
   useEffect(() => {
-    const selectedDest = JobTypeData.find((entry) => entry.jobTypeId === ID);
-    if (selectedDest) {
-      setDetails(selectedDest);
+    const selectedJob = JobTypeData.find((entry) => entry.jobTypeId === ID);
+    if (selectedJob) {
+      setDetails(selectedJob);
     }
   }, [ID]);
 
@@ -60,9 +60,9 @@ const ViewJob = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Job Type ID</p>
                 <input
-                  id="ID"
+                  id="jobTypeId"
                   type="number"
-                  placeholder="Enter Destination ID"
+                  placeholder="Enter Job Type ID"
                   value={details.jobTypeId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
@@ -72,9 +72,9 @@ const ViewJob = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Job Type Name</p>
                 <input
-                  id="Name"
+                  id="jobTypeName"
                   type="text"
-                  placeholder="Enter Destination Name"
+                  placeholder="Enter Job Type Name"
                   value={details.jobTypeName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
@@ -84,7 +84,7 @@ const ViewJob = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">ShortName</p>
                 <input
-                  id="shortName"
+                  id="shortname"
                   type="text"
                   placeholder="Enter Short Name"
                   value={details.shortname}

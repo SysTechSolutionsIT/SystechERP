@@ -296,7 +296,10 @@ const Sidebar = () => {
                       title="Weekly Off Master"
                       onClick={() => navigate("/weeklyoff-master")}
                     />
-                    <SubMenuEntry title="Holiday Master" />
+                    <SubMenuEntry
+                      title="Holiday Master"
+                      onClick={() => navigate("/holiday-master")}
+                    />
                     <SubMenuEntry title="Atten. Device Master" />
                   </SubMenuGroup>
                 )}

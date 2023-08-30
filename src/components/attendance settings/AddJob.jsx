@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import { JobTypeData } from "./jobTypeMaster";
 
@@ -21,8 +21,12 @@ const AddJob = ({ visible, onClick }) => {
     onSubmit: (values) => {
       console.log(values);
       JobTypeData.push(values);
+      onClick();
     },
   });
+  useEffect(() => {
+    formik.resetForm();
+  }, []);
 
   if (!visible) return null;
   return (
@@ -75,10 +79,10 @@ const AddJob = ({ visible, onClick }) => {
                   Short Name
                 </p>
                 <input
-                  id="shortName"
+                  id="shortname"
                   type="text"
                   placeholder="Enter Short Name"
-                  value={formik.values.shortName}
+                  value={formik.values.shortname}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -88,7 +92,7 @@ const AddJob = ({ visible, onClick }) => {
                   Rate Per Day
                 </p>
                 <input
-                  id="ratePerday"
+                  id="ratePerDay"
                   type="text"
                   placeholder="Enter Rate/Day"
                   value={formik.values.ratePerDay}
@@ -167,12 +171,14 @@ const AddJob = ({ visible, onClick }) => {
                     checked={statusCheck}
                     className={`w-5 h-5 mr-2 mt-4 focus:outline-gray-300 border border-blue-900 rounded-lg`}
                     onChange={() => {
-                      console.log("Status checkbox clicked");
                       setStatusCheck(!statusCheck);
-                      console.log("Status after updating", statusCheck);
+                      formik.setFieldValue(
+                        "status",
+                        statusCheck ? "Inactive" : "Active"
+                      ); // Update status value in formik
                     }}
                   />
-                  Active
+                  Active {/* Always display "Active" label */}
                 </label>
               </div>
             </div>

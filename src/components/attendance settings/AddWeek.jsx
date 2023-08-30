@@ -4,22 +4,28 @@ import { Icon } from "@iconify/react";
 import { WeeklyOffData } from "./WeeklyOffMaster";
 
 const AddWeek = ({ visible, onClick }) => {
-  const [statusCheck, setStatusCheck] = useState(false);
+  const [isStatusChecked, setStatusCheched] = useState(false);
 
   const formik = useFormik({
     initialValues: {
-      weeklyOffId: {},
+      weeklyOffId: "",
       weeklyOff: "",
       remark: "",
-      status: "",
+      status: isStatusChecked.toString(),
     },
     onSubmit: (values) => {
       console.log(values);
       WeeklyOffData.push(values);
     },
   });
-
-  const [status, setStatus] = useState(false);
+  const handleCheckboxChange = (fieldName, setChecked, event) => {
+    const checked = event.target.checked;
+    setChecked(checked);
+    formik.setValues({
+      ...formik.values,
+      [fieldName]: checked.toString(),
+    });
+  };
 
   if (!visible) return null;
   return (
@@ -46,8 +52,8 @@ const AddWeek = ({ visible, onClick }) => {
                   Weekly Off ID
                 </p>
                 <input
-                  id=" weeklyOffId"
-                  type="number"
+                  id="weeklyOffId"
+                  type="text"
                   placeholder="Enter Weekly Off ID"
                   value={formik.values.weeklyOffId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
@@ -59,7 +65,7 @@ const AddWeek = ({ visible, onClick }) => {
                   Weekly Off Name
                 </p>
                 <input
-                  id="jobTypeName"
+                  id="weeklyOff"
                   type="text"
                   placeholder="Enter Weekly Off Name"
                   value={formik.values.weeklyOff}
@@ -79,18 +85,18 @@ const AddWeek = ({ visible, onClick }) => {
                 />
               </div>
               <div>
-                <p className="capitalize font-semibold text-[13px]">Status</p>
+                <p className=" mt-1 capitalize font-semibold text-[13px]">
+                  Status
+                </p>
                 <label className="capitalize font-semibold text-[13px]">
                   <input
                     id="status"
                     type="checkbox"
-                    checked={statusCheck}
-                    className={`w-5 h-5 mr-2 mt-4 focus:outline-gray-300 border border-blue-900 rounded-lg`}
-                    onChange={() => {
-                      console.log("Status checkbox clicked");
-                      setStatusCheck(!statusCheck);
-                      console.log("Status after updating", statusCheck);
-                    }}
+                    checked={isStatusChecked}
+                    className={`w-5 h-5 mr-2 mt-2 focus:outline-gray-300 border border-blue-900 rounded-lg`}
+                    onChange={(event) =>
+                      handleCheckboxChange("status", setStatusCheched, event)
+                    }
                   />
                   Active
                 </label>

@@ -28,14 +28,15 @@ const AddShift = ({ visible, onClick }) => {
       console.log(values);
       ShiftData.push(values);
       alert("Added Successfully");
+      onClick();
     },
   });
 
-  const [status, setStatus] = useState(false);
+  const [statusCheck, setStatusCheck] = useState(false);
 
-  const handleStatusChange = () => {
-    setStatus(!status);
-  };
+  useEffect(() => {
+    formik.resetForm();
+  }, []);
 
   if (!visible) return null;
   return (
@@ -69,7 +70,7 @@ const AddShift = ({ visible, onClick }) => {
               <div>
                 <p className="text-[13px] font-semibold">Shift Name</p>
                 <input
-                  id="Name"
+                  id="shiftName"
                   type="text"
                   placeholder="Enter Shift Name"
                   value={formik.values.shiftName}
@@ -266,25 +267,23 @@ const AddShift = ({ visible, onClick }) => {
                 />
               </div>
               <div>
-                <p className="text-[13px] font-semibold">Status</p>
-                <div className="flex items-center">
+                <p className="capitalize font-semibold text-[13px]">Status</p>
+                <label className="capitalize font-semibold text-[13px]">
                   <input
                     id="status"
                     type="checkbox"
-                    checked={formik.values.status}
-                    value={formik.values.status}
-                    className={` relative w-4 h-4 mr-2 peer shrink-0 appearance-none checked:bg-blue-800 border-2 border-blue-900 rounded-sm`}
-                    onChange={handleStatusChange}
+                    checked={statusCheck}
+                    className={`w-5 h-5 mr-2 mt-4 focus:outline-gray-300 border border-blue-900 rounded-lg`}
+                    onChange={() => {
+                      setStatusCheck(!statusCheck);
+                      formik.setFieldValue(
+                        "status",
+                        statusCheck ? "Inactive" : "Active"
+                      ); // Update status value in formik
+                    }}
                   />
-                  <Icon
-                    className="absolute w-4 h-4 hidden peer-checked:block"
-                    icon="gg:check"
-                    color="white"
-                  />
-                  <label for="status" className="text-[11px] font-semibold">
-                    Active
-                  </label>
-                </div>
+                  Active {/* Always display "Active" label */}
+                </label>
               </div>
             </div>
           </div>

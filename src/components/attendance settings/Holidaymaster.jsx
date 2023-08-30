@@ -1,80 +1,107 @@
 import { Icon } from "@iconify/react";
 import React, { useState, useEffect, useRef } from "react";
-import ViewWeek from "./viewWeek";
-import AddShift from "./AddShift";
-import AddWeek from "./AddWeek";
+import { Button } from "react-bootstrap";
+import ViewHoliday from "./viewHoliday";
+import AddHoliday from "./AddHoliday";
 
-export const WeeklyOffData = [
+export const HolidayData = [
   {
-    weeklyOffId: 1,
-    weeklyOff: "Sunday",
-    remark: "Weekend",
-    status: "active",
+    id: 1,
+    description: "New Year's Day",
+    date: "2023-01-01",
+    type: "Paid",
+    year: "2023",
+    remark: "Start of the new year",
+    status: "Active",
   },
   {
-    weeklyOffId: 2,
-    weeklyOff: "Saturday",
-    remark: "Weekend",
-    status: "active",
+    id: 2,
+    description: "Independence Day",
+    date: "2023-08-15",
+    type: "Paid",
+    year: "2023",
+    remark: "National holiday",
+    status: "Active",
   },
   {
-    weeklyOffId: 3,
-    weeklyOff: "Wednesday",
-    remark: "Midweek",
-    status: "active",
+    id: 3,
+    description: "Christmas Day",
+    date: "2023-12-25",
+    type: "Paid",
+    year: "2023",
+    remark: "Celebration of Christmas",
+    status: "Active",
   },
   {
-    weeklyOffId: 4,
-    weeklyOff: "Thursday",
-    remark: "Midweek",
-    status: "inactive",
+    id: 4,
+    description: "Labor Day",
+    date: "2023-05-01",
+    type: "Paid",
+    year: "2023",
+    remark: "International Workers' Day",
+    status: "Active",
   },
   {
-    weeklyOffId: 5,
-    weeklyOff: "Monday",
-    remark: "",
-    status: "active",
+    id: 5,
+    description: "Thanksgiving Day",
+    date: "2023-11-23",
+    type: "Paid",
+    year: "2023",
+    remark: "Day of giving thanks",
+    status: "Active",
   },
   {
-    weeklyOffId: 6,
-    weeklyOff: "Tuesday",
-    remark: "",
-    status: "inactive",
+    id: 6,
+    description: "Easter Sunday",
+    date: "2023-04-16",
+    type: "Paid",
+    year: "2023",
+    remark: "Celebration of Easter",
+    status: "Active",
   },
   {
-    weeklyOffId: 7,
-    weeklyOff: "Friday",
-    remark: "Weekend",
-    status: "active",
+    id: 7,
+    description: "Diwali",
+    date: "2023-11-04",
+    type: "weekOff",
+    year: "2023",
+    remark: "Festival of lights",
+    status: "Active",
   },
   {
-    weeklyOffId: 8,
-    weeklyOff: "Thursday",
-    remark: "",
-    status: "inactive",
+    id: 8,
+    description: "Halloween",
+    date: "2023-10-31",
+    type: "Unpaid",
+    year: "2023",
+    remark: "Spooky celebrations",
+    status: "Active",
   },
 ];
 
-const WeeklyOffMaster = () => {
+const HolidayMaster = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false); //Add Modal
   //View and Edit
-  const [WVE, setWVE] = useState(false);
+  const [HVE, setHVE] = useState(false);
   const [edit, setEdit] = useState(false);
-  const [weeklyOffId, setweeklyOffId] = useState();
+  const [Hid, setHid] = useState();
 
   //Hamburger Menu
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
   const [columnVisibility, setColumnVisibility] = useState({
-    weeklyOff: true,
+    description: true,
+    date: true,
+    type: true,
+    year: true,
     remark: false,
     status: true,
   });
 
   const handleSearchChange = (title, searchWord) => {
-    const newFilter = WeeklyOffData.filter((item) => {
+    const newFilter = HolidayData.filter((item) => {
       const value = item[title];
       return value && value.toLowerCase().includes(searchWord.toLowerCase());
     });
@@ -131,7 +158,7 @@ const WeeklyOffMaster = () => {
   //Max Searchbar width
   const getColumnMaxWidth = (columnName) => {
     let maxWidth = 0;
-    const allRows = [...WeeklyOffData, ...filteredData];
+    const allRows = [...HolidayData, ...filteredData];
 
     allRows.forEach((row) => {
       const cellContent = row[columnName];
@@ -154,7 +181,7 @@ const WeeklyOffMaster = () => {
       <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-x-clip">
         <div className="flex items-center gap-4 whitespace-normal">
           <div className="mr-auto text-[15px] whitespace-normal min-w-fit">
-            Attendance Settings / Weekly Off Master
+            Attendance Settings / Holiday Master
           </div>
           <div className="relative sticky lg:ml-96 sm:ml-64">
             <button
@@ -252,7 +279,7 @@ const WeeklyOffMaster = () => {
           )}
         </div>
       </div>
-      <AddWeek visible={isModalOpen} onClick={() => setModalOpen(false)} />
+      <AddHoliday visible={isModalOpen} onClick={() => setModalOpen(false)} />
 
       <div className="grid gap-2 justify-between">
         <div className="my-1 rounded-2xl bg-white p-2 pr-8 ">
@@ -270,18 +297,11 @@ const WeeklyOffMaster = () => {
                     columnVisibility[columnName] && (
                       <th
                         key={columnName}
-                        className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 capitalize whitespace-normal max-w-xs ${
+                        className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 capitalize ${
                           columnVisibility[columnName] ? "" : "hidden"
                         }`}
                       >
-                        {columnName
-                          .replace(/([a-z])([A-Z])/g, "$1 $2")
-                          .split(" ")
-                          .map((word, index) => (
-                            <div key={index} className="whitespace-nowrap">
-                              {word}
-                            </div>
-                          ))}
+                        {columnName}
                       </th>
                     )
                 )}
@@ -324,9 +344,9 @@ const WeeklyOffMaster = () => {
                             width="20"
                             height="20"
                             onClick={() => {
-                              setWVE(true); // Open VEModal
+                              setHVE(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setweeklyOffId(result.weeklyOffId); // Pass ID to VEModal
+                              setHid(result.id); // Pass ID to VEModal
                             }}
                           />
                           <Icon
@@ -335,16 +355,16 @@ const WeeklyOffMaster = () => {
                             width="20"
                             height="20"
                             onClick={() => {
-                              setWVE(true); // Open VEModal
+                              setHVE(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setweeklyOffId(result.weeklyOffId); // Pass ID to VEModal
+                              setHid(result.id); // Pass ID to VEModal
                             }}
                           />
-                          <ViewWeek
-                            visible={WVE}
-                            onClick={() => setWVE(false)}
+                          <ViewHoliday
+                            visible={HVE}
+                            onClick={() => setHVE(false)}
                             edit={edit}
-                            ID={weeklyOffId}
+                            ID={Hid}
                           />
                           <Icon
                             icon="material-symbols:delete-outline"
@@ -355,7 +375,7 @@ const WeeklyOffMaster = () => {
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {result.weeklyOffId}
+                        {result.id}
                       </td>
                       {selectedColumns.map(
                         (columnName) =>
@@ -372,7 +392,7 @@ const WeeklyOffMaster = () => {
                       )}
                     </tr>
                   ))
-                : WeeklyOffData.map((entry, index) => (
+                : HolidayData.map((entry, index) => (
                     <tr key={index}>
                       <td className="px-2 border-2">
                         <div className="flex items-center gap-2 text-center justify-center">
@@ -382,9 +402,9 @@ const WeeklyOffMaster = () => {
                             width="20"
                             height="20"
                             onClick={() => {
-                              setWVE(true); // Open VEModal
+                              setHVE(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setweeklyOffId(entry.weeklyOffId); // Pass ID to VEModal
+                              setHid(entry.id); // Pass ID to VEModal
                             }}
                           />
 
@@ -394,16 +414,16 @@ const WeeklyOffMaster = () => {
                             width="20"
                             height="20"
                             onClick={() => {
-                              setWVE(true); // Open VEModal
+                              setHVE(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setweeklyOffId(entry.weeklyOffId); // Pass ID to VEModal
+                              setHid(entry.id); // Pass ID to VEModal
                             }}
                           />
-                          <ViewWeek
-                            visible={WVE}
-                            onClick={() => setWVE(false)}
+                          <ViewHoliday
+                            visible={HVE}
+                            onClick={() => setHVE(false)}
                             edit={edit}
-                            ID={weeklyOffId}
+                            ID={Hid}
                           />
 
                           <Icon
@@ -415,7 +435,7 @@ const WeeklyOffMaster = () => {
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {entry.weeklyOffId}
+                        {entry.id}
                       </td>
                       {selectedColumns.map(
                         (columnName) =>
@@ -440,4 +460,4 @@ const WeeklyOffMaster = () => {
   );
 };
 
-export default WeeklyOffMaster;
+export default HolidayMaster;
