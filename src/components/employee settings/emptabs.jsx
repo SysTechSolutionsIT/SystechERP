@@ -5,21 +5,27 @@ import Personal from "../forms/personal";
 import Professional from "../forms/professional";
 import Work from "../forms/work";
 import { Icon } from "@iconify/react";
+import SalaryStructure from "../forms/salary";
 
 export default function EMPTabs() {
   const [openTab, setOpenTab] = React.useState(1);
 
   return (
     <>
-      <div className="flex font-[Inter] justify-center ">
-        <div className="">
-          <ul className="flex mb-0 list-none flex-wrap pt-0 pb-4 flex-row">
+      <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg items-center justify-between mb-1 sm:overflow-x-auto">
+        <div className="mr-auto text-[15px] whitespace-normal">
+            HRMS / Employee Settings / Employee Master
+          </div>
+        </div>
+      <div className="flex font-[Inter] justify-center">
+        <div>
+          <ul className="flex mb-0 list-none flex-wrap pt-0 pb-4 flex-row border-b-2 border-blue-900">
           <li className="-mb-px mr-2 ml-2 cursor-pointer">
               <p
                 className={
                   "inline-block p-0 py-1 px-1.5 " +
                   (openTab === 1
-                    ? "text-s font-bold uppercase text-white bg-blue-900 rounded-lg active"
+                    ? "text-s font-bold  text-white bg-blue-900 rounded-lg active"
                     :"hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg font-semibold")
                 }
                 onClick={(e) => {
@@ -27,7 +33,7 @@ export default function EMPTabs() {
                   setOpenTab(1);
                 }}
               >
-                PERSONAL PROFILE
+                Personal Profile
               </p>
             </li>
             <li className="-mb-px mr-2 ml-2 cursor-pointer">
@@ -35,7 +41,7 @@ export default function EMPTabs() {
                 className={
                   "inline-block p-0 py-1 px-1.5 rounded-lg " +
                   (openTab === 2
-                    ? "text-s font-bold uppercase text-white bg-blue-900 rounded-lg active"
+                    ? "text-s font-bold  text-white bg-blue-900 rounded-lg active"
                     : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg font-semibold")
                 }
                 onClick={(e) => {
@@ -44,7 +50,7 @@ export default function EMPTabs() {
                 }}
 
               >
-                FAMILY PROFILE
+                Work Profile
               </p>
             </li>
             <li className="-mb-px mr-2 cursor-pointer">
@@ -52,7 +58,7 @@ export default function EMPTabs() {
                 className={
                   "inline-block p-0 py-1 px-1.5 rounded-lg " +
                   (openTab === 3
-                    ? "text-s font-bold uppercase text-white bg-blue-900 rounded-lg active"
+                    ? "text-s font-bold  text-white bg-blue-900 rounded-lg active"
                     : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg font-semibold")
                 }
                 onClick={(e) => {
@@ -61,7 +67,7 @@ export default function EMPTabs() {
                 }}
 
               >
-                WORK PROFILE
+                Salary Structure
               </p>
             </li>
             <li className="-mb-px mr-2 cursor-pointer">
@@ -69,7 +75,7 @@ export default function EMPTabs() {
                 className={
                   "inline-block p-0 py-1 px-1.5 rounded-lg " +
                   (openTab === 4
-                    ? "text-s font-bold uppercase text-white bg-blue-900 rounded-lg active"
+                    ? "text-s font-bold  text-white bg-blue-900 rounded-lg active"
                     : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg font-semibold")
                 }
                 onClick={(e) => {
@@ -78,7 +84,7 @@ export default function EMPTabs() {
                 }}
 
               >
-                ACADEMIC PROFILE
+                Professional Profile
               </p>
             </li>
             <li className="-mb-px mr-2 cursor-pointer">
@@ -86,7 +92,7 @@ export default function EMPTabs() {
                 className={
                   "inline-block p-0 py-1 px-1.5 rounded-lg " +
                   (openTab === 5
-                    ? "text-s font-bold uppercase text-white bg-blue-900 rounded-lg active"
+                    ? "text-s font-bold  text-white bg-blue-900 rounded-lg active"
                     : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg font-semibold")
                 }
                 onClick={(e) => {
@@ -95,7 +101,7 @@ export default function EMPTabs() {
                 }}
 
               >
-                PROFESSIONAL PROFILE
+                Academic Profile
               </p>
             </li>
             <li className="-mb-px mr-2 cursor-pointer">
@@ -112,7 +118,7 @@ export default function EMPTabs() {
                 }}
 
               >
-                TRAINING PROFILE
+                Family Profile
               </p>
             </li>
             <li className="-mb-px mr-2 cursor-pointer">
@@ -129,7 +135,7 @@ export default function EMPTabs() {
                 }}
 
               >
-                ASSET PROFILE
+                Documents
               </p>
             </li>
           </ul>
@@ -140,42 +146,35 @@ export default function EMPTabs() {
                   <Personal />
                 </div>
 
-                {/* Family Profile Tab */}
-                <div className={openTab === 2 ? "block" : "hidden"}>
-                  <Family/>
-                </div>
-
                 {/* Work Profile Tab */}
-                <div className={openTab === 3 ? "block" : "hidden"}>
+                <div className={openTab === 2 ? "block" : "hidden"}>
                   <Work/>
                 </div>
 
-                {/* Academic Profile Tab */}
-                <div className={openTab === 4 ? "block" : "hidden"}>
-                  <Academic/>
+                {/* Salary Structure Tab */}
+                <div className={openTab === 3 ? "block" : "hidden"}>
+                  <SalaryStructure/>
                 </div>
 
                 {/* Professional Profile Tab */}
-                <div className={openTab === 5 ? "block" : "hidden"}>
+                <div className={openTab === 4 ? "block" : "hidden"}>
                   <Professional/>
                 </div>
 
-                {/* Training Profile Tab */}
-                <div className={openTab === 6 ? "block" : "hidden"}>
-                  <p>
-                    Suspendisse cursus mauris ut magna posuere, ut posuere justo
-                    tincidunt. Nam ac nunc et augue bibendum ultrices. Duis non
-                    ex nec purus interdum tincidunt.
-                  </p>
+                {/* Academic Profile Tab */}
+                <div className={openTab === 5 ? "block" : "hidden"}>
+                  <Academic/>
                 </div>
 
-                {/* Asset Profile Tab */}
+
+                {/* Family Profile Tab */}
+                <div className={openTab === 6 ? "block" : "hidden"}>
+                  <Family/>
+                </div>
+
+                {/* Documents Tab */}
                 <div className={openTab === 7 ? "block" : "hidden"}>
-                  <p>
-                    Aenean a justo et dui placerat convallis. Curabitur vel
-                    lectus in tellus rhoncus ultrices. Nulla facilisi. Aliquam
-                    id arcu in nisi pharetra gravida.
-                  </p>
+                  Docs
                 </div>
               </div>
             </div>
