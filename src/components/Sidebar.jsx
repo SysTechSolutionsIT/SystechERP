@@ -292,7 +292,10 @@ const Sidebar = () => {
                       title="Shift Master"
                       onClick={() => navigate("/shift-master")}
                     />
-                    <SubMenuEntry title="Weekly Off Master" />
+                    <SubMenuEntry
+                      title="Weekly Off Master"
+                      onClick={() => navigate("/weeklyoff-master")}
+                    />
                     <SubMenuEntry title="Holiday Master" />
                     <SubMenuEntry title="Atten. Device Master" />
                   </SubMenuGroup>
