@@ -268,8 +268,8 @@ const Sidebar = () => {
                       onClick={() => navigate("employee-master")}
                     />
                     <SubMenuEntry
-                    title="Employee Type Master"
-                    onClick={() => navigate("employee-type-master")}
+                      title="Employee Type Master"
+                      onClick={() => navigate("employee-type-master")}
                     />
                     <SubMenuEntry title="Employee Grade Master" />
                     <SubMenuEntry title="Designation Master" />
@@ -303,7 +303,10 @@ const Sidebar = () => {
                       title="Holiday Master"
                       onClick={() => navigate("/holiday-master")}
                     />
-                    <SubMenuEntry title="Atten. Device Master" />
+                    <SubMenuEntry
+                      title="Atten. Device Master"
+                      onClick={() => navigate("/attDevice-master")}
+                    />
                   </SubMenuGroup>
                 )}
                 <SubMenuMain
