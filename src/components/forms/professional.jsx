@@ -79,6 +79,7 @@ const Professional = () => {
               />
         </div>
         </div>
+        </div>
        <div className="gap-4 justify-between">
             <div className="my-1 rounded-2xl bg-white p-2 pr-8">
             <table className="text-center h-auto text-[11px] rounded-lg justify-center whitespace-normal">
@@ -105,6 +106,7 @@ const Professional = () => {
                         </th>
                     </tr>
                     </thead>
+                    <tbody>
                     {ProfessionalData.map((item, index) =>(
                       <tr>
                       <td className='text-[11px] border-2 cursor-pointer font-normal border-r-2 border-white py-1 px-2 bg-red-600 rounded-md text-white'>
@@ -142,6 +144,7 @@ const Professional = () => {
                       </td>
                       </tr>
                     ))}
+                    </tbody>
                     </table>
                     </div>
                     </div>
@@ -152,7 +155,6 @@ const Professional = () => {
                       >
                         Save Details
                       </button>
-                    </div>
                     </div>
     </formik>
   )

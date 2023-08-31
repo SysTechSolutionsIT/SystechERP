@@ -2,6 +2,59 @@ import React from 'react';
 import { useFormik } from 'formik';
 import { useState } from 'react';
 
+export const family = [
+  {
+    PersonName: "John Doe",
+    Relation: "Father",
+    Education: "Bachelor of Arts",
+    Occupation: "Engineer",
+    Address: "123 Main Street, Anytown, CA 12345",
+    CellNo: "123-456-7890",
+    EmailId: "john.doe@example.com",
+    Nomminee: "Jane Doe",
+  },
+  {
+    PersonName: "Jane Doe",
+    Relation: "Mother",
+    Education: "Master of Science",
+    Occupation: "Doctor",
+    Address: "456 Elm Street, Anytown, CA 12345",
+    CellNo: "555-678-9012",
+    EmailId: "jane.doe@example.com",
+    Nomminee: "John Doe",
+  },
+  {
+    PersonName: "Peter Smith",
+    Relation: "Brother",
+    Education: "High School Diploma",
+    Occupation: "Truck Driver",
+    Address: "789 Oak Street, Anytown, CA 12345",
+    CellNo: "987-654-3210",
+    EmailId: "peter.smith@example.com",
+    Nomminee: "John Doe",
+  },
+  {
+    PersonName: "Mary Jones",
+    Relation: "Sister",
+    Education: "Associate's Degree",
+    Occupation: "Teacher",
+    Address: "1011 Main Street, Anytown, CA 12345",
+    CellNo: "234-567-8901",
+    EmailId: "mary.jones@example.com",
+    Nomminee: "Jane Doe",
+  },
+  {
+    PersonName: "Bill Brown",
+    Relation: "Friend",
+    Education: "PhD",
+    Occupation: "Scientist",
+    Address: "1234 Elm Street, Anytown, CA 12345",
+    CellNo: "345-678-9012",
+    EmailId: "bill.brown@example.com",
+    Nomminee: "John Doe",
+  },
+];
+
 const Family = () => {
   const [familyMembers, setFamilyMembers] = useState([]);
   
@@ -41,221 +94,130 @@ const Family = () => {
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <div>
-        <div className='p-8'>
-          <div className='grid grid-cols-3 gap-4'>
-            <div>
-              <p className='text-[13px] font-semibold capatilize'>Employee ID</p>
+       <div className='grid grid-cols-2 gap-x-4'>
+        <div className="py-1">
+              <p className="mb-1 capitalize font-semibold text-[13px]">Employee ID</p>
               <input
                 id="EmployeeId"
                 type="number"
                 value={formik.values.EmployeeId}
-                className={`w-full px-4 py-2 font-normal text-[13px] focus:outline-gray-300 border-2 rounded-lg `}
+                className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg `}
                 onChange={formik.handleChange}
               />
-            </div>
-            <div className='col-span-2'>
-              <p className='text-[13px] font-semibold capatilize'>Employee Name</p>
+        </div>
+        <div className="py-1">
+              <p className="mb-1 capitalize font-semibold text-[13px]">Employee Name</p>
               <input
                 id="EmployeeName"
-                type="number"
+                type="text"
                 value={formik.values.EmployeeName}
-                className={`w-full px-4 py-2 font-normal text-[13px] focus:outline-gray-300 border-2 rounded-lg `}
+                className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg `}
                 onChange={formik.handleChange}
               />
-            </div>
-            <div className='w-full col-span-3'>
-              <p className='text-[15px] font-bold underline'>Family Members:</p>
-            </div>
-            <div>
-              <p className='text-[13px] font-semibold'>Person Name</p>
-              <input
-                id="PersonName"
-                type='text'
-                value={formik.values.PersonName}
-                className={`w-full px-4 py-2 font-normal text-[13px] focus:outline-gray-300 border-2 rounded-lg `}
-                onChange={formik.handleChange}
-              />
-            </div>
-            <div>
-              <p className='text-[13px] font-semibold'>Relation</p>
-              <input
-                id="Relation"
-                type='text'
-                value={formik.values.Relation}
-                className={`w-full px-4 py-2 font-normal text-[13px] focus:outline-gray-300 border-2 rounded-lg `}
-                onChange={formik.handleChange}
-              />
-            </div>
-            <div>
-              <p className='text-[13px] font-semibold'>Education</p>
-              <input
-                id="Education"
-                type='text'
-                value={formik.values.Education}
-                className={`w-full px-4 py-2 font-normal text-[13px] focus:outline-gray-300 border-2 rounded-lg `}
-                onChange={formik.handleChange}
-              />
-            </div>
-            <div>
-              <p className='text-[13px] font-semibold'>Occupation</p>
-              <input
-                id="Occupation"
-                type='text'
-                value={formik.values.Occupation}
-                className={`w-full px-4 py-2 font-normal text-[13px] focus:outline-gray-300 border-2 rounded-lg `}
-                onChange={formik.handleChange}
-              />
-            </div>
-            <div className='col-span-2'>
-              <p className='text-[13px] font-semibold'>Address</p>
-              <input
-                id="Address"
-                type='text'
-                value={formik.values.Address}
-                className={`w-full px-4 py-2 font-normal text-[13px] focus:outline-gray-300 border-2 rounded-lg `}
-                onChange={formik.handleChange}
-              />
-            </div>
-            <div>
-              <p className='text-[13px] font-semibold'>Phone No.</p>
-              <input
-                id="CellNo"
-                type='text'
-                value={formik.values.CellNo}
-                className={`w-full px-4 py-2 font-normal text-[13px] focus:outline-gray-300 border-2 rounded-lg `}
-                onChange={formik.handleChange}
-              />
-            </div>
-            <div>
-              <p className='text-[13px] font-semibold'>Email ID</p>
-              <input
-                id="EmailId"
-                type='text'
-                value={formik.values.EmailId}
-                className={`w-full px-4 py-2 font-normal text-[13px] focus:outline-gray-300 border-2 rounded-lg `}
-                onChange={formik.handleChange}
-              />
-            </div>
-            <div>
-              <p className='text-[13px] font-semibold'>Nomine</p>
-              <input
-                id="Nomminee"
-                type='text'
-                value={formik.values.Nomminee}
-                className={`w-full px-4 py-2 font-normal text-[13px] focus:outline-gray-300 border-2 rounded-lg `}
-                onChange={formik.handleChange}
-              />
-            </div>
-          </div>
-          <div className='mt-5 border-b border-[1px] rounded-sm border-blue-900'></div>
-          {familyMembers.map((member, index) => (
-            <div key={index} className='pt-2'>
-              <div className='grid grid-cols-3 gap-4'>
-                <div>
-                  <p className='text-[13px] font-semibold'>Person Name</p>
-                  <input
-                    name={`familyMembers[${index}].PersonName`}
-                    type='text'
-                    value={member.PersonName}
-                    className={`w-full px-4 py-2 font-normal text-[13px] focus:outline-gray-300 border-2 rounded-lg `}
-                    onChange={formik.handleChange}
-                  />
-                </div>
-                <div>
-                  <p className='text-[13px] font-semibold'>Relation</p>
-                  <input
-                    name={`familyMembers[${index}].Relation`}
-                    type='text'
-                    value={member.Relation}
-                    className={`w-full px-4 py-2 font-normal text-[13px] focus:outline-gray-300 border-2 rounded-lg `}
-                    onChange={formik.handleChange}
-                  />
-                </div>
-                <div>
-                  <p className='text-[13px] font-semibold'>Education</p>
-                  <input
-                    name={`familyMembers[${index}].Education`}
-                    type='text'
-                    value={member.Education}
-                    className={`w-full px-4 py-2 font-normal text-[13px] focus:outline-gray-300 border-2 rounded-lg `}
-                    onChange={formik.handleChange}
-                  />
-                </div>
-                <div>
-                  <p className='text-[13px] font-semibold'>Occupation</p>
-                  <input
-                    name={`familyMembers[${index}].Occupation`}
-                    type='text'
-                    value={member.Occupation}
-                    className={`w-full px-4 py-2 font-normal text-[13px] focus:outline-gray-300 border-2 rounded-lg `}
-                    onChange={formik.handleChange}
-                  />
-                </div>
-                <div className='col-span-2'>
-                  <p className='text-[13px] font-semibold'>Address</p>
-                  <input
-                    name={`familyMembers[${index}].Address`}
-                    type='text'
-                    value={member.Address}
-                    className={`w-full px-4 py-2 font-normal text-[13px] focus:outline-gray-300 border-2 rounded-lg `}
-                    onChange={formik.handleChange}
-                  />
-                </div>
-                <div>
-                  <p className='text-[13px] font-semibold'>Phone No.</p>
-                  <input
-                    name={`familyMembers[${index}].CellNo`}
-                    type='text'
-                    value={member.CellNo}
-                    className={`w-full px-4 py-2 font-normal text-[13px] focus:outline-gray-300 border-2 rounded-lg `}
-                    onChange={formik.handleChange}
-                  />
-                </div>
-                <div>
-                  <p className='text-[13px] font-semibold'>Email ID</p>
-                  <input
-                    name={`familyMembers[${index}].EmailId`}
-                    type='text'
-                    value={member.EmailId}
-                    className={`w-full px-4 py-2 font-normal text-[13px] focus:outline-gray-300 border-2 rounded-lg `}
-                    onChange={formik.handleChange}
-                  />
-                </div>
-                <div>
-                  <p className='text-[13px] font-semibold'>Nomine</p>
-                  <input
-                    name={`familyMembers[${index}].Nomminee`}
-                    type='text'
-                    value={member.Nomminee}
-                    className={`w-full px-4 py-2 font-normal text-[13px] focus:outline-gray-300 border-2 rounded-lg `}
-                    onChange={formik.handleChange}
-                  />
-                </div>
-              </div>
-            <div className='mt-5 border-b border-[1px] rounded-sm border-blue-900'></div>
-            </div>
-
-          ))}
-          <div className='flex justify-end gap-4'>
-            <button
-              type='button'
-              className='px-4 text-[13px] py-1 mt-2 bg-blue-900 text-white text-lg rounded-md'
-              onClick={handleAddFamilyMember}
-            >
-              Add +
-            </button>
-          </div>
-          <div className="flex justify-center gap-4">
-          <button
-            type="submit"
-            className="px-8 py-2 bg-blue-900 text-white text-lg rounded-md"
-          >
-            Save Details
-          </button>
         </div>
         </div>
-      </div>
+        <div className="grid gap-4 justify-between">
+            <div className="my-1 rounded-2xl bg-white p-2 pr-8">
+            <table className="text-center text-[11px]  rounded-lg justify-center whitespace-normal">
+                <thead>
+                    <tr>
+                    <th className='text-[13px] font-normal border-2 border-white py-1 px-2 bg-blue-500 rounded-md cursor-pointer text-white'>
+                            Add
+                        </th>
+                        <th className='text-[13px] font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
+                            Person Name
+                        </th>
+                        <th className='text-[13px] font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white '>
+                            Relation
+                        </th>
+                        <th className='text-[13px] font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
+                            Education
+                        </th>
+                        <th className='text-[13px] font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
+                            Occupation
+                        </th>
+                        <th className='text-[13px] font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
+                            Address
+                        </th>
+                        <th className='text-[13px] font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
+                            CellNo
+                        </th>
+                        <th className='text-[13px] font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
+                            Email ID
+                        </th>
+                        <th className='text-[13px] font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
+                            Nominee
+                        </th>
+                    </tr>
+                    </thead>
+                    {family.map((item, index) =>(
+                    <tbody className='justify-between'>
+                      <tr>
+                      <td className='text-[11px] border-2 cursor-pointer font-normal border-r-2 border-white py-1 px-2 bg-red-600 rounded-md text-white'>
+                        Remove 
+                      </td>
+                      <td className='px-4 border-2 whitespace-normal text-center text-[11px'>
+                        <input
+                        id='PersonName'
+                        type='text'
+                        value={item.PersonName}
+                        onChange={formik.handleChange}/>
+                      </td>
+                      <td className='px-4 border-2 whitespace-normal text-center text-[11px'>
+                        <input
+                        id='Relation'
+                        type='text'
+                        value={item.Relation}
+                        onChange={formik.handleChange}/>
+                      </td>
+                      <td className='px-4 border-2 whitespace-normal text-center text-[11px'>
+                        <input
+                        id='Education'
+                        type='text'
+                        value={item.Education}
+                        onChange={formik.handleChange}/>
+                      </td>
+                      <td className='px-4 border-2 whitespace-normal text-center text-[11px'>
+                        <input
+                        id='Occupation'
+                        type='text'
+                        value={item.Occupation}
+                        onChange={formik.handleChange}/>
+                      </td>
+                      <td className='px-4 border-2 whitespace-normal text-center text-[11px'>
+                        <input
+                        id='Address'
+                        type='text'
+                        value={item.Address}
+                        onChange={formik.handleChange}/>
+                      </td>
+                      <td className='px-4 border-2 whitespace-normal text-center text-[11px'>
+                        <input
+                        id='CellNo'
+                        type='text'
+                        value={item.CellNo}
+                        onChange={formik.handleChange}/>
+                      </td>
+                      <td className='px-4 border-2 whitespace-normal text-center text-[11px'>
+                        <input
+                        id='EmailId'
+                        type='text'
+                        value={item.EmailId}
+                        onChange={formik.handleChange}/>
+                      </td>
+                      <td className='px-4 border-2 whitespace-normal text-center text-[11px'>
+                        <input
+                        id='Nomminee'
+                        type='text'
+                        value={item.Nomminee}
+                        onChange={formik.handleChange}/>
+                      </td>
+                      </tr>
+                    </tbody>
+                    ))}
+        </table>
+        </div>
+        </div>
     </form>
   );
 }
