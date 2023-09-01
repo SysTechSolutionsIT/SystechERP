@@ -25,7 +25,8 @@ import ShiftMaster from "./components/attendance settings/shiftMaster";
 import WeeklyOffMaster from "./components/attendance settings/WeeklyOffMaster";
 import HolidayMaster from "./components/attendance settings/Holidaymaster";
 import DeviceMaster from "./components/attendance settings/AttDevice";
-import LeaveTypeMaster from "./components/leaves settings/LeaveType";
+import EarningHeadsMaster from "./components/payroll settings/EarningHeadsMaster";
+import DeductionHeadsMaster from "./components/payroll settings/DeductionHeadsMaster";
 
 function App() {
   return (
@@ -63,8 +64,14 @@ function App() {
           <Route path="/weeklyoff-master" element={<WeeklyOffMaster />} />
           <Route path="/attDevice-master" element={<DeviceMaster />} />
           <Route path="/job-type-master" element={<JobTypeMaster />} />
-          <Route path="/leave-type-master" element={<LeaveTypeMaster />} />
+          {/* <Route path="/leave-type-master" element={<LeaveTypeMaster />} /> */}
           <Route path="/edit-employee/:empid" element={<EMPTabs />} />
+          <Route
+            path="/employee-type-master"
+            element={<EmployeeTypeMaster />}
+          />
+          <Route path="/earning-heads-master" element={<EarningHeadsMaster />} />
+          <Route path="/deduction-heads-master" element={<DeductionHeadsMaster />} />
         </Route>
       </Routes>
     </Router>

@@ -1,7 +1,8 @@
 import { Icon } from "@iconify/react";
 import React, { useState, useEffect, useRef } from "react";
+import ViewLeave from "./ViewLeave";
 
-const leaveData = [
+export const leaveData = [
   {
     LeaveId: 1,
     LeaveType: "Vacation",
@@ -364,12 +365,12 @@ const LeaveTypeMaster = () => {
                               setLeaveId(result.LeaveId); // Pass ID to VEModal
                             }}
                           />
-                          {/* <ViewWeek
+                          <ViewLeave
                             visible={LVE}
                             onClick={() => setLVE(false)}
                             edit={edit}
                             ID={LeaveId}
-                          /> */}
+                          />
                           <Icon
                             icon="material-symbols:delete-outline"
                             color="#556987"
@@ -423,12 +424,12 @@ const LeaveTypeMaster = () => {
                               setLeaveId(entry.LeaveId); // Pass ID to VEModal
                             }}
                           />
-                          {/* <ViewWeek
+                          <ViewLeave
                             visible={LVE}
                             onClick={() => setLVE(false)}
                             edit={edit}
                             ID={LeaveId}
-                          /> */}
+                          />
 
                           <Icon
                             icon="material-symbols:delete-outline"

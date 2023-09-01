@@ -316,8 +316,12 @@ const Sidebar = () => {
                 />
                 {isPayrollSubmenuOpen && (
                   <SubMenuGroup>
-                    <SubMenuEntry title="Earning Heads Master" />
-                    <SubMenuEntry title="Deduction Heads Master" />
+                    <SubMenuEntry 
+                    title="Earning Heads Master" 
+                    onClick={()=> navigate('/earning-heads-master')}/>
+                    <SubMenuEntry 
+                    title="Deduction Heads Master"
+                    onClick={()=> navigate('/deduction-heads-master')} />
                     <SubMenuEntry title="Employee Type Earning Deduciton" />
                     <SubMenuEntry title="Professional Tax Setting" />
                     <SubMenuEntry title="Advance Request" />
