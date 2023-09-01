@@ -24,6 +24,8 @@ import WeeklyOffMaster from "./components/attendance settings/WeeklyOffMaster";
 import HolidayMaster from "./components/attendance settings/Holidaymaster";
 import EmployeeTypeMaster from "./components/employee settings/EmployeeTypeMaster";
 import DeviceMaster from "./components/attendance settings/AttDevice";
+import EarningHeadsMaster from "./components/payroll settings/EarningHeadsMaster";
+import DeductionHeadsMaster from "./components/payroll settings/DeductionHeadsMaster";
 
 function App() {
   return (
@@ -64,6 +66,8 @@ function App() {
             path="/employee-type-master"
             element={<EmployeeTypeMaster />}
           />
+          <Route path="/earning-heads-master" element={<EarningHeadsMaster/>}/>
+          <Route path="/deduction-heads-master" element={<DeductionHeadsMaster/>}/>
         </Route>
       </Routes>
     </Router>
