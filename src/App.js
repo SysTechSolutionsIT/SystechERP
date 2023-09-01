@@ -24,6 +24,7 @@ import WeeklyOffMaster from "./components/attendance settings/WeeklyOffMaster";
 import HolidayMaster from "./components/attendance settings/Holidaymaster";
 import EmployeeTypeMaster from "./components/employee settings/EmployeeTypeMaster";
 import DeviceMaster from "./components/attendance settings/AttDevice";
+import LeaveTypeMaster from "./components/leaves settings/LeaveType";
 
 function App() {
   return (
@@ -59,6 +60,7 @@ function App() {
           <Route path="/weeklyoff-master" element={<WeeklyOffMaster />} />
           <Route path="/attDevice-master" element={<DeviceMaster />} />
           <Route path="/job-type-master" element={<JobTypeMaster />} />
+          <Route path="/leave-type-master" element={<LeaveTypeMaster />} />
           <Route path="/edit-employee/:empid" element={<EMPTabs />} />
           <Route
             path="/employee-type-master"
