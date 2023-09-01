@@ -338,7 +338,10 @@ const Sidebar = () => {
                 />
                 {isLeaveSubmenuOpen && (
                   <SubMenuGroup>
-                    <SubMenuEntry title="Leave Type Master" />
+                    <SubMenuEntry
+                      title="Leave Type Master"
+                      onClick={() => navigate("/leave-type-master")}
+                    />
                     <SubMenuEntry title="Leave Balance Upload" />
                     <SubMenuEntry title="Leave Application" />
                     <SubMenuEntry title="Leave Approvals" />

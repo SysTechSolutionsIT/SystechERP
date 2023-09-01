@@ -61,6 +61,7 @@ function App() {
           <Route path="/weeklyoff-master" element={<WeeklyOffMaster />} />
           <Route path="/attDevice-master" element={<DeviceMaster />} />
           <Route path="/job-type-master" element={<JobTypeMaster />} />
+          <Route path="/leave-type-master" element={<LeaveTypeMaster />} />
           <Route path="/edit-employee/:empid" element={<EMPTabs />} />
           <Route
             path="/employee-type-master"

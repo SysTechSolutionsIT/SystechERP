@@ -1,38 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { Icon } from "@iconify/react";
-import { JobTypeData } from "./jobTypeMaster";
+import { leaveData } from "./LeaveType";
 
-const ViewJob = ({ visible, onClick, edit, ID }) => {
+const ViewLeave = ({ visible, onClick, edit, ID }) => {
   const [details, setDetails] = useState([]);
   const formik = useFormik({
     initialValues: {
-      jobTypeId: "",
-      jobTypeName: "",
-      shortname: "",
-      ratePerDay: "",
-      rateGroup: "",
-      category: "",
-      position: "",
-      remark: "",
-      status: "",
+      LeaveId: "",
+      LeaveType: "",
+      ShortName: "",
+      PaidFlag: "",
+      CarryForwardFlag: "",
+      Remarks: "",
+      Status: "",
     },
     onSubmit: (values) => {
       console.log(values);
-      JobTypeData.push(values);
+      leaveData.push(values);
       alert("Added Successfully");
     },
   });
 
   useEffect(() => {
-    const selectedJob = JobTypeData.find((entry) => entry.jobTypeId === ID);
-    if (selectedJob) {
-      setDetails(selectedJob);
+    const selectedEntry = leaveData.find((entry) => entry.LeaveId === ID);
+    if (selectedEntry) {
+      setDetails(selectedEntry);
     }
   }, [ID]);
 
-  const [status, setStatus] = useState(false);
-
+  const [status, setStatus] = useState(details.Status === "Active");
   const handleStatusChange = () => {
     setStatus(!status);
   };
@@ -44,7 +41,7 @@ const ViewJob = ({ visible, onClick, edit, ID }) => {
         <div className="bg-gray-200 w-[60%]  p-8 rounded-lg max-h-[90%]">
           <div className="bg-blue-900 py-2 px-4 rounded-lg flex justify-between items-center">
             <p className="text-white text-[13px] font-semibold">
-              Job Type Master
+              Leave Type Master
             </p>
             <Icon
               icon="maki:cross"
@@ -58,24 +55,24 @@ const ViewJob = ({ visible, onClick, edit, ID }) => {
           <div className="py-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-[13px] font-semibold">Job Type ID</p>
+                <p className="text-[13px] font-semibold">Leave ID</p>
                 <input
-                  id="jobTypeId"
+                  id="LeaveId"
                   type="number"
-                  placeholder="Enter Job Type ID"
-                  value={details.jobTypeId}
+                  placeholder="Enter Leave ID"
+                  value={details.LeaveId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
               </div>
               <div>
-                <p className="text-[13px] font-semibold">Job Type Name</p>
+                <p className="text-[13px] font-semibold">Leave Type Name</p>
                 <input
-                  id="jobTypeName"
+                  id=" LeaveType"
                   type="text"
-                  placeholder="Enter Job Type Name"
-                  value={details.jobTypeName}
+                  placeholder="Enter Leave Type Name"
+                  value={details.LeaveType}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -87,76 +84,73 @@ const ViewJob = ({ visible, onClick, edit, ID }) => {
                   id="shortname"
                   type="text"
                   placeholder="Enter Short Name"
-                  value={details.shortname}
+                  value={details.ShortName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
               </div>
               <div>
-                <p className="text-[13px] font-semibold">Rate Per Day</p>
-                <input
-                  id="ratePerDay"
-                  type="number"
-                  placeholder="Enter Rate/Day"
-                  value={details.ratePerDay}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                  disabled={!edit}
-                />
-              </div>
-              <div>
-                <p className="text-[13px] font-semibold">Rate Group</p>
-                <input
-                  id="rateGroup"
-                  type="text"
-                  placeholder="Enter Rate Group"
-                  value={details.rateGroup}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                  disabled={!edit}
-                />
-              </div>
-              <div>
-                <p className="capitalize font-semibold text-[13px]">Category</p>
+                <p className="capitalize font-semibold text-[13px]">
+                  Paid Flag
+                </p>
                 <div className="space-y-2 text-[11px]">
                   <label className="flex items-center">
                     <input
                       type="radio"
-                      id="category"
-                      value="standard"
-                      checked={details.category === "standard"}
+                      id="PaidFlag"
+                      value="Paid"
+                      checked={details.PaidFlag === "Paid"}
                       onChange={formik.handleChange}
                       className="mr-2"
                       disabled={!edit}
                     />
-                    Standard
+                    Paid
                   </label>
                   <label className="flex items-center">
                     <input
                       type="radio"
-                      id="category"
-                      value="position"
-                      checked={details.category === "position"}
+                      id="PaidFlag"
+                      value="Unpaid"
+                      checked={details.PaidFlag === "Unpaid"}
                       onChange={formik.handleChange}
                       className="mr-2"
                       disabled={!edit}
                     />
-                    Position
+                    Unpaid
                   </label>
                 </div>
               </div>
               <div>
-                <p className="text-[13px] font-semibold">Position</p>
-                <input
-                  id="position"
-                  type="text"
-                  placeholder="Enter Position"
-                  value={details.position}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                  disabled={!edit}
-                />
+                <p className="capitalize font-semibold text-[13px]">
+                  Carry Forward Flag
+                </p>
+                <div className="space-y-2 text-[11px]">
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      id="CarryForwardFlag"
+                      value="Yes"
+                      checked={details.CarryForwardFlag === "Yes"}
+                      onChange={formik.handleChange}
+                      className="mr-2"
+                      disabled={!edit}
+                    />
+                    Yes
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      id="CarryForwardFlag"
+                      value="No"
+                      checked={details.CarryForwardFlag === "No"}
+                      onChange={formik.handleChange}
+                      className="mr-2"
+                      disabled={!edit}
+                    />
+                    No
+                  </label>
+                </div>
               </div>
               <div>
                 <p className="text-[13px] font-semibold">Remarks</p>
@@ -164,7 +158,7 @@ const ViewJob = ({ visible, onClick, edit, ID }) => {
                   id="remark"
                   type="text"
                   placeholder="Enter Remarks"
-                  value={details.remark}
+                  value={details.Remarks}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -176,8 +170,8 @@ const ViewJob = ({ visible, onClick, edit, ID }) => {
                   <input
                     id="status"
                     type="checkbox"
-                    checked={details.status}
-                    value={details.status}
+                    checked={details.Status}
+                    value={details.Status}
                     className={` relative w-4 h-4 mr-2 peer shrink-0 appearance-none checked:bg-blue-800 border-2 border-blue-900 rounded-sm`}
                     onChange={handleStatusChange}
                   />
@@ -213,4 +207,4 @@ const ViewJob = ({ visible, onClick, edit, ID }) => {
   );
 };
 
-export default ViewJob;
+export default ViewLeave;
