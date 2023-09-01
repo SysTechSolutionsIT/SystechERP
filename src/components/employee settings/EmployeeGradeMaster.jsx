@@ -1,6 +1,7 @@
 import { Icon } from '@iconify/react';
 import React, { useEffect, useRef, useState } from 'react'
 import EmployeeGradeModal from './EmployeeGradeModal';
+import ViewEmployeeGrade from './ViewEmployeeGrade';
 
 export const EmployeeGradeData = [
     {
@@ -109,7 +110,7 @@ const EmployeeGradeMaster = () => {
         setSelectedColumns([]);
     };
 
-    const [veDest, setVeDest] = useState(false);
+    const [veEGrade, setVeEGrade] = useState(false);
     const [edit, setEdit] = useState(false);
     const [id, setid] = useState();
 
@@ -308,14 +309,14 @@ const EmployeeGradeMaster = () => {
                                                     width="20"
                                                     height="20"
                                                     onClick={() => {
-                                                        setVeDest(true); // Open VEModal
+                                                        setVeEGrade(true); // Open VEModal
                                                         setEdit(false); // Disable edit mode for VEModal
                                                         setid(entry.ID); // Pass ID to VEModal
                                                     }}
                                                 />
-                                                {/* <ViewDestination
-                          visible={veDest}
-                          onClick={() => setVeDest(false)}
+                                                {/* <ViewEGradeination
+                          visible={veEGrade}
+                          onClick={() => setVeEGrade(false)}
                           edit={edit}
                           ID={id}
                         /> */}
@@ -326,17 +327,17 @@ const EmployeeGradeMaster = () => {
                                                     width="20"
                                                     height="20"
                                                     onClick={() => {
-                                                        setVeDest(true); // Open VEModal
+                                                        setVeEGrade(true); // Open VEModal
                                                         setEdit(true); // Disable edit mode for VEModal
                                                         setid(entry.ID); // Pass ID to VEModal
                                                     }}
                                                 />
-                                                {/* <ViewEmployeeType
-                          visible={veDest}
-                          onClick={() => setVeDest(false)}
-                          edit={edit}
-                          ID={id}
-                        /> */}
+                                                <ViewEmployeeGrade
+                                                    visible={veEGrade}
+                                                    onClick={() => setVeEGrade(false)}
+                                                    edit={edit}
+                                                    ID={id}
+                                                />
                                                 <Icon
                                                     className="cursor-pointer"
                                                     icon="material-symbols:delete-outline"
@@ -371,14 +372,14 @@ const EmployeeGradeMaster = () => {
                                                     width="20"
                                                     height="20"
                                                     onClick={() => {
-                                                        setVeDest(true); // Open VEModal
+                                                        setVeEGrade(true); // Open VEModal
                                                         setEdit(false); // Disable edit mode for VEModal
                                                         setid(entry.ID); // Pass ID to VEModal
                                                     }}
                                                 />
-                                                {/* <ViewDestination
-                          visible={veDest}
-                          onClick={() => setVeDest(false)}
+                                                {/* <ViewEGradeination
+                          visible={veEGrade}
+                          onClick={() => setVeEGrade(false)}
                           edit={edit}
                           ID={id}
                         /> */}
@@ -389,17 +390,17 @@ const EmployeeGradeMaster = () => {
                                                     width="20"
                                                     height="20"
                                                     onClick={() => {
-                                                        setVeDest(true); // Open VEModal
+                                                        setVeEGrade(true); // Open VEModal
                                                         setEdit(true); // Disable edit mode for VEModal
                                                         setid(entry.ID); // Pass ID to VEModal
                                                     }}
                                                 />
-                                                {/* <ViewEmployeeType
-                          visible={veDest}
-                          onClick={() => setVeDest(false)}
-                          edit={edit}
-                          ID={id}
-                        /> */}
+                                                <ViewEmployeeGrade
+                                                    visible={veEGrade}
+                                                    onClick={() => setVeEGrade(false)}
+                                                    edit={edit}
+                                                    ID={id}
+                                                />
                                                 <Icon
                                                     className="cursor-pointer"
                                                     icon="material-symbols:delete-outline"

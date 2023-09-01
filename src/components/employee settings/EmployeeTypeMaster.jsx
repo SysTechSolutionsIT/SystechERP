@@ -92,7 +92,7 @@ const EmployeeTypeMaster = () => {
     setSelectedColumns([]);
   };
 
-  const [veDest, setVeDest] = useState(false);
+  const [veEType, setVeEType] = useState(false);
   const [edit, setEdit] = useState(false);
   const [id, setid] = useState();
 
@@ -292,14 +292,14 @@ const EmployeeTypeMaster = () => {
                           width="20"
                           height="20"
                           onClick={() => {
-                            setVeDest(true); // Open VEModal
+                            setVeEType(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
                             setid(entry.ID); // Pass ID to VEModal
                           }}
                         />
-                        {/* <ViewDestination
-                          visible={veDest}
-                          onClick={() => setVeDest(false)}
+                        {/* <ViewETypeination
+                          visible={veEType}
+                          onClick={() => setVeEType(false)}
                           edit={edit}
                           ID={id}
                         /> */}
@@ -310,14 +310,14 @@ const EmployeeTypeMaster = () => {
                           width="20"
                           height="20"
                           onClick={() => {
-                            setVeDest(true); // Open VEModal
+                            setVeEType(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
                             setid(entry.ID); // Pass ID to VEModal
                           }}
                         />
                         <ViewEmployeeType
-                          visible={veDest}
-                          onClick={() => setVeDest(false)}
+                          visible={veEType}
+                          onClick={() => setVeEType(false)}
                           edit={edit}
                           ID={id}
                         />
@@ -355,14 +355,14 @@ const EmployeeTypeMaster = () => {
                           width="20"
                           height="20"
                           onClick={() => {
-                            setVeDest(true); // Open VEModal
+                            setVeEType(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
                             setid(entry.ID); // Pass ID to VEModal
                           }}
                         />
-                        {/* <ViewDestination
-                          visible={veDest}
-                          onClick={() => setVeDest(false)}
+                        {/* <ViewETypeination
+                          visible={veEType}
+                          onClick={() => setVeEType(false)}
                           edit={edit}
                           ID={id}
                         /> */}
@@ -373,14 +373,14 @@ const EmployeeTypeMaster = () => {
                           width="20"
                           height="20"
                           onClick={() => {
-                            setVeDest(true); // Open VEModal
+                            setVeEType(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
                             setid(entry.ID); // Pass ID to VEModal
                           }}
                         />
                         <ViewEmployeeType
-                          visible={veDest}
-                          onClick={() => setVeDest(false)}
+                          visible={veEType}
+                          onClick={() => setVeEType(false)}
                           edit={edit}
                           ID={id}
                         />

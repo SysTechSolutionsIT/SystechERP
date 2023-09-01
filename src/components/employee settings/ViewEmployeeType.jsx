@@ -4,6 +4,7 @@ import { EmployeeTypeData } from './EmployeeTypeMaster';
 import { Icon } from '@iconify/react';
 
 const ViewEmployeeType = ({ visible, onClick, edit, ID }) => {
+    const [StatusCheck, setStatusCheck] = useState(false);
     const [details, setDetails] = useState([]);
     const formik = useFormik({
         initialValues: {
@@ -17,7 +18,6 @@ const ViewEmployeeType = ({ visible, onClick, edit, ID }) => {
         onSubmit: (values) => {
             console.log(values);
             EmployeeTypeData.push(values);
-            alert("Added Successfully");
         },
     });
 
@@ -27,12 +27,6 @@ const ViewEmployeeType = ({ visible, onClick, edit, ID }) => {
             setDetails(selectedDest);
         }
     }, [ID]);
-
-    const [status, setStatus] = useState(false);
-
-    const handleStatusChange = () => {
-        setStatus(!status);
-    };
 
     if (!visible) return null;
     return (
@@ -120,10 +114,9 @@ const ViewEmployeeType = ({ visible, onClick, edit, ID }) => {
                                     <input
                                         id="status"
                                         type="checkbox"
-                                        checked={status}
-                                        value={details.Status}
+                                        checked={details.status}
                                         className={`relative w-4 h-4 mr-2 peer shrink-0 checked:appearance-none checked:bg-blue-900 border-2 border-blue-900 rounded-sm`}
-                                        onChange={handleStatusChange}
+                                        onChange={() => setStatusCheck(!StatusCheck)}
                                         disabled={!edit}
                                     />
                                     <Icon
