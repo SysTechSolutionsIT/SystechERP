@@ -25,6 +25,7 @@ import HolidayMaster from "./components/attendance settings/Holidaymaster";
 import EmployeeTypeMaster from "./components/employee settings/EmployeeTypeMaster";
 import DeviceMaster from "./components/attendance settings/AttDevice";
 import LeaveTypeMaster from "./components/leaves settings/LeaveType";
+import LeaveBalance from "./components/leaves settings/LeaveBalance";
 
 function App() {
   return (
@@ -54,6 +55,7 @@ function App() {
           <Route path="/three-field-master" element={<ThreeFieldsMaster />} />
           <Route path="/two-field-master" element={<TwoFieldsMaster />} />
           <Route path="/employee-master" element={<EmployeeMaster />} />
+          <Route path="/leave-balance-master" element={<LeaveBalance />} />
           <Route path="/add-employee" element={<EMPTabs />} />
           <Route path="/shift-master" element={<ShiftMaster />} />
           <Route path="/holiday-master" element={<HolidayMaster />} />

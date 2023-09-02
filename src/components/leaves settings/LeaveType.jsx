@@ -1,6 +1,7 @@
 import { Icon } from "@iconify/react";
 import React, { useState, useEffect, useRef } from "react";
 import ViewLeave from "./ViewLeave";
+import AddLeave from "./AddLeave";
 
 export const leaveData = [
   {
@@ -277,7 +278,7 @@ const LeaveTypeMaster = () => {
           )}
         </div>
       </div>
-      {/* <AddWeek visible={isModalOpen} onClick={() => setModalOpen(false)} /> */}
+      <AddLeave visible={isModalOpen} onClick={() => setModalOpen(false)} />
 
       <div className="grid gap-2 justify-between">
         <div className="my-1 rounded-2xl bg-white p-2 pr-8 ">
