@@ -4,6 +4,7 @@ import { ThreeFData } from "./ThreeFieldsMaster";
 import { Icon } from "@iconify/react";
 
 const ViewThreeF = ({ visible, onClick, edit, ID }) => {
+    const [StatusCheck, setStatusCheck] = useState(false);
     const [details, setDetails] = useState([]);
     const formik = useFormik({
         initialValues: {
@@ -17,7 +18,6 @@ const ViewThreeF = ({ visible, onClick, edit, ID }) => {
         onSubmit: (values) => {
             console.log(values);
             ThreeFData.push(values);
-            alert("Added Successfully");
         },
     });
 
@@ -27,12 +27,6 @@ const ViewThreeF = ({ visible, onClick, edit, ID }) => {
             setDetails(selectedField);
         }
     }, [ID]);
-
-    const [status, setStatus] = useState(false);
-
-    const handleStatusChange = () => {
-        setStatus(!status);
-    };
 
     if (!visible) return null;
     return (
@@ -118,10 +112,9 @@ const ViewThreeF = ({ visible, onClick, edit, ID }) => {
                                     <input
                                         id="status"
                                         type="checkbox"
-                                        checked={status}
-                                        value={formik.values.status}
+                                        checked={details.status}
                                         className={`relative w-4 h-4 mr-2 peer shrink-0 checked:appearance-none checked:bg-blue-900 border-2 border-blue-900 rounded-sm`}
-                                        onChange={handleStatusChange}
+                                        onChange={() => setStatusCheck(!StatusCheck)}
                                     />
                                     <Icon
                                         className="absolute w-4 h-4 hidden peer-checked:block"

@@ -17,14 +17,16 @@ import DestinationMaster from "./components/company settings/DestinationMaster";
 import ThreeFieldsMaster from "./components/company settings/ThreeFieldsMaster";
 import TwoFieldsMaster from "./components/company settings/TwoFieldsMaster";
 import EmployeeMaster from "./components/employee settings/EmployeeMaster";
+import EmployeeTypeMaster from "./components/employee settings/EmployeeTypeMaster";
+import EmployeeGradeMaster from "./components/employee settings/EmployeeGradeMaster";
 import EMPTabs from "./components/employee settings/emptabs";
 import JobTypeMaster from "./components/attendance settings/jobTypeMaster";
 import ShiftMaster from "./components/attendance settings/shiftMaster";
 import WeeklyOffMaster from "./components/attendance settings/WeeklyOffMaster";
 import HolidayMaster from "./components/attendance settings/Holidaymaster";
-import EmployeeTypeMaster from "./components/employee settings/EmployeeTypeMaster";
 import DeviceMaster from "./components/attendance settings/AttDevice";
-import LeaveTypeMaster from "./components/leaves settings/LeaveType";
+import EarningHeadsMaster from "./components/payroll settings/EarningHeadsMaster";
+import DeductionHeadsMaster from "./components/payroll settings/DeductionHeadsMaster";
 import LeaveBalance from "./components/leaves settings/LeaveBalance";
 
 function App() {
@@ -56,17 +58,33 @@ function App() {
           <Route path="/two-field-master" element={<TwoFieldsMaster />} />
           <Route path="/employee-master" element={<EmployeeMaster />} />
           <Route path="/leave-balance-master" element={<LeaveBalance />} />
+          <Route
+            path="/employee-type-master"
+            element={<EmployeeTypeMaster />}
+          />
+          <Route
+            path="/employee-grade-master"
+            element={<EmployeeGradeMaster />}
+          />
           <Route path="/add-employee" element={<EMPTabs />} />
           <Route path="/shift-master" element={<ShiftMaster />} />
           <Route path="/holiday-master" element={<HolidayMaster />} />
           <Route path="/weeklyoff-master" element={<WeeklyOffMaster />} />
           <Route path="/attDevice-master" element={<DeviceMaster />} />
           <Route path="/job-type-master" element={<JobTypeMaster />} />
-          <Route path="/leave-type-master" element={<LeaveTypeMaster />} />
+          {/* <Route path="/leave-type-master" element={<LeaveTypeMaster />} /> */}
           <Route path="/edit-employee/:empid" element={<EMPTabs />} />
           <Route
             path="/employee-type-master"
             element={<EmployeeTypeMaster />}
+          />
+          <Route
+            path="/earning-heads-master"
+            element={<EarningHeadsMaster />}
+          />
+          <Route
+            path="/deduction-heads-master"
+            element={<DeductionHeadsMaster />}
           />
         </Route>
       </Routes>

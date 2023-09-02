@@ -4,6 +4,7 @@ import { TwoFData } from "./TwoFieldsMaster";
 import { useFormik } from "formik";
 
 const ViewTwoF = ({ visible, onClick, edit, ID }) => {
+  const [StatusCheck, setStatusCheck] = useState(false);
   const [details, setDetails] = useState([]);
   const formik = useFormik({
     initialValues: {
@@ -16,7 +17,6 @@ const ViewTwoF = ({ visible, onClick, edit, ID }) => {
     onSubmit: (values) => {
       console.log(values);
       TwoFData.push(values);
-      alert("Added Successfully");
     },
   });
 
@@ -26,12 +26,6 @@ const ViewTwoF = ({ visible, onClick, edit, ID }) => {
       setDetails(selectedField);
     }
   }, [ID]);
-
-  const [status, setStatus] = useState(false);
-
-  const handleStatusChange = () => {
-    setStatus(!status);
-  };
 
   if (!visible) return null;
   return (
@@ -105,10 +99,10 @@ const ViewTwoF = ({ visible, onClick, edit, ID }) => {
                   <input
                     id="status"
                     type="checkbox"
-                    checked={status}
+                    checked={details.Status}
                     value={details.Status}
                     className={`relative w-4 h-4 mr-2 peer shrink-0 checked:appearance-none checked:bg-blue-900 border-2 border-blue-900 rounded-sm`}
-                    onChange={handleStatusChange}
+                    onChange={() => setStatusCheck(!StatusCheck)}
                   />
                   <Icon
                     className="absolute w-4 h-4 hidden peer-checked:block"

@@ -124,28 +124,28 @@ const Family = () => {
                     <th className='text-[13px] font-normal border-2 border-white py-1 px-2 bg-blue-500 rounded-md cursor-pointer text-white'>
                             Add
                         </th>
-                        <th className='text-[13px] font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
+                        <th className='text-[13px] font-normal border-r-2 border-white py-1 bg-blue-900 text-white'>
                             Person Name
                         </th>
-                        <th className='text-[13px] font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white '>
+                        <th className='text-[13px] font-normal border-r-2 border-white py-1 bg-blue-900 text-white '>
                             Relation
                         </th>
-                        <th className='text-[13px] font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
+                        <th className='text-[13px] font-normal border-r-2 border-white py-1 bg-blue-900 text-white'>
                             Education
                         </th>
-                        <th className='text-[13px] font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
+                        <th className='text-[13px] font-normal border-r-2 border-white py-1 bg-blue-900 text-white'>
                             Occupation
                         </th>
-                        <th className='text-[13px] font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
+                        <th className='text-[13px] font-normal border-r-2 border-white py-1 bg-blue-900 text-white'>
                             Address
                         </th>
-                        <th className='text-[13px] font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
+                        <th className='text-[13px] font-normal border-r-2 border-white py-1 bg-blue-900 text-white'>
                             CellNo
                         </th>
-                        <th className='text-[13px] font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
+                        <th className='text-[13px] font-normal border-r-2 border-white py-1 bg-blue-900 text-white'>
                             Email ID
                         </th>
-                        <th className='text-[13px] font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
+                        <th className='text-[13px] font-normal border-r-2 border-white py-1 bg-blue-900 text-white'>
                             Nominee
                         </th>
                     </tr>
@@ -156,49 +156,49 @@ const Family = () => {
                       <td className='text-[11px] border-2 cursor-pointer font-normal border-r-2 border-white py-1 px-2 bg-red-600 rounded-md text-white'>
                         Remove 
                       </td>
-                      <td className='px-4 border-2 whitespace-normal text-center text-[11px'>
+                      <td className='px-4 border-2 whitespace-normal w-1/2 text-center text-[11px]'>
                         <input
                         id='PersonName'
                         type='text'
                         value={item.PersonName}
                         onChange={formik.handleChange}/>
                       </td>
-                      <td className='px-4 border-2 whitespace-normal text-center text-[11px'>
+                      <td className='px-4 border-2 whitespace-normal text-center text-[11px]'>
                         <input
                         id='Relation'
                         type='text'
                         value={item.Relation}
                         onChange={formik.handleChange}/>
                       </td>
-                      <td className='px-4 border-2 whitespace-normal text-center text-[11px'>
+                      <td className='px-4 border-2 whitespace-normal text-center text-[11px]'>
                         <input
                         id='Education'
                         type='text'
                         value={item.Education}
                         onChange={formik.handleChange}/>
                       </td>
-                      <td className='px-4 border-2 whitespace-normal text-center text-[11px'>
+                      <td className='px-4 border-2 whitespace-normal text-center text-[11px]'>
                         <input
                         id='Occupation'
                         type='text'
                         value={item.Occupation}
                         onChange={formik.handleChange}/>
                       </td>
-                      <td className='px-4 border-2 whitespace-normal text-center text-[11px'>
+                      <td className='px-4 border-2 whitespace-normal text-center text-[11px]'>
                         <input
                         id='Address'
                         type='text'
                         value={item.Address}
                         onChange={formik.handleChange}/>
                       </td>
-                      <td className='px-4 border-2 whitespace-normal text-center text-[11px'>
+                      <td className='px-4 border-2 whitespace-normal text-center text-[11px]'>
                         <input
                         id='CellNo'
                         type='text'
                         value={item.CellNo}
                         onChange={formik.handleChange}/>
                       </td>
-                      <td className='px-4 border-2 whitespace-normal text-center text-[11px'>
+                      <td className='px-4 border-2 whitespace-normal text-center text-[11px]'>
                         <input
                         id='EmailId'
                         type='text'

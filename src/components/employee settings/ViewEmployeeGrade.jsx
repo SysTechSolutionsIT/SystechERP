@@ -1,32 +1,23 @@
 import { useFormik } from 'formik';
-import React, { useEffect, useState } from 'react'
-import { EmployeeTypeData } from './EmployeeTypeMaster';
+import React, { useState } from 'react'
+import { EmployeeGradeData } from './EmployeeGradeMaster';
 import { Icon } from '@iconify/react';
 
-const ViewEmployeeType = ({ visible, onClick, edit, ID }) => {
+const ViewEmployeeGrade = ({ visible, onClick, edit, ID }) => {
     const [StatusCheck, setStatusCheck] = useState(false);
     const [details, setDetails] = useState([]);
     const formik = useFormik({
         initialValues: {
             ID: "",
-            EmployeeType: "",
-            EmployeeTypeGroup: "",
-            ShortName: "",
+            Name: "",
             Status: "",
             Remark: ""
         },
         onSubmit: (values) => {
             console.log(values);
-            EmployeeTypeData.push(values);
+            EmployeeGradeData.push(values);
         },
     });
-
-    useEffect(() => {
-        const selectedDest = EmployeeTypeData.find((dest) => dest.ID === ID);
-        if (selectedDest) {
-            setDetails(selectedDest);
-        }
-    }, [ID]);
 
     if (!visible) return null;
     return (
@@ -35,7 +26,7 @@ const ViewEmployeeType = ({ visible, onClick, edit, ID }) => {
                 <div className="bg-gray-200 w-[60%] p-8 rounded-lg max-h-[80%] overflow-y-scroll">
                     <div className="bg-blue-900 py-2 px-4 rounded-lg flex justify-between items-center">
                         <p className="text-white text-[13px] font-semibold">
-                            Employee Type Master
+                            Employee Grade Master
                         </p>
                         <Icon
                             icon="maki:cross"
@@ -47,11 +38,11 @@ const ViewEmployeeType = ({ visible, onClick, edit, ID }) => {
                     <div className="py-4">
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <p className="text-[13px] font-semibold">Employee Type ID</p>
+                                <p className="text-[13px] font-semibold">Employee Grade ID</p>
                                 <input
                                     id="ID"
                                     type="number"
-                                    placeholder="Enter Employee Type ID"
+                                    placeholder="Enter Employee Grade ID"
                                     value={details.ID}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
@@ -59,38 +50,12 @@ const ViewEmployeeType = ({ visible, onClick, edit, ID }) => {
                                 />
                             </div>
                             <div>
-                                <p className="text-[13px] font-semibold">Employee Type</p>
+                                <p className="text-[13px] font-semibold">Employee Grade Name</p>
                                 <input
-                                    id="EmployeeType"
+                                    id="Name"
                                     type="text"
-                                    placeholder="Enter Employee Type"
-                                    value={details.EmployeeType}
-                                    className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                                    onChange={formik.handleChange}
-                                    disabled={!edit}
-                                />
-                            </div>
-                            <div>
-                                <p className="text-[13px] font-semibold">Employee Type Group</p>
-                                <select
-                                    id="EmployeeTypeGroup"
-                                    value={details.EmployeeTypeGroup}
-                                    className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                                    onChange={formik.handleChange}
-                                    disabled={!edit}
-                                >
-                                    <option value="">Select Employee Type Group</option>
-                                    <option value="Worker">Worker</option>
-                                    <option value="Staff">Staff</option>
-                                </select>
-                            </div>
-                            <div>
-                                <p className="text-[13px] font-semibold">Short Name</p>
-                                <input
-                                    id="ShortName"
-                                    type="text"
-                                    placeholder="Enter Short Name"
-                                    value={details.ShortName}
+                                    placeholder="Enter Employee Grade Name"
+                                    value={details.Name}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
@@ -114,7 +79,7 @@ const ViewEmployeeType = ({ visible, onClick, edit, ID }) => {
                                     <input
                                         id="status"
                                         type="checkbox"
-                                        checked={details.status}
+                                        checked={details.Status}
                                         className={`relative w-4 h-4 mr-2 peer shrink-0 checked:appearance-none checked:bg-blue-900 border-2 border-blue-900 rounded-sm`}
                                         onChange={() => setStatusCheck(!StatusCheck)}
                                         disabled={!edit}
@@ -151,4 +116,4 @@ const ViewEmployeeType = ({ visible, onClick, edit, ID }) => {
     );
 }
 
-export default ViewEmployeeType
+export default ViewEmployeeGrade
