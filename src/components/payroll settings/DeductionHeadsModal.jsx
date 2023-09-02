@@ -1,69 +1,89 @@
-import { useFormik } from 'formik'
 import React from 'react'
+import { useFormik } from 'formik'
 import { useState } from 'react'
 import { Icon } from '@iconify/react'
 
-const EarningHeadsModal = ({visible, onClick}) => {
+const DeductionHeadsModal = ({visible, onClick}) => {
     const formik = useFormik({
-       initialValues:{
-        EarningHeadId: "",
-        EarningHead: "",
-        HeadPosition:"",
-        ShortName: "",
-        CalculationType: "",
-        CalculationValue:"",
-        SalaryParameter1:"",
-        SalaryParameter2:"",
-        SalaryParameter3:"",
-        SalaryParameter4:"",
-        SalaryParameter5:"",
-        SalaryParameter6:"",
-        SalaryParameter7:"",
-        SalaryParameter8:"",
-        SalaryParameter9:"",
-        SalaryParameter10:"",
-        Formula:"",
-        Remark:"",
-        Status: "",
-       },
-       onSubmit:(values) =>{
-        console.log(values)
-       }
-    })
+        initialValues:{
+         DeductionHeadId: "",
+         DeductionHead: "",
+         HeadPosition:"",
+         ShortName: "",
+         CalculationType: "",
+         CalculationValue:"",
+         SalaryParameter1:"",
+         SalaryParameter2:"",
+         SalaryParameter3:"",
+         SalaryParameter4:"",
+         SalaryParameter5:"",
+         SalaryParameter6:"",
+         SalaryParameter7:"",
+         SalaryParameter8:"",
+         SalaryParameter9:"",
+         SalaryParameter10:"",
+         Formula:"",
+         Remark:"",
+         Status: "",
+        },
+        onSubmit:(values) =>{
+         console.log(values)
+        }
+     })
 
-    const [isStatusChecked, setStatusChecked] = useState(false)
-    const handleCheckboxChange = (fieldName, setChecked, event) => {
-        const checked = event.target.checked;
-        setChecked(checked);
-        formik.setValues({
-          ...formik.values,
-          [fieldName]: checked.toString(),
-        });
-      };
+     const [isStatusChecked, setStatusChecked] = useState(false)
+     const handleCheckboxChange = (fieldName, setChecked, event) => {
+         const checked = event.target.checked;
+         setChecked(checked);
+         formik.setValues({
+           ...formik.values,
+           [fieldName]: checked.toString(),
+         });
+       };
 
-      const salaryParemeters = [
-        "Basic Salary",
-        "House Rent Allowance (HRA)",
-        "Special Allowance",
-        "Dearness Allowance (DA)",
-        "Conveyance Allowance",
-        "Medical Allowance",
-        "Leave Travel Allowance (LTA)",
-        "Performance Bonus",
-        "Overtime Pay",
-        "Incentives",
-        "Commission",
-        "Gratuity",
-        "Provident Fund (PF) Contributions",
-        "Employee Stock Options (ESOPs)",
-        "Allowances for Food or Uniform",
-        "Shift Differentials",
-        "Education Allowance",
-        "Child Care Allowance",
-        "Travel Allowances",
-        "Bonus Leave"
+       const salaryParemeters = [
+        'Income Tax',
+        'Provident Fund (PF)',
+        'Employees State Insurance (ESI)',
+        'Professional Tax',
+        'Gratuity',
+        'Employee Provident Fund (EPF) Contributions',
+        'Public Provident Fund (PPF)',
+        'National Pension System (NPS)',
+        'National Savings Certificate (NSC)',
+        'Tax-Saving Fixed Deposit',
+        'Life Insurance Premium',
+        'Health Insurance Premium',
+        'Employee Stock Options (ESOPs)',
+        'Voluntary Provident Fund (VPF)',
+        'House Rent Allowance (HRA)',
+        'Leave Travel Allowance (LTA)',
+        'Conveyance Allowance',
+        'Child Education Allowance',
+        'Special Allowance',
+        'Bonus',
+        'Gratuity',
+        'Professional Development Fund',
+        'Union Dues',
+        'Cafeteria Plan Deductions',
+        'Employee Stock Purchase Plan (ESPP)',
+        'Medical Reimbursement',
+        'Children Education Allowance',
+        'Transport Allowance',
+        'Uniform Allowance',
+        'Dress Allowance',
+        'Travel Allowances',
+        'Food Coupons',
+        'Employee Provident Fund (EPF) Withdrawal',
+        'Employee State Insurance (ESI) Withdrawal',
+        'Employee Gratuity Withdrawal',
+        'National Pension System (NPS) Withdrawal',
+        'Superannuation Fund',
+        'Housing Loan Interest Deduction',
+        'Standard Deduction',
+        'Tax on Employment',
       ];
-      
+
       function generateSelectWithOptions(optionsArray) {
         const optionsHTML = optionsArray.map((optionText) => (
           <option key={optionText} value={optionText}>
@@ -78,14 +98,14 @@ const EarningHeadsModal = ({visible, onClick}) => {
         );
       }
 
-if (!visible) return null;
+    if (!visible) return null;
     return (
       <form onSubmit={formik.handleSubmit}>
         <div className="fixed overflow-y-scroll inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center w-full">
           <div className="bg-gray-200 w-[60%] h-[80%] overflow-y-scroll max-h-fit p-8 rounded-lg">
             <div className="bg-blue-900 py-2 px-4 rounded-lg flex justify-between items-center">
               <p className="text-white text-[15px] font-semibold text-center">
-                Earning Heads Master
+                Deduction Heads Master
               </p>
               <Icon
                 icon="maki:cross"
@@ -100,24 +120,24 @@ if (!visible) return null;
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="capatilize font-semibold  text-[13px]">
-                    Earning Head ID
+                    Deduction Head ID
                   </p>
                   <input
-                    id="EarningHeadId"
+                    id="DeductionHeadId"
                     type="number"
-                    value={formik.values.EarningHeadId}
+                    value={formik.values.DeductionHeadId}
                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                     onChange={formik.handleChange}
                   />
                 </div>
                 <div>
                   <p className="capatilize font-semibold  text-[13px]">
-                    Earning Head Name
+                    Deduction Head Name
                   </p>
                   <input
-                    id="EarningHead"
+                    id="DeductionHead"
                     type="text"
-                    value={formik.values.EarningHead}
+                    value={formik.values.DeductionHead}
                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                     onChange={formik.handleChange}
                   />
@@ -340,4 +360,4 @@ if (!visible) return null;
   )
 }
 
-export default EarningHeadsModal
+export default DeductionHeadsModal
