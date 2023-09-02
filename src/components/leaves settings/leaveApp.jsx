@@ -3,21 +3,25 @@ import React, { useState, useEffect, useRef } from "react";
 import { Button } from "react-bootstrap";
 
 const LeaveApp = () => {
-  const columns = [
-    "Approve Flag",
-    "Leave Application Id",
-    "FYear",
-    "Application Date",
+  const employeeFields = [
     "Employee Id",
     "Employee Name",
-    "Leave From Date",
-    "Leave To Date",
     "Leave Type",
-    "Leave Days",
-    "Sanction By",
-    "Sanction From Date",
-    "Sanction To Date",
-    "Sanction Leave Days",
+    "Leave Balance",
+    "Opening Balance",
+    "Leaves Taken",
+    "Leaves Earned1",
+    "Leaves Earned2",
+    "Leaves Earned3",
+    "Leaves Earned4",
+    "Leaves Earned5",
+    "Leaves Earned6",
+    "Leaves Earned7",
+    "Leaves Earned8",
+    "Leaves Earned9",
+    "Leaves Earned10",
+    "Leaves Earned11",
+    "Leaves Earned12",
   ];
 
   return (
@@ -35,7 +39,7 @@ const LeaveApp = () => {
                 <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
                   Add
                 </th>
-                {columns.map((columnName) => (
+                {employeeFields.map((columnName) => (
                   <th
                     key={columnName}
                     className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400`}
