@@ -30,16 +30,18 @@ const Sidebar = () => {
 
   const SubMenuMain = ({ title, isOpen = false, onClick }) => (
     <span
-      className={`flex justify-between w-full items-center hover:bg-gray-300  hover:bg-opacity-25 rounded-lg cursor-pointer ${isOpen ? "mb-0" : ""
-        }`}
+      className={`flex justify-between w-full items-center hover:bg-gray-300  hover:bg-opacity-25 rounded-lg cursor-pointer ${
+        isOpen ? "mb-0" : ""
+      }`}
       onClick={onClick}
     >
       <h1 className="font-[Inter] text-white font-semibold text-[14px] cursor-pointer py-1.5 px-2 rounded-md mt-0 whitespace-normal">
         {title}
       </h1>
       <span
-        className={`text-sm ${isOpen ? "" : "rotate-180 ease-linear duration-200"
-          }`}
+        className={`text-sm ${
+          isOpen ? "" : "rotate-180 ease-linear duration-200"
+        }`}
         id="arrow"
       >
         <Icon
@@ -73,8 +75,9 @@ const Sidebar = () => {
   return (
     <div className="flex">
       <div
-        className={`${open ? "w-[250px]" : "w-[80px]"
-          } bg-blue-900 overflow-x-hidden sidebar bottom-0 lg:left-0 p-0 text-center border-0 border-radius-xl ease-in-out duration-300`}
+        className={`${
+          open ? "w-[250px]" : "w-[80px]"
+        } bg-blue-900 overflow-x-hidden sidebar bottom-0 lg:left-0 p-0 text-center border-0 border-radius-xl ease-in-out duration-300`}
       >
         <div className="text-white-100 text-xl items-center px-2">
           <div className="p-2.5 mt-1 flex items-center">
@@ -154,8 +157,9 @@ const Sidebar = () => {
                     Company Settings
                   </span>
                   <span
-                    className={`text-sm ${isCompanySubmenuOpen ? "" : "rotate-180"
-                      } ease-linear duration-200`}
+                    className={`text-sm ${
+                      isCompanySubmenuOpen ? "" : "rotate-180"
+                    } ease-linear duration-200`}
                     id="arrow"
                   >
                     <Icon
@@ -230,8 +234,9 @@ const Sidebar = () => {
                     HRM
                   </span>
                   <span
-                    className={`text-sm ${isSubMenuOpen ? "" : "rotate-180"
-                      } ease-linear duration-200`}
+                    className={`text-sm ${
+                      isSubMenuOpen ? "" : "rotate-180"
+                    } ease-linear duration-200`}
                     id="arrow"
                   >
                     <Icon
@@ -316,12 +321,14 @@ const Sidebar = () => {
                 />
                 {isPayrollSubmenuOpen && (
                   <SubMenuGroup>
-                    <SubMenuEntry 
-                    title="Earning Heads Master" 
-                    onClick={()=> navigate('/earning-heads-master')}/>
-                    <SubMenuEntry 
-                    title="Deduction Heads Master"
-                    onClick={()=> navigate('/deduction-heads-master')} />
+                    <SubMenuEntry
+                      title="Earning Heads Master"
+                      onClick={() => navigate("/earning-heads-master")}
+                    />
+                    <SubMenuEntry
+                      title="Deduction Heads Master"
+                      onClick={() => navigate("/deduction-heads-master")}
+                    />
                     <SubMenuEntry title="Employee Type Earning Deduciton" />
                     <SubMenuEntry title="Professional Tax Setting" />
                     <SubMenuEntry title="Advance Request" />
@@ -344,7 +351,10 @@ const Sidebar = () => {
                       title="Leave Balance Upload"
                       onClick={() => navigate("/leave-balance-master")}
                     />
-                    <SubMenuEntry title="Leave Application" />
+                    <SubMenuEntry
+                      title="Leave Application"
+                      onClick={() => navigate("/leave-application")}
+                    />
                     <SubMenuEntry title="Leave Approvals" />
                   </SubMenuGroup>
                 )}
@@ -501,8 +511,9 @@ const Sidebar = () => {
             </div>
           </div>
           <div
-            className={`mt-5 w-full px-2.5 pb-3 flex relative ${open ? "ml-40" : "ml-5"
-              } ease-in-out duration-200 bg-gray-200 bg-opacity-20 items-center rounded-lg cursor-pointer`}
+            className={`mt-5 w-full px-2.5 pb-3 flex relative ${
+              open ? "ml-40" : "ml-5"
+            } ease-in-out duration-200 bg-gray-200 bg-opacity-20 items-center rounded-lg cursor-pointer`}
             onClick={handleClose}
           >
             <Icon

@@ -28,6 +28,7 @@ import DeviceMaster from "./components/attendance settings/AttDevice";
 import EarningHeadsMaster from "./components/payroll settings/EarningHeadsMaster";
 import DeductionHeadsMaster from "./components/payroll settings/DeductionHeadsMaster";
 import LeaveBalance from "./components/leaves settings/LeaveBalance";
+import LeaveApp from "./components/leaves settings/leaveApp";
 
 function App() {
   return (
@@ -86,6 +87,7 @@ function App() {
             path="/deduction-heads-master"
             element={<DeductionHeadsMaster />}
           />
+          <Route path="/leave-application" element={<LeaveApp />} />
         </Route>
       </Routes>
     </Router>

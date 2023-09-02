@@ -42,6 +42,23 @@ const LeaveBalance = () => {
     "December",
   ];
   const years = [2020, 2021, 2022, 2023, 2024, 2025];
+  const columns = [
+    "Approve Flag",
+    "Leave Application Id",
+    "FYear",
+    "Application Date",
+    "Employee Id",
+    "Employee Name",
+    "Leave From Date",
+    "Leave To Date",
+    "Leave Type",
+    "Leave Days",
+    "Sanction By",
+    "Sanction From Date",
+    "Sanction To Date",
+    "Sanction Leave Days",
+  ];
+
   return (
     <form onSubmit={formik.handleSubmit}>
       <div className="flex justify-center items-center h-full">
@@ -195,6 +212,28 @@ const LeaveBalance = () => {
             <button className="bg-blue-900 text-white text-[13px] font-semibold py-2 px-4 rounded-lg w-36">
               Close
             </button>
+          </div>
+          <div className="grid gap-2 justify-between mt-2">
+            <div className="my-1 rounded-2xl  p-2 pr-8 ">
+              <table className="min-w-full text-center whitespace-normal z-0">
+                <thead className="border-b-2">
+                  <tr className="">
+                    <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
+                      Add
+                    </th>
+                    {columns.map((columnName) => (
+                      <th
+                        key={columnName}
+                        className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400`}
+                      >
+                        {columnName}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
