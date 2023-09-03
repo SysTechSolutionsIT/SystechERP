@@ -355,7 +355,10 @@ const Sidebar = () => {
                       title="Leave Application"
                       onClick={() => navigate("/leave-application")}
                     />
-                    <SubMenuEntry title="Leave Approvals" />
+                    <SubMenuEntry
+                      title="Leave Approvals"
+                      onClick={() => navigate("/leave-approval")}
+                    />
                   </SubMenuGroup>
                 )}
                 <SubMenuMain
