@@ -31,6 +31,7 @@ import LeaveBalance from "./components/leaves settings/LeaveBalance";
 import LeaveApp from "./components/leaves settings/leaveApp";
 import EmpTypeEarningDeduction from "./components/payroll settings/EmpTypeEarningDeduction";
 import ProfesssionalTaxMaster from "./components/payroll settings/ProfesssionalTaxMaster";
+import LeaveApproval from "./components/leaves settings/LeaveApproval";
 
 function App() {
   return (
@@ -85,6 +86,7 @@ function App() {
           path="/employee-type-earning-deduction"
           element={<EmpTypeEarningDeduction/>}/>
           <Route path="/leave-application" element={<LeaveApp />} />
+          <Route path="/leave-approval" element={<LeaveApproval />} />
         </Route>
       </Routes>
     </Router>
