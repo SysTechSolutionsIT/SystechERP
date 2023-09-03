@@ -28,7 +28,7 @@ import DeviceMaster from "./components/attendance settings/AttDevice";
 import EarningHeadsMaster from "./components/payroll settings/EarningHeadsMaster";
 import DeductionHeadsMaster from "./components/payroll settings/DeductionHeadsMaster";
 import LeaveBalance from "./components/leaves settings/LeaveBalance";
-import LeaveApp from "./components/leaves settings/leaveApp";
+import LeaveApp from "./components/leaves settings/leaveApplication";
 import LeaveApproval from "./components/leaves settings/LeaveApproval";
 
 function App() {

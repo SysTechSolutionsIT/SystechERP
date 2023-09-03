@@ -1,27 +1,25 @@
 import { Icon } from "@iconify/react";
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "react-bootstrap";
+import LeaveModal1 from "./LeaveModal1";
 
 const LeaveApp = () => {
+  const [isModalOpen, setModalOpen] = useState(false); //Add Modal
+
   const employeeFields = [
+    "Approval Flag",
+    "Leave Application Id",
+    "FYear",
+    "Application Date",
     "Employee Id",
     "Employee Name",
+    "Leave From Date",
+    "Leave To Date",
     "Leave Type",
-    "Leave Balance",
-    "Opening Balance",
-    "Leaves Taken",
-    "Leaves Earned1",
-    "Leaves Earned2",
-    "Leaves Earned3",
-    "Leaves Earned4",
-    "Leaves Earned5",
-    "Leaves Earned6",
-    "Leaves Earned7",
-    "Leaves Earned8",
-    "Leaves Earned9",
-    "Leaves Earned10",
-    "Leaves Earned11",
-    "Leaves Earned12",
+    "Sanction By",
+    "Sanction From Date",
+    "Sanction To Date",
+    "Sanction Leave Day",
   ];
 
   return (
@@ -37,7 +35,17 @@ const LeaveApp = () => {
             <thead className="border-b-2">
               <tr className="">
                 <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
-                  Add
+                  <button
+                    type="submit"
+                    className="bg-blue-900 text-white text-[13px] font-semibold py-2 px-4 rounded-lg "
+                    onClick={() => setModalOpen(true)}
+                  >
+                    Add
+                  </button>
+                  <LeaveModal1
+                    visible={isModalOpen}
+                    onClick={() => setModalOpen(false)}
+                  />
                 </th>
                 {employeeFields.map((columnName) => (
                   <th
