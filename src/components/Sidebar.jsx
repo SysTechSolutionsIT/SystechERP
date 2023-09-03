@@ -329,8 +329,12 @@ const Sidebar = () => {
                       title="Deduction Heads Master"
                       onClick={() => navigate("/deduction-heads-master")}
                     />
-                    <SubMenuEntry title="Employee Type Earning Deduciton" />
-                    <SubMenuEntry title="Professional Tax Setting" />
+                    <SubMenuEntry 
+                    title="Employee Type Earning Deduciton"
+                    onClick={() => navigate("/employee-type-earning-deduction")} />
+                    <SubMenuEntry 
+                    title="Professional Tax Setting"
+                    onClick={()=> navigate("/professional-tax-master")} />
                     <SubMenuEntry title="Advance Request" />
                     <SubMenuEntry title="Advance Approval" />
                     <SubMenuEntry title="Advance Repayment" />

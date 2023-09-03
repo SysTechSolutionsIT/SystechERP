@@ -29,6 +29,8 @@ import EarningHeadsMaster from "./components/payroll settings/EarningHeadsMaster
 import DeductionHeadsMaster from "./components/payroll settings/DeductionHeadsMaster";
 import LeaveBalance from "./components/leaves settings/LeaveBalance";
 import LeaveApp from "./components/leaves settings/leaveApp";
+import EmpTypeEarningDeduction from "./components/payroll settings/EmpTypeEarningDeduction";
+import ProfesssionalTaxMaster from "./components/payroll settings/ProfesssionalTaxMaster";
 
 function App() {
   return (
@@ -75,18 +77,13 @@ function App() {
           <Route path="/job-type-master" element={<JobTypeMaster />} />
           {/* <Route path="/leave-type-master" element={<LeaveTypeMaster />} /> */}
           <Route path="/edit-employee/:empid" element={<EMPTabs />} />
-          <Route
-            path="/employee-type-master"
-            element={<EmployeeTypeMaster />}
-          />
-          <Route
-            path="/earning-heads-master"
-            element={<EarningHeadsMaster />}
-          />
-          <Route
-            path="/deduction-heads-master"
-            element={<DeductionHeadsMaster />}
-          />
+          <Route path="/employee-type-master" element={<EmployeeTypeMaster />}/>
+          <Route path="/earning-heads-master" element={<EarningHeadsMaster />}/>
+          <Route path="/deduction-heads-master" element={<DeductionHeadsMaster />}/>
+          <Route path="/professional-tax-master" element={<ProfesssionalTaxMaster/>}/>
+          <Route 
+          path="/employee-type-earning-deduction"
+          element={<EmpTypeEarningDeduction/>}/>
           <Route path="/leave-application" element={<LeaveApp />} />
         </Route>
       </Routes>
