@@ -13,6 +13,7 @@ const ViewDestination = ({ visible, onClick, edit, ID }) => {
       ContractorName: "",
       Distance: "",
       EmployeeFare: "",
+      status: "",
       remark: "",
     },
     onSubmit: (values) => {
