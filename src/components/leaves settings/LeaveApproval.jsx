@@ -1,6 +1,7 @@
 import { Icon } from "@iconify/react";
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "react-bootstrap";
+import LeaveApprovalModal from "./LeaveApprovalModal";
 
 export const leaveApplications = [
   {
@@ -126,16 +127,7 @@ export const leaveApplications = [
 ];
 
 const LeaveApproval = () => {
-  const [filteredData, setFilteredData] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false); //Add Modal
-  //View and Edit
-  const [SVE, setSVE] = useState(false);
-  const [edit, setEdit] = useState(false);
-  const [ShiftId, setShiftId] = useState();
-
-  //Hamburger Menu
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef(null);
 
   const fieldNames = [
     "Approval Flag",
@@ -191,6 +183,7 @@ const LeaveApproval = () => {
                       <button
                         type="submit"
                         className="bg-blue-900 text-white font-semibold py-1 px-1 rounded-lg text-[11px]"
+                        onClick={() => setModalOpen(true)}
                       >
                         Approve
                       </button>
@@ -208,6 +201,10 @@ const LeaveApproval = () => {
               ))}
             </tbody>
           </table>
+          <LeaveApprovalModal
+            visible={isModalOpen}
+            onClick={() => setModalOpen(false)}
+          />
         </div>
       </div>
     </div>

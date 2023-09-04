@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { Icon } from "@iconify/react";
+import "./leave.css";
 
-const LeaveModal1 = ({ visible, onClick }) => {
+const LeaveApprovalModal = ({ visible, onClick }) => {
   const [details, setDetails] = useState([]);
   const formik = useFormik({
     initialValues: {
@@ -15,7 +16,9 @@ const LeaveModal1 = ({ visible, onClick }) => {
       LeaveFromDate: "",
       LeaveToDate: "",
       remarks: "",
-      leaveDays: "",
+      sanctionBy: "",
+      sanctionFrom: "",
+      sanctionTo: "",
       Status: "",
     },
     onSubmit: (values) => {
@@ -139,12 +142,35 @@ const LeaveModal1 = ({ visible, onClick }) => {
                 />
               </div>
               <div>
-                <p className="text-[13px] font-semibold">Leave Days</p>
+                <p className="text-[13px] font-semibold">Sanctioned By</p>
                 <input
-                  id="leaveDays"
+                  id="sanctionBy"
                   type="text"
-                  placeholder="Enter Leave Days"
-                  value={formik.values.leaveDays}
+                  value={formik.values.sanctionBy}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  onChange={formik.handleChange}
+                />
+              </div>
+              <div>
+                <p className="text-[13px] font-semibold">
+                  Sanctioned From Date
+                </p>
+                <input
+                  id="sanctionFrom"
+                  type="date"
+                  placeholder="Enter sanction From Date"
+                  value={formik.values.sanctionFrom}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  onChange={formik.handleChange}
+                />
+              </div>
+              <div>
+                <p className="text-[13px] font-semibold">Sanctioned To Date</p>
+                <input
+                  id="sanctionTo"
+                  type="date"
+                  placeholder="Enter Leave To Date"
+                  value={formik.values.sanctionTo}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -179,15 +205,15 @@ const LeaveModal1 = ({ visible, onClick }) => {
                 Show
               </button>
             </div>
-            <div className="grid gap-2 justify-between mt-2 w-full">
-              <div className="my-1 rounded-2xl  p-2 pr-8 ">
-                <table className="min-w-full text-center whitespace-normal z-0">
-                  <thead className="border-b-2">
-                    <tr className="">
+            <div className="grid gap-4 justify-between mt-2 w-full">
+              <div className="my-1 p-2 pr-8 ">
+                <table className="min-w-full text-center tableX1">
+                  <thead className="bg-gray-700 text-white ">
+                    <tr>
                       {columnHeads.map((columnName) => (
                         <th
                           key={columnName}
-                          className={`px-2 text-[13px] font-bold text-black border-2 border-gray-400`}
+                          className="px-2 py-2 font-bold text-[13px] text-center border-2 border-gray-400 rounded headers gap-2"
                         >
                           {columnName}
                         </th>
@@ -199,6 +225,7 @@ const LeaveModal1 = ({ visible, onClick }) => {
               </div>
             </div>
           </div>
+
           <div className="flex gap-10 justify-center">
             <button
               type="submit"
@@ -219,4 +246,4 @@ const LeaveModal1 = ({ visible, onClick }) => {
   );
 };
 
-export default LeaveModal1;
+export default LeaveApprovalModal;
