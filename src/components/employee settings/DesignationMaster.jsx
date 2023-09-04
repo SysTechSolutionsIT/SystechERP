@@ -1,52 +1,81 @@
 import { Icon } from '@iconify/react';
 import React, { useEffect, useRef, useState } from 'react'
-import EmployeeTypeModal from './EmployeeTypeModal';
-import ViewEmployeeType from './ViewEmployeeType';
 
-export const EmployeeTypeData = [
+const DesignData = [
   {
     ID: 1,
-    EmployeeType: "Company Staff",
-    EmployeeTypeGroup: "Staff",
-    ShortName: "S",
+    Name: "ADMINISTRATOR",
+    ReportDesignationName: "ADMINISTRATOR",
     Status: "Y"
   },
   {
     ID: 2,
-    EmployeeType: "Worker",
-    EmployeeTypeGroup: "Worker",
-    ShortName: "W",
+    Name: "PROJECT MANAGER",
+    ReportDesignationName: "ADMINISTRATOR",
     Status: "Y"
   },
   {
     ID: 3,
-    EmployeeType: "Trainee Staff",
-    EmployeeTypeGroup: "Staff",
-    ShortName: "T",
+    Name: "HMI MANAGER",
+    ReportDesignationName: "ADMINISTRATOR",
     Status: "Y"
   },
   {
     ID: 4,
-    EmployeeType: "Trainee Worker",
-    EmployeeTypeGroup: "Worker",
-    ShortName: "O",
+    Name: "ACCOUNT HEAD",
+    ReportDesignationName: "ADMINISTRATOR",
     Status: "Y"
   },
   {
     ID: 5,
-    EmployeeType: "Contract Staff",
-    EmployeeTypeGroup: "Staff",
-    ShortName: "Y",
+    Name: "SR.LEAD ENGINEER",
+    ReportDesignationName: "ADMINISTRATOR",
     Status: "Y"
   },
+  {
+    ID: 6,
+    Name: "PURCHASE MANAGER",
+    ReportDesignationName: "ADMINISTRATOR",
+    Status: "Y"
+  },
+  {
+    ID: 7,
+    Name: "LEAD ENGINEER",
+    ReportDesignationName: "ADMINISTRATOR",
+    Status: "Y"
+  },
+  {
+    ID: 8,
+    Name: "SALES MANAGER",
+    ReportDesignationName: "ADMINISTRATOR",
+    Status: "Y"
+  },
+  {
+    ID: 9,
+    Name: "SR. TECHNICIAN",
+    ReportDesignationName: "ADMINISTRATOR",
+    Status: "Y"
+  },
+  {
+    ID: 10,
+    Name: "SR. PROJECT ENGINEER",
+    ReportDesignationName: "ADMINISTRATOR",
+    Status: "Y"
+  },
+  {
+    ID: 11,
+    Name: "OFFICE BOY",
+    ReportDesignationName: "ADMINISTRATOR",
+    Status: "Y"
+  }
 ]
 
-const EmployeeTypeMaster = () => {
+const DesignationMaster = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
 
   const handleSearchChange = (title, searchWord) => {
-    const newFilter = EmployeeTypeData.filter((item) => {
+    const newFilter = DesignData.filter((item) => {
       const value = item[title];
       return value && value.toLowerCase().includes(searchWord.toLowerCase());
     });
@@ -59,10 +88,8 @@ const EmployeeTypeMaster = () => {
   };
 
   const [columnVisibility, setColumnVisibility] = useState({
-    EmployeeType: true,
-    EmployeeTypeGroup: true,
-    ShortName: true,
-    Status: true
+    Name: true,
+    ReportDesignationName: true
   });
 
   const [showDropdown, setShowDropdown] = useState(false);
@@ -92,7 +119,7 @@ const EmployeeTypeMaster = () => {
     setSelectedColumns([]);
   };
 
-  const [veEType, setVeEType] = useState(false);
+  const [veDest, setVeDest] = useState(false);
   const [edit, setEdit] = useState(false);
   const [id, setid] = useState();
 
@@ -117,7 +144,7 @@ const EmployeeTypeMaster = () => {
   //Max Searchbar width
   const getColumnMaxWidth = (columnName) => {
     let maxWidth = 0;
-    const allRows = [...EmployeeTypeData, ...filteredData];
+    const allRows = [...DesignData, ...filteredData];
 
     allRows.forEach((row) => {
       const cellContent = row[columnName];
@@ -139,7 +166,7 @@ const EmployeeTypeMaster = () => {
     <div className="top-25 min-w-[40%]">
       <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
         <div className="mr-auto text-[15px]">
-          HRM / Employee Settings / Employee Type Master
+          HRM / Employee Settings / Designation Master
         </div>
         <div className="flex gap-4">
           <button
@@ -233,10 +260,10 @@ const EmployeeTypeMaster = () => {
           </div>
         </div>
       </div>
-      <EmployeeTypeModal
+      {/* <DestinationModal
         visible={isModalOpen}
         onClick={() => setModalOpen(false)}
-      />
+      /> */}
       <div className="grid gap-4 justify-between">
         <div className="my-1 rounded-2xl bg-white p-2 pr-8">
           <table className="min-w-full text-center rounded-lg  whitespace-normal">
@@ -292,17 +319,11 @@ const EmployeeTypeMaster = () => {
                           width="20"
                           height="20"
                           onClick={() => {
-                            setVeEType(true); // Open VEModal
+                            setVeDest(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
                             setid(entry.ID); // Pass ID to VEModal
                           }}
                         />
-                        {/* <ViewETypeination
-                          visible={veEType}
-                          onClick={() => setVeEType(false)}
-                          edit={edit}
-                          ID={id}
-                        /> */}
                         <Icon
                           className="cursor-pointer"
                           icon="mdi:edit"
@@ -310,17 +331,17 @@ const EmployeeTypeMaster = () => {
                           width="20"
                           height="20"
                           onClick={() => {
-                            setVeEType(true); // Open VEModal
+                            setVeDest(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
                             setid(entry.ID); // Pass ID to VEModal
                           }}
                         />
-                        <ViewEmployeeType
-                          visible={veEType}
-                          onClick={() => setVeEType(false)}
+                        {/* <ViewDestination
+                          visible={veDest}
+                          onClick={() => setVeDest(false)}
                           edit={edit}
                           ID={id}
-                        />
+                        /> */}
                         <Icon
                           className="cursor-pointer"
                           icon="material-symbols:delete-outline"
@@ -344,7 +365,7 @@ const EmployeeTypeMaster = () => {
                     ))}
                   </tr>
                 ))
-                : EmployeeTypeData.map((entry, index) => (
+                : DesignData.map((entry, index) => (
                   <tr key={index}>
                     <td className="px-2 text-[11px] border-2">
                       <div className="flex items-center gap-2 text-center justify-center">
@@ -355,7 +376,7 @@ const EmployeeTypeMaster = () => {
                           width="20"
                           height="20"
                           onClick={() => {
-                            setVeEType(true); // Open VEModal
+                            setVeDest(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
                             setid(entry.ID); // Pass ID to VEModal
                           }}
@@ -367,17 +388,17 @@ const EmployeeTypeMaster = () => {
                           width="20"
                           height="20"
                           onClick={() => {
-                            setVeEType(true); // Open VEModal
+                            setVeDest(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
                             setid(entry.ID); // Pass ID to VEModal
                           }}
                         />
-                        <ViewEmployeeType
-                          visible={veEType}
-                          onClick={() => setVeEType(false)}
+                        {/* <ViewDestination
+                          visible={veDest}
+                          onClick={() => setVeDest(false)}
                           edit={edit}
                           ID={id}
-                        />
+                        /> */}
                         <Icon
                           className="cursor-pointer"
                           icon="material-symbols:delete-outline"
@@ -410,4 +431,4 @@ const EmployeeTypeMaster = () => {
   );
 }
 
-export default EmployeeTypeMaster
+export default DesignationMaster

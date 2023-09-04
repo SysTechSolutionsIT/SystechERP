@@ -32,6 +32,7 @@ import LeaveApp from "./components/leaves settings/leaveApplication";
 import EmpTypeEarningDeduction from "./components/payroll settings/EmpTypeEarningDeduction";
 import ProfesssionalTaxMaster from "./components/payroll settings/ProfesssionalTaxMaster";
 import LeaveApproval from "./components/leaves settings/LeaveApproval";
+import DesignationMaster from "./components/employee settings/DesignationMaster";
 
 function App() {
   return (
@@ -62,14 +63,9 @@ function App() {
           <Route path="/two-field-master" element={<TwoFieldsMaster />} />
           <Route path="/employee-master" element={<EmployeeMaster />} />
           <Route path="/leave-balance-master" element={<LeaveBalance />} />
-          <Route
-            path="/employee-type-master"
-            element={<EmployeeTypeMaster />}
-          />
-          <Route
-            path="/employee-grade-master"
-            element={<EmployeeGradeMaster />}
-          />
+          <Route path="/employee-type-master" element={<EmployeeTypeMaster />} />
+          <Route path="/employee-grade-master" element={<EmployeeGradeMaster />} />
+          <Route path="/designation-master" element={<DesignationMaster />} />
           <Route path="/add-employee" element={<EMPTabs />} />
           <Route path="/shift-master" element={<ShiftMaster />} />
           <Route path="/holiday-master" element={<HolidayMaster />} />
