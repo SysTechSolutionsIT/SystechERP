@@ -3,119 +3,103 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { Icon } from '@iconify/react';
 import { useRef } from 'react';
-import ProfesionalTaxModal from './ProfesionalTaxModal';
-import ViewPT from './ViewPT';
+import AdvanceRequestModal from './AdvanceRequestModal';
 
-export const TaxData = [
+export const advanceData = [
+    // Item 1
     {
-      ProfessionalTaxId: 1,
-      Gender: 'Male',
-      UpperLimit: 5000,
-      LowerLimit: 1000,
-      PTAmount: 200,
-      PTAmountFebruary: 220,
-      Remark: 'Employee A',
-      Status: 'Active',
+      ApprovalFlag: true,
+      AdvanceId: 1,
+      AdvanceDate: "2023-09-04",
+      Employee: "John Doe",
+      AdvanceType: "Office",
+      AdvanceStatus: "Pending",
+      Project: "Project ABC",
+      Amount: 1000,
+      Installment: 3,
+      AdvanceStartingMonth: "September",
+      AdvanceStartingYear: 2023,
+      Purpose: "Equipment Purchase",
+      Status:"Active",
+      Remark: "Approval pending from manager",
     },
+    // Item 2
     {
-      ProfessionalTaxId: 2,
-      Gender: 'Female',
-      UpperLimit: 6000,
-      LowerLimit: 1200,
-      PTAmount: 180,
-      PTAmountFebruary: 200,
-      Remark: 'Employee B',
-      Status: 'Inactive',
+      ApprovalFlag: false,
+      AdvanceId: 2,
+      AdvanceDate: "2023-09-05",
+      Employee: "Jane Smith",
+      AdvanceType: "Personal",
+      AdvanceStatus: "Repayment",
+      Project: "",
+      Amount: 500,
+      Installment: 1,
+      AdvanceStartingMonth: "August",
+      AdvanceStartingYear: 2023,
+      Purpose: "Vacation",
+      Status:"Active",
+      Remark: "Pending repayment",
     },
+    // Item 3
     {
-      ProfessionalTaxId: 3,
-      Gender: 'Male',
-      UpperLimit: 5500,
-      LowerLimit: 1100,
-      PTAmount: 210,
-      PTAmountFebruary: 230,
-      Remark: 'Employee C',
-      Status: 'Active',
+      ApprovalFlag: true,
+      AdvanceId: 3,
+      AdvanceDate: "2023-09-06",
+      Employee: "Alice Johnson",
+      AdvanceType: "Office",
+      AdvanceStatus: "Partial Repayment",
+      Project: "Project XYZ",
+      Amount: 1500,
+      Installment: 2,
+      AdvanceStartingMonth: "October",
+      AdvanceStartingYear: 2023,
+      Purpose: "Travel Expenses",
+      Status:"Active",
+      Remark: "Partial repayment in progress",
     },
+    // Item 4
     {
-        ProfessionalTaxId: 4,
-        Gender: 'Female',
-        UpperLimit: 6500,
-        LowerLimit: 1300,
-        PTAmount: 190,
-        PTAmountFebruary: 210,
-        Remark: 'Employee D',
-        Status: 'Inactive',
-      },
-      {
-        ProfessionalTaxId: 5,
-        Gender: 'Male',
-        UpperLimit: 4800,
-        LowerLimit: 960,
-        PTAmount: 220,
-        PTAmountFebruary: 240,
-        Remark: 'Employee E',
-        Status: 'Active',
-      },
-      {
-        ProfessionalTaxId: 6,
-        Gender: 'Female',
-        UpperLimit: 7000,
-        LowerLimit: 1400,
-        PTAmount: 180,
-        PTAmountFebruary: 200,
-        Remark: 'Employee F',
-        Status: 'Active',
-      },
-      {
-        ProfessionalTaxId: 7,
-        Gender: 'Male',
-        UpperLimit: 5200,
-        LowerLimit: 1040,
-        PTAmount: 240,
-        PTAmountFebruary: 260,
-        Remark: 'Employee G',
-        Status: 'Inactive',
-      },
-      {
-        ProfessionalTaxId: 8,
-        Gender: 'Female',
-        UpperLimit: 5800,
-        LowerLimit: 1160,
-        PTAmount: 200,
-        PTAmountFebruary: 220,
-        Remark: 'Employee H',
-        Status: 'Active',
-      },
-      {
-        ProfessionalTaxId: 9,
-        Gender: 'Male',
-        UpperLimit: 5400,
-        LowerLimit: 1080,
-        PTAmount: 230,
-        PTAmountFebruary: 250,
-        Remark: 'Employee I',
-        Status: 'Active',
-      },
-      {
-        ProfessionalTaxId: 10,
-        Gender: 'Female',
-        UpperLimit: 6200,
-        LowerLimit: 1240,
-        PTAmount: 210,
-        PTAmountFebruary: 230,
-        Remark: 'Employee J',
-        Status: 'Inactive',
-      },
+      ApprovalFlag: true,
+      AdvanceId: 4,
+      AdvanceDate: "2023-09-07",
+      Employee: "Bob Anderson",
+      AdvanceType: "Personal",
+      AdvanceStatus: "Pending",
+      Project: "",
+      Amount: 750,
+      Installment: 1,
+      AdvanceStartingMonth: "September",
+      AdvanceStartingYear: 2023,
+      Purpose: "Education Fees",
+      Status:"Active",
+      Remark: "Awaiting approval",
+    },
+    // Item 5
+    {
+      ApprovalFlag: false,
+      AdvanceId: 5,
+      AdvanceDate: "2023-09-08",
+      Employee: "Eva Williams",
+      AdvanceType: "Office",
+      AdvanceStatus: "Repayment",
+      Project: "Project DEF",
+      Amount: 1200,
+      Installment: 4,
+      AdvanceStartingMonth: "November",
+      AdvanceStartingYear: 2023,
+      Purpose: "Software Licenses",
+      Status:"Active",
+      Remark: "Repayment initiated",
+    },
   ];
-  
 
-const ProfesssionalTaxMaster = () => {
+  
+const AdvanceRequest = () => {
     const [isModalOpen, setModalOpen] = useState(false);
     const [filteredData, setFilteredData] = useState([]);
   
     const handleSearchChange = (title, searchWord) => {
-        const newFilter = TaxData.filter((item) => {
+        const newFilter = advanceData.filter((item) => {
           const value = item[title];
       
           if (typeof value === 'string' || typeof value === 'number') {
@@ -135,9 +119,9 @@ const ProfesssionalTaxMaster = () => {
       };
       
   
-    const [PTView, setPTView] = useState(false);
-    const [edit, setEdit] = useState(false);
-    const [PTId, setPTId] = useState();
+    // const [PTView, setPTView] = useState(false);
+    // const [edit, setEdit] = useState(false);
+    // const [PTId, setPTId] = useState();
   
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef(null);
@@ -159,7 +143,7 @@ const ProfesssionalTaxMaster = () => {
     //Max Searchbar width
     const getColumnMaxWidth = (columnName) => {
       let maxWidth = 0;
-      const allRows = [...TaxData];
+      const allRows = [...advanceData];
   
       allRows.forEach((row) => {
         const cellContent = row[columnName];
@@ -182,7 +166,7 @@ const ProfesssionalTaxMaster = () => {
       <div className="bg-blue-900 h-15 p-2 ml-2 px-8 sm:whitespace-nowrap text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-x-auto">
         <div className="flex items-center gap-4">
           <div className="mr-auto text-[15px] whitespace-nowrap">
-            Payroll Settings / Professional Tax Master
+            Payroll Settings / Advance Request
           </div>
           <div className="relative lg:ml-96 sm:ml-8">
             <button
@@ -224,7 +208,7 @@ const ProfesssionalTaxMaster = () => {
           )}
         </div>
       </div>
-      <ProfesionalTaxModal
+      <AdvanceRequestModal
         visible={isModalOpen}
         onClick={() => setModalOpen(false)}
       />
@@ -233,43 +217,61 @@ const ProfesssionalTaxMaster = () => {
           <table className="min-w-full text-center  rounded-lg justify-center whitespace-normal">
             <thead>
               <tr>
-                <th className=" px-1 text-[13px] font-bold text-black border-2 border-gray-400">
-                  Actions
+                <th className=" w-auto px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
+                  Approval Flag
                 </th>
                 <th className=" w-auto px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
                   ID
                 </th>
                 <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px]">
-                  Gender
+                  Advance Date
                 </th>
                 <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px]">
-                  Upper Limit
+                  Employee
                 </th>
                 <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px]">
-                  Lower Limit
+                  Advance Type
                 </th>
                 <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px]">
-                  PT Amount
+                   Amount
                 </th>
                 <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px]">
-                  PT Amount Feb. 
+                  Installment
                 </th>
                 <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px]">
-                  Status
+                  Project Name
+                </th>
+                <th className=" w-auto px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
+                  Advance Status
+                </th>
+                <th className=" w-auto px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
+                    Status
                 </th>
               </tr>
               <tr>
-                <th className="border-2"></th>
+                <th className="p-2 font-semibold text-black border-2">
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
+                    style={{
+                      maxWidth: getColumnMaxWidth("ApprovalFlag") + "px",
+                    }}
+                    onChange={(e) =>
+                      handleSearchChange("ApprovalFlag", e.target.value)
+                    }
+                  />
+                </th>
                 <th className="p-2 font-semibold text-black border-2">
                   <input
                     type="number"
                     placeholder="Search"
                     className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
                     style={{
-                      maxWidth: getColumnMaxWidth("ProfessionalTaxId") + "px",
+                      maxWidth: getColumnMaxWidth("AdvanceId") + "px",
                     }}
                     onChange={(e) =>
-                      handleSearchChange("ProfessionalTaxId", e.target.value)
+                      handleSearchChange("AdvanceId", e.target.value)
                     }
                   />
                 </th>
@@ -278,9 +280,9 @@ const ProfesssionalTaxMaster = () => {
                     type="text"
                     placeholder="Search"
                     className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
-                    style={{ maxWidth: getColumnMaxWidth("Gender") + "px" }}
+                    style={{ maxWidth: getColumnMaxWidth("AdvanceDate") + "px" }}
                     onChange={(e) =>
-                      handleSearchChange("Gender", e.target.value)
+                      handleSearchChange("AdvanceDate", e.target.value)
                     }
                   />
                 </th>
@@ -289,9 +291,9 @@ const ProfesssionalTaxMaster = () => {
                     type="text"
                     placeholder="Search"
                     className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
-                    style={{ maxWidth: getColumnMaxWidth("UpperLimit") + "px" }}
+                    style={{ maxWidth: getColumnMaxWidth("Employee") + "px" }}
                     onChange={(e) =>
-                      handleSearchChange("UpperLimit", e.target.value)
+                      handleSearchChange("Employee", e.target.value)
                     }
                   />
                 </th>
@@ -300,9 +302,9 @@ const ProfesssionalTaxMaster = () => {
                     type="text"
                     placeholder="Search"
                     className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
-                    style={{ maxWidth: getColumnMaxWidth("LowerLimit") + "px" }}
+                    style={{ maxWidth: getColumnMaxWidth("AdvanceType") + "px" }}
                     onChange={(e) =>
-                      handleSearchChange("LowerLimit", e.target.value)
+                      handleSearchChange("AdvanceType", e.target.value)
                     }
                   />
                 </th>
@@ -311,9 +313,9 @@ const ProfesssionalTaxMaster = () => {
                     type="text"
                     placeholder="Search"
                     className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
-                    style={{ maxWidth: getColumnMaxWidth("PTAmount") + "px" }}
+                    style={{ maxWidth: getColumnMaxWidth("Amount") + "px" }}
                     onChange={(e) =>
-                      handleSearchChange("PTAmount", e.target.value)
+                      handleSearchChange("Amount", e.target.value)
                     }
                   />
                 </th>
@@ -322,9 +324,31 @@ const ProfesssionalTaxMaster = () => {
                     type="text"
                     placeholder="Search"
                     className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
-                    style={{ maxWidth: getColumnMaxWidth("PTAmountFeburary") + "px" }}
+                    style={{ maxWidth: getColumnMaxWidth("Installment") + "px" }}
                     onChange={(e) =>
-                      handleSearchChange("PTAmountFeburary", e.target.value)
+                      handleSearchChange("Installment", e.target.value)
+                    }
+                  />
+                </th>
+                <th className="p-2 font-semibold text-black border-2">
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
+                    style={{ maxWidth: getColumnMaxWidth("Project") + "px" }}
+                    onChange={(e) =>
+                      handleSearchChange("Project", e.target.value)
+                    }
+                  />
+                </th>
+                <th className="p-2 font-semibold text-black border-2">
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
+                    style={{ maxWidth: getColumnMaxWidth("AdvanceStatus") + "px" }}
+                    onChange={(e) =>
+                      handleSearchChange("AdvanceStatus", e.target.value)
                     }
                   />
                 </th>
@@ -345,136 +369,66 @@ const ProfesssionalTaxMaster = () => {
               {filteredData.length > 0
                 ? filteredData.map((result, key) => (
                     <tr key={key}>
-                      <td className="px-2 border-2">
-                        <div className="flex gap-2 text-center">
-                          <Icon
-                            icon="lucide:eye"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => {
-                              setPTView(true); // Open VEModal
-                              setEdit(false); // Disable edit mode for VEModal
-                              setPTId(result.ProfessionalTaxId); // Pass ID to VEModal
-                            }}
-                          />
-                          <ViewPT
-                            visible={PTView}
-                            onClick={() => setPTView(false)}
-                            edit={edit}
-                            ID={PTId}
-                          />
-                          <Icon
-                            icon="mdi:edit"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => {
-                              setPTView(true); // Open VEModal
-                              setEdit(true); // Disable edit mode for VEModal
-                              setPTId(result.DeductionHeadId); // Pass ID to VEModal
-                            }}
-                          />
-                          <ViewPT
-                            visible={PTView}
-                            onClick={() => setPTView(false)}
-                            edit={edit}
-                            ID={PTId}
-                          />
-                          <Icon
-                            icon="material-symbols:delete-outline"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                          />
-                        </div>
-                      </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {result.ProfessionalTaxId}
+                        {result.ApprovalFlag}
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {result.Gender}
+                        {result.AdvanceId}
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {result.UpperLimit}
+                        {result.AdvanceDate}
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {result.LowerLimit}
+                        {result.Employee}
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {result.PTAmount}
+                        {result.AdvanceType}
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {result.PTAmountFebruary}
+                        {result.Amount}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                        {result.Installment}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                        {result.Project}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                        {result.AdvanceStatus}
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
                         {result.Status}
                       </td>
                     </tr>
                   ))
-                : TaxData.map((entry, index) => (
+                : advanceData.map((entry, index) => (
                     <tr key={index}>
-                      <td className="px-2 border-2">
-                        <div className="flex items-center gap-2 text-center justify-center">
-                          <Icon
-                            icon="lucide:eye"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => {
-                              setPTView(true); // Open VEModal
-                              setEdit(false); // Disable edit mode for VEModal
-                              setPTId(entry.DeductionHeadId); // Pass ID to VEModal
-                            }}
-                          />
-                          <ViewPT
-                            visible={PTView}
-                            onClick={() => setPTView(false)}
-                            edit={edit}
-                            ID={PTId}
-                          />
-                          <Icon
-                            icon="mdi:edit"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => {
-                              setPTView(true); // Open VEModal
-                              setEdit(true); // Disable edit mode for VEModal
-                              setPTId(entry.DeductionHeadId); // Pass ID to VEModal
-                            }}
-                          />
-                          <ViewPT
-                            visible={PTView}
-                            onClick={() => setPTView(false)}
-                            edit={edit}
-                            ID={PTId}
-                          />
-                          <Icon
-                            icon="material-symbols:delete-outline"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                          />
-                        </div>
-                      </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {entry.ProfessionalTaxId}
+                        {entry.ApprovalFlag ? 'Approved' : 'Unapproved'}
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {entry.Gender}
+                        {entry.AdvanceId}
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {entry.UpperLimit}
+                        {entry.AdvanceDate}
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {entry.LowerLimit}
+                        {entry.Employee}
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {entry.PTAmount}
+                        {entry.AdvanceType}
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {entry.PTAmountFebruary}
+                        {entry.Amount}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                        {entry.Installment}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                        {entry.Project}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                        {entry.AdvanceStatus}
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
                         {entry.Status}
@@ -489,4 +443,4 @@ const ProfesssionalTaxMaster = () => {
   )
 }
 
-export default ProfesssionalTaxMaster
+export default AdvanceRequest

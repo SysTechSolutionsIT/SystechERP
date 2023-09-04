@@ -34,6 +34,7 @@ import ProfesssionalTaxMaster from "./components/payroll settings/ProfesssionalT
 import LeaveApproval from "./components/leaves settings/LeaveApproval";
 import DesignationMaster from "./components/employee settings/DesignationMaster";
 import KRAMaster from "./components/employee settings/KRAMaster";
+import AdvanceRequest from "./components/payroll settings/AdvanceRequest";
 
 function App() {
   return (
@@ -96,6 +97,7 @@ function App() {
             path="/employee-type-earning-deduction"
             element={<EmpTypeEarningDeduction />}
           />
+          <Route path="/advance-request" element={<AdvanceRequest />} />
           <Route path="/leave-application" element={<LeaveApp />} />
           <Route path="/leave-approval" element={<LeaveApproval />} />
         </Route>
