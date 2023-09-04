@@ -95,15 +95,33 @@ const LeaveModal1 = ({ visible, onClick }) => {
                 />
               </div>
               <div>
-                <p className="text-[13px] font-semibold">Employee Name</p>
-                <input
-                  id="Port"
-                  type="text"
-                  placeholder="Enter Port No"
-                  value={formik.values.Port}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                />
+                <label
+                  htmlFor="employeeName"
+                  className="text-[13px] font-semibold"
+                >
+                  Employee Name
+                </label>
+                <div className="flex items-center">
+                  <select
+                    id="employeeName"
+                    name="employeeName"
+                    value={formik.values.employeeName}
+                    onChange={formik.handleChange}
+                    className="w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                  >
+                    <option value="">Select an Employee</option>
+                    <option value="John">John</option>
+                    <option value="Jane">Jane</option>
+                    <option value="Smith">Smith</option>
+                  </select>
+                  <button
+                    type="button"
+                    // onClick={addEmployee}
+                    className="ml-2 px-3 py-1 text-[11px] bg-blue-500 text-white rounded-md"
+                  >
+                    +
+                  </button>
+                </div>
               </div>
               <div>
                 <p className="text-[13px] font-semibold">Leave From Date</p>
@@ -179,15 +197,15 @@ const LeaveModal1 = ({ visible, onClick }) => {
                 Show
               </button>
             </div>
-            <div className="grid gap-2 justify-between mt-2 w-full">
-              <div className="my-1 rounded-2xl  p-2 pr-8 ">
-                <table className="min-w-full text-center whitespace-normal z-0">
-                  <thead className="border-b-2">
-                    <tr className="">
+            <div className="grid gap-4 justify-between mt-2 w-full">
+              <div className="my-1 p-2 pr-8 ">
+                <table className="min-w-full text-center tableX1">
+                  <thead className="bg-gray-700 text-white ">
+                    <tr>
                       {columnHeads.map((columnName) => (
                         <th
                           key={columnName}
-                          className={`px-2 text-[13px] font-bold text-black border-2 border-gray-400`}
+                          className="px-2 py-2 font-bold text-[13px] text-center border-2 rounded headers"
                         >
                           {columnName}
                         </th>

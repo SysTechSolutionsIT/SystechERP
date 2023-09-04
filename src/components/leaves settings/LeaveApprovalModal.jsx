@@ -98,15 +98,33 @@ const LeaveApprovalModal = ({ visible, onClick }) => {
                 />
               </div>
               <div>
-                <p className="text-[13px] font-semibold">Employee Name</p>
-                <input
-                  id="Port"
-                  type="text"
-                  placeholder="Enter Port No"
-                  value={formik.values.Port}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                />
+                <label
+                  htmlFor="employeeName"
+                  className="text-[13px] font-semibold"
+                >
+                  Employee Name
+                </label>
+                <div className="flex items-center">
+                  <select
+                    id="employeeName"
+                    name="employeeName"
+                    value={formik.values.employeeName}
+                    onChange={formik.handleChange}
+                    className="w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                  >
+                    <option value="">Select an Employee</option>
+                    <option value="John">John</option>
+                    <option value="Jane">Jane</option>
+                    <option value="Smith">Smith</option>
+                  </select>
+                  <button
+                    type="button"
+                    // onClick={addEmployee}
+                    className="ml-2 px-3 py-1 text-[11px] bg-blue-500 text-white rounded-md"
+                  >
+                    +
+                  </button>
+                </div>
               </div>
               <div>
                 <p className="text-[13px] font-semibold">Leave From Date</p>
@@ -142,14 +160,33 @@ const LeaveApprovalModal = ({ visible, onClick }) => {
                 />
               </div>
               <div>
-                <p className="text-[13px] font-semibold">Sanctioned By</p>
-                <input
-                  id="sanctionBy"
-                  type="text"
-                  value={formik.values.sanctionBy}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                />
+                <label
+                  htmlFor="employeeName"
+                  className="text-[13px] font-semibold"
+                >
+                  Sanctioned By
+                </label>
+                <div className="flex items-center">
+                  <select
+                    id="sanctionBy"
+                    name="sanctionBy"
+                    value={formik.values.sanctionBy}
+                    onChange={formik.handleChange}
+                    className="w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                  >
+                    <option value="">Select an Employee</option>
+                    <option value="John">John</option>
+                    <option value="Jane">Jane</option>
+                    <option value="Smith">Smith</option>
+                  </select>
+                  <button
+                    type="button"
+                    // onClick={addEmployee}
+                    className="ml-2 px-3 py-1 text-[11px] bg-blue-500 text-white rounded-md"
+                  >
+                    +
+                  </button>
+                </div>
               </div>
               <div>
                 <p className="text-[13px] font-semibold">
@@ -213,7 +250,7 @@ const LeaveApprovalModal = ({ visible, onClick }) => {
                       {columnHeads.map((columnName) => (
                         <th
                           key={columnName}
-                          className="px-2 py-2 font-bold text-[13px] text-center border-2 border-gray-400 rounded headers gap-2"
+                          className="px-2 py-2 font-bold text-[13px] text-center border-2  rounded headers "
                         >
                           {columnName}
                         </th>
