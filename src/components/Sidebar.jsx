@@ -333,7 +333,9 @@ const Sidebar = () => {
                     <SubMenuEntry
                       title="Professional Tax Setting"
                       onClick={() => navigate("/professional-tax-master")} />
-                    <SubMenuEntry title="Advance Request" />
+                    <SubMenuEntry 
+                    title="Advance Request" 
+                    onClick={() => navigate('/advance-request')}/>
                     <SubMenuEntry title="Advance Approval" />
                     <SubMenuEntry title="Advance Repayment" />
                   </SubMenuGroup>
