@@ -314,12 +314,6 @@ const EmployeeGradeMaster = () => {
                                                         setid(entry.ID); // Pass ID to VEModal
                                                     }}
                                                 />
-                                                {/* <ViewEGradeination
-                          visible={veEGrade}
-                          onClick={() => setVeEGrade(false)}
-                          edit={edit}
-                          ID={id}
-                        /> */}
                                                 <Icon
                                                     className="cursor-pointer"
                                                     icon="mdi:edit"
@@ -331,12 +325,6 @@ const EmployeeGradeMaster = () => {
                                                         setEdit(true); // Disable edit mode for VEModal
                                                         setid(entry.ID); // Pass ID to VEModal
                                                     }}
-                                                />
-                                                <ViewEmployeeGrade
-                                                    visible={veEGrade}
-                                                    onClick={() => setVeEGrade(false)}
-                                                    edit={edit}
-                                                    ID={id}
                                                 />
                                                 <Icon
                                                     className="cursor-pointer"
@@ -377,12 +365,6 @@ const EmployeeGradeMaster = () => {
                                                         setid(entry.ID); // Pass ID to VEModal
                                                     }}
                                                 />
-                                                {/* <ViewEGradeination
-                          visible={veEGrade}
-                          onClick={() => setVeEGrade(false)}
-                          edit={edit}
-                          ID={id}
-                        /> */}
                                                 <Icon
                                                     className="cursor-pointer"
                                                     icon="mdi:edit"
@@ -394,12 +376,6 @@ const EmployeeGradeMaster = () => {
                                                         setEdit(true); // Disable edit mode for VEModal
                                                         setid(entry.ID); // Pass ID to VEModal
                                                     }}
-                                                />
-                                                <ViewEmployeeGrade
-                                                    visible={veEGrade}
-                                                    onClick={() => setVeEGrade(false)}
-                                                    edit={edit}
-                                                    ID={id}
                                                 />
                                                 <Icon
                                                     className="cursor-pointer"
@@ -429,6 +405,12 @@ const EmployeeGradeMaster = () => {
                     </table>
                 </div>
             </div>
+            <ViewEmployeeGrade
+                visible={veEGrade}
+                onClick={() => setVeEGrade(false)}
+                edit={edit}
+                ID={id}
+            />
         </div>
     );
 }

@@ -268,12 +268,6 @@ const ThreeFieldsMaster = () => {
                             setid(entry.ID); // Pass ID to VEModal
                           }}
                         />
-                        {/* <VEFModal
-                                        visible={veTf}
-                                        onClick={() => setVeTf(false)}
-                                        edit={edit}
-                                        ID={id}
-                                      /> */}
                         <Icon
                           className="cursor-pointer"
                           icon="mdi:edit"
@@ -285,12 +279,6 @@ const ThreeFieldsMaster = () => {
                             setEdit(true); // Disable edit mode for VEModal
                             setid(entry.ID); // Pass ID to VEModal
                           }}
-                        />
-                        <ViewThreeF
-                          visible={veTf}
-                          onClick={() => setVeTf(false)}
-                          edit={edit}
-                          ID={id}
                         />
                         <Icon
                           className="cursor-pointer"
@@ -331,12 +319,6 @@ const ThreeFieldsMaster = () => {
                             setid(entry.ID); // Pass ID to VEModal
                           }}
                         />
-                        {/* <VEFModal
-                                            visible={veTf}
-                                            onClick={() => setVeTf(false)}
-                                            edit={edit}
-                                            ID={id}
-                                          /> */}
                         <Icon
                           className="cursor-pointer"
                           icon="mdi:edit"
@@ -348,12 +330,6 @@ const ThreeFieldsMaster = () => {
                             setEdit(true); // Disable edit mode for VEModal
                             setid(entry.ID); // Pass ID to VEModal
                           }}
-                        />
-                        <ViewThreeF
-                          visible={veTf}
-                          onClick={() => setVeTf(false)}
-                          edit={edit}
-                          ID={id}
                         />
                         <Icon
                           className="cursor-pointer"
@@ -383,6 +359,12 @@ const ThreeFieldsMaster = () => {
           </table>
         </div>
       </div>
+      <ViewThreeF
+        visible={veTf}
+        onClick={() => setVeTf(false)}
+        edit={edit}
+        ID={id}
+      />
     </div>
   );
 };

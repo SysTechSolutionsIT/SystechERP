@@ -22,7 +22,7 @@ const ViewDesignation = ({ visible, onClick, edit, ID }) => {
     });
 
     useEffect(() => {
-        const selectedDesign = DesignData.find((dest) => dest.ID === ID);
+        const selectedDesign = DesignData.find((item) => item.ID === ID);
         if (selectedDesign) {
             setDetails(selectedDesign);
         }

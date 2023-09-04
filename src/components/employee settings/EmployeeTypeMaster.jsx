@@ -297,12 +297,6 @@ const EmployeeTypeMaster = () => {
                             setid(entry.ID); // Pass ID to VEModal
                           }}
                         />
-                        {/* <ViewETypeination
-                          visible={veEType}
-                          onClick={() => setVeEType(false)}
-                          edit={edit}
-                          ID={id}
-                        /> */}
                         <Icon
                           className="cursor-pointer"
                           icon="mdi:edit"
@@ -314,12 +308,6 @@ const EmployeeTypeMaster = () => {
                             setEdit(true); // Disable edit mode for VEModal
                             setid(entry.ID); // Pass ID to VEModal
                           }}
-                        />
-                        <ViewEmployeeType
-                          visible={veEType}
-                          onClick={() => setVeEType(false)}
-                          edit={edit}
-                          ID={id}
                         />
                         <Icon
                           className="cursor-pointer"
@@ -372,12 +360,6 @@ const EmployeeTypeMaster = () => {
                             setid(entry.ID); // Pass ID to VEModal
                           }}
                         />
-                        <ViewEmployeeType
-                          visible={veEType}
-                          onClick={() => setVeEType(false)}
-                          edit={edit}
-                          ID={id}
-                        />
                         <Icon
                           className="cursor-pointer"
                           icon="material-symbols:delete-outline"
@@ -406,6 +388,12 @@ const EmployeeTypeMaster = () => {
           </table>
         </div>
       </div>
+      <ViewEmployeeType
+        visible={veEType}
+        onClick={() => setVeEType(false)}
+        edit={edit}
+        ID={id}
+      />
     </div>
   );
 }

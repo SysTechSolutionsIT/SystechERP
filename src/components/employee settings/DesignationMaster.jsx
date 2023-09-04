@@ -338,12 +338,6 @@ const DesignationMaster = () => {
                             setid(entry.ID); // Pass ID to VEModal
                           }}
                         />
-                        <ViewDesignation
-                          visible={veDesign}
-                          onClick={() => setVeDesign(false)}
-                          edit={edit}
-                          ID={id}
-                        />
                         <Icon
                           className="cursor-pointer"
                           icon="material-symbols:delete-outline"
@@ -395,12 +389,6 @@ const DesignationMaster = () => {
                             setid(entry.ID); // Pass ID to VEModal
                           }}
                         />
-                        <ViewDesignation
-                          visible={veDesign}
-                          onClick={() => setVeDesign(false)}
-                          edit={edit}
-                          ID={id}
-                        />
                         <Icon
                           className="cursor-pointer"
                           icon="material-symbols:delete-outline"
@@ -429,6 +417,12 @@ const DesignationMaster = () => {
           </table>
         </div>
       </div>
+      <ViewDesignation
+        visible={veDesign}
+        onClick={() => setVeDesign(false)}
+        edit={edit}
+        ID={id}
+      />
     </div>
   );
 }

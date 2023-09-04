@@ -1,30 +1,31 @@
-import { useFormik } from "formik";
-import React, { useEffect, useState } from "react";
-import { ThreeFData } from "./ThreeFieldsMaster";
-import { Icon } from "@iconify/react";
+import { useFormik } from 'formik';
+import React, { useEffect, useState } from 'react'
+import { KRAData } from './KRAMaster';
+import { Icon } from '@iconify/react';
 
-const ViewThreeF = ({ visible, onClick, edit, ID }) => {
+const ViewKRA = ({ visible, onClick, edit, ID }) => {
     const [StatusCheck, setStatusCheck] = useState(false);
     const [details, setDetails] = useState([]);
+
     const formik = useFormik({
         initialValues: {
             ID: "",
-            MasterName: "",
-            FieldDetails1: "",
-            FieldDetails2: "",
-            status: "",
-            remark: "",
+            Name: "",
+            Duration: "",
+            Points: "",
+            Status: "",
+            Remark: ""
         },
         onSubmit: (values) => {
             console.log(values);
-            ThreeFData.push(values);
+            KRAData.push(values);
         },
     });
 
     useEffect(() => {
-        const selectedField = ThreeFData.find((dest) => dest.ID === ID);
-        if (selectedField) {
-            setDetails(selectedField);
+        const selectedKRA = KRAData.find((item) => item.ID === ID);
+        if (selectedKRA) {
+            setDetails(selectedKRA);
         }
     }, [ID]);
 
@@ -35,7 +36,7 @@ const ViewThreeF = ({ visible, onClick, edit, ID }) => {
                 <div className="bg-gray-200 w-[60%] p-8 rounded-lg max-h-[80%] overflow-y-scroll">
                     <div className="bg-blue-900 py-2 px-4 rounded-lg flex justify-between items-center">
                         <p className="text-white text-[13px] font-semibold">
-                            Three Fields Master
+                            KRA Master
                         </p>
                         <Icon
                             icon="maki:cross"
@@ -47,11 +48,11 @@ const ViewThreeF = ({ visible, onClick, edit, ID }) => {
                     <div className="py-4">
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <p className="text-[13px] font-semibold">Field ID</p>
+                                <p className="text-[13px] font-semibold">KRA ID</p>
                                 <input
                                     id="ID"
                                     type="number"
-                                    placeholder="Enter Field ID"
+                                    placeholder="Enter KRA ID"
                                     value={details.ID}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
@@ -59,36 +60,36 @@ const ViewThreeF = ({ visible, onClick, edit, ID }) => {
                                 />
                             </div>
                             <div>
-                                <p className="text-[13px] font-semibold">Master Name</p>
+                                <p className="text-[13px] font-semibold">KRA Name</p>
                                 <input
-                                    id="MasterName"
+                                    id="Name"
                                     type="text"
-                                    placeholder="Enter Master Name"
-                                    value={details.MasterName}
+                                    placeholder="Enter KRA Name"
+                                    value={details.Name}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
                                 />
                             </div>
                             <div>
-                                <p className="text-[13px] font-semibold">Field Details 1</p>
+                                <p className="text-[13px] font-semibold">Duration</p>
                                 <input
-                                    id="FieldDetails1"
-                                    type="text"
-                                    placeholder="Enter Field Details 1"
-                                    value={details.FieldDetails1}
+                                    id="Duration"
+                                    type="number"
+                                    placeholder="Enter Duration"
+                                    value={details.Duration}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
                                 />
                             </div>
                             <div>
-                                <p className="text-[13px] font-semibold">Field Details 2</p>
+                                <p className="text-[13px] font-semibold">Points</p>
                                 <input
-                                    id="FieldDetails2"
-                                    type="text"
-                                    placeholder="Enter Field Details 2"
-                                    value={details.FieldDetails2}
+                                    id="Points"
+                                    type="number"
+                                    placeholder="Enter Points"
+                                    value={details.Points}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
@@ -97,10 +98,10 @@ const ViewThreeF = ({ visible, onClick, edit, ID }) => {
                             <div>
                                 <p className="text-[13px] font-semibold">Remarks</p>
                                 <input
-                                    id="remark"
+                                    id="Remark"
                                     type="text"
                                     placeholder="Enter Remarks"
-                                    value={details.remark}
+                                    value={details.Remark}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
@@ -110,9 +111,9 @@ const ViewThreeF = ({ visible, onClick, edit, ID }) => {
                                 <p className="text-[13px] font-semibold">Status</p>
                                 <div className="flex items-center">
                                     <input
-                                        id="status"
+                                        id="Status"
                                         type="checkbox"
-                                        checked={details.status}
+                                        checked={details.Status}
                                         className={`relative w-4 h-4 mr-2 peer shrink-0 checked:appearance-none checked:bg-blue-900 border-2 border-blue-900 rounded-sm`}
                                         onChange={() => setStatusCheck(!StatusCheck)}
                                         disabled={!edit}
@@ -147,6 +148,6 @@ const ViewThreeF = ({ visible, onClick, edit, ID }) => {
             </div>
         </form>
     );
-};
+}
 
-export default ViewThreeF;
+export default ViewKRA

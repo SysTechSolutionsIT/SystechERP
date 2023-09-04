@@ -309,12 +309,6 @@ const TwoFieldsMaster = () => {
                             setid(entry.ID); // Pass ID to VEModal
                           }}
                         />
-                        {/* <VEFModal
-                                        visible={veTf}
-                                        onClick={() => setVeTf(false)}
-                                        edit={edit}
-                                        ID={id}
-                                      /> */}
                         <Icon
                           className="cursor-pointer"
                           icon="mdi:edit"
@@ -326,12 +320,6 @@ const TwoFieldsMaster = () => {
                             setEdit(true); // Disable edit mode for VEModal
                             setid(entry.ID); // Pass ID to VEModal
                           }}
-                        />
-                        <ViewTwoF
-                          visible={veTf}
-                          onClick={() => setVeTf(false)}
-                          edit={edit}
-                          ID={id}
                         />
                         <Icon
                           className="cursor-pointer"
@@ -372,12 +360,6 @@ const TwoFieldsMaster = () => {
                             setid(entry.ID); // Pass ID to VEModal
                           }}
                         />
-                        {/* <VEFModal
-                                            visible={veTf}
-                                            onClick={() => setVeTf(false)}
-                                            edit={edit}
-                                            ID={id}
-                                          /> */}
                         <Icon
                           className="cursor-pointer"
                           icon="mdi:edit"
@@ -389,12 +371,6 @@ const TwoFieldsMaster = () => {
                             setEdit(true); // Disable edit mode for VEModal
                             setid(entry.ID); // Pass ID to VEModal
                           }}
-                        />
-                        <ViewTwoF
-                          visible={veTf}
-                          onClick={() => setVeTf(false)}
-                          edit={edit}
-                          ID={id}
                         />
                         <Icon
                           className="cursor-pointer"
@@ -424,6 +400,12 @@ const TwoFieldsMaster = () => {
           </table>
         </div>
       </div>
+      <ViewTwoF
+        visible={veTf}
+        onClick={() => setVeTf(false)}
+        edit={edit}
+        ID={id}
+      />
     </div>
   );
 };

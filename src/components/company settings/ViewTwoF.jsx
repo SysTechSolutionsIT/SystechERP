@@ -30,7 +30,7 @@ const ViewTwoF = ({ visible, onClick, edit, ID }) => {
   if (!visible) return null;
   return (
     <form onSubmit={formik.handleSubmit}>
-      <div className="fixed overflow-y-scroll inset-0 bg-black bg-opacity-5 backdrop-blur-sm flex items-center justify-center w-full">
+      <div className="fixed overflow-y-scroll inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center w-full">
         <div className="bg-gray-200 w-[60%]  p-8 rounded-lg max-h-[90%] overflow-y-scroll">
           <div className="bg-blue-900 py-2 px-4 rounded-lg flex justify-between items-center">
             <p className="text-white text-[13px] font-semibold">
@@ -100,9 +100,9 @@ const ViewTwoF = ({ visible, onClick, edit, ID }) => {
                     id="status"
                     type="checkbox"
                     checked={details.Status}
-                    value={details.Status}
                     className={`relative w-4 h-4 mr-2 peer shrink-0 checked:appearance-none checked:bg-blue-900 border-2 border-blue-900 rounded-sm`}
                     onChange={() => setStatusCheck(!StatusCheck)}
+                    disabled={!edit}
                   />
                   <Icon
                     className="absolute w-4 h-4 hidden peer-checked:block"

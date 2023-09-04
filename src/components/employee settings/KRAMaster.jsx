@@ -1,6 +1,7 @@
 import { Icon } from '@iconify/react';
 import React, { useEffect, useRef, useState } from 'react'
 import KRAModal from './KRAModal';
+import ViewKRA from './ViewKRA';
 
 export const KRAData = [
     {
@@ -63,7 +64,7 @@ const KRAMaster = () => {
         setSelectedColumns([]);
     };
 
-    const [veDesign, setVeDesign] = useState(false);
+    const [veKRA, setVeKRA] = useState(false);
     const [edit, setEdit] = useState(false);
     const [id, setid] = useState();
 
@@ -263,7 +264,7 @@ const KRAMaster = () => {
                                                     width="20"
                                                     height="20"
                                                     onClick={() => {
-                                                        setVeDesign(true); // Open VEModal
+                                                        setVeKRA(true); // Open VEModal
                                                         setEdit(false); // Disable edit mode for VEModal
                                                         setid(entry.ID); // Pass ID to VEModal
                                                     }}
@@ -275,17 +276,11 @@ const KRAMaster = () => {
                                                     width="20"
                                                     height="20"
                                                     onClick={() => {
-                                                        setVeDesign(true); // Open VEModal
+                                                        setVeKRA(true); // Open VEModal
                                                         setEdit(true); // Disable edit mode for VEModal
                                                         setid(entry.ID); // Pass ID to VEModal
                                                     }}
                                                 />
-                                                {/* <ViewDesignation
-                          visible={veDesign}
-                          onClick={() => setVeDesign(false)}
-                          edit={edit}
-                          ID={id}
-                        /> */}
                                                 <Icon
                                                     className="cursor-pointer"
                                                     icon="material-symbols:delete-outline"
@@ -320,7 +315,7 @@ const KRAMaster = () => {
                                                     width="20"
                                                     height="20"
                                                     onClick={() => {
-                                                        setVeDesign(true); // Open VEModal
+                                                        setVeKRA(true); // Open VEModal
                                                         setEdit(false); // Disable edit mode for VEModal
                                                         setid(entry.ID); // Pass ID to VEModal
                                                     }}
@@ -332,17 +327,11 @@ const KRAMaster = () => {
                                                     width="20"
                                                     height="20"
                                                     onClick={() => {
-                                                        setVeDesign(true); // Open VEModal
+                                                        setVeKRA(true); // Open VEModal
                                                         setEdit(true); // Disable edit mode for VEModal
                                                         setid(entry.ID); // Pass ID to VEModal
                                                     }}
                                                 />
-                                                {/* <ViewDesignation
-                          visible={veDesign}
-                          onClick={() => setVeDesign(false)}
-                          edit={edit}
-                          ID={id}
-                        /> */}
                                                 <Icon
                                                     className="cursor-pointer"
                                                     icon="material-symbols:delete-outline"
@@ -371,6 +360,12 @@ const KRAMaster = () => {
                     </table>
                 </div>
             </div>
+            <ViewKRA
+                visible={veKRA}
+                onClick={() => setVeKRA(false)}
+                edit={edit}
+                ID={id}
+            />
         </div>
     );
 }

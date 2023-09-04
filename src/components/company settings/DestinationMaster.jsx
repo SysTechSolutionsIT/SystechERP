@@ -276,12 +276,6 @@ const DestinationMaster = () => {
                             setid(entry.ID); // Pass ID to VEModal
                           }}
                         />
-                        {/* <ViewDestination
-                          visible={veDest}
-                          onClick={() => setVeDest(false)}
-                          edit={edit}
-                          ID={id}
-                        /> */}
                         <Icon
                           className="cursor-pointer"
                           icon="mdi:edit"
@@ -293,12 +287,6 @@ const DestinationMaster = () => {
                             setEdit(true); // Disable edit mode for VEModal
                             setid(entry.ID); // Pass ID to VEModal
                           }}
-                        />
-                        <ViewDestination
-                          visible={veDest}
-                          onClick={() => setVeDest(false)}
-                          edit={edit}
-                          ID={id}
                         />
                         <Icon
                           className="cursor-pointer"
@@ -339,12 +327,6 @@ const DestinationMaster = () => {
                             setid(entry.ID); // Pass ID to VEModal
                           }}
                         />
-                        {/* <ViewDestination
-                          visible={veDest}
-                          onClick={() => setVeDest(false)}
-                          edit={edit}
-                          ID={id}
-                        /> */}
                         <Icon
                           className="cursor-pointer"
                           icon="mdi:edit"
@@ -356,12 +338,6 @@ const DestinationMaster = () => {
                             setEdit(true); // Disable edit mode for VEModal
                             setid(entry.ID); // Pass ID to VEModal
                           }}
-                        />
-                        <ViewDestination
-                          visible={veDest}
-                          onClick={() => setVeDest(false)}
-                          edit={edit}
-                          ID={id}
                         />
                         <Icon
                           className="cursor-pointer"
@@ -391,6 +367,12 @@ const DestinationMaster = () => {
           </table>
         </div>
       </div>
+      <ViewDestination
+        visible={veDest}
+        onClick={() => setVeDest(false)}
+        edit={edit}
+        ID={id}
+      />
     </div>
   );
 };
