@@ -1,7 +1,9 @@
 import { Icon } from '@iconify/react';
 import React, { useEffect, useRef, useState } from 'react'
+import DesignationModal from './DesignationModal';
+import ViewDesignation from './ViewDesignation';
 
-const DesignData = [
+export const DesignData = [
   {
     ID: 1,
     Name: "ADMINISTRATOR",
@@ -119,7 +121,7 @@ const DesignationMaster = () => {
     setSelectedColumns([]);
   };
 
-  const [veDest, setVeDest] = useState(false);
+  const [veDesign, setVeDesign] = useState(false);
   const [edit, setEdit] = useState(false);
   const [id, setid] = useState();
 
@@ -260,10 +262,10 @@ const DesignationMaster = () => {
           </div>
         </div>
       </div>
-      {/* <DestinationModal
+      <DesignationModal
         visible={isModalOpen}
         onClick={() => setModalOpen(false)}
-      /> */}
+      />
       <div className="grid gap-4 justify-between">
         <div className="my-1 rounded-2xl bg-white p-2 pr-8">
           <table className="min-w-full text-center rounded-lg  whitespace-normal">
@@ -319,7 +321,7 @@ const DesignationMaster = () => {
                           width="20"
                           height="20"
                           onClick={() => {
-                            setVeDest(true); // Open VEModal
+                            setVeDesign(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
                             setid(entry.ID); // Pass ID to VEModal
                           }}
@@ -331,17 +333,17 @@ const DesignationMaster = () => {
                           width="20"
                           height="20"
                           onClick={() => {
-                            setVeDest(true); // Open VEModal
+                            setVeDesign(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
                             setid(entry.ID); // Pass ID to VEModal
                           }}
                         />
-                        {/* <ViewDestination
-                          visible={veDest}
-                          onClick={() => setVeDest(false)}
+                        <ViewDesignation
+                          visible={veDesign}
+                          onClick={() => setVeDesign(false)}
                           edit={edit}
                           ID={id}
-                        /> */}
+                        />
                         <Icon
                           className="cursor-pointer"
                           icon="material-symbols:delete-outline"
@@ -376,7 +378,7 @@ const DesignationMaster = () => {
                           width="20"
                           height="20"
                           onClick={() => {
-                            setVeDest(true); // Open VEModal
+                            setVeDesign(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
                             setid(entry.ID); // Pass ID to VEModal
                           }}
@@ -388,17 +390,17 @@ const DesignationMaster = () => {
                           width="20"
                           height="20"
                           onClick={() => {
-                            setVeDest(true); // Open VEModal
+                            setVeDesign(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
                             setid(entry.ID); // Pass ID to VEModal
                           }}
                         />
-                        {/* <ViewDestination
-                          visible={veDest}
-                          onClick={() => setVeDest(false)}
+                        <ViewDesignation
+                          visible={veDesign}
+                          onClick={() => setVeDesign(false)}
                           edit={edit}
                           ID={id}
-                        /> */}
+                        />
                         <Icon
                           className="cursor-pointer"
                           icon="material-symbols:delete-outline"
