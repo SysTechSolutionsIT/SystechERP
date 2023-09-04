@@ -29,6 +29,8 @@ import EarningHeadsMaster from "./components/payroll settings/EarningHeadsMaster
 import DeductionHeadsMaster from "./components/payroll settings/DeductionHeadsMaster";
 import LeaveBalance from "./components/leaves settings/LeaveBalance";
 import LeaveApp from "./components/leaves settings/leaveApplication";
+import EmpTypeEarningDeduction from "./components/payroll settings/EmpTypeEarningDeduction";
+import ProfesssionalTaxMaster from "./components/payroll settings/ProfesssionalTaxMaster";
 import LeaveApproval from "./components/leaves settings/LeaveApproval";
 
 function App() {
@@ -87,6 +89,14 @@ function App() {
           <Route
             path="/deduction-heads-master"
             element={<DeductionHeadsMaster />}
+          />
+          <Route
+            path="/professional-tax-master"
+            element={<ProfesssionalTaxMaster />}
+          />
+          <Route
+            path="/employee-type-earning-deduction"
+            element={<EmpTypeEarningDeduction />}
           />
           <Route path="/leave-application" element={<LeaveApp />} />
           <Route path="/leave-approval" element={<LeaveApproval />} />
