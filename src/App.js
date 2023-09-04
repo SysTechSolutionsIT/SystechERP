@@ -33,6 +33,7 @@ import EmpTypeEarningDeduction from "./components/payroll settings/EmpTypeEarnin
 import ProfesssionalTaxMaster from "./components/payroll settings/ProfesssionalTaxMaster";
 import LeaveApproval from "./components/leaves settings/LeaveApproval";
 import DesignationMaster from "./components/employee settings/DesignationMaster";
+import KRAMaster from "./components/employee settings/KRAMaster";
 
 function App() {
   return (
@@ -66,6 +67,7 @@ function App() {
           <Route path="/employee-type-master" element={<EmployeeTypeMaster />} />
           <Route path="/employee-grade-master" element={<EmployeeGradeMaster />} />
           <Route path="/designation-master" element={<DesignationMaster />} />
+          <Route path="/kra-master" element={<KRAMaster />} />
           <Route path="/add-employee" element={<EMPTabs />} />
           <Route path="/shift-master" element={<ShiftMaster />} />
           <Route path="/holiday-master" element={<HolidayMaster />} />
