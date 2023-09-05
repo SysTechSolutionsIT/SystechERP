@@ -35,6 +35,7 @@ import LeaveApproval from "./components/leaves settings/LeaveApproval";
 import DesignationMaster from "./components/employee settings/DesignationMaster";
 import KRAMaster from "./components/employee settings/KRAMaster";
 import AdvanceRequest from "./components/payroll settings/AdvanceRequest";
+import EDImports from "./components/salary management/EDImports";
 
 function App() {
   return (
@@ -65,8 +66,14 @@ function App() {
           <Route path="/two-field-master" element={<TwoFieldsMaster />} />
           <Route path="/employee-master" element={<EmployeeMaster />} />
           <Route path="/leave-balance-master" element={<LeaveBalance />} />
-          <Route path="/employee-type-master" element={<EmployeeTypeMaster />} />
-          <Route path="/employee-grade-master" element={<EmployeeGradeMaster />} />
+          <Route
+            path="/employee-type-master"
+            element={<EmployeeTypeMaster />}
+          />
+          <Route
+            path="/employee-grade-master"
+            element={<EmployeeGradeMaster />}
+          />
           <Route path="/designation-master" element={<DesignationMaster />} />
           <Route path="/kra-master" element={<KRAMaster />} />
           <Route path="/add-employee" element={<EMPTabs />} />
@@ -100,6 +107,7 @@ function App() {
           <Route path="/advance-request" element={<AdvanceRequest />} />
           <Route path="/leave-application" element={<LeaveApp />} />
           <Route path="/leave-approval" element={<LeaveApproval />} />
+          <Route path="/ED-imports" element={<EDImports />} />
         </Route>
       </Routes>
     </Router>
