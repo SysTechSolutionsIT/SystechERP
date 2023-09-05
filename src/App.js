@@ -36,6 +36,7 @@ import DesignationMaster from "./components/employee settings/DesignationMaster"
 import KRAMaster from "./components/employee settings/KRAMaster";
 import AdvanceRequest from "./components/payroll settings/AdvanceRequest";
 import EDImports from "./components/salary management/EDImports";
+import JobsResponsibilityMaster from "./components/employee settings/JobsResponsibilityMaster";
 
 function App() {
   return (
@@ -66,16 +67,11 @@ function App() {
           <Route path="/two-field-master" element={<TwoFieldsMaster />} />
           <Route path="/employee-master" element={<EmployeeMaster />} />
           <Route path="/leave-balance-master" element={<LeaveBalance />} />
-          <Route
-            path="/employee-type-master"
-            element={<EmployeeTypeMaster />}
-          />
-          <Route
-            path="/employee-grade-master"
-            element={<EmployeeGradeMaster />}
-          />
+          <Route path="/employee-type-master" element={<EmployeeTypeMaster />} />
+          <Route path="/employee-grade-master" element={<EmployeeGradeMaster />} />
           <Route path="/designation-master" element={<DesignationMaster />} />
           <Route path="/kra-master" element={<KRAMaster />} />
+          <Route path="/jobs-responsibility-master" element={<JobsResponsibilityMaster />} />
           <Route path="/add-employee" element={<EMPTabs />} />
           <Route path="/shift-master" element={<ShiftMaster />} />
           <Route path="/holiday-master" element={<HolidayMaster />} />
@@ -84,10 +80,6 @@ function App() {
           <Route path="/job-type-master" element={<JobTypeMaster />} />
           {/* <Route path="/leave-type-master" element={<LeaveTypeMaster />} /> */}
           <Route path="/edit-employee/:empid" element={<EMPTabs />} />
-          <Route
-            path="/employee-type-master"
-            element={<EmployeeTypeMaster />}
-          />
           <Route
             path="/earning-heads-master"
             element={<EarningHeadsMaster />}
