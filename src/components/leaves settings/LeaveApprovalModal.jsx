@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { Icon } from "@iconify/react";
-import "./leave.css";
 
 const LeaveApprovalModal = ({ visible, onClick }) => {
   const [details, setDetails] = useState([]);
@@ -243,14 +242,18 @@ const LeaveApprovalModal = ({ visible, onClick }) => {
               </button>
             </div>
             <div className="grid gap-4 justify-between mt-2 w-full">
-              <div className="my-1 p-2 pr-8 ">
-                <table className="min-w-full text-center tableX1">
-                  <thead className="bg-gray-700 text-white ">
+              <div className="my-1 p-2 pr-8 border ">
+                <table className="min-w-full text-center">
+                  <thead className="">
                     <tr>
                       {columnHeads.map((columnName) => (
                         <th
                           key={columnName}
-                          className="px-2 py-2 font-bold text-[13px] text-center border-2  rounded headers "
+                          className="px-2 py-2 font-bold text-[13px] text-center border-2 bg-blue-900 text-white "
+                          style={{
+                            borderTopLeftRadius: "10px",
+                            borderTopRightRadius: "10px",
+                          }}
                         >
                           {columnName}
                         </th>

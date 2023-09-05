@@ -205,7 +205,11 @@ const LeaveModal1 = ({ visible, onClick }) => {
                       {columnHeads.map((columnName) => (
                         <th
                           key={columnName}
-                          className="px-2 py-2 font-bold text-[13px] text-center border-2 rounded headers"
+                          className="px-2 py-2 font-bold text-[13px] text-center border-2 bg-blue-900 text-white "
+                          style={{
+                            borderTopLeftRadius: "10px",
+                            borderTopRightRadius: "10px",
+                          }}
                         >
                           {columnName}
                         </th>
