@@ -127,8 +127,15 @@ const EDImports = () => {
                 </select>
               </div>
               <div>
-                <input type="file" onChange={handleFileChange} />
-                <button onClick={handleUpload}>Upload</button>
+                <p className="text-[13px] font-semibold">File</p>
+                <input
+                  id="file"
+                  type="file"
+                  placeholder="Enter Financial Year"
+                  value={formik.values.file}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  onChange={formik.handleChange}
+                />
               </div>
             </div>
           </div>

@@ -417,7 +417,10 @@ const Sidebar = () => {
                       title="Earning-Deduction Imports"
                       onClick={() => navigate("/ED-imports")}
                     />
-                    <SubMenuEntry title="Salary Processing" />
+                    <SubMenuEntry
+                      title="Salary Processing"
+                      onClick={() => navigate("/salary-processing")}
+                    />
                     <SubMenuEntry title="Salary Corrections" />
                   </SubMenuGroup>
                 )}

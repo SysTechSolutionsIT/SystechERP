@@ -36,6 +36,7 @@ import DesignationMaster from "./components/employee settings/DesignationMaster"
 import KRAMaster from "./components/employee settings/KRAMaster";
 import AdvanceRequest from "./components/payroll settings/AdvanceRequest";
 import EDImports from "./components/salary management/EDImports";
+import SalProcessing from "./components/salary management/SalProcess";
 
 function App() {
   return (
@@ -108,6 +109,7 @@ function App() {
           <Route path="/leave-application" element={<LeaveApp />} />
           <Route path="/leave-approval" element={<LeaveApproval />} />
           <Route path="/ED-imports" element={<EDImports />} />
+          <Route path="/salary-processing" element={<SalProcessing />} />
         </Route>
       </Routes>
     </Router>
