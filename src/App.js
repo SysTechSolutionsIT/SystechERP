@@ -38,6 +38,7 @@ import AdvanceRequest from "./components/payroll settings/AdvanceRequest";
 import EDImports from "./components/salary management/EDImports";
 import SalProcessing from "./components/salary management/SalProcess";
 import JobsResponsibilityMaster from "./components/employee settings/JobsResponsibilityMaster";
+import LeaveTypeMaster from "./components/leaves settings/LeaveType";
 
 function App() {
   return (
@@ -88,7 +89,7 @@ function App() {
           <Route path="/weeklyoff-master" element={<WeeklyOffMaster />} />
           <Route path="/attDevice-master" element={<DeviceMaster />} />
           <Route path="/job-type-master" element={<JobTypeMaster />} />
-          {/* <Route path="/leave-type-master" element={<LeaveTypeMaster />} /> */}
+          <Route path="/leave-type-master" element={<LeaveTypeMaster />} />
           <Route path="/edit-employee/:empid" element={<EMPTabs />} />
           <Route
             path="/earning-heads-master"
