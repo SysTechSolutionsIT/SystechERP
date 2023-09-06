@@ -81,13 +81,18 @@ const EarningHeadsMaster = () => {
     }
   };
 
-
   const [veEarningH, setVeEarningH] = useState(false);
   const [edit, setEdit] = useState(false);
   const [EHid, setEHid] = useState();
 
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
+  const [columnVisibility, setColumnVisibility] = useState({
+    EarningHead: true,
+    ShortName: true,
+    CalculationType: true,
+    Status: true,
+  });
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -123,6 +128,33 @@ const EarningHeadsMaster = () => {
     context.font = fontSize + " sans-serif";
     return context.measureText(text).width;
   };
+  //Toggle columns
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedColumns, setSelectedColumns] = useState([
+    ...Object.keys(columnVisibility),
+  ]);
+
+  const toggleColumn = (columnName) => {
+    if (selectedColumns.includes(columnName)) {
+      setSelectedColumns((prevSelected) =>
+        prevSelected.filter((col) => col !== columnName)
+      );
+    } else {
+      setSelectedColumns((prevSelected) => [...prevSelected, columnName]);
+    }
+  };
+
+  useEffect(() => {
+    console.log("Selected Columns:", selectedColumns);
+  }, [selectedColumns]);
+
+  const selectAllColumns = () => {
+    setSelectedColumns([...Object.keys(columnVisibility)]);
+  };
+
+  const deselectAllColumns = () => {
+    setSelectedColumns([]);
+  };
 
   return (
     <div className="top-25 min-w-[40%]">
@@ -133,14 +165,70 @@ const EarningHeadsMaster = () => {
           </div>
           <div className="relative sticky lg:ml-96 sm:ml-8">
             <button
-              className="text-white font-semibold py-1 px-4 rounded-lg text-[13px] border border-white"
+              onClick={() => setShowDropdown(!showDropdown)}
+              className="flex text-[13px] bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap"
+            >
+              Column Visibility
+              <Icon
+                icon="fe:arrow-down"
+                className={`mt-1.5 ml-2 ${
+                  showDropdown ? "rotate-180" : ""
+                } cursor-pointer`}
+              />
+            </button>
+          </div>
+          {showDropdown && (
+            <div className="absolute top-[16%] lg:ml-[42%] sm:mr-[20%] bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50 top-[calc(100% + 10px)]">
+              {/* Dropdown content */}
+              <div className="flex items-center mb-2">
+                <button
+                  className="text-blue-500 hover:text-blue-700 underline mr-2 text-[13px]"
+                  onClick={selectAllColumns}
+                >
+                  Select All
+                </button>
+                <button
+                  className="text-blue-500 hover:text-blue-700 underline text-[13px]"
+                  onClick={deselectAllColumns}
+                >
+                  Deselect All
+                </button>
+              </div>
+              {Object.keys(columnVisibility).map((columnName) => (
+                <label
+                  key={columnName}
+                  className="flex items-center capitalize text-black text-[13px]"
+                >
+                  <input
+                    type="checkbox"
+                    className="mr-2"
+                    checked={selectedColumns.includes(columnName)}
+                    onChange={() => toggleColumn(columnName)}
+                  />
+                  <span
+                    className={
+                      selectedColumns.includes(columnName)
+                        ? "font-semibold"
+                        : ""
+                    }
+                  >
+                    {columnName}
+                  </span>
+                </label>
+              ))}
+            </div>
+          )}
+
+          <div className="min-w-[40%]">
+            <button
+              className="text-white font-semibold px-4 rounded-lg text-[13px] border border-white"
               onClick={() => setModalOpen(true)}
             >
-              Add Record
+              Add Company
             </button>
           </div>
         </div>
-        <div className="flex items-center mb-2 mr-96">
+        <div className="flex items-center mb-2 lg:mr-[210px] sm:mr-[60px]">
           <button
             className=" cursor-pointer"
             onClick={() => setMenuOpen(!menuOpen)}
@@ -150,12 +238,12 @@ const EarningHeadsMaster = () => {
           {menuOpen && (
             <div
               ref={menuRef}
-              className="w-24 flex flex-col absolute lg:top-[16%] lg:right-[23%] bg-white border border-gray-300 shadow-md rounded-lg p-1 items-center mb-2"
+              className="w-24 flex flex-col absolute lg:top-28 lg:right-38 bg-white border border-gray-300 shadow-md rounded-lg p-1 items-center mb-2"
             >
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2 z-50">
                 Copy
               </button>
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2 z-50">
                 CSV
               </button>
               <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
@@ -186,78 +274,36 @@ const EarningHeadsMaster = () => {
                 <th className=" w-auto px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
                   ID
                 </th>
-                <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px]">
-                  Earning Head
-                </th>
-                <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px]">
-                  Short Name
-                </th>
-                <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px]">
-                  Calculation Type
-                </th>
-                <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px]">
-                  Status
-                </th>
+                {selectedColumns.map((columnName) => (
+                  <th
+                    key={columnName}
+                    className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 ${
+                      columnVisibility[columnName] ? "" : "hidden"
+                    }`}
+                  >
+                    {columnName}
+                  </th>
+                ))}
               </tr>
               <tr>
                 <th className="border-2"></th>
-                <th className="p-2 font-semibold text-black border-2">
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
-                    style={{
-                      maxWidth: getColumnMaxWidth("EarningHeadId") + "px",
-                    }}
-                    onChange={(e) =>
-                      handleSearchChange("EarningHeadId", e.target.value)
-                    }
-                  />
-                </th>
-                <th className="p-2 font-semibold text-black border-2">
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
-                    style={{ maxWidth: getColumnMaxWidth("EarningHead") + "px" }}
-                    onChange={(e) =>
-                      handleSearchChange("EarningHead", e.target.value)
-                    }
-                  />
-                </th>
-                <th className="p-2 font-semibold text-black border-2">
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
-                    style={{ maxWidth: getColumnMaxWidth("ShortName") + "px" }}
-                    onChange={(e) =>
-                      handleSearchChange("ShortName", e.target.value)
-                    }
-                  />
-                </th>
-                <th className="p-2 font-semibold text-black border-2">
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
-                    style={{ maxWidth: getColumnMaxWidth("CalculationType") + "px" }}
-                    onChange={(e) =>
-                      handleSearchChange("CalculationType", e.target.value)
-                    }
-                  />
-                </th>
-                <th className="p-2 font-semibold text-black border-2">
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
-                    style={{ maxWidth: getColumnMaxWidth("Status") + "px" }}
-                    onChange={(e) =>
-                      handleSearchChange("Status", e.target.value)
-                    }
-                  />
-                </th>
+                <th className="p-2 font-bold text-black border-2 " />
+                {selectedColumns.map((columnName) => (
+                  <th
+                    key={columnName}
+                    className="p-2 font-bold text-black border-2 text-[11px]"
+                  >
+                    <input
+                      type="text"
+                      placeholder={`Search `}
+                      className="w-auto text-[11px] h-6 border-2 border-slate-500 rounded-lg justify-center text-center whitespace-normal"
+                      style={{ maxWidth: getColumnMaxWidth(columnName) + "px" }}
+                      onChange={(e) =>
+                        handleSearchChange(columnName, e.target.value)
+                      }
+                    />
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody className="">
@@ -311,18 +357,20 @@ const EarningHeadsMaster = () => {
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
                         {result.EarningHeadId}
                       </td>
-                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {result.EarningHead}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {result.ShortName}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {result.CalculationType}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {result.Status}
-                      </td>
+                      {selectedColumns.map((columnName) => (
+                        <td
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-[11px] text-left${
+                            columnVisibility[columnName] ? "" : "hidden"
+                          }`}
+                        >
+                          {columnName === "Status"
+                            ? result[columnName]
+                              ? "Active"
+                              : "Inactive"
+                            : result[columnName]}
+                        </td>
+                      ))}
                     </tr>
                   ))
                 : EarningHeads.map((entry, index) => (
@@ -374,18 +422,20 @@ const EarningHeadsMaster = () => {
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
                         {entry.EarningHeadId}
                       </td>
-                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {entry.EarningHead}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {entry.ShortName}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {entry.CalculationType}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {entry.Status ? 'Active' : 'Inactive'}
-                      </td>
+                      {selectedColumns.map((columnName) => (
+                        <td
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-left text-[11px]${
+                            columnVisibility[columnName] ? "" : "hidden"
+                          }`}
+                        >
+                          {columnName === "Status"
+                            ? entry[columnName]
+                              ? "Active"
+                              : "Inactive"
+                            : entry[columnName]}
+                        </td>
+                      ))}
                     </tr>
                   ))}
             </tbody>
@@ -396,4 +446,4 @@ const EarningHeadsMaster = () => {
   );
 };
 
-export default EarningHeadsMaster
+export default EarningHeadsMaster;
