@@ -26,12 +26,25 @@ const SalProcessing = () => {
 
   const [status, setStatus] = useState(false);
   const columnHeads = [
-    "Leave Type Description",
-    "Leave Gain",
-    "Leave Taken",
-    "Leave Balance",
-    "Leave Applied",
-    "Sanction Days",
+    "Process Id",
+    "Process Date",
+    "Employee Id",
+    "Employee Name",
+    "EmpType",
+    "Department Name",
+    "AMonth",
+    "AYear",
+    "Salary",
+    "PerDaySalary",
+    "Presenty",
+    "Monthly Salary",
+    "GrossSalary",
+    "TotalEarning",
+    "TotalDeduction",
+    "NetSalary",
+    "BankSalary",
+    "CashSalary",
+    "Remark",
   ];
 
   const months = [
@@ -55,7 +68,7 @@ const SalProcessing = () => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <div className="flex justify-center items-center h-full">
-        <div className="bg-gray-200 w-[90%] p-8 rounded-lg">
+        <div className="bg-gray-200 p-8 rounded-lg">
           <div className="bg-blue-900 py-2 px-4 rounded-lg flex justify-between items-center">
             <p className="text-white text-[13px] font-semibold text-center">
               Import Employeewise Earning & Deduction Heads
@@ -156,7 +169,7 @@ const SalProcessing = () => {
             </button>
           </div>
           <div className="grid gap-4 justify-between mt-2 w-full">
-            <div className="my-1 p-2 pr-8">
+            <div className="" style={{ maxWidth: "100%" }}>
               <table className="min-w-full text-center tableX1">
                 <thead className="bg-gray-700 text-white">
                   <tr>
@@ -169,7 +182,14 @@ const SalProcessing = () => {
                           borderTopRightRadius: "10px",
                         }}
                       >
-                        {columnName}
+                        {columnName
+                          .replace(/([a-z])([A-Z])/g, "$1 $2")
+                          .split(" ")
+                          .map((word, index) => (
+                            <div key={index} className="whitespace-nowrap">
+                              {word}
+                            </div>
+                          ))}
                       </th>
                     ))}
                   </tr>
@@ -178,7 +198,7 @@ const SalProcessing = () => {
               </table>
             </div>
           </div>
-          <div className="flex gap-10 justify-center">
+          <div className="flex gap-10 justify-center mt-4">
             <button
               type="submit"
               className="bg-blue-900 text-white text-[13px] font-semibold py-2 px-4 rounded-lg w-36"
