@@ -120,7 +120,7 @@ const DestinationMaster = () => {
         <div className="mr-auto text-[15px]">
           Company Settings / Destination Master
         </div>
-        <div className="flex gap-4">
+        <div className="flex gap-4 relative sticky lg:ml-96 sm:ml-8">
           <button
             onClick={() => setShowDropdown(!showDropdown)}
             className="flex text-[13px] bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap"
@@ -128,8 +128,9 @@ const DestinationMaster = () => {
             Column Visibility
             <Icon
               icon="fe:arrow-down"
-              className={`mt-1.5 ml-2 ${showDropdown ? "rotate-180" : ""
-                } cursor-pointer`}
+              className={`mt-1.5 ml-2 ${
+                showDropdown ? "rotate-180" : ""
+              } cursor-pointer`}
             />
           </button>
           {showDropdown && (
@@ -230,8 +231,9 @@ const DestinationMaster = () => {
                 {selectedColumns.map((columnName) => (
                   <th
                     key={columnName}
-                    className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] capitalize whitespace-normal${columnVisibility[columnName] ? "" : "hidden"
-                      }`}
+                    className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] capitalize whitespace-normal${
+                      columnVisibility[columnName] ? "" : "hidden"
+                    }`}
                   >
                     {columnName}
                   </th>
@@ -261,108 +263,110 @@ const DestinationMaster = () => {
             <tbody>
               {filteredData.length > 0
                 ? filteredData.map((entry, index) => (
-                  <tr key={index}>
-                    <td className="px-2 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          className="cursor-pointer"
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          onClick={() => {
-                            setVeDest(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setid(entry.ID); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          className="cursor-pointer"
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          onClick={() => {
-                            setVeDest(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setid(entry.ID); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          className="cursor-pointer"
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
-                      {entry.ID}
-                    </td>
-                    {selectedColumns.map((columnName) => (
-                      <td
-                        key={columnName}
-                        className={`px-4 text-[11px] border-2 whitespace-normal text-left${columnVisibility[columnName] ? "" : "hidden"
+                    <tr key={index}>
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            className="cursor-pointer"
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            onClick={() => {
+                              setVeDest(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setid(entry.ID); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            className="cursor-pointer"
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            onClick={() => {
+                              setVeDest(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setid(entry.ID); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            className="cursor-pointer"
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
+                        {entry.ID}
+                      </td>
+                      {selectedColumns.map((columnName) => (
+                        <td
+                          key={columnName}
+                          className={`px-4 text-[11px] border-2 whitespace-normal text-left${
+                            columnVisibility[columnName] ? "" : "hidden"
                           }`}
-                      >
-                        {entry[columnName]}
-                      </td>
-                    ))}
-                  </tr>
-                ))
+                        >
+                          {entry[columnName]}
+                        </td>
+                      ))}
+                    </tr>
+                  ))
                 : destData.map((entry, index) => (
-                  <tr key={index}>
-                    <td className="px-2 text-[11px] border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          className="cursor-pointer"
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          onClick={() => {
-                            setVeDest(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setid(entry.ID); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          className="cursor-pointer"
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          onClick={() => {
-                            setVeDest(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setid(entry.ID); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          className="cursor-pointer"
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
-                      {entry.ID}
-                    </td>
-                    {selectedColumns.map((columnName) => (
-                      <td
-                        key={columnName}
-                        className={`px-4 text-[11px] border-2 whitespace-normal ${columnName === "EmployeeFare" && "text-right"
-                          } ${columnVisibility[columnName] ? "" : "hidden"}`}
-                      >
-                        {columnName === "EmployeeFare" && "₹"}
-                        {entry[columnName]}
+                    <tr key={index}>
+                      <td className="px-2 text-[11px] border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            className="cursor-pointer"
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            onClick={() => {
+                              setVeDest(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setid(entry.ID); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            className="cursor-pointer"
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            onClick={() => {
+                              setVeDest(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setid(entry.ID); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            className="cursor-pointer"
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                          />
+                        </div>
                       </td>
-                    ))}
-                  </tr>
-                ))}
+                      <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
+                        {entry.ID}
+                      </td>
+                      {selectedColumns.map((columnName) => (
+                        <td
+                          key={columnName}
+                          className={`px-4 text-[11px] border-2 whitespace-normal ${
+                            columnName === "EmployeeFare" && "text-right"
+                          } ${columnVisibility[columnName] ? "" : "hidden"}`}
+                        >
+                          {columnName === "EmployeeFare" && "₹"}
+                          {entry[columnName]}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
             </tbody>
           </table>
         </div>

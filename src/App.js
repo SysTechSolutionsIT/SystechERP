@@ -40,6 +40,7 @@ import SalProcessing from "./components/salary management/SalProcess";
 import JobsResponsibilityMaster from "./components/employee settings/JobsResponsibilityMaster";
 import LeaveTypeMaster from "./components/leaves settings/LeaveType";
 import Login from "./components/Login";
+import Registration from "./components/Registration";
 
 function App() {
   return (
@@ -113,6 +114,7 @@ function App() {
           <Route path="/leave-approval" element={<LeaveApproval />} />
           <Route path="/ED-imports" element={<EDImports />} />
           <Route path="/salary-processing" element={<SalProcessing />} />
+          <Route path="registration" element={<Registration />} />
         </Route>
       </Routes>
     </Router>

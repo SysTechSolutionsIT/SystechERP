@@ -28,18 +28,28 @@ const Sidebar = () => {
     setOpen((prev) => !prev);
   };
 
+  const handleLogOut = () => {
+    navigate("/");
+  };
+
+  const handleNewUser = () => {
+    navigate("registration");
+  };
+
   const SubMenuMain = ({ title, isOpen = false, onClick }) => (
     <span
-      className={`flex justify-between w-full items-center hover:bg-gray-300  hover:bg-opacity-25 rounded-lg cursor-pointer ${isOpen ? "mb-0" : ""
-        }`}
+      className={`flex justify-between w-full items-center hover:bg-gray-300  hover:bg-opacity-25 rounded-lg cursor-pointer ${
+        isOpen ? "mb-0" : ""
+      }`}
       onClick={onClick}
     >
       <h1 className="font-[Inter] text-white font-semibold text-[14px] cursor-pointer py-1.5 px-2 rounded-md mt-0 whitespace-normal">
         {title}
       </h1>
       <span
-        className={`text-sm ${isOpen ? "" : "rotate-180 ease-linear duration-200"
-          }`}
+        className={`text-sm ${
+          isOpen ? "" : "rotate-180 ease-linear duration-200"
+        }`}
         id="arrow"
       >
         <Icon
@@ -73,8 +83,9 @@ const Sidebar = () => {
   return (
     <div className="flex">
       <div
-        className={`${open ? "w-[250px]" : "w-[80px]"
-          } bg-blue-900 overflow-x-hidden sidebar bottom-0 lg:left-0 p-0 text-center border-0 border-radius-xl ease-in-out duration-300`}
+        className={`${
+          open ? "w-[250px]" : "w-[80px]"
+        } bg-blue-900 overflow-x-hidden sidebar bottom-0 lg:left-0 p-0 text-center border-0 border-radius-xl ease-in-out duration-300`}
       >
         <div className="text-white-100 text-xl items-center px-2">
           <div className="p-2.5 mt-1 flex items-center">
@@ -154,8 +165,9 @@ const Sidebar = () => {
                     Company Settings
                   </span>
                   <span
-                    className={`text-sm ${isCompanySubmenuOpen ? "" : "rotate-180"
-                      } ease-linear duration-200`}
+                    className={`text-sm ${
+                      isCompanySubmenuOpen ? "" : "rotate-180"
+                    } ease-linear duration-200`}
                     id="arrow"
                   >
                     <Icon
@@ -230,8 +242,9 @@ const Sidebar = () => {
                     HRM
                   </span>
                   <span
-                    className={`text-sm ${isSubMenuOpen ? "" : "rotate-180"
-                      } ease-linear duration-200`}
+                    className={`text-sm ${
+                      isSubMenuOpen ? "" : "rotate-180"
+                    } ease-linear duration-200`}
                     id="arrow"
                   >
                     <Icon
@@ -535,8 +548,9 @@ const Sidebar = () => {
             </div>
           </div>
           <div
-            className={`mt-5 w-full px-2.5 pb-3 flex relative ${open ? "ml-40" : "ml-5"
-              } ease-in-out duration-200 bg-gray-200 bg-opacity-20 items-center rounded-lg cursor-pointer`}
+            className={`mt-5 w-full px-2.5 pb-3 flex relative ${
+              open ? "ml-40" : "ml-5"
+            } ease-in-out duration-200 bg-gray-200 bg-opacity-20 items-center rounded-lg cursor-pointer`}
             onClick={handleClose}
           >
             <Icon
@@ -547,6 +561,41 @@ const Sidebar = () => {
               rotate={`${open ? "" : "2"}`}
               className="mt-4 cursor-pointer ease-in-out duration-300"
             />
+          </div>
+          <div
+            className="mt-4 flex items-center rounded-md px-4 duration-300
+            cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white"
+            onClick={handleNewUser}
+          >
+            <Icon
+              icon="grommet-icons:user-new"
+              color="white"
+              width="24"
+              height="24"
+            />
+            {open && (
+              <span className="font-[Inter] font-semibold text-[15px] ml-4 text-white-200">
+                Register New
+              </span>
+            )}
+          </div>
+
+          <div
+            className="mt-2 flex items-center rounded-md px-4 duration-300
+            cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white"
+            onClick={handleLogOut}
+          >
+            <Icon
+              icon="clarity:sign-out-line"
+              color="white"
+              width="24"
+              height="24"
+            />
+            {open && (
+              <span className="font-[Inter] font-semibold text-[15px] ml-4 text-white-200">
+                Sign Out
+              </span>
+            )}
           </div>
         </div>
       </div>
