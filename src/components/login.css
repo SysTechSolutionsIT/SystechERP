@@ -1,0 +1,193 @@
+.login-box {
+    display: flex;
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    left: 280px;
+    top: 150px;
+    background: #ffffff;
+    box-shadow: 0px 2px 4px rgba(117, 131, 142, 0.04),
+      0px 8px 16px rgba(52, 60, 68, 0.1);
+    border-radius: 12px;
+  }
+  .l-txt {
+    width: 400px;
+    position: absolute;
+    height: 44px;
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 36px;
+    line-height: 44px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #2a3342;
+    left: 200px;
+    flex: none;
+    order: 0;
+    align-self: self-start;
+    flex-grow: 0;
+  }
+  .l-mobNo {
+    left: 45px;
+    width: 400px;
+    position: relative;
+    height: 22px;
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+    top: 120px;
+    display: flex;
+    align-items: center;
+    color: #2a3342;
+    /* flex: none; */
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+  }
+  .l-username {
+    box-sizing: border-box;
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 16px 20px;
+    gap: 10px;
+    width: 400px;
+    height: 50px;
+    top: 150px;
+    left: 43px;
+    background: #ffffff;
+    border: 1px solid #d5dae1;
+    border-radius: 6px;
+    flex: none;
+    order: 2;
+    align-self: stretch;
+    flex-grow: 0;
+  }
+  .l-pwd {
+    box-sizing: border-box;
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 16px 20px;
+    gap: 10px;
+    width: 400px;
+    height: 50px;
+    top: 250px;
+    left: 43px;
+    background: #ffffff;
+    border: 1px solid #d5dae1;
+    border-radius: 6px;
+    flex: none;
+    order: 2;
+    align-self: stretch;
+    flex-grow: 0;
+  }
+  .l-ptxt {
+    left: 45px;
+    width: 400px;
+    position: absolute;
+    height: 22px;
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+    top: 220px;
+    display: flex;
+    align-items: center;
+    color: #2a3342;
+    /* flex: none; */
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+  }
+  .l-btn {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 36px;
+    gap: 6px;
+    width: 400px;
+    height: 46px;
+    background: #20a0d8;
+    border-radius: 6px;
+    flex: none;
+    order: 0;
+    position: absolute;
+    border: none;
+    flex-grow: 0;
+    top: 350px;
+    left: 45px;
+    color: white;
+    font-size: 20px;
+  }
+  
+  .l-register{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 36px;
+    gap: 6px;
+    width: 400px;
+    height: 46px;
+    background: #20a0d8;
+    border-radius: 6px;
+    flex: none;
+    order: 0;
+    border: none;
+    position: absolute;
+    flex-grow: 0;
+    top: 420px;
+    left: 45px;
+    color: white;
+    font-size: 20px;
+  }
+  
+  .l-robo {
+    position: absolute;
+    width: 450px;
+    height: 450px;
+    left: 781px;
+    top: 150px;
+  }
+  .l-doc {
+    position: absolute;
+    width: 115px;
+    height: 44px;
+    left: 950px;
+    top: 580px;
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 36px;
+    line-height: 44px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #2a3342;
+  }
+  .l-er {
+    position: absolute;
+    width: 115px;
+    height: 44px;
+    left: 1020px;
+    top: 580px;
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 36px;
+    line-height: 44px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #20a0d8;
+  }
+  

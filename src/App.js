@@ -39,13 +39,14 @@ import EDImports from "./components/salary management/EDImports";
 import SalProcessing from "./components/salary management/SalProcess";
 import JobsResponsibilityMaster from "./components/employee settings/JobsResponsibilityMaster";
 import LeaveTypeMaster from "./components/leaves settings/LeaveType";
+import Login from "./components/Login";
 
 function App() {
   return (
     <Router>
       <Routes>
+        <Route index element={<Login />} />
         <Route
-          path="/"
           element={
             <div className="flex min-h-screen">
               <Sidebar />
