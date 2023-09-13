@@ -548,30 +548,15 @@ const Sidebar = () => {
             </div>
           </div>
           <div
-            className={`mt-5 w-full px-2.5 pb-3 flex relative ${
-              open ? "ml-40" : "ml-5"
-            } ease-in-out duration-200 bg-gray-200 bg-opacity-20 items-center rounded-lg cursor-pointer`}
-            onClick={handleClose}
-          >
-            <Icon
-              icon="streamline:interface-arrows-button-left-double-arrow-arrows-double-left"
-              color="white"
-              width="28"
-              height="28"
-              rotate={`${open ? "" : "2"}`}
-              className="mt-4 cursor-pointer ease-in-out duration-300"
-            />
-          </div>
-          <div
-            className="mt-4 flex items-center rounded-md px-4 duration-300
+            className="mt-1 flex items-center rounded-md px-4 duration-300
             cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white"
             onClick={handleNewUser}
           >
             <Icon
               icon="grommet-icons:user-new"
               color="white"
-              width="24"
-              height="24"
+              width="22"
+              height="22"
             />
             {open && (
               <span className="font-[Inter] font-semibold text-[15px] ml-4 text-white-200">
@@ -581,7 +566,7 @@ const Sidebar = () => {
           </div>
 
           <div
-            className="mt-2 flex items-center rounded-md px-4 duration-300
+            className="mt-1 flex items-center rounded-md px-4 duration-300
             cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white"
             onClick={handleLogOut}
           >
@@ -598,6 +583,21 @@ const Sidebar = () => {
             )}
           </div>
         </div>
+        <div
+            className={`mt-5 w-full px-2.5 pb-3 flex relative ${
+              open ? "ml-40" : "ml-5"
+            } ease-in-out duration-200 bg-gray-200 bg-opacity-20 items-center rounded-lg cursor-pointer`}
+            onClick={handleClose}
+          >
+            <Icon
+              icon="streamline:interface-arrows-button-left-double-arrow-arrows-double-left"
+              color="white"
+              width="28"
+              height="28"
+              rotate={`${open ? "" : "2"}`}
+              className="mt-4 cursor-pointer ease-in-out duration-300"
+            />
+          </div>
       </div>
     </div>
   );
