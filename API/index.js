@@ -1,10 +1,8 @@
 const express = require("express");
 const app = express();
-const userRoutes = require('./userRoutes'); // Import the user routes and secretKey
+const userRoutes = require('./route/userRoutes'); // Import the user routes and secretKey
 const jwt = require('jsonwebtoken');
 const cors = require('cors'); // Import the cors middleware
-const userRoutes = require("./route/userRoutes"); // Import the user routes and secretKey
-const jwt = require("jsonwebtoken");
 
 app.use(express.json()); // Parse JSON requests
 
