@@ -1,25 +1,83 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useContext, useEffect } from "react";
+import { createContext } from "react";
+import axios from "axios"
+
+export const AuthContext = createContext();
+
+export function useAuth() {
+  return useContext(AuthContext);
+}
+
+export const AuthProvider = ({ children }) => {
+  const [token, setToken] = useState('');
+
+  const handleSetToken = (newToken) => {
+    setToken(newToken);
+    // Save token to cookies whenever it changes
+    document.cookie = `token=${newToken}; path=/;`;
+  };
+
+  useEffect(() => {
+    // Check if a token exists in cookies and set it in the state
+    const cookieToken = document.cookie
+      .split('; ')
+      .find((row) => row.startsWith('token='))
+      ?.split('=')[1];
+
+    if (cookieToken) {
+      setToken(cookieToken);
+    }
+  }, []);
+
+  return (
+    <AuthContext.Provider value={{ token, setToken: handleSetToken }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [token, setToken] = useState("")
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
 
-    // Perform your authentication logic here.
-    // For simplicity, we'll just check if username and password are not empty.
-
-    if (username && password) {
-      // If authentication is successful, call the onLogin callback
-      // to set isLoggedIn to true in the parent component (App).
-      navigate("/company-masters");
-    } else {
-      alert("Invalid credentials. Please try again.");
+  const userLogin = async () => {
+    console.log('login clicked');
+  
+    try {
+      const response = await axios.post(
+        'http://localhost:5500/users/login',
+        {
+          username: username,
+          password: password,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      
+      const {token} = response.data
+      console.log('Token is',token);
+  
+      // Set token in the AuthContext
+      setToken(token);
+  
+      // Redirect if token is available
+      if (token) {
+        navigate('/dashboard');
+      }
+    } catch (error) {
+      console.log('Error', error);
     }
   };
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -28,7 +86,7 @@ function Login() {
           <img src="/systech.jpg" alt="Logo" className="w-24 mx-auto mb-4" />
           <h2 className="text-2xl font-semibold">Login</h2>
         </div>
-        <form onSubmit={handleSubmit}>
+        {/* <form onSubmit={userLogin}> */}
           <div className="mb-4">
             <label htmlFor="username" className="block text-gray-700">
               Username:
@@ -57,11 +115,12 @@ function Login() {
           </div>
           <button
             type="submit"
+            onClick={userLogin}
             className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-300"
           >
             Login
           </button>
-        </form>
+        {/* </form> */}
       </div>
     </div>
   );

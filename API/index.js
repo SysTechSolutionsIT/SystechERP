@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const userRoutes = require('./userRoutes'); // Import the user routes and secretKey
 const jwt = require('jsonwebtoken');
+const cors = require('cors'); // Import the cors middleware
 
 app.use(express.json()); // Parse JSON requests
 
@@ -23,6 +24,9 @@ function verifyToken(req, res, next) {
     next();
   });
 }
+
+// Apply the cors middleware to allow requests from any origin
+app.use(cors());
 
 // Apply the authentication middleware for protected routes
 app.use('/protected-route', verifyToken);

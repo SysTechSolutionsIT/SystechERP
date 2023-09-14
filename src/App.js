@@ -41,6 +41,7 @@ import JobsResponsibilityMaster from "./components/employee settings/JobsRespons
 import LeaveTypeMaster from "./components/leaves settings/LeaveType";
 import Login from "./components/Login";
 import Registration from "./components/Registration";
+import Dashboard from "./components/Dashboard";
 
 function App() {
   return (
@@ -60,6 +61,7 @@ function App() {
             </div>
           }
         >
+          <Route path="/dashboard" element={<Dashboard/>}/>
           <Route path="/company-masters" element={<CompMaster />} />
           <Route path="/financial-masters" element={<FinMaster />} />
           <Route path="/company-configurations" element={<CompConfig />} />

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function Registration() {
@@ -9,18 +10,27 @@ function Registration() {
 
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    // Perform your authentication logic here.
-    // For simplicity, we'll just check if username and password are not empty.
-
-    if (username && password) {
-      // If authentication is successful, call the onLogin callback
-      // to set isLoggedIn to true in the parent component (App).
-      navigate("/company-masters");
-    } else {
-      alert("Invalid credentials. Please try again.");
+  const userRegistration = async () => {
+    console.log('register clicked');
+  
+    try {
+      const response = await axios.post(
+        'http://localhost:5500/users/register',
+        {
+          name: name,
+          username: username,
+          password: password,
+          role: role
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      alert("New User Added")
+    } catch (error) {
+      console.log('Error', error);
     }
   };
 
@@ -38,7 +48,7 @@ function Registration() {
           />
           <h2 className="text-l font-semibold">Register a New User</h2>
         </div>
-        <form onSubmit={handleSubmit}>
+        {/* <form onSubmit={handleSubmit}> */}
           <div className="mb-4">
             <label htmlFor="name" className="block text-gray-700 text-[13px]">
               Name
@@ -105,6 +115,7 @@ function Registration() {
           <div className="flex gap-10 justify-center">
             <button
               type="submit"
+              onClick={userRegistration}
               className="bg-blue-900 text-white text-[13px] font-semibold py-2 px-4 rounded-lg w-36"
             >
               Add
@@ -116,7 +127,7 @@ function Registration() {
               Cancel
             </button>
           </div>
-        </form>
+        {/* </form> */}
       </div>
     </div>
   );
