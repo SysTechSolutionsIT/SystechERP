@@ -29,6 +29,14 @@ router.get("/", async (req, res) => {
   });
 });
 
+router.get("/:id", async (req, res) => {
+  const company = await Company.findByPk(req.params.id);
+
+  res.status(200).json({
+    company,
+  });
+});
+
 router.put("/update/:id", async (req, res) => {
   const company = await Company.findByPk(req.params.id);
 
@@ -37,7 +45,6 @@ router.put("/update/:id", async (req, res) => {
       message: "Company not found",
     });
   }
-
   (company.name = req.body.name),
     (company.shortName = req.body.shortName),
     (company.sectorDetails = req.body.sectorDetails),

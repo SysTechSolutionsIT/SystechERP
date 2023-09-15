@@ -86,6 +86,18 @@ const CompMaster = () => {
     ModifiedBy: true,
   });
 
+  const handleSearchChange = (title, searchWord) => {
+    const newFilter = compData.filter((item) => {
+      const value = item[title];
+      return value && value.toLowerCase().includes(searchWord.toLowerCase());
+    });
+
+    if (searchWord === "") {
+      setFilteredData([]);
+    } else {
+      setFilteredData(newFilter);
+    }
+  };
   //Toggle
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedColumns, setSelectedColumns] = useState([
@@ -161,34 +173,11 @@ const CompMaster = () => {
     try {
       const response = await axios.get("http://localhost:5500/companies/");
       console.log("Response Object", response);
-      const data = response.data.companies;
-      console.log(data);
+      const data = response.data;
       setCompanies(data);
     } catch (error) {
       console.log("Error while fetching course data: ", error.message);
     }
-  };
-  console.log(companies);
-
-  const handleSearchChange = (title, searchWord) => {
-    const searchData = [...companies];
-
-    const newFilter = searchData.filter((item) => {
-      // Check if the item matches the search term in any of the selected columns
-      const matches = selectedColumns.some((columnName) => {
-        const newCol = columnName.charAt(0).toLowerCase() + columnName.slice(1);
-        const value = item[newCol];
-        return (
-          value &&
-          value.toString().toLowerCase().includes(searchWord.toLowerCase())
-        );
-      });
-
-      return matches;
-    });
-
-    // Update the filtered data
-    setFilteredData(newFilter);
   };
 
   return (
@@ -353,7 +342,7 @@ const CompMaster = () => {
                             onClick={() => {
                               setVE(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setCid(result.id); // Pass ID to VEModal
+                              setCid(result.ID); // Pass ID to VEModal
                             }}
                           />
                           <Icon
@@ -364,7 +353,7 @@ const CompMaster = () => {
                             onClick={() => {
                               setVE(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setCid(result.id); // Pass ID to VEModal
+                              setCid(result.ID); // Pass ID to VEModal
                             }}
                           />
                           <VEModal
@@ -382,7 +371,7 @@ const CompMaster = () => {
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {result.id}
+                        {result.ID}
                       </td>
                       {selectedColumns.map((columnName) => (
                         <td
@@ -391,20 +380,13 @@ const CompMaster = () => {
                             columnVisibility[columnName] ? "" : "hidden"
                           }`}
                         >
-                          {
-                            result[
-                              columnName.charAt(0).toLowerCase() +
-                                columnName.slice(1)
-                            ]
-                          }
+                          {result[columnName]}
                         </td>
                       ))}
                     </tr>
                   ))
-                : companies.length > 0 &&
-                  companies.map((result, key) => (
-                    <tr key={key}>
-                      {/* ... Rest of the table data */}
+                : companies.map((entry, index) => (
+                    <tr key={index}>
                       <td className="px-2 border-2">
                         <div className="flex items-center gap-2 text-center justify-center">
                           <Icon
@@ -415,9 +397,10 @@ const CompMaster = () => {
                             onClick={() => {
                               setVE(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setCid(result.id); // Pass ID to VEModal
+                              setCid(entry.ID); // Pass ID to VEModal
                             }}
                           />
+
                           <Icon
                             icon="mdi:edit"
                             color="#556987"
@@ -425,8 +408,8 @@ const CompMaster = () => {
                             height="20"
                             onClick={() => {
                               setVE(true); // Open VEModal
-                              setEdit(true); // Enable edit mode for VEModal
-                              setCid(result.id); // Pass ID to VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setCid(entry.ID); // Pass ID to VEModal
                             }}
                           />
                           <VEModal
@@ -435,6 +418,7 @@ const CompMaster = () => {
                             edit={edit}
                             ID={Cid}
                           />
+
                           <Icon
                             icon="material-symbols:delete-outline"
                             color="#556987"
@@ -444,21 +428,16 @@ const CompMaster = () => {
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {result.id}
+                        {entry.ID}
                       </td>
                       {selectedColumns.map((columnName) => (
                         <td
                           key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-[11px] text-left${
+                          className={`px-4 border-2 whitespace-normal text-left text-[11px]${
                             columnVisibility[columnName] ? "" : "hidden"
                           }`}
                         >
-                          {
-                            result[
-                              columnName.charAt(0).toLowerCase() +
-                                columnName.slice(1)
-                            ]
-                          }
+                          {entry[columnName]}
                         </td>
                       ))}
                     </tr>
