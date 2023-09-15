@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
+const authorize = require('../Authorization')
 const Company = require("../model/CMModel");
+
+router.use(authorize)
 
 router.post("/add", async (req, res) => {
   const newCompany = await Company.create({
