@@ -1,14 +1,14 @@
 const express = require("express");
 const app = express();
-const userRoutes = require('./route/userRoutes'); // Import the user routes and secretKey
-const jwt = require('jsonwebtoken');
-const cors = require('cors'); // Import the cors middleware
+const userRoutes = require("./route/userRoutes"); // Import the user routes and secretKey
+const jwt = require("jsonwebtoken");
+const cors = require("cors"); // Import the cors middleware
 
 app.use(express.json()); // Parse JSON requests
 
 // Import the secretKey from userRoutes.js
 const { secretKey } = require("./config");
-const CompMaster = require("./route/CompMaster");
+const CompMaster = require("./route/CMRoute");
 
 // Your authentication middleware for token verification
 function verifyToken(req, res, next) {
