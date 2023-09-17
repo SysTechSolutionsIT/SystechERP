@@ -1,7 +1,6 @@
 import { useFormik } from "formik";
 import React from "react";
 import { useState } from "react";
-import { compData } from "./CompMaster";
 import { Icon } from "@iconify/react";
 
 const CompanyModal = ({ visible, onClick }) => {
@@ -10,18 +9,18 @@ const CompanyModal = ({ visible, onClick }) => {
 
   const formik = useFormik({
     initialValues: {
-      companyId: "",
-      companyName: "",
+      name: "",
       shortName: "",
       companySector: "",
       status: statusCheck,
+      createdBy: "",
       natureOfBusiness: "",
       logo: "",
       singleBranch: singleBranchCheck,
     },
     onSubmit: (values) => {
       console.log(values);
-      compData.push(values);
+      // compData.push(values);
     },
   });
 
@@ -47,26 +46,13 @@ const CompanyModal = ({ visible, onClick }) => {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <p className="capatilize font-semibold text-[13px]">
-                  Company ID
-                </p>
-                <input
-                  id="companyId"
-                  type="number"
-                  placeholder="Enter Company ID"
-                  value={formik.values.companyId}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                />
-              </div>
-              <div>
-                <p className="capatilize font-semibold text-[13px]">
                   Company Name
                 </p>
                 <input
-                  id="companyName"
+                  id="name"
                   type="text"
                   placeholder="Enter Company Name"
-                  value={formik.values.companyName}
+                  value={formik.values.name}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -110,6 +96,19 @@ const CompanyModal = ({ visible, onClick }) => {
                 />
               </div>
               <div>
+                <p className="capatilize font-semibold text-[13px]">
+                  Created By
+                </p>
+                <input
+                  id="createdBy"
+                  type="text"
+                  placeholder="Enter Creator"
+                  value={formik.values.createdBy}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                  onChange={formik.handleChange}
+                />
+              </div>
+              <div>
                 <p className="capitalize font-semibold text-[13px]">Status</p>
                 <label className="capitalize font-semibold text-[13px]">
                   <input
@@ -118,9 +117,7 @@ const CompanyModal = ({ visible, onClick }) => {
                     checked={statusCheck}
                     className={`w-5 h-5 mr-2 mt-4 focus:outline-gray-300 border border-blue-900 rounded-lg`}
                     onChange={() => {
-                      console.log("Status checkbox clicked");
                       setStatusCheck(!statusCheck);
-                      console.log("Status after updating", statusCheck);
                     }}
                   />
                   Active
@@ -132,7 +129,7 @@ const CompanyModal = ({ visible, onClick }) => {
                   id="logo"
                   type="file"
                   placeholder="Upload File"
-                  value={formik.values.file}
+                  value={formik.values.logo}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />

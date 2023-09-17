@@ -1,7 +1,7 @@
 import { useFormik } from "formik";
 import React from "react";
 import { useState, useEffect } from "react";
-import { compData } from "./CompMaster";
+import axios from "axios";
 import { Icon } from "@iconify/react";
 
 const VEModal = ({ visible, onClick, edit, ID }) => {
@@ -21,16 +21,27 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
     },
     onSubmit: (values) => {
       console.log(values);
-      compData.push(values);
+      // compData.push(values);
     },
   });
 
   useEffect(() => {
-    const selectedCompany = compData.find((company) => company.ID === ID);
-    if (selectedCompany) {
-      setDetails(selectedCompany);
+    fetchCompData();
+  }, []);
+
+  const fetchCompData = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5500/companies/${ID}`);
+      console.log("Response Object", response);
+      const data = response.data.company;
+      console.log(data);
+      setDetails(data);
+    } catch (error) {
+      console.log("Error while fetching course data: ", error.message);
     }
-  }, [ID]);
+  };
+  // console.log("ID:", ID);
+  // console.log(details);
 
   if (!visible) return null;
   return (
@@ -60,7 +71,7 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                   id="companyId"
                   type="number"
                   placeholder="Enter Company ID"
-                  value={details.ID}
+                  value={details?.id || ""}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -74,7 +85,7 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                   id="companyName"
                   type="text"
                   placeholder="Enter Company Name"
-                  value={details.Name}
+                  value={details?.name || ""}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -88,7 +99,7 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                   id="shortName"
                   type="text"
                   placeholder="Enter Company Short Name"
-                  value={details.ShortName}
+                  value={details?.shortName || ""}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -102,7 +113,7 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                   id="companySector"
                   type="text"
                   placeholder="Enter Company Sector"
-                  value={details.SectorDetails}
+                  value={details?.sectorDetails || ""}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -115,7 +126,7 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                 <textarea
                   id="natureOfBusiness"
                   placeholder="Enter Nature of Business"
-                  value={details.NatureOfBusiness}
+                  value={details?.natureOfBusiness || ""}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -144,7 +155,7 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                   id="logo"
                   type="file"
                   placeholder="Upload File"
-                  value={details.File}
+                  value={details?.File || ""}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />

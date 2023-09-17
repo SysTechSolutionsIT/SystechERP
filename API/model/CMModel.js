@@ -34,7 +34,7 @@ const Company = sequelize.define("Company", {
     allowNull: false,
   },
   status: {
-    type: DataTypes.STRING, // You can adjust the data type for the role as needed
+    type: DataTypes.BOOLEAN, // You can adjust the data type for the role as needed
   },
   createdBy: {
     type: DataTypes.STRING, // You can adjust the data type for the role as needed
@@ -47,6 +47,13 @@ const Company = sequelize.define("Company", {
   },
   modifiedOn: {
     type: DataTypes.DATE, // You can adjust the data type for the role as needed
+  },
+  logo: {
+    type: DataTypes.BLOB, // You can adjust the data type for the role as needed
+    allowNull: true,
+  },
+  singleBranch: {
+    type: DataTypes.STRING, // You can adjust the data type for the role as needed
   },
 });
 
