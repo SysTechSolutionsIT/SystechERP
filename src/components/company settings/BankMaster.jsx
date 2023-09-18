@@ -2,6 +2,7 @@ import React from "react";
 import { Icon } from "@iconify/react";
 import BankModal from "./BankModal";
 import { useState, useEffect, useRef } from "react";
+import axios from "axios";
 import ViewBank from "./ViewBank";
 
 export const bankData = [
@@ -96,6 +97,23 @@ const BankMaster = () => {
     ifscCode: true,
   });
 
+  const [banks, setBanks] = useState([])
+
+  useEffect(() =>{
+    const fetchBanks = async () => {
+      try {
+        const response = await axios.get("http://localhost:5500/bankmaster/banks");
+        console.log("Response Object", response);
+        const data = response.data;
+        console.log(data);
+        setBanks(data);
+      } catch (error) {
+        console.log("Error while fetching course data: ", error.message);
+      }
+    }
+    fetchBanks()
+  }, [])
+
   const [isModalOpen, setModalOpen] = useState(false);
   const handleModalClose = () => {
     setModalOpen(false);
@@ -103,7 +121,7 @@ const BankMaster = () => {
   const [filteredData, setFilteredData] = useState([]);
 
   const handleSearchChange = (title, searchWord) => {
-    const newFilter = bankData.filter((item) => {
+    const newFilter = banks.filter((item) => {
       const value = item[title];
       return value && value.toLowerCase().includes(searchWord.toLowerCase());
     });
@@ -166,7 +184,7 @@ const BankMaster = () => {
   //Max Searchbar width
   const getColumnMaxWidth = (columnName) => {
     let maxWidth = 0;
-    const allRows = [...bankData, ...filteredData];
+    const allRows = [...banks, ...filteredData];
 
     allRows.forEach((row) => {
       const cellContent = row[columnName];
@@ -388,7 +406,7 @@ const BankMaster = () => {
                       ))}
                     </tr>
                   ))
-                : bankData.map((entry, index) => (
+                : banks.map((entry, index) => (
                     <tr key={index}>
                       <td className="border-2">
                         <div className="flex items-center gap-2">
