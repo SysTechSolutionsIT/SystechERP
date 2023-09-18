@@ -3,12 +3,12 @@ const app = express();
 const userRoutes = require("./route/userRoutes"); // Import the user routes and secretKey
 const jwt = require("jsonwebtoken");
 const cors = require("cors"); // Import the cors middleware
-
 app.use(express.json()); // Parse JSON requests
-
-// Import the secretKey from userRoutes.js
 const { secretKey } = require("./config");
 const CompMaster = require("./route/CMRoute");
+const CompConfig = require("./route/CompanyConfigRoute")
+const BankMaster = require("./route/BankMasterRoute")
+const DepartmentMaster = require("./route/DepartmentMasterRoute")
 
 // Your authentication middleware for token verification
 function verifyToken(req, res, next) {
@@ -35,6 +35,10 @@ app.use("/protected-route", verifyToken);
 // Use the user routes
 app.use("/users", userRoutes);
 app.use("/companies", CompMaster);
+app.use("/company-config", CompConfig)
+app.use("/bankmaster",BankMaster)
+app.use("/departmentmaster", DepartmentMaster)
+
 
 // Start the server
 const port = 5500;
