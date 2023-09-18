@@ -15,6 +15,8 @@ const storage = multer.diskStorage({
   },
 });
 
+const upload = multer({ storage: storage }); // Create the upload object
+
 // router.use(authorize)
 
 router.post("/add", upload.single("logo"), async (req, res) => {
