@@ -14,6 +14,7 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + "-" + file.originalname);
   },
 });
+const upload = multer({ storage });
 
 // router.use(authorize)
 
@@ -30,7 +31,7 @@ router.post("/add", upload.single("logo"), async (req, res) => {
       createdOn: new Date(),
       modifiedBy: req.body.modifiedBy,
       modifiedOn: new Date(),
-      logo: req.file.path, // Store the file path in the 'logo' column
+      logo: req.file.path || "", // Store the file path in the 'logo' column
       singleBranch: req.body.singleBranch,
     });
 
@@ -41,23 +42,7 @@ router.post("/add", upload.single("logo"), async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
-  const companies = await Company.findAll();
-
-  res.status(200).json({
-    companies,
-  });
-});
-
-router.get("/:id", async (req, res) => {
-  const company = await Company.findByPk(req.params.id);
-
-  res.status(200).json({
-    company,
-  });
-});
-
-router.put("/update/:id", async (req, res) => {
+router.put("/update/:id", upload.single("logo"), async (req, res) => {
   const company = await Company.findByPk(req.params.id);
 
   if (!company) {
@@ -72,13 +57,29 @@ router.put("/update/:id", async (req, res) => {
     (company.status = req.body.status),
     (company.modifiedBy = req.body.modifiedBy);
   company.modifiedOn = new Date();
-  company.logo = req.file.path; // Store the file path in the 'logo' column
+  company.logo = req.file.path || ""; // Store the file path in the 'logo' column
   company.singleBranch = req.body.singleBranch;
 
   await company.save();
 
   res.status(200).json({
     message: "Company updated successfully",
+    company,
+  });
+});
+
+router.get("/", async (req, res) => {
+  const companies = await Company.findAll();
+
+  res.status(200).json({
+    companies,
+  });
+});
+
+router.get("/:id", async (req, res) => {
+  const company = await Company.findByPk(req.params.id);
+
+  res.status(200).json({
     company,
   });
 });

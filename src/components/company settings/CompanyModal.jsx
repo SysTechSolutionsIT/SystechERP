@@ -2,6 +2,7 @@ import { useFormik } from "formik";
 import React from "react";
 import { useState } from "react";
 import { Icon } from "@iconify/react";
+import axios from "axios";
 
 const CompanyModal = ({ visible, onClick }) => {
   const [statusCheck, setStatusCheck] = useState(false);
@@ -11,16 +12,53 @@ const CompanyModal = ({ visible, onClick }) => {
     initialValues: {
       name: "",
       shortName: "",
-      companySector: "",
+      sectorDetails: "",
       status: statusCheck,
       createdBy: "",
       natureOfBusiness: "",
       logo: "",
       singleBranch: singleBranchCheck,
     },
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       console.log(values);
-      // compData.push(values);
+
+      // Create a FormData object to send the form data with the file
+      const formData = new FormData();
+      formData.append("name", values.name);
+      formData.append("shortName", values.shortName);
+      formData.append("sectorDetails", values.sectorDetails);
+      formData.append("status", values.status);
+      formData.append("createdBy", values.createdBy);
+      formData.append("natureOfBusiness", values.natureOfBusiness);
+      formData.append("logo", values.logo); // Append the selected file
+
+      try {
+        // Send the POST request to your server
+        const response = await axios.post(
+          "http://localhost:5500/companies/add",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data", // Set the content type for file upload
+            },
+          }
+        );
+
+        if (response.status === 201) {
+          // The company was created successfully
+          window.alert("Company created successfully!");
+
+          // Close the modal
+          onClick();
+        } else {
+          // An error occurred while creating the company
+          console.log("Error creating company:", response.status);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        // Handle any network or server error
+        window.alert("An error occurred. Please try again.");
+      }
     },
   });
 
@@ -75,10 +113,10 @@ const CompanyModal = ({ visible, onClick }) => {
                   Company Sector
                 </p>
                 <input
-                  id="companySector"
+                  id="sectorDetails"
                   type="text"
                   placeholder="Enter Company Sector"
-                  value={formik.values.companySector}
+                  value={formik.values.sectorDetails}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -131,7 +169,10 @@ const CompanyModal = ({ visible, onClick }) => {
                   placeholder="Upload File"
                   value={formik.values.logo}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
+                  onChange={(event) => {
+                    // Set the selected file in formik's values
+                    formik.setFieldValue("logo", event.currentTarget.files[0]);
+                  }}
                 />
               </div>
               <div>
