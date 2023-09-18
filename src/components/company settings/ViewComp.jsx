@@ -13,7 +13,7 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
       companyId: "",
       companyName: "",
       shortName: "",
-      companySector: "",
+      sectorDetails: "",
       status: statusCheck,
       natureOfBusiness: "",
       logo: "",
@@ -41,7 +41,7 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
     }
   };
   // console.log("ID:", ID);
-  // console.log(details);
+  console.log(details);
 
   if (!visible) return null;
   return (
