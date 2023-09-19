@@ -2,11 +2,12 @@ import React from "react";
 import { Icon } from "@iconify/react";
 import { useFormik } from "formik";
 import { bankData } from "./BankMaster";
+import axios from "axios";
 
 const BankModal = ({ visible, onClick }) => {
   const formik = useFormik({
     initialValues: {
-      bankId: "",
+      // bankId: "",
       bankName: "",
       branchName: "",
       branchAddress: "",
@@ -26,9 +27,27 @@ const BankModal = ({ visible, onClick }) => {
     },
     onSubmit: (values) => {
       console.log(values);
-      bankData.push(values);
+      addBank()
     },
   });
+
+  const addBank = async () =>{
+    try{
+      const response = await axios.post("http://localhost:5500/bankmaster/add-bank", formik.values)
+      if (response.status === 200) {
+        const data = response.data;
+        console.log(data);
+        alert('Bank added successfully')
+        // Handle successful response
+      } else {
+        console.error(`HTTP error! Status: ${response.status}`);
+        // Handle error response
+      }
+    }catch (error) {
+      console.error('Error:', error.message);
+      // Handle network error
+    }
+  }
 
   if (!visible) return null;
   return (
@@ -56,9 +75,8 @@ const BankModal = ({ visible, onClick }) => {
                   id="bankId"
                   type="number"
                   placeholder="Bank ID"
-                  value={formik.values.bankId}
+                  // value={formik.values.bankId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
                 />
               </div>
               <div>

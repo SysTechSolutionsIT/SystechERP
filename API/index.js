@@ -9,6 +9,7 @@ const CompMaster = require("./route/CMRoute");
 const CompConfig = require("./route/CompanyConfigRoute");
 const BankMaster = require("./route/BankMasterRoute");
 const DepartmentMaster = require("./route/DepartmentMasterRoute");
+const DestinationMaster = require("./route/DestinationMasterRoute");
 const FinMaster = require("./route/FinMasterRoute");
 
 // Your authentication middleware for token verification
@@ -40,6 +41,7 @@ app.use("/company-config", CompConfig);
 app.use("/bankmaster", BankMaster);
 app.use("/departmentmaster", DepartmentMaster);
 app.use("/financials", FinMaster);
+app.use("/destinationmaster", DestinationMaster);
 
 // Start the server
 const port = 5500;
