@@ -16,7 +16,7 @@ const CompanyModal = ({ visible, onClick }) => {
       status: statusCheck,
       createdBy: "",
       natureOfBusiness: "",
-      logo: "",
+      logo: null,
       singleBranch: singleBranchCheck,
     },
     onSubmit: async (values) => {
@@ -31,6 +31,7 @@ const CompanyModal = ({ visible, onClick }) => {
       formData.append("createdBy", values.createdBy);
       formData.append("natureOfBusiness", values.natureOfBusiness);
       formData.append("logo", values.logo); // Append the selected file
+      console.log(values.logo);
 
       try {
         // Send the POST request to your server
@@ -169,10 +170,8 @@ const CompanyModal = ({ visible, onClick }) => {
                   placeholder="Upload File"
                   value={formik.values.logo}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
-                  onChange={(event) => {
-                    // Set the selected file in formik's values
-                    formik.setFieldValue("logo", event.currentTarget.files[0]);
-                  }}
+                  // onChange={handleFileChange}
+                  onChange={formik.handleChange}
                 />
               </div>
               <div>

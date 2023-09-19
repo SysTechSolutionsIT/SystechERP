@@ -16,26 +16,50 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
       sectorDetails: "",
       status: statusCheck,
       natureOfBusiness: "",
-      logo: "",
+      logo: null,
       singleBranch: singleBranchCheck,
     },
     onSubmit: (values) => {
       console.log(values);
       // compData.push(values);
+      const updatedData = {
+        id: values.id,
+        name: values.name,
+        shortName: values.shortName,
+        sectorDetails: values.sectorDetails,
+        status: values.status,
+        natureOfBusiness: values.natureOfBusiness,
+        logo: values.logo,
+        logoName: values.logoName,
+        singleBranch: values.singleBranch,
+      };
+
+      // Send a PUT request to update the data
+      axios
+        .put(`http://localhost:5500/companies/update/${ID}`, updatedData)
+        .then((response) => {
+          // Handle success
+          console.log("Data updated successfully", response);
+          // You can also perform additional actions here, like closing the modal or updating the UI.
+        })
+        .catch((error) => {
+          // Handle error
+          console.error("Error updating data", error);
+        });
     },
   });
 
   useEffect(() => {
     fetchCompData();
-  }, []);
-
+  }, [ID]);
+  console.log(ID);
   const fetchCompData = async () => {
     try {
       const response = await axios.get(`http://localhost:5500/companies/${ID}`);
       console.log("Response Object", response);
       const data = response.data.company;
-      console.log(data);
       setDetails(data);
+      console.log(data);
     } catch (error) {
       console.log("Error while fetching course data: ", error.message);
     }
@@ -155,7 +179,7 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                   id="logo"
                   type="file"
                   placeholder="Upload File"
-                  value={details?.File || ""}
+                  value={details?.logoName || ""}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />

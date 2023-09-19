@@ -1,8 +1,8 @@
 import { useFormik } from "formik";
 import React from "react";
 import { useState, useEffect } from "react";
-import { finData } from "./FinMaster";
 import { Icon } from "@iconify/react";
+import axios from "axios";
 
 const VEFModal = ({ visible, onClick, edit, ID }) => {
   const [YearCloseCheck, setYearCloseCheck] = useState(false);
@@ -22,15 +22,25 @@ const VEFModal = ({ visible, onClick, edit, ID }) => {
     },
     onSubmit: (values) => {
       console.log(values);
-      finData.push(values);
     },
   });
   useEffect(() => {
-    const selected = finData.find((data) => data.FinID === ID);
-    if (selected) {
-      setDetails(selected);
-    }
+    fetchFinData();
   }, [ID]);
+  console.log(ID);
+  const fetchFinData = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5500/financials/${ID}`
+      );
+      console.log("Response Object", response);
+      const data = response.data.record;
+      setDetails(data);
+      console.log(data);
+    } catch (error) {
+      console.log("Error while fetching course data: ", error.message);
+    }
+  };
   if (!visible) return null;
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -59,7 +69,7 @@ const VEFModal = ({ visible, onClick, edit, ID }) => {
                   id="FinID"
                   type="number"
                   placeholder="Enter Financial Year ID"
-                  value={details.FinID}
+                  value={details?.finId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -71,7 +81,7 @@ const VEFModal = ({ visible, onClick, edit, ID }) => {
                   id="Name"
                   type="text"
                   placeholder="Enter Name"
-                  value={details.Name}
+                  value={details?.fName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -85,7 +95,7 @@ const VEFModal = ({ visible, onClick, edit, ID }) => {
                   id="StartDate"
                   type="date"
                   placeholder="Enter Start Date"
-                  value={details.StartDate}
+                  value={details?.sDate}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -97,7 +107,7 @@ const VEFModal = ({ visible, onClick, edit, ID }) => {
                   id="EndDate"
                   type="date"
                   placeholder="Enter End Date"
-                  value={details.EndDate}
+                  value={details?.eDate}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -111,7 +121,7 @@ const VEFModal = ({ visible, onClick, edit, ID }) => {
                   id="ShortName"
                   type="text"
                   placeholder="Enter Short Name"
-                  value={details.ShortName}
+                  value={details?.fShortName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -138,7 +148,7 @@ const VEFModal = ({ visible, onClick, edit, ID }) => {
                 <textarea
                   id="Remark"
                   placeholder="Enter Remark"
-                  value={details.Remark}
+                  value={details?.remark}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}

@@ -11,10 +11,9 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     // Set the file name for the uploaded file (you can customize this)
-    cb(null, Date.now() + "-" + file.originalname);
+    cb(null, file.originalname);
   },
 });
-const upload = multer({ storage });
 
 const upload = multer({ storage: storage }); // Create the upload object
 
@@ -33,7 +32,7 @@ router.post("/add", upload.single("logo"), async (req, res) => {
       createdOn: new Date(),
       modifiedBy: req.body.modifiedBy,
       modifiedOn: new Date(),
-      logo: req.file.path || "", // Store the file path in the 'logo' column
+      logo: req.body.logo, // Store the file path in the 'logo' column
       singleBranch: req.body.singleBranch,
     });
 
@@ -59,7 +58,7 @@ router.put("/update/:id", upload.single("logo"), async (req, res) => {
     (company.status = req.body.status),
     (company.modifiedBy = req.body.modifiedBy);
   company.modifiedOn = new Date();
-  company.logo = req.file.path || ""; // Store the file path in the 'logo' column
+  company.logo = req.body.logo; // Store the file path in the 'logo' column
   company.singleBranch = req.body.singleBranch;
 
   await company.save();

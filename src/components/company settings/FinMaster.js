@@ -3,10 +3,11 @@ import React, { useState, useEffect, useRef } from "react";
 import { Button } from "react-bootstrap";
 import FinancialModal from "./FinancialModal";
 import VEFModal from "./ViewFin";
+import axios from "axios";
 
 export const finData = [
   {
-    FinID: 1,
+    finId: 1,
     Name: "Systech Solutions Pvt. Ltd",
     ShortName: "SYS",
     YearClose: 2021,
@@ -16,7 +17,7 @@ export const finData = [
     Status: "Active",
   },
   {
-    FinID: 2,
+    finId: 2,
     Name: "TechCorp Inc.",
     ShortName: "TCI",
     YearClose: 2021,
@@ -26,7 +27,7 @@ export const finData = [
     Status: "Active",
   },
   {
-    FinID: 3,
+    finId: 3,
     Name: "Global Finance Group",
     ShortName: "GFG",
     StartDate: 22 / 1 / 22,
@@ -36,7 +37,7 @@ export const finData = [
     Status: "Active",
   },
   {
-    FinID: 4,
+    finId: 4,
     Name: "Investment Innovators Ltd.",
     ShortName: "IIL",
     StartDate: 22 / 1 / 22,
@@ -46,7 +47,7 @@ export const finData = [
     Status: "Active",
   },
   {
-    FinID: 5,
+    finId: 5,
     Name: "Capital Ventures International",
     ShortName: "CVI",
     StartDate: 22 / 1 / 22,
@@ -56,7 +57,7 @@ export const finData = [
     Status: "Active",
   },
   {
-    FinID: 6,
+    finId: 6,
     Name: "Alpha Financial Services",
     ShortName: "AFS",
     StartDate: 22 / 1 / 22,
@@ -77,24 +78,11 @@ const FinMaster = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
-  const handleSearchChange = (title, searchWord) => {
-    const newFilter = finData.filter((item) => {
-      const value = item[title];
-      return value && value.toLowerCase().includes(searchWord.toLowerCase());
-    });
-
-    if (searchWord === "") {
-      setFilteredData([]);
-    } else {
-      setFilteredData(newFilter);
-    }
-  };
-
   const [columnVisibility, setColumnVisibility] = useState({
-    Name: true,
-    ShortName: true,
-    YearClose: true,
-    Status: true,
+    fName: true,
+    fShortName: true,
+    yearAct: true,
+    status: true,
   });
 
   const [showDropdown, setShowDropdown] = useState(false);
@@ -157,6 +145,47 @@ const FinMaster = () => {
     const context = canvas.getContext("2d");
     context.font = fontSize + " sans-serif";
     return context.measureText(text).width;
+  };
+
+  //For API
+  const [Fins, setFins] = useState([]);
+
+  useEffect(() => {
+    fetchCompData();
+  }, []);
+
+  const fetchCompData = async () => {
+    try {
+      const response = await axios.get("http://localhost:5500/financials/");
+      console.log("Response Object", response);
+      const data = response.data.records;
+      console.log(data);
+      setFins(data);
+    } catch (error) {
+      console.log("Error while fetching course data: ", error.message);
+    }
+  };
+  console.log(Fins);
+
+  const handleSearchChange = (title, searchWord) => {
+    const searchData = [...Fins];
+
+    const newFilter = searchData.filter((item) => {
+      // Check if the item matches the search term in any of the selected columns
+      const matches = selectedColumns.some((columnName) => {
+        const newCol = columnName.charAt(0).toLowerCase() + columnName.slice(1);
+        const value = item[newCol];
+        return (
+          value &&
+          value.toString().toLowerCase().includes(searchWord.toLowerCase())
+        );
+      });
+
+      return matches;
+    });
+
+    // Update the filtered data
+    setFilteredData(newFilter);
   };
 
   return (
@@ -323,7 +352,7 @@ const FinMaster = () => {
                             onClick={() => {
                               setFin(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setFid(result.FinID); // Pass ID to VEModal
+                              setFid(result.finId); // Pass ID to VEModal
                             }}
                           />
                           <VEFModal
@@ -340,7 +369,7 @@ const FinMaster = () => {
                             onClick={() => {
                               setFin(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setFid(result.FinID); // Pass ID to VEModal
+                              setFid(result.finId); // Pass ID to VEModal
                             }}
                           />
                           <VEFModal
@@ -358,7 +387,7 @@ const FinMaster = () => {
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {result.FinID}
+                        {result.finId}
                       </td>
                       {selectedColumns.map((columnName) => (
                         <td
@@ -372,7 +401,8 @@ const FinMaster = () => {
                       ))}
                     </tr>
                   ))
-                : finData.map((entry, index) => (
+                : Fins.length > 0 &&
+                  Fins.map((entry, index) => (
                     <tr key={index}>
                       <td className="px-2 border-2">
                         <div className="flex items-center gap-2 text-center justify-center">
@@ -384,7 +414,7 @@ const FinMaster = () => {
                             onClick={() => {
                               setFin(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setFid(entry.FinID); // Pass ID to VEModal
+                              setFid(entry.finId); // Pass ID to VEModal
                             }}
                           />
                           <Icon
@@ -395,7 +425,7 @@ const FinMaster = () => {
                             onClick={() => {
                               setFin(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setFid(entry.FinID); // Pass ID to VEModal
+                              setFid(entry.finId); // Pass ID to VEModal
                             }}
                           />
                           <VEFModal
@@ -413,7 +443,7 @@ const FinMaster = () => {
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {entry.FinID}
+                        {entry.finId}
                       </td>
                       {selectedColumns.map((columnName) => (
                         <td

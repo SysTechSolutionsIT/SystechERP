@@ -5,64 +5,6 @@ import CompanyModal from "./CompanyModal";
 import VEModal from "./ViewComp";
 import axios from "axios";
 
-export const compData = [
-  {
-    ID: 1,
-    Name: "Systech Solutions Pvt. Ltd",
-    ShortName: "SYS",
-    SectorDetails: "Automation",
-    NatureOfBusiness: "Electrical Automission",
-    Status: "Active",
-    CreatedBy: "User123",
-    CreatedOn: "2023-08-15",
-    ModifiedBy: "User123",
-  },
-  {
-    ID: 2,
-    Name: "5S Innovations LLP",
-    ShortName: "5SL",
-    SectorDetails: "Information Technology",
-    NatureOfBusiness: "B2B",
-    Status: "Active",
-    CreatedBy: "User456",
-    CreatedOn: "2023-08-15",
-    ModifiedBy: "User456",
-  },
-  {
-    ID: 3,
-    Name: "Healtech",
-    ShortName: "HLT",
-    SectorDetails: "Healthcare",
-    NatureOfBusiness: "Software Service",
-    Status: "Active",
-    CreatedBy: "User789",
-    CreatedOn: "2023-08-14",
-    ModifiedBy: "User789",
-  },
-  {
-    ID: 4,
-    Name: "Company D",
-    ShortName: "Co. D",
-    SectorDetails: "Retail",
-    NatureOfBusiness: "E-commerce",
-    Status: "InActive",
-    CreatedBy: "User123",
-    CreatedOn: "2023-08-14",
-    ModifiedBy: "User123",
-  },
-  {
-    ID: 5,
-    Name: "Company E",
-    ShortName: "Co. E",
-    SectorDetails: "Manufacturing",
-    NatureOfBusiness: "ZZZZ",
-    Status: "Inactive",
-    CreatedBy: "User456",
-    CreatedOn: "2023-08-13",
-    ModifiedBy: "User456",
-  },
-];
-
 const CompMaster = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false); //Add Modal
@@ -132,7 +74,7 @@ const CompMaster = () => {
   //Max Searchbar width
   const getColumnMaxWidth = (columnName) => {
     let maxWidth = 0;
-    const allRows = [...compData, ...filteredData];
+    const allRows = [...companies, ...filteredData];
 
     allRows.forEach((row) => {
       const cellContent = row[columnName];
