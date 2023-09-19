@@ -8,7 +8,8 @@ const { secretKey } = require("./config");
 const CompMaster = require("./route/CMRoute");
 const CompConfig = require("./route/CompanyConfigRoute")
 const BankMaster = require("./route/BankMasterRoute")
-const DepartmentMaster = require("./route/DepartmentMasterRoute")
+const DepartmentMaster = require("./route/DepartmentMasterRoute");
+const DestinationMaster = require("./route/DestinationMasterRoute");
 
 // Your authentication middleware for token verification
 function verifyToken(req, res, next) {
@@ -36,9 +37,9 @@ app.use("/protected-route", verifyToken);
 app.use("/users", userRoutes);
 app.use("/companies", CompMaster);
 app.use("/company-config", CompConfig)
-app.use("/bankmaster",BankMaster)
+app.use("/bankmaster", BankMaster)
 app.use("/departmentmaster", DepartmentMaster)
-
+app.use("/destinationmaster", DestinationMaster)
 
 // Start the server
 const port = 5500;
