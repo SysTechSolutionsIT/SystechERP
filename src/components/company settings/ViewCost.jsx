@@ -1,30 +1,68 @@
 import { useFormik } from "formik";
 import React from "react";
 import { useState, useEffect } from "react";
-import { costCenters } from "./CostCenterMaster";
 import { Icon } from "@iconify/react";
+import axios from "axios";
 
 const VECost = ({ visible, onClick, edit, ID }) => {
-  const [StatusCheck, setStatusCheck] = useState(false);
+  const [status, setStatus] = useState(false);
   const [details, setDetails] = useState([]);
 
   const formik = useFormik({
     initialValues: {
       costCenterID: "",
       costCenterName: "",
-      status: "",
+      status: status,
     },
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       console.log(values);
-      costCenters.push(values);
+
+      try {
+        // Make a PATCH request to update the cost center
+        const response = await axios.patch(
+          `http://localhost:5500/cost-center/update-cost-center/${values.costCenterID}`,
+          {
+            // Pass the updated values to the server
+            cName: values.costCenterName,
+            status: values.status, // Use the status value from the form
+          }
+        );
+
+        // Handle the response from the server here if needed
+        console.log("Server response:", response.data);
+
+        // You may want to update your local data (costCenters) or perform other actions here
+      } catch (error) {
+        console.error("Error while sending PATCH request:", error);
+        // Handle errors here if needed
+      }
     },
   });
+
+  //API
   useEffect(() => {
-    const selected = costCenters.find((data) => data.costCenterID === ID);
-    if (selected) {
-      setDetails(selected);
-    }
+    fetchNewData();
   }, [ID]);
+
+  const fetchNewData = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5500/cost-center/${ID}`
+      );
+      console.log("Response Object", response);
+      const data = response.data.record;
+      setDetails(data);
+      console.log(data);
+    } catch (error) {
+      console.log("Error while fetching course data: ", error.message);
+    }
+  };
+  const handleStatusChange = () => {
+    const newStatus = !status; // Toggle the status
+    setStatus(newStatus); // Update the local state
+    formik.setFieldValue("status", newStatus); // Update the formik field value
+  };
+
   if (!visible) return null;
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -50,10 +88,10 @@ const VECost = ({ visible, onClick, edit, ID }) => {
                   Cost Center ID
                 </p>
                 <input
-                  id="costCenterID"
+                  id="cID"
                   type="number"
                   placeholder="Enter Financial Year ID"
-                  value={details.costCenterID}
+                  value={details.cID}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -64,10 +102,10 @@ const VECost = ({ visible, onClick, edit, ID }) => {
                   Cost Center Name
                 </p>
                 <input
-                  id="costCenterName"
+                  id="cName"
                   type="text"
                   placeholder="Enter Name"
-                  value={details.costCenterName}
+                  value={details.cName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -76,9 +114,9 @@ const VECost = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="capatilize font-semibold  text-[13px]">Remarks</p>
                 <textarea
-                  id="Remark"
+                  id="cRemarks"
                   placeholder="Enter Remark"
-                  value={details.Remarks}
+                  value={details.cRemarks}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -94,7 +132,7 @@ const VECost = ({ visible, onClick, edit, ID }) => {
                     type="checkbox"
                     checked={details.status}
                     className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border-2 rounded-lg`}
-                    onChange={() => setStatusCheck(!StatusCheck)}
+                    onChange={handleStatusChange}
                     disabled={!edit}
                   />
                   Active
