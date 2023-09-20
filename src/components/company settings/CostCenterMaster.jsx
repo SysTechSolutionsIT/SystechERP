@@ -3,64 +3,65 @@ import { useState, useEffect, useRef } from "react";
 import { Icon } from "@iconify/react";
 import CostCenterModal from "./CostCenterModal";
 import VECost from "./ViewCost";
+import axios from "axios";
 
 export const costCenters = [
   {
-    costCenterID: "0003",
+    cID: "0003",
     costCenterName: "Human Resources",
     Remarks: "",
     status: "Y",
   },
   {
-    costCenterID: "0004",
+    cID: "0004",
     costCenterName: "IT Department",
     Remarks: "",
     status: "Y",
   },
   {
-    costCenterID: "0005",
+    cID: "0005",
     costCenterName: "Operations",
     Remarks: "",
     status: "N",
   },
   {
-    costCenterID: "0006",
+    cID: "0006",
     costCenterName: "Research and Development",
     Remarks: "",
     status: "Y",
   },
   {
-    costCenterID: "0007",
+    cID: "0007",
     costCenterName: "Customer Service",
     Remarks: "",
     status: "Y",
   },
   {
-    costCenterID: "0008",
+    cID: "0008",
     costCenterName: "Production",
     Remarks: "",
     status: "N",
   },
   {
-    costCenterID: "0009",
+    cID: "0009",
     costCenterName: "Quality Assurance",
     Remarks: "",
     status: "Y",
   },
   {
-    costCenterID: "0010",
+    cID: "0010",
     costCenterName: "Supply Chain",
     Remarks: "",
     status: "Y",
   },
   {
-    costCenterID: "0011",
+    cID: "0011",
     costCenterName: "Legal",
     Remarks: "",
     status: "N",
   },
   {
-    costCenterID: "0012",
+    cID: "0012",
     costCenterName: "Public Relations",
     Remarks: "",
     status: "Y",
@@ -70,19 +71,6 @@ export const costCenters = [
 const CostCenterMaster = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
-
-  const handleSearchChange = (title, searchWord) => {
-    const newFilter = costCenters.filter((item) => {
-      const value = item[title];
-      return value && value.toLowerCase().includes(searchWord.toLowerCase());
-    });
-
-    if (searchWord === "") {
-      setFilteredData([]);
-    } else {
-      setFilteredData(newFilter);
-    }
-  };
 
   const [veCost, setVeCost] = useState(false);
   const [edit, setEdit] = useState(false);
@@ -124,6 +112,37 @@ const CostCenterMaster = () => {
     const context = canvas.getContext("2d");
     context.font = fontSize + " sans-serif";
     return context.measureText(text).width;
+  };
+
+  //API
+  //For API
+  const [CC, setCC] = useState([]);
+
+  useEffect(() => {
+    fetchCompData();
+  }, []);
+
+  const fetchCompData = async () => {
+    try {
+      const response = await axios.get("http://localhost:5500/cost-center/");
+      console.log("Response Object", response);
+      const data = response.data.records;
+      console.log(data);
+      setCC(data);
+    } catch (error) {
+      console.log("Error while fetching course data: ", error.message);
+    }
+  };
+  console.log(CC);
+
+  const handleSearchChange = (searchWord) => {
+    // Filter the data based on the search word in the "costCenterName" column
+    const newFilteredData = CC.filter((item) =>
+      item.cName.toLowerCase().includes(searchWord.toLowerCase())
+    );
+
+    // Update the filtered data
+    setFilteredData(newFilteredData);
   };
 
   return (
@@ -238,7 +257,7 @@ const CostCenterMaster = () => {
                             onClick={() => {
                               setVeCost(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setCCid(result.costCenterID); // Pass ID to VEModal
+                              setCCid(result.cID); // Pass ID to VEModal
                             }}
                           />
                           {/* <VECost
@@ -255,7 +274,7 @@ const CostCenterMaster = () => {
                             onClick={() => {
                               setVeCost(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setCCid(result.costCenterID); // Pass ID to VEModal
+                              setCCid(result.cID); // Pass ID to VEModal
                             }}
                           />
                           <VECost
@@ -273,17 +292,18 @@ const CostCenterMaster = () => {
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {result.costCenterID}
+                        {result.cID}
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {result.costCenterName}
+                        {result.cName}
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {result.status}
+                        {result.cStatus}
                       </td>
                     </tr>
                   ))
-                : costCenters.map((entry, index) => (
+                : CC.length > 0 &&
+                  CC.map((entry, index) => (
                     <tr key={index}>
                       <td className="px-2 border-2">
                         <div className="flex items-center gap-2 text-center justify-center">
@@ -295,7 +315,7 @@ const CostCenterMaster = () => {
                             onClick={() => {
                               setVeCost(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setCCid(entry.costCenterID); // Pass ID to VEModal
+                              setCCid(entry.cID); // Pass ID to VEModal
                             }}
                           />
                           {/* <VECost
@@ -312,7 +332,7 @@ const CostCenterMaster = () => {
                             onClick={() => {
                               setVeCost(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setCCid(entry.costCenterID); // Pass ID to VEModal
+                              setCCid(entry.cID); // Pass ID to VEModal
                             }}
                           />
                           <VECost
@@ -330,13 +350,13 @@ const CostCenterMaster = () => {
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {entry.costCenterID}
+                        {entry.cID}
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {entry.costCenterName}
+                        {entry.cName}
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {entry.status}
+                        {entry.cStatus ? "Active" : "Inactive"}
                       </td>
                     </tr>
                   ))}

@@ -32,7 +32,8 @@ router.post("/add", upload.single("logo"), async (req, res) => {
       createdOn: new Date(),
       modifiedBy: req.body.modifiedBy,
       modifiedOn: new Date(),
-      logo: req.body.logo, // Store the file path in the 'logo' column
+      logo: req.file.path, // Store the file path in the 'logo' column
+      logoName: req.file.originalname, // Store the original file name
       singleBranch: req.body.singleBranch,
     });
 

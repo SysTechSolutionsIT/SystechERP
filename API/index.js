@@ -11,6 +11,7 @@ const BankMaster = require("./route/BankMasterRoute");
 const DepartmentMaster = require("./route/DepartmentMasterRoute");
 const DestinationMaster = require("./route/DestinationMasterRoute");
 const FinMaster = require("./route/FinMasterRoute");
+const CCMaster = require("./route/CostCenterRoute");
 
 // Your authentication middleware for token verification
 function verifyToken(req, res, next) {
@@ -42,6 +43,7 @@ app.use("/bankmaster", BankMaster);
 app.use("/departmentmaster", DepartmentMaster);
 app.use("/financials", FinMaster);
 app.use("/destinationmaster", DestinationMaster);
+app.use("/cost-center", CCMaster);
 
 // Start the server
 const port = 5500;
