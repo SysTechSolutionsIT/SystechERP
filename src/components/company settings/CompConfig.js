@@ -1,8 +1,35 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
+import axios from "axios";
 
 export default function EMPTabs() {
   const [openTab, setOpenTab] = React.useState(1);
+  const [details, setDetails] = useState([])
+
+  useEffect(() => {
+    const fetchCompanyConfig = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5500/company-config/get`);
+        const data = response.data;
+  
+        // Check if data is an array and has at least one element
+        if (Array.isArray(data) && data.length > 0) {
+          // Set the first element of the array as the 'details' state
+          setDetails(data);
+          console.log(data)
+        } else {
+          console.log('No data or empty array received from API');
+        }
+      } catch (error) {
+        console.log('Error in fetching Company Configurations', error);
+      }
+    };
+  
+    fetchCompanyConfig();
+  }, []);
+  
+
+  console.log('Details', details)
 
   //For SMS Settings
   const [selectedOption, setSelectedOption] = useState("");
@@ -50,15 +77,15 @@ export default function EMPTabs() {
     { abbreviation: "CNY", name: "Chinese Yuan" },
   ];
 
-  //Formik for Form Submission
+  // //Formik for Form Submission
   const formik = useFormik({
     initialValues: {
-      currency: "INR",
-      theme: "",
-      date: "",
+      currency: details.currency,
+      theme: details.themes,
+      date: details.dateFormat,
       sessionTM: 0,
       remarks: "",
-      status: "inactive",
+      status: "",
 
       empID: "",
       cmulti: "",
@@ -95,14 +122,49 @@ export default function EMPTabs() {
       smsUrl: "",
       sms: "",
     },
-    onSubmit: (values, { resetForm }) => {
+    onSubmit: (values) => {
       console.log(values);
-      // Your other submission logic
-
-      // Reset the form to its initial state
-      resetForm();
     },
   });
+
+  
+  const [LeaveApprovalFlag, setLeaveApprovalFlag] = useState(details.LeaveApprovalFlag);
+  const [OdApprovalFlag, setOdApprovalFlag] = useState(details.OdApprovalFlag);
+  const [OtApprovalFlag, setOtApprovalFlag] = useState(details.OtApprovalFlag);
+  const [attendanceApprovalFlag, setAttendanceApprovalFlag] = useState(details.attendanceApprovalFlag);
+  const [attendanceFlag, setAttendanceFlag] = useState(details.attendanceFlag);
+  const [attendanceLockDay, setAttendanceLockDay] = useState(details.attendanceLockDay);
+  const [attendanceProcess, setAttendanceProcess] = useState(details.attendanceProcess);
+  const [companyMultibranch, setCompanyMultibranch] = useState(details.companyMultibranch);
+  const [currency, setCurrency] = useState(details.currency);
+  const [dateFormat, setDateFormat] = useState(details.dateFormat);
+  const [emailFormat, setEmailFormat] = useState(details.emailFormat);
+  const [emailService, setEmailService] = useState(details.emailService);
+  const [empIdPrefix, setEmpIdPrefix] = useState(details.empIdPrefix);
+  const [esicSalaryLimit, setEsicSalaryLimit] = useState(details.esicSalaryLimit);
+  const [fixShiftFlag, setFixShiftFlag] = useState(details.fixShiftFlag);
+  const [fromEmailId, setFromEmailId] = useState(details.fromEmailId);
+  const [gratuityYearsLimit, setGratuityYearsLimit] = useState(details.gratuityYearsLimit);
+  const [id, setId] = useState(details.id);
+  const [jobApproval, setJobApproval] = useState(details.jobApproval);
+  const [mPassword, setMPassword] = useState(details.mPassword);
+  const [mUsername, setMUsername] = useState(details.mUsername);
+  const [mlwfMonth1, setMlwfMonth1] = useState(details.mlwfMonth1);
+  const [mlwfMonth2, setMlwfMonth2] = useState(details.mlwfMonth2);
+  const [otCalculationFlag, setOtCalculationFlag] = useState(details.otCalculationFlag);
+  const [paidHolidayLogic, setPaidHolidayLogic] = useState(details.paidHolidayLogic);
+  const [pfSalaryLimit, setPfSalaryLimit] = useState(details.pfSalaryLimit);
+  const [remarksGeneral, setRemarksGeneral] = useState(details.remarksGeneral);
+  const [remarksPayroll, setRemarksPayroll] = useState(details.remarksPayroll);
+  const [salaryLockDay, setSalaryLockDay] = useState(details.salaryLockDay);
+  const [salaryMinWages, setSalaryMinWages] = useState(details.salaryMinWages);
+  const [sessionTimeout, setSessionTimeout] = useState(details.sessionTimout);
+  const [smsService, setSmsService] = useState(details.smsService);
+  const [smsURL, setSmsURL] = useState(details.smsURL);
+  const [smtpHost, setSmtpHost] = useState(details.smtpHost);
+  const [status, setStatus] = useState(details.status);
+  const [welcomeMessage, setWelcomeMessage] = useState('')
+  const [themes, setThemes] = useState(details.themes);
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -245,9 +307,12 @@ export default function EMPTabs() {
                         name="currency"
                         className="text-[13px] w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
                         default="Indian Rupees"
-                        value={formik.values.currency}
-                        onChange={formik.handleChange}
+                        value={currency}
+                        onChange={(e)=> setCurrency(e.target.value)}
                       >
+                        <option>
+                          {currency}
+                        </option>
                         {currencies.map((currency, index) => (
                           <option key={index} value={currency.abbreviation}>
                             {currency.name}
@@ -265,8 +330,9 @@ export default function EMPTabs() {
                       <select
                         id="Theme"
                         name="theme"
+                        value={themes}
                         className="w-full text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
-                        onChange={formik.handleChange}
+                        onChange={(e)=> setThemes(e.target.value)}
                       >
                         {months.map((month, index) => (
                           <option key={index} value={month}>
@@ -282,12 +348,12 @@ export default function EMPTabs() {
                         Date Format
                       </p>
                       <input
-                        id="DateF"
+                        id="date"
                         type="text"
-                        name="date"
+                        value={dateFormat}
                         className={`text-[13px] w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
                         placeholder="dd/mm/yyyy"
-                        onChange={formik.handleChange}
+                        onChange={(e)=> setDateFormat(e.target.value)}
                       />
                     </div>
                     <div className="w-1/2">
@@ -298,8 +364,9 @@ export default function EMPTabs() {
                         id="SessTM"
                         type="number"
                         name="sessionTM"
+                        value={sessionTimeout}
                         className={`w-full text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
-                        onChange={formik.handleChange}
+                        onChange={(e)=> setSessionTimeout(e.target.value)}
                       />
                     </div>
                   </div>
@@ -312,8 +379,9 @@ export default function EMPTabs() {
                         id="remarks"
                         name="remarks"
                         type="text"
+                        value={remarksGeneral}
                         className={`text-[13px] w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
-                        onChange={formik.handleChange}
+                        onChange={(e)=> setRemarksGeneral(e.target.value)}
                       />
                     </div>
                     <div className="w-1/2">
@@ -327,7 +395,7 @@ export default function EMPTabs() {
                           name="status"
                           className="form-checkbox h-5 w-5 text-blue-600"
                           checked={isActive}
-                          onChange={formik.handleChange}
+                          onChange={handleCheckboxChange}
                         />
                         <label
                           htmlFor="activeCheckbox"
@@ -353,7 +421,8 @@ export default function EMPTabs() {
                             name="empID"
                             value="Yes"
                             className="mr-2"
-                            onChange={formik.handleChange}
+                            checked={empIdPrefix === 'Yes'}
+                            onChange={(e) => setEmpIdPrefix(e.target.value)}
                           />
                           Yes
                         </label>
@@ -363,7 +432,8 @@ export default function EMPTabs() {
                             name="empID"
                             value="No"
                             className="mr-2 ml-2"
-                            onChange={formik.handleChange}
+                            checked={empIdPrefix === 'No'}
+                            onChange={(e) => setEmpIdPrefix(e.target.value)}
                           />
                           No
                         </label>
@@ -380,7 +450,8 @@ export default function EMPTabs() {
                             name="cmulti"
                             value="Yes"
                             className="mr-2 ml-2"
-                            onChange={formik.handleChange}
+                            checked={ companyMultibranch === 'Yes'}
+                            onChange={(e) => setCompanyMultibranch(e.target.value)}
                           />
                           Yes
                         </label>
@@ -390,7 +461,8 @@ export default function EMPTabs() {
                             name="cmulti"
                             value="No"
                             className="mr-2"
-                            onChange={formik.handleChange}
+                            checked={ companyMultibranch === 'No'}
+                            onChange={(e) => setCompanyMultibranch(e.target.value)}
                           />
                           No
                         </label>
@@ -413,7 +485,8 @@ export default function EMPTabs() {
                             name="att"
                             value="daily"
                             className="mr-2 ml-2"
-                            onChange={formik.handleChange}
+                            checked={ attendanceFlag === 'Daily'}
+                            onChange={(e) => setAttendanceFlag(e.target.value)}
                           />
                           Daily
                         </label>
@@ -423,7 +496,8 @@ export default function EMPTabs() {
                             name="att"
                             value="monthly"
                             className="mr-2"
-                            onChange={formik.handleChange}
+                            checked={ attendanceFlag === 'Monthly'}
+                            onChange={(e) => setAttendanceFlag(e.target.value)}
                           />
                           Monthly
                         </label>
@@ -441,7 +515,8 @@ export default function EMPTabs() {
                               name="atProcess"
                               value="all"
                               className="mr-2 ml-2"
-                              onChange={formik.handleChange}
+                              checked={ attendanceProcess === 'All'}
+                            onChange={(e) => setAttendanceProcess(e.target.value)}
                             />
                             All
                           </label>
@@ -451,7 +526,8 @@ export default function EMPTabs() {
                               name="atProcess"
                               value="manual"
                               className="mr-2"
-                              onChange={formik.handleChange}
+                              checked={ attendanceProcess === 'Manual'}
+                            onChange={(e) => setAttendanceProcess(e.target.value)}
                             />
                             Manual
                           </label>
@@ -461,7 +537,8 @@ export default function EMPTabs() {
                               name="atProcess"
                               value="excel"
                               className="mr-2"
-                              onChange={formik.handleChange}
+                              checked={ attendanceProcess === 'Excel Import'}
+                            onChange={(e) => setAttendanceProcess(e.target.value)}
                             />
                             Excel Import
                           </label>
@@ -471,7 +548,8 @@ export default function EMPTabs() {
                               name="atProcess"
                               value="autoD"
                               className="mr-2"
-                              onChange={formik.handleChange}
+                              checked={ attendanceProcess === 'Auto Download'}
+                            onChange={(e) => setAttendanceProcess(e.target.value)}
                             />
                             Auto Download
                           </label>
@@ -489,9 +567,10 @@ export default function EMPTabs() {
                           <input
                             type="radio"
                             name="atap"
-                            value="yes"
+                            value="Yes"
                             className="mr-2 ml-2"
-                            onChange={formik.handleChange}
+                            checked={attendanceApprovalFlag === 'Yes'}
+                            onChange={(e) => setAttendanceApprovalFlag(e.target.value)}
                           />
                           Yes
                         </label>
@@ -499,9 +578,10 @@ export default function EMPTabs() {
                           <input
                             type="radio"
                             name="atap"
-                            value="no"
+                            value="No"
                             className="mr-2"
-                            onChange={formik.handleChange}
+                            checked={attendanceApprovalFlag === 'No'}
+                            onChange={(e) => setAttendanceApprovalFlag(e.target.value)}
                           />
                           No
                         </label>
@@ -510,16 +590,17 @@ export default function EMPTabs() {
                     <div className="flex space-x-8 justify-between w-1/2">
                       <div className="flex flex-col p-2 ">
                         <p className="mb-3 font-semibold text-[13px]">
-                          Fix Shift Flag{" "}
+                          Fix Shift Flag
                         </p>
                         <div className="flex space-x-2">
                           <label className="flex items-center text-[13px]">
                             <input
                               type="radio"
                               name="shiftFlag"
-                              value="yes"
+                              value="Yes"
                               className="mr-2 ml-2"
-                              onChange={formik.handleChange}
+                              checked={fixShiftFlag === 'Yes'}
+                            onChange={(e) => setFixShiftFlag(e.target.value)}
                             />
                             Yes
                           </label>
@@ -527,9 +608,10 @@ export default function EMPTabs() {
                             <input
                               type="radio"
                               name="shiftFlag"
-                              value="no"
+                              value="No"
                               className="mr-2"
-                              onChange={formik.handleChange}
+                              checked={fixShiftFlag === 'No'}
+                            onChange={(e) => setFixShiftFlag(e.target.value)}
                             />
                             No
                           </label>
@@ -547,9 +629,10 @@ export default function EMPTabs() {
                           <input
                             type="radio"
                             name="jobApp"
-                            value="yes"
+                            value="Yes"
                             className="mr-2 ml-2"
-                            onChange={formik.handleChange}
+                            checked={jobApproval === 'Yes'}
+                            onChange={(e) => setJobApproval(e.target.value)}
                           />
                           Yes
                         </label>
@@ -557,9 +640,10 @@ export default function EMPTabs() {
                           <input
                             type="radio"
                             name="jobApp"
-                            value="no"
+                            value="No"
                             className="mr-2"
-                            onChange={formik.handleChange}
+                            checked={jobApproval === 'No'}
+                            onChange={(e) => setJobApproval(e.target.value)}
                           />
                           No
                         </label>
@@ -577,7 +661,8 @@ export default function EMPTabs() {
                               name="holiday"
                               value="Add1"
                               className="mr-2 ml-2 whitespace-nowrap"
-                              onChange={formik.handleChange}
+                              checked={paidHolidayLogic === 'Add 1 day in Presenty'}
+                            onChange={(e) => setPaidHolidayLogic(e.target.value)}
                             />
                             Add 1 day in Presenty
                           </label>
@@ -587,7 +672,8 @@ export default function EMPTabs() {
                               name="holiday"
                               value="coff"
                               className="mr-2 whitespace-nowrap"
-                              onChange={formik.handleChange}
+                              checked={paidHolidayLogic === 'Give C-Off'}
+                            onChange={(e) => setPaidHolidayLogic(e.target.value)}
                             />
                             Give C-Off
                           </label>
@@ -605,9 +691,10 @@ export default function EMPTabs() {
                           <input
                             type="radio"
                             name="odFlag"
-                            value="yes"
+                            value="Yes"
                             className="mr-2 ml-2"
-                            onChange={formik.handleChange}
+                            checked={OdApprovalFlag === 'Yes'}
+                            onChange={(e) => setOdApprovalFlag(e.target.value)}
                           />
                           Yes
                         </label>
@@ -615,9 +702,10 @@ export default function EMPTabs() {
                           <input
                             type="radio"
                             name="odFlag"
-                            value="no"
+                            value="No"
                             className="mr-2"
-                            onChange={formik.handleChange}
+                            checked={OdApprovalFlag === 'No'}
+                            onChange={(e) => setOdApprovalFlag(e.target.value)}
                           />
                           No
                         </label>
@@ -633,9 +721,10 @@ export default function EMPTabs() {
                             <input
                               type="radio"
                               name="otFlag"
-                              value="yes"
+                              value="Yes"
                               className="mr-2 ml-2"
-                              onChange={formik.handleChange}
+                              checked={OtApprovalFlag === 'Yes'}
+                            onChange={(e) => setOtApprovalFlag(e.target.value)}
                             />
                             Yes
                           </label>
@@ -643,9 +732,10 @@ export default function EMPTabs() {
                             <input
                               type="radio"
                               name="otFlag"
-                              value="no"
+                              value="No"
                               className="mr-2"
-                              onChange={formik.handleChange}
+                              checked={OtApprovalFlag === 'No'}
+                            onChange={(e) => setOtApprovalFlag(e.target.value)}
                             />
                             No
                           </label>
@@ -663,9 +753,10 @@ export default function EMPTabs() {
                           <input
                             type="radio"
                             name="LAFlag"
-                            value="yes"
+                            value="Yes"
                             className="mr-2 ml-2"
-                            onChange={formik.handleChange}
+                            checked={LeaveApprovalFlag === 'Yes'}
+                            onChange={(e) => setLeaveApprovalFlag(e.target.value)}
                           />
                           Yes
                         </label>
@@ -673,9 +764,10 @@ export default function EMPTabs() {
                           <input
                             type="radio"
                             name="LAFlag"
-                            value="no"
+                            value="No"
                             className="mr-2"
-                            onChange={formik.handleChange}
+                            checked={LeaveApprovalFlag === 'No'}
+                            onChange={(e) => setLeaveApprovalFlag(e.target.value)}
                           />
                           No
                         </label>
@@ -690,7 +782,8 @@ export default function EMPTabs() {
                         name="ALockDay"
                         type="text"
                         className={`px-4 h-10 text-[13px] py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
-                        onChange={formik.handleChange}
+                        value={attendanceLockDay}
+                        onChange={(e)=> setAttendanceLockDay(e.target.value)}
                       />
                     </div>
                   </div>
@@ -710,7 +803,8 @@ export default function EMPTabs() {
                             name="otCalc"
                             value="daily"
                             className="mr-2 ml-2"
-                            onChange={formik.handleChange}
+                            checked={otCalculationFlag === 'Daily'}
+                            onChange={(e) => setOtCalculationFlag(e.target.value)}
                           />
                           Daily
                         </label>
@@ -720,7 +814,8 @@ export default function EMPTabs() {
                             name="otCalc"
                             value="monthly"
                             className="mr-2"
-                            onChange={formik.handleChange}
+                            checked={otCalculationFlag === 'Monthly'}
+                            onChange={(e) => setOtCalculationFlag(e.target.value)}
                           />
                           Monthly
                         </label>
@@ -734,7 +829,7 @@ export default function EMPTabs() {
                         name="esicSal"
                         type="text"
                         className={`px-4 h-10 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6 text-[13px]`}
-                        onChange={formik.handleChange}
+                        onChange={(e) => setEsicSalaryLimit(e.target.value)}
                       />
                     </div>
                   </div>
@@ -748,7 +843,7 @@ export default function EMPTabs() {
                         name="pfSal"
                         type="text"
                         className={` w-full h-10 text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
-                        onChange={formik.handleChange}
+                        onChange={(e) => setPfSalaryLimit(e.target.value)}
                       />
                     </div>
                     <div className="w-1/2">
@@ -760,7 +855,7 @@ export default function EMPTabs() {
                         name="gratuity"
                         type="text"
                         className={` w-full h-10 text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
-                        onChange={formik.handleChange}
+                        onChange={(e) => setGratuityYearsLimit(e.target.value)}
                       />
                     </div>
                   </div>
@@ -776,8 +871,11 @@ export default function EMPTabs() {
                         id="mlwf1"
                         name="mlwf1"
                         className="w-full  h-10 text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
-                        onChange={formik.handleChange}
+                        onChange={(e) => setMlwfMonth1(e.target.value)}
                       >
+                        <option>
+                          {mlwfMonth1}
+                        </option>
                         {months.map((month, index) => (
                           <option key={index} value={month}>
                             {month}
@@ -795,8 +893,11 @@ export default function EMPTabs() {
                       <select
                         id="mlwf2"
                         className="w-full h-10 text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
-                        onChange={formik.handleChange}
+                        onChange={(e) => setMlwfMonth2(e.target.value)}
                       >
+                        <option>
+                          {mlwfMonth2}
+                        </option>
                         {months.map((month, index) => (
                           <option key={index} value={month}>
                             {month}
@@ -814,8 +915,9 @@ export default function EMPTabs() {
                         id="SLockday"
                         name="salLock"
                         type="text"
+                        value={salaryLockDay}
                         className={`w-full h-10 text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
-                        onChange={formik.handleChange}
+                        onChange={(e) => setSalaryLockDay(e.target.value)}
                       />
                     </div>
                     <div className="w-1/2">
@@ -826,8 +928,9 @@ export default function EMPTabs() {
                         id="MinWages"
                         name="minWages"
                         type="text"
+                        value={setSalaryMinWages}
                         className={`w-full h-10 text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
-                        onChange={formik.handleChange}
+                        onChange={(e) => setSalaryMinWages(e.target.value)}
                       />
                     </div>
                   </div>
@@ -839,8 +942,10 @@ export default function EMPTabs() {
                       <input
                         id="remarks"
                         name="remarks1"
+                        value={remarksPayroll}
                         type="text"
                         className={`w-full  h-10 text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                        onChange={(e) => setRemarksPayroll(e.target.value)}
                       />
                     </div>
                     <div className="w-1/2">
@@ -877,9 +982,10 @@ export default function EMPTabs() {
                           <input
                             type="radio"
                             name="email"
-                            value="yes"
+                            value="Yes"
                             className="mr-2 ml-2"
-                            onChange={formik.handleChange}
+                            checked={emailService == 'Yes'}
+                            onChange={(e) => setEmailService(e.target.value)}
                           />
                           Yes
                         </label>
@@ -887,9 +993,10 @@ export default function EMPTabs() {
                           <input
                             type="radio"
                             name="email"
-                            value="no"
+                            value="No"
                             className="mr-2"
-                            onChange={formik.handleChange}
+                            checked={emailService == 'No'}
+                            onChange={(e) => setEmailService(e.target.value)}
                           />
                           No
                         </label>
@@ -903,7 +1010,8 @@ export default function EMPTabs() {
                         id="smtpHost"
                         name="smtpHost"
                         type="text"
-                        onChange={formik.handleChange}
+                        value={smtpHost}
+                        onChange={(e) => setSmtpHost(e.target.value)}
                         className={`px-4 py-2 h-10 text-[13px] font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
                       />
                     </div>
@@ -917,7 +1025,8 @@ export default function EMPTabs() {
                         id="sender"
                         name="sender"
                         type="text"
-                        onChange={formik.handleChange}
+                        value={fromEmailId}
+                        onChange={(e) => setFromEmailId(e.target.value)}
                         className={`w-full h-10 text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
                       />
                     </div>
@@ -929,7 +1038,8 @@ export default function EMPTabs() {
                         id="username"
                         name="username"
                         type="text"
-                        onChange={formik.handleChange}
+                        value={mUsername}
+                        onChange={(e) => setMUsername(e.target.value)}
                         className={`w-full h-10 text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
                       />
                     </div>
@@ -942,7 +1052,8 @@ export default function EMPTabs() {
                       id="password"
                       name="password"
                       type="text"
-                      onChange={formik.handleChange}
+                      value={mPassword}
+                        onChange={(e) => setMPassword(e.target.value)}
                       className={`w-full text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
                     />
                   </div>
@@ -962,6 +1073,8 @@ export default function EMPTabs() {
                     rows="4"
                     className="block p-2.5 w-full text-[13px] text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 resize-none"
                     placeholder="Write your Welcome Message here..."
+                    value={welcomeMessage}
+                    onChange={(e) => setWelcomeMessage(e.target.value)}
                   />
                 </div>
 
@@ -977,9 +1090,10 @@ export default function EMPTabs() {
                           <input
                             type="radio"
                             name="sms"
-                            value="yes"
+                            value="Yes"
                             className="mr-2 ml-2"
-                            onChange={formik.handleChange}
+                            checked={smsService == 'Yes'}
+                            onChange={(e) => setSmsService(e.target.value)}
                           />
                           Yes
                         </label>
@@ -987,9 +1101,10 @@ export default function EMPTabs() {
                           <input
                             type="radio"
                             name="sms"
-                            value="no"
+                            value="No"
                             className="mr-2"
-                            onChange={formik.handleChange}
+                            checked={smsService == 'No'}
+                            onChange={(e) => setSmsService(e.target.value)}
                           />
                           No
                         </label>
@@ -1000,6 +1115,8 @@ export default function EMPTabs() {
                       <input
                         id="smsUrl"
                         type="text"
+                        value={smsURL}
+                        onChange={(e)=> setSmsURL(e.target.value)}
                         className={`w-full px-4 py-2 h-10 text-[13px] font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
                       />
                     </div>

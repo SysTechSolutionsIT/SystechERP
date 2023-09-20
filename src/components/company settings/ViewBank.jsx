@@ -1,5 +1,5 @@
 import React from "react";
-import { bankData } from "./BankMaster";
+import axios from "axios";
 import { useFormik } from "formik";
 import { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
@@ -8,7 +8,6 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
   const [details, setDetails] = useState([]);
   const formik = useFormik({
     initialValues: {
-      bankId: "",
       bankName: "",
       branchName: "",
       branchAddress: "",
@@ -28,17 +27,36 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
     },
     onSubmit: (values) => {
       console.log(values);
-      bankData.push(values);
     },
   });
 
-  useEffect(() => {
-    const selectedBank = bankData.find((bank) => bank.bankId === ID);
-    if (selectedBank) {
-      setDetails(selectedBank);
+  const updateBanks = async () =>{
+    try{
+      const response = axios.patch(`http://localhost:5500/bankmaster/update-bank/${ID}`, formik.values)
+      console.log('Patch successful')
+    } catch(error){
+      console.log('Error in patch', error)
     }
+  }
+
+  
+  useEffect(() => {
+    fetchBanks()
   }, [ID]);
 
+    const fetchBanks = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5500/bankmaster/banks/${ID}`);
+        // console.log("Response Object", response);
+        const data = response.data;
+        // console.log(data);
+        setDetails(data.BankbyId);
+      } catch (error) {
+        console.log("Error while fetching course data: ", error.message);
+      }
+    }
+
+console.log('Details array', details)
   if (!visible) return null;
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -60,66 +78,66 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
           <div className="py-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="capatilize font-semibold text-[13px]">Bank ID</p>
+                <p className="capatilize text-left font-semibold text-[13px]">Bank ID</p>
                 <input
                   id="bankId"
                   type="number"
                   placeholder="Bank ID"
-                  value={details.bankId}
+                  value={details?.id}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
               </div>
               <div>
-                <p className="capatilize font-semibold text-[13px] ">
+                <p className="capatilize text-left font-semibold text-[13px] ">
                   Bank Name
                 </p>
                 <input
                   id="bankName"
                   type="text"
                   placeholder="Enter Bank Name"
-                  value={details.bankName}
+                  value={details?.bankName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
               </div>
               <div>
-                <p className="capatilize font-semibold  text-[13px]">
+                <p className="capatilize text-left font-semibold  text-[13px]">
                   Branch Name
                 </p>
                 <input
                   id="branchName"
                   type="text"
                   placeholder="Enter Branch Name"
-                  value={details.branchName}
+                  value={details?.branchName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
               </div>
               <div>
-                <p className="capatilize font-semibold  text-[13px]">
+                <p className="capatilize text-left font-semibold  text-[13px]">
                   Branch Address
                 </p>
                 <input
                   id="branchAddress"
                   type="text"
                   placeholder=" Enter Branch Address"
-                  value={details.branchAddress}
+                  value={details?.branchAddress}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
               </div>
               <div>
-                <p className="capatilize font-semibold  text-[13px]">
+                <p className="capatilize text-left font-semibold  text-[13px]">
                   Account Type
                 </p>
                 <select
                   id="accountType"
-                  value={details.accountType}
+                  value={details?.accountType}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -139,82 +157,82 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                 </select>
               </div>
               <div>
-                <p className="capatilize font-semibold  text-[13px]">
+                <p className="capatilize text-left font-semibold  text-[13px]">
                   Account No.
                 </p>
                 <input
                   id="accountNo"
                   type="number"
                   placeholder=" Enter Account No."
-                  value={details.accountNo}
+                  value={details?.accountNo}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
               </div>
               <div>
-                <p className="capatilize font-semibold  text-[13px]">
+                <p className="capatilize text-left font-semibold  text-[13px]">
                   IFSC Code
                 </p>
                 <input
                   id="ifscCode"
                   type="text"
                   placeholder=" Enter IFSC Code"
-                  value={details.ifscCode}
+                  value={details?.ifscCode}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
               </div>
               <div>
-                <p className="capatilize font-semibold  text-[13px]">
+                <p className="capatilize text-left font-semibold  text-[13px]">
                   SWIFT Code.
                 </p>
                 <input
                   id="swiftCode"
                   type="text"
                   placeholder=" Enter SWIFT Code"
-                  value={details.swiftCode}
+                  value={details?.swiftCode}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
               </div>
               <div>
-                <p className="capatilize font-semibold  text-[13px]">
+                <p className="capatilize text-left font-semibold  text-[13px]">
                   Registered Email ID
                 </p>
                 <input
                   id="registeredEmail"
                   type="text"
                   placeholder=" Enter Registered Email"
-                  value={details.registeredEmail}
+                  value={details?.registeredEmail}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
               </div>
               <div>
-                <p className="capatilize font-semibold  text-[13px]">
+                <p className="capatilize text-left font-semibold  text-[13px]">
                   Registered Contact No.
                 </p>
                 <input
                   id="registeredContact"
                   type="number"
                   placeholder=" Enter Registered Contact No."
-                  value={details.registeredContact}
+                  value={details?.registeredContact}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
               </div>
               <div>
-                <p className="capitalize font-semibold  text-[13px]">
+                <p className="capitalize text-left font-semibold  text-[13px]">
                   Currency Type
                 </p>
                 <select
                   id="currencyType"
-                  value={details.currencyType}
+                  value={details?.currencyType}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -233,52 +251,52 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                 </select>
               </div>
               <div>
-                <p className="capatilize font-semibold  text-[13px]">
+                <p className="capatilize text-left font-semibold  text-[13px]">
                   Bank GST
                 </p>
                 <input
                   id="bankGst"
                   type="text"
                   placeholder=" Enter Bank GST"
-                  value={details.bankGst}
+                  value={details?.bankGst}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
               </div>
               <div>
-                <p className="capatilize font-semibold  text-[13px]">
+                <p className="capatilize text-left font-semibold  text-[13px]">
                   Authorized Person Count
                 </p>
                 <input
                   id="authPersonCount"
                   type="number"
                   placeholder=" Enter Authorized Person Count."
-                  value={details.authPersonCount}
+                  value={details?.authPersonCount}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
               </div>
               <div>
-                <p className="capatilize font-semibold  text-[13px]">Remarks</p>
+                <p className="capatilize text-left font-semibold  text-[13px]">Remarks</p>
                 <input
                   id="remark"
                   type="text"
                   placeholder=" Enter Remarks."
-                  value={details.remark}
+                  value={details?.remark}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
               </div>
               <div>
-                <p className="capitalize font-semibold  text-[13px]">
+                <p className="capitalize text-left font-semibold  text-[13px]">
                   Authorized Person 1
                 </p>
                 <select
                   id="authPerson1"
-                  value={details.authPerson1}
+                  value={details?.authPerson1}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -290,14 +308,14 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                 </select>
               </div>
               <div>
-                <p className="capitalize font-semibold">Authorized Person 1</p>
+                <p className="capitalize text-left text-[13px] font-semibold">Authorized Person 1</p>
                 <div className="space-y-2">
                   <label className="flex items-center text-[11px]">
                     <input
                       type="radio"
                       id="authPerson1"
                       value="View"
-                      checked={details.authPerson1 === "View"}
+                      checked={details?.authPerson1 === "View"}
                       onChange={formik.handleChange}
                       disabled={!edit}
                       className="mr-2"
@@ -309,7 +327,7 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                       type="radio"
                       id="authPerson1"
                       value="Operation"
-                      checked={details.authPerson1 === "Operation"}
+                      checked={details?.authPerson1 === "Operation"}
                       onChange={formik.handleChange}
                       disabled={!edit}
                       className="mr-2"
@@ -319,12 +337,12 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                 </div>
               </div>
               <div>
-                <p className="capitalize font-semibold text-[13px]">
+                <p className="capitalize text-left font-semibold text-[13px]">
                   Authorized Person 2
                 </p>
                 <select
                   id="authPerson2"
-                  value={details.authPerson2}
+                  value={details?.authPerson2}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -336,7 +354,7 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                 </select>
               </div>
               <div>
-                <p className="capitalize font-semibold text-[13px]">
+                <p className="capitalize text-left font-semibold text-[13px]">
                   Authorized Person 2
                 </p>
                 <div className="space-y-2">
@@ -345,7 +363,7 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                       type="radio"
                       id="authPerson2"
                       value="View"
-                      checked={details.authPerson2 === "View"}
+                      checked={details?.authPerson2 === "View"}
                       onChange={formik.handleChange}
                       disabled={!edit}
                       className="mr-2"
@@ -357,7 +375,7 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                       type="radio"
                       id="authPerson2"
                       value="Operation"
-                      checked={details.authPerson2 === "Operation"}
+                      checked={details?.authPerson2 === "Operation"}
                       onChange={formik.handleChange}
                       disabled={!edit}
                       className="mr-2"
@@ -367,12 +385,12 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                 </div>
               </div>
               <div>
-                <p className="capitalize font-semibold text-[13px]">
+                <p className="capitalize text-left font-semibold text-[13px]">
                   Authorized Person 3
                 </p>
                 <select
                   id="authPerson3"
-                  value={details.authPerson3}
+                  value={details?.authPerson3}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -384,14 +402,14 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                 </select>
               </div>
               <div>
-                <p className="capitalize font-semibold">Authorized Person 3</p>
+                <p className="capitalize text-left text-[13px] font-semibold">Authorized Person 3</p>
                 <div className="space-y-2">
                   <label className="flex items-center text-[11px]">
                     <input
                       type="radio"
                       id="authPerson3"
                       value="View"
-                      checked={details.authPerson3 === "View"}
+                      checked={details?.authPerson3 === "View"}
                       onChange={formik.handleChange}
                       disabled={!edit}
                       className="mr-2 text-[11px]"
@@ -403,7 +421,7 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                       type="radio"
                       id="authPerson3"
                       value="Operation"
-                      checked={details.authPerson3 === "Operation"}
+                      checked={details?.authPerson3 === "Operation"}
                       onChange={formik.handleChange}
                       disabled={!edit}
                       className="mr-2 "
@@ -417,6 +435,7 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
           <div className="flex gap-10 justify-center">
             <button
               type="submit"
+              onClick={updateBanks}
               className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg w-36"
             >
               Save

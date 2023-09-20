@@ -13,6 +13,22 @@ router.get('/get', async (req, res) => {
   }
 });
 
+// GET Route to retrieve a department record by ID
+router.get('/get/:id', async (req, res) => {
+  try {
+    const department = await DepartmentMaster.findByPk(req.params.id); // Retrieve a department record by ID
+    if (department) {
+      res.json(department); // Return the department record as JSON if found
+    } else {
+      res.status(404).json({ error: 'Department not found' }); // Return a 404 error if the department is not found
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
 // POST Route to create a new department record
 router.post('/add-dept', async (req, res) => {
   try {

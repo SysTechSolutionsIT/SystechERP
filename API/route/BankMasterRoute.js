@@ -13,6 +13,14 @@ router.get('/banks', async (req, res) => {
   }
 });
 
+router.get("/banks/:id", async (req, res) => {
+  const BankbyId = await BankMaster.findByPk(req.params.id);
+
+  res.status(200).json({
+    BankbyId
+  });
+});
+
 // POST Route to create a new bank record
 router.post('/add-bank', async (req, res) => {
   try {
