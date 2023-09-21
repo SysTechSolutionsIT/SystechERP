@@ -13,6 +13,21 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/:id', async (req, res) => {
+    try {
+        const DestByID = await DestinationMaster.findByPk(req.params.id);
+
+        if (!DestByID) {
+            return res.status(404).json({ error: 'Destination not found' });
+        }
+
+        res.status(200).json({ DestByID });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+})
+
 // POST Route to create a new destination record
 router.post('/add-dest', async (req, res) => {
     try {
