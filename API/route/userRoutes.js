@@ -1,9 +1,10 @@
+require('dotenv').config()
 const express = require("express");
 const router = express.Router();
 const User = require("../model/userModels");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const secretKey = require("../config");
+const secretKey = process.env.SECRET_KEY
 // console.log('in useer routes', secretKey)
 
 // Registration
@@ -29,9 +30,7 @@ router.post("/register", async (req, res) => {
     });
 
     // Generate a JWT token
-    const token = jwt.sign({ userId: newUser.id }, secretKey, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign({ userId: newUser.id }, secretKey);
 
     res.status(201).json({ user: newUser, token });
   } catch (error) {
@@ -66,7 +65,7 @@ router.post('/login', async (req, res) => {
       }
   
       // Generate a JWT token
-      const token = jwt.sign({ userId: user.id }, secretKey, { expiresIn: '8h' });
+      const token = jwt.sign({ userId: user.id }, secretKey);
   
       // Return the token only
       res.json({ token });
@@ -76,6 +75,5 @@ router.post('/login', async (req, res) => {
     }
   });
   
-
 // Export both the secretKey and router in a single object
 module.exports = router;

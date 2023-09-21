@@ -4,6 +4,7 @@ import BankModal from "./BankModal";
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import ViewBank from "./ViewBank";
+import { useAuth } from "../Login";
 
 export const bankData = [
   {
@@ -88,6 +89,7 @@ export const bankData = [
 ];
 
 const BankMaster = () => {
+  const {token} = useAuth()
   const [columnVisibility, setColumnVisibility] = useState({
     bankName: true,
     branchName: true,
@@ -119,13 +121,17 @@ const BankMaster = () => {
   useEffect(() =>{
     const fetchBanks = async () => {
       try {
-        const response = await axios.get("http://localhost:5500/bankmaster/banks");
+        const response = await axios.get("http://localhost:5500/bankmaster/banks",{
+          headers:{
+            Authorization: `Bearer ${token}`
+          }
+        });
         console.log("Response Object", response);
         const data = response.data;
         console.log(data);
         setBanks(data);
       } catch (error) {
-        console.log("Error while fetching course data: ", error.message);
+        console.log("Error while fetching bank data: ", error.message);
       }
     }
     fetchBanks()

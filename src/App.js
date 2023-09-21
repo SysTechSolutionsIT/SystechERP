@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
+import { AuthProvider } from "./components/Login";
 import {
   BrowserRouter as Router,
   Routes,
@@ -46,6 +47,7 @@ import Dashboard from "./components/Dashboard";
 function App() {
   return (
     <Router>
+      <AuthProvider>
       <Routes>
         <Route index element={<Login />} />
         <Route
@@ -119,6 +121,7 @@ function App() {
           <Route path="registration" element={<Registration />} />
         </Route>
       </Routes>
+      </AuthProvider>
     </Router>
   );
 }
