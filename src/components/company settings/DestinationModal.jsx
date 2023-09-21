@@ -2,23 +2,41 @@ import { useFormik } from "formik";
 import React, { useState } from "react";
 import { destData } from "./DestinationMaster";
 import { Icon } from "@iconify/react";
+import axios from "axios";
 
 const DestinationModal = ({ visible, onClick }) => {
   const formik = useFormik({
     initialValues: {
-      ID: "",
-      Name: "",
-      ContractorName: "",
-      Distance: "",
-      EmployeeFare: "",
+      name: "",
+      contractorName: "",
+      distance: "",
+      employeeFare: "",
       remark: "",
+      status: ""
     },
     onSubmit: (values) => {
       console.log(values);
-      destData.push(values);
-      alert("Added Successfully");
+      addDest(values);
     },
   });
+
+  const addDest = async (values) => {
+    try {
+      const response = await axios.post("http://localhost:5500/destinationmaster/add-dest", values)
+      if (response.status === 200) {
+        const data = response.data;
+        console.log(data);
+        alert("Destination added successfully");
+        // Handle successful response
+      } else {
+        console.error(`HTTP error! Status: ${response.status}`);
+        // Handle error response
+      }
+    } catch (error) {
+      console.log(`Error: `, error.message);
+      // Handle network error
+    }
+  }
 
   const [status, setStatus] = useState(false);
 
@@ -50,18 +68,18 @@ const DestinationModal = ({ visible, onClick }) => {
                   id="ID"
                   type="number"
                   placeholder="Enter Destination ID"
-                  value={formik.values.ID}
+                  // value={formik.values.ID}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
+                // onChange={formik.handleChange}
                 />
               </div>
               <div>
                 <p className="text-[13px] font-semibold">Destination Name</p>
                 <input
-                  id="Name"
+                  id="name"
                   type="text"
                   placeholder="Enter Destination Name"
-                  value={formik.values.Name}
+                  value={formik.values.name}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -69,8 +87,8 @@ const DestinationModal = ({ visible, onClick }) => {
               <div>
                 <p className="text-[13px] font-semibold">Contractor Name</p>
                 <select
-                  id="ContractorName"
-                  value={formik.values.ContractorName}
+                  id="contractorName"
+                  value={formik.values.contractorName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 >
@@ -81,10 +99,10 @@ const DestinationModal = ({ visible, onClick }) => {
               <div>
                 <p className="text-[13px] font-semibold">Distance(Km)</p>
                 <input
-                  id="Distance"
+                  id="distance"
                   type="number"
                   placeholder="Enter Distance"
-                  value={formik.values.Distance}
+                  value={formik.values.distance}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -92,10 +110,10 @@ const DestinationModal = ({ visible, onClick }) => {
               <div>
                 <p className="text-[13px] font-semibold">Employee Fare</p>
                 <input
-                  id="EmployeeFare"
+                  id="employeeFare"
                   type="number"
                   placeholder="Enter Employee Fare"
-                  value={formik.values.EmployeeFare}
+                  value={formik.values.employeeFare}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />

@@ -28,6 +28,7 @@ const BankModal = ({ visible, onClick }) => {
     onSubmit: (values) => {
       console.log(values);
       addBank()
+      // alert("Bank Added Successfully");
     },
   });
 

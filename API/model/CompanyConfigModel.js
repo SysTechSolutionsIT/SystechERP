@@ -63,7 +63,7 @@ const CompanyConfig = sequelize.define("CompanyConfig", {
       LeaveApprovalFlag: {
         type: DataTypes.STRING,
       },
-      attendanceLockDaty: {
+      attendanceLockDay: {
         type: DataTypes.STRING,
       },
       otCalculationFlag: {

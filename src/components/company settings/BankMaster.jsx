@@ -4,10 +4,10 @@ import BankModal from "./BankModal";
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import ViewBank from "./ViewBank";
+import { useAuth } from "../Login";
 
 export const bankData = [
   {
-    bankId: "0001",
     bankName: "Bank A",
     branchName: "Branch A",
     branchAddress: "Address A",
@@ -89,6 +89,7 @@ export const bankData = [
 ];
 
 const BankMaster = () => {
+  const {token} = useAuth()
   const [columnVisibility, setColumnVisibility] = useState({
     bankName: true,
     branchName: true,
@@ -99,16 +100,38 @@ const BankMaster = () => {
 
   const [banks, setBanks] = useState([])
 
+  const deleteBank = async (bankid) => {
+    try {
+      const apiUrl = `http://localhost:5500/bankmaster/delete-bank/${bankid}`;
+  
+      const response = await axios.delete(apiUrl);
+  
+      if (response.status === 204) {
+        console.log(`Bank with ID ${bankid} deleted successfully.`);
+        alert('Bank Deleted')
+        window.location.reload()
+      } else {
+        console.error(`Failed to delete bank with ID ${bankid}.`);
+      }
+    } catch (error) {
+      console.error('Error deleting bank:', error);
+    }
+  };
+
   useEffect(() =>{
     const fetchBanks = async () => {
       try {
-        const response = await axios.get("http://localhost:5500/bankmaster/banks");
+        const response = await axios.get("http://localhost:5500/bankmaster/banks",{
+          headers:{
+            Authorization: `Bearer ${token}`
+          }
+        });
         console.log("Response Object", response);
         const data = response.data;
         console.log(data);
         setBanks(data);
       } catch (error) {
-        console.log("Error while fetching course data: ", error.message);
+        console.log("Error while fetching bank data: ", error.message);
       }
     }
     fetchBanks()
@@ -363,7 +386,7 @@ const BankMaster = () => {
                             onClick={() => {
                               setVeBank(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setBid(result.bankId); // Pass ID to VEModal
+                              setBid(result.id); // Pass ID to VEModal
                             }}
                           />
                           <Icon
@@ -374,7 +397,7 @@ const BankMaster = () => {
                             onClick={() => {
                               setVeBank(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setBid(result.bankId); // Pass ID to VEModal
+                              setBid(result.id); // Pass ID to VEModal
                             }}
                           />
                           <ViewBank
@@ -392,7 +415,7 @@ const BankMaster = () => {
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {result.bankId}
+                        {result.id}
                       </td>
                       {selectedColumns.map((columnName) => (
                         <td
@@ -418,7 +441,7 @@ const BankMaster = () => {
                             onClick={() => {
                               setVeBank(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setBid(entry.bankId); // Pass ID to VEModal
+                              setBid(entry.id); // Pass ID to VEModal
                             }}
                           />
                           <Icon
@@ -429,7 +452,7 @@ const BankMaster = () => {
                             onClick={() => {
                               setVeBank(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setBid(entry.bankId); // Pass ID to VEModal
+                              setBid(entry.id); // Pass ID to VEModal
                             }}
                           />
                           <ViewBank
@@ -443,11 +466,12 @@ const BankMaster = () => {
                             color="#556987"
                             width="20"
                             height="20"
+                            onClick={() => deleteBank(entry.id)}
                           />
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px] capitalize">
-                        {entry.bankId}
+                        {entry.id}
                       </td>
                       {selectedColumns.map((columnName) => (
                         <td

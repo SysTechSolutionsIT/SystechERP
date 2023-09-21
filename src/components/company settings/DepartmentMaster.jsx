@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect, useRef } from "react";
 import { Icon } from "@iconify/react";
+import axios from "axios";
 import DepartmentModal from "./DepartmentModal";
 import VEDept from "./ViewDept";
 export const departments = [
@@ -84,6 +85,40 @@ export const departments = [
 const DepartmentMaster = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
+  const [departments, setDepartments] = useState([])
+
+  const deleteDept = async (deptid) => {
+    try {
+      const apiUrl = `http://localhost:5500/departmentmaster/delete-dept/${deptid}`;
+  
+      const response = await axios.delete(apiUrl);
+  
+      if (response.status === 204) {
+        console.log(`Department with ID ${deptid} deleted successfully.`);
+        alert('Department Deleted')
+        window.location.reload()
+      } else {
+        console.error(`Failed to delete Department with ID ${deptid}.`);
+      }
+    } catch (error) {
+      console.error('Error deleting Department:', error);
+    }
+  };
+
+  useEffect(() =>{
+    const fetchBanks = async () => {
+      try {
+        const response = await axios.get("http://localhost:5500/departmentmaster/get");
+        console.log("Response Object", response);
+        const data = response.data;
+        console.log(data);
+        setDepartments(data);
+      } catch (error) {
+        console.log("Error while fetching course data: ", error.message);
+      }
+    }
+    fetchBanks()
+  }, [])
 
   const handleSearchChange = (title, searchWord) => {
     const newFilter = departments.filter((item) => {
@@ -339,7 +374,7 @@ const DepartmentMaster = () => {
                             onClick={() => {
                               setVeDept(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setDid(result.deptID); // Pass ID to VEModal
+                              setDid(result.id); // Pass ID to VEModal
                             }}
                           />
                           <VEDept
@@ -356,7 +391,7 @@ const DepartmentMaster = () => {
                             onClick={() => {
                               setVeDept(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setDid(result.deptID); // Pass ID to VEModal
+                              setDid(result.id); // Pass ID to VEModal
                             }}
                           />
                           <VEDept
@@ -374,7 +409,7 @@ const DepartmentMaster = () => {
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
-                        {result.deptID}
+                        {result.id}
                       </td>
                       {selectedColumns.map((columnName) => (
                         <td
@@ -400,7 +435,7 @@ const DepartmentMaster = () => {
                             onClick={() => {
                               setVeDept(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setDid(entry.deptID); // Pass ID to VEModal
+                              setDid(entry.id); // Pass ID to VEModal
                             }}
                           />
                           <VEDept
@@ -417,7 +452,7 @@ const DepartmentMaster = () => {
                             onClick={() => {
                               setVeDept(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setDid(entry.deptID); // Pass ID to VEModal
+                              setDid(entry.id); // Pass ID to VEModal
                             }}
                           />
                           <VEDept
@@ -431,11 +466,12 @@ const DepartmentMaster = () => {
                             color="#556987"
                             width="20"
                             height="20"
+                            onClick={() => deleteDept(entry.id)}
                           />
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
-                        {entry.deptID}
+                        {entry.id}
                       </td>
                       {selectedColumns.map((columnName) => (
                         <td

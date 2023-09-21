@@ -1,10 +1,11 @@
+require('dotenv').config()
 const express = require("express");
 const app = express();
 const userRoutes = require("./route/userRoutes"); // Import the user routes and secretKey
 const jwt = require("jsonwebtoken");
 const cors = require("cors"); // Import the cors middleware
 app.use(express.json()); // Parse JSON requests
-const { secretKey } = require("./config");
+const secretKey = process.env.SECRET_KEY
 const CompMaster = require("./route/CMRoute");
 const CompConfig = require("./route/CompanyConfigRoute");
 const BankMaster = require("./route/BankMasterRoute");
@@ -33,7 +34,7 @@ function verifyToken(req, res, next) {
 app.use(cors());
 
 // Apply the authentication middleware for protected routes
-app.use("/protected-route", verifyToken);
+// app.use("/protected-route", verifyToken);
 
 // Use the user routes
 app.use("/users", userRoutes);

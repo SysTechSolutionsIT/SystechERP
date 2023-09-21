@@ -2,6 +2,7 @@ import { Icon } from "@iconify/react";
 import React, { useEffect, useState, useRef } from "react";
 import DestinationModal from "./DestinationModal";
 import ViewDestination from "./ViewDestination";
+import axios from "axios";
 
 export const destData = [
   {
@@ -23,19 +24,14 @@ export const destData = [
 const DestinationMaster = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
+  // View and Edit
+  const [veDest, setVeDest] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const [id, setid] = useState();
 
-  const handleSearchChange = (title, searchWord) => {
-    const newFilter = destData.filter((item) => {
-      const value = item[title];
-      return value && value.toLowerCase().includes(searchWord.toLowerCase());
-    });
-
-    if (searchWord === "") {
-      setFilteredData([]);
-    } else {
-      setFilteredData(newFilter);
-    }
-  };
+  // Hamburger Menu
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
 
   const [columnVisibility, setColumnVisibility] = useState({
     Name: true,
@@ -44,6 +40,7 @@ const DestinationMaster = () => {
     EmployeeFare: true,
   });
 
+  // Toggle
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedColumns, setSelectedColumns] = useState([
     ...Object.keys(columnVisibility),
@@ -70,13 +67,6 @@ const DestinationMaster = () => {
   const deselectAllColumns = () => {
     setSelectedColumns([]);
   };
-
-  const [veDest, setVeDest] = useState(false);
-  const [edit, setEdit] = useState(false);
-  const [id, setid] = useState();
-
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef(null);
 
   //Menu click outside
   useEffect(() => {
@@ -114,6 +104,48 @@ const DestinationMaster = () => {
     return context.measureText(text).width;
   };
 
+  //For API
+  const [destinations, setDestinations] = useState([]);
+
+  useEffect(() => {
+    fetchDestData();
+  }, []);
+
+  const fetchDestData = async () => {
+    try {
+      const response = await axios.get("http://localhost:5500/destinationmaster/");
+      console.log("Response Object", response);
+      const data = response.data;
+      console.log(data);
+      setDestinations(data);
+    } catch (error) {
+      console.log("Error while fetching course data: ", error.message);
+    }
+  };
+  console.log(destinations);
+
+  const handleSearchChange = (title, searchWord) => {
+    const searchData = [...destinations];
+
+    const newFilter = searchData.filter((item) => {
+      // Check if the item matches the search term in any of the selected columns
+      const matches = selectedColumns.some((columnName) => {
+        const newCol = columnName.charAt(0).toLowerCase() + columnName.slice(1);
+        const value = item[newCol];
+        return (
+          value &&
+          value.toString().toLowerCase().includes(searchWord.toLowerCase())
+        );
+      });
+
+      return matches;
+    });
+
+    // Update the filtered data
+    setFilteredData(newFilter);
+  };
+
+
   return (
     <div className="top-25 min-w-[40%]">
       <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
@@ -128,9 +160,8 @@ const DestinationMaster = () => {
             Column Visibility
             <Icon
               icon="fe:arrow-down"
-              className={`mt-1.5 ml-2 ${
-                showDropdown ? "rotate-180" : ""
-              } cursor-pointer`}
+              className={`mt-1.5 ml-2 ${showDropdown ? "rotate-180" : ""
+                } cursor-pointer`}
             />
           </button>
           {showDropdown && (
@@ -231,9 +262,8 @@ const DestinationMaster = () => {
                 {selectedColumns.map((columnName) => (
                   <th
                     key={columnName}
-                    className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] capitalize whitespace-normal${
-                      columnVisibility[columnName] ? "" : "hidden"
-                    }`}
+                    className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] capitalize whitespace-normal${columnVisibility[columnName] ? "" : "hidden"
+                      }`}
                   >
                     {columnName}
                   </th>
@@ -262,111 +292,116 @@ const DestinationMaster = () => {
             </thead>
             <tbody>
               {filteredData.length > 0
-                ? filteredData.map((entry, index) => (
-                    <tr key={index}>
-                      <td className="px-2 border-2">
-                        <div className="flex items-center gap-2 text-center justify-center">
-                          <Icon
-                            className="cursor-pointer"
-                            icon="lucide:eye"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => {
-                              setVeDest(true); // Open VEModal
-                              setEdit(false); // Disable edit mode for VEModal
-                              setid(entry.ID); // Pass ID to VEModal
-                            }}
-                          />
-                          <Icon
-                            className="cursor-pointer"
-                            icon="mdi:edit"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => {
-                              setVeDest(true); // Open VEModal
-                              setEdit(true); // Disable edit mode for VEModal
-                              setid(entry.ID); // Pass ID to VEModal
-                            }}
-                          />
-                          <Icon
-                            className="cursor-pointer"
-                            icon="material-symbols:delete-outline"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                          />
-                        </div>
-                      </td>
-                      <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
-                        {entry.ID}
-                      </td>
-                      {selectedColumns.map((columnName) => (
-                        <td
-                          key={columnName}
-                          className={`px-4 text-[11px] border-2 whitespace-normal text-left${
-                            columnVisibility[columnName] ? "" : "hidden"
+                ? filteredData.map((result, index) => (
+                  <tr key={index}>
+                    <td className="px-2 border-2">
+                      <div className="flex items-center gap-2 text-center justify-center">
+                        <Icon
+                          className="cursor-pointer"
+                          icon="lucide:eye"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          onClick={() => {
+                            setVeDest(true); // Open VEModal
+                            setEdit(false); // Disable edit mode for VEModal
+                            setid(result.id); // Pass ID to VEModal
+                          }}
+                        />
+                        <Icon
+                          className="cursor-pointer"
+                          icon="mdi:edit"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          onClick={() => {
+                            setVeDest(true); // Open VEModal
+                            setEdit(true); // Disable edit mode for VEModal
+                            setid(result.id); // Pass ID to VEModal
+                          }}
+                        />
+                        <Icon
+                          className="cursor-pointer"
+                          icon="material-symbols:delete-outline"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                        />
+                      </div>
+                    </td>
+                    <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
+                      {result.id}
+                    </td>
+                    {selectedColumns.map((columnName) => (
+                      <td
+                        key={columnName}
+                        className={`px-4 text-[11px] border-2 whitespace-normal text-left${columnVisibility[columnName] ? "" : "hidden"
                           }`}
-                        >
-                          {entry[columnName]}
-                        </td>
-                      ))}
-                    </tr>
-                  ))
-                : destData.map((entry, index) => (
-                    <tr key={index}>
-                      <td className="px-2 text-[11px] border-2">
-                        <div className="flex items-center gap-2 text-center justify-center">
-                          <Icon
-                            className="cursor-pointer"
-                            icon="lucide:eye"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => {
-                              setVeDest(true); // Open VEModal
-                              setEdit(false); // Disable edit mode for VEModal
-                              setid(entry.ID); // Pass ID to VEModal
-                            }}
-                          />
-                          <Icon
-                            className="cursor-pointer"
-                            icon="mdi:edit"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => {
-                              setVeDest(true); // Open VEModal
-                              setEdit(true); // Disable edit mode for VEModal
-                              setid(entry.ID); // Pass ID to VEModal
-                            }}
-                          />
-                          <Icon
-                            className="cursor-pointer"
-                            icon="material-symbols:delete-outline"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                          />
-                        </div>
+                      >
+                        result[
+                        columnName.charAt(0).toLowerCase() +
+                        columnName.slice(1)
+                        ]
                       </td>
-                      <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
-                        {entry.ID}
-                      </td>
-                      {selectedColumns.map((columnName) => (
-                        <td
-                          key={columnName}
-                          className={`px-4 text-[11px] border-2 whitespace-normal ${
-                            columnName === "EmployeeFare" && "text-right"
+                    ))}
+                  </tr>
+                ))
+                : destinations.length > 0 &&
+                destinations.map((result, index) => (
+                  <tr key={index}>
+                    <td className="px-2 text-[11px] border-2">
+                      <div className="flex items-center gap-2 text-center justify-center">
+                        <Icon
+                          className="cursor-pointer"
+                          icon="lucide:eye"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          onClick={() => {
+                            setVeDest(true); // Open VEModal
+                            setEdit(false); // Disable edit mode for VEModal
+                            setid(result.id); // Pass ID to VEModal
+                          }}
+                        />
+                        <Icon
+                          className="cursor-pointer"
+                          icon="mdi:edit"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          onClick={() => {
+                            setVeDest(true); // Open VEModal
+                            setEdit(true); // Disable edit mode for VEModal
+                            setid(result.id); // Pass ID to VEModal
+                          }}
+                        />
+                        <Icon
+                          className="cursor-pointer"
+                          icon="material-symbols:delete-outline"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                        />
+                      </div>
+                    </td>
+                    <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
+                      {result.id}
+                    </td>
+                    {selectedColumns.map((columnName) => (
+                      <td
+                        key={columnName}
+                        className={`px-4 text-[11px] border-2 whitespace-normal ${columnName === "EmployeeFare" && "text-right"
                           } ${columnVisibility[columnName] ? "" : "hidden"}`}
-                        >
-                          {columnName === "EmployeeFare" && "₹"}
-                          {entry[columnName]}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
+                      >
+                        {columnName === "EmployeeFare" && "₹"}
+                        {result[
+                          columnName.charAt(0).toLowerCase() +
+                          columnName.slice(1)
+                        ]}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>

@@ -3,6 +3,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { departments } from "./DepartmentMaster";
 import { Icon } from "@iconify/react";
+import axios from "axios";
 
 const VEDept = ({ visible, onClick, edit, ID }) => {
   const [StatusCheck, setStatusCheck] = useState(false);
@@ -10,10 +11,10 @@ const VEDept = ({ visible, onClick, edit, ID }) => {
 
   const formik = useFormik({
     initialValues: {
-      deptID: "",
+      // deptID: "",
       deptName: "",
       companyBranchName: "",
-      parentDept: "" | "NA",
+      parentDept: "",
       deptType: "",
       deptGroup: "",
       deptHead: "",
@@ -26,15 +27,37 @@ const VEDept = ({ visible, onClick, edit, ID }) => {
     },
     onSubmit: (values) => {
       console.log(values);
-      departments.push(values);
     },
   });
-  useEffect(() => {
-    const selected = departments.find((data) => data.deptID === ID);
-    if (selected) {
-      setDetails(selected);
+
+  const updateDept = async () =>{
+    try{
+      const response = axios.patch(`http://localhost:5500/departmentmaster/update-dept/${ID}`, formik.values)
+      console.log('Patch successful')
+    } catch(error){
+      console.log('Error in patch', error)
     }
+  }
+
+  
+  useEffect(() => {
+    fetchDept()
   }, [ID]);
+
+    const fetchDept = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5500/departmentmaster/get/${ID}`);
+        // console.log("Response Object", response);
+        const data = response.data;
+        // console.log(data);
+        setDetails(data.department);
+      } catch (error) {
+        console.log("Error while fetching department data: ", error.message);
+      }
+    }
+
+console.log('Details array', details)
+
   if (!visible) return null;
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -63,7 +86,7 @@ const VEDept = ({ visible, onClick, edit, ID }) => {
                   id="deptID"
                   type="number"
                   placeholder="Enter Department ID"
-                  value={details.deptID}
+                  value={details.id}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}

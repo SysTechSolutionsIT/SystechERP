@@ -11,23 +11,22 @@ export function useAuth() {
 }
 
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState('');
 
   const handleSetToken = (newToken) => {
     setToken(newToken);
-    // Save token to cookies whenever it changes
-    document.cookie = `token=${newToken}; path=/;`;
   };
 
   useEffect(() => {
-    // Check if a token exists in cookies and set it in the state
-    const cookieToken = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("token="))
-      ?.split("=")[1];
+    // Save token to local storage whenever it changes
+    localStorage.setItem('token', token);
+  }, [token]);
 
-    if (cookieToken) {
-      setToken(cookieToken);
+  useEffect(() => {
+    // Check if a token exists in local storage and set it in the state
+    const savedToken = localStorage.getItem('token');
+    if (savedToken) {
+      setToken(savedToken);
     }
   }, []);
 
@@ -41,7 +40,7 @@ export const AuthProvider = ({ children }) => {
 function Login() {
   const [username, setUsername] = useState("ggwpfax");
   const [password, setPassword] = useState("udayan@99");
-  const [token, setToken] = useState("");
+  const { setToken } = useAuth();
   const navigate = useNavigate();
 
   const userLogin = async () => {
@@ -60,12 +59,13 @@ function Login() {
           },
         }
       );
-
-      const { token } = response.data;
+      
+      const token = await response.data.token
+      setToken(response.data.token);
       console.log("Token is", token);
 
       // Set token in the AuthContext
-      setToken(token);
+      // setToken(token);
 
       // Redirect if token is available
       if (token) {
@@ -75,6 +75,7 @@ function Login() {
       console.log("Error", error);
     }
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">

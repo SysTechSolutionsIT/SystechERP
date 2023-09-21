@@ -3,11 +3,12 @@ import { useFormik } from "formik";
 import { useState } from "react";
 import { departments } from "./DepartmentMaster";
 import { Icon } from "@iconify/react";
+import axios from "axios";
 
 const DepartmentModal = ({ visible, onClick }) => {
   const formik = useFormik({
     initialValues: {
-      deptID: "",
+      // deptID: "",
       deptName: "",
       companyBranchName: "",
       parentDept: "" | "NA",
@@ -23,10 +24,28 @@ const DepartmentModal = ({ visible, onClick }) => {
     },
     onSubmit: (values) => {
       console.log(values);
-      departments.push(values);
-      alert("Added Successfully");
+      addDept()
+      // alert("Department Added Successfully");
     },
   });
+
+  const addDept = async () =>{
+    try{
+      const response = await axios.post("http://localhost:5500/departmentmaster/add-dept", formik.values)
+      if (response.status === 200) {
+        const data = response.data;
+        console.log(data);
+        alert('Department added successfully')
+        // Handle successful response
+      } else {
+        console.error(`HTTP error! Status: ${response.status}`);
+        // Handle error response
+      }
+    }catch (error) {
+      console.error('Error:', error.message);
+      // Handle network error
+    }
+  }
 
   const [status, setStatus] = useState(false);
 
@@ -62,7 +81,7 @@ const DepartmentModal = ({ visible, onClick }) => {
                   id="deptID"
                   type="number"
                   placeholder="Enter Department ID"
-                  value={formik.values.deptID}
+                  value=''
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />

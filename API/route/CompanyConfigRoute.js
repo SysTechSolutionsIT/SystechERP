@@ -3,7 +3,7 @@ const router = express.Router();
 const CompanyConfig = require('../model/CompanyConfigModel'); // Import your CompanyConfig model
 
 // GET Route to retrieve all company configurations
-router.get('/', async (req, res) => {
+router.get('/get', async (req, res) => {
   try {
     const companyConfigs = await CompanyConfig.findAll(); // Retrieve all company configurations
     res.json(companyConfigs); // Return the company configurations as JSON

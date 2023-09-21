@@ -2,32 +2,50 @@ import React, { useEffect, useState } from "react";
 import { destData } from "./DestinationMaster";
 import { useFormik } from "formik";
 import { Icon } from "@iconify/react";
+import axios from "axios";
 
 const ViewDestination = ({ visible, onClick, edit, ID }) => {
   const [StatusCheck, setStatusCheck] = useState(false);
   const [details, setDetails] = useState([]);
   const formik = useFormik({
     initialValues: {
-      ID: "",
-      Name: "",
-      ContractorName: "",
-      Distance: "",
-      EmployeeFare: "",
-      status: "",
+      name: "",
+      contractorName: "",
+      distance: "",
+      employeeFare: "",
       remark: "",
+      status: ""
     },
     onSubmit: (values) => {
       console.log(values);
-      destData.push(values);
+      updateDest(values);
     },
   });
 
-  useEffect(() => {
-    const selectedDest = destData.find((dest) => dest.ID === ID);
-    if (selectedDest) {
-      setDetails(selectedDest);
+  const updateDest = async (values) => {
+    try {
+      const response = axios.patch(`http://localhost:5500/destinationmaster/update-dest/${ID}`, values);
+      console.log("Patch successful");
+    } catch (error) {
+      console.log("Error in patch ", error);
     }
+  }
+
+  useEffect(() => {
+    fetchDestData();
   }, [ID]);
+
+  const fetchDestData = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5500/destinationmaster/${ID}`);
+      const data = response.data;
+      setDetails(data.DestByID);
+    } catch (error) {
+      console.log("Error while fetching course data: ", error.message);
+    }
+  }
+
+  console.log('Details array', details);
 
   if (!visible) return null;
   return (
@@ -55,7 +73,7 @@ const ViewDestination = ({ visible, onClick, edit, ID }) => {
                   id="ID"
                   type="number"
                   placeholder="Enter Destination ID"
-                  value={details.ID}
+                  value={details?.id}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -67,7 +85,7 @@ const ViewDestination = ({ visible, onClick, edit, ID }) => {
                   id="Name"
                   type="text"
                   placeholder="Enter Destination Name"
-                  value={details.Name}
+                  value={details?.name}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -77,7 +95,7 @@ const ViewDestination = ({ visible, onClick, edit, ID }) => {
                 <p className="text-[13px] font-semibold">Contractor Name</p>
                 <select
                   id="ContractorName"
-                  value={details.ContractorName}
+                  value={details?.contractorName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -92,7 +110,7 @@ const ViewDestination = ({ visible, onClick, edit, ID }) => {
                   id="Distance"
                   type="number"
                   placeholder="Enter Distance"
-                  value={details.Distance}
+                  value={details?.distance}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -104,7 +122,7 @@ const ViewDestination = ({ visible, onClick, edit, ID }) => {
                   id="EmployeeFare"
                   type="number"
                   placeholder="Enter Employee Fare"
-                  value={details.EmployeeFare}
+                  value={details?.employeeFare}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -116,7 +134,7 @@ const ViewDestination = ({ visible, onClick, edit, ID }) => {
                   id="remark"
                   type="text"
                   placeholder="Enter Remarks"
-                  value={details.remark}
+                  value={details?.remark}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -128,7 +146,7 @@ const ViewDestination = ({ visible, onClick, edit, ID }) => {
                   <input
                     id="status"
                     type="checkbox"
-                    checked={details.status}
+                    checked={details?.status}
                     className={`relative w-4 h-4 mr-2 peer shrink-0 checked:appearance-none checked:bg-blue-900 border-2 border-blue-900 rounded-sm`}
                     onChange={() => setStatusCheck(!StatusCheck)}
                     disabled={!edit}
