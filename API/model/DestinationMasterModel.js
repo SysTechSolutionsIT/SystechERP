@@ -12,7 +12,7 @@ const sequelize = new Sequelize(
 );
 
 const DestinationMaster = sequelize.define("DestinationMaster", {
-    destName: {
+    name: {
         type: DataTypes.STRING,
     },
     contractorName: {

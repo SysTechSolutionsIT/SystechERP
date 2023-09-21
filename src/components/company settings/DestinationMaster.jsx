@@ -34,7 +34,7 @@ const DestinationMaster = () => {
   const menuRef = useRef(null);
 
   const [columnVisibility, setColumnVisibility] = useState({
-    DestName: true,
+    Name: true,
     ContractorName: true,
     Distance: true,
     EmployeeFare: true,
