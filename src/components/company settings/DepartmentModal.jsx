@@ -4,8 +4,10 @@ import { useState } from "react";
 import { departments } from "./DepartmentMaster";
 import { Icon } from "@iconify/react";
 import axios from "axios";
+import { useAuth } from "../Login";
 
 const DepartmentModal = ({ visible, onClick }) => {
+  const {token} = useAuth()
   const formik = useFormik({
     initialValues: {
       // deptID: "",
@@ -31,7 +33,12 @@ const DepartmentModal = ({ visible, onClick }) => {
 
   const addDept = async () =>{
     try{
-      const response = await axios.post("http://localhost:5500/departmentmaster/add-dept", formik.values)
+      const response = await axios.post("http://localhost:5500/departmentmaster/add-dept", formik.values,
+      {
+        headers:{
+          Authorization: `Bearer ${token}`
+        }
+      })
       if (response.status === 200) {
         const data = response.data;
         console.log(data);

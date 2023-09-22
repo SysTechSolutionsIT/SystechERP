@@ -4,6 +4,8 @@ import { Icon } from "@iconify/react";
 import axios from "axios";
 import DepartmentModal from "./DepartmentModal";
 import VEDept from "./ViewDept";
+import { useAuth } from "../Login";
+
 export const departments = [
   {
     deptID: 1,
@@ -86,12 +88,18 @@ const DepartmentMaster = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
   const [departments, setDepartments] = useState([])
+  const {token} = useAuth()
 
   const deleteDept = async (deptid) => {
     try {
       const apiUrl = `http://localhost:5500/departmentmaster/delete-dept/${deptid}`;
   
-      const response = await axios.delete(apiUrl);
+      const response = await axios.delete(apiUrl,
+        {
+          headers:{
+            Authorization: `Bearer ${token}`
+          }
+        });
   
       if (response.status === 204) {
         console.log(`Department with ID ${deptid} deleted successfully.`);
@@ -106,9 +114,14 @@ const DepartmentMaster = () => {
   };
 
   useEffect(() =>{
-    const fetchBanks = async () => {
+    const fetchDept = async () => {
       try {
-        const response = await axios.get("http://localhost:5500/departmentmaster/get");
+        const response = await axios.get("http://localhost:5500/departmentmaster/get",
+        {
+          headers:{
+            Authorization: `Bearer ${token}`
+          }
+        });
         console.log("Response Object", response);
         const data = response.data;
         console.log(data);
@@ -117,8 +130,8 @@ const DepartmentMaster = () => {
         console.log("Error while fetching course data: ", error.message);
       }
     }
-    fetchBanks()
-  }, [])
+    fetchDept()
+  }, [token])
 
   const handleSearchChange = (title, searchWord) => {
     const newFilter = departments.filter((item) => {
