@@ -101,10 +101,16 @@ const BankMaster = () => {
   const [banks, setBanks] = useState([])
 
   const deleteBank = async (bankid) => {
+    alert('Are you sure you want to delete this bank?')
     try {
       const apiUrl = `http://localhost:5500/bankmaster/delete-bank/${bankid}`;
   
-      const response = await axios.delete(apiUrl);
+      const response = await axios.delete(apiUrl,
+        {
+          headers:{
+            Authorization: `Bearer ${token}`
+          }
+        });
   
       if (response.status === 204) {
         console.log(`Bank with ID ${bankid} deleted successfully.`);
@@ -135,7 +141,7 @@ const BankMaster = () => {
       }
     }
     fetchBanks()
-  }, [])
+  }, [token])
 
   const [isModalOpen, setModalOpen] = useState(false);
   const handleModalClose = () => {

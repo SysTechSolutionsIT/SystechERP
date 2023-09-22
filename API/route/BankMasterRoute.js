@@ -27,7 +27,7 @@ router.get('/banks', authToken, async (req, res) => {
   }
 });
 
-router.get("/banks/:id", async (req, res) => {
+router.get("/banks/:id", authToken, async (req, res) => {
   try {
     const BankbyId = await BankMaster.findByPk(req.params.id);
 
@@ -43,7 +43,7 @@ router.get("/banks/:id", async (req, res) => {
 });
 
 // POST Route to create a new bank record
-router.post('/add-bank', async (req, res) => {
+router.post('/add-bank', authToken, async (req, res) => {
   try {
     const newBank = await BankMaster.create(req.body); // Create a new bank record based on the request body
     res.json(newBank); // Return the newly created bank record as JSON
@@ -54,7 +54,7 @@ router.post('/add-bank', async (req, res) => {
 });
 
 // PATCH Route to update an existing bank record by ID
-router.patch('/update-bank/:id', async (req, res) => {
+router.patch('/update-bank/:id', authToken, async (req, res) => {
   const bankId = req.params.id; // Get the bank record ID from the URL parameter
   try {
     const updatedBank = await BankMaster.findByPk(bankId);
@@ -72,7 +72,7 @@ router.patch('/update-bank/:id', async (req, res) => {
 });
 
 // DELETE Route to delete an existing bank record by ID
-router.delete('/delete-bank/:id', async (req, res) => {
+router.delete('/delete-bank/:id', authToken, async (req, res) => {
   const bankId = req.params.id; // Get the bank record ID from the URL parameter
   try {
     const deletedBank = await BankMaster.findByPk(bankId);
