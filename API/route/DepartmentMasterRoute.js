@@ -16,7 +16,7 @@ const authToken = (req, res, next) =>{
 
 
 // GET Route to retrieve all department records
-router.get('/get', async (req, res) => {
+router.get('/get', authToken, async (req, res) => {
   try {
     const departments = await DepartmentMaster.findAll(); // Retrieve all department records
     res.json(departments); // Return the department records as JSON
@@ -27,7 +27,7 @@ router.get('/get', async (req, res) => {
 });
 
 // GET Route to retrieve a department record by ID
-router.get('/get/:id', async (req, res) => {
+router.get('/get/:id', authToken, async (req, res) => {
   try {
     const department = await DepartmentMaster.findByPk(req.params.id); // Retrieve a department record by ID
     if (department) {
@@ -43,7 +43,7 @@ router.get('/get/:id', async (req, res) => {
 
 
 // POST Route to create a new department record
-router.post('/add-dept', async (req, res) => {
+router.post('/add-dept', authToken,  async (req, res) => {
   try {
     const newDepartment = await DepartmentMaster.create(req.body); // Create a new department record based on the request body
     res.json(newDepartment); // Return the newly created department record as JSON
@@ -54,7 +54,7 @@ router.post('/add-dept', async (req, res) => {
 });
 
 // PATCH Route to update an existing department record by ID
-router.patch('/update-dept/:id', async (req, res) => {
+router.patch('/update-dept/:id', authToken, async (req, res) => {
   const departmentId = req.params.id; // Get the department record ID from the URL parameter
   try {
     const updatedDepartment = await DepartmentMaster.findByPk(departmentId);
@@ -72,7 +72,7 @@ router.patch('/update-dept/:id', async (req, res) => {
 });
 
 // DELETE Route to delete an existing department record by ID
-router.delete('/delete-dept/:id', async (req, res) => {
+router.delete('/delete-dept/:id', authToken,  async (req, res) => {
   const departmentId = req.params.id; // Get the department record ID from the URL parameter
   try {
     const deletedDepartment = await DepartmentMaster.findByPk(departmentId);
