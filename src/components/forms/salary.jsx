@@ -1,10 +1,13 @@
 import { useFormik } from 'formik'
 import React from 'react'
 import { useState } from 'react';
+import { useAuth } from '../Login';
 import DeductionHeadsTable from './DeductionHeadsTable';
 import EarningHeadsTable from './EarningHeadsTable';
+import axios from 'axios';
 
 const SalaryStructure = () => {
+  const { token } = useAuth()
     const [isOTFlagChecked, setOTFlagChecked] = useState(false);
     const [isPFFlagChecked, setPFFlagChecked] = useState(false)
     const [isESICFlagChecked, setESICFlagChecked] = useState(false)
@@ -14,7 +17,7 @@ const SalaryStructure = () => {
 
     const formik = useFormik({
         initialValues:{
-            EmployeeId:"",
+            // EmployeeId:"",
             EmployeeName:"",
             Grade:"",
             Band:"",
@@ -37,8 +40,22 @@ const SalaryStructure = () => {
         },
         onSubmit: (values) => {
             console.log(values);
+            addEmpSalary()
           },
         });
+
+        const addEmpSalary = async() =>{
+          try{
+            const response = axios.post("http://localhost:5500/employee/salary/add",formik.values,{
+              headers:{
+                Authorization:`Bearer ${token}`
+              }
+            })
+            alert('Salary Details added successfully')
+          } catch(error){
+            console.error('Error', error.message)
+          }
+        }
 
         const handleCheckboxChange = (fieldName, setChecked, event) => {
             const checked = event.target.checked;
@@ -270,7 +287,7 @@ const SalaryStructure = () => {
               <p className="mb-1 capitalize font-semibold text-[13px]">Remark</p>
               <input
                 id="Remark"
-                type="number"
+                type="text"
                 value={formik.values.Remark}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg `}
                 onChange={formik.handleChange}

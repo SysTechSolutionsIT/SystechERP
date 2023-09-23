@@ -61,7 +61,7 @@ export default function Personal() {
 
   const addEmpPersonal = async (values) =>{
     try{
-      const response = await axios.post("http://localhost:5500/personal/add", values,{
+      const response = await axios.post("http://localhost:5500/employee/personal/add", values,{
         headers:{
           Authorization: `Bearer ${token}`
         }

@@ -42,7 +42,7 @@ const Work = () => {
 
         const addEmpWork = async () =>{
           try{
-            const response = await axios.post("http://localhost:5500/work/add", formik.values,
+            const response = await axios.post("http://localhost:5500/employee/work/add", formik.values,
             {
               headers:{
                 Authorization: `Bearer ${token}`
