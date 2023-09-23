@@ -3,11 +3,14 @@ import { Button } from "react-bootstrap";
 import { Icon } from "@iconify/react";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
+import axios from "axios";
+import { useAuth } from "../Login";
 
 export default function Personal() {
+  const {token} = useAuth()
   const formik = useFormik({
     initialValues: {
-      EmployeeID: "",
+      // EmployeeID: "",
       EmpType: "",
       EmpTypeGroup: "",
       FirstName: "",
@@ -52,12 +55,31 @@ export default function Personal() {
     },
     onSubmit: (values, { resetForm }) => {
       console.log(values);
-      // Your other submission logic
-
-      // Reset the form to its initial state
-      resetForm();
+      addEmpPersonal(values)
     },
   });
+
+  const addEmpPersonal = async (values) =>{
+    try{
+      const response = await axios.post("http://localhost:5500/personal/add", values,{
+        headers:{
+          Authorization: `Bearer ${token}`
+        }
+      })
+      if (response.status === 200) {
+        const data = response.data;
+        console.log(data);
+        // Handle successful response
+      }
+      alert('Employee Personal Details added successfully')
+      // Handle error response
+      
+    }catch (error) {
+      console.error('Error:', error.message);
+      // Handle network error
+    }
+  }
+  
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -68,8 +90,8 @@ export default function Personal() {
               <p className="mb-1 capitalize font-semibold text-[13px]">Employee ID</p>
               <input
                 id="EmployeeID"
-                type="number"
-                value={formik.values.EmployeeID}
+                type="text"
+                // value={formik.values.EmployeeID}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg `}
                 onChange={formik.handleChange}
               />
@@ -150,7 +172,7 @@ export default function Personal() {
               <p className="mb-1 capitalize  font-semibold text-[13px]">Date of Birth</p>
               <input
                 id="DOB"
-                type="date"
+                type="text"
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -223,7 +245,7 @@ export default function Personal() {
               <p className="mb-1 capitalize font-semibold text-[13px]">Phone</p>
               <input
                 id="PhoneNo"
-                type="number"
+                type="text"
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -232,7 +254,7 @@ export default function Personal() {
                 <p className="mb-1 capitalize font-semibold text-[13px]">Cell 1</p>
                 <input
                   id="CellNo1"
-                  type="number"
+                  type="text"
                   className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                   onChange={formik.handleChange}
                 />
@@ -241,7 +263,7 @@ export default function Personal() {
                 <p className="mb-1 capitalize font-semibold text-[13px]">Cell 2</p>
                 <input
                   id="CellNo2"
-                  type="number"
+                  type="text"
                   className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                   onChange={formik.handleChange}
                 />
@@ -251,7 +273,7 @@ export default function Personal() {
               <p className="mb-1 capitalize  font-semibold text-[13px]">Email ID 1</p>
               <input
                 id="EmailID1"
-                type="email"
+                type="text"
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -260,7 +282,7 @@ export default function Personal() {
               <p className="mb-1 capitalize  font-semibold text-[13px]">Email ID 2</p>
               <input
                 id="EmailID2"
-                type="email"
+                type="text"
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -269,7 +291,7 @@ export default function Personal() {
                 <p className="mb-1 capitalize font-semibold text-[13px]">Bank ID 1</p>
                 <input
                   id="BankId1"
-                  type="number"
+                  type="text"
                   className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                   onChange={formik.handleChange}
                 />
@@ -278,7 +300,7 @@ export default function Personal() {
                 <p className="mb-1 capitalize  font-semibold text-[13px]">Account No 1</p>
                 <input
                   id="AccountNo1"
-                  type="number"
+                  type="text"
                   className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                   onChange={formik.handleChange}
                 />
@@ -296,7 +318,7 @@ export default function Personal() {
                 <p className="mb-1 capitalize font-semibold text-[13px]">Bank ID 2</p>
                 <input
                   id="BankId2"
-                  type="number"
+                  type="text"
                   className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                   onChange={formik.handleChange}
                 />
@@ -305,7 +327,7 @@ export default function Personal() {
                 <p className="mb-1 capitalize  font-semibold text-[13px]">Account No 2</p>
                 <input
                   id="AccountNo2"
-                  type="number"
+                  type="text"
                   className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                   onChange={formik.handleChange}
                 />
@@ -524,7 +546,7 @@ export default function Personal() {
                     </p>
                     <input
                       id="PassportIssueDate"
-                      type="date"
+                      type="text"
                       className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                       onChange={formik.handleChange}
                     />
@@ -535,7 +557,7 @@ export default function Personal() {
                     </p>
                     <input
                       id="PassportExpireDate"
-                      type="date"
+                      type="text"
                       className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                       onChange={formik.handleChange}
                     />

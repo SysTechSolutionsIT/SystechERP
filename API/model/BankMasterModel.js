@@ -13,9 +13,6 @@ const sequelize = new Sequelize(
 
 
 const BankMaster = sequelize.define("BankMaster", {
-    bankId:{
-        type: DataTypes.INTEGER,
-    },
     bankName: {
         type: DataTypes.STRING,
     },
