@@ -14,6 +14,7 @@ const DestinationMaster = require("./route/DestinationMasterRoute");
 const FinMaster = require("./route/FinMasterRoute");
 const CCMaster = require("./route/CostCenterRoute");
 const EmpPersonal = require("./route/EmpPersonalRoute")
+const EmpWork = require("./route/EmpWorkRoute")
 
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());
@@ -26,7 +27,8 @@ app.use("/departmentmaster", DepartmentMaster);
 app.use("/financials", FinMaster);
 app.use("/destinationmaster", DestinationMaster);
 app.use("/cost-center", CCMaster);
-app.use("/personal", EmpPersonal);``
+app.use("/personal", EmpPersonal);
+app.use("/work", EmpWork)
 
 // Start the server
 const port = 5500;
