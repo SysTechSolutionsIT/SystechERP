@@ -57,39 +57,78 @@ export const family = [
 
 const Family = () => {
   const [familyMembers, setFamilyMembers] = useState([]);
+  const [PersonName, setPersonName] = useState("");
+const [Relation, setRelation] = useState("");
+const [Education, setEducation] = useState("");
+const [Occupation, setOccupation] = useState("");
+const [Address, setAddress] = useState("");
+const [CellNo, setCellNo] = useState("");
+const [EmailId, setEmailId] = useState("");
+const [Nomminee, setNomminee] = useState("");
   
   const formik = useFormik({
     initialValues: {
       EmployeeId: "",
       EmployeeName: "",
-      PersonName: "",
-      Relation: "",
-      Education: "",
-      Occupation: "",
-      Address: "",
-      CellNo: "",
-      EmailId: "",
-      Nomminee: "",
     },
     onSubmit: (values) => {
       console.log(values);
+
+      const newEntry = 
+      {
+        PersonName: PersonName,
+        Relation: Relation,
+        Education: Education,
+        Occupation: Occupation,
+        Address: Address,
+        CellNo: CellNo,
+        EmailId: EmailId,
+        Nomminee: Nomminee,
+      }
+    familyMembers.push(newEntry)
+    setFamilyMembers([...familyMembers])
+    console.log(familyMembers)
+    handleRemoveRow(familyMembers.length - 1)
+          const combinedData = {
+            ...values,
+            familyMembers
+          }
+
+          console.log('Submitted data', combinedData)
+
     },
   });
 
   const handleAddFamilyMember = () => {
-    setFamilyMembers([
-      ...familyMembers,
+    const newEntry = 
       {
-        PersonName: "",
-        Relation: "",
-        Education: "",
-        Occupation: "",
-        Address: "",
-        CellNo: "",
-        EmailId: "",
-        Nomminee: "",
-      },
-    ]);
+        PersonName: PersonName,
+        Relation: Relation,
+        Education: Education,
+        Occupation: Occupation,
+        Address: Address,
+        CellNo: CellNo,
+        EmailId: EmailId,
+        Nomminee: Nomminee,
+      }
+    familyMembers.push(newEntry)
+    setFamilyMembers([...familyMembers])
+    console.log(familyMembers)
+
+    setPersonName('')
+    setRelation('')
+    setEducation('')
+    setOccupation('')
+    setAddress('')
+    setCellNo('')
+    setEmailId('')
+    setNomminee('')
+  };
+
+  const handleRemoveRow = (index) => {
+    const updatedData = [...familyMembers];
+    updatedData.splice(index, 1);
+    setFamilyMembers(updatedData);
   };
 
   return (
@@ -121,7 +160,8 @@ const Family = () => {
             <table className="text-center text-[11px]  rounded-lg justify-center whitespace-normal">
                 <thead>
                     <tr>
-                    <th className='text-[13px] font-normal border-2 border-white py-1 px-2 bg-blue-500 rounded-md cursor-pointer text-white'>
+                    <th className='text-[13px] font-normal border-2 border-white py-1 px-2 bg-blue-500 rounded-md cursor-pointer text-white'
+                    onClick={handleAddFamilyMember}>
                             Add
                         </th>
                         <th className='text-[13px] font-normal border-r-2 border-white py-1 bg-blue-900 text-white'>
@@ -150,72 +190,81 @@ const Family = () => {
                         </th>
                     </tr>
                     </thead>
-                    {family.map((item, index) =>(
+                    {familyMembers.map((item, index) =>(
                     <tbody className='justify-between'>
-                      <tr>
-                      <td className='text-[11px] border-2 cursor-pointer font-normal border-r-2 border-white py-1 px-2 bg-red-600 rounded-md text-white'>
+                      <tr key={index}>
+                      <td className='text-[11px] border-2 cursor-pointer font-normal border-r-2 border-white py-1 px-2 bg-red-600 rounded-md text-white'
+                      onClick={() => handleRemoveRow(index)}>
                         Remove 
                       </td>
                       <td className='px-4 border-2 whitespace-normal w-1/2 text-center text-[11px]'>
                         <input
-                        id='PersonName'
                         type='text'
-                        value={item.PersonName}
-                        onChange={formik.handleChange}/>
+                        name={`familyMembers[${index}].PersonName`}
+                        value={familyMembers.PersonName}
+                        onChange={(e) => setPersonName(e.target.value)}/>
                       </td>
                       <td className='px-4 border-2 whitespace-normal text-center text-[11px]'>
                         <input
-                        id='Relation'
                         type='text'
-                        value={item.Relation}
-                        onChange={formik.handleChange}/>
+                        name={`familyMembers[${index}].Relation`}
+                        value={familyMembers.Relation}
+                        onChange={(e) => setRelation(e.target.value)}/>
                       </td>
                       <td className='px-4 border-2 whitespace-normal text-center text-[11px]'>
                         <input
-                        id='Education'
                         type='text'
-                        value={item.Education}
-                        onChange={formik.handleChange}/>
+                        name={`familyMembers[${index}].Education`}
+                        value={familyMembers.Education}
+                        onChange={(e) => setEducation(e.target.value)}/>
                       </td>
                       <td className='px-4 border-2 whitespace-normal text-center text-[11px]'>
                         <input
-                        id='Occupation'
                         type='text'
-                        value={item.Occupation}
-                        onChange={formik.handleChange}/>
+                        name={`familyMembers[${index}].Occupation`}
+                        value={familyMembers.Occupation}
+                        onChange={(e) => setOccupation(e.target.value)}/>
                       </td>
                       <td className='px-4 border-2 whitespace-normal text-center text-[11px]'>
                         <input
-                        id='Address'
                         type='text'
-                        value={item.Address}
-                        onChange={formik.handleChange}/>
+                        name={`familyMembers[${index}].Address`}
+                        value={familyMembers.Address}
+                        onChange={(e) => setAddress(e.target.value)}/>
                       </td>
                       <td className='px-4 border-2 whitespace-normal text-center text-[11px]'>
                         <input
-                        id='CellNo'
                         type='text'
-                        value={item.CellNo}
-                        onChange={formik.handleChange}/>
+                        name={`familyMembers[${index}].CellNo`}
+                        value={familyMembers.CellNo}
+                        onChange={(e) => setCellNo(e.target.value)}/>
                       </td>
                       <td className='px-4 border-2 whitespace-normal text-center text-[11px]'>
                         <input
-                        id='EmailId'
                         type='text'
-                        value={item.EmailId}
-                        onChange={formik.handleChange}/>
+                        name={`familyMembers[${index}].EmailId`}
+                        value={familyMembers.EmailId}
+                        onChange={(e) => setEmailId(e.target.value)}/>
                       </td>
                       <td className='px-4 border-2 whitespace-normal text-center text-[11px'>
                         <input
-                        id='Nomminee'
                         type='text'
-                        value={item.Nomminee}
-                        onChange={formik.handleChange}/>
+                        name={`familyMembers[${index}].Nominee`}
+                        value={familyMembers.Nomminee}
+                        onChange={(e) => setNomminee(e.target.value)}/>
                       </td>
                       </tr>
                     </tbody>
                     ))}
         </table>
+        </div>
+        <div className="flex mt-5 justify-center gap-4">
+                      <button
+                        type="submit"
+                        className="px-8 py-2 bg-blue-900 text-white text-lg rounded-md"
+                      >
+                        Save Details
+                      </button>
         </div>
         </div>
     </form>

@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const jwt = require('jsonwebtoken'); 
 const DepartmentMaster = require('../model/DepartmentMasterModel'); // Import your DepartmentMaster model
 
 const authToken = (req, res, next) =>{
