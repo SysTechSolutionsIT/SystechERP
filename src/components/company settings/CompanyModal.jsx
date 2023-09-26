@@ -3,10 +3,12 @@ import React from "react";
 import { useState } from "react";
 import { Icon } from "@iconify/react";
 import axios from "axios";
+import { useAuth } from "../Login";
 
 const CompanyModal = ({ visible, onClick }) => {
   const [statusCheck, setStatusCheck] = useState(false);
   const [singleBranchCheck, setSingleBranchCheck] = useState(false);
+  const { token } = useAuth();
 
   const formik = useFormik({
     initialValues: {
@@ -21,17 +23,17 @@ const CompanyModal = ({ visible, onClick }) => {
     },
     onSubmit: async (values) => {
       console.log(values);
+      const status = statusCheck === true;
 
       // Create a FormData object to send the form data with the file
       const formData = new FormData();
       formData.append("name", values.name);
       formData.append("shortName", values.shortName);
       formData.append("sectorDetails", values.sectorDetails);
-      formData.append("status", values.status);
+      formData.append("status", status);
       formData.append("createdBy", values.createdBy);
       formData.append("natureOfBusiness", values.natureOfBusiness);
       formData.append("logo", values.logo); // Append the selected file
-      console.log(values.logo);
 
       try {
         // Send the POST request to your server
@@ -41,6 +43,7 @@ const CompanyModal = ({ visible, onClick }) => {
           {
             headers: {
               "Content-Type": "multipart/form-data", // Set the content type for file upload
+              Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -62,6 +65,11 @@ const CompanyModal = ({ visible, onClick }) => {
       }
     },
   });
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    formik.setFieldValue("logo", file);
+  };
 
   if (!visible) return null;
   return (
@@ -156,7 +164,7 @@ const CompanyModal = ({ visible, onClick }) => {
                     checked={statusCheck}
                     className={`w-5 h-5 mr-2 mt-4 focus:outline-gray-300 border border-blue-900 rounded-lg`}
                     onChange={() => {
-                      setStatusCheck(!statusCheck);
+                      setStatusCheck(!statusCheck); // Toggle between true and false
                     }}
                   />
                   Active
@@ -168,10 +176,9 @@ const CompanyModal = ({ visible, onClick }) => {
                   id="logo"
                   type="file"
                   placeholder="Upload File"
-                  value={formik.values.logo}
+                  // value={formik.values.logo}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
-                  // onChange={handleFileChange}
-                  onChange={formik.handleChange}
+                  onChange={handleFileChange}
                 />
               </div>
               <div>

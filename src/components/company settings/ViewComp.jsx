@@ -18,6 +18,7 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
       natureOfBusiness: "",
       logo: null,
       singleBranch: singleBranchCheck,
+      modifiedBy: "",
     },
     onSubmit: (values) => {
       console.log(values);
@@ -32,6 +33,8 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
         logo: values.logo,
         logoName: values.logoName,
         singleBranch: values.singleBranch,
+        modifiedBy: values.modifiedBy,
+        modifiedOn: new Date(),
       };
 
       // Send a PUT request to update the data
@@ -66,6 +69,22 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
   };
   // console.log("ID:", ID);
   console.log(details);
+
+  useEffect(() => {
+    if (details) {
+      formik.setValues({
+        companyId: details.id,
+        name: details.name,
+        shortName: details.shortName,
+        sectorDetails: details.sectorDetails,
+        status: details.status,
+        natureOfBusiness: details.natureOfBusiness,
+        logo: null, // You might want to handle file inputs differently
+        singleBranch: singleBranchCheck,
+        modifiedBy: details.modifiedBy,
+      });
+    }
+  }, [details]);
 
   if (!visible) return null;
   return (
@@ -106,10 +125,10 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                   Company Name
                 </p>
                 <input
-                  id="companyName"
+                  id="name"
                   type="text"
                   placeholder="Enter Company Name"
-                  value={details?.name || ""}
+                  value={formik.values.name}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -123,7 +142,7 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                   id="shortName"
                   type="text"
                   placeholder="Enter Company Short Name"
-                  value={details?.shortName || ""}
+                  value={formik.values.shortName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -134,10 +153,10 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                   Company Sector
                 </p>
                 <input
-                  id="companySector"
+                  id="sectorDetails"
                   type="text"
                   placeholder="Enter Company Sector"
-                  value={details?.sectorDetails || ""}
+                  value={formik.values.sectorDetails}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -150,7 +169,7 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                 <textarea
                   id="natureOfBusiness"
                   placeholder="Enter Nature of Business"
-                  value={details?.natureOfBusiness || ""}
+                  value={formik.values.natureOfBusiness}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -162,7 +181,7 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                   <input
                     id="status"
                     type="checkbox"
-                    checked={statusCheck}
+                    checked={formik.values.status}
                     className={`w-5 h-5 mr-2 mt-5 focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px]`}
                     onChange={() => {
                       console.log("Status checkbox clicked");
@@ -174,15 +193,22 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                 </label>
               </div>
               <div>
-                <p className="capatilize font-semibold text-[13px]">Logo</p>
-                <input
-                  id="logo"
-                  type="file"
-                  placeholder="Upload File"
-                  value={details?.logoName || ""}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                />
+                <p className="capitalize font-semibold text-[13px]">Logo</p>
+                {edit ? ( // If edit is true, render the input field and logoName
+                  <>
+                    <input
+                      id="logo"
+                      type="file"
+                      placeholder="Upload File"
+                      className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                      onChange={formik.handleChange}
+                    />
+                    <p className="text-[11px]">{details?.logoName}</p>
+                  </>
+                ) : (
+                  // If edit is false, just display the logoName
+                  <p className="text-[11px]">{details?.logoName}</p>
+                )}
               </div>
               <div>
                 <p className="capitalize font-semibold text-[13px]">
@@ -199,6 +225,21 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                   Active
                 </label>
               </div>
+              {edit && ( // Only show the "Save" button if edit is true
+                <div>
+                  <p className="capatilize font-semibold text-[13px]">
+                    Modified By
+                  </p>
+                  <input
+                    id="modifiedBy"
+                    placeholder="Enter Updater"
+                    value={formik.values.modifiedBy}
+                    className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                    onChange={formik.handleChange}
+                    disabled={!edit}
+                  />
+                </div>
+              )}
             </div>
             <div className="flex mt-5 gap-10 justify-center">
               {edit && ( // Only show the "Save" button if edit is true
