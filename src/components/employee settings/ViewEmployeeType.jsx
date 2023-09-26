@@ -1,11 +1,22 @@
 import { useFormik } from 'formik';
 import React, { useEffect, useState } from 'react'
-import { EmployeeTypeData } from './EmployeeTypeMaster';
 import { Icon } from '@iconify/react';
+import axios from 'axios';
 
 const ViewEmployeeType = ({ visible, onClick, edit, ID }) => {
-    const [StatusCheck, setStatusCheck] = useState(false);
     const [details, setDetails] = useState([]);
+    const [isStatusChecked, setStatusChecked] = useState(false)
+
+    const handleCheckboxChange = (fieldName, setChecked, event) => {
+      //This is how to use it (event) => handleCheckboxChange('Status', setStatusChecked, event)
+        const checked = event.target.checked;
+        setChecked(checked);
+        formik.setValues({
+          ...formik.values,
+          [fieldName]: checked.toString(),
+        });
+      };
+
     const formik = useFormik({
         initialValues: {
             ID: "",
@@ -17,16 +28,22 @@ const ViewEmployeeType = ({ visible, onClick, edit, ID }) => {
         },
         onSubmit: (values) => {
             console.log(values);
-            EmployeeTypeData.push(values);
         },
     });
 
-    useEffect(() => {
-        const selectedDest = EmployeeTypeData.find((dest) => dest.ID === ID);
-        if (selectedDest) {
-            setDetails(selectedDest);
+    useEffect(() =>{
+        const fetchEmpTypeData = async() =>{
+          try{
+            const response = await axios.get(`http://localhost:5500/employee-type/get/${ID}`)
+            const data = response.data
+            console.log(data)
+            setDetails(data)
+          }catch(error){
+            console.error('Error', error)
+          }
         }
-    }, [ID]);
+        fetchEmpTypeData()
+      },[ID])
 
     if (!visible) return null;
     return (
@@ -47,34 +64,33 @@ const ViewEmployeeType = ({ visible, onClick, edit, ID }) => {
                     <div className="py-4">
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <p className="text-[13px] font-semibold">Employee Type ID</p>
+                                <p className="text-[13px] text-left py-1 font-semibold">Employee Type ID</p>
                                 <input
-                                    id="ID"
                                     type="number"
                                     placeholder="Enter Employee Type ID"
-                                    value={details.ID}
+                                    value={details?.id}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
                                 />
                             </div>
                             <div>
-                                <p className="text-[13px] font-semibold">Employee Type</p>
+                                <p className="text-[13px] text-left py-1 font-semibold">Employee Type</p>
                                 <input
                                     id="EmployeeType"
                                     type="text"
                                     placeholder="Enter Employee Type"
-                                    value={details.EmployeeType}
+                                    value={details?.EmployeeType}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
                                 />
                             </div>
                             <div>
-                                <p className="text-[13px] font-semibold">Employee Type Group</p>
+                                <p className="text-[13px] text-left py-1 font-semibold">Employee Type Group</p>
                                 <select
                                     id="EmployeeTypeGroup"
-                                    value={details.EmployeeTypeGroup}
+                                    value={details?.EmployeeTypeGroup}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
@@ -85,38 +101,38 @@ const ViewEmployeeType = ({ visible, onClick, edit, ID }) => {
                                 </select>
                             </div>
                             <div>
-                                <p className="text-[13px] font-semibold">Short Name</p>
+                                <p className="text-[13px] text-left py-1 font-semibold">Short Name</p>
                                 <input
                                     id="ShortName"
                                     type="text"
                                     placeholder="Enter Short Name"
-                                    value={details.ShortName}
+                                    value={details?.ShortName}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
                                 />
                             </div>
                             <div>
-                                <p className="text-[13px] font-semibold">Remarks</p>
+                                <p className="text-[13px] text-left py-1 font-semibold">Remarks</p>
                                 <input
                                     id="remark"
                                     type="text"
                                     placeholder="Enter Remarks"
-                                    value={details.Remark}
+                                    value={details?.Remark}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
                                 />
                             </div>
                             <div>
-                                <p className="text-[13px] font-semibold">Status</p>
+                                <p className="text-[13px] text-left py-1 font-semibold">Status</p>
                                 <div className="flex items-center">
                                     <input
                                         id="status"
                                         type="checkbox"
-                                        checked={details.status}
+                                        checked={details?.Status}
                                         className={`relative w-4 h-4 mr-2 peer shrink-0 checked:appearance-none checked:bg-blue-900 border-2 border-blue-900 rounded-sm`}
-                                        onChange={() => setStatusCheck(!StatusCheck)}
+                                        onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}
                                         disabled={!edit}
                                     />
                                     <Icon
