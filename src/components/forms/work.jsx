@@ -2,14 +2,16 @@ import { useFormik } from 'formik'
 import { useState } from 'react';
 import React from 'react'
 import { useEffect } from 'react';
+import axios from 'axios';
+import { useAuth } from '../Login';
 
 const Work = () => {
-    const [statusCheck, setStatusCheck] = useState(false);
-    const [bondApplicableCheck, setBondApplicableCheck] = useState(false);
-  
+  const [statusCheck, setStatusCheck] = useState(false);
+  const [bondApplicableCheck, setBondApplicableCheck] = useState(false);
+  const {token} = useAuth()  
     const formik = useFormik({
         initialValues:{
-            EmployeeID:"",
+            // EmployeeID:"",
             EmployeeName:"",
             DOJ:"",
             ContractStartDate:"",
@@ -27,26 +29,40 @@ const Work = () => {
             Contractor:"",
             DOL:"",
             ContractEndDate:"",
-            BoldApplicable:"",
+            BondApplicable:bondApplicableCheck,
             Status: statusCheck,
             Remark:""
 
         },
         onSubmit: (values, { resetForm }) => {
             console.log(values);
+            addEmpWork()
           },
         });
 
-        const handleCheckBox = () => {
-            if(statusCheck === true){
-                setStatusCheck(false)
-            }
-            else{
-                setStatusCheck(true)
-            }
-        console.log("Status checkbox clicked");
-            console.log("Status after updating", statusCheck);
+        const addEmpWork = async () =>{
+          try{
+            const response = await axios.post("http://localhost:5500/employee/work/add", formik.values,
+            {
+              headers:{
+                Authorization: `Bearer ${token}`
+              }
+            })
+            alert('Employee Work Details have been added')
+          } catch(error){
+            console.error('Error', error.message)
+          }
         }
+
+        
+        const handleCheckboxChange = (fieldName, setChecked, event) => {
+          const checked = event.target.checked;
+          setChecked(checked);
+          formik.setValues({
+            ...formik.values,
+            [fieldName]: checked.toString(),
+          });
+        };
         
 
   return (
@@ -326,11 +342,7 @@ const Work = () => {
                     type="checkbox"
                     checked={bondApplicableCheck}
                     className={`w-5 h-5 mr-2 mt-2 focus:outline-gray-300 border border-blue-900 rounded-lg`}
-                    onChange={() => {
-                      console.log("Status checkbox clicked");
-                      setBondApplicableCheck(!bondApplicableCheck);
-                      console.log("Bond Applicable after updating", bondApplicableCheck);
-                    }}
+                    onChange={(e) => handleCheckboxChange('BondApplicable', setBondApplicableCheck, e) }
                   />
                   Active
                 </label>
@@ -343,7 +355,7 @@ const Work = () => {
                     type="checkbox"
                     checked={statusCheck}
                     className={`w-5 h-5 mr-2 mt-2 focus:outline-gray-300 border border-blue-900 rounded-lg`}
-                    onChange={handleCheckBox}
+                    onChange={(e) => handleCheckboxChange('Status', setStatusCheck, e)}
                   />
                   Active
                 </label>

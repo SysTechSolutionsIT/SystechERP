@@ -3,8 +3,10 @@ import { Icon } from "@iconify/react";
 import { useFormik } from "formik";
 import { bankData } from "./BankMaster";
 import axios from "axios";
+import { useAuth } from "../Login";
 
 const BankModal = ({ visible, onClick }) => {
+  const { token }  = useAuth()
   const formik = useFormik({
     initialValues: {
       // bankId: "",
@@ -34,7 +36,12 @@ const BankModal = ({ visible, onClick }) => {
 
   const addBank = async () =>{
     try{
-      const response = await axios.post("http://localhost:5500/bankmaster/add-bank", formik.values)
+      const response = await axios.post("http://localhost:5500/bankmaster/add-bank", formik.values,
+      {
+        headers:{
+          Authorization: `Bearer ${token}`
+        }
+      })
       if (response.status === 200) {
         const data = response.data;
         console.log(data);

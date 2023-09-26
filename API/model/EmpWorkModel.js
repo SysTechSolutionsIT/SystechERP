@@ -9,67 +9,78 @@ const sequelize = new Sequelize(
     dialect: "mysql",
     port: 3306,
   }
-);
+)
 
-
-const BankMaster = sequelize.define("BankMaster", {
-    bankName: {
+const EmpWork = sequelize.define("EmpWork", {
+    EmployeeName:{
         type: DataTypes.STRING,
     },
-    branchName: {
+    DOJ:{
         type: DataTypes.STRING,
     },
-    branchAddress: {
+    ContractStartDate:{
         type: DataTypes.STRING,
     },
-    accountType: {
+    WeeklyOff:{
         type: DataTypes.STRING,
     },
-    accountNo: {
+    CostCenter:{
         type: DataTypes.STRING,
     },
-    ifscCode: {
+    DepartmentGroup:{
         type: DataTypes.STRING,
     },
-    swiftCode: {
+    Department:{
         type: DataTypes.STRING,
     },
-    registeredEmail: {
+    SubDepartment:{
         type: DataTypes.STRING,
     },
-    registeredContact: {
+    Designation:{
         type: DataTypes.STRING,
     },
-    currencyType: {
+    ReportingTo:{
         type: DataTypes.STRING,
     },
-    bankGst: {
+    Shift:{
         type: DataTypes.STRING,
     },
-    authPersonCount: {
-        type: DataTypes.INTEGER,
-    },
-    remark: {
+    Band:{
         type: DataTypes.STRING,
     },
-    authPerson1: {
+    Zone:{
         type: DataTypes.STRING,
     },
-    authPerson2: {
+    Grade:{
         type: DataTypes.STRING,
     },
-    authPerson3: {
+    Contractor:{
         type: DataTypes.STRING,
     },
+    DOL:{
+        type: DataTypes.STRING,
+    },
+    ContractEndDate:{
+        type: DataTypes.STRING,
+    },
+    BondApplicable:{
+        type: DataTypes.STRING,
+    },
+    Status: {
+        type: DataTypes.STRING,
+    },
+    Remark:{
+        type: DataTypes.STRING,
+    }
 })
 
 sequelize
   .sync()
   .then(() => {
-    console.log("Bank Master table created successfully.");
+    console.log("Emp Work table created successfully.");
   })
   .catch((error) => {
-    console.error("Error creating Bank Master table:", error);
+    console.error("Error creating Emp Work table:", error);
   });
 
-module.exports = BankMaster;
+module.exports = EmpWork;

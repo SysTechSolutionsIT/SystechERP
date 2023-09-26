@@ -13,6 +13,7 @@
     "express": "^4.18.2",
     "express-fileupload": "^1.4.0",
     "formik": "^2.4.3",
+    "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.5.1",
     "mysql2": "^3.6.1",

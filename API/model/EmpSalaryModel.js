@@ -9,56 +9,64 @@ const sequelize = new Sequelize(
     dialect: "mysql",
     port: 3306,
   }
-);
+)
 
-
-const BankMaster = sequelize.define("BankMaster", {
-    bankName: {
+const EmpSalary = sequelize.define("EmpSalary", {
+    EmployeeName:{
         type: DataTypes.STRING,
     },
-    branchName: {
+            Grade:{
         type: DataTypes.STRING,
     },
-    branchAddress: {
+            Band:{
         type: DataTypes.STRING,
     },
-    accountType: {
+            Salary:{
         type: DataTypes.STRING,
     },
-    accountNo: {
+            CTC:{
         type: DataTypes.STRING,
     },
-    ifscCode: {
+            OTFlag: {
         type: DataTypes.STRING,
     },
-    swiftCode: {
+            OTAmount:{
         type: DataTypes.STRING,
     },
-    registeredEmail: {
+            PFFlag:{
         type: DataTypes.STRING,
     },
-    registeredContact: {
+            PFNo:{
         type: DataTypes.STRING,
     },
-    currencyType: {
+            PFDate:{
         type: DataTypes.STRING,
     },
-    bankGst: {
+            ESICFlag:{
         type: DataTypes.STRING,
     },
-    authPersonCount: {
-        type: DataTypes.INTEGER,
-    },
-    remark: {
+            ESICNo:{
         type: DataTypes.STRING,
     },
-    authPerson1: {
+            ESICDate:{
         type: DataTypes.STRING,
     },
-    authPerson2: {
+            MLWFFlag:{
         type: DataTypes.STRING,
     },
-    authPerson3: {
+            MLWFNo:{
+        type: DataTypes.STRING,
+    },
+            GratuityApplicable:{
+        type: DataTypes.STRING,
+    },
+            GratuityAmount:{
+        type: DataTypes.STRING,
+    },
+            Remark:{
+        type: DataTypes.STRING,
+    },
+            Status: {
         type: DataTypes.STRING,
     },
 })
@@ -66,10 +74,10 @@ const BankMaster = sequelize.define("BankMaster", {
 sequelize
   .sync()
   .then(() => {
-    console.log("Bank Master table created successfully.");
+    console.log("Emp Salary table created successfully.");
   })
   .catch((error) => {
-    console.error("Error creating Bank Master table:", error);
+    console.error("Error creating Emp Salary table:", error);
   });
 
-module.exports = BankMaster;
+module.exports = EmpSalary;

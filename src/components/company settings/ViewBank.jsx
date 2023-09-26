@@ -3,8 +3,9 @@ import axios from "axios";
 import { useFormik } from "formik";
 import { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
-
+import { useAuth } from "../Login";
 const ViewBank = ({ visible, onClick, edit, ID }) => {
+  const { token } = useAuth()
   const [details, setDetails] = useState([]);
   const formik = useFormik({
     initialValues: {
@@ -32,7 +33,12 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
 
   const updateBanks = async () =>{
     try{
-      const response = axios.patch(`http://localhost:5500/bankmaster/update-bank/${ID}`, formik.values)
+      const response = axios.patch(`http://localhost:5500/bankmaster/update-bank/${ID}`, formik.values,
+      {
+        headers:{
+          Authorization: `Bearer ${token}`
+        }
+      })
       console.log('Patch successful')
     } catch(error){
       console.log('Error in patch', error)
@@ -46,7 +52,12 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
 
     const fetchBanks = async () => {
       try {
-        const response = await axios.get(`http://localhost:5500/bankmaster/banks/${ID}`);
+        const response = await axios.get(`http://localhost:5500/bankmaster/banks/${ID}`,
+        {
+          headers:{
+            Authorization: `Bearer ${token}`
+          }
+        });
         // console.log("Response Object", response);
         const data = response.data;
         // console.log(data);
