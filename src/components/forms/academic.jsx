@@ -1,6 +1,8 @@
 import React from 'react'
 import { useFormik } from 'formik'
 import { useState } from 'react';
+import axios from 'axios';
+import { useEffect } from 'react';
 
 export const qualificationsArray = [
     {
@@ -61,15 +63,30 @@ const Academic = () => {
           setAcademicData([...academicData])
           console.log(academicData)
           handleRemoveRow(academicData.length - 1)
-          const combinedData = {
-            ...values,
-            academicData
+
+          const data ={
+            academicData: values.academicData.map(item => ({
+              ...item,
+              EmployeeId: values.EmployeeId,
+              EmployeeName: values.EmployeeName,
+            })),
           }
 
-          console.log('Submitted data', combinedData)
+          console.log('data', data.academicData)
+          addEmpAcademic(data.academicData)
         },
     })
     
+    const addEmpAcademic = async (data) =>{
+      try{
+        const response = await axios.post("http://localhost:5500/employee/academic/add", data)
+
+        alert('Academic Details Added')
+      } catch(error){
+        console.error('Error', error)
+      }
+    }
+
     const handleAddRow = () => {
         const newEntry = {
             Qualification: Qualification,

@@ -16,7 +16,8 @@ const CCMaster = require("./route/CostCenterRoute");
 const EmpPersonal = require("./route/EmpPersonalRoute")
 const EmpWork = require("./route/EmpWorkRoute")
 const EmpSalary = require("./route/EmpSalaryRoute")
-const EmpProfessional = require("./route/EmpProfessionalRoute")
+const EmpProfessional = require("./route/EmpProfessionalRoute");
+const EmpAcademic = require('./route/EmpAcademicRoute');
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());
 // Use the user routes
@@ -32,6 +33,7 @@ app.use("/employee/personal", EmpPersonal);
 app.use("/employee/work", EmpWork)
 app.use("/employee/salary", EmpSalary)
 app.use("/employee/professional", EmpProfessional)
+app.use("/employee/academic", EmpAcademic)
 
 // Start the server
 const port = 5500;
