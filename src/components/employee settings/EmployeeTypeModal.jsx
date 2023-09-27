@@ -2,29 +2,46 @@ import { useFormik } from 'formik';
 import React, { useState } from 'react'
 import { EmployeeTypeData } from './EmployeeTypeMaster';
 import { Icon } from '@iconify/react';
+import axios from 'axios'
 
 const EmployeeTypeModal = ({ visible, onClick }) => {
   const formik = useFormik({
     initialValues: {
-      ID: "",
+      // ID: "",
       EmployeeType: "",
       EmployeeTypeGroup: "",
       ShortName: "",
       Status: "",
       Remark: ""
     },
-    onSubmit: (values) => {
+    onSubmit: (values, {resetForm}) => {
       console.log(values);
-      EmployeeTypeData.push(values);
-      alert("Added Successfully");
+      addEmpType()
+      resetForm()
     },
   });
 
-  const [status, setStatus] = useState(false);
+  const addEmpType = async() =>{
+    try{
+      const response = await axios.post("http://localhost:5500/employee-type/add", formik.values)
+      alert('Employee Type Added')
+    } catch(error){
+      console.error('Error', error)
+    }
+  }
 
-  const handleStatusChange = () => {
-    setStatus(!status);
-  };
+
+      const [isStatusChecked, setStatusChecked] = useState(false)
+    const handleCheckboxChange = (fieldName, setChecked, event) => {
+      //This is how to use it (event) => handleCheckboxChange('Status', setStatusChecked, event)
+        const checked = event.target.checked;
+        setChecked(checked);
+        formik.setValues({
+          ...formik.values,
+          [fieldName]: checked.toString(),
+        });
+      };
+
 
   if (!visible) return null;
   return (
@@ -50,7 +67,7 @@ const EmployeeTypeModal = ({ visible, onClick }) => {
                   id="ID"
                   type="number"
                   placeholder="Enter Employee Type ID"
-                  value={formik.values.ID}
+                  value=""
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -93,7 +110,7 @@ const EmployeeTypeModal = ({ visible, onClick }) => {
               <div>
                 <p className="text-[13px] font-semibold">Remarks</p>
                 <input
-                  id="remark"
+                  id="Remark"
                   type="text"
                   placeholder="Enter Remarks"
                   value={formik.values.Remark}
@@ -107,10 +124,10 @@ const EmployeeTypeModal = ({ visible, onClick }) => {
                   <input
                     id="status"
                     type="checkbox"
-                    checked={status}
+                    checked={isStatusChecked}
                     value={formik.values.Status}
                     className={`relative w-4 h-4 mr-2 peer shrink-0 checked:appearance-none checked:bg-blue-900 border-2 border-blue-900 rounded-sm`}
-                    onChange={handleStatusChange}
+                    onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}
                   />
                   <Icon
                     className="absolute w-4 h-4 hidden peer-checked:block"
