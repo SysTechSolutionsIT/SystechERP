@@ -70,7 +70,7 @@ const ViewDestination = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Destination ID</p>
                 <input
-                  id="ID"
+                  id="id"
                   type="number"
                   placeholder="Enter Destination ID"
                   value={details?.id}
@@ -82,7 +82,7 @@ const ViewDestination = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Destination Name</p>
                 <input
-                  id="DestName"
+                  id="destName"
                   type="text"
                   placeholder="Enter Destination Name"
                   value={details?.destName}
@@ -94,7 +94,7 @@ const ViewDestination = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Contractor Name</p>
                 <select
-                  id="ContractorName"
+                  id="contractorName"
                   value={details?.contractorName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
@@ -107,7 +107,7 @@ const ViewDestination = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Distance(Km)</p>
                 <input
-                  id="Distance"
+                  id="distance"
                   type="number"
                   placeholder="Enter Distance"
                   value={details?.distance}
@@ -119,7 +119,7 @@ const ViewDestination = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Employee Fare</p>
                 <input
-                  id="EmployeeFare"
+                  id="employeeFare"
                   type="number"
                   placeholder="Enter Employee Fare"
                   value={details?.employeeFare}

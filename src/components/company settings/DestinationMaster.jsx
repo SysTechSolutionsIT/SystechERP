@@ -338,10 +338,10 @@ const DestinationMaster = () => {
                         className={`px-4 text-[11px] border-2 whitespace-normal text-left${columnVisibility[columnName] ? "" : "hidden"
                           }`}
                       >
-                        result[
-                        columnName.charAt(0).toLowerCase() +
-                        columnName.slice(1)
-                        ]
+                        {result[
+                          columnName.charAt(0).toLowerCase() +
+                          columnName.slice(1)
+                        ]}
                       </td>
                     ))}
                   </tr>

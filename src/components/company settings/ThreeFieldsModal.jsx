@@ -2,23 +2,40 @@ import { useFormik } from "formik";
 import React, { useState } from "react";
 import { ThreeFData } from "./ThreeFieldsMaster";
 import { Icon } from "@iconify/react";
+import axios from "axios";
 
 const ThreeFieldsModal = ({ visible, onClick }) => {
   const formik = useFormik({
     initialValues: {
-      ID: "",
-      MasterName: "",
-      FieldDetails1: "",
-      FieldDetails2: "",
+      masterName: "",
+      fieldDetails1: "",
+      fieldDetails2: "",
       status: "",
       remark: "",
     },
     onSubmit: (values) => {
       console.log(values);
-      ThreeFData.push(values);
-      alert("Added Successfully");
+      addField(values);
     },
   });
+
+  const addField = async (values) => {
+    try {
+      const response = await axios.post("http://localhost:5500/threefieldmaster/add/", values)
+      if (response.status === 200) {
+        const data = response.data;
+        console.log(data);
+        alert("Three Fields added successfully");
+        // Handle successful response
+      } else {
+        console.error(`HTTP error! Status: ${response.status}`);
+        // Handle error response
+      }
+    } catch (error) {
+      console.log(`Error: `, error.message);
+      // Handle network error
+    }
+  }
 
   const [status, setStatus] = useState(false);
 
@@ -50,18 +67,18 @@ const ThreeFieldsModal = ({ visible, onClick }) => {
                   id="ID"
                   type="number"
                   placeholder="Enter Field ID"
-                  value={formik.values.ID}
+                  // value={formik.values.ID}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
+                // onChange={formik.handleChange}
                 />
               </div>
               <div>
                 <p className="text-[13px] font-semibold">Master Name</p>
                 <input
-                  id="MasterName"
+                  id="masterName"
                   type="text"
                   placeholder="Enter Master Name"
-                  value={formik.values.MasterName}
+                  value={formik.values.masterName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -69,10 +86,10 @@ const ThreeFieldsModal = ({ visible, onClick }) => {
               <div>
                 <p className="text-[13px] font-semibold">Field Details 1</p>
                 <input
-                  id="FieldDetails1"
+                  id="fieldDetails1"
                   type="text"
                   placeholder="Enter Field Details 1"
-                  value={formik.values.FieldDetails1}
+                  value={formik.values.fieldDetails1}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -80,10 +97,10 @@ const ThreeFieldsModal = ({ visible, onClick }) => {
               <div>
                 <p className="text-[13px] font-semibold">Field Details 2</p>
                 <input
-                  id="FieldDetails2"
+                  id="fieldDetails2"
                   type="text"
                   placeholder="Enter Field Details 2"
-                  value={formik.values.FieldDetails2}
+                  value={formik.values.fieldDetails2}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
