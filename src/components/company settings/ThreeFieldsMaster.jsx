@@ -2,6 +2,7 @@ import { Icon } from "@iconify/react";
 import React, { useEffect, useState, useRef } from "react";
 import ThreeFieldsModal from "./ThreeFieldsModal";
 import ViewThreeF from "./ViewThreeF";
+import axios from "axios";
 
 export const ThreeFData = [
   {
@@ -17,18 +18,14 @@ const ThreeFieldsMaster = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
 
-  const handleSearchChange = (title, searchWord) => {
-    const newFilter = ThreeFData.filter((item) => {
-      const value = item[title];
-      return value && value.toLowerCase().includes(searchWord.toLowerCase());
-    });
+  // View and Edit
+  const [veTf, setVeTf] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const [id, setid] = useState();
 
-    if (searchWord === "") {
-      setFilteredData([]);
-    } else {
-      setFilteredData(newFilter);
-    }
-  };
+  // Hamburger menu
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
 
   const [columnVisibility, setColumnVisibility] = useState({
     MasterName: true,
@@ -37,6 +34,7 @@ const ThreeFieldsMaster = () => {
     Status: true,
   });
 
+  // Toggle
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedColumns, setSelectedColumns] = useState([
     ...Object.keys(columnVisibility),
@@ -63,13 +61,6 @@ const ThreeFieldsMaster = () => {
   const deselectAllColumns = () => {
     setSelectedColumns([]);
   };
-
-  const [veTf, setVeTf] = useState(false);
-  const [edit, setEdit] = useState(false);
-  const [id, setid] = useState();
-
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef(null);
 
   //Menu click outside
   useEffect(() => {
@@ -105,6 +96,46 @@ const ThreeFieldsMaster = () => {
     const context = canvas.getContext("2d");
     context.font = fontSize + " sans-serif";
     return context.measureText(text).width;
+  };
+
+  // API
+  const [fields, setFields] = useState([]);
+
+  useEffect(() => {
+    fetchThreeFieldData();
+  }, []);
+
+  const fetchThreeFieldData = async () => {
+    try {
+      const response = await axios.get("http://localhost:5500/threefieldmaster/");
+      console.log("Response Object", response);
+      const data = response.data;
+      console.log(data);
+      setFields(data);
+    } catch (error) {
+      console.log("Error while fetching course data: ", error.message);
+    }
+  };
+  console.log(fields);
+
+  const handleSearchChange = (title, searchWord) => {
+    const searchData = [...fields];
+    const newFilter = searchData.filter((item) => {
+      // Check if the item matches the search term in any of the selected columns
+      const matches = selectedColumns.some((columnName) => {
+        const newCol = columnName.charAt(0).toLowerCase() + columnName.slice(1);
+        const value = item[newCol];
+        return (
+          value &&
+          value.toString().toLowerCase().includes(searchWord.toLowerCase())
+        );
+      });
+
+      return matches;
+    });
+
+    // Update the filtered data
+    setFilteredData(newFilter);
   };
 
   return (
@@ -252,7 +283,7 @@ const ThreeFieldsMaster = () => {
             </thead>
             <tbody>
               {filteredData.length > 0
-                ? filteredData.map((entry, index) => (
+                ? filteredData.map((result, index) => (
                   <tr key={index}>
                     <td className="px-2 border-2">
                       <div className="flex items-center gap-2 text-center justify-center">
@@ -265,7 +296,7 @@ const ThreeFieldsMaster = () => {
                           onClick={() => {
                             setVeTf(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
-                            setid(entry.ID); // Pass ID to VEModal
+                            setid(result.id); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -277,7 +308,7 @@ const ThreeFieldsMaster = () => {
                           onClick={() => {
                             setVeTf(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
-                            setid(entry.ID); // Pass ID to VEModal
+                            setid(result.id); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -290,7 +321,7 @@ const ThreeFieldsMaster = () => {
                       </div>
                     </td>
                     <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
-                      {entry.ID}
+                      {result.id}
                     </td>
                     {selectedColumns.map((columnName) => (
                       <td
@@ -298,12 +329,16 @@ const ThreeFieldsMaster = () => {
                         className={`px-4 text-[11px] border-2 whitespace-normal text-left${columnVisibility[columnName] ? "" : "hidden"
                           }`}
                       >
-                        {entry[columnName]}
+                        {result[
+                          columnName.charAt(0).toLowerCase() +
+                          columnName.slice(1)
+                        ]}
                       </td>
                     ))}
                   </tr>
                 ))
-                : ThreeFData.map((entry, index) => (
+                : fields.length > 0 &&
+                fields.map((result, index) => (
                   <tr key={index}>
                     <td className="px-2 text-[11px] border-2">
                       <div className="flex items-center gap-2 text-center justify-center">
@@ -316,7 +351,7 @@ const ThreeFieldsMaster = () => {
                           onClick={() => {
                             setVeTf(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
-                            setid(entry.ID); // Pass ID to VEModal
+                            setid(result.id); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -328,7 +363,7 @@ const ThreeFieldsMaster = () => {
                           onClick={() => {
                             setVeTf(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
-                            setid(entry.ID); // Pass ID to VEModal
+                            setid(result.id); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -341,16 +376,17 @@ const ThreeFieldsMaster = () => {
                       </div>
                     </td>
                     <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
-                      {entry.ID}
+                      {result.id}
                     </td>
                     {selectedColumns.map((columnName) => (
                       <td
                         key={columnName}
-                        className={`px-4 text-[11px] border-2 whitespace-normal ${columnName === "EmployeeFare" && "text-right"
-                          } ${columnVisibility[columnName] ? "" : "hidden"}`}
+                        className={`px-4 text-[11px] border-2 whitespace-normal ${columnVisibility[columnName] ? "" : "hidden"}`}
                       >
-                        {columnName === "EmployeeFare" && "₹"}
-                        {entry[columnName]}
+                        {result[
+                          columnName.charAt(0).toLowerCase() +
+                          columnName.slice(1)
+                        ]}
                       </td>
                     ))}
                   </tr>

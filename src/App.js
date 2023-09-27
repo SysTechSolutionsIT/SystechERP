@@ -48,79 +48,79 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-      <Routes>
-        <Route index element={<Login />} />
-        <Route
-          element={
-            <div className="flex min-h-screen">
-              <Sidebar />
-              <main className="flex-1 mx-auto">
-                <Header />
-                <div className="bg-white">
-                  <Outlet />
-                </div>
-              </main>
-            </div>
-          }
-        >
-          <Route path="/dashboard" element={<Dashboard/>}/>
-          <Route path="/company-masters" element={<CompMaster />} />
-          <Route path="/financial-masters" element={<FinMaster />} />
-          <Route path="/company-configurations" element={<CompConfig />} />
-          <Route path="/bank-master" element={<BankMaster />} />
-          <Route path="/costcenter-master" element={<CostCenterMaster />} />
-          <Route path="/department-master" element={<DepartmentMaster />} />
-          <Route path="/destination-master" element={<DestinationMaster />} />
-          <Route path="/three-field-master" element={<ThreeFieldsMaster />} />
-          <Route path="/two-field-master" element={<TwoFieldsMaster />} />
-          <Route path="/employee-master" element={<EmployeeMaster />} />
-          <Route path="/leave-balance-master" element={<LeaveBalance />} />
+        <Routes>
+          <Route index element={<Login />} />
           <Route
-            path="/employee-type-master"
-            element={<EmployeeTypeMaster />}
-          />
-          <Route
-            path="/employee-grade-master"
-            element={<EmployeeGradeMaster />}
-          />
-          <Route path="/designation-master" element={<DesignationMaster />} />
-          <Route path="/kra-master" element={<KRAMaster />} />
-          <Route
-            path="/jobs-responsibility-master"
-            element={<JobsResponsibilityMaster />}
-          />
-          <Route path="/add-employee" element={<EMPTabs />} />
-          <Route path="/shift-master" element={<ShiftMaster />} />
-          <Route path="/holiday-master" element={<HolidayMaster />} />
-          <Route path="/weeklyoff-master" element={<WeeklyOffMaster />} />
-          <Route path="/attDevice-master" element={<DeviceMaster />} />
-          <Route path="/job-type-master" element={<JobTypeMaster />} />
-          <Route path="/leave-type-master" element={<LeaveTypeMaster />} />
-          <Route path="/edit-employee/:empid" element={<EMPTabs />} />
-          <Route
-            path="/earning-heads-master"
-            element={<EarningHeadsMaster />}
-          />
-          <Route
-            path="/deduction-heads-master"
-            element={<DeductionHeadsMaster />}
-          />
-          <Route
-            path="/professional-tax-master"
-            element={<ProfesssionalTaxMaster />}
-          />
-          <Route
-            path="/employee-type-earning-deduction"
-            element={<EmpTypeEarningDeduction />}
-          />
-          <Route path="/advance-request" element={<AdvanceRequest />} />
-          <Route path="/leave-application" element={<LeaveApp />} />
-          <Route path="/leave-approval" element={<LeaveApproval />} />
-          <Route path="/ED-imports" element={<EDImports />} />
-          <Route path="/salary-processing" element={<SalProcessing />} />
-          <Route path="registration" element={<Registration />} />
-        </Route>
-      </Routes>
+            element={
+              <div className="flex min-h-screen">
+                <Sidebar />
+                <main className="flex-1 mx-auto">
+                  <Header />
+                  <div className="bg-white">
+                    <Outlet />
+                  </div>
+                </main>
+              </div>
+            }
+          >
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/company-masters" element={<CompMaster />} />
+            <Route path="/financial-masters" element={<FinMaster />} />
+            <Route path="/company-configurations" element={<CompConfig />} />
+            <Route path="/bank-master" element={<BankMaster />} />
+            <Route path="/costcenter-master" element={<CostCenterMaster />} />
+            <Route path="/department-master" element={<DepartmentMaster />} />
+            <Route path="/destination-master" element={<DestinationMaster />} />
+            <Route path="/three-field-master" element={<ThreeFieldsMaster />} />
+            <Route path="/two-field-master" element={<TwoFieldsMaster />} />
+            <Route path="/employee-master" element={<EmployeeMaster />} />
+            <Route path="/leave-balance-master" element={<LeaveBalance />} />
+            <Route
+              path="/employee-type-master"
+              element={<EmployeeTypeMaster />}
+            />
+            <Route
+              path="/employee-grade-master"
+              element={<EmployeeGradeMaster />}
+            />
+            <Route path="/designation-master" element={<DesignationMaster />} />
+            <Route path="/kra-master" element={<KRAMaster />} />
+            <Route
+              path="/jobs-responsibility-master"
+              element={<JobsResponsibilityMaster />}
+            />
+            <Route path="/add-employee" element={<EMPTabs />} />
+            <Route path="/shift-master" element={<ShiftMaster />} />
+            <Route path="/holiday-master" element={<HolidayMaster />} />
+            <Route path="/weeklyoff-master" element={<WeeklyOffMaster />} />
+            <Route path="/attDevice-master" element={<DeviceMaster />} />
+            <Route path="/job-type-master" element={<JobTypeMaster />} />
+            <Route path="/leave-type-master" element={<LeaveTypeMaster />} />
+            <Route path="/edit-employee/:empid" element={<EMPTabs />} />
+            <Route
+              path="/earning-heads-master"
+              element={<EarningHeadsMaster />}
+            />
+            <Route
+              path="/deduction-heads-master"
+              element={<DeductionHeadsMaster />}
+            />
+            <Route
+              path="/professional-tax-master"
+              element={<ProfesssionalTaxMaster />}
+            />
+            <Route
+              path="/employee-type-earning-deduction"
+              element={<EmpTypeEarningDeduction />}
+            />
+            <Route path="/advance-request" element={<AdvanceRequest />} />
+            <Route path="/leave-application" element={<LeaveApp />} />
+            <Route path="/leave-approval" element={<LeaveApproval />} />
+            <Route path="/ED-imports" element={<EDImports />} />
+            <Route path="/salary-processing" element={<SalProcessing />} />
+            <Route path="registration" element={<Registration />} />
+          </Route>
+        </Routes>
       </AuthProvider>
     </Router>
   );
