@@ -5,13 +5,12 @@ import { Icon } from "@iconify/react";
 import axios from "axios";
 
 const CostCenterModal = ({ visible, onClick }) => {
-  const [status, setStatus] = useState(false);
 
   const formik = useFormik({
     initialValues: {
       cName: "",
       cRemarks: "",
-      status: status,
+      status: "",
     },
     onSubmit: async (values) => {
       console.log(values);
@@ -33,12 +32,17 @@ const CostCenterModal = ({ visible, onClick }) => {
       }
     },
   });
+  const [isStatusChecked, setStatusChecked] = useState(false)
+  const handleCheckboxChange = (fieldName, setChecked, event) => {
+    //This is how to use it (event) => handleCheckboxChange('Status', setStatusChecked, event)
+      const checked = event.target.checked;
+      setChecked(checked);
+      formik.setValues({
+        ...formik.values,
+        [fieldName]: checked.toString(),
+      });
+    };
 
-  const handleStatusChange = () => {
-    const newStatus = !status; // Toggle the status
-    setStatus(newStatus); // Update the local state
-    formik.setFieldValue("status", newStatus); // Update the formik field value
-  };
 
   if (!visible) return null;
   return (
@@ -90,10 +94,10 @@ const CostCenterModal = ({ visible, onClick }) => {
                   <input
                     id="status"
                     type="checkbox"
-                    checked={status}
+                    checked={isStatusChecked}
                     value={formik.values.status}
                     className={`w-5 h-5 mr-2 mt-2 focus:outline-gray-300 border-2 rounded-lg`}
-                    onChange={handleStatusChange}
+                    onChange={(event) => handleCheckboxChange('status', setStatusChecked, event)}
                   />
                   Active
                 </label>

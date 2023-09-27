@@ -20,6 +20,7 @@ const EmpProfessional = require("./route/EmpProfessionalRoute");
 const EmpAcademic = require('./route/EmpAcademicRoute');
 const EmpType = require("./route/EmployeeTypeRoute")
 const EmpGrade = require("./route/EmployeeGradeRoute")
+const Designation = require("./route/DesignationRoute")
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());
 // Use the user routes
@@ -38,6 +39,7 @@ app.use("/employee/professional", EmpProfessional)
 app.use("/employee/academic", EmpAcademic)
 app.use("/employee-type", EmpType)
 app.use("/employee-grade", EmpGrade)
+app.use("/designation-master", Designation)
 
 // Start the server
 const port = 5500;

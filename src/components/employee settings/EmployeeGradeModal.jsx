@@ -89,26 +89,19 @@ const EmployeeGradeModal = ({ visible, onClick }) => {
                                 />
                             </div>
                             <div>
-                                <p className="text-[13px] font-semibold">Status</p>
-                                <div className="flex items-center">
-                                    <input
-                                        id="Status"
-                                        type="checkbox"
-                                        checked={isStatusChecked}
-                                        // value={formik.values.Status}
-                                        className={`relative w-4 h-4 mr-2 peer shrink-0 checked:appearance-none checked:bg-blue-900 border-2 border-blue-900 rounded-sm`}
-                                        onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}
-                                    />
-                                    <Icon
-                                        className="absolute w-4 h-4 hidden peer-checked:block"
-                                        icon="gg:check"
-                                        color="white"
-                                    />
-                                    <label for="status" className="text-[11px] font-semibold">
-                                        Active
-                                    </label>
-                                </div>
-                            </div>
+                            <p className="capitalize font-semibold text-[13px]">Status</p>
+                            <label className="capitalize font-semibold text-[11px]">
+                            <input
+                                id="Status"
+                                type="checkbox"
+                                checked={isStatusChecked}
+                                value={formik.values.Status}
+                                className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border-2 rounded-lg`}
+                                onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}
+                            />
+                            Active
+                            </label>
+                        </div>
                         </div>
                     </div>
                     <div className="flex gap-10 justify-center">
