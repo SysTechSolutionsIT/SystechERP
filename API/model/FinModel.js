@@ -31,8 +31,8 @@ const FinModel = sequelize.define("FinModel", {
   eDate: {
     type: DataTypes.DATE, // You can adjust the data type for the role as needed
   },
-  yearAct: {
-    type: DataTypes.INTEGER, // You can adjust the data type for the role as needed
+  yearClose: {
+    type: DataTypes.BOOLEAN, // You can adjust the data type for the role as needed
   },
   remarks: {
     type: DataTypes.STRING, // You can adjust the data type for the role as needed
