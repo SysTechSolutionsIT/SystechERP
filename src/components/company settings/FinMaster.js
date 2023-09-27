@@ -81,7 +81,7 @@ const FinMaster = () => {
   const [columnVisibility, setColumnVisibility] = useState({
     fName: true,
     fShortName: true,
-    yearAct: true,
+    yearClosed: true,
     status: true,
   });
 
@@ -396,13 +396,21 @@ const FinMaster = () => {
                             columnVisibility[columnName] ? "" : "hidden"
                           }`}
                         >
-                          {result[columnName]}
+                          {columnName === "YearClose"
+                            ? result[columnName]
+                              ? "Active"
+                              : "Inactive"
+                            : columnName === "Status"
+                            ? result[columnName]
+                              ? "Active"
+                              : "Inactive"
+                            : result[columnName]}
                         </td>
                       ))}
                     </tr>
                   ))
                 : Fins.length > 0 &&
-                  Fins.map((entry, index) => (
+                  Fins.map((result, index) => (
                     <tr key={index}>
                       <td className="px-2 border-2">
                         <div className="flex items-center gap-2 text-center justify-center">
@@ -414,7 +422,7 @@ const FinMaster = () => {
                             onClick={() => {
                               setFin(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setFid(entry.finId); // Pass ID to VEModal
+                              setFid(result.finId); // Pass ID to VEModal
                             }}
                           />
                           <Icon
@@ -425,7 +433,7 @@ const FinMaster = () => {
                             onClick={() => {
                               setFin(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setFid(entry.finId); // Pass ID to VEModal
+                              setFid(result.finId); // Pass ID to VEModal
                             }}
                           />
                           <VEFModal
@@ -443,7 +451,7 @@ const FinMaster = () => {
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {entry.finId}
+                        {result.finId}
                       </td>
                       {selectedColumns.map((columnName) => (
                         <td
@@ -452,7 +460,15 @@ const FinMaster = () => {
                             columnVisibility[columnName] ? "" : "hidden"
                           }`}
                         >
-                          {entry[columnName]}
+                          {columnName === "YearClose"
+                            ? result[columnName]
+                              ? "Active"
+                              : "Inactive"
+                            : columnName === "Status"
+                            ? result[columnName]
+                              ? "Active"
+                              : "Inactive"
+                            : result[columnName]}
                         </td>
                       ))}
                     </tr>

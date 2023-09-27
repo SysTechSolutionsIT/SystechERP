@@ -24,6 +24,7 @@ const CompanyModal = ({ visible, onClick }) => {
     onSubmit: async (values) => {
       console.log(values);
       const status = statusCheck === true;
+      const singleBranch = singleBranchCheck === true;
 
       // Create a FormData object to send the form data with the file
       const formData = new FormData();
@@ -31,6 +32,7 @@ const CompanyModal = ({ visible, onClick }) => {
       formData.append("shortName", values.shortName);
       formData.append("sectorDetails", values.sectorDetails);
       formData.append("status", status);
+      formData.append("singleBranch", singleBranch);
       formData.append("createdBy", values.createdBy);
       formData.append("natureOfBusiness", values.natureOfBusiness);
       formData.append("logo", values.logo); // Append the selected file
