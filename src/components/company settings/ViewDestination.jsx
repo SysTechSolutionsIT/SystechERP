@@ -9,7 +9,7 @@ const ViewDestination = ({ visible, onClick, edit, ID }) => {
   const [details, setDetails] = useState([]);
   const formik = useFormik({
     initialValues: {
-      name: "",
+      destName: "",
       contractorName: "",
       distance: "",
       employeeFare: "",
@@ -82,10 +82,10 @@ const ViewDestination = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Destination Name</p>
                 <input
-                  id="Name"
+                  id="DestName"
                   type="text"
                   placeholder="Enter Destination Name"
-                  value={details?.name}
+                  value={details?.destName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
