@@ -111,7 +111,7 @@ const JobsResponsibilityMaster = () => {
         <div className="top-25 min-w-[40%]">
             <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
                 <div className="mr-auto text-[15px]">
-                    HRM / Employee Settings / KRA Master
+                    HRM / Employee Settings / Job Responsibility Master
                 </div>
                 <div className="flex gap-4">
                     <button

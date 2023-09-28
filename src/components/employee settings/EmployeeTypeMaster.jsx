@@ -348,6 +348,7 @@ const EmployeeTypeMaster = () => {
                           color="#556987"
                           width="20"
                           height="20"
+                          onClick={() => deleteEmpType(entry.id)}
                         />
                       </div>
                     </td>

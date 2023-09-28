@@ -2,31 +2,47 @@ import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
 import { ThreeFData } from "./ThreeFieldsMaster";
 import { Icon } from "@iconify/react";
+import axios from "axios";
 
 const ViewThreeF = ({ visible, onClick, edit, ID }) => {
     const [StatusCheck, setStatusCheck] = useState(false);
     const [details, setDetails] = useState([]);
     const formik = useFormik({
         initialValues: {
-            ID: "",
-            MasterName: "",
-            FieldDetails1: "",
-            FieldDetails2: "",
+            masterName: "",
+            fieldDetails1: "",
+            fieldDetails2: "",
             status: "",
             remark: "",
         },
         onSubmit: (values) => {
             console.log(values);
-            ThreeFData.push(values);
+            updateField(values);
         },
     });
 
-    useEffect(() => {
-        const selectedField = ThreeFData.find((dest) => dest.ID === ID);
-        if (selectedField) {
-            setDetails(selectedField);
+    const updateField = async (values) => {
+        try {
+            const response = axios.patch(`http://localhost:5500/threefieldmaster/update/${ID}`, values);
+            console.log("Patch successful");
+        } catch (error) {
+            console.log("Error in patch ", error);
         }
+    }
+
+    useEffect(() => {
+        fetchFieldData()
     }, [ID]);
+
+    const fetchFieldData = async () => {
+        try {
+            const response = await axios.get(`http://localhost:5500/threefieldmaster/${ID}`);
+            const data = response.data;
+            setDetails(data.FieldByID);
+        } catch (error) {
+            console.log("Error while fetching course data: ", error.message);
+        }
+    }
 
     if (!visible) return null;
     return (
@@ -49,10 +65,10 @@ const ViewThreeF = ({ visible, onClick, edit, ID }) => {
                             <div>
                                 <p className="text-[13px] font-semibold">Field ID</p>
                                 <input
-                                    id="ID"
+                                    id="id"
                                     type="number"
                                     placeholder="Enter Field ID"
-                                    value={details.ID}
+                                    value={details?.id}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
@@ -61,10 +77,10 @@ const ViewThreeF = ({ visible, onClick, edit, ID }) => {
                             <div>
                                 <p className="text-[13px] font-semibold">Master Name</p>
                                 <input
-                                    id="MasterName"
+                                    id="masterName"
                                     type="text"
                                     placeholder="Enter Master Name"
-                                    value={details.MasterName}
+                                    value={details?.masterName}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
@@ -73,10 +89,10 @@ const ViewThreeF = ({ visible, onClick, edit, ID }) => {
                             <div>
                                 <p className="text-[13px] font-semibold">Field Details 1</p>
                                 <input
-                                    id="FieldDetails1"
+                                    id="fieldDetails1"
                                     type="text"
                                     placeholder="Enter Field Details 1"
-                                    value={details.FieldDetails1}
+                                    value={details?.fieldDetails1}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
@@ -85,10 +101,10 @@ const ViewThreeF = ({ visible, onClick, edit, ID }) => {
                             <div>
                                 <p className="text-[13px] font-semibold">Field Details 2</p>
                                 <input
-                                    id="FieldDetails2"
+                                    id="fieldDetails2"
                                     type="text"
                                     placeholder="Enter Field Details 2"
-                                    value={details.FieldDetails2}
+                                    value={details?.fieldDetails2}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
@@ -100,7 +116,7 @@ const ViewThreeF = ({ visible, onClick, edit, ID }) => {
                                     id="remark"
                                     type="text"
                                     placeholder="Enter Remarks"
-                                    value={details.remark}
+                                    value={details?.remark}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
@@ -112,7 +128,7 @@ const ViewThreeF = ({ visible, onClick, edit, ID }) => {
                                     <input
                                         id="status"
                                         type="checkbox"
-                                        checked={details.status}
+                                        checked={details?.status}
                                         className={`relative w-4 h-4 mr-2 peer shrink-0 checked:appearance-none checked:bg-blue-900 border-2 border-blue-900 rounded-sm`}
                                         onChange={() => setStatusCheck(!StatusCheck)}
                                         disabled={!edit}

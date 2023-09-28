@@ -1,28 +1,43 @@
 import React, { useState } from 'react'
-import { EmployeeGradeData } from './EmployeeGradeMaster';
+// import { EmployeeGradeData } from './EmployeeGradeMaster';
 import { useFormik } from 'formik';
+import axios from 'axios';
 import { Icon } from '@iconify/react';
 
 const EmployeeGradeModal = ({ visible, onClick }) => {
     const formik = useFormik({
         initialValues: {
-            ID: "",
+            // ID: "",
             Name: "",
             Status: "",
             Remark: ""
         },
-        onSubmit: (values) => {
+        onSubmit: (values, {resetForm}) => {
             console.log(values);
-            EmployeeGradeData.push(values);
-            alert("Added Successfully");
+            addEmpGrade()
+            resetForm()
         },
     });
 
-    const [status, setStatus] = useState(false);
+    const addEmpGrade = async() =>{
+        try{
+            const response = await axios.post("http://localhost:5500/employee-grade/add",formik.values)
+            alert("Grade Added")
+        } catch(error){
+            console.error('Error', error);
+        }
+    }
 
-    const handleStatusChange = () => {
-        setStatus(!status);
-    };
+    const [isStatusChecked, setStatusChecked] = useState(false)
+    const handleCheckboxChange = (fieldName, setChecked, event) => {
+      //This is how to use it (event) => handleCheckboxChange('Status', setStatusChecked, event)
+        const checked = event.target.checked;
+        setChecked(checked);
+        formik.setValues({
+          ...formik.values,
+          [fieldName]: checked.toString(),
+        });
+      };
 
     if (!visible) return null;
     return (
@@ -45,10 +60,8 @@ const EmployeeGradeModal = ({ visible, onClick }) => {
                             <div>
                                 <p className="text-[13px] font-semibold">Employee Grade ID</p>
                                 <input
-                                    id="ID"
                                     type="number"
                                     placeholder="Enter Employee Grade ID"
-                                    value={formik.values.ID}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                 />
@@ -67,7 +80,7 @@ const EmployeeGradeModal = ({ visible, onClick }) => {
                             <div>
                                 <p className="text-[13px] font-semibold">Remarks</p>
                                 <input
-                                    id="remark"
+                                    id="Remark"
                                     type="text"
                                     placeholder="Enter Remarks"
                                     value={formik.values.Remark}
@@ -76,26 +89,19 @@ const EmployeeGradeModal = ({ visible, onClick }) => {
                                 />
                             </div>
                             <div>
-                                <p className="text-[13px] font-semibold">Status</p>
-                                <div className="flex items-center">
-                                    <input
-                                        id="status"
-                                        type="checkbox"
-                                        checked={status}
-                                        value={formik.values.Status}
-                                        className={`relative w-4 h-4 mr-2 peer shrink-0 checked:appearance-none checked:bg-blue-900 border-2 border-blue-900 rounded-sm`}
-                                        onChange={handleStatusChange}
-                                    />
-                                    <Icon
-                                        className="absolute w-4 h-4 hidden peer-checked:block"
-                                        icon="gg:check"
-                                        color="white"
-                                    />
-                                    <label for="status" className="text-[11px] font-semibold">
-                                        Active
-                                    </label>
-                                </div>
-                            </div>
+                            <p className="capitalize font-semibold text-[13px]">Status</p>
+                            <label className="capitalize font-semibold text-[11px]">
+                            <input
+                                id="Status"
+                                type="checkbox"
+                                checked={isStatusChecked}
+                                value={formik.values.Status}
+                                className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border-2 rounded-lg`}
+                                onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}
+                            />
+                            Active
+                            </label>
+                        </div>
                         </div>
                     </div>
                     <div className="flex gap-10 justify-center">

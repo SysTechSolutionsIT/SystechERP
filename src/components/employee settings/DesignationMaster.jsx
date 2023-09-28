@@ -1,4 +1,5 @@
 import { Icon } from '@iconify/react';
+import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
 import DesignationModal from './DesignationModal';
 import ViewDesignation from './ViewDesignation';
@@ -75,6 +76,31 @@ export const DesignData = [
 const DesignationMaster = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
+  const [DesignData, setDesignData] = useState([])
+
+  useEffect(() =>{
+    const fetchDesignations = async() =>{
+      try{
+        const response = await axios.get("http://localhost:5500/designation-master/get")
+        const data = response.data
+        setDesignData(data)
+      } catch(error){
+        console.error('Error', error);
+      }
+    }
+    fetchDesignations()
+  },[])
+
+  const deleteDesignation = async(id) =>{
+    alert('Are you sure you want to delete this entry?')
+    try{
+      const response = await axios.delete(`http://localhost:5500/designation-master/delete/${id}`)
+      alert('Designation Deleted')
+      window.location.reload()
+    } catch (error){
+      console.error('Error', error);
+    }
+  }
 
   const handleSearchChange = (title, searchWord) => {
     const newFilter = DesignData.filter((item) => {
@@ -323,7 +349,7 @@ const DesignationMaster = () => {
                           onClick={() => {
                             setVeDesign(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
-                            setid(entry.ID); // Pass ID to VEModal
+                            setid(entry.id); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -335,7 +361,7 @@ const DesignationMaster = () => {
                           onClick={() => {
                             setVeDesign(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
-                            setid(entry.ID); // Pass ID to VEModal
+                            setid(entry.id); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -344,11 +370,12 @@ const DesignationMaster = () => {
                           color="#556987"
                           width="20"
                           height="20"
+                          onClick={()=> deleteDesignation(entry.id)}
                         />
                       </div>
                     </td>
                     <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
-                      {entry.ID}
+                      {entry.id}
                     </td>
                     {selectedColumns.map((columnName) => (
                       <td
@@ -374,7 +401,7 @@ const DesignationMaster = () => {
                           onClick={() => {
                             setVeDesign(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
-                            setid(entry.ID); // Pass ID to VEModal
+                            setid(entry.id); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -386,7 +413,7 @@ const DesignationMaster = () => {
                           onClick={() => {
                             setVeDesign(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
-                            setid(entry.ID); // Pass ID to VEModal
+                            setid(entry.id); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -395,11 +422,12 @@ const DesignationMaster = () => {
                           color="#556987"
                           width="20"
                           height="20"
+                          onClick={()=> deleteDesignation(entry.id)}
                         />
                       </div>
                     </td>
                     <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
-                      {entry.ID}
+                      {entry.id}
                     </td>
                     {selectedColumns.map((columnName) => (
                       <td

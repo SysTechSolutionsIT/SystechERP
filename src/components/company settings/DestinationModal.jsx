@@ -7,7 +7,7 @@ import axios from "axios";
 const DestinationModal = ({ visible, onClick }) => {
   const formik = useFormik({
     initialValues: {
-      name: "",
+      destName: "",
       contractorName: "",
       distance: "",
       employeeFare: "",
@@ -76,10 +76,10 @@ const DestinationModal = ({ visible, onClick }) => {
               <div>
                 <p className="text-[13px] font-semibold">Destination Name</p>
                 <input
-                  id="name"
+                  id="destName"
                   type="text"
                   placeholder="Enter Destination Name"
-                  value={formik.values.name}
+                  value={formik.values.destName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
