@@ -6,90 +6,8 @@ import axios from "axios";
 import ViewBank from "./ViewBank";
 import { useAuth } from "../Login";
 
-export const bankData = [
-  {
-    bankName: "Bank A",
-    branchName: "Branch A",
-    branchAddress: "Address A",
-    accountType: "Savings",
-    accountNo: "12345678",
-    ifscCode: "ABCD123456",
-    swiftCode: "SWIFT123",
-    registeredEmail: "email@example.com",
-    registeredContact: "+123456789",
-    currencyType: "USD",
-    bankGst: "GST123",
-    authPersonCount: 3,
-    remark: "Remark for Bank A",
-  },
-  {
-    bankId: "0002",
-    bankName: "Bank B",
-    branchName: "Branch B",
-    branchAddress: "Address B",
-    accountType: "Checking",
-    accountNo: "98765432",
-    ifscCode: "EFGH567890",
-    swiftCode: "SWIFT567",
-    registeredEmail: "email2@example.com",
-    registeredContact: "+987654321",
-    currencyType: "EUR",
-    bankGst: "GST456",
-    authPersonCount: 2,
-    remark: "Remark for Bank B",
-  },
-  {
-    bankId: "0003",
-    bankName: "Bank C",
-    branchName: "Branch C",
-    branchAddress: "Address C",
-    accountType: "Savings",
-    accountNo: "55555555",
-    ifscCode: "WXYZ123456",
-    swiftCode: "SWIFT789",
-    registeredEmail: "email3@example.com",
-    registeredContact: "+9876543210",
-    currencyType: "GBP",
-    bankGst: "GST789",
-    authPersonCount: 1,
-    remark: "Remark for Bank C",
-  },
-  {
-    bankId: "0004",
-    bankName: "Bank D",
-    branchName: "Branch D",
-    branchAddress: "Address D",
-    accountType: "Checking",
-    accountNo: "44444444",
-    ifscCode: "PQRS567890",
-    swiftCode: "SWIFT101",
-    registeredEmail: "email4@example.com",
-    registeredContact: "+1122334455",
-    currencyType: "AUD",
-    bankGst: "GST101",
-    authPersonCount: 2,
-    remark: "Remark for Bank D",
-  },
-  {
-    bankId: "0005",
-    bankName: "Bank E",
-    branchName: "Branch E",
-    branchAddress: "Address E",
-    accountType: "Savings",
-    accountNo: "77777777",
-    ifscCode: "LMNO123456",
-    swiftCode: "SWIFT111",
-    registeredEmail: "email5@example.com",
-    registeredContact: "+9988776655",
-    currencyType: "JPY",
-    bankGst: "GST111",
-    authPersonCount: 1,
-    remark: "Remark for Bank E",
-  },
-];
-
 const BankMaster = () => {
-  const {token} = useAuth()
+  const { token } = useAuth();
   const [columnVisibility, setColumnVisibility] = useState({
     bankName: true,
     branchName: true,
@@ -98,40 +16,42 @@ const BankMaster = () => {
     ifscCode: true,
   });
 
-  const [banks, setBanks] = useState([])
+  const [banks, setBanks] = useState([]);
 
   const deleteBank = async (bankid) => {
-    alert('Are you sure you want to delete this bank?')
+    alert("Are you sure you want to delete this bank?");
     try {
       const apiUrl = `http://localhost:5500/bankmaster/delete-bank/${bankid}`;
-  
-      const response = await axios.delete(apiUrl,
-        {
-          headers:{
-            Authorization: `Bearer ${token}`
-          }
-        });
-  
+
+      const response = await axios.delete(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
       if (response.status === 204) {
         console.log(`Bank with ID ${bankid} deleted successfully.`);
-        alert('Bank Deleted')
-        window.location.reload()
+        alert("Bank Deleted");
+        window.location.reload();
       } else {
         console.error(`Failed to delete bank with ID ${bankid}.`);
       }
     } catch (error) {
-      console.error('Error deleting bank:', error);
+      console.error("Error deleting bank:", error);
     }
   };
 
-  useEffect(() =>{
+  useEffect(() => {
     const fetchBanks = async () => {
       try {
-        const response = await axios.get("http://localhost:5500/bankmaster/banks",{
-          headers:{
-            Authorization: `Bearer ${token}`
+        const response = await axios.get(
+          "http://localhost:5500/bankmaster/banks",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        });
+        );
         console.log("Response Object", response);
         const data = response.data;
         console.log(data);
@@ -139,9 +59,9 @@ const BankMaster = () => {
       } catch (error) {
         console.log("Error while fetching bank data: ", error.message);
       }
-    }
-    fetchBanks()
-  }, [token])
+    };
+    fetchBanks();
+  }, [token]);
 
   const [isModalOpen, setModalOpen] = useState(false);
   const handleModalClose = () => {
@@ -417,6 +337,7 @@ const BankMaster = () => {
                             color="#556987"
                             width="20"
                             height="20"
+                            onClick={() => deleteBank(result.id)}
                           />
                         </div>
                       </td>
