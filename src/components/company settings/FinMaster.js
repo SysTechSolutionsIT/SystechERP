@@ -1,9 +1,9 @@
 import { Icon } from "@iconify/react";
 import React, { useState, useEffect, useRef } from "react";
-import { Button } from "react-bootstrap";
 import FinancialModal from "./FinancialModal";
 import VEFModal from "./ViewFin";
 import axios from "axios";
+import { useAuth } from "../Login";
 
 export const finData = [
   {
@@ -75,13 +75,15 @@ const FinMaster = () => {
   const [edit, setEdit] = useState(false);
   const [Fid, setFid] = useState();
 
+  const { token } = useAuth();
+
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
   const [columnVisibility, setColumnVisibility] = useState({
     fName: true,
     fShortName: true,
-    yearClosed: true,
+    yearClose: true,
     status: true,
   });
 
@@ -152,7 +154,7 @@ const FinMaster = () => {
 
   useEffect(() => {
     fetchCompData();
-  }, []);
+  }, [token]);
 
   const fetchCompData = async () => {
     try {
@@ -460,11 +462,11 @@ const FinMaster = () => {
                             columnVisibility[columnName] ? "" : "hidden"
                           }`}
                         >
-                          {columnName === "YearClose"
+                          {columnName === "yearClose"
                             ? result[columnName]
                               ? "Active"
                               : "Inactive"
-                            : columnName === "Status"
+                            : columnName === "status"
                             ? result[columnName]
                               ? "Active"
                               : "Inactive"

@@ -11,17 +11,35 @@ const VEFModal = ({ visible, onClick, edit, ID }) => {
 
   const formik = useFormik({
     initialValues: {
-      FinID: "",
-      Name: "",
-      StartDate: "",
-      EndDate: "",
-      ShortName: "",
-      YearClose: YearCloseCheck,
-      Remark: "",
-      Status: StatusCheck,
+      fName: "",
+      sDate: [],
+      eDate: [],
+      fShortName: "",
+      yearClose: YearCloseCheck,
+      remarks: "",
+      status: StatusCheck,
     },
     onSubmit: (values) => {
       console.log(values);
+      const updatedData = {
+        fName: values.fName,
+        fShortName: values.fShortName,
+        status: values.status,
+        remarks: values.remarks,
+        sDate: values.sDate,
+        eDate: values.eDate,
+      };
+
+      axios
+        .patch(`http://localhost:5500/update-record/${ID}`, updatedData)
+        .then((response) => {
+          console.log("Record updated successfully:", response.data);
+          // You can perform additional actions if needed after a successful update
+        })
+        .catch((error) => {
+          console.error("Error updating record:", error);
+          // Handle the error appropriately
+        });
     },
   });
   useEffect(() => {
@@ -37,10 +55,19 @@ const VEFModal = ({ visible, onClick, edit, ID }) => {
       const data = response.data.record;
       setDetails(data);
       console.log(data);
+      console.log(typeof details.sDate);
     } catch (error) {
       console.log("Error while fetching course data: ", error.message);
     }
   };
+  const sDateFormatted = new Date(
+    details?.sDate ? details.sDate : null
+  ).toLocaleDateString();
+  const eDateFormatted = new Date(
+    details?.eDate ? details.eDate : null
+  ).toLocaleDateString();
+
+  console.log(typeof sDateFormatted);
   if (!visible) return null;
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -66,13 +93,12 @@ const VEFModal = ({ visible, onClick, edit, ID }) => {
                   Financial Year ID
                 </p>
                 <input
-                  id="FinID"
+                  id="finId"
                   type="number"
                   placeholder="Enter Financial Year ID"
                   value={details?.finId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                  disabled={!edit}
+                  disabled={true}
                 />
               </div>
               <div>
@@ -92,10 +118,10 @@ const VEFModal = ({ visible, onClick, edit, ID }) => {
                   Start Date
                 </p>
                 <input
-                  id="StartDate"
-                  type="date"
+                  id="sDate"
+                  type="Date"
                   placeholder="Enter Start Date"
-                  value={details?.sDate}
+                  value={sDateFormatted}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -104,10 +130,10 @@ const VEFModal = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="capatilize font-semibold text-[13px]">End Date</p>
                 <input
-                  id="EndDate"
+                  id="eDate"
                   type="date"
                   placeholder="Enter End Date"
-                  value={details?.eDate}
+                  value={eDateFormatted}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -135,7 +161,7 @@ const VEFModal = ({ visible, onClick, edit, ID }) => {
                   <input
                     id="YearClose"
                     type="checkbox"
-                    checked={YearCloseCheck}
+                    checked={details?.yearClose}
                     className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border-2 rounded-lg`}
                     onChange={() => setYearCloseCheck(!YearCloseCheck)}
                     disabled={!edit}
@@ -148,7 +174,7 @@ const VEFModal = ({ visible, onClick, edit, ID }) => {
                 <textarea
                   id="Remark"
                   placeholder="Enter Remark"
-                  value={details?.remark}
+                  value={details?.remarks}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -160,7 +186,7 @@ const VEFModal = ({ visible, onClick, edit, ID }) => {
                   <input
                     id="Status"
                     type="checkbox"
-                    checked={StatusCheck}
+                    checked={details?.status}
                     className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border-2 rounded-lg`}
                     onChange={() => setStatusCheck(!StatusCheck)}
                     disabled={!edit}

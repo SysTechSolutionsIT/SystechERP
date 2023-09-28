@@ -24,7 +24,6 @@ const FinancialModal = ({ visible, onClick }) => {
       console.log(values);
       try {
         const formData = {
-          finId: values.finId,
           fName: values.fName,
           sDate: values.sDate,
           eDate: values.eDate,
@@ -44,6 +43,7 @@ const FinancialModal = ({ visible, onClick }) => {
           console.log(data);
           alert("Financial record added successfully");
           // Handle successful response
+          onClick();
         } else {
           console.error(`HTTP error! Status: ${response.status}`);
           // Handle error response
