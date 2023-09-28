@@ -2,30 +2,46 @@ import { Icon } from "@iconify/react";
 import React, { useEffect, useState } from "react";
 import { TwoFData } from "./TwoFieldsMaster";
 import { useFormik } from "formik";
+import axios from "axios";
 
 const ViewTwoF = ({ visible, onClick, edit, ID }) => {
   const [StatusCheck, setStatusCheck] = useState(false);
   const [details, setDetails] = useState([]);
   const formik = useFormik({
     initialValues: {
-      ID: "",
-      MasterName: "",
-      FieldDetails: "",
-      Status: "",
+      masterName: "",
+      fieldDetails: "",
+      status: "",
       remark: "",
     },
     onSubmit: (values) => {
       console.log(values);
-      TwoFData.push(values);
+      updateField(values);
     },
   });
 
-  useEffect(() => {
-    const selectedField = TwoFData.find((dest) => dest.ID === ID);
-    if (selectedField) {
-      setDetails(selectedField);
+  const updateField = async (values) => {
+    try {
+      const response = axios.patch(`http://localhost:5500/twofieldmaster/update/${ID}`, values);
+      console.log("Patch successful");
+    } catch (error) {
+      console.log("Error in patch ", error);
     }
+  }
+
+  useEffect(() => {
+    fetchFieldData();
   }, [ID]);
+
+  const fetchFieldData = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5500/twofieldmaster/${ID}`);
+      const data = response.data;
+      setDetails(data.FieldByID);
+    } catch (error) {
+      console.log("Error while fetching course data: ", error.message);
+    }
+  }
 
   if (!visible) return null;
   return (
@@ -48,10 +64,10 @@ const ViewTwoF = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Field ID</p>
                 <input
-                  id="ID"
+                  id="id"
                   type="number"
                   placeholder="Enter Field ID"
-                  value={details.ID}
+                  value={details?.id}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -60,10 +76,10 @@ const ViewTwoF = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Master Name</p>
                 <input
-                  id="MasterName"
+                  id="masterName"
                   type="text"
                   placeholder="Enter Master Name"
-                  value={details.MasterName}
+                  value={details?.masterName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -72,10 +88,10 @@ const ViewTwoF = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Field Details</p>
                 <input
-                  id="FieldDetails"
+                  id="fieldDetails"
                   type="text"
                   placeholder="Enter Field Details"
-                  value={details.FieldDetails}
+                  value={details?.fieldDetails}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -87,7 +103,7 @@ const ViewTwoF = ({ visible, onClick, edit, ID }) => {
                   id="remark"
                   type="text"
                   placeholder="Enter Remarks"
-                  value={details.remark}
+                  value={details?.remark}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -99,7 +115,7 @@ const ViewTwoF = ({ visible, onClick, edit, ID }) => {
                   <input
                     id="status"
                     type="checkbox"
-                    checked={details.Status}
+                    checked={details?.status}
                     className={`relative w-4 h-4 mr-2 peer shrink-0 checked:appearance-none checked:bg-blue-900 border-2 border-blue-900 rounded-sm`}
                     onChange={() => setStatusCheck(!StatusCheck)}
                     disabled={!edit}

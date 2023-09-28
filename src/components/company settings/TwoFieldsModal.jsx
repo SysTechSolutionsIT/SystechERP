@@ -2,22 +2,39 @@ import { useFormik } from "formik";
 import React, { useState } from "react";
 import { TwoFData } from "./TwoFieldsMaster";
 import { Icon } from "@iconify/react";
+import axios from "axios";
 
 const TwoFieldsModal = ({ visible, onClick }) => {
   const formik = useFormik({
     initialValues: {
-      ID: "",
-      MasterName: "",
-      FieldDetails: "",
-      Status: "",
+      masterName: "",
+      fieldDetails: "",
+      status: "",
       remark: "",
     },
     onSubmit: (values) => {
       console.log(values);
-      TwoFData.push(values);
-      alert("Added Successfully");
+      addField(values);
     },
   });
+
+  const addField = async (values) => {
+    try {
+      const response = await axios.post("http://localhost:5500/twofieldmaster/add/", values)
+      if (response.status === 200) {
+        const data = response.data;
+        console.log(data);
+        alert("Three Fields added successfully");
+        // Handle successful response
+      } else {
+        console.error(`HTTP error! Status: ${response.status}`);
+        // Handle error response
+      }
+    } catch (error) {
+      console.log(`Error: `, error.message);
+      // Handle network error
+    }
+  }
 
   const [status, setStatus] = useState(false);
 
@@ -46,21 +63,21 @@ const TwoFieldsModal = ({ visible, onClick }) => {
               <div>
                 <p className="text-[13px] font-semibold">Field ID</p>
                 <input
-                  id="ID"
+                  id="id"
                   type="number"
                   placeholder="Enter Field ID"
-                  value={formik.values.ID}
+                  // value={formik.values.ID}
                   className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
-                  onChange={formik.handleChange}
+                // onChange={formik.handleChange}
                 />
               </div>
               <div>
                 <p className="text-[13px] font-semibold">Master Name</p>
                 <input
-                  id="MasterName"
+                  id="masterName"
                   type="text"
                   placeholder="Enter Master Name"
-                  value={formik.values.MasterName}
+                  value={formik.values.masterName}
                   className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
                   onChange={formik.handleChange}
                 />
@@ -68,10 +85,10 @@ const TwoFieldsModal = ({ visible, onClick }) => {
               <div>
                 <p className="text-[13px] font-semibold">Field Details</p>
                 <input
-                  id="FieldDetails"
+                  id="fieldDetails"
                   type="text"
                   placeholder="Enter Field Details"
-                  value={formik.values.FieldDetails}
+                  value={formik.values.fieldDetails}
                   className={`w-full px-4 py-2 text-[11px] border-blue-900 focus:outline-gray-300 border-2 rounded-lg `}
                   onChange={formik.handleChange}
                 />
@@ -94,7 +111,7 @@ const TwoFieldsModal = ({ visible, onClick }) => {
                     id="status"
                     type="checkbox"
                     checked={status}
-                    value={formik.values.Status}
+                    value={formik.values.status}
                     className={` relative w-4 h-4 mr-2 peer shrink-0 appearance-none checked:bg-blue-800 border-2 border-blue-900 rounded-sm`}
                     onChange={handleStatusChange}
                   />
