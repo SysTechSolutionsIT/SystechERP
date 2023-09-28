@@ -22,6 +22,9 @@ const EmpAcademic = require('./route/EmpAcademicRoute');
 const EmpType = require("./route/EmployeeTypeRoute")
 const EmpGrade = require("./route/EmployeeGradeRoute")
 const Designation = require("./route/DesignationRoute")
+const KRAMaster = require("./route/KRARoute")
+const JobResponsibility = require("./route/JobResponsibilityRoute")
+
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());
 // Use the user routes
@@ -42,6 +45,9 @@ app.use("/employee/academic", EmpAcademic)
 app.use("/employee-type", EmpType)
 app.use("/employee-grade", EmpGrade)
 app.use("/designation-master", Designation)
+app.use("/KRA-master", KRAMaster)
+app.use("/job-responsibility", JobResponsibility)
+
 
 // Start the server
 const port = 5500;

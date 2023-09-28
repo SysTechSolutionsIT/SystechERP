@@ -336,12 +336,12 @@ const EmployeeTypeMaster = () => {
                             setid(entry.id); // Pass ID to VEModal
                           }}
                         />
-                        <ViewEmployeeType
+                        {/* <ViewEmployeeType
                           visible={veEType}
                           onClick={() => setVeEType(false)}
                           edit={edit}
                           ID={id}
-                        />
+                        /> */}
                         <Icon
                           className="cursor-pointer"
                           icon="material-symbols:delete-outline"
@@ -394,12 +394,12 @@ const EmployeeTypeMaster = () => {
                             setid(entry.id); // Pass ID to VEModal
                           }}
                         />
-                        <ViewEmployeeType
+                        {/* <ViewEmployeeType
                           visible={veEType}
                           onClick={() => setVeEType(false)}
                           edit={edit}
                           ID={id}
-                        />
+                        /> */}
                         <Icon
                           className="cursor-pointer"
                           icon="material-symbols:delete-outline"
@@ -429,6 +429,12 @@ const EmployeeTypeMaster = () => {
           </table>
         </div>
       </div>
+      <ViewEmployeeType
+                          visible={veEType}
+                          onClick={() => setVeEType(false)}
+                          edit={edit}
+                          ID={id}
+                        />
     </div>
   );
 }

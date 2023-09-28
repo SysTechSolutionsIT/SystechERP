@@ -2,6 +2,7 @@ import { useFormik } from 'formik';
 import React, { useEffect, useState } from 'react'
 import { jobsRespData } from './JobsResponsibilityMaster';
 import { Icon } from '@iconify/react';
+import axios from 'axios';
 
 const ViewJobsResponsibility = ({ visible, onClick, edit, ID }) => {
     const [StatusCheck, setStatusCheck] = useState(false);
@@ -9,7 +10,7 @@ const ViewJobsResponsibility = ({ visible, onClick, edit, ID }) => {
 
     const formik = useFormik({
         initialValues: {
-            ID: "",
+            // ID: "",
             Name: "",
             Duration: "",
             Points: "",
@@ -18,15 +19,21 @@ const ViewJobsResponsibility = ({ visible, onClick, edit, ID }) => {
         },
         onSubmit: (values) => {
             console.log(values);
-            jobsRespData.push(values);
         },
     });
 
     useEffect(() => {
-        const selectedJobsResponsibility = jobsRespData.find((item) => item.ID === ID);
-        if (selectedJobsResponsibility) {
-            setDetails(selectedJobsResponsibility);
+        const fetchJobRes = async() =>{
+            try{
+                const response = await axios.get(`http://localhost:5500/job-responsibility/get/${ID}`)
+                const data = response.data
+                setDetails(data)
+                console.log(data)
+            } catch(error){
+                console.error('Error', error);            }
         }
+
+        fetchJobRes()
     }, [ID]);
 
     if (!visible) return null;
@@ -50,10 +57,9 @@ const ViewJobsResponsibility = ({ visible, onClick, edit, ID }) => {
                             <div>
                                 <p className="text-[13px] font-semibold">Jobs Responsibility ID</p>
                                 <input
-                                    id="ID"
                                     type="number"
                                     placeholder="Enter Jobs Responsibility ID"
-                                    value={details.ID}
+                                    value={details?.id}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
@@ -65,7 +71,7 @@ const ViewJobsResponsibility = ({ visible, onClick, edit, ID }) => {
                                     id="Name"
                                     type="text"
                                     placeholder="Enter Jobs Responsibility Name"
-                                    value={details.Name}
+                                    value={details?.Name}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
@@ -77,7 +83,7 @@ const ViewJobsResponsibility = ({ visible, onClick, edit, ID }) => {
                                     id="Duration"
                                     type="number"
                                     placeholder="Enter Duration"
-                                    value={details.Duration}
+                                    value={details?.Duration}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
@@ -89,7 +95,7 @@ const ViewJobsResponsibility = ({ visible, onClick, edit, ID }) => {
                                     id="Points"
                                     type="number"
                                     placeholder="Enter Points"
-                                    value={details.Points}
+                                    value={details?.Points}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
@@ -101,7 +107,7 @@ const ViewJobsResponsibility = ({ visible, onClick, edit, ID }) => {
                                     id="Remark"
                                     type="text"
                                     placeholder="Enter Remarks"
-                                    value={details.Remark}
+                                    value={details?.Remark}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
@@ -113,7 +119,7 @@ const ViewJobsResponsibility = ({ visible, onClick, edit, ID }) => {
                                     <input
                                         id="Status"
                                         type="checkbox"
-                                        checked={details.Status}
+                                        checked={details?.Status}
                                         className={`relative w-4 h-4 mr-2 peer shrink-0 checked:appearance-none checked:bg-blue-900 border-2 border-blue-900 rounded-sm`}
                                         onChange={() => setStatusCheck(!StatusCheck)}
                                         disabled={!edit}

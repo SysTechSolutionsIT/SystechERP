@@ -352,12 +352,6 @@ const EmployeeGradeMaster = () => {
                                                         setid(entry.id); // Pass id to VEModal
                                                     }}
                                                 />
-                                                <ViewEmployeeGrade
-                                                    visible={veEGrade}
-                                                    onClick={() => setVeEGrade(false)}
-                                                    edit={edit}
-                                                    ID={id}
-                                                />
                                                 <Icon
                                                     className="cursor-pointer"
                                                     icon="material-symbols:delete-outline"
@@ -410,12 +404,12 @@ const EmployeeGradeMaster = () => {
                                                         setid(entry.id); // Pass id to VEModal
                                                     }}
                                                 />
-                                                <ViewEmployeeGrade
+                                                {/* <ViewEmployeeGrade
                                                     visible={veEGrade}
                                                     onClick={() => setVeEGrade(false)}
                                                     edit={edit}
                                                     ID={id}
-                                                />
+                                                /> */}
                                                 <Icon
                                                     className="cursor-pointer"
                                                     icon="material-symbols:delete-outline"
@@ -445,6 +439,12 @@ const EmployeeGradeMaster = () => {
                     </table>
                 </div>
             </div>
+            <ViewEmployeeGrade
+                visible={veEGrade}
+                onClick={() => setVeEGrade(false)}
+                edit={edit}
+                ID={id}
+            />
         </div>
     );
 }

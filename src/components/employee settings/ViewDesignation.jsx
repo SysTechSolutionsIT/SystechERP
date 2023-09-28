@@ -1,7 +1,8 @@
 import { useFormik } from 'formik';
 import React, { useEffect, useState } from 'react'
-import { DesignData } from './DesignationMaster';
+// import { DesignData } from './DesignationMaster';
 import { Icon } from '@iconify/react';
+import axios from 'axios';
 
 const ViewDesignation = ({ visible, onClick, edit, ID }) => {
     const [StatusCheck, setStatusCheck] = useState(false);
@@ -9,7 +10,7 @@ const ViewDesignation = ({ visible, onClick, edit, ID }) => {
 
     const formik = useFormik({
         initialValues: {
-            ID: "",
+            // ID: "",
             Name: "",
             ReportDesignationName: "",
             Status: "",
@@ -17,15 +18,22 @@ const ViewDesignation = ({ visible, onClick, edit, ID }) => {
         },
         onSubmit: (values) => {
             console.log(values);
-            DesignData.push(values);
         },
     });
 
     useEffect(() => {
-        const selectedDesign = DesignData.find((item) => item.ID === ID);
-        if (selectedDesign) {
-            setDetails(selectedDesign);
+        const fetchDesignation = async() =>{
+            try{
+                const response = await axios.get(`http://localhost:5500/designation-master/get/${ID}`)
+                const data = response.data
+                console.log(data)
+                setDetails(data)
+            } catch(error){
+                console.error('Error', error);
+            }
         }
+
+        fetchDesignation()
     }, [ID]);
 
     if (!visible) return null;
@@ -49,10 +57,9 @@ const ViewDesignation = ({ visible, onClick, edit, ID }) => {
                             <div>
                                 <p className="text-[13px] font-semibold">Designation ID</p>
                                 <input
-                                    id="ID"
                                     type="number"
                                     placeholder="Enter Designation ID"
-                                    value={details.ID}
+                                    value={details?.id}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
@@ -64,7 +71,7 @@ const ViewDesignation = ({ visible, onClick, edit, ID }) => {
                                     id="Name"
                                     type="text"
                                     placeholder="Enter Designation Name"
-                                    value={details.Name}
+                                    value={details?.Name}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
@@ -74,13 +81,16 @@ const ViewDesignation = ({ visible, onClick, edit, ID }) => {
                                 <p className="text-[13px] font-semibold">Report Designation</p>
                                 <select
                                     id="ReportDesignationName"
-                                    value={details.ReportDesignationName}
+                                    value={details?.ReportDesignationName}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
                                 >
                                     <option value="">Select Report Designation</option>
-                                    <option value="ADMINISTRATOR">ADMINISTRATOR</option>
+                                    <option value={details?.ReportDesignationName}>{details?.ReportDesignationName}</option>
+                                    <option value="Administrator">Administrator</option>
+                                    <option value="HR">HR</option>
+                                    <option value="User">User</option>
                                 </select>
                             </div>
                             <div>
@@ -89,7 +99,7 @@ const ViewDesignation = ({ visible, onClick, edit, ID }) => {
                                     id="Remark"
                                     type="text"
                                     placeholder="Enter Remarks"
-                                    value={details.Remark}
+                                    value={details?.Remark}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
@@ -101,7 +111,7 @@ const ViewDesignation = ({ visible, onClick, edit, ID }) => {
                                     <input
                                         id="Status"
                                         type="checkbox"
-                                        checked={details.status}
+                                        checked={details?.Status}
                                         className={`relative w-4 h-4 mr-2 peer shrink-0 checked:appearance-none checked:bg-blue-900 border-2 border-blue-900 rounded-sm`}
                                         onChange={() => setStatusCheck(!StatusCheck)}
                                         disabled={!edit}

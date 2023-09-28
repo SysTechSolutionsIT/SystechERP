@@ -1,7 +1,7 @@
 import { useFormik } from 'formik';
 import React, { useEffect, useState } from 'react'
-import { KRAData } from './KRAMaster';
 import { Icon } from '@iconify/react';
+import axios from 'axios';
 
 const ViewKRA = ({ visible, onClick, edit, ID }) => {
     const [StatusCheck, setStatusCheck] = useState(false);
@@ -9,7 +9,7 @@ const ViewKRA = ({ visible, onClick, edit, ID }) => {
 
     const formik = useFormik({
         initialValues: {
-            ID: "",
+            // ID: "",
             Name: "",
             Duration: "",
             Points: "",
@@ -18,15 +18,21 @@ const ViewKRA = ({ visible, onClick, edit, ID }) => {
         },
         onSubmit: (values) => {
             console.log(values);
-            KRAData.push(values);
         },
     });
 
     useEffect(() => {
-        const selectedKRA = KRAData.find((item) => item.ID === ID);
-        if (selectedKRA) {
-            setDetails(selectedKRA);
+        const fetchKRA = async() =>{
+            try{
+                const response = await axios.get(`http://localhost:5500/KRA-master/get/${ID}`)
+                const data = response.data
+                setDetails(data)
+            } catch(error){
+                console.error('Error', error);
+            }
         }
+        fetchKRA()
+
     }, [ID]);
 
     if (!visible) return null;
@@ -53,7 +59,7 @@ const ViewKRA = ({ visible, onClick, edit, ID }) => {
                                     id="ID"
                                     type="number"
                                     placeholder="Enter KRA ID"
-                                    value={details.ID}
+                                    value={details.id}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
