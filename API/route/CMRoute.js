@@ -33,7 +33,7 @@ const upload = multer({ storage: storage }); // Create the upload object
 
 // router.use(authorize)
 
-router.post("/add", upload.single("logo"), async (req, res) => {
+router.post("/add", authToken, upload.single("logo"), async (req, res) => {
   try {
     if (req.file) {
       // Create a new Company record with the file path
@@ -63,33 +63,38 @@ router.post("/add", upload.single("logo"), async (req, res) => {
   }
 });
 
-router.put("/update/:id", upload.single("logo"), async (req, res) => {
-  const company = await Company.findByPk(req.params.id);
+router.put(
+  "/update/:id",
+  authToken,
+  upload.single("logo"),
+  async (req, res) => {
+    const company = await Company.findByPk(req.params.id);
 
-  if (!company) {
-    return res.status(404).json({
-      message: "Company not found",
+    if (!company) {
+      return res.status(404).json({
+        message: "Company not found",
+      });
+    }
+    (company.name = req.body.name),
+      (company.shortName = req.body.shortName),
+      (company.sectorDetails = req.body.sectorDetails),
+      (company.natureOfBusiness = req.body.natureOfBusiness),
+      (company.status = req.body.status),
+      (company.modifiedBy = req.body.modifiedBy);
+    company.modifiedOn = new Date();
+    company.logo = req.body.logo; // Store the file path in the 'logo' column
+    company.singleBranch = req.body.singleBranch;
+
+    await company.save();
+
+    res.status(200).json({
+      message: "Company updated successfully",
+      company,
     });
   }
-  (company.name = req.body.name),
-    (company.shortName = req.body.shortName),
-    (company.sectorDetails = req.body.sectorDetails),
-    (company.natureOfBusiness = req.body.natureOfBusiness),
-    (company.status = req.body.status),
-    (company.modifiedBy = req.body.modifiedBy);
-  company.modifiedOn = new Date();
-  company.logo = req.body.logo; // Store the file path in the 'logo' column
-  company.singleBranch = req.body.singleBranch;
+);
 
-  await company.save();
-
-  res.status(200).json({
-    message: "Company updated successfully",
-    company,
-  });
-});
-
-router.get("/", async (req, res) => {
+router.get("/", authToken, async (req, res) => {
   const companies = await Company.findAll();
 
   res.status(200).json({
@@ -97,7 +102,7 @@ router.get("/", async (req, res) => {
   });
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", authToken, async (req, res) => {
   const company = await Company.findByPk(req.params.id);
 
   res.status(200).json({
@@ -105,7 +110,7 @@ router.get("/:id", async (req, res) => {
   });
 });
 
-router.delete("/delete/:id", async (req, res) => {
+router.delete("/delete/:id", authToken, async (req, res) => {
   const company = await Company.findByPk(req.params.id);
 
   if (!company) {

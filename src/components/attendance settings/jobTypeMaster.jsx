@@ -3,10 +3,12 @@ import React, { useState, useEffect, useRef } from "react";
 import { Button } from "react-bootstrap";
 import AddJob from "./AddJob";
 import ViewJob from "./ViewJob";
+import { useAuth } from "../Login";
+import axios from "axios";
 
 export const JobTypeData = [
   {
-    jobTypeId: 1,
+    jobID: 1,
     jobTypeName: "Developer",
     shortname: "DEV",
     ratePerDay: 150,
@@ -17,7 +19,7 @@ export const JobTypeData = [
     status: "active",
   },
   {
-    jobTypeId: 2,
+    jobID: 2,
     jobTypeName: "Designer",
     shortname: "DSN",
     ratePerDay: 120,
@@ -28,7 +30,7 @@ export const JobTypeData = [
     status: "active",
   },
   {
-    jobTypeId: 3,
+    jobID: 3,
     jobTypeName: "Manager",
     shortname: "MGR",
     ratePerDay: 200,
@@ -39,7 +41,7 @@ export const JobTypeData = [
     status: "inactive",
   },
   {
-    jobTypeId: 4,
+    jobID: 4,
     jobTypeName: "Analyst",
     shortname: "ANA",
     ratePerDay: 130,
@@ -50,7 +52,7 @@ export const JobTypeData = [
     status: "active",
   },
   {
-    jobTypeId: 5,
+    jobID: 5,
     jobTypeName: "Tester",
     shortname: "TST",
     ratePerDay: 140,
@@ -65,6 +67,8 @@ export const JobTypeData = [
 const JobTypeMaster = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false); //Add Modal
+
+  const { token } = useAuth();
   //View and Edit
   const [JVE, setJVE] = useState(false);
   const [edit, setEdit] = useState(false);
@@ -85,18 +89,6 @@ const JobTypeMaster = () => {
     status: true,
   });
 
-  const handleSearchChange = (title, searchWord) => {
-    const newFilter = JobTypeData.filter((item) => {
-      const value = item[title];
-      return value && value.toLowerCase().includes(searchWord.toLowerCase());
-    });
-
-    if (searchWord === "") {
-      setFilteredData([]);
-    } else {
-      setFilteredData(newFilter);
-    }
-  };
   //Toggle
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedColumns, setSelectedColumns] = useState([
@@ -159,6 +151,72 @@ const JobTypeMaster = () => {
     const context = canvas.getContext("2d");
     context.font = fontSize + " sans-serif";
     return context.measureText(text).width;
+  };
+  const [job, setJob] = useState([]);
+
+  useEffect(() => {
+    fetchJobData();
+  }, [token]);
+
+  const fetchJobData = async () => {
+    try {
+      const response = await axios.get("http://localhost:5500/job-master/", {
+        headers: { authorization: `Bearer ${token}` },
+      });
+      console.log("Response Object", response);
+      const data = response.data.Jobs;
+      console.log(data);
+      setJob(data);
+    } catch (error) {
+      console.log("Error while fetching course data: ", error.message);
+    }
+  };
+  console.log(job);
+
+  //Searching -- api
+  const handleSearchChange = (title, searchWord) => {
+    const searchData = [...job];
+
+    const newFilter = searchData.filter((item) => {
+      // Check if the item matches the search term in any of the selected columns
+      const matches = selectedColumns.some((columnName) => {
+        const newCol = columnName.charAt(0).toLowerCase() + columnName.slice(1);
+        const value = item[newCol];
+        return (
+          value &&
+          value.toString().toLowerCase().includes(searchWord.toLowerCase())
+        );
+      });
+
+      return matches;
+    });
+
+    // Update the filtered data
+    setFilteredData(newFilter);
+  };
+
+  //Deletion
+  const deleteRecord = async (ID) => {
+    alert("Are you sure you want to delete this bank?");
+    try {
+      const apiUrl = `http://localhost:5500/job-master/delete/${ID}`;
+
+      const response = await axios.delete(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 204) {
+        console.log(`Record with ID ${ID} deleted successfully.`);
+        alert("Record Deleted");
+        window.location.reload();
+      } else {
+        console.error(`Failed to delete record with ID ${ID}.`);
+      }
+    } catch (error) {
+      console.error("Error deleting record:", error);
+    }
   };
 
   return (
@@ -331,7 +389,7 @@ const JobTypeMaster = () => {
                             onClick={() => {
                               setJVE(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setJid(result.jobTypeId); // Pass ID to VEModal
+                              setJid(result.jobID); // Pass ID to VEModal
                             }}
                           />
                           <Icon
@@ -342,7 +400,7 @@ const JobTypeMaster = () => {
                             onClick={() => {
                               setJVE(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setJid(result.jobTypeId); // Pass ID to VEModal
+                              setJid(result.jobID); // Pass ID to VEModal
                             }}
                           />
                           <ViewJob
@@ -356,11 +414,12 @@ const JobTypeMaster = () => {
                             color="#556987"
                             width="20"
                             height="20"
+                            onClick={deleteRecord(result.jobID)}
                           />
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {result.jobTypeId}
+                        {result.jobID}
                       </td>
                       {selectedColumns.map(
                         (columnName) =>
@@ -377,7 +436,8 @@ const JobTypeMaster = () => {
                       )}
                     </tr>
                   ))
-                : JobTypeData.map((entry, index) => (
+                : job.length > 0 &&
+                  job.map((entry, index) => (
                     <tr key={index}>
                       <td className="px-2 border-2">
                         <div className="flex items-center gap-2 text-center justify-center">
@@ -389,7 +449,7 @@ const JobTypeMaster = () => {
                             onClick={() => {
                               setJVE(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setJid(entry.jobTypeId); // Pass ID to VEModal
+                              setJid(entry.jobID); // Pass ID to VEModal
                             }}
                           />
 
@@ -401,7 +461,7 @@ const JobTypeMaster = () => {
                             onClick={() => {
                               setJVE(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setJid(entry.jobTypeId); // Pass ID to VEModal
+                              setJid(entry.jobID); // Pass ID to VEModal
                             }}
                           />
                           <ViewJob
@@ -416,11 +476,12 @@ const JobTypeMaster = () => {
                             color="#556987"
                             width="20"
                             height="20"
+                            onClick={deleteRecord(entry.jobID)}
                           />
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {entry.jobTypeId}
+                        {entry.jobID}
                       </td>
                       {selectedColumns.map(
                         (columnName) =>
@@ -431,7 +492,14 @@ const JobTypeMaster = () => {
                                 columnVisibility[columnName] ? "" : "hidden"
                               }`}
                             >
-                              {entry[columnName]}
+                              {columnName === "status"
+                                ? entry.status
+                                  ? "Active"
+                                  : "Inactive"
+                                : entry[
+                                    columnName.charAt(0).toLowerCase() +
+                                      columnName.slice(1)
+                                  ]}
                             </td>
                           )
                       )}

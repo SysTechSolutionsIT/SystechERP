@@ -3,11 +3,13 @@ import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Icon } from "@iconify/react";
+import { useAuth } from "../Login";
 
 const VEModal = ({ visible, onClick, edit, ID }) => {
   const [statusCheck, setStatusCheck] = useState(false);
   const [singleBranchCheck, setSingleBranchCheck] = useState(false);
   const [details, setDetails] = useState([]);
+  const { token } = useAuth();
   const formik = useFormik({
     initialValues: {
       companyId: "",
@@ -39,7 +41,9 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
 
       // Send a PUT request to update the data
       axios
-        .put(`http://localhost:5500/companies/update/${ID}`, updatedData)
+        .put(`http://localhost:5500/companies/update/${ID}`, updatedData, {
+          header: { Authorization: `Bearer ${token}` },
+        })
         .then((response) => {
           // Handle success
           console.log("Data updated successfully", response);
@@ -58,7 +62,12 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
   console.log(ID);
   const fetchCompData = async () => {
     try {
-      const response = await axios.get(`http://localhost:5500/companies/${ID}`);
+      const response = await axios.get(
+        `http://localhost:5500/companies/${ID}`,
+        {
+          header: { Authorization: `Bearer ${token}` },
+        }
+      );
       console.log("Response Object", response);
       const data = response.data.company;
       setDetails(data);

@@ -4,32 +4,34 @@ import axios from "axios";
 
 export default function EMPTabs() {
   const [openTab, setOpenTab] = React.useState(1);
-  const [details, setDetails] = useState([])
+  const [details, setDetails] = useState([]);
+  const [edit, setEdit] = useState(false);
 
   useEffect(() => {
     const fetchCompanyConfig = async () => {
       try {
-        const response = await axios.get(`http://localhost:5500/company-config/get`);
+        const response = await axios.get(
+          `http://localhost:5500/company-config/get`
+        );
         const data = response.data;
-  
+
         // Check if data is an array and has at least one element
         if (Array.isArray(data) && data.length > 0) {
           // Set the first element of the array as the 'details' state
           setDetails(data);
-          console.log(data)
+          console.log(data);
         } else {
-          console.log('No data or empty array received from API');
+          console.log("No data or empty array received from API");
         }
       } catch (error) {
-        console.log('Error in fetching Company Configurations', error);
+        console.log("Error in fetching Company Configurations", error);
       }
     };
-  
+
     fetchCompanyConfig();
   }, []);
-  
 
-  console.log('Details', details)
+  console.log("Details", details);
 
   //For SMS Settings
   const [selectedOption, setSelectedOption] = useState("");
@@ -127,32 +129,49 @@ export default function EMPTabs() {
     },
   });
 
-  
-  const [LeaveApprovalFlag, setLeaveApprovalFlag] = useState(details.LeaveApprovalFlag);
+  const [LeaveApprovalFlag, setLeaveApprovalFlag] = useState(
+    details.LeaveApprovalFlag
+  );
   const [OdApprovalFlag, setOdApprovalFlag] = useState(details.OdApprovalFlag);
   const [OtApprovalFlag, setOtApprovalFlag] = useState(details.OtApprovalFlag);
-  const [attendanceApprovalFlag, setAttendanceApprovalFlag] = useState(details.attendanceApprovalFlag);
+  const [attendanceApprovalFlag, setAttendanceApprovalFlag] = useState(
+    details.attendanceApprovalFlag
+  );
   const [attendanceFlag, setAttendanceFlag] = useState(details.attendanceFlag);
-  const [attendanceLockDay, setAttendanceLockDay] = useState(details.attendanceLockDay);
-  const [attendanceProcess, setAttendanceProcess] = useState(details.attendanceProcess);
-  const [companyMultibranch, setCompanyMultibranch] = useState(details.companyMultibranch);
+  const [attendanceLockDay, setAttendanceLockDay] = useState(
+    details.attendanceLockDay
+  );
+  const [attendanceProcess, setAttendanceProcess] = useState(
+    details.attendanceProcess
+  );
+  const [companyMultibranch, setCompanyMultibranch] = useState(
+    details.companyMultibranch
+  );
   const [currency, setCurrency] = useState(details.currency);
   const [dateFormat, setDateFormat] = useState(details.dateFormat);
   const [emailFormat, setEmailFormat] = useState(details.emailFormat);
   const [emailService, setEmailService] = useState(details.emailService);
   const [empIdPrefix, setEmpIdPrefix] = useState(details.empIdPrefix);
-  const [esicSalaryLimit, setEsicSalaryLimit] = useState(details.esicSalaryLimit);
+  const [esicSalaryLimit, setEsicSalaryLimit] = useState(
+    details.esicSalaryLimit
+  );
   const [fixShiftFlag, setFixShiftFlag] = useState(details.fixShiftFlag);
   const [fromEmailId, setFromEmailId] = useState(details.fromEmailId);
-  const [gratuityYearsLimit, setGratuityYearsLimit] = useState(details.gratuityYearsLimit);
+  const [gratuityYearsLimit, setGratuityYearsLimit] = useState(
+    details.gratuityYearsLimit
+  );
   const [id, setId] = useState(details.id);
   const [jobApproval, setJobApproval] = useState(details.jobApproval);
   const [mPassword, setMPassword] = useState(details.mPassword);
   const [mUsername, setMUsername] = useState(details.mUsername);
   const [mlwfMonth1, setMlwfMonth1] = useState(details.mlwfMonth1);
   const [mlwfMonth2, setMlwfMonth2] = useState(details.mlwfMonth2);
-  const [otCalculationFlag, setOtCalculationFlag] = useState(details.otCalculationFlag);
-  const [paidHolidayLogic, setPaidHolidayLogic] = useState(details.paidHolidayLogic);
+  const [otCalculationFlag, setOtCalculationFlag] = useState(
+    details.otCalculationFlag
+  );
+  const [paidHolidayLogic, setPaidHolidayLogic] = useState(
+    details.paidHolidayLogic
+  );
   const [pfSalaryLimit, setPfSalaryLimit] = useState(details.pfSalaryLimit);
   const [remarksGeneral, setRemarksGeneral] = useState(details.remarksGeneral);
   const [remarksPayroll, setRemarksPayroll] = useState(details.remarksPayroll);
@@ -163,7 +182,7 @@ export default function EMPTabs() {
   const [smsURL, setSmsURL] = useState(details.smsURL);
   const [smtpHost, setSmtpHost] = useState(details.smtpHost);
   const [status, setStatus] = useState(details.status);
-  const [welcomeMessage, setWelcomeMessage] = useState('')
+  const [welcomeMessage, setWelcomeMessage] = useState("");
   const [themes, setThemes] = useState(details.themes);
 
   return (
@@ -308,11 +327,9 @@ export default function EMPTabs() {
                         className="text-[13px] w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
                         default="Indian Rupees"
                         value={currency}
-                        onChange={(e)=> setCurrency(e.target.value)}
+                        onChange={(e) => setCurrency(e.target.value)}
                       >
-                        <option>
-                          {currency}
-                        </option>
+                        <option>{currency}</option>
                         {currencies.map((currency, index) => (
                           <option key={index} value={currency.abbreviation}>
                             {currency.name}
@@ -332,7 +349,7 @@ export default function EMPTabs() {
                         name="theme"
                         value={themes}
                         className="w-full text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
-                        onChange={(e)=> setThemes(e.target.value)}
+                        onChange={(e) => setThemes(e.target.value)}
                       >
                         {months.map((month, index) => (
                           <option key={index} value={month}>
@@ -353,7 +370,7 @@ export default function EMPTabs() {
                         value={dateFormat}
                         className={`text-[13px] w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
                         placeholder="dd/mm/yyyy"
-                        onChange={(e)=> setDateFormat(e.target.value)}
+                        onChange={(e) => setDateFormat(e.target.value)}
                       />
                     </div>
                     <div className="w-1/2">
@@ -366,7 +383,7 @@ export default function EMPTabs() {
                         name="sessionTM"
                         value={sessionTimeout}
                         className={`w-full text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
-                        onChange={(e)=> setSessionTimeout(e.target.value)}
+                        onChange={(e) => setSessionTimeout(e.target.value)}
                       />
                     </div>
                   </div>
@@ -381,7 +398,7 @@ export default function EMPTabs() {
                         type="text"
                         value={remarksGeneral}
                         className={`text-[13px] w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
-                        onChange={(e)=> setRemarksGeneral(e.target.value)}
+                        onChange={(e) => setRemarksGeneral(e.target.value)}
                       />
                     </div>
                     <div className="w-1/2">
@@ -421,7 +438,7 @@ export default function EMPTabs() {
                             name="empID"
                             value="Yes"
                             className="mr-2"
-                            checked={empIdPrefix === 'Yes'}
+                            checked={empIdPrefix === "Yes"}
                             onChange={(e) => setEmpIdPrefix(e.target.value)}
                           />
                           Yes
@@ -432,7 +449,7 @@ export default function EMPTabs() {
                             name="empID"
                             value="No"
                             className="mr-2 ml-2"
-                            checked={empIdPrefix === 'No'}
+                            checked={empIdPrefix === "No"}
                             onChange={(e) => setEmpIdPrefix(e.target.value)}
                           />
                           No
@@ -450,8 +467,10 @@ export default function EMPTabs() {
                             name="cmulti"
                             value="Yes"
                             className="mr-2 ml-2"
-                            checked={ companyMultibranch === 'Yes'}
-                            onChange={(e) => setCompanyMultibranch(e.target.value)}
+                            checked={companyMultibranch === "Yes"}
+                            onChange={(e) =>
+                              setCompanyMultibranch(e.target.value)
+                            }
                           />
                           Yes
                         </label>
@@ -461,8 +480,10 @@ export default function EMPTabs() {
                             name="cmulti"
                             value="No"
                             className="mr-2"
-                            checked={ companyMultibranch === 'No'}
-                            onChange={(e) => setCompanyMultibranch(e.target.value)}
+                            checked={companyMultibranch === "No"}
+                            onChange={(e) =>
+                              setCompanyMultibranch(e.target.value)
+                            }
                           />
                           No
                         </label>
@@ -485,7 +506,7 @@ export default function EMPTabs() {
                             name="att"
                             value="daily"
                             className="mr-2 ml-2"
-                            checked={ attendanceFlag === 'Daily'}
+                            checked={attendanceFlag === "Daily"}
                             onChange={(e) => setAttendanceFlag(e.target.value)}
                           />
                           Daily
@@ -496,7 +517,7 @@ export default function EMPTabs() {
                             name="att"
                             value="monthly"
                             className="mr-2"
-                            checked={ attendanceFlag === 'Monthly'}
+                            checked={attendanceFlag === "Monthly"}
                             onChange={(e) => setAttendanceFlag(e.target.value)}
                           />
                           Monthly
@@ -515,8 +536,10 @@ export default function EMPTabs() {
                               name="atProcess"
                               value="all"
                               className="mr-2 ml-2"
-                              checked={ attendanceProcess === 'All'}
-                            onChange={(e) => setAttendanceProcess(e.target.value)}
+                              checked={attendanceProcess === "All"}
+                              onChange={(e) =>
+                                setAttendanceProcess(e.target.value)
+                              }
                             />
                             All
                           </label>
@@ -526,8 +549,10 @@ export default function EMPTabs() {
                               name="atProcess"
                               value="manual"
                               className="mr-2"
-                              checked={ attendanceProcess === 'Manual'}
-                            onChange={(e) => setAttendanceProcess(e.target.value)}
+                              checked={attendanceProcess === "Manual"}
+                              onChange={(e) =>
+                                setAttendanceProcess(e.target.value)
+                              }
                             />
                             Manual
                           </label>
@@ -537,8 +562,10 @@ export default function EMPTabs() {
                               name="atProcess"
                               value="excel"
                               className="mr-2"
-                              checked={ attendanceProcess === 'Excel Import'}
-                            onChange={(e) => setAttendanceProcess(e.target.value)}
+                              checked={attendanceProcess === "Excel Import"}
+                              onChange={(e) =>
+                                setAttendanceProcess(e.target.value)
+                              }
                             />
                             Excel Import
                           </label>
@@ -548,8 +575,10 @@ export default function EMPTabs() {
                               name="atProcess"
                               value="autoD"
                               className="mr-2"
-                              checked={ attendanceProcess === 'Auto Download'}
-                            onChange={(e) => setAttendanceProcess(e.target.value)}
+                              checked={attendanceProcess === "Auto Download"}
+                              onChange={(e) =>
+                                setAttendanceProcess(e.target.value)
+                              }
                             />
                             Auto Download
                           </label>
@@ -569,8 +598,10 @@ export default function EMPTabs() {
                             name="atap"
                             value="Yes"
                             className="mr-2 ml-2"
-                            checked={attendanceApprovalFlag === 'Yes'}
-                            onChange={(e) => setAttendanceApprovalFlag(e.target.value)}
+                            checked={attendanceApprovalFlag === "Yes"}
+                            onChange={(e) =>
+                              setAttendanceApprovalFlag(e.target.value)
+                            }
                           />
                           Yes
                         </label>
@@ -580,8 +611,10 @@ export default function EMPTabs() {
                             name="atap"
                             value="No"
                             className="mr-2"
-                            checked={attendanceApprovalFlag === 'No'}
-                            onChange={(e) => setAttendanceApprovalFlag(e.target.value)}
+                            checked={attendanceApprovalFlag === "No"}
+                            onChange={(e) =>
+                              setAttendanceApprovalFlag(e.target.value)
+                            }
                           />
                           No
                         </label>
@@ -599,8 +632,8 @@ export default function EMPTabs() {
                               name="shiftFlag"
                               value="Yes"
                               className="mr-2 ml-2"
-                              checked={fixShiftFlag === 'Yes'}
-                            onChange={(e) => setFixShiftFlag(e.target.value)}
+                              checked={fixShiftFlag === "Yes"}
+                              onChange={(e) => setFixShiftFlag(e.target.value)}
                             />
                             Yes
                           </label>
@@ -610,8 +643,8 @@ export default function EMPTabs() {
                               name="shiftFlag"
                               value="No"
                               className="mr-2"
-                              checked={fixShiftFlag === 'No'}
-                            onChange={(e) => setFixShiftFlag(e.target.value)}
+                              checked={fixShiftFlag === "No"}
+                              onChange={(e) => setFixShiftFlag(e.target.value)}
                             />
                             No
                           </label>
@@ -631,7 +664,7 @@ export default function EMPTabs() {
                             name="jobApp"
                             value="Yes"
                             className="mr-2 ml-2"
-                            checked={jobApproval === 'Yes'}
+                            checked={jobApproval === "Yes"}
                             onChange={(e) => setJobApproval(e.target.value)}
                           />
                           Yes
@@ -642,7 +675,7 @@ export default function EMPTabs() {
                             name="jobApp"
                             value="No"
                             className="mr-2"
-                            checked={jobApproval === 'No'}
+                            checked={jobApproval === "No"}
                             onChange={(e) => setJobApproval(e.target.value)}
                           />
                           No
@@ -661,8 +694,12 @@ export default function EMPTabs() {
                               name="holiday"
                               value="Add1"
                               className="mr-2 ml-2 whitespace-nowrap"
-                              checked={paidHolidayLogic === 'Add 1 day in Presenty'}
-                            onChange={(e) => setPaidHolidayLogic(e.target.value)}
+                              checked={
+                                paidHolidayLogic === "Add 1 day in Presenty"
+                              }
+                              onChange={(e) =>
+                                setPaidHolidayLogic(e.target.value)
+                              }
                             />
                             Add 1 day in Presenty
                           </label>
@@ -672,8 +709,10 @@ export default function EMPTabs() {
                               name="holiday"
                               value="coff"
                               className="mr-2 whitespace-nowrap"
-                              checked={paidHolidayLogic === 'Give C-Off'}
-                            onChange={(e) => setPaidHolidayLogic(e.target.value)}
+                              checked={paidHolidayLogic === "Give C-Off"}
+                              onChange={(e) =>
+                                setPaidHolidayLogic(e.target.value)
+                              }
                             />
                             Give C-Off
                           </label>
@@ -693,7 +732,7 @@ export default function EMPTabs() {
                             name="odFlag"
                             value="Yes"
                             className="mr-2 ml-2"
-                            checked={OdApprovalFlag === 'Yes'}
+                            checked={OdApprovalFlag === "Yes"}
                             onChange={(e) => setOdApprovalFlag(e.target.value)}
                           />
                           Yes
@@ -704,7 +743,7 @@ export default function EMPTabs() {
                             name="odFlag"
                             value="No"
                             className="mr-2"
-                            checked={OdApprovalFlag === 'No'}
+                            checked={OdApprovalFlag === "No"}
                             onChange={(e) => setOdApprovalFlag(e.target.value)}
                           />
                           No
@@ -723,8 +762,10 @@ export default function EMPTabs() {
                               name="otFlag"
                               value="Yes"
                               className="mr-2 ml-2"
-                              checked={OtApprovalFlag === 'Yes'}
-                            onChange={(e) => setOtApprovalFlag(e.target.value)}
+                              checked={OtApprovalFlag === "Yes"}
+                              onChange={(e) =>
+                                setOtApprovalFlag(e.target.value)
+                              }
                             />
                             Yes
                           </label>
@@ -734,8 +775,10 @@ export default function EMPTabs() {
                               name="otFlag"
                               value="No"
                               className="mr-2"
-                              checked={OtApprovalFlag === 'No'}
-                            onChange={(e) => setOtApprovalFlag(e.target.value)}
+                              checked={OtApprovalFlag === "No"}
+                              onChange={(e) =>
+                                setOtApprovalFlag(e.target.value)
+                              }
                             />
                             No
                           </label>
@@ -755,8 +798,10 @@ export default function EMPTabs() {
                             name="LAFlag"
                             value="Yes"
                             className="mr-2 ml-2"
-                            checked={LeaveApprovalFlag === 'Yes'}
-                            onChange={(e) => setLeaveApprovalFlag(e.target.value)}
+                            checked={LeaveApprovalFlag === "Yes"}
+                            onChange={(e) =>
+                              setLeaveApprovalFlag(e.target.value)
+                            }
                           />
                           Yes
                         </label>
@@ -766,8 +811,10 @@ export default function EMPTabs() {
                             name="LAFlag"
                             value="No"
                             className="mr-2"
-                            checked={LeaveApprovalFlag === 'No'}
-                            onChange={(e) => setLeaveApprovalFlag(e.target.value)}
+                            checked={LeaveApprovalFlag === "No"}
+                            onChange={(e) =>
+                              setLeaveApprovalFlag(e.target.value)
+                            }
                           />
                           No
                         </label>
@@ -783,7 +830,7 @@ export default function EMPTabs() {
                         type="text"
                         className={`px-4 h-10 text-[13px] py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
                         value={attendanceLockDay}
-                        onChange={(e)=> setAttendanceLockDay(e.target.value)}
+                        onChange={(e) => setAttendanceLockDay(e.target.value)}
                       />
                     </div>
                   </div>
@@ -803,8 +850,10 @@ export default function EMPTabs() {
                             name="otCalc"
                             value="daily"
                             className="mr-2 ml-2"
-                            checked={otCalculationFlag === 'Daily'}
-                            onChange={(e) => setOtCalculationFlag(e.target.value)}
+                            checked={otCalculationFlag === "Daily"}
+                            onChange={(e) =>
+                              setOtCalculationFlag(e.target.value)
+                            }
                           />
                           Daily
                         </label>
@@ -814,8 +863,10 @@ export default function EMPTabs() {
                             name="otCalc"
                             value="monthly"
                             className="mr-2"
-                            checked={otCalculationFlag === 'Monthly'}
-                            onChange={(e) => setOtCalculationFlag(e.target.value)}
+                            checked={otCalculationFlag === "Monthly"}
+                            onChange={(e) =>
+                              setOtCalculationFlag(e.target.value)
+                            }
                           />
                           Monthly
                         </label>
@@ -873,9 +924,7 @@ export default function EMPTabs() {
                         className="w-full  h-10 text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
                         onChange={(e) => setMlwfMonth1(e.target.value)}
                       >
-                        <option>
-                          {mlwfMonth1}
-                        </option>
+                        <option>{mlwfMonth1}</option>
                         {months.map((month, index) => (
                           <option key={index} value={month}>
                             {month}
@@ -895,9 +944,7 @@ export default function EMPTabs() {
                         className="w-full h-10 text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
                         onChange={(e) => setMlwfMonth2(e.target.value)}
                       >
-                        <option>
-                          {mlwfMonth2}
-                        </option>
+                        <option>{mlwfMonth2}</option>
                         {months.map((month, index) => (
                           <option key={index} value={month}>
                             {month}
@@ -984,7 +1031,7 @@ export default function EMPTabs() {
                             name="email"
                             value="Yes"
                             className="mr-2 ml-2"
-                            checked={emailService == 'Yes'}
+                            checked={emailService == "Yes"}
                             onChange={(e) => setEmailService(e.target.value)}
                           />
                           Yes
@@ -995,7 +1042,7 @@ export default function EMPTabs() {
                             name="email"
                             value="No"
                             className="mr-2"
-                            checked={emailService == 'No'}
+                            checked={emailService == "No"}
                             onChange={(e) => setEmailService(e.target.value)}
                           />
                           No
@@ -1053,7 +1100,7 @@ export default function EMPTabs() {
                       name="password"
                       type="text"
                       value={mPassword}
-                        onChange={(e) => setMPassword(e.target.value)}
+                      onChange={(e) => setMPassword(e.target.value)}
                       className={`w-full text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
                     />
                   </div>
@@ -1092,7 +1139,7 @@ export default function EMPTabs() {
                             name="sms"
                             value="Yes"
                             className="mr-2 ml-2"
-                            checked={smsService == 'Yes'}
+                            checked={smsService == "Yes"}
                             onChange={(e) => setSmsService(e.target.value)}
                           />
                           Yes
@@ -1103,7 +1150,7 @@ export default function EMPTabs() {
                             name="sms"
                             value="No"
                             className="mr-2"
-                            checked={smsService == 'No'}
+                            checked={smsService == "No"}
                             onChange={(e) => setSmsService(e.target.value)}
                           />
                           No
@@ -1116,7 +1163,7 @@ export default function EMPTabs() {
                         id="smsUrl"
                         type="text"
                         value={smsURL}
-                        onChange={(e)=> setSmsURL(e.target.value)}
+                        onChange={(e) => setSmsURL(e.target.value)}
                         className={`w-full px-4 py-2 h-10 text-[13px] font-normal focus:outline-gray-300 border-2 rounded-lg mb-6`}
                       />
                     </div>

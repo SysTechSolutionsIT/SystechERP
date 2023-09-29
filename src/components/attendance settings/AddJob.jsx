@@ -8,7 +8,6 @@ const AddJob = ({ visible, onClick }) => {
 
   const formik = useFormik({
     initialValues: {
-      jobTypeId: "",
       jobTypeName: "",
       shortname: "",
       ratePerDay: "",
