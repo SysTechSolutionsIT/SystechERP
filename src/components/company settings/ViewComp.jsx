@@ -12,7 +12,6 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
   const { token } = useAuth();
   const formik = useFormik({
     initialValues: {
-      companyId: "",
       companyName: "",
       shortName: "",
       sectorDetails: "",
@@ -26,7 +25,7 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
       console.log(values);
       // compData.push(values);
       const updatedData = {
-        id: values.id,
+        id: ID,
         name: values.name,
         shortName: values.shortName,
         sectorDetails: values.sectorDetails,
@@ -42,12 +41,13 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
       // Send a PUT request to update the data
       axios
         .put(`http://localhost:5500/companies/update/${ID}`, updatedData, {
-          header: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${token}` },
         })
         .then((response) => {
           // Handle success
           console.log("Data updated successfully", response);
           // You can also perform additional actions here, like closing the modal or updating the UI.
+          window.location.reload();
         })
         .catch((error) => {
           // Handle error
@@ -65,7 +65,7 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
       const response = await axios.get(
         `http://localhost:5500/companies/${ID}`,
         {
-          header: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
       console.log("Response Object", response);

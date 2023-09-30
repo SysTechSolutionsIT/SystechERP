@@ -106,7 +106,7 @@ const CompMaster = () => {
   const fetchCompData = async () => {
     try {
       const response = await axios.get("http://localhost:5500/companies/", {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { authorization: `Bearer ${token}` },
       });
       console.log("Response Object", response);
       const data = response.data.companies;
