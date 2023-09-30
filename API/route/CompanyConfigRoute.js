@@ -1,6 +1,7 @@
 const express = require("express");
 const CompanyConfig = require("../model/CompanyConfigModel"); // Import your CompanyConfig model here
 const router = express.Router();
+const jwt = require('jsonwebtoken'); // Import the jwt library
 
 const authToken = (req, res, next) =>{
   const authHeader = req.headers['authorization']
@@ -15,7 +16,7 @@ const authToken = (req, res, next) =>{
 }
 
 // GET route to retrieve all company configurations
-router.get("/get",  async (req, res) => {
+router.get("/get",  authToken, async (req, res) => {
   try {
     const companyConfigs = await CompanyConfig.findAll();
     res.json(companyConfigs);
@@ -26,7 +27,7 @@ router.get("/get",  async (req, res) => {
 });
 
 // GET route to retrieve a specific company configuration by ID
-router.get("/get/:id",  async (req, res) => {
+router.get("/get/:id",  authToken, async (req, res) => {
   const companyId = req.params.id;
   try {
     const companyConfig = await CompanyConfig.findByPk(companyId);
@@ -42,7 +43,7 @@ router.get("/get/:id",  async (req, res) => {
 });
 
 // POST route to create a new company configuration
-router.post("/add",  async (req, res) => {
+router.post("/add",  authToken, async (req, res) => {
   const newCompanyConfig = req.body; // Assuming the request body contains the new configuration data
   try {
     const createdCompanyConfig = await CompanyConfig.create(newCompanyConfig);
@@ -54,7 +55,7 @@ router.post("/add",  async (req, res) => {
 });
 
 // PUT route to update an existing company configuration by ID
-router.put("/update/:id",  async (req, res) => {
+router.put("/update/:id",  authToken, async (req, res) => {
   const companyId = req.params.id;
   const updatedCompanyConfigData = req.body; // Assuming the request body contains the updated configuration data
   try {
