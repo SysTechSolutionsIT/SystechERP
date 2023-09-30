@@ -3,6 +3,7 @@ import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
 import DesignationModal from './DesignationModal';
 import ViewDesignation from './ViewDesignation';
+import { useAuth } from '../Login';
 
 export const DesignData = [
   {
@@ -77,11 +78,16 @@ const DesignationMaster = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
   const [DesignData, setDesignData] = useState([])
+  const {token} = useAuth()
 
   useEffect(() =>{
     const fetchDesignations = async() =>{
       try{
-        const response = await axios.get("http://localhost:5500/designation-master/get")
+        const response = await axios.get("http://localhost:5500/designation-master/get", {
+          headers:{
+            Authorization: `Bearer ${token}`
+          }
+        })
         const data = response.data
         setDesignData(data)
       } catch(error){
@@ -89,12 +95,16 @@ const DesignationMaster = () => {
       }
     }
     fetchDesignations()
-  },[])
+  },[token])
 
   const deleteDesignation = async(id) =>{
     alert('Are you sure you want to delete this entry?')
     try{
-      const response = await axios.delete(`http://localhost:5500/designation-master/delete/${id}`)
+      const response = await axios.delete(`http://localhost:5500/designation-master/delete/${id}`,{
+        headers:{
+          Authorization: `Bearer ${token}`
+        }
+      })
       alert('Designation Deleted')
       window.location.reload()
     } catch (error){

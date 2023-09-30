@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken'); // Import the jwt library
-const secretKey = process.env.SECRET_KEY; // Replace with your actual secret key
 const BankMaster = require('../model/BankMasterModel'); // Import your BankMaster model
 
 const authToken = (req, res, next) =>{

@@ -1,9 +1,22 @@
 const express = require('express');
 const router = express.Router();
+const jwt = require('jsonwebtoken'); // Import the jwt library
 const Designation  = require('../model/DesignationModel'); // Assuming your model file is in the same directory
 
+const authToken = (req, res, next) =>{
+  const authHeader = req.headers['authorization']
+  const token = authHeader && authHeader.split(' ')[1]
+  if (token == null) return res.sendStatus(401)
+
+  jwt.verify(token, process.env.SECRET_KEY, (err, user) =>{
+    if (err) return res.sendStatus(403)
+    req.user = user
+    next()
+  })
+}
+
 // GET all Designations
-router.get('/get', async (req, res) => {
+router.get('/get', authToken, async (req, res) => {
   try {
     const designations = await Designation.findAll();
     res.json(designations);
@@ -13,7 +26,7 @@ router.get('/get', async (req, res) => {
 });
 
 // GET Designation by ID
-router.get('/get/:id', async (req, res) => {
+router.get('/get/:id', authToken, async (req, res) => {
   const { id } = req.params;
   try {
     const designation = await Designation.findByPk(id);
@@ -28,7 +41,7 @@ router.get('/get/:id', async (req, res) => {
 });
 
 // POST a new Designation
-router.post('/add', async (req, res) => {
+router.post('/add', authToken, async (req, res) => {
   try {
     const newDesignation = await Designation.create(req.body);
     res.status(201).json(newDesignation);
@@ -38,7 +51,7 @@ router.post('/add', async (req, res) => {
 });
 
 // PATCH Designation by ID
-router.patch('/update/:id', async (req, res) => {
+router.patch('/update/:id', authToken, async (req, res) => {
   const { id } = req.params;
   try {
     const [updatedRowsCount, updatedDesignations] = await Designation.update(req.body, {
@@ -57,7 +70,7 @@ router.patch('/update/:id', async (req, res) => {
 });
 
 // DELETE Designation by ID
-router.delete('/delete/:id', async (req, res) => {
+router.delete('/delete/:id', authToken, async (req, res) => {
   const { id } = req.params;
   try {
     const deletedRowCount = await Designation.destroy({

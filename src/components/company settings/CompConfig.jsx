@@ -95,7 +95,11 @@ export default function EMPTabs() {
 
   const updateCompanyConfig = async(data) =>{
     try{
-      const response = axios.put(`http://localhost:5500/company-config/update/1`, data)
+      const response = axios.put(`http://localhost:5500/company-config/update/1`, data, {
+        headers:{
+          Authorization: `Bearer ${token}`
+        }
+      })
       alert('Company Configuration Updated')
     } catch(error){
       console.error('Error', error);
@@ -105,7 +109,11 @@ export default function EMPTabs() {
   useEffect(() => {
     const fetchCompanyConfig = async () => {
       try {
-        const response = await axios.get(`http://localhost:5500/company-config/get/1`);
+        const response = await axios.get(`http://localhost:5500/company-config/get/1`,{
+          headers:{
+            Authorization: `Bearer ${token}`
+          }
+        });
         const data = response.data;
           setDetails(data);
           console.log(data)
@@ -115,7 +123,7 @@ export default function EMPTabs() {
     };
   
     fetchCompanyConfig();
-  }, []);
+  }, [token]);
 
 
   useEffect(() =>{
@@ -162,7 +170,7 @@ export default function EMPTabs() {
 
   console.log('Details', details)
 
-  const [isStatusChecked, setStatusChecked] = useState(false)
+  const [isStatusChecked, setStatusChecked] = useState(details?.status)
   const handleCheckboxChange = (fieldName, setChecked, event) => {
     //This is how to use it (event) => handleCheckboxChange('Status', setStatusChecked, event)
       const checked = event.target.checked;
