@@ -1,4 +1,4 @@
-const { Sequelize, DataTypes } = require("sequelize");""
+const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = new Sequelize(
   "u172510268_systech",
   "u172510268_devs",
@@ -10,31 +10,31 @@ const sequelize = new Sequelize(
   }
 );
 
-const EmpAcademic = sequelize.define("EmpAcademic",{
-    EmployeeId:{
-      type: DataTypes.STRING, 
-    },
-    EmployeeName:{
-      type: DataTypes.STRING, 
-    },
-            Qualification: {
-      type: DataTypes.STRING, 
-    },
-              Institute: {
-      type: DataTypes.STRING, 
-    },
-              Specialization: {
-      type: DataTypes.STRING, 
-    },
-              Grades: {
-      type: DataTypes.STRING, 
-    },
-              PassingYear: {
-      type: DataTypes.STRING, 
-    },
-              Languages: {
-      type: DataTypes.STRING, 
-    }
+const EmpAcademic = sequelize.define("EmpAcademic", {
+  EmployeeId: {
+    type: DataTypes.STRING,
+  },
+  EmployeeName: {
+    type: DataTypes.STRING,
+  },
+  Qualification: {
+    type: DataTypes.STRING,
+  },
+  Institute: {
+    type: DataTypes.STRING,
+  },
+  Specialization: {
+    type: DataTypes.STRING,
+  },
+  Grades: {
+    type: DataTypes.STRING,
+  },
+  PassingYear: {
+    type: DataTypes.STRING,
+  },
+  Languages: {
+    type: DataTypes.STRING,
+  }
 })
 
 sequelize
