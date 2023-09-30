@@ -1,9 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const EmployeeType  = require('../model/EmployeeTypeModel'); // Assuming your model file is in the same directory
+const jwt = require('jsonwebtoken'); // Import the jwt library
 
+const authToken = (req, res, next) =>{
+  const authHeader = req.headers['authorization']
+  const token = authHeader && authHeader.split(' ')[1]
+  if (token == null) return res.sendStatus(401)
+
+  jwt.verify(token, process.env.SECRET_KEY, (err, user) =>{
+    if (err) return res.sendStatus(403)
+    req.user = user
+    next()
+  })
+}
 // GET all EmployeeTypes
-router.get('/get', async (req, res) => {
+router.get('/get', authToken, async (req, res) => {
   try {
     const employeeTypes = await EmployeeType.findAll();
     res.json(employeeTypes);
@@ -13,7 +25,7 @@ router.get('/get', async (req, res) => {
 });
 
 // POST a new EmployeeType
-router.post('/add', async (req, res) => {
+router.post('/add', authToken, async (req, res) => {
   try {
     const newEmployeeType = await EmployeeType.create(req.body);
     res.status(201).json(newEmployeeType);
@@ -23,7 +35,7 @@ router.post('/add', async (req, res) => {
 });
 
 // GET EmployeeType by ID
-router.get('/get/:id', async (req, res) => {
+router.get('/get/:id', authToken, async (req, res) => {
   try {
     const employeeType = await EmployeeType.findByPk(req.params.id);
     if (!employeeType) {
@@ -37,7 +49,7 @@ router.get('/get/:id', async (req, res) => {
 });
 
 // PATCH EmployeeType by ID
-router.patch('/update/:id', async (req, res) => {
+router.patch('/update/:id', authToken, async (req, res) => {
   const { id } = req.params;
   try {
     const [updatedRowsCount, updatedEmployeeTypes] = await EmployeeType.update(req.body, {
@@ -56,7 +68,7 @@ router.patch('/update/:id', async (req, res) => {
 });
 
 // DELETE EmployeeType by ID
-router.delete('/delte/:id', async (req, res) => {
+router.delete('/delte/:id', authToken, async (req, res) => {
   const { id } = req.params;
   try {
     const deletedRowCount = await EmployeeType.destroy({

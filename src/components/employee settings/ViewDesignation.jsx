@@ -3,10 +3,12 @@ import React, { useEffect, useState } from 'react'
 // import { DesignData } from './DesignationMaster';
 import { Icon } from '@iconify/react';
 import axios from 'axios';
+import { useAuth } from '../Login';
 
 const ViewDesignation = ({ visible, onClick, edit, ID }) => {
     const [StatusCheck, setStatusCheck] = useState(false);
     const [details, setDetails] = useState([]);
+    const { token } = useAuth()
 
     const formik = useFormik({
         initialValues: {
@@ -24,7 +26,11 @@ const ViewDesignation = ({ visible, onClick, edit, ID }) => {
     useEffect(() => {
         const fetchDesignation = async() =>{
             try{
-                const response = await axios.get(`http://localhost:5500/designation-master/get/${ID}`)
+                const response = await axios.get(`http://localhost:5500/designation-master/get/${ID}`,{
+                    headers:{
+                      Authorization: `Bearer ${token}`
+                    }
+                  })
                 const data = response.data
                 console.log(data)
                 setDetails(data)

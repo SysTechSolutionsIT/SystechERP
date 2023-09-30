@@ -3,6 +3,7 @@ import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
 import EmployeeTypeModal from './EmployeeTypeModal';
 import ViewEmployeeType from './ViewEmployeeType';
+import { useAuth } from '../Login';
 
 export const EmployeeTypeData = [
   {
@@ -43,6 +44,7 @@ export const EmployeeTypeData = [
 ]
 
 const EmployeeTypeMaster = () => {
+  const { token } = useAuth()
   const [isModalOpen, setModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
   const [EmployeeTypeData, setEmployeeTypeData] = useState([])
@@ -50,7 +52,11 @@ const EmployeeTypeMaster = () => {
   useEffect(() =>{
     const fetchEmpTypeData = async() =>{
       try{
-        const response = await axios.get("http://localhost:5500/employee-type/get")
+        const response = await axios.get("http://localhost:5500/employee-type/get", {
+          headers:{
+            Authorization: `Bearer ${token}`
+          }
+        })
         const data = response.data
         console.log(data)
         setEmployeeTypeData(data)
@@ -64,7 +70,11 @@ const EmployeeTypeMaster = () => {
   const deleteEmpType = async (id) =>{
     alert('Are you sure you want to delete this entry?')
     try{
-      const response = await axios.delete(`http://localhost:5500/employee-type/delete/${id}`)
+      const response = await axios.delete(`http://localhost:5500/employee-type/delete/${id}`, {
+        headers:{
+          Authorization: `Bearer ${token}`
+        }
+      })
       alert('Bank Deleted')
       window.location.reload()
     } catch (error){
