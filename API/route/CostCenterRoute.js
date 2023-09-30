@@ -2,8 +2,23 @@ const express = require("express");
 const router = express.Router();
 const CCMaster = require("../model/CostCenterModel"); // Import your CCMaster model
 
+const jwt = require("jsonwebtoken"); // Import the jwt library
+const secretKey = process.env.SECRET_KEY; // Replace with your actual secret key
+
+const authToken = (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  if (token == null) return res.sendStatus(401);
+
+  jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
+  });
+};
+
 // GET Route to retrieve all bank records
-router.get("/", async (req, res) => {
+router.get("/", authToken, async (req, res) => {
   const records = await CCMaster.findAll(); // Retrieve all bank records
 
   res.status(200).json({
@@ -19,7 +34,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // POST Route to create a new bank record
-router.post("/add-record", async (req, res) => {
+router.post("/add-record", authToken, async (req, res) => {
   try {
     const newRecord = await CCMaster.create(req.body); // Create a new bank record based on the request body
     res.json(newRecord); // Return the newly created bank record as JSON
@@ -29,7 +44,7 @@ router.post("/add-record", async (req, res) => {
   }
 });
 
-router.patch("/update-cost-center/:id", async (req, res) => {
+router.patch("/update-cost-center/:id", authToken, async (req, res) => {
   const costCenterId = req.params.id;
 
   try {
@@ -66,7 +81,7 @@ router.patch("/update-cost-center/:id", async (req, res) => {
 });
 
 // DELETE Route to delete an existing bank record by ID
-router.delete("/delete-record/:id", async (req, res) => {
+router.delete("/delete-record/:id", authToken, async (req, res) => {
   const CID = req.params.id; // Get the bank record ID from the URL parameter
   try {
     const deleteRecord = await CCMaster.findByPk(CID);

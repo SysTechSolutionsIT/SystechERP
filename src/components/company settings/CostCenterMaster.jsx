@@ -4,6 +4,7 @@ import { Icon } from "@iconify/react";
 import CostCenterModal from "./CostCenterModal";
 import VECost from "./ViewCost";
 import axios from "axios";
+import { useAuth } from "../Login";
 
 export const costCenters = [
   {
@@ -72,6 +73,8 @@ const CostCenterMaster = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
 
+  const { token } = useAuth();
+
   const [veCost, setVeCost] = useState(false);
   const [edit, setEdit] = useState(false);
   const [CCid, setCCid] = useState();
@@ -124,7 +127,11 @@ const CostCenterMaster = () => {
 
   const fetchCompData = async () => {
     try {
-      const response = await axios.get("http://localhost:5500/cost-center/");
+      const response = await axios.get("http://localhost:5500/cost-center/", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       console.log("Response Object", response);
       const data = response.data.records;
       console.log(data);
@@ -145,11 +152,35 @@ const CostCenterMaster = () => {
     setFilteredData(newFilteredData);
   };
 
+  //For Deletion
+
+  const deleteRecord = async (ID) => {
+    alert("Are you sure you want to delete this Record?");
+    try {
+      const apiUrl = `http://localhost:5500/cost-center/delete-record/${ID}`;
+
+      const response = await axios.delete(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 204) {
+        console.log(`Record with ID ${ID} deleted successfully.`);
+        alert("Record Deleted");
+        window.location.reload();
+      } else {
+        console.error(`Failed to delete record with ID ${ID}.`);
+      }
+    } catch (error) {
+      console.error("Error deleting record:", error);
+    }
+  };
   return (
     <div className="top-25 min-w-[40%]">
-      <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-x-auto">
-        <div className="flex items-center gap-4">
-          <div className="mr-auto text-[15px] whitespace-normal">
+      <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-x-clip">
+        <div className="flex items-center gap-4 whitespace-normal">
+          <div className="mr-auto text-[15px] whitespace-normal min-w-fit">
             Company Settings / Cost Center Master
           </div>
           <div className="relative sticky lg:ml-96 sm:ml-8">
@@ -260,12 +291,6 @@ const CostCenterMaster = () => {
                               setCCid(result.cID); // Pass ID to VEModal
                             }}
                           />
-                          {/* <VECost
-                            visible={veCost}
-                            onClick={() => setVeCost(false)}
-                            edit={edit}
-                            ID={CCid}
-                          /> */}
                           <Icon
                             icon="mdi:edit"
                             color="#556987"
@@ -288,6 +313,7 @@ const CostCenterMaster = () => {
                             color="#556987"
                             width="20"
                             height="20"
+                            onClick={() => deleteRecord(result.cID)}
                           />
                         </div>
                       </td>
@@ -298,7 +324,7 @@ const CostCenterMaster = () => {
                         {result.cName}
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {result.cStatus}
+                        {result.status ? "Active" : "Inactive"}
                       </td>
                     </tr>
                   ))
@@ -346,6 +372,7 @@ const CostCenterMaster = () => {
                             color="#556987"
                             width="20"
                             height="20"
+                            onClick={() => deleteRecord(entry.cID)}
                           />
                         </div>
                       </td>
@@ -356,7 +383,7 @@ const CostCenterMaster = () => {
                         {entry.cName}
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {entry.cStatus ? "Active" : "Inactive"}
+                        {entry.status ? "Active" : "Inactive"}
                       </td>
                     </tr>
                   ))}

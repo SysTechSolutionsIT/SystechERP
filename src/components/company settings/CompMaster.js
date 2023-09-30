@@ -105,7 +105,9 @@ const CompMaster = () => {
 
   const fetchCompData = async () => {
     try {
-      const response = await axios.get("http://localhost:5500/companies/");
+      const response = await axios.get("http://localhost:5500/companies/", {
+        headers: { authorization: `Bearer ${token}` },
+      });
       console.log("Response Object", response);
       const data = response.data.companies;
       console.log(data);
@@ -135,6 +137,29 @@ const CompMaster = () => {
 
     // Update the filtered data
     setFilteredData(newFilter);
+  };
+  // Deleting Entry
+  const deleteComp = async (ID) => {
+    alert("Are you sure you want to delete this bank?");
+    try {
+      const apiUrl = `http://localhost:5500/companies/delete/${ID}`;
+
+      const response = await axios.delete(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 204) {
+        console.log(`Record with ID ${ID} deleted successfully.`);
+        alert("Record Deleted");
+        window.location.reload();
+      } else {
+        console.error(`Failed to delete record with ID ${ID}.`);
+      }
+    } catch (error) {
+      console.error("Error deleting record:", error);
+    }
   };
 
   return (
@@ -324,6 +349,7 @@ const CompMaster = () => {
                             color="#556987"
                             width="20"
                             height="20"
+                            onClick={() => deleteComp(result.id)}
                           />
                         </div>
                       </td>
@@ -388,6 +414,7 @@ const CompMaster = () => {
                             color="#556987"
                             width="20"
                             height="20"
+                            onClick={() => deleteComp(result.id)}
                           />
                         </div>
                       </td>

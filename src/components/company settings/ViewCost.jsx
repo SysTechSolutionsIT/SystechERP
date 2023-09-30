@@ -3,28 +3,38 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import axios from "axios";
+import { useAuth } from "../Login";
 
 const VECost = ({ visible, onClick, edit, ID }) => {
   const [status, setStatus] = useState(false);
   const [details, setDetails] = useState([]);
+  const { token } = useAuth();
 
   const formik = useFormik({
     initialValues: {
-      costCenterID: "",
-      costCenterName: "",
+      cID: "",
+      cName: "",
+      cRemarks: "",
       status: status,
     },
     onSubmit: async (values) => {
       console.log(values);
+      const state = status === true;
 
       try {
         // Make a PATCH request to update the cost center
         const response = await axios.patch(
-          `http://localhost:5500/cost-center/update-cost-center/${values.costCenterID}`,
+          `http://localhost:5500/cost-center/update-cost-center/${ID}}`,
           {
             // Pass the updated values to the server
-            cName: values.costCenterName,
-            status: values.status, // Use the status value from the form
+            cName: values.cName,
+            cRemarks: values.cRemarks,
+            status: state, // Use the status value from the form
+          },
+          {
+            header: {
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
 
@@ -47,7 +57,12 @@ const VECost = ({ visible, onClick, edit, ID }) => {
   const fetchNewData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5500/cost-center/${ID}`
+        `http://localhost:5500/cost-center/${ID}`,
+        {
+          header: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       console.log("Response Object", response);
       const data = response.data.record;
@@ -91,7 +106,7 @@ const VECost = ({ visible, onClick, edit, ID }) => {
                   id="cID"
                   type="number"
                   placeholder="Enter Financial Year ID"
-                  value={details.cID}
+                  value={details?.cID}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -105,7 +120,7 @@ const VECost = ({ visible, onClick, edit, ID }) => {
                   id="cName"
                   type="text"
                   placeholder="Enter Name"
-                  value={details.cName}
+                  value={details?.cName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -116,7 +131,7 @@ const VECost = ({ visible, onClick, edit, ID }) => {
                 <textarea
                   id="cRemarks"
                   placeholder="Enter Remark"
-                  value={details.cRemarks}
+                  value={details?.cRemarks}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -130,7 +145,7 @@ const VECost = ({ visible, onClick, edit, ID }) => {
                   <input
                     id="YearClose"
                     type="checkbox"
-                    checked={details.status}
+                    checked={details?.status}
                     className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border-2 rounded-lg`}
                     onChange={handleStatusChange}
                     disabled={!edit}

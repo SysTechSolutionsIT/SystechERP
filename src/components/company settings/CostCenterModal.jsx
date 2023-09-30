@@ -5,44 +5,47 @@ import { Icon } from "@iconify/react";
 import axios from "axios";
 
 const CostCenterModal = ({ visible, onClick }) => {
+  const [statusCheck, setStatus] = useState(false);
 
   const formik = useFormik({
     initialValues: {
       cName: "",
       cRemarks: "",
-      status: "",
+      status: statusCheck,
     },
     onSubmit: async (values) => {
       console.log(values);
+      const status = statusCheck === true;
+
       try {
-        // Make a POST request to your server
+        const formData = {
+          cName: values.cName,
+          cRemarks: values.cRemarks,
+          status: status, // StatusCheck was already part of formik.values
+        };
+
         const response = await axios.post(
-          "http://localhost:5500/cost-center/add-record",
-          values
+          "http://localhost:5500/financials/add-record",
+          formData // Send the extracted form data
         );
 
-        // Handle the response from the server here if needed
-        console.log("Server response:", response.data);
-
-        // Close the modal or perform any other actions after a successful request
-        onClick();
+        if (response.status === 200) {
+          const data = response.data;
+          console.log(data);
+          alert("Financial record added successfully");
+          // Handle successful response
+          onClick();
+        } else {
+          console.error(`HTTP error! Status: ${response.status}`);
+          // Handle error response
+        }
       } catch (error) {
-        console.error("Error while sending POST request:", error);
-        // Handle errors here if needed
+        console.error("Error:", error.message);
+        alert(error.message);
+        // Handle network error
       }
     },
   });
-  const [isStatusChecked, setStatusChecked] = useState(false)
-  const handleCheckboxChange = (fieldName, setChecked, event) => {
-    //This is how to use it (event) => handleCheckboxChange('Status', setStatusChecked, event)
-      const checked = event.target.checked;
-      setChecked(checked);
-      formik.setValues({
-        ...formik.values,
-        [fieldName]: checked.toString(),
-      });
-    };
-
 
   if (!visible) return null;
   return (
@@ -94,10 +97,10 @@ const CostCenterModal = ({ visible, onClick }) => {
                   <input
                     id="status"
                     type="checkbox"
-                    checked={isStatusChecked}
+                    checked={statusCheck}
                     value={formik.values.status}
                     className={`w-5 h-5 mr-2 mt-2 focus:outline-gray-300 border-2 rounded-lg`}
-                    onChange={(event) => handleCheckboxChange('status', setStatusChecked, event)}
+                    onChange={(event) => setStatus(!statusCheck)}
                   />
                   Active
                 </label>

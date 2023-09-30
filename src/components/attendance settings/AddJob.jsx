@@ -1,27 +1,57 @@
 import { useFormik } from "formik";
 import React, { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
-import { JobTypeData } from "./jobTypeMaster";
+import axios from "axios";
 
 const AddJob = ({ visible, onClick }) => {
   const [statusCheck, setStatusCheck] = useState(false);
 
   const formik = useFormik({
     initialValues: {
-      jobTypeId: "",
-      jobTypeName: "",
-      shortname: "",
+      jobName: "",
+      jobShortName: "",
       ratePerDay: "",
       rateGroup: "",
       category: "",
       position: "",
-      remark: "",
+      Remark: "",
       status: statusCheck,
     },
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
+      const status = statusCheck === true;
       console.log(values);
-      JobTypeData.push(values);
-      onClick();
+      try {
+        const formData = {
+          jobName: values.jobName,
+          jobShortName: values.jobShortName,
+          category: values.category,
+          position: values.position,
+          ratePerDay: values.ratePerDay,
+          rateGroup: values.rateGroup,
+          Remark: values.remark,
+          status: status, // StatusCheck was already part of formik.values
+        };
+
+        const response = await axios.post(
+          "http://localhost:5500/job-master/add",
+          formData // Send the extracted form data
+        );
+
+        if (response.status === 200) {
+          const data = response.data;
+          console.log(data);
+          alert(" record added successfully");
+          // Handle successful response
+          onClick();
+        } else {
+          console.error(`HTTP error! Status: ${response.status}`);
+          // Handle error response
+        }
+      } catch (error) {
+        console.error("Error:", error.message);
+        alert(error.message);
+        // Handle network error
+      }
     },
   });
   useEffect(() => {
@@ -50,26 +80,13 @@ const AddJob = ({ visible, onClick }) => {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <p className="capatilize font-semibold text-[13px]">
-                  Job Type ID
-                </p>
-                <input
-                  id="jobTypeId"
-                  type="number"
-                  placeholder="Enter Job ID"
-                  value={formik.values.companyId}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                />
-              </div>
-              <div>
-                <p className="capatilize font-semibold text-[13px]">
                   Job Type Name
                 </p>
                 <input
-                  id="jobTypeName"
+                  id="jobName"
                   type="text"
                   placeholder="Enter Job Type Name"
-                  value={formik.values.jobTypeName}
+                  value={formik.values.jobName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -79,10 +96,10 @@ const AddJob = ({ visible, onClick }) => {
                   Short Name
                 </p>
                 <input
-                  id="shortname"
+                  id="jobShortName"
                   type="text"
                   placeholder="Enter Short Name"
-                  value={formik.values.shortname}
+                  value={formik.values.jobShortName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -154,10 +171,10 @@ const AddJob = ({ visible, onClick }) => {
               <div>
                 <p className="text-[13px] font-semibold">Remarks</p>
                 <input
-                  id="remark"
+                  id="Remark"
                   type="text"
                   placeholder="Enter Remarks"
-                  value={formik.values.remark}
+                  value={formik.values.Remark}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -172,13 +189,10 @@ const AddJob = ({ visible, onClick }) => {
                     className={`w-5 h-5 mr-2 mt-4 focus:outline-gray-300 border border-blue-900 rounded-lg`}
                     onChange={() => {
                       setStatusCheck(!statusCheck);
-                      formik.setFieldValue(
-                        "status",
-                        statusCheck ? "Inactive" : "Active"
-                      ); // Update status value in formik
+                      formik.setFieldValue("status", statusCheck); // Update status value in formik
                     }}
                   />
-                  Active {/* Always display "Active" label */}
+                  Active
                 </label>
               </div>
             </div>
