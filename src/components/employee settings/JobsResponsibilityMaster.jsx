@@ -1,6 +1,7 @@
 import { Icon } from '@iconify/react';
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
+import { useAuth } from '../Login';
 import JobsResponsibilityModal from './JobsResponsibilityModal';
 import ViewJobsResponsibility from './ViewJobsResponsibility';
 
@@ -15,6 +16,7 @@ export const jobsRespData = [
 ]
 
 const JobsResponsibilityMaster = () => {
+    const { token } = useAuth()
     const [isModalOpen, setModalOpen] = useState(false);
     const [filteredData, setFilteredData] = useState([]);
     const [jobsRespData, setJobRespData] = useState([])
@@ -22,7 +24,11 @@ const JobsResponsibilityMaster = () => {
     useEffect(() =>{
         const fetchJobRes = async() =>{
             try{
-                const response = await axios.get("http://localhost:5500/job-responsibility/get")
+                const response = await axios.get("http://localhost:5500/job-responsibility/get", {
+                    headers:{
+                        Authorization: `Bearer ${token}`
+                    }
+                })
                 const data = response.data
                 setJobRespData(data)
             } catch(error){
@@ -30,12 +36,16 @@ const JobsResponsibilityMaster = () => {
             }
         }
         fetchJobRes()
-    },[])
+    },[token])
 
     const deleteJobRes = async(id) =>{
         alert('Are you sure you want to delete this entry?')
         try{
-            const response = await axios.delete(`http://localhost:5500/job-responsibility/delete/${id}`)
+            const response = await axios.delete(`http://localhost:5500/job-responsibility/delete/${id}`, {
+                headers:{
+                    Authorization: `Bearer ${token}`
+                }
+            })
             alert('Job Responsibility Deleted Successfully')
             window.location.reload()
         } catch(error){

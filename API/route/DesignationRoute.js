@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const jwt = require('jsonwebtoken'); // Import the jwt library
 const Designation  = require('../model/DesignationModel'); // Assuming your model file is in the same directory
+const jwt = require('jsonwebtoken'); // Import the jwt library
 
 const authToken = (req, res, next) =>{
   const authHeader = req.headers['authorization']

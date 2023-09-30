@@ -116,7 +116,7 @@ const DesignationModal = ({ visible, onClick }) => {
                             <input
                                 id="Status"
                                 type="checkbox"
-                                checked={isStatusChecked}
+                                checked={formik.values.Status}
                                 value={formik.values.Status}
                                 className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border-2 rounded-lg`}
                                 onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}

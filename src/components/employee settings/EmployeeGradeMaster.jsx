@@ -1,6 +1,7 @@
 import { Icon } from '@iconify/react';
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
+import { useAuth } from '../Login';
 import EmployeeGradeModal from './EmployeeGradeModal';
 import ViewEmployeeGrade from './ViewEmployeeGrade';
 
@@ -66,11 +67,16 @@ const EmployeeGradeMaster = () => {
     const [isModalOpen, setModalOpen] = useState(false);
     const [filteredData, setFilteredData] = useState([]);
     const [EmployeeGradeData, setEmployeeGradeData] = useState([])
+    const { token } = useAuth()
 
     useEffect(() =>{
         const fetchEmpGradeData = async() =>{
             try{
-                const response = await axios.get("http://localhost:5500/employee-grade/get")
+                const response = await axios.get("http://localhost:5500/employee-grade/get", {
+                    headers:{
+                        Authorization: `Bearer ${token}`
+                    }
+                })
                 const data = response.data
                 setEmployeeGradeData(data)
             } catch(error){
@@ -78,12 +84,16 @@ const EmployeeGradeMaster = () => {
             }
         }
         fetchEmpGradeData()
-    },[])
+    },[token])
 
     const deleteEmpGrade = async(id) =>{
         alert('Are you sure you want to delete this entry?')
         try{
-            const response = await axios.delete(`http://localhost:5500/employee-grade/delete/${id}`)
+            const response = await axios.delete(`http://localhost:5500/employee-grade/delete/${id}`, {
+            headers:{
+                Authorization: `Bearer ${token}`
+            }
+        })
             alert('Entry Deleted') 
             window.location.reload()
         } catch (error){

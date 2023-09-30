@@ -170,7 +170,8 @@ export default function EMPTabs() {
 
   console.log('Details', details)
 
-  const [isStatusChecked, setStatusChecked] = useState(details?.status)
+  const [isStatusChecked, setStatusChecked] = useState(false)
+  const [salStat, setSalStatChecked] = useState(false)
   const handleCheckboxChange = (fieldName, setChecked, event) => {
     //This is how to use it (event) => handleCheckboxChange('Status', setStatusChecked, event)
       const checked = event.target.checked;
@@ -456,7 +457,7 @@ export default function EMPTabs() {
                           id="status"
                           name="status"
                           className="form-checkbox h-5 w-5 text-blue-600"
-                          checked={isStatusChecked}
+                          checked={formik.values.Status}
                           onChange={(event) => handleCheckboxChange('status', setStatusChecked, event)}
                         />
                         <label
@@ -1059,8 +1060,8 @@ export default function EMPTabs() {
                         id="activeCheckbox"
                         name="salstat"
                         className="form-checkbox h-5 w-5 text-blue-600"
-                        checked={isStatusChecked}
-                        onChange={(event) => handleCheckboxChange('status', setStatusChecked, event)}
+                        checked={formik.values.salstat}
+                        onChange={(event) => handleCheckboxChange('salstat', setSalStatChecked, event)}
                       />
                       <label
                         htmlFor="activeCheckbox"

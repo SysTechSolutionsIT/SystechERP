@@ -1,9 +1,22 @@
 const express = require("express");
 const router = express.Router();
 const JobResponsibilityModel  = require("../model/JobResponsibilityModel"); // Assuming your model is exported as "JobResponsibilityModel"
+const jwt = require('jsonwebtoken'); // Import the jwt library
+
+const authToken = (req, res, next) =>{
+  const authHeader = req.headers['authorization']
+  const token = authHeader && authHeader.split(' ')[1]
+  if (token == null) return res.sendStatus(401)
+
+  jwt.verify(token, process.env.SECRET_KEY, (err, user) =>{
+    if (err) return res.sendStatus(403)
+    req.user = user
+    next()
+  })
+}
 
 // GET all Job Responsibilities
-router.get("/get", async (req, res) => {
+router.get("/get", authToken, async (req, res) => {
   try {
     const jobResponsibilities = await JobResponsibilityModel.findAll();
     res.json(jobResponsibilities);
@@ -14,7 +27,7 @@ router.get("/get", async (req, res) => {
 });
 
 // GET Job Responsibility by ID
-router.get("/get/:id", async (req, res) => {
+router.get("/get/:id", authToken, async (req, res) => {
   const { id } = req.params;
   try {
     const jobResponsibility = await JobResponsibilityModel.findByPk(id);
@@ -30,7 +43,7 @@ router.get("/get/:id", async (req, res) => {
 });
 
 // POST a new Job Responsibility
-router.post("/add", async (req, res) => {
+router.post("/add", authToken, async (req, res) => {
   const { Name, Duration, Points, Status } = req.body;
   try {
     const newJobResponsibility = await JobResponsibilityModel.create({
@@ -47,7 +60,7 @@ router.post("/add", async (req, res) => {
 });
 
 // PATCH (Update) Job Responsibility by ID
-router.patch("/update/:id", async (req, res) => {
+router.patch("/update/:id", authToken, async (req, res) => {
   const { id } = req.params;
   const { Name, Duration, Points, Status } = req.body;
   try {
@@ -73,7 +86,7 @@ router.patch("/update/:id", async (req, res) => {
 });
 
 // DELETE Job Responsibility by ID
-router.delete("/delete/:id", async (req, res) => {
+router.delete("/delete/:id", authToken, async (req, res) => {
   const { id } = req.params;
   try {
     const jobResponsibility = await JobResponsibilityModel.findByPk(id);

@@ -3,8 +3,10 @@ import React, { useState } from 'react'
 import { useFormik } from 'formik';
 import axios from 'axios';
 import { Icon } from '@iconify/react';
+import { useAuth } from '../Login';
 
 const EmployeeGradeModal = ({ visible, onClick }) => {
+    const { token } = useAuth()
     const formik = useFormik({
         initialValues: {
             // ID: "",
@@ -21,7 +23,11 @@ const EmployeeGradeModal = ({ visible, onClick }) => {
 
     const addEmpGrade = async() =>{
         try{
-            const response = await axios.post("http://localhost:5500/employee-grade/add",formik.values)
+            const response = await axios.post("http://localhost:5500/employee-grade/add", formik.values, {
+                headers:{
+                    Authorization: `Bearer ${token}`
+                }
+            })
             alert("Grade Added")
         } catch(error){
             console.error('Error', error);
@@ -94,7 +100,7 @@ const EmployeeGradeModal = ({ visible, onClick }) => {
                             <input
                                 id="Status"
                                 type="checkbox"
-                                checked={isStatusChecked}
+                                checked={formik.values.Status}
                                 value={formik.values.Status}
                                 className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border-2 rounded-lg`}
                                 onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}
