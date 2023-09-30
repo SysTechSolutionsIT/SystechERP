@@ -12,112 +12,109 @@ const sequelize = new Sequelize(
 );
 
 const CompanyConfig = sequelize.define("CompanyConfig", {
-    currency: {
+      currency: {
         type: DataTypes.STRING,
       },
-      themes: {
+      theme: {
         type: DataTypes.STRING,
       },
-      dateFormat: {
+      date: {
         type: DataTypes.STRING,
       },
-      sessionTimout: {
+      sessionTM: {
         type: DataTypes.STRING,
       },
-      remarksGeneral: {
-        type: DataTypes.STRING,
-      },
-      status: {
-        type: DataTypes.STRING,
-      },
-      empIdPrefix: {
-        type: DataTypes.STRING,
-      },
-      companyMultibranch: {
-        type: DataTypes.STRING,
-      },
-      attendanceFlag: {
-        type: DataTypes.STRING,
-      },
-      attendanceProcess: {
-        type: DataTypes.STRING,
-      },
-      attendanceApprovalFlag: {
-        type: DataTypes.STRING,
-      },
-      fixShiftFlag: {
-        type: DataTypes.STRING,
-      },
-      jobApproval: {
-        type: DataTypes.STRING,
-      },
-      paidHolidayLogic: {
-        type: DataTypes.STRING,
-      },
-      OdApprovalFlag: {
-        type: DataTypes.STRING,
-      },
-      OtApprovalFlag: {
-        type: DataTypes.STRING,
-      },
-      LeaveApprovalFlag: {
-        type: DataTypes.STRING,
-      },
-      attendanceLockDay: {
-        type: DataTypes.STRING,
-      },
-      otCalculationFlag: {
-        type: DataTypes.STRING,
-      },
-      esicSalaryLimit: {
-        type: DataTypes.STRING,
-      },
-      pfSalaryLimit: {
-        type: DataTypes.STRING,
-      },
-      gratuityYearsLimit: {
-        type: DataTypes.STRING,
-      },
-      mlwfMonth1: {
-        type: DataTypes.STRING,
-      },
-      mlwfMonth2: {
-        type: DataTypes.STRING,
-      },
-      salaryLockDay: {
-        type: DataTypes.STRING,
-      },
-      salaryMinWages: {
-        type: DataTypes.STRING,
-      },
-      remarksPayroll: {
+      remarks: {
         type: DataTypes.STRING,
       },
       status: {
         type: DataTypes.STRING,
       },
-      emailService: {
+      empID: {
+        type: DataTypes.STRING,
+      },
+      cmulti: {
+        type: DataTypes.STRING,
+      },
+      att: {
+        type: DataTypes.STRING,
+      },
+      aProcess: {
+        type: DataTypes.STRING,
+      },
+      atap: {
+        type: DataTypes.STRING,
+      },
+      shiftFlag: {
+        type: DataTypes.STRING,
+      },
+      jobApp: {
+        type: DataTypes.STRING,
+      },
+      holiday: {
+        type: DataTypes.STRING,
+      },
+      odFlag: {
+        type: DataTypes.STRING,
+      },
+      otFlag: {
+        type: DataTypes.STRING,
+      },
+      LAFlag: {
+        type: DataTypes.STRING,
+      },
+      otCalc: {
+        type: DataTypes.STRING,
+      },
+      esicSal: {
+        type: DataTypes.STRING,
+      },
+      pfSal: {
+        type: DataTypes.STRING,
+      },
+      gratuity: {
+        type: DataTypes.STRING,
+      },
+      mlwf1: {
+        type: DataTypes.STRING,
+      },
+      mlwf2: {
+        type: DataTypes.STRING,
+      },
+      salLock: {
+        type: DataTypes.STRING,
+      },
+      minWages: {
+        type: DataTypes.STRING,
+      },
+      remarks1: {
+        type: DataTypes.STRING,
+      },
+      salstat: {
+        type: DataTypes.STRING,
+      },
+      email: {
         type: DataTypes.STRING,
       },
       smtpHost: {
         type: DataTypes.STRING,
       },
-      fromEmailId: {
+      sender: {
         type: DataTypes.STRING,
       },
-      mUsername: {
+      username: {
         type: DataTypes.STRING,
       },
-      mPassword: {
+      password: {
         type: DataTypes.STRING,
       },
-      emailFormat: {
-        type: DataTypes.TEXT,
-      },
-      smsService: {
+      message: {
         type: DataTypes.STRING,
       },
-      smsURL: {
+      smsUrl: {
+        type: DataTypes.STRING,
+      },
+      sms: {
         type: DataTypes.STRING,
       },
   });
