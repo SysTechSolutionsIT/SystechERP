@@ -2,10 +2,12 @@ import { useFormik } from 'formik';
 import React, { useEffect, useState } from 'react'
 import { Icon } from '@iconify/react';
 import axios from 'axios';
+import { useAuth } from '../Login';
 
 const ViewEmployeeType = ({ visible, onClick, edit, ID }) => {
     const [details, setDetails] = useState([]);
     const [isStatusChecked, setStatusChecked] = useState(false)
+    const { token } = useAuth()
 
     const handleCheckboxChange = (fieldName, setChecked, event) => {
       //This is how to use it (event) => handleCheckboxChange('Status', setStatusChecked, event)
@@ -19,7 +21,6 @@ const ViewEmployeeType = ({ visible, onClick, edit, ID }) => {
 
     const formik = useFormik({
         initialValues: {
-            ID: "",
             EmployeeType: "",
             EmployeeTypeGroup: "",
             ShortName: "",
@@ -28,13 +29,39 @@ const ViewEmployeeType = ({ visible, onClick, edit, ID }) => {
         },
         onSubmit: (values) => {
             console.log(values);
+
+            const updatedData = {
+                EmployeeType: values.EmployeeType,
+                EmployeeTypeGroup: values.EmployeeTypeGroup,
+                ShortName: values.ShortName,
+                Status: values.Status,
+                Remark: values.Remark
+            }
+            updateEmpType(updatedData)
         },
     });
+
+    const updateEmpType = async(data) =>{
+        try{
+            const response = axios.patch(`http://localhost:5500/employee-type/update/${ID}`, data, {
+                headers:{
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            alert('Employee Type Updated')
+        } catch(error){
+            console.error('Error', error);
+        }
+    }
 
     useEffect(() =>{
         const fetchEmpTypeData = async() =>{
           try{
-            const response = await axios.get(`http://localhost:5500/employee-type/get/${ID}`)
+            const response = await axios.get(`http://localhost:5500/employee-type/get/${ID}`, {
+                headers:{
+                  Authorization: `Bearer ${token}`
+                }
+              })
             const data = response.data
             console.log(data)
             setDetails(data)
@@ -44,6 +71,18 @@ const ViewEmployeeType = ({ visible, onClick, edit, ID }) => {
         }
         fetchEmpTypeData()
       },[ID])
+
+    useEffect(() => {
+        if (details){
+            formik.setValues({
+                EmployeeType: details.EmployeeType,
+                EmployeeTypeGroup: details.EmployeeTypeGroup,
+                ShortName: details.ShortName,
+                Status: details.Status,
+                Remark: details.Remark
+            })
+        }
+    }, [details])
 
     if (!visible) return null;
     return (
@@ -80,7 +119,7 @@ const ViewEmployeeType = ({ visible, onClick, edit, ID }) => {
                                     id="EmployeeType"
                                     type="text"
                                     placeholder="Enter Employee Type"
-                                    value={details?.EmployeeType}
+                                    value={formik.values.EmployeeType}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
@@ -90,7 +129,7 @@ const ViewEmployeeType = ({ visible, onClick, edit, ID }) => {
                                 <p className="text-[13px] text-left py-1 font-semibold">Employee Type Group</p>
                                 <select
                                     id="EmployeeTypeGroup"
-                                    value={details?.EmployeeTypeGroup}
+                                    value={formik.values.EmployeeTypeGroup}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
@@ -106,7 +145,7 @@ const ViewEmployeeType = ({ visible, onClick, edit, ID }) => {
                                     id="ShortName"
                                     type="text"
                                     placeholder="Enter Short Name"
-                                    value={details?.ShortName}
+                                    value={formik.values.ShortName}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
@@ -118,7 +157,7 @@ const ViewEmployeeType = ({ visible, onClick, edit, ID }) => {
                                     id="remark"
                                     type="text"
                                     placeholder="Enter Remarks"
-                                    value={details?.Remark}
+                                    value={formik.values.Remark}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
@@ -130,7 +169,7 @@ const ViewEmployeeType = ({ visible, onClick, edit, ID }) => {
                                     <input
                                         id="status"
                                         type="checkbox"
-                                        checked={details?.Status}
+                                        checked={formik.values.Status}
                                         className={`relative w-4 h-4 mr-2 peer shrink-0 checked:appearance-none checked:bg-blue-900 border-2 border-blue-900 rounded-sm`}
                                         onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}
                                         disabled={!edit}

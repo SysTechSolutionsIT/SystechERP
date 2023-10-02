@@ -3,8 +3,10 @@ import React, { useState } from 'react'
 import { DesignData } from './DesignationMaster';
 import { Icon } from '@iconify/react';
 import axios from 'axios';
+import { useAuth } from '../Login';
 
 const DesignationModal = ({ visible, onClick }) => {
+    const { token } = useAuth()
     const formik = useFormik({
         initialValues: {
             // ID: "",
@@ -21,7 +23,11 @@ const DesignationModal = ({ visible, onClick }) => {
 
     const addDesignation = async(values) =>{
         try{
-            const response = await axios.post("http://localhost:5500/designation-master/add", values)
+            const response = await axios.post("http://localhost:5500/designation-master/add", values, {
+                headers:{
+                  Authorization: `Bearer ${token}`
+                }
+              })
             alert('Designation Added')
         } catch(error){
             console.error('Error', error);
@@ -110,7 +116,7 @@ const DesignationModal = ({ visible, onClick }) => {
                             <input
                                 id="Status"
                                 type="checkbox"
-                                checked={isStatusChecked}
+                                checked={formik.values.Status}
                                 value={formik.values.Status}
                                 className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border-2 rounded-lg`}
                                 onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}

@@ -3,14 +3,25 @@ import React, { useEffect, useState } from 'react'
 // import { DesignData } from './DesignationMaster';
 import { Icon } from '@iconify/react';
 import axios from 'axios';
+import { useAuth } from '../Login';
 
 const ViewDesignation = ({ visible, onClick, edit, ID }) => {
-    const [StatusCheck, setStatusCheck] = useState(false);
     const [details, setDetails] = useState([]);
+    const { token } = useAuth()
+
+    const [isStatusChecked, setStatusChecked] = useState(false)
+    const handleCheckboxChange = (fieldName, setChecked, event) => {
+      //This is how to use it (event) => handleCheckboxChange('Status', setStatusChecked, event)
+        const checked = event.target.checked;
+        setChecked(checked);
+        formik.setValues({
+          ...formik.values,
+          [fieldName]: checked.toString(),
+        });
+      };
 
     const formik = useFormik({
         initialValues: {
-            // ID: "",
             Name: "",
             ReportDesignationName: "",
             Status: "",
@@ -18,16 +29,42 @@ const ViewDesignation = ({ visible, onClick, edit, ID }) => {
         },
         onSubmit: (values) => {
             console.log(values);
+            const updatedData = {
+            Name: values.Name,
+            ReportDesignationName: values.ReportDesignationName,
+            Status: values.Status,
+            Remark: values.Remark
+            }
+
+            updateDesignation(updatedData)
         },
     });
+
+    const updateDesignation = async (data) =>{
+        try{
+            const response = axios.patch(`http://localhost:5500/designation-master/update/${ID}`, data, {
+                headers:{
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            alert('Designation Updated')
+        } catch (error){
+            console.error('Error', error);
+        }
+    }
 
     useEffect(() => {
         const fetchDesignation = async() =>{
             try{
-                const response = await axios.get(`http://localhost:5500/designation-master/get/${ID}`)
+                const response = await axios.get(`http://localhost:5500/designation-master/get/${ID}`,{
+                    headers:{
+                      Authorization: `Bearer ${token}`
+                    }
+                  })
                 const data = response.data
                 console.log(data)
                 setDetails(data)
+                setStatusChecked(data.Status)
             } catch(error){
                 console.error('Error', error);
             }
@@ -35,6 +72,19 @@ const ViewDesignation = ({ visible, onClick, edit, ID }) => {
 
         fetchDesignation()
     }, [ID]);
+
+    useEffect(() =>{
+        if (details){
+            formik.setValues({
+            Name: details.Name,
+            ReportDesignationName: details.ReportDesignationName,
+            Status: details.Status,
+            Remark: details.Remark
+            })
+        }
+    }, [details])
+
+
 
     if (!visible) return null;
     return (
@@ -71,7 +121,7 @@ const ViewDesignation = ({ visible, onClick, edit, ID }) => {
                                     id="Name"
                                     type="text"
                                     placeholder="Enter Designation Name"
-                                    value={details?.Name}
+                                    value={formik.values.Name}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
@@ -81,13 +131,13 @@ const ViewDesignation = ({ visible, onClick, edit, ID }) => {
                                 <p className="text-[13px] font-semibold">Report Designation</p>
                                 <select
                                     id="ReportDesignationName"
-                                    value={details?.ReportDesignationName}
+                                    value={formik.values.ReportDesignationName}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
                                 >
                                     <option value="">Select Report Designation</option>
-                                    <option value={details?.ReportDesignationName}>{details?.ReportDesignationName}</option>
+                                    <option value={formik.values.ReportDesignationName}>{formik.values.ReportDesignationName}</option>
                                     <option value="Administrator">Administrator</option>
                                     <option value="HR">HR</option>
                                     <option value="User">User</option>
@@ -99,33 +149,33 @@ const ViewDesignation = ({ visible, onClick, edit, ID }) => {
                                     id="Remark"
                                     type="text"
                                     placeholder="Enter Remarks"
-                                    value={details?.Remark}
+                                    value={formik.values.Remark}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
                                 />
                             </div>
-                            <div>
-                                <p className="text-[13px] font-semibold">Status</p>
-                                <div className="flex items-center">
-                                    <input
-                                        id="Status"
-                                        type="checkbox"
-                                        checked={details?.Status}
-                                        className={`relative w-4 h-4 mr-2 peer shrink-0 checked:appearance-none checked:bg-blue-900 border-2 border-blue-900 rounded-sm`}
-                                        onChange={() => setStatusCheck(!StatusCheck)}
-                                        disabled={!edit}
-                                    />
-                                    <Icon
-                                        className="absolute w-4 h-4 hidden peer-checked:block"
-                                        icon="gg:check"
-                                        color="white"
-                                    />
-                                    <label for="status" className="text-[11px] font-semibold">
-                                        Active
-                                    </label>
-                                </div>
-                            </div>
+                            <div className="w-1/2">
+                      <p className="mb-3 capitalize font-semibold text-[13px]">
+                        Status
+                      </p>
+                      <div className="flex items-center text-[13px]">
+                        <input
+                          type="checkbox"
+                          id="Status"
+                          name="Status"
+                          className="form-checkbox h-5 w-5 text-blue-600"
+                          checked={formik.values.Status}
+                          onChange={(event) => handleCheckboxChange('status', setStatusChecked, event)}
+                        />
+                        <label
+                          htmlFor="activeCheckbox"
+                          className="ml-2 text-gray-700 text-[13px]"
+                        >
+                          Active
+                        </label>
+                      </div>
+                    </div>
                         </div>
                     </div>
                     <div className="flex gap-10 justify-center">

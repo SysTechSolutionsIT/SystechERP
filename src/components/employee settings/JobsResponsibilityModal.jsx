@@ -3,8 +3,10 @@ import React, { useState } from 'react'
 import { jobsRespData } from './JobsResponsibilityMaster';
 import { Icon } from '@iconify/react';
 import axios from 'axios';
+import { useAuth } from '../Login';
 
 const JobsResponsibilityModal = ({ visible, onClick }) => {
+    const { token } = useAuth()
     const formik = useFormik({
         initialValues: {
             // ID: "",
@@ -23,7 +25,11 @@ const JobsResponsibilityModal = ({ visible, onClick }) => {
 
     const addJobRes = async() =>{
         try{
-            const response = await axios.post("http://localhost:5500/job-responsibility/add", formik.values)
+            const response = await axios.post("http://localhost:5500/job-responsibility/add", formik.values, {
+                headers:{
+                    Authorization: `Bearer ${token}`
+                }
+            })
             alert('Job Responsibility Added')
         } catch(error){
             console.error('Error', error);
@@ -119,7 +125,7 @@ const JobsResponsibilityModal = ({ visible, onClick }) => {
                             <input
                                 id="Status"
                                 type="checkbox"
-                                checked={isStatusChecked}
+                                checked={formik.values.Status}
                                 value={formik.values.Status}
                                 className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border-2 rounded-lg`}
                                 onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}

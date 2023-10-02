@@ -1,9 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const EmpGrade = require('../model/EmployeeGradeModel'); // Assuming your model file is in the same directory
+const jwt = require('jsonwebtoken'); // Import the jwt library
 
+const authToken = (req, res, next) =>{
+  const authHeader = req.headers['authorization']
+  const token = authHeader && authHeader.split(' ')[1]
+  if (token == null) return res.sendStatus(401)
+
+  jwt.verify(token, process.env.SECRET_KEY, (err, user) =>{
+    if (err) return res.sendStatus(403)
+    req.user = user
+    next()
+  })
+}
 // GET all EmpGrades
-router.get('/get', async (req, res) => {
+router.get('/get', authToken, async (req, res) => {
   try {
     const empGrades = await EmpGrade.findAll();
     res.json(empGrades);
@@ -13,7 +25,7 @@ router.get('/get', async (req, res) => {
 });
 
 // GET EmpGrade by ID
-router.get('/get/:id', async (req, res) => {
+router.get('/get/:id', authToken, async (req, res) => {
   const { id } = req.params;
   try {
     const empGrade = await EmpGrade.findByPk(id);
@@ -28,7 +40,7 @@ router.get('/get/:id', async (req, res) => {
 });
 
 // POST a new EmpGrade
-router.post('/add', async (req, res) => {
+router.post('/add', authToken, async (req, res) => {
   try {
     const newEmpGrade = await EmpGrade.create(req.body);
     res.status(201).json(newEmpGrade);
@@ -38,7 +50,7 @@ router.post('/add', async (req, res) => {
 });
 
 // PATCH EmpGrade by ID
-router.patch('/update/:id', async (req, res) => {
+router.patch('/update/:id', authToken, async (req, res) => {
   const { id } = req.params;
   try {
     const [updatedRowsCount, updatedEmpGrades] = await EmpGrade.update(req.body, {
@@ -57,7 +69,7 @@ router.patch('/update/:id', async (req, res) => {
 });
 
 // DELETE EmpGrade by ID
-router.delete('/delete/:id', async (req, res) => {
+router.delete('/delete/:id', authToken, async (req, res) => {
   const { id } = req.params;
   try {
     const deletedRowCount = await EmpGrade.destroy({

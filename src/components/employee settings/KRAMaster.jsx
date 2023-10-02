@@ -1,6 +1,7 @@
 import { Icon } from '@iconify/react';
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
+import { useAuth } from '../Login';
 import KRAModal from './KRAModal';
 import ViewKRA from './ViewKRA';
 
@@ -18,11 +19,16 @@ const KRAMaster = () => {
     const [isModalOpen, setModalOpen] = useState(false);
     const [filteredData, setFilteredData] = useState([]);
     const [KRAData, setKRAData] = useState([])
+    const { token } = useAuth()
 
     useEffect(() =>{
         const fetchKRA = async() =>{
             try{
-                const response = await axios.get("http://localhost:5500/KRA-master/get")
+                const response = await axios.get("http://localhost:5500/KRA-master/get",{
+                    headers:{
+                        Authorization: `Bearer ${token}`
+                    }
+                })
                 const data = response.data
                 setKRAData(data)
             } catch(error){
@@ -36,7 +42,11 @@ const KRAMaster = () => {
     const deleteKRA = async(id) =>{
         alert('Are you sure you want to delete this entry?')
         try{
-            const response = await axios.delete(`http://localhost:5500/KRA-master/delete/${id}`)
+            const response = await axios.delete(`http://localhost:5500/KRA-master/delete/${id}`, {
+                headers:{
+                    Authorization: `Bearer ${token}`
+                }
+            })
             alert("KRA Deleted")
         } catch(error){
             console.error('Error', error);

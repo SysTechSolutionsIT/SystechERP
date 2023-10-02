@@ -124,7 +124,7 @@ const EmployeeTypeModal = ({ visible, onClick }) => {
                   <input
                     id="status"
                     type="checkbox"
-                    checked={isStatusChecked}
+                    checked={formik.values.Status}
                     value={formik.values.Status}
                     className={`relative w-4 h-4 mr-2 peer shrink-0 checked:appearance-none checked:bg-blue-900 border-2 border-blue-900 rounded-sm`}
                     onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}

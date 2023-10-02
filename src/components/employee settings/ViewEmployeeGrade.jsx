@@ -3,20 +3,41 @@ import React, { useState } from 'react'
 import { Icon } from '@iconify/react';
 import { useEffect } from 'react';
 import axios from 'axios';
+import { useAuth } from "../Login";
 
 const ViewEmployeeGrade = ({ visible, onClick, edit, ID }) => {
     const [details, setDetails] = useState([]);
+    const {token} = useAuth()
     const formik = useFormik({
         initialValues: {
-            ID: "",
             Name: "",
             Status: "",
             Remark: ""
         },
         onSubmit: (values) => {
             console.log(values);
+            const updatedData = {
+                Name: values.Name,
+                Status: values.Status,
+                Remark: values.Remark
+            }
+
+            updateEmpGrade(updatedData)
         },
     });
+
+    const updateEmpGrade = async (data) =>{
+        try{
+            const response = axios.patch(`http://localhost:5500/employee-grade/update/${ID}`, data, {
+                headers:{
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            alert('Employee Grade Updated')
+        } catch (error){
+            console.error('Error', error);
+        }
+    }
 
     const [isStatusChecked, setStatusChecked] = useState(false)
 
@@ -33,7 +54,11 @@ const ViewEmployeeGrade = ({ visible, onClick, edit, ID }) => {
       useEffect(() => {
         const fetchEmpGradeData = async () => {
           try {
-            const response = await axios.get(`http://localhost:5500/employee-grade/get/${ID}`);
+            const response = await axios.get(`http://localhost:5500/employee-grade/get/${ID}`, {
+                headers:{
+                    Authorization: `Bearer ${token}`
+                }
+            });
               const data = response.data;
               console.log('fetched data', data);
               setDetails(data);
@@ -44,7 +69,15 @@ const ViewEmployeeGrade = ({ visible, onClick, edit, ID }) => {
         fetchEmpGradeData();
       }, [ID]);
       
-      
+      useEffect(() =>{
+        if (details){
+            formik.setValues({
+                Name: details.Name,
+                Status: details.Status,
+                Remark: details.Remark
+            })
+        }
+      }, [details])
 
     if (!visible) return null;
     return (
@@ -78,9 +111,10 @@ const ViewEmployeeGrade = ({ visible, onClick, edit, ID }) => {
                             <div>
                                 <p className="text-[13px] text-left font-semibold">Employee Grade Name</p>
                                 <input
+                                    id='Name'
                                     type="text"
                                     placeholder="Enter Employee Grade Name"
-                                    value={details?.Name}
+                                    value={formik.values.Name}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
@@ -89,34 +123,28 @@ const ViewEmployeeGrade = ({ visible, onClick, edit, ID }) => {
                             <div>
                                 <p className="text-[13px] text-left font-semibold">Remarks</p>
                                 <input
+                                    id='Remark'
                                     type="text"
                                     placeholder="Enter Remarks"
-                                    value={details?.Remark}
+                                    value={formik.values.Remark}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
                                 />
                             </div>
                             <div>
-                                <p className="text-[13px] text-left font-semibold">Status</p>
-                                <div className="flex items-center">
-                                    <input
-                                        type="checkbox"
-                                        checked={details?.Status}
-                                        className={`relative w-4 h-4 mr-2 peer shrink-0 checked:appearance-none checked:bg-blue-900 border-2 border-blue-900 rounded-sm`}
-                                        onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}
-                                        disabled={!edit}
-                                    />
-                                    <Icon
-                                        className="absolute w-4 h-4 hidden peer-checked:block"
-                                        icon="gg:check"
-                                        color="white"
-                                    />
-                                    <label for="status" className="text-[11px] font-semibold">
-                                        Active
-                                    </label>
-                                </div>
-                            </div>
+                            <p className="capitalize font-semibold text-[13px]">Status</p>
+                            <label className="capitalize font-semibold text-[11px]">
+                            <input
+                                id="Status"
+                                type="checkbox"
+                                checked={formik.values.Status}
+                                className={`w-5 h-5 mr-2 mt-5 focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px]`}
+                                onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}
+                            />
+                            Active
+                            </label>
+                        </div>
                         </div>
                     </div>
                     <div className="flex gap-10 justify-center">

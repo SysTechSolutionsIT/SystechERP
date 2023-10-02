@@ -3,8 +3,10 @@ import React, { useState } from 'react'
 // import { KRAData } from './KRAMaster';
 import { Icon } from '@iconify/react';
 import axios from 'axios';
+import { useAuth } from '../Login';
 
 const KRAModal = ({ visible, onClick }) => {
+    const {token} = useAuth()
     const formik = useFormik({
         initialValues: {
             // ID: "",
@@ -23,7 +25,11 @@ const KRAModal = ({ visible, onClick }) => {
 
     const addKRA = async() =>{
         try{
-            const response = await axios.post("http://localhost:5500/KRA-master/add",  formik.values)
+            const response = await axios.post("http://localhost:5500/KRA-master/add",  formik.values, {
+                headers:{
+                    Authorization: `Bearer ${token}`
+                }
+            })
             alert('KRA Added')
         } catch(error){
             console.error('Error', error);
