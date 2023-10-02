@@ -2,9 +2,11 @@ import { useFormik } from "formik";
 import React, { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import axios from "axios";
+import { useAuth } from "../Login";
 
 const AddJob = ({ visible, onClick }) => {
   const [statusCheck, setStatusCheck] = useState(false);
+  const { token } = useAuth();
 
   const formik = useFormik({
     initialValues: {
@@ -18,8 +20,9 @@ const AddJob = ({ visible, onClick }) => {
       status: statusCheck,
     },
     onSubmit: async (values) => {
-      const status = statusCheck === true;
       console.log(values);
+      const state = statusCheck === true;
+
       try {
         const formData = {
           jobName: values.jobName,
@@ -28,13 +31,18 @@ const AddJob = ({ visible, onClick }) => {
           position: values.position,
           ratePerDay: values.ratePerDay,
           rateGroup: values.rateGroup,
-          Remark: values.remark,
-          status: status, // StatusCheck was already part of formik.values
+          Remark: values.Remark,
+          status: state,
         };
 
         const response = await axios.post(
           "http://localhost:5500/job-master/add",
-          formData // Send the extracted form data
+          formData,
+          {
+            headers: {
+              authorization: `Bearer ${token}`,
+            },
+          } // Send the extracted form data
         );
 
         if (response.status === 200) {
@@ -188,8 +196,7 @@ const AddJob = ({ visible, onClick }) => {
                     checked={statusCheck}
                     className={`w-5 h-5 mr-2 mt-4 focus:outline-gray-300 border border-blue-900 rounded-lg`}
                     onChange={() => {
-                      setStatusCheck(!statusCheck);
-                      formik.setFieldValue("status", statusCheck); // Update status value in formik
+                      setStatusCheck(!statusCheck); // Update status value in formik
                     }}
                   />
                   Active
