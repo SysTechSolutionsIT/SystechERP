@@ -16,10 +16,10 @@ const authToken = (req, res, next) => {
   });
 };
 
-router.get("/get", authToken, async (req, res) => {
+router.get("/", authToken, async (req, res) => {
   try {
-    const Jobs = await JobMaster.findAll();
-    res.json(Jobs);
+    const jobs = await JobMaster.findAll();
+    res.json(jobs);
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve Job Master data" });
   }

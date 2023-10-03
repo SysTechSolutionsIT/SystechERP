@@ -26,6 +26,7 @@ const Designation = require("./route/DesignationRoute");
 const KRAMaster = require("./route/KRARoute");
 const JobResponsibility = require("./route/JobResponsibilityRoute");
 const JobMaster = require("./route/JobMasterRoute");
+const ShiftMaster = require("./route/ShiftMasterRoute");
 
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());
@@ -51,6 +52,7 @@ app.use("/designation-master", Designation);
 app.use("/KRA-master", KRAMaster);
 app.use("/job-responsibility", JobResponsibility);
 app.use("/job-master", JobMaster);
+app.use("/shift-master", ShiftMaster);
 
 // Start the server
 const port = 5500;

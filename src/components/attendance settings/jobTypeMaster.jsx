@@ -156,7 +156,7 @@ const JobTypeMaster = () => {
 
   useEffect(() => {
     fetchJobData();
-  }, [token]);
+  }, []);
 
   const fetchJobData = async () => {
     try {
@@ -164,11 +164,11 @@ const JobTypeMaster = () => {
         headers: { authorization: `Bearer ${token}` },
       });
       console.log("Response Object", response);
-      const data = response.data.Jobs;
+      const data = response.data.jobs;
       console.log(data);
       setJob(data);
     } catch (error) {
-      console.log("Error while fetching course data: ", error.message);
+      console.log("Error while fetching job data: ", error.message);
     }
   };
   console.log(job);
@@ -203,7 +203,7 @@ const JobTypeMaster = () => {
 
       const response = await axios.delete(apiUrl, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          authorization: `Bearer ${token}`,
         },
       });
 

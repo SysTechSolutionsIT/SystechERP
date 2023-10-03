@@ -56,6 +56,7 @@ const CompanyModal = ({ visible, onClick }) => {
 
           // Close the modal
           onClick();
+          window.location.reload();
         } else {
           // An error occurred while creating the company
           console.log("Error creating company:", response.status);

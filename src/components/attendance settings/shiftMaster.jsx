@@ -1,8 +1,9 @@
 import { Icon } from "@iconify/react";
 import React, { useState, useEffect, useRef } from "react";
-import { Button } from "react-bootstrap";
 import ViewShift from "./viewShift";
 import AddShift from "./AddShift";
+import axios from "axios";
+import { useAuth } from "../Login";
 
 export const ShiftData = [
   {
@@ -154,6 +155,8 @@ export const ShiftData = [
 const ShiftMaster = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false); //Add Modal
+
+  const { token } = useAuth();
   //View and Edit
   const [SVE, setSVE] = useState(false);
   const [edit, setEdit] = useState(false);
@@ -181,18 +184,6 @@ const ShiftMaster = () => {
     status: true,
   });
 
-  const handleSearchChange = (title, searchWord) => {
-    const newFilter = ShiftData.filter((item) => {
-      const value = item[title];
-      return value && value.toLowerCase().includes(searchWord.toLowerCase());
-    });
-
-    if (searchWord === "") {
-      setFilteredData([]);
-    } else {
-      setFilteredData(newFilter);
-    }
-  };
   //Toggle
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedColumns, setSelectedColumns] = useState([
@@ -255,6 +246,47 @@ const ShiftMaster = () => {
     const context = canvas.getContext("2d");
     context.font = fontSize + " sans-serif";
     return context.measureText(text).width;
+  };
+  //API CALL
+
+  const [, set] = useState([]);
+
+  useEffect(() => {
+    fetchCompData();
+  }, [token]);
+
+  const fetchCompData = async () => {
+    try {
+      const response = await axios.get("http://localhost:5500/financials/");
+      console.log("Response Object", response);
+      const data = response.data.records;
+      console.log(data);
+      setFins(data);
+    } catch (error) {
+      console.log("Error while fetching course data: ", error.message);
+    }
+  };
+  console.log(Fins);
+
+  const handleSearchChange = (title, searchWord) => {
+    const searchData = [...Fins];
+
+    const newFilter = searchData.filter((item) => {
+      // Check if the item matches the search term in any of the selected columns
+      const matches = selectedColumns.some((columnName) => {
+        const newCol = columnName.charAt(0).toLowerCase() + columnName.slice(1);
+        const value = item[newCol];
+        return (
+          value &&
+          value.toString().toLowerCase().includes(searchWord.toLowerCase())
+        );
+      });
+
+      return matches;
+    });
+
+    // Update the filtered data
+    setFilteredData(newFilter);
   };
 
   return (
