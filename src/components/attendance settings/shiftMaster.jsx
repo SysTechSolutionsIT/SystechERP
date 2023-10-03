@@ -155,6 +155,7 @@ export const ShiftData = [
 const ShiftMaster = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false); //Add Modal
+  const [ Fins, setFins] = useState('')
 
   const { token } = useAuth();
   //View and Edit
