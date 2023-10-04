@@ -2,6 +2,8 @@ import { Icon } from "@iconify/react";
 import React, { useState, useEffect, useRef } from "react";
 import ViewLeave from "./ViewLeave";
 import AddLeave from "./AddLeave";
+import axios from "axios";
+import { useAuth } from "../Login";
 
 export const leaveData = [
   {
@@ -81,10 +83,30 @@ export const leaveData = [
 const LeaveTypeMaster = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false); //Add Modal
+  const [ leaveData , setLeaveData ] = useState([])
+  const { token } = useAuth()
   //View and Edit
   const [LVE, setLVE] = useState(false);
   const [edit, setEdit] = useState(false);
   const [LeaveId, setLeaveId] = useState();
+
+  useEffect(() =>{
+    const fetchLeaveType = async() =>{
+      try{
+        const response = await axios.get('http://localhost:5500/leave-master/get',{
+          headers:{
+            Authorization: `Bearer ${token}`
+          }
+        })
+        const data = response.data
+        setLeaveData(data)
+      } catch(error){
+        console.error('Error', error);
+      }
+    }
+
+    fetchLeaveType()
+  }, [token])
 
   //Hamburger Menu
   const [menuOpen, setMenuOpen] = useState(false);
@@ -352,7 +374,7 @@ const LeaveTypeMaster = () => {
                             onClick={() => {
                               setLVE(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setLeaveId(result.LeaveId); // Pass ID to VEModal
+                              setLeaveId(result.id); // Pass ID to VEModal
                             }}
                           />
                           <Icon
@@ -363,7 +385,7 @@ const LeaveTypeMaster = () => {
                             onClick={() => {
                               setLVE(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setLeaveId(result.LeaveId); // Pass ID to VEModal
+                              setLeaveId(result.id); // Pass ID to VEModal
                             }}
                           />
                           <ViewLeave
@@ -381,7 +403,7 @@ const LeaveTypeMaster = () => {
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {result.LeaveId}
+                        {result.id}
                       </td>
                       {selectedColumns.map(
                         (columnName) =>
@@ -410,7 +432,7 @@ const LeaveTypeMaster = () => {
                             onClick={() => {
                               setLVE(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setLeaveId(entry.LeaveId); // Pass ID to VEModal
+                              setLeaveId(entry.id); // Pass ID to VEModal
                             }}
                           />
 
@@ -422,7 +444,7 @@ const LeaveTypeMaster = () => {
                             onClick={() => {
                               setLVE(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setLeaveId(entry.LeaveId); // Pass ID to VEModal
+                              setLeaveId(entry.id); // Pass ID to VEModal
                             }}
                           />
                           <ViewLeave
@@ -441,7 +463,7 @@ const LeaveTypeMaster = () => {
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {entry.LeaveId}
+                        {entry.id}
                       </td>
                       {selectedColumns.map(
                         (columnName) =>

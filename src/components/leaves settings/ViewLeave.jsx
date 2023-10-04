@@ -2,37 +2,92 @@ import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { Icon } from "@iconify/react";
 import { leaveData } from "./LeaveType";
+import axios from "axios";
+import { useAuth } from "../Login";
 
 const ViewLeave = ({ visible, onClick, edit, ID }) => {
   const [details, setDetails] = useState([]);
+  const {token} = useAuth()
   const formik = useFormik({
     initialValues: {
-      LeaveId: "",
       LeaveType: "",
       ShortName: "",
       PaidFlag: "",
       CarryForwardFlag: "",
-      Remarks: "",
+      Remark: "",
       Status: "",
     },
     onSubmit: (values) => {
       console.log(values);
-      leaveData.push(values);
-      alert("Added Successfully");
+      const updatedData = {
+        LeaveType: values.LeaveType,
+      ShortName: values.ShortName,
+      PaidFlag: values.PaidFlag,
+      CarryForwardFlag: values.CarryForwardFlag,
+      Remark: values.Remark,
+      Status: values.Status,
+      }
+
+      updateLeave(updatedData)
     },
   });
 
-  useEffect(() => {
-    const selectedEntry = leaveData.find((entry) => entry.LeaveId === ID);
-    if (selectedEntry) {
-      setDetails(selectedEntry);
+  const updateLeave = async (data) =>{
+    try {
+      const response = axios.patch(`http://localhost:5500/leave-master/update/${ID}`, data, {
+        headers:{
+          Authorization: `Bearer ${token}`
+        }
+      })
+      alert('Leave Data Updated')
+      window.location.reload()
+    } catch (error) {
+      console.error('Error', error);
     }
+  }
+
+  useEffect(() => {
+    const fetchLeave = async () =>{
+      try{
+        const response = await axios.get(`http://localhost:5500/leave-master/get/${ID}`, {
+          headers:{
+            Authorization: `Bearer ${token}`
+          }
+        })
+        const data = response.data
+        setDetails(data)
+      }catch (error){
+        console.error('Error', error);
+    } 
+    }
+
+    fetchLeave()
   }, [ID]);
 
-  const [status, setStatus] = useState(details.Status === "Active");
-  const handleStatusChange = () => {
-    setStatus(!status);
-  };
+  useEffect(() =>{
+    if (details){
+        formik.setValues({
+          LeaveType: details.LeaveType,
+          ShortName: details.ShortName,
+          PaidFlag: details.PaidFlag,
+          CarryForwardFlag: details.CarryForwardFlag,
+          Remark: details.Remark,
+          Status: details.Status,
+        })
+    }
+  }, [details])
+
+  const [isStatusChecked, setStatusChecked] = useState(false)
+
+  const handleCheckboxChange = (fieldName, setChecked, event) => {
+    //This is how to use it (event) => handleCheckboxChange('Status', setStatusChecked, event)
+      const checked = event.target.checked;
+      setChecked(checked);
+      formik.setValues({
+        ...formik.values,
+        [fieldName]: checked.toString(),
+      });
+    };
 
   if (!visible) return null;
   return (
@@ -57,10 +112,9 @@ const ViewLeave = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Leave ID</p>
                 <input
-                  id="LeaveId"
                   type="number"
                   placeholder="Enter Leave ID"
-                  value={details.LeaveId}
+                  value={details?.id}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -69,10 +123,10 @@ const ViewLeave = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Leave Type Name</p>
                 <input
-                  id=" LeaveType"
+                  id="LeaveType"
                   type="text"
                   placeholder="Enter Leave Type Name"
-                  value={details.LeaveType}
+                  value={formik.values.LeaveType}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -81,10 +135,10 @@ const ViewLeave = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">ShortName</p>
                 <input
-                  id="shortname"
+                  id="ShortName"
                   type="text"
                   placeholder="Enter Short Name"
-                  value={details.ShortName}
+                  value={formik.values.ShortName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -100,7 +154,7 @@ const ViewLeave = ({ visible, onClick, edit, ID }) => {
                       type="radio"
                       id="PaidFlag"
                       value="Paid"
-                      checked={details.PaidFlag === "Paid"}
+                      checked={formik.values.PaidFlag === "Paid"}
                       onChange={formik.handleChange}
                       className="mr-2"
                       disabled={!edit}
@@ -112,7 +166,7 @@ const ViewLeave = ({ visible, onClick, edit, ID }) => {
                       type="radio"
                       id="PaidFlag"
                       value="Unpaid"
-                      checked={details.PaidFlag === "Unpaid"}
+                      checked={formik.values.PaidFlag === "Unpaid"}
                       onChange={formik.handleChange}
                       className="mr-2"
                       disabled={!edit}
@@ -131,7 +185,7 @@ const ViewLeave = ({ visible, onClick, edit, ID }) => {
                       type="radio"
                       id="CarryForwardFlag"
                       value="Yes"
-                      checked={details.CarryForwardFlag === "Yes"}
+                      checked={formik.values.CarryForwardFlag === "Yes"}
                       onChange={formik.handleChange}
                       className="mr-2"
                       disabled={!edit}
@@ -143,7 +197,7 @@ const ViewLeave = ({ visible, onClick, edit, ID }) => {
                       type="radio"
                       id="CarryForwardFlag"
                       value="No"
-                      checked={details.CarryForwardFlag === "No"}
+                      checked={formik.values.CarryForwardFlag === "No"}
                       onChange={formik.handleChange}
                       className="mr-2"
                       disabled={!edit}
@@ -153,38 +207,30 @@ const ViewLeave = ({ visible, onClick, edit, ID }) => {
                 </div>
               </div>
               <div>
-                <p className="text-[13px] font-semibold">Remarks</p>
+                <p className="text-[13px] font-semibold">Remark</p>
                 <input
-                  id="remark"
+                  id="Remark"
                   type="text"
-                  placeholder="Enter Remarks"
-                  value={details.Remarks}
+                  placeholder="Enter Remark"
+                  value={formik.values.Remark}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
               </div>
               <div>
-                <p className="text-[13px] font-semibold">Status</p>
-                <div className="flex items-center">
-                  <input
-                    id="status"
+                <p className="capitalize font-semibold text-[13px]">Status</p>
+                <label className="capitalize font-semibold text-[11px]">
+                <input
+                    id="Status"
                     type="checkbox"
-                    checked={details.Status}
-                    value={details.Status}
-                    className={` relative w-4 h-4 mr-2 peer shrink-0 appearance-none checked:bg-blue-800 border-2 border-blue-900 rounded-sm`}
-                    onChange={handleStatusChange}
-                  />
-                  <Icon
-                    className="absolute w-4 h-4 hidden peer-checked:block"
-                    icon="gg:check"
-                    color="white"
-                  />
-                  <label for="status" className="text-[11px] font-semibold">
-                    Active
-                  </label>
-                </div>
-              </div>
+                    checked={formik.values.Status}
+                    className={`w-5 h-5 mr-2 mt-5 focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px]`}
+                    onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}
+                />
+                Active
+                </label>
+            </div>
             </div>
           </div>
           <div className="flex gap-10 justify-center">

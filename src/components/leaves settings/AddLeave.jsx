@@ -2,37 +2,53 @@ import { useFormik } from "formik";
 import React, { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import { leaveData } from "./LeaveType";
+import axios from 'axios'
+import { useAuth } from "../Login";
 
 const AddLeave = ({ visible, onClick }) => {
-  const [statusCheck, setStatusCheck] = useState("Inactive");
+  const { token } = useAuth()
+  const [isStatusChecked, setStatusChecked] = useState(false)
 
   const formik = useFormik({
     initialValues: {
-      LeaveId: "",
+      // LeaveId: "",
       LeaveType: "",
       ShortName: "",
       PaidFlag: "",
       CarryForwardFlag: "",
-      Remarks: "",
-      Status: "",
+      Remark: "",
+      Status: isStatusChecked,
     },
     onSubmit: (values) => {
       console.log(values);
-      leaveData.push(values);
-      onClick();
+      addLeave()
     },
-  });
-  useEffect(() => {
-    formik.resetForm();
-  }, []);
+  })
 
-  const handleStatusChange = () => {
-    if (statusCheck === "Inactive") {
-      setStatusCheck("Active");
-    } else {
-      setStatusCheck("Inactive");
+  const addLeave = async () => {
+    try{
+      const response = await axios.post('http://localhost:5500/leave-master/add', formik.values, {
+        headers:{
+          Authorization: `Bearer ${token}`
+        }
+      })
+      alert('Leave Successfully Added')
+    } catch(error){
+      console.error('Error', error);
     }
-  };
+  }
+
+    const handleCheckboxChange = (fieldName, setChecked, event) => {
+      //This is how to use it (event) => handleCheckboxChange('Status', setStatusChecked, event)
+        const checked = event.target.checked;
+        setChecked(checked);
+        formik.setValues({
+          ...formik.values,
+          [fieldName]: checked.toString(),
+        });
+      };
+
+
   if (!visible) return null;
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -56,10 +72,10 @@ const AddLeave = ({ visible, onClick }) => {
               <div>
                 <p className="text-[13px] font-semibold">Leave ID</p>
                 <input
-                  id="LeaveId"
+                  // id="LeaveId"
                   type="number"
                   placeholder="Enter Leave ID"
-                  value={formik.values.LeaveId}
+                  // value={formik.values.LeaveId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -67,7 +83,7 @@ const AddLeave = ({ visible, onClick }) => {
               <div>
                 <p className="text-[13px] font-semibold">Leave Type Name</p>
                 <input
-                  id=" LeaveType"
+                  id="LeaveType"
                   type="text"
                   placeholder="Enter Leave Type Name"
                   value={formik.values.LeaveType}
@@ -78,7 +94,7 @@ const AddLeave = ({ visible, onClick }) => {
               <div>
                 <p className="text-[13px] font-semibold">ShortName</p>
                 <input
-                  id="shortname"
+                  id="ShortName"
                   type="text"
                   placeholder="Enter Short Name"
                   value={formik.values.ShortName}
@@ -147,35 +163,28 @@ const AddLeave = ({ visible, onClick }) => {
               <div>
                 <p className="text-[13px] font-semibold">Remarks</p>
                 <input
-                  id="remark"
+                  id="Remark"
                   type="text"
                   placeholder="Enter Remarks"
-                  value={formik.values.Remarks}
+                  value={formik.values.Remark}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
               </div>
               <div>
-                <p className="text-[13px] font-semibold">Status</p>
-                <div className="flex items-center">
-                  <input
-                    id="status"
+                <p className="capitalize font-semibold text-[13px]">Status</p>
+                <label className="capitalize font-semibold text-[11px]">
+                <input
+                    id="Status"
                     type="checkbox"
                     checked={formik.values.Status}
                     value={formik.values.Status}
-                    className={` relative w-4 h-4 mr-2 peer shrink-0 appearance-none checked:bg-blue-800 border-2 border-blue-900 rounded-sm`}
-                    onChange={handleStatusChange}
-                  />
-                  <Icon
-                    className="absolute w-4 h-4 hidden peer-checked:block"
-                    icon="gg:check"
-                    color="white"
-                  />
-                  <label for="status" className="text-[11px] font-semibold">
-                    Active
-                  </label>
-                </div>
-              </div>
+                    className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border-2 rounded-lg`}
+                    onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}
+                />
+                Active
+                </label>
+            </div>
             </div>
           </div>
           <div className="flex gap-10 justify-center">
