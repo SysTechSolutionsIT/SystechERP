@@ -1,10 +1,14 @@
 import { Icon } from "@iconify/react";
+import axios from "axios";
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "react-bootstrap";
+import { useAuth } from "../Login";
 import LeaveModal1 from "./LeaveModal1";
 
 const LeaveApp = () => {
   const [isModalOpen, setModalOpen] = useState(false); //Add Modal
+  const [LeaveApps, setLeaveApps] = useState([])
+  const { token } = useAuth()
 
   const employeeFields = [
     "Approval Flag",
@@ -21,6 +25,23 @@ const LeaveApp = () => {
     "Sanction To Date",
     "Sanction Leave Day",
   ];
+
+useEffect(() =>{
+  const fetchLeaveApps = async () =>{
+    try {
+      const response = await axios.get('http://localhost:5500/leave-application/get', {
+        headers:{
+          Authorization: `Bearer ${token}`
+        }
+      })
+      const data = response.data
+      setLeaveApps(data)
+    } catch (error) {
+      console.error('Error', error);
+    }
+  }
+  fetchLeaveApps()
+}, [token])
 
   return (
     <div className="top-25 min-w-[40%]">
@@ -57,7 +78,76 @@ const LeaveApp = () => {
                 ))}
               </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+          {LeaveApps.map((entry, index) => (
+          <tr>
+            <td className="px-2 text-[11px] border-2">
+              <div className="flex items-center gap-2 text-center justify-center">
+                <Icon
+                  className="cursor-pointer"
+                  icon="lucide:eye"
+                  color="#556987"
+                  width="20"
+                  height="20"
+                />
+                <Icon
+                  className="cursor-pointer"
+                  icon="mdi:edit"
+                  color="#556987"
+                  width="20"
+                  height="20"
+                />
+                <Icon
+                  className="cursor-pointer"
+                  icon="material-symbols:delete-outline"
+                  color="#556987"
+                  width="20"
+                  height="20"
+                />
+              </div>
+            </td>
+            <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
+              {entry.ApprovalFlag ? 'Approved' : 'Not Approved'}
+            </td>
+            <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
+              {entry.id}
+            </td>
+            <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
+              {entry.FYear}
+            </td>
+            <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
+              {entry.ApplicationDate}
+            </td>
+            <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
+              {entry.EmployeeId}
+            </td>
+            <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
+              {entry.EmployeeName}
+            </td>
+            <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
+              {entry.LeaveFromDate}
+            </td>
+            <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
+              {entry.LeaveToDate}
+            </td>
+            <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
+              {entry.LeaveType}
+            </td>
+            <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
+              {entry.SanctionBy || 'NA'}
+            </td>
+            <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
+              {entry.SanctionFromDate || 'NA'}
+            </td>
+            <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
+              {entry.SanctionToDate || 'NA'}
+            </td>
+            <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
+              {entry.SanctionLeaveDay || 'NA'}
+            </td>
+            </tr>
+            ))}
+            </tbody>
           </table>
         </div>
       </div>
