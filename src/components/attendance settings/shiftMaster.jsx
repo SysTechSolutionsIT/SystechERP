@@ -168,20 +168,20 @@ const ShiftMaster = () => {
   const menuRef = useRef(null);
 
   const [columnVisibility, setColumnVisibility] = useState({
-    employeeType: true,
-    shiftName: true,
-    startTime: true,
-    endTime: true,
-    OTstartTime: true,
-    graceEarlyTime: true,
-    graceLateTime: true,
+    eType: true,
+    sName: true,
+    startT: true,
+    endT: true,
+    OTstartT: true,
+    GRstartT: true,
+    GRendT: true,
     halfDayHour: true,
     fullDayHours: true,
     twoDayShift: true,
     autoRotateFlag: false,
-    shiftGraceHoursMin: false,
-    shiftGraceHoursMax: false,
-    remark: false,
+    graceMin: false,
+    graceMax: false,
+    remarks: false,
     status: true,
   });
 
@@ -250,27 +250,31 @@ const ShiftMaster = () => {
   };
   //API CALL
 
-  const [, set] = useState([]);
+  const [Shift, setShift] = useState([]);
 
   useEffect(() => {
-    fetchCompData();
-  }, [token]);
+    fetchShiftData();
+  }, []);
 
-  const fetchCompData = async () => {
+  const fetchShiftData = async () => {
     try {
-      const response = await axios.get("http://localhost:5500/financials/");
+      const response = await axios.get("http://localhost:5500/shift-master/", {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
       console.log("Response Object", response);
-      const data = response.data.records;
+      const data = response.data;
       console.log(data);
-      setFins(data);
+      setShift(data);
     } catch (error) {
       console.log("Error while fetching course data: ", error.message);
     }
   };
-  console.log(Fins);
+  console.log(Shift);
 
   const handleSearchChange = (title, searchWord) => {
-    const searchData = [...Fins];
+    const searchData = [...Shift];
 
     const newFilter = searchData.filter((item) => {
       // Check if the item matches the search term in any of the selected columns
@@ -467,7 +471,7 @@ const ShiftMaster = () => {
                             onClick={() => {
                               setSVE(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setShiftId(result.shiftId); // Pass ID to VEModal
+                              setShiftId(result.sID); // Pass ID to VEModal
                             }}
                           />
                           <Icon
@@ -478,7 +482,7 @@ const ShiftMaster = () => {
                             onClick={() => {
                               setSVE(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setShiftId(result.shiftId); // Pass ID to VEModal
+                              setShiftId(result.sID); // Pass ID to VEModal
                             }}
                           />
                           <ViewShift
@@ -496,7 +500,7 @@ const ShiftMaster = () => {
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {result.shiftId}
+                        {result.sID}
                       </td>
                       {selectedColumns.map(
                         (columnName) =>
@@ -513,7 +517,8 @@ const ShiftMaster = () => {
                       )}
                     </tr>
                   ))
-                : ShiftData.map((entry, index) => (
+                : Shift.length > 0 &&
+                  Shift.map((entry, index) => (
                     <tr key={index}>
                       <td className="px-2 border-2">
                         <div className="flex items-center gap-2 text-center justify-center">
@@ -525,7 +530,7 @@ const ShiftMaster = () => {
                             onClick={() => {
                               setSVE(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setShiftId(entry.shiftId); // Pass ID to VEModal
+                              setShiftId(entry.sID); // Pass ID to VEModal
                             }}
                           />
 
@@ -537,7 +542,7 @@ const ShiftMaster = () => {
                             onClick={() => {
                               setSVE(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setShiftId(entry.shiftId); // Pass ID to VEModal
+                              setShiftId(entry.sID); // Pass ID to VEModal
                             }}
                           />
                           <ViewShift
@@ -556,7 +561,7 @@ const ShiftMaster = () => {
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {entry.shiftId}
+                        {entry.sID}
                       </td>
                       {selectedColumns.map(
                         (columnName) =>
@@ -567,7 +572,16 @@ const ShiftMaster = () => {
                                 columnVisibility[columnName] ? "" : "hidden"
                               }`}
                             >
-                              {entry[columnName]}
+                              {columnName === "twoDayShift" ||
+                              columnName === "autoRotateFlag"
+                                ? entry[columnName] === "yes"
+                                  ? "Yes"
+                                  : "No"
+                                : columnName === "status"
+                                ? entry[columnName] === "active"
+                                  ? "Active"
+                                  : "Inactive"
+                                : entry[columnName]}
                             </td>
                           )
                       )}

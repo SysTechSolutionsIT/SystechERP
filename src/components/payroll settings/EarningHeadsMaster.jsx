@@ -68,25 +68,13 @@ const EarningHeadsMaster = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
 
-  const handleSearchChange = (title, searchWord) => {
-    const newFilter = EarningHeads.filter((item) => {
-      const value = item[title];
-      return value && value.toLowerCase().includes(searchWord.toLowerCase());
-    });
-
-    if (searchWord === "") {
-      setFilteredData([]);
-    } else {
-      setFilteredData(newFilter);
-    }
-  };
-
   const [veEarningH, setVeEarningH] = useState(false);
   const [edit, setEdit] = useState(false);
   const [EHid, setEHid] = useState();
 
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
+
   const [columnVisibility, setColumnVisibility] = useState({
     EarningHead: true,
     ShortName: true,
@@ -156,6 +144,19 @@ const EarningHeadsMaster = () => {
     setSelectedColumns([]);
   };
 
+  const handleSearchChange = (title, searchWord) => {
+    const newFilter = EarningHeads.filter((item) => {
+      const value = item[title];
+      return value && value.toLowerCase().includes(searchWord.toLowerCase());
+    });
+
+    if (searchWord === "") {
+      setFilteredData([]);
+    } else {
+      setFilteredData(newFilter);
+    }
+  };
+
   return (
     <div className="top-25 min-w-[40%]">
       <div className="bg-blue-900 h-15 p-2 ml-2 px-8 sm:whitespace-nowrap text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-x-auto">
@@ -171,9 +172,8 @@ const EarningHeadsMaster = () => {
               Column Visibility
               <Icon
                 icon="fe:arrow-down"
-                className={`mt-1.5 ml-2 ${
-                  showDropdown ? "rotate-180" : ""
-                } cursor-pointer`}
+                className={`mt-1.5 ml-2 ${showDropdown ? "rotate-180" : ""
+                  } cursor-pointer`}
               />
             </button>
           </div>
@@ -277,9 +277,8 @@ const EarningHeadsMaster = () => {
                 {selectedColumns.map((columnName) => (
                   <th
                     key={columnName}
-                    className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 ${
-                      columnVisibility[columnName] ? "" : "hidden"
-                    }`}
+                    className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 ${columnVisibility[columnName] ? "" : "hidden"
+                      }`}
                   >
                     {columnName}
                   </th>
@@ -309,135 +308,133 @@ const EarningHeadsMaster = () => {
             <tbody className="">
               {filteredData.length > 0
                 ? filteredData.map((result, key) => (
-                    <tr key={key}>
-                      <td className="px-2 border-2">
-                        <div className="flex gap-2 text-center">
-                          <Icon
-                            icon="lucide:eye"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => {
-                              setVeEarningH(true); // Open VEModal
-                              setEdit(false); // Disable edit mode for VEModal
-                              setEHid(result.EarningHeadId); // Pass ID to VEModal
-                            }}
-                          />
-                          <ViewEarningHeads
-                            visible={veEarningH}
-                            onClick={() => setVeEarningH(false)}
-                            edit={edit}
-                            ID={EHid}
-                          />
-                          <Icon
-                            icon="mdi:edit"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => {
-                              setVeEarningH(true); // Open VEModal
-                              setEdit(true); // Disable edit mode for VEModal
-                              setEHid(result.EarningHeadId); // Pass ID to VEModal
-                            }}
-                          />
-                          <ViewEarningHeads
-                            visible={veEarningH}
-                            onClick={() => setVeEarningH(false)}
-                            edit={edit}
-                            ID={EHid}
-                          />
-                          <Icon
-                            icon="material-symbols:delete-outline"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                          />
-                        </div>
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {result.EarningHeadId}
-                      </td>
-                      {selectedColumns.map((columnName) => (
-                        <td
-                          key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-[11px] text-left${
-                            columnVisibility[columnName] ? "" : "hidden"
+                  <tr key={key}>
+                    <td className="px-2 border-2">
+                      <div className="flex gap-2 text-center">
+                        <Icon
+                          icon="lucide:eye"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          onClick={() => {
+                            setVeEarningH(true); // Open VEModal
+                            setEdit(false); // Disable edit mode for VEModal
+                            setEHid(result.EarningHeadId); // Pass ID to VEModal
+                          }}
+                        />
+                        <ViewEarningHeads
+                          visible={veEarningH}
+                          onClick={() => setVeEarningH(false)}
+                          edit={edit}
+                          ID={EHid}
+                        />
+                        <Icon
+                          icon="mdi:edit"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          onClick={() => {
+                            setVeEarningH(true); // Open VEModal
+                            setEdit(true); // Disable edit mode for VEModal
+                            setEHid(result.EarningHeadId); // Pass ID to VEModal
+                          }}
+                        />
+                        <ViewEarningHeads
+                          visible={veEarningH}
+                          onClick={() => setVeEarningH(false)}
+                          edit={edit}
+                          ID={EHid}
+                        />
+                        <Icon
+                          icon="material-symbols:delete-outline"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                        />
+                      </div>
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                      {result.EarningHeadId}
+                    </td>
+                    {selectedColumns.map((columnName) => (
+                      <td
+                        key={columnName}
+                        className={`px-4 border-2 whitespace-normal text-[11px] text-left${columnVisibility[columnName] ? "" : "hidden"
                           }`}
-                        >
-                          {columnName === "Status"
-                            ? result[columnName]
-                              ? "Active"
-                              : "Inactive"
-                            : result[columnName]}
-                        </td>
-                      ))}
-                    </tr>
-                  ))
+                      >
+                        {columnName === "Status"
+                          ? result[columnName]
+                            ? "Active"
+                            : "Inactive"
+                          : result[columnName]}
+                      </td>
+                    ))}
+                  </tr>
+                ))
                 : EarningHeads.map((entry, index) => (
-                    <tr key={index}>
-                      <td className="px-2 border-2">
-                        <div className="flex items-center gap-2 text-center justify-center">
-                          <Icon
-                            icon="lucide:eye"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => {
-                              setVeEarningH(true); // Open VEModal
-                              setEdit(false); // Disable edit mode for VEModal
-                              setEHid(entry.EarningHeadId); // Pass ID to VEModal
-                            }}
-                          />
-                          <ViewEarningHeads
-                            visible={veEarningH}
-                            onClick={() => setVeEarningH(false)}
-                            edit={edit}
-                            ID={EHid}
-                          />
-                          <Icon
-                            icon="mdi:edit"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => {
-                              setVeEarningH(true); // Open VEModal
-                              setEdit(true); // Disable edit mode for VEModal
-                              setEHid(entry.EarningHeadId); // Pass ID to VEModal
-                            }}
-                          />
-                          <ViewEarningHeads
-                            visible={veEarningH}
-                            onClick={() => setVeEarningH(false)}
-                            edit={edit}
-                            ID={EHid}
-                          />
-                          <Icon
-                            icon="material-symbols:delete-outline"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                          />
-                        </div>
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {entry.EarningHeadId}
-                      </td>
-                      {selectedColumns.map((columnName) => (
-                        <td
-                          key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-left text-[11px]${
-                            columnVisibility[columnName] ? "" : "hidden"
+                  <tr key={index}>
+                    <td className="px-2 border-2">
+                      <div className="flex items-center gap-2 text-center justify-center">
+                        <Icon
+                          icon="lucide:eye"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          onClick={() => {
+                            setVeEarningH(true); // Open VEModal
+                            setEdit(false); // Disable edit mode for VEModal
+                            setEHid(entry.EarningHeadId); // Pass ID to VEModal
+                          }}
+                        />
+                        <ViewEarningHeads
+                          visible={veEarningH}
+                          onClick={() => setVeEarningH(false)}
+                          edit={edit}
+                          ID={EHid}
+                        />
+                        <Icon
+                          icon="mdi:edit"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          onClick={() => {
+                            setVeEarningH(true); // Open VEModal
+                            setEdit(true); // Disable edit mode for VEModal
+                            setEHid(entry.EarningHeadId); // Pass ID to VEModal
+                          }}
+                        />
+                        <ViewEarningHeads
+                          visible={veEarningH}
+                          onClick={() => setVeEarningH(false)}
+                          edit={edit}
+                          ID={EHid}
+                        />
+                        <Icon
+                          icon="material-symbols:delete-outline"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                        />
+                      </div>
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                      {entry.EarningHeadId}
+                    </td>
+                    {selectedColumns.map((columnName) => (
+                      <td
+                        key={columnName}
+                        className={`px-4 border-2 whitespace-normal text-left text-[11px]${columnVisibility[columnName] ? "" : "hidden"
                           }`}
-                        >
-                          {columnName === "Status"
-                            ? entry[columnName]
-                              ? "Active"
-                              : "Inactive"
-                            : entry[columnName]}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
+                      >
+                        {columnName === "Status"
+                          ? entry[columnName]
+                            ? "Active"
+                            : "Inactive"
+                          : entry[columnName]}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>

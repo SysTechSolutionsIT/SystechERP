@@ -26,6 +26,14 @@ router.get("/", authToken, async (req, res) => {
   }
 });
 
+router.get("/:id", authToken, async (req, res) => {
+  const record = await ShiftMaster.findByPk(req.params.id);
+
+  res.status(200).json({
+    record,
+  });
+});
+
 // POST a new ShiftMaster record
 router.post("/add", authToken, async (req, res) => {
   try {

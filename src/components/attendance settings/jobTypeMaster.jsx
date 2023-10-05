@@ -79,8 +79,8 @@ const JobTypeMaster = () => {
   const menuRef = useRef(null);
 
   const [columnVisibility, setColumnVisibility] = useState({
-    jobTypeName: true,
-    shortname: true,
+    jobName: true,
+    jobShortName: true,
     ratePerDay: true,
     rateGroup: true,
     category: false,
@@ -197,7 +197,7 @@ const JobTypeMaster = () => {
 
   //Deletion
   const deleteRecord = async (ID) => {
-    alert("Are you sure you want to delete this bank?");
+    alert("Are you sure you want to delete this record?");
     try {
       const apiUrl = `http://localhost:5500/job-master/delete/${ID}`;
 
@@ -414,7 +414,7 @@ const JobTypeMaster = () => {
                             color="#556987"
                             width="20"
                             height="20"
-                            onClick={deleteRecord(result.jobID)}
+                            onClick={() => deleteRecord(result.jobID)}
                           />
                         </div>
                       </td>
@@ -476,7 +476,7 @@ const JobTypeMaster = () => {
                             color="#556987"
                             width="20"
                             height="20"
-                            onClick={deleteRecord(entry.jobID)}
+                            onClick={() => deleteRecord(entry.jobID)}
                           />
                         </div>
                       </td>

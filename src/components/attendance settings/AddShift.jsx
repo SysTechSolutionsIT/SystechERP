@@ -2,37 +2,88 @@ import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { Icon } from "@iconify/react";
 import { ShiftData } from "./shiftMaster";
+import axios from "axios";
+import { useAuth } from "../Login";
 
 const AddShift = ({ visible, onClick }) => {
   const [details, setDetails] = useState([]);
+
+  const { token } = useAuth();
+  // Boolean Values
+  const [twoDay, setTwoDay] = useState(false);
+  const [autoRotate, setAutoRotate] = useState(false);
+  const [state, setState] = useState(false);
+
   const formik = useFormik({
     initialValues: {
-      shiftId: "",
-      employeeType: "",
-      shiftName: "",
-      startTime: "",
-      endTime: "",
-      OTstartTime: "",
-      graceEarlyTime: "",
-      graceLateTime: "",
+      eType: "",
+      sName: "",
+      startT: "",
+      endT: "",
+      OTstartT: "",
+      OTendT: "",
+      GRstartT: "",
+      GRendT: "",
       halfDayHour: "",
       fullDayHours: "",
-      twoDayShift: "",
-      autoRotateFlag: "",
-      shiftGraceHoursMin: "",
-      shiftGraceHoursMax: "",
-      remark: "",
-      status: "",
+      twoDayShift: twoDay,
+      autoRotateFlag: autoRotate,
+      graceMin: "",
+      graceMax: "",
+      remarks: "",
+      status: state,
     },
-    onSubmit: (values) => {
-      console.log(values);
-      ShiftData.push(values);
-      alert("Added Successfully");
-      onClick();
+    onSubmit: async (values) => {
+      const status = state === true;
+      const two = twoDay === true;
+      const rotate = autoRotate === true;
+
+      const formData = {
+        eType: values.eType,
+        sName: values.sName,
+        startT: values.startT,
+        endT: values.endT,
+        OTstartT: values.OTstartT,
+        OTendT: values.OTendT,
+        GRstartT: values.GRstartT,
+        GRendT: values.GRendT,
+        halfDayHour: values.halfDayHour,
+        fullDayHours: values.fullDayHours,
+        twoDayShift: two,
+        autoRotateFlag: rotate,
+        graceMin: values.graceMin,
+        graceMax: values.graceMax,
+        remarks: values.remarks,
+        status: status,
+      };
+      console.log(formData);
+      try {
+        const response = await axios.post(
+          "http://localhost:5500/shift-master/add",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (response.status === 201) {
+          const data = response.data;
+          console.log(data);
+          alert("Bank added successfully");
+          onClick();
+          window.location.refresh();
+          // Handle successful response
+        } else {
+          console.error(`HTTP error! Status: ${response.status}`);
+          // Handle error response
+        }
+      } catch (error) {
+        console.error("Error:", error.message);
+        // Handle network error
+      }
     },
   });
-
-  const [statusCheck, setStatusCheck] = useState(false);
 
   useEffect(() => {
     formik.resetForm();
@@ -57,23 +108,12 @@ const AddShift = ({ visible, onClick }) => {
           <div className="py-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-[13px] font-semibold">Shift ID</p>
-                <input
-                  id="shiftId"
-                  type="number"
-                  placeholder="Enter Shift ID"
-                  value={formik.values.shiftId}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                />
-              </div>
-              <div>
                 <p className="text-[13px] font-semibold">Shift Name</p>
                 <input
-                  id="shiftName"
+                  id="sName"
                   type="text"
                   placeholder="Enter Shift Name"
-                  value={formik.values.shiftName}
+                  value={formik.values.sName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -81,8 +121,8 @@ const AddShift = ({ visible, onClick }) => {
               <div>
                 <p className="text-[13px] font-semibold">Employee Type</p>
                 <select
-                  id="employeeType"
-                  value={formik.values.employeeType}
+                  id="eType"
+                  value={formik.values.eType}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 >
@@ -96,10 +136,10 @@ const AddShift = ({ visible, onClick }) => {
               <div>
                 <p className="text-[13px] font-semibold">Start Time</p>
                 <input
-                  id="startTime"
+                  id="startT"
                   type="text"
-                  placeholder="Enter Start Time"
-                  value={formik.values.startTime}
+                  placeholder="HH:MM"
+                  value={formik.values.startT}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -107,10 +147,10 @@ const AddShift = ({ visible, onClick }) => {
               <div>
                 <p className="text-[13px] font-semibold">End Time</p>
                 <input
-                  id="endTime"
+                  id="endT"
                   type="text"
-                  placeholder="Enter End Time"
-                  value={formik.values.endTime}
+                  placeholder="HH:MM"
+                  value={formik.values.endT}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -118,32 +158,43 @@ const AddShift = ({ visible, onClick }) => {
               <div>
                 <p className="text-[13px] font-semibold">OT Start Time</p>
                 <input
-                  id="OTstartTime"
+                  id="OTstartT"
                   type="text"
-                  placeholder="Enter OT Start Time"
-                  value={formik.values.OTstartTime}
+                  placeholder="HH:MM"
+                  value={formik.values.OTstartT}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
               </div>
               <div>
-                <p className="text-[13px] font-semibold">Grace Early Time</p>
+                <p className="text-[13px] font-semibold">OT End Time</p>
                 <input
-                  id="graceEarlyTime"
+                  id="OTendT"
+                  type="text"
+                  placeholder="HH:MM"
+                  value={formik.values.OTendT}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  onChange={formik.handleChange}
+                />
+              </div>
+              <div>
+                <p className="text-[13px] font-semibold">Grace Start Time</p>
+                <input
+                  id="GRstartT"
                   type="text"
                   placeholder="Enter Grace Early Time"
-                  value={formik.values.graceEarlyTime}
+                  value={formik.values.GRstartT}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
               </div>
               <div>
-                <p className="text-[13px] font-semibold">Grace Late Time</p>
+                <p className="text-[13px] font-semibold">Grace End Time</p>
                 <input
-                  id="graceLateTime"
+                  id="GRendT"
                   type="text"
                   placeholder="Enter Grace Late Time"
-                  value={formik.values.graceLateTime}
+                  value={formik.values.GRendT}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -162,7 +213,7 @@ const AddShift = ({ visible, onClick }) => {
               <div>
                 <p className="text-[13px] font-semibold">Full Day Hours</p>
                 <input
-                  id="halfDayHours"
+                  id="fullDayHours"
                   type="text"
                   placeholder="Enter Full Day Hours"
                   value={formik.values.fullDayHours}
@@ -180,9 +231,10 @@ const AddShift = ({ visible, onClick }) => {
                     <input
                       type="radio"
                       id="twoDayShift"
-                      value="yes"
-                      checked={formik.values.twoDayShift === "yes"}
-                      onChange={formik.handleChange}
+                      name="twoDayShift"
+                      value="true"
+                      checked={twoDay === true}
+                      onChange={() => setTwoDay(true)}
                       className="mr-2"
                     />
                     Yes
@@ -191,9 +243,10 @@ const AddShift = ({ visible, onClick }) => {
                     <input
                       type="radio"
                       id="twoDayShift"
-                      value="no"
-                      checked={formik.values.twoDayShift === "no"}
-                      onChange={formik.handleChange}
+                      name="twoDayShift"
+                      value="false"
+                      checked={twoDay === false}
+                      onChange={() => setTwoDay(false)}
                       className="mr-2"
                     />
                     No
@@ -209,9 +262,10 @@ const AddShift = ({ visible, onClick }) => {
                     <input
                       type="radio"
                       id="autoRotateFlag"
-                      value="yes"
-                      checked={formik.values.autoRotateFlag === "yes"}
-                      onChange={formik.handleChange}
+                      name="autoRotateFlag"
+                      value="true"
+                      checked={autoRotate === true}
+                      onChange={() => setAutoRotate(true)}
                       className="mr-2"
                     />
                     Yes
@@ -220,9 +274,10 @@ const AddShift = ({ visible, onClick }) => {
                     <input
                       type="radio"
                       id="autoRotateFlag"
-                      value="no"
-                      checked={formik.values.autoRotateFlag === "no"}
-                      onChange={formik.handleChange}
+                      name="autoRotateFlag"
+                      value="false"
+                      checked={autoRotate === false}
+                      onChange={() => setAutoRotate(false)}
                       className="mr-2"
                     />
                     No
@@ -234,10 +289,10 @@ const AddShift = ({ visible, onClick }) => {
                   Shift Grace Hours Min
                 </p>
                 <input
-                  id="shiftGraceHoursMin"
+                  id="graceMin"
                   type="text"
                   placeholder="Enter Shift Grace Hours Min"
-                  value={formik.values.shiftGraceHoursMin}
+                  value={formik.values.graceMin}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -247,10 +302,10 @@ const AddShift = ({ visible, onClick }) => {
                   Shift Grace Hours Max
                 </p>
                 <input
-                  id="hiftGraceHoursMax"
+                  id="graceMax"
                   type="text"
                   placeholder="Enter Shift Grace Hours Max"
-                  value={formik.values.hiftGraceHoursMax}
+                  value={formik.values.graceMax}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -258,9 +313,9 @@ const AddShift = ({ visible, onClick }) => {
               <div>
                 <p className="text-[13px] font-semibold">Remarks</p>
                 <input
-                  id="remark"
+                  id="remarks"
                   type="text"
-                  placeholder="Enter Remarks"
+                  placeholder="Enter remarks"
                   value={formik.values.remark}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
@@ -272,14 +327,10 @@ const AddShift = ({ visible, onClick }) => {
                   <input
                     id="status"
                     type="checkbox"
-                    checked={statusCheck}
+                    checked={state}
                     className={`w-5 h-5 mr-2 mt-4 focus:outline-gray-300 border border-blue-900 rounded-lg`}
                     onChange={() => {
-                      setStatusCheck(!statusCheck);
-                      formik.setFieldValue(
-                        "status",
-                        statusCheck ? "Inactive" : "Active"
-                      ); // Update status value in formik
+                      setState(!state);
                     }}
                   />
                   Active {/* Always display "Active" label */}

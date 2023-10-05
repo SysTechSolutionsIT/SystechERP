@@ -2,47 +2,125 @@ import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { Icon } from "@iconify/react";
 import { ShiftData } from "./shiftMaster";
+import axios from "axios";
+import { useAuth } from "../Login";
 
 const ViewShift = ({ visible, onClick, edit, ID }) => {
   const [details, setDetails] = useState([]);
+  const { token } = useAuth();
+  const [twoDay, setTwoDay] = useState(false);
+  const [autoRotate, setAutoRotate] = useState(false);
+  const [state, setState] = useState(false);
+
   const formik = useFormik({
     initialValues: {
-      shiftId: "",
-      employeeType: "",
-      shiftName: "",
-      startTime: "",
-      endTime: "",
-      OTstartTime: "",
-      graceEarlyTime: "",
-      graceLateTime: "",
+      eType: "",
+      sName: "",
+      startT: "",
+      endT: "",
+      OTstartT: "",
+      OTendT: "",
+      GRstartT: "",
+      GRendT: "",
       halfDayHour: "",
       fullDayHours: "",
-      twoDayShift: "",
-      autoRotateFlag: "",
-      shiftGraceHoursMin: "",
-      shiftGraceHoursMax: "",
-      remark: "",
-      status: "",
+      twoDayShift: twoDay,
+      autoRotateFlag: autoRotate,
+      graceMin: "",
+      graceMax: "",
+      remarks: "",
+      status: state,
     },
-    onSubmit: (values) => {
-      console.log(values);
-      ShiftData.push(values);
-      alert("Added Successfully");
+    onSubmit: async (values) => {
+      const status = state === true;
+      const two = twoDay === true;
+      const rotate = autoRotate === true;
+
+      const formData = {
+        eType: values.eType,
+        sName: values.sName,
+        startT: values.startT,
+        endT: values.endT,
+        OTstartT: values.OTstartT,
+        OTendT: values.OTendT,
+        GRstartT: values.GRstartT,
+        GRendT: values.GRendT,
+        halfDayHour: values.halfDayHour,
+        fullDayHours: values.fullDayHours,
+        twoDayShift: two,
+        autoRotateFlag: rotate,
+        graceMin: values.graceMin,
+        graceMax: values.graceMax,
+        remarks: values.remarks,
+        status: status,
+      };
+      console.log(formData);
+      axios
+        .patch(`http://localhost:5500/shift-master/update/${ID}`, formData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          // Handle success
+          console.log("Data updated successfully", response);
+          // You can also perform additional actions here, like closing the modal or updating the UI.
+          window.location.reload();
+          onClick();
+        })
+        .catch((error) => {
+          // Handle error
+          console.error("Error updating data", error);
+        });
     },
   });
 
   useEffect(() => {
-    const selectedDest = ShiftData.find((entry) => entry.jobTypeId === ID);
-    if (selectedDest) {
-      setDetails(selectedDest);
-    }
+    fetchShiftData();
   }, [ID]);
-
-  const [status, setStatus] = useState(false);
-
-  const handleStatusChange = () => {
-    setStatus(!status);
+  console.log(ID);
+  const fetchShiftData = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5500/shift-master/${ID}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      console.log("Response Object", response);
+      const data = response.data.record;
+      setDetails(data);
+      console.log(data);
+    } catch (error) {
+      console.log("Error while fetching course data: ", error.message);
+    }
   };
+  // console.log("ID:", ID);
+  console.log(details);
+
+  useEffect(() => {
+    if (details) {
+      formik.setValues({
+        sID: details.sID,
+        eType: details.eType,
+        sName: details.sName,
+        startT: details.startT,
+        endT: details.endT,
+        OTstartT: details.OTstartT,
+        OTendT: details.OTendT,
+        GRstartT: details.GRstartT,
+        GRendT: details.GRendT,
+        halfDayHour: details.halfDayHour,
+        fullDayHours: details.fullDayHours,
+        twoDayShift: details.twoDayShift,
+        autoRotateFlag: details.autoRotateFlag,
+        graceMin: details.graceMin,
+        graceMax: details.graceMax,
+        remarks: details.remarks,
+        status: details.status,
+      });
+    }
+  }, [details]);
 
   if (!visible) return null;
   return (
@@ -65,22 +143,22 @@ const ViewShift = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Shift ID</p>
                 <input
-                  id="shiftId"
+                  id="sID"
                   type="number"
                   placeholder="Enter Shift ID"
-                  value={details.shiftId}
+                  value={details.sID}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
-                  disabled={!edit}
+                  disabled={true}
                 />
               </div>
               <div>
                 <p className="text-[13px] font-semibold">Shift Name</p>
                 <input
-                  id="Name"
+                  id="sName"
                   type="text"
                   placeholder="Enter Shift Name"
-                  value={details.shiftName}
+                  value={formik.values.sName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -89,8 +167,8 @@ const ViewShift = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Employee Type</p>
                 <select
-                  id="employeeType"
-                  value={details.employeeType}
+                  id="eType"
+                  value={formik.values.eType}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -105,10 +183,10 @@ const ViewShift = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Start Time</p>
                 <input
-                  id="startTime"
+                  id="startT"
                   type="text"
                   placeholder="Enter Start Time"
-                  value={details.startTime}
+                  value={formik.values.startT}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -117,10 +195,10 @@ const ViewShift = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">End Time</p>
                 <input
-                  id="endTime"
+                  id="endT"
                   type="text"
                   placeholder="Enter End Time"
-                  value={details.endTime}
+                  value={formik.values.endT}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -129,10 +207,10 @@ const ViewShift = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">OT Start Time</p>
                 <input
-                  id="OTstartTime"
+                  id="OTstartT"
                   type="text"
                   placeholder="Enter OT Start Time"
-                  value={details.OTstartTime}
+                  value={formik.values.OTstartT}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -141,10 +219,10 @@ const ViewShift = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Grace Early Time</p>
                 <input
-                  id="graceEarlyTime"
+                  id="GRstartT"
                   type="text"
                   placeholder="Enter Grace Early Time"
-                  value={details.graceEarlyTime}
+                  value={formik.values.GRstartT}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -153,10 +231,10 @@ const ViewShift = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Grace Late Time</p>
                 <input
-                  id="graceLateTime"
+                  id="GRendT"
                   type="text"
                   placeholder="Enter Grace Late Time"
-                  value={details.graceLateTime}
+                  value={formik.values.GRendT}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -168,7 +246,7 @@ const ViewShift = ({ visible, onClick, edit, ID }) => {
                   id="halfDayHour"
                   type="text"
                   placeholder="Enter Half Day Hours"
-                  value={details.halfDayHour}
+                  value={formik.values.halfDayHour}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -177,10 +255,10 @@ const ViewShift = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Full Day Hours</p>
                 <input
-                  id="halfDayHours"
+                  id="fullDayHours"
                   type="text"
                   placeholder="Enter Full Day Hours"
-                  value={details.fullDayHours}
+                  value={formik.values.fullDayHours}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -196,8 +274,8 @@ const ViewShift = ({ visible, onClick, edit, ID }) => {
                     <input
                       type="radio"
                       id="twoDayShift"
-                      value="yes"
-                      checked={details.twoDayShift === "yes"}
+                      value="true"
+                      checked={formik.values.twoDayShift === true}
                       onChange={formik.handleChange}
                       className="mr-2"
                       disabled={!edit}
@@ -208,8 +286,8 @@ const ViewShift = ({ visible, onClick, edit, ID }) => {
                     <input
                       type="radio"
                       id="twoDayShift"
-                      value="no"
-                      checked={details.twoDayShift === "no"}
+                      value="false"
+                      checked={formik.values.twoDayShift === false}
                       onChange={formik.handleChange}
                       className="mr-2"
                       disabled={!edit}
@@ -227,8 +305,8 @@ const ViewShift = ({ visible, onClick, edit, ID }) => {
                     <input
                       type="radio"
                       id="autoRotateFlag"
-                      value="yes"
-                      checked={details.autoRotateFlag === "yes"}
+                      value="true"
+                      checked={formik.values.autoRotateFlag === true}
                       onChange={formik.handleChange}
                       className="mr-2"
                       disabled={!edit}
@@ -239,8 +317,8 @@ const ViewShift = ({ visible, onClick, edit, ID }) => {
                     <input
                       type="radio"
                       id="autoRotateFlag"
-                      value="no"
-                      checked={details.autoRotateFlag === "no"}
+                      value="false"
+                      checked={formik.values.autoRotateFlag === false}
                       onChange={formik.handleChange}
                       className="mr-2"
                       disabled={!edit}
@@ -254,10 +332,10 @@ const ViewShift = ({ visible, onClick, edit, ID }) => {
                   Shift Grace Hours Min
                 </p>
                 <input
-                  id="shiftGraceHoursMin"
+                  id="graceMin"
                   type="text"
                   placeholder="Enter Shift Grace Hours Min"
-                  value={details.shiftGraceHoursMin}
+                  value={formik.values.graceMin}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -268,10 +346,10 @@ const ViewShift = ({ visible, onClick, edit, ID }) => {
                   Shift Grace Hours Max
                 </p>
                 <input
-                  id="hiftGraceHoursMax"
+                  id="graceMax"
                   type="text"
                   placeholder="Enter Shift Grace Hours Max"
-                  value={details.hiftGraceHoursMax}
+                  value={formik.values.graceMax}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -280,10 +358,10 @@ const ViewShift = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Remarks</p>
                 <input
-                  id="remark"
+                  id="remarks"
                   type="text"
                   placeholder="Enter Remarks"
-                  value={details.remark}
+                  value={formik.values.remarks}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -298,7 +376,7 @@ const ViewShift = ({ visible, onClick, edit, ID }) => {
                     checked={details.status}
                     value={details.status}
                     className={` relative w-4 h-4 mr-2 peer shrink-0 appearance-none checked:bg-blue-800 border-2 border-blue-900 rounded-sm`}
-                    onChange={handleStatusChange}
+                    onChange={() => setState(!state)}
                   />
                   <Icon
                     className="absolute w-4 h-4 hidden peer-checked:block"
