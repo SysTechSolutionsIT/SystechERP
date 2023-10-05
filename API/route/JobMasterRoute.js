@@ -16,7 +16,7 @@ const authToken = (req, res, next) => {
   });
 };
 
-router.get("/", authToken, async (req, res) => {
+router.get("/get", authToken, async (req, res) => {
   try {
     const jobs = await JobMaster.findAll();
     res.json(jobs);
@@ -65,7 +65,7 @@ router.patch("/update/:id", authToken, async (req, res) => {
 });
 
 // DELETE EmployeeType by ID
-router.delete("/delte/:id", authToken, async (req, res) => {
+router.delete("/delete/:id", authToken, async (req, res) => {
   const ID = req.params.id; // Get the bank record ID from the URL parameter
   try {
     const deleted = await JobMaster.findByPk(ID);

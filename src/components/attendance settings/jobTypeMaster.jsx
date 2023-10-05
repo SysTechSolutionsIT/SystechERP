@@ -156,15 +156,15 @@ const JobTypeMaster = () => {
 
   useEffect(() => {
     fetchJobData();
-  }, []);
+  }, [token]);
 
   const fetchJobData = async () => {
     try {
-      const response = await axios.get("http://localhost:5500/job-master/", {
-        headers: { authorization: `Bearer ${token}` },
+      const response = await axios.get("http://localhost:5500/job-master/get", {
+        headers: { Authorization: `Bearer ${token}` },
       });
       console.log("Response Object", response);
-      const data = response.data.jobs;
+      const data = response.data;
       console.log(data);
       setJob(data);
     } catch (error) {
