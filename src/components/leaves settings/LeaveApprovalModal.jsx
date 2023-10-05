@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { Icon } from "@iconify/react";
+import axios from "axios";
+import { useAuth } from "../Login";
 
-const LeaveApprovalModal = ({ visible, onClick }) => {
+const LeaveApprovalModal = ({ visible, onClick, ID }) => {
   const [details, setDetails] = useState([]);
+  const { token } = useAuth()
+
   const formik = useFormik({
     initialValues: {
       ApprovalFlag: "",
@@ -15,17 +19,96 @@ const LeaveApprovalModal = ({ visible, onClick }) => {
       LeaveFromDate: "",
       LeaveToDate: "",
       remarks: "",
-      sanctionBy: "",
-      sanctionFrom: "",
-      sanctionTo: "",
+      SanctionBy: "",
+      SanctionFrom: "",
+      SanctionTo: "",
       Status: "",
     },
     onSubmit: (values) => {
       console.log(values);
-      alert("Added Successfully");
-      onClick();
+      const updatedData = {
+      ApprovalFlag: "true",
+      LeaveApplicationId: values.LeaveApplicationId,
+      FYear: values.FYear,
+      ApplicationDate: values.ApplicationDate,
+      EmployeeId: values.EmployeeId,
+      EmployeeName: values.EmployeeName,
+      LeaveFromDate: values.LeaveFromDate,
+      LeaveToDate: values.LeaveToDate,
+      remarks: values.remarks,
+      SanctionBy:values.SanctionBy,
+      SanctionFromDate:values.SanctionFrom,
+      SanctionToDate:values.SanctionTo,
+      SanctionLeaveDay:values.SanctionLeaveDay,
+      Status: values.Status,
+      }
+      updateApproval(updatedData)
     },
   });
+
+  const updateApproval = async (values) =>{
+    try{
+      const response = axios.patch(`http://localhost:5500/leave-application/update/${ID}`, values, {
+        headers:{
+          Authorization: `Bearer ${token}`
+        }
+      })
+      alert('Leave Approved')
+    } catch(error){
+      console.error('Error', error);
+    }
+  }
+
+  const [isStatusChecked, setStatusChecked] = useState(false)
+
+  const handleCheckboxChange = (fieldName, setChecked, event) => {
+    //This is how to use it (event) => handleCheckboxChange('Status', setStatusChecked, event)
+      const checked = event.target.checked;
+      setChecked(checked);
+      formik.setValues({
+        ...formik.values,
+        [fieldName]: checked.toString(),
+      });
+    };
+
+  useEffect(() =>{
+    const fetchLeave = async () =>{
+      try{
+        const response = await axios.get(`http://localhost:5500/leave-application/get/${ID}`, {
+          headers:{
+            Authorization: `Bearer ${token}`
+          }
+        })
+        const data = response.data
+        console.log(data)
+        setDetails(data)
+      } catch(error){
+        console.error('Error', error);
+      }
+    }
+    fetchLeave()
+  }, [visible])
+
+  useEffect(() =>{
+    if (details){
+      formik.setValues({
+      LeaveApplicationId: details.LeaveApplicationId,
+      FYear: details.FYear,
+      ApplicationDate: details.ApplicationDate,
+      EmployeeId: details.EmployeeId,
+      EmployeeName: details.EmployeeName,
+      LeaveFromDate: details.LeaveFromDate,
+      LeaveToDate: details.LeaveToDate,
+      remarks: details.remarks,
+      SanctionBy:details.SanctionBy,
+      SanctionFromDate:details.SanctionFrom,
+      SanctionToDate:details.SanctionTo,
+      SanctionLeaveDay:details.SanctionLeaveDay,
+      Status: details.Status,
+      })
+    }
+  }, [details])
+
 
   const [status, setStatus] = useState(false);
   const columnHeads = [
@@ -36,10 +119,6 @@ const LeaveApprovalModal = ({ visible, onClick }) => {
     "Leave Applied",
     "Sanction Days",
   ];
-
-  const handleStatusChange = () => {
-    setStatus(!status);
-  };
 
   if (!visible) return null;
   return (
@@ -67,7 +146,7 @@ const LeaveApprovalModal = ({ visible, onClick }) => {
                   id="LeaveApplicationId"
                   type="text"
                   placeholder="Enter Leave Application ID"
-                  value={formik.values.LeaveApplicationId}
+                  value={details?.id}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -96,25 +175,25 @@ const LeaveApprovalModal = ({ visible, onClick }) => {
                   onChange={formik.handleChange}
                 />
               </div>
-              <div>
-                <label
-                  htmlFor="employeeName"
-                  className="text-[13px] font-semibold"
-                >
-                  Employee Name
-                </label>
-                <div className="flex items-center">
+              <div className="flex items-center">
                   <select
-                    id="employeeName"
-                    name="employeeName"
-                    value={formik.values.employeeName}
+                    id="EmployeeName"
+                    name="EmployeeName"
+                    value={formik.values.EmployeeName}
                     onChange={formik.handleChange}
                     className="w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
                   >
-                    <option value="">Select an Employee</option>
-                    <option value="John">John</option>
-                    <option value="Jane">Jane</option>
-                    <option value="Smith">Smith</option>
+                   <option value="">Select an Employee</option>
+                    <option value="Alice">Alice</option>
+                    <option value="Bob">Bob</option>
+                    <option value="Charlie">Charlie</option>
+                    <option value="David">David</option>
+                    <option value="Eve">Eve</option>
+                    <option value="Frank">Frank</option>
+                    <option value="Grace">Grace</option>
+                    <option value="Henry">Henry</option>
+                    <option value="Isabel">Isabel</option>
+                    <option value="Jack">Jack</option>
                   </select>
                   <button
                     type="button"
@@ -124,7 +203,6 @@ const LeaveApprovalModal = ({ visible, onClick }) => {
                     +
                   </button>
                 </div>
-              </div>
               <div>
                 <p className="text-[13px] font-semibold">Leave From Date</p>
                 <input
@@ -150,10 +228,10 @@ const LeaveApprovalModal = ({ visible, onClick }) => {
               <div>
                 <p className="text-[13px] font-semibold">Remarks</p>
                 <input
-                  id="remark"
+                  id="remarks"
                   type="text"
                   placeholder="Enter Remarks"
-                  value={formik.values.Remark}
+                  value={formik.values.remarks}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -167,16 +245,22 @@ const LeaveApprovalModal = ({ visible, onClick }) => {
                 </label>
                 <div className="flex items-center">
                   <select
-                    id="sanctionBy"
-                    name="sanctionBy"
-                    value={formik.values.sanctionBy}
+                    id="SanctionBy"
+                    name="SanctionBy"
+                    value={formik.values.SanctionBy}
                     onChange={formik.handleChange}
                     className="w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
                   >
-                    <option value="">Select an Employee</option>
+                    <option value="">Select a Supervisor</option>
                     <option value="John">John</option>
                     <option value="Jane">Jane</option>
                     <option value="Smith">Smith</option>
+                    <option value="Michael">Michael</option>
+                    <option value="Emily">Emily</option>
+                    <option value="David">David</option>
+                    <option value="Sarah">Sarah</option>
+                    <option value="Robert">Robert</option>
+                    <option value="Jennifer">Jennifer</option>
                   </select>
                   <button
                     type="button"
@@ -192,10 +276,10 @@ const LeaveApprovalModal = ({ visible, onClick }) => {
                   Sanctioned From Date
                 </p>
                 <input
-                  id="sanctionFrom"
+                  id="SanctionFrom"
                   type="date"
                   placeholder="Enter sanction From Date"
-                  value={formik.values.sanctionFrom}
+                  value={formik.values.SanctionFrom}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -203,35 +287,27 @@ const LeaveApprovalModal = ({ visible, onClick }) => {
               <div>
                 <p className="text-[13px] font-semibold">Sanctioned To Date</p>
                 <input
-                  id="sanctionTo"
+                  id="SanctionTo"
                   type="date"
                   placeholder="Enter Leave To Date"
-                  value={formik.values.sanctionTo}
+                  value={formik.values.SanctionTo}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
               </div>
               <div>
-                <p className="text-[13px] font-semibold">Status</p>
-                <div className="flex items-center">
-                  <input
-                    id="status"
+                <p className="capitalize font-semibold text-[13px]">Status</p>
+                <label className="capitalize font-semibold text-[11px]">
+                <input
+                    id="Status"
                     type="checkbox"
-                    checked={status}
-                    value={formik.values.Status}
-                    className={` relative w-4 h-4 mr-2 peer shrink-0 appearance-none checked:bg-blue-800 border-2 border-blue-900 rounded-sm`}
-                    onChange={handleStatusChange}
-                  />
-                  <Icon
-                    className="absolute w-4 h-4 hidden peer-checked:block"
-                    icon="gg:check"
-                    color="white"
-                  />
-                  <label for="status" className="text-[11px] font-semibold">
-                    Active
-                  </label>
-                </div>
-              </div>
+                    checked={formik.values.Status}
+                    className={`w-5 h-5 mr-2 mt-5 focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px]`}
+                    onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}
+                />
+                Active
+                </label>
+            </div>
             </div>
             <div className="flex mt-4 justify-start">
               <button

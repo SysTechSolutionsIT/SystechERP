@@ -12,6 +12,9 @@ const sequelize = new Sequelize(
 )
 
 const LeaveApplication = sequelize.define("LeaveApplications", {
+      ApprovalFlag:{
+        type: DataTypes.STRING
+      },
       FYear: {
         type: DataTypes.STRING
       },

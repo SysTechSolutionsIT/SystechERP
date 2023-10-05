@@ -11,7 +11,7 @@ const LeaveModal1 = ({ visible, onClick }) => {
 
   const formik = useFormik({
     initialValues: {
-      ApprovalFlag: false,
+      ApprovalFlag: "false",
       // LeaveApplicationId: "",
       FYear: "",
       ApplicationDate: "",
