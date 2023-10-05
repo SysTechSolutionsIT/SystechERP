@@ -2,41 +2,94 @@ import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { Icon } from "@iconify/react";
 import { JobTypeData } from "./jobTypeMaster";
+import axios from "axios";
+import { useAuth } from "../Login";
 
 const ViewJob = ({ visible, onClick, edit, ID }) => {
+  const { token } = useAuth();
   const [details, setDetails] = useState([]);
+  const [state, setState] = useState(false);
   const formik = useFormik({
     initialValues: {
-      jobTypeId: "",
-      jobTypeName: "",
-      shortname: "",
+      jobName: "",
+      jobShortName: "",
       ratePerDay: "",
       rateGroup: "",
       category: "",
       position: "",
-      remark: "",
-      status: "",
+      Remark: "",
+      status: state,
     },
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       console.log(values);
-      JobTypeData.push(values);
-      alert("Added Successfully");
+      const stat = state === true;
+      const updatedData = {
+        jobID: ID,
+        jobName: values.jobName,
+        jobShortName: values.jobShortName,
+        category: values.category,
+        position: values.position,
+        ratePerDay: values.ratePerDay,
+        rateGroup: values.rateGroup,
+        Remark: values.Remark,
+        status: stat,
+      };
+      axios
+        .patch(`http://localhost:5500/job-master/update/${ID}`, updatedData, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((response) => {
+          // Handle success
+          console.log("Data updated successfully", response);
+          // You can also perform additional actions here, like closing the modal or updating the UI.
+          window.location.reload();
+          onClick();
+        })
+        .catch((error) => {
+          // Handle error
+          console.error("Error updating data", error);
+        });
     },
   });
 
   useEffect(() => {
-    const selectedJob = JobTypeData.find((entry) => entry.jobTypeId === ID);
-    if (selectedJob) {
-      setDetails(selectedJob);
-    }
+    fetchJobData();
   }, [ID]);
-
-  const [status, setStatus] = useState(false);
-
-  const handleStatusChange = () => {
-    setStatus(!status);
+  console.log(ID);
+  const fetchJobData = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5500/job-master/get/${ID}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      console.log("Response Object", response);
+      const data = response.data;
+      setDetails(data);
+      console.log(data);
+    } catch (error) {
+      console.log("Error while fetching course data: ", error.message);
+    }
   };
+  // console.log("ID:", ID);
+  console.log(details);
 
+  useEffect(() => {
+    if (details) {
+      formik.setValues({
+        jobID: ID,
+        jobName: details.jobName,
+        jobShortName: details.jobShortName,
+        category: details.category,
+        position: details.position,
+        ratePerDay: details.ratePerDay,
+        rateGroup: details.rateGroup,
+        Remark: details.Remark,
+        status: details.status,
+      });
+    }
+  }, [details]);
   if (!visible) return null;
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -60,22 +113,22 @@ const ViewJob = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Job Type ID</p>
                 <input
-                  id="jobTypeId"
+                  id="jobID"
                   type="number"
                   placeholder="Enter Job Type ID"
-                  value={details.jobTypeId}
+                  value={details.jobID}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
-                  disabled={!edit}
+                  disabled={true}
                 />
               </div>
               <div>
                 <p className="text-[13px] font-semibold">Job Type Name</p>
                 <input
-                  id="jobTypeName"
+                  id="jobName"
                   type="text"
                   placeholder="Enter Job Type Name"
-                  value={details.jobTypeName}
+                  value={formik.values.jobName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -84,10 +137,10 @@ const ViewJob = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">ShortName</p>
                 <input
-                  id="shortname"
+                  id="jobShortName"
                   type="text"
                   placeholder="Enter Short Name"
-                  value={details.shortname}
+                  value={formik.values.jobShortName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -99,7 +152,7 @@ const ViewJob = ({ visible, onClick, edit, ID }) => {
                   id="ratePerDay"
                   type="number"
                   placeholder="Enter Rate/Day"
-                  value={details.ratePerDay}
+                  value={formik.values.ratePerDay}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -111,7 +164,7 @@ const ViewJob = ({ visible, onClick, edit, ID }) => {
                   id="rateGroup"
                   type="text"
                   placeholder="Enter Rate Group"
-                  value={details.rateGroup}
+                  value={formik.values.rateGroup}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -125,7 +178,7 @@ const ViewJob = ({ visible, onClick, edit, ID }) => {
                       type="radio"
                       id="category"
                       value="standard"
-                      checked={details.category === "standard"}
+                      checked={formik.values.category === "standard"}
                       onChange={formik.handleChange}
                       className="mr-2"
                       disabled={!edit}
@@ -137,7 +190,7 @@ const ViewJob = ({ visible, onClick, edit, ID }) => {
                       type="radio"
                       id="category"
                       value="position"
-                      checked={details.category === "position"}
+                      checked={formik.values.category === "position"}
                       onChange={formik.handleChange}
                       className="mr-2"
                       disabled={!edit}
@@ -152,7 +205,7 @@ const ViewJob = ({ visible, onClick, edit, ID }) => {
                   id="position"
                   type="text"
                   placeholder="Enter Position"
-                  value={details.position}
+                  value={formik.values.position}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -161,10 +214,10 @@ const ViewJob = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Remarks</p>
                 <input
-                  id="remark"
+                  id="Remark"
                   type="text"
                   placeholder="Enter Remarks"
-                  value={details.remark}
+                  value={formik.values.Remark}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -176,10 +229,10 @@ const ViewJob = ({ visible, onClick, edit, ID }) => {
                   <input
                     id="status"
                     type="checkbox"
-                    checked={details.status}
-                    value={details.status}
+                    checked={formik.values.status}
+                    value={formik.values.status}
                     className={` relative w-4 h-4 mr-2 peer shrink-0 appearance-none checked:bg-blue-800 border-2 border-blue-900 rounded-sm`}
-                    onChange={handleStatusChange}
+                    onChange={() => setState(!state)}
                   />
                   <Icon
                     className="absolute w-4 h-4 hidden peer-checked:block"

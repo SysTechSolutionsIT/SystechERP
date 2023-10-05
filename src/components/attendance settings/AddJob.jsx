@@ -45,12 +45,13 @@ const AddJob = ({ visible, onClick }) => {
           } // Send the extracted form data
         );
 
-        if (response.status === 200) {
+        if (response.status === 201) {
           const data = response.data;
           console.log(data);
           alert(" record added successfully");
           // Handle successful response
           onClick();
+          window.location.reload();
         } else {
           console.error(`HTTP error! Status: ${response.status}`);
           // Handle error response
