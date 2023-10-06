@@ -27,8 +27,9 @@ const KRAMaster = require("./route/KRARoute");
 const JobResponsibility = require("./route/JobResponsibilityRoute");
 const JobMaster = require("./route/JobMasterRoute");
 const ShiftMaster = require("./route/ShiftMasterRoute");
-const LeaveMaster = require("./route/LeaveMasterRoute")
-const LeaveApplication = require("./route/LeaveApplicationRoute")
+const LeaveMaster = require("./route/LeaveMasterRoute");
+const LeaveApplication = require("./route/LeaveApplicationRoute");
+const WeeklyOffMaster = require("./route/WeeklyOffRoute");
 
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());
@@ -55,8 +56,9 @@ app.use("/KRA-master", KRAMaster);
 app.use("/job-responsibility", JobResponsibility);
 app.use("/job-master", JobMaster);
 app.use("/shift-master", ShiftMaster);
-app.use("/leave-master", LeaveMaster)
-app.use("/leave-application", LeaveApplication)
+app.use("/leave-master", LeaveMaster);
+app.use("/leave-application", LeaveApplication);
+app.use("/weekly-off-master", WeeklyOffMaster);
 
 // Start the server
 const port = 5500;

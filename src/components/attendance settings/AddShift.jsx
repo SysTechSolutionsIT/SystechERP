@@ -70,7 +70,7 @@ const AddShift = ({ visible, onClick }) => {
         if (response.status === 201) {
           const data = response.data;
           console.log(data);
-          alert("Bank added successfully");
+          alert("Record added successfully");
           onClick();
           window.location.refresh();
           // Handle successful response

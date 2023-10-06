@@ -1,31 +1,60 @@
 import { useFormik } from "formik";
 import React, { useState } from "react";
 import { Icon } from "@iconify/react";
-import { WeeklyOffData } from "./WeeklyOffMaster";
+import { weeklyOffNameData } from "./weeklyOffNameMaster";
+import axios from "axios";
+import { useAuth } from "../Login";
 
 const AddWeek = ({ visible, onClick }) => {
-  const [isStatusChecked, setStatusCheched] = useState(false);
+  const [state, setState] = useState(false);
+  const { token } = useAuth();
 
   const formik = useFormik({
     initialValues: {
-      weeklyOffId: "",
-      weeklyOff: "",
-      remark: "",
-      status: isStatusChecked.toString(),
+      weeklyOffName: "",
+      remarks: "",
+      status: state,
     },
-    onSubmit: (values) => {
-      console.log(values);
-      WeeklyOffData.push(values);
+    onSubmit: async (values) => {
+      const status = state === true;
+
+      const formData = {
+        weeklyOffName: values.weeklyOffName,
+        remarks: values.remarks,
+        status: state,
+      };
+      console.log(formData);
+      try {
+        const response = await axios.post(
+          "http://localhost:5500/weekly-off-master/add",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (response.status === 201) {
+          const data = response.data;
+          console.log(data);
+          alert("Record added successfully");
+          onClick();
+          window.location.refresh();
+          // Handle successful response
+        } else {
+          console.error(`HTTP error! Status: ${response.status}`);
+          // Handle error response
+        }
+      } catch (error) {
+        console.error("Error:", error.message);
+        // Handle network error
+      }
     },
   });
-  const handleCheckboxChange = (fieldName, setChecked, event) => {
-    const checked = event.target.checked;
-    setChecked(checked);
-    formik.setValues({
-      ...formik.values,
-      [fieldName]: checked.toString(),
-    });
-  };
+
+  useEffect(() => {
+    formik.resetForm();
+  }, []);
 
   if (!visible) return null;
   return (
@@ -49,26 +78,13 @@ const AddWeek = ({ visible, onClick }) => {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <p className="capatilize font-semibold text-[13px]">
-                  Weekly Off ID
-                </p>
-                <input
-                  id="weeklyOffId"
-                  type="text"
-                  placeholder="Enter Weekly Off ID"
-                  value={formik.values.weeklyOffId}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                />
-              </div>
-              <div>
-                <p className="capatilize font-semibold text-[13px]">
                   Weekly Off Name
                 </p>
                 <input
-                  id="weeklyOff"
+                  id="weeklyOffName"
                   type="text"
                   placeholder="Enter Weekly Off Name"
-                  value={formik.values.weeklyOff}
+                  value={formik.values.weeklyOffName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -76,10 +92,10 @@ const AddWeek = ({ visible, onClick }) => {
               <div>
                 <p className="text-[13px] font-semibold">Remarks</p>
                 <input
-                  id="remark"
+                  id="remarks"
                   type="text"
                   placeholder="Enter Remarks"
-                  value={formik.values.remark}
+                  value={formik.values.remarks}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -92,11 +108,9 @@ const AddWeek = ({ visible, onClick }) => {
                   <input
                     id="status"
                     type="checkbox"
-                    checked={isStatusChecked}
+                    checked={state}
                     className={`w-5 h-5 mr-2 mt-2 focus:outline-gray-300 border border-blue-900 rounded-lg`}
-                    onChange={(event) =>
-                      handleCheckboxChange("status", setStatusCheched, event)
-                    }
+                    onChange={() => setState(!state)}
                   />
                   Active
                 </label>
