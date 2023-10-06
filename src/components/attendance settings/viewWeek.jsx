@@ -1,40 +1,88 @@
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { Icon } from "@iconify/react";
-import { WeeklyOffData } from "./WeeklyOffMaster";
+import axios from "axios";
+import { useAuth } from "../Login";
 
 const ViewWeek = ({ visible, onClick, edit, ID }) => {
   const [details, setDetails] = useState([]);
+  const { token } = useAuth();
+  const [state, setState] = useState(false);
   const formik = useFormik({
     initialValues: {
-      weeklyOffId: "",
-      weeklyOff: "",
+      weeklyOffName: "",
       remark: "",
-      status: "",
+      status: state,
     },
-    onSubmit: (values) => {
-      console.log(values);
-      WeeklyOffData.push(values);
-      alert("Added Successfully");
+    onSubmit: async (values) => {
+      const status = state === true;
+
+      const formData = {
+        weeklyOffName: "",
+        remark: "",
+        status: status,
+      };
+      console.log(formData);
+      axios
+        .patch(
+          `http://localhost:5500/weekly-off-master/update/${ID}`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          // Handle success
+          console.log("Data updated successfully", response);
+          // You can also perform additional actions here, like closing the modal or updating the UI.
+          window.location.reload();
+          onClick();
+        })
+        .catch((error) => {
+          // Handle error
+          console.error("Error updating data", error);
+        });
     },
   });
 
   useEffect(() => {
-    const selectedDest = WeeklyOffData.find(
-      (entry) => entry.weeklyOffId === ID
-    );
-    if (selectedDest) {
-      setDetails(selectedDest);
-    }
+    fetchWeekData();
   }, [ID]);
-
-  const [status, setStatus] = useState(false);
-
-  const handleStatusChange = () => {
-    setStatus(!status);
+  console.log(ID);
+  const fetchWeekData = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5500/weekly-off-master/get/${ID}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      console.log("Response Object", response);
+      const data = response.data.record;
+      setDetails(data);
+      console.log(data);
+    } catch (error) {
+      console.log("Error while fetching course data: ", error.message);
+    }
   };
+  // console.log("ID:", ID);
+  console.log(details);
+
+  useEffect(() => {
+    if (details) {
+      formik.setValues({
+        weekID: details.weekID,
+        weeklyOffName: details.weeklyOffName,
+        remarks: details.remarks,
+        status: details.status,
+      });
+    }
+  }, [details]);
 
   if (!visible) return null;
+
   return (
     <form onSubmit={formik.handleSubmit}>
       <div className="fixed overflow-y-scroll inset-0 bg-black bg-opacity-5 backdrop-blur-sm flex items-center justify-center w-full">
@@ -57,22 +105,22 @@ const ViewWeek = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Weekly Off ID</p>
                 <input
-                  id="weeklyOffId"
+                  id="weekID"
                   type="text"
                   placeholder="Enter Weekly Off ID"
-                  value={details.weeklyOffId}
+                  value={details?.weekID}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
-                  disabled={!edit}
+                  disabled={true}
                 />
               </div>
               <div>
                 <p className="text-[13px] font-semibold">Weekly Off Name</p>
                 <input
-                  id="weeklyOff"
+                  id="weeklyOffName"
                   type="text"
                   placeholder="Enter Weekly Off Name"
-                  value={details.weeklyOff}
+                  value={formik.values.weeklyOffName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -81,10 +129,10 @@ const ViewWeek = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Remarks</p>
                 <input
-                  id="remark"
+                  id="remarks"
                   type="text"
                   placeholder="Enter Remarks"
-                  value={details.remark}
+                  value={formik.values.remarks}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -96,10 +144,10 @@ const ViewWeek = ({ visible, onClick, edit, ID }) => {
                   <input
                     id="status"
                     type="checkbox"
-                    checked={details.status}
-                    value={details.status}
+                    checked={formik.values.status}
+                    value={formik.values.status}
                     className={` relative w-4 h-4 mr-2 peer shrink-0 appearance-none checked:bg-blue-800 border-2 border-blue-900 rounded-sm`}
-                    onChange={handleStatusChange}
+                    onChange={() => setState(!state)}
                   />
                   <Icon
                     className="absolute w-4 h-4 hidden peer-checked:block"

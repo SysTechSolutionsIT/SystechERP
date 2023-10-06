@@ -1,54 +1,55 @@
 import { Icon } from "@iconify/react";
 import React, { useState, useEffect, useRef } from "react";
 import ViewWeek from "./viewWeek";
-import AddShift from "./AddShift";
+import axios from "axios";
 import AddWeek from "./AddWeek";
+import { useAuth } from "../Login";
 
 export const WeeklyOffData = [
   {
-    weeklyOffId: 1,
+    weekID: 1,
     weeklyOff: "Sunday",
     remark: "Weekend",
     status: "active",
   },
   {
-    weeklyOffId: 2,
+    weekID: 2,
     weeklyOff: "Saturday",
     remark: "Weekend",
     status: "active",
   },
   {
-    weeklyOffId: 3,
+    weekID: 3,
     weeklyOff: "Wednesday",
     remark: "Midweek",
     status: "active",
   },
   {
-    weeklyOffId: 4,
+    weekID: 4,
     weeklyOff: "Thursday",
     remark: "Midweek",
     status: "inactive",
   },
   {
-    weeklyOffId: 5,
+    weekID: 5,
     weeklyOff: "Monday",
     remark: "",
     status: "active",
   },
   {
-    weeklyOffId: 6,
+    weekID: 6,
     weeklyOff: "Tuesday",
     remark: "",
     status: "inactive",
   },
   {
-    weeklyOffId: 7,
+    weekID: 7,
     weeklyOff: "Friday",
     remark: "Weekend",
     status: "active",
   },
   {
-    weeklyOffId: 8,
+    weekID: 8,
     weeklyOff: "Thursday",
     remark: "",
     status: "inactive",
@@ -58,33 +59,23 @@ export const WeeklyOffData = [
 const WeeklyOffMaster = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false); //Add Modal
+
+  const { token } = useAuth();
   //View and Edit
   const [WVE, setWVE] = useState(false);
   const [edit, setEdit] = useState(false);
-  const [weeklyOffId, setweeklyOffId] = useState();
+  const [weekID, setweekID] = useState();
 
   //Hamburger Menu
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
   const [columnVisibility, setColumnVisibility] = useState({
-    weeklyOff: true,
-    remark: false,
+    weeklyOffName: true,
+    remarks: false,
     status: true,
   });
 
-  const handleSearchChange = (title, searchWord) => {
-    const newFilter = WeeklyOffData.filter((item) => {
-      const value = item[title];
-      return value && value.toLowerCase().includes(searchWord.toLowerCase());
-    });
-
-    if (searchWord === "") {
-      setFilteredData([]);
-    } else {
-      setFilteredData(newFilter);
-    }
-  };
   //Toggle
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedColumns, setSelectedColumns] = useState([
@@ -147,6 +138,77 @@ const WeeklyOffMaster = () => {
     const context = canvas.getContext("2d");
     context.font = fontSize + " sans-serif";
     return context.measureText(text).width;
+  };
+
+  //API
+  //For API
+  const [Weeks, setWeeks] = useState([]);
+
+  useEffect(() => {
+    fetchCompData();
+  }, []);
+
+  const fetchCompData = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5500/weekly-off-master/get",
+        {
+          headers: { authorization: `Bearer ${token}` },
+        }
+      );
+      console.log("Response Object", response);
+      const data = response.data;
+      console.log(data);
+      setWeeks(data);
+    } catch (error) {
+      console.log("Error while fetching course data: ", error.message);
+    }
+  };
+  console.log(Weeks);
+
+  const handleSearchChange = (title, searchWord) => {
+    const searchData = [...Weeks];
+
+    const newFilter = searchData.filter((item) => {
+      // Check if the item matches the search term in any of the selected columns
+      const matches = selectedColumns.some((columnName) => {
+        const newCol = columnName.charAt(0).toLowerCase() + columnName.slice(1);
+        const value = item[newCol];
+        return (
+          value &&
+          value.toString().toLowerCase().includes(searchWord.toLowerCase())
+        );
+      });
+
+      return matches;
+    });
+
+    // Update the filtered data
+    setFilteredData(newFilter);
+  };
+
+  //Deletion
+  const deleteRecord = async (weekID) => {
+    alert("Are you sure you want to delete this bank?");
+    try {
+      const apiUrl = `http://localhost:5500/weekly-off-master/delete/${weekID}`;
+
+      const response = await axios.delete(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 204) {
+        console.log(`record with ID ${weekID} deleted successfully.`);
+        alert("record Deleted");
+        window.location.reload();
+      } else {
+        console.error(`Failed to delete record with ID ${weekID}.`);
+      }
+    } catch (error) {
+      console.error("Error deleting record:", error);
+    }
   };
 
   return (
@@ -326,7 +388,7 @@ const WeeklyOffMaster = () => {
                             onClick={() => {
                               setWVE(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setweeklyOffId(result.weeklyOffId); // Pass ID to VEModal
+                              setweekID(result.weekID); // Pass ID to VEModal
                             }}
                           />
                           <Icon
@@ -337,25 +399,26 @@ const WeeklyOffMaster = () => {
                             onClick={() => {
                               setWVE(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setweeklyOffId(result.weeklyOffId); // Pass ID to VEModal
+                              setweekID(result.weekID); // Pass ID to VEModal
                             }}
                           />
                           <ViewWeek
                             visible={WVE}
                             onClick={() => setWVE(false)}
                             edit={edit}
-                            ID={weeklyOffId}
+                            ID={weekID}
                           />
                           <Icon
                             icon="material-symbols:delete-outline"
                             color="#556987"
                             width="20"
                             height="20"
+                            onClick={() => deleteRecord(result.weekID)}
                           />
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {result.weeklyOffId}
+                        {result.weekID}
                       </td>
                       {selectedColumns.map(
                         (columnName) =>
@@ -366,13 +429,18 @@ const WeeklyOffMaster = () => {
                                 columnVisibility[columnName] ? "" : "hidden"
                               }`}
                             >
-                              {result[columnName]}
+                              {columnName === "status"
+                                ? result.status
+                                  ? "Active"
+                                  : "Inactive"
+                                : result[columnName]}
                             </td>
                           )
                       )}
                     </tr>
                   ))
-                : WeeklyOffData.map((entry, index) => (
+                : Weeks.length > 0 &&
+                  Weeks.map((entry, index) => (
                     <tr key={index}>
                       <td className="px-2 border-2">
                         <div className="flex items-center gap-2 text-center justify-center">
@@ -384,7 +452,7 @@ const WeeklyOffMaster = () => {
                             onClick={() => {
                               setWVE(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setweeklyOffId(entry.weeklyOffId); // Pass ID to VEModal
+                              setweekID(entry.weekID); // Pass ID to VEModal
                             }}
                           />
 
@@ -396,14 +464,14 @@ const WeeklyOffMaster = () => {
                             onClick={() => {
                               setWVE(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setweeklyOffId(entry.weeklyOffId); // Pass ID to VEModal
+                              setweekID(entry.weekID); // Pass ID to VEModal
                             }}
                           />
                           <ViewWeek
                             visible={WVE}
                             onClick={() => setWVE(false)}
                             edit={edit}
-                            ID={weeklyOffId}
+                            ID={weekID}
                           />
 
                           <Icon
@@ -411,11 +479,12 @@ const WeeklyOffMaster = () => {
                             color="#556987"
                             width="20"
                             height="20"
+                            onClick={() => deleteRecord(entry.weekID)}
                           />
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {entry.weeklyOffId}
+                        {entry.weekID}
                       </td>
                       {selectedColumns.map(
                         (columnName) =>
@@ -426,7 +495,11 @@ const WeeklyOffMaster = () => {
                                 columnVisibility[columnName] ? "" : "hidden"
                               }`}
                             >
-                              {entry[columnName]}
+                              {columnName === "status"
+                                ? entry.status
+                                  ? "Active"
+                                  : "Inactive"
+                                : entry[columnName]}
                             </td>
                           )
                       )}

@@ -37,4 +37,4 @@ sequelize
     console.error("Error creating Weekly off Master table", error);
   });
 
-module.exports = KRAModel;
+module.exports = WeeklyOff;

@@ -1,7 +1,6 @@
 import { useFormik } from "formik";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
-import { weeklyOffNameData } from "./weeklyOffNameMaster";
 import axios from "axios";
 import { useAuth } from "../Login";
 
@@ -21,7 +20,7 @@ const AddWeek = ({ visible, onClick }) => {
       const formData = {
         weeklyOffName: values.weeklyOffName,
         remarks: values.remarks,
-        status: state,
+        status: status,
       };
       console.log(formData);
       try {
@@ -37,9 +36,10 @@ const AddWeek = ({ visible, onClick }) => {
         if (response.status === 201) {
           const data = response.data;
           console.log(data);
+          window.location.refresh();
           alert("Record added successfully");
           onClick();
-          window.location.refresh();
+
           // Handle successful response
         } else {
           console.error(`HTTP error! Status: ${response.status}`);
