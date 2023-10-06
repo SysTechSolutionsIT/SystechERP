@@ -30,6 +30,7 @@ const ShiftMaster = require("./route/ShiftMasterRoute");
 const LeaveMaster = require("./route/LeaveMasterRoute");
 const LeaveApplication = require("./route/LeaveApplicationRoute");
 const WeeklyOffMaster = require("./route/WeeklyOffRoute");
+const EarningHeadsMaster = require("./route/EarningHeadsRoute");
 
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());
@@ -59,6 +60,7 @@ app.use("/shift-master", ShiftMaster);
 app.use("/leave-master", LeaveMaster);
 app.use("/leave-application", LeaveApplication);
 app.use("/weekly-off-master", WeeklyOffMaster);
+app.use("/earning-heads", EarningHeadsMaster);
 
 // Start the server
 const port = 5500;

@@ -107,7 +107,7 @@ useEffect(() =>{
               </div>
             </td>
             <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
-              {entry.ApprovalFlag ? 'Approved' : 'Not Approved'}
+             {entry.ApprovalFlag === 'true' ? 'Approved' : 'Not Approved'}
             </td>
             <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
               {entry.id}
