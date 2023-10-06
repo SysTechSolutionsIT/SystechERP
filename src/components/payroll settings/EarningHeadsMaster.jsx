@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { Icon } from "@iconify/react";
 import EarningHeadsModal from "./EarningHeadsModal";
 import ViewEarningHeads from "./ViewEarningHeads";
+import axios from "axios";
 
 export const EarningHeads = [
   {
@@ -68,20 +69,23 @@ const EarningHeadsMaster = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
 
+  // View and Edit
   const [veEarningH, setVeEarningH] = useState(false);
   const [edit, setEdit] = useState(false);
   const [EHid, setEHid] = useState();
 
+  // Hamburger Menu
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
   const [columnVisibility, setColumnVisibility] = useState({
-    EarningHead: true,
+    Name: true,
     ShortName: true,
     CalculationType: true,
     Status: true,
   });
 
+  // Menu click outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -116,6 +120,7 @@ const EarningHeadsMaster = () => {
     context.font = fontSize + " sans-serif";
     return context.measureText(text).width;
   };
+
   //Toggle columns
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedColumns, setSelectedColumns] = useState([
@@ -144,17 +149,42 @@ const EarningHeadsMaster = () => {
     setSelectedColumns([]);
   };
 
-  const handleSearchChange = (title, searchWord) => {
-    const newFilter = EarningHeads.filter((item) => {
-      const value = item[title];
-      return value && value.toLowerCase().includes(searchWord.toLowerCase());
-    });
+  // For API
+  const [heads, setHeads] = useState([]);
 
-    if (searchWord === "") {
-      setFilteredData([]);
-    } else {
-      setFilteredData(newFilter);
+  useEffect(() => {
+    fetchHeadsData();
+  }, []);
+
+  const fetchHeadsData = async () => {
+    try {
+      const response = await axios.get("http://localhost:5500/earning-heads/get");
+      console.log("Response Object", response);
+      const data = response.data;
+      console.log(data);
+      setHeads(data);
+    } catch (error) {
+      console.log("Error while fetching course data: ", error);
     }
+  };
+  console.log(heads);
+
+  const handleSearchChange = (title, searchWord) => {
+    const searchData = [...heads];
+
+    const newFilter = searchData.filter((item) => {
+      // Check if the item matches the search term in any selected columns
+      const matches = selectedColumns.some((columnName) => {
+        const newCol = columnName;
+        const value = item[newCol];
+        return (
+          value && value.toString().toLowerCase().includes(searchWord.toLowerCase())
+        );
+      })
+      return matches;
+    });
+    // Update the filtered data
+    setFilteredData(newFilter);
   };
 
   return (
@@ -319,14 +349,8 @@ const EarningHeadsMaster = () => {
                           onClick={() => {
                             setVeEarningH(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
-                            setEHid(result.EarningHeadId); // Pass ID to VEModal
+                            setEHid(result.id); // Pass ID to VEModal
                           }}
-                        />
-                        <ViewEarningHeads
-                          visible={veEarningH}
-                          onClick={() => setVeEarningH(false)}
-                          edit={edit}
-                          ID={EHid}
                         />
                         <Icon
                           icon="mdi:edit"
@@ -336,14 +360,8 @@ const EarningHeadsMaster = () => {
                           onClick={() => {
                             setVeEarningH(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
-                            setEHid(result.EarningHeadId); // Pass ID to VEModal
+                            setEHid(result.id); // Pass ID to VEModal
                           }}
-                        />
-                        <ViewEarningHeads
-                          visible={veEarningH}
-                          onClick={() => setVeEarningH(false)}
-                          edit={edit}
-                          ID={EHid}
                         />
                         <Icon
                           icon="material-symbols:delete-outline"
@@ -354,7 +372,7 @@ const EarningHeadsMaster = () => {
                       </div>
                     </td>
                     <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {result.EarningHeadId}
+                      {result.id}
                     </td>
                     {selectedColumns.map((columnName) => (
                       <td
@@ -371,7 +389,7 @@ const EarningHeadsMaster = () => {
                     ))}
                   </tr>
                 ))
-                : EarningHeads.map((entry, index) => (
+                : heads.length > 0 && heads.map((result, index) => (
                   <tr key={index}>
                     <td className="px-2 border-2">
                       <div className="flex items-center gap-2 text-center justify-center">
@@ -383,14 +401,8 @@ const EarningHeadsMaster = () => {
                           onClick={() => {
                             setVeEarningH(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
-                            setEHid(entry.EarningHeadId); // Pass ID to VEModal
+                            setEHid(result.id); // Pass ID to VEModal
                           }}
-                        />
-                        <ViewEarningHeads
-                          visible={veEarningH}
-                          onClick={() => setVeEarningH(false)}
-                          edit={edit}
-                          ID={EHid}
                         />
                         <Icon
                           icon="mdi:edit"
@@ -400,14 +412,8 @@ const EarningHeadsMaster = () => {
                           onClick={() => {
                             setVeEarningH(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
-                            setEHid(entry.EarningHeadId); // Pass ID to VEModal
+                            setEHid(result.id); // Pass ID to VEModal
                           }}
-                        />
-                        <ViewEarningHeads
-                          visible={veEarningH}
-                          onClick={() => setVeEarningH(false)}
-                          edit={edit}
-                          ID={EHid}
                         />
                         <Icon
                           icon="material-symbols:delete-outline"
@@ -418,7 +424,7 @@ const EarningHeadsMaster = () => {
                       </div>
                     </td>
                     <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {entry.EarningHeadId}
+                      {result.id}
                     </td>
                     {selectedColumns.map((columnName) => (
                       <td
@@ -427,10 +433,10 @@ const EarningHeadsMaster = () => {
                           }`}
                       >
                         {columnName === "Status"
-                          ? entry[columnName]
+                          ? result[columnName]
                             ? "Active"
                             : "Inactive"
-                          : entry[columnName]}
+                          : result[columnName]}
                       </td>
                     ))}
                   </tr>
@@ -439,6 +445,12 @@ const EarningHeadsMaster = () => {
           </table>
         </div>
       </div>
+      <ViewEarningHeads
+        visible={veEarningH}
+        onClick={() => setVeEarningH(false)}
+        edit={edit}
+        ID={EHid}
+      />
     </div>
   );
 };
