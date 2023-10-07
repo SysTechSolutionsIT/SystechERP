@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import DestinationModal from "./DestinationModal";
 import ViewDestination from "./ViewDestination";
 import axios from "axios";
+import { useAuth } from "../Login";
 
 export const destData = [
   {
@@ -24,6 +25,7 @@ export const destData = [
 const DestinationMaster = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
+  const { token } = useAuth();
   // View and Edit
   const [veDest, setVeDest] = useState(false);
   const [edit, setEdit] = useState(false);
@@ -113,7 +115,11 @@ const DestinationMaster = () => {
 
   const fetchDestData = async () => {
     try {
-      const response = await axios.get("http://localhost:5500/destinationmaster/");
+      const response = await axios.get("http://localhost:5500/destinationmaster/", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       console.log("Response Object", response);
       const data = response.data;
       console.log(data);

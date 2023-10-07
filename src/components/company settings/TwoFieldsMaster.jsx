@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import TwoFieldsModal from "./TwoFieldsModal";
 import ViewTwoF from "./ViewTwoF";
 import axios from "axios";
+import { useAuth } from "../Login";
 
 export const TwoFData = [
   {
@@ -58,6 +59,7 @@ export const TwoFData = [
 const TwoFieldsMaster = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
+  const { token } = useAuth();
 
   // View and Edit
   const [veTf, setVeTf] = useState(false);
@@ -147,7 +149,11 @@ const TwoFieldsMaster = () => {
 
   const fetchTwoFieldData = async () => {
     try {
-      const response = await axios.get("http://localhost:5500/twofieldmaster/");
+      const response = await axios.get("http://localhost:5500/twofieldmaster/", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       console.log("Response Object", response);
       const data = response.data;
       console.log(data);

@@ -3,8 +3,10 @@ import React, { useEffect, useState } from "react";
 import { TwoFData } from "./TwoFieldsMaster";
 import { useFormik } from "formik";
 import axios from "axios";
+import { useAuth } from "../Login";
 
 const ViewTwoF = ({ visible, onClick, edit, ID }) => {
+  const { token } = useAuth();
   const [StatusCheck, setStatusCheck] = useState(false);
   const [details, setDetails] = useState([]);
   const formik = useFormik({
@@ -22,7 +24,11 @@ const ViewTwoF = ({ visible, onClick, edit, ID }) => {
 
   const updateField = async (values) => {
     try {
-      const response = axios.patch(`http://localhost:5500/twofieldmaster/update/${ID}`, values);
+      const response = axios.patch(`http://localhost:5500/twofieldmaster/update/${ID}`, values, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       console.log("Patch successful");
     } catch (error) {
       console.log("Error in patch ", error);
@@ -35,7 +41,11 @@ const ViewTwoF = ({ visible, onClick, edit, ID }) => {
 
   const fetchFieldData = async () => {
     try {
-      const response = await axios.get(`http://localhost:5500/twofieldmaster/${ID}`);
+      const response = await axios.get(`http://localhost:5500/twofieldmaster/${ID}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       const data = response.data;
       setDetails(data.FieldByID);
     } catch (error) {
@@ -79,7 +89,7 @@ const ViewTwoF = ({ visible, onClick, edit, ID }) => {
                   id="masterName"
                   type="text"
                   placeholder="Enter Master Name"
-                  value={details?.masterName}
+                  value={formik.values.masterName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -91,7 +101,7 @@ const ViewTwoF = ({ visible, onClick, edit, ID }) => {
                   id="fieldDetails"
                   type="text"
                   placeholder="Enter Field Details"
-                  value={details?.fieldDetails}
+                  value={formik.values.fieldDetails}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -103,7 +113,7 @@ const ViewTwoF = ({ visible, onClick, edit, ID }) => {
                   id="remark"
                   type="text"
                   placeholder="Enter Remarks"
-                  value={details?.remark}
+                  value={formik.values.remark}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -115,7 +125,7 @@ const ViewTwoF = ({ visible, onClick, edit, ID }) => {
                   <input
                     id="status"
                     type="checkbox"
-                    checked={details?.status}
+                    checked={formik.values.status}
                     className={`relative w-4 h-4 mr-2 peer shrink-0 checked:appearance-none checked:bg-blue-900 border-2 border-blue-900 rounded-sm`}
                     onChange={() => setStatusCheck(!StatusCheck)}
                     disabled={!edit}

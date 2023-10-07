@@ -3,8 +3,10 @@ import React, { useState } from "react";
 import { destData } from "./DestinationMaster";
 import { Icon } from "@iconify/react";
 import axios from "axios";
+import { useAuth } from "../Login";
 
 const DestinationModal = ({ visible, onClick }) => {
+  const { token } = useAuth();
   const formik = useFormik({
     initialValues: {
       destName: "",
@@ -22,7 +24,11 @@ const DestinationModal = ({ visible, onClick }) => {
 
   const addDest = async (values) => {
     try {
-      const response = await axios.post("http://localhost:5500/destinationmaster/add-dest", values)
+      const response = await axios.post("http://localhost:5500/destinationmaster/add-dest", values, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       if (response.status === 200) {
         const data = response.data;
         console.log(data);
