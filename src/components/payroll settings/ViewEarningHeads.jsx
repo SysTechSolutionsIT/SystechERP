@@ -37,7 +37,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
 
   const updateHead = async (values) => {
     try {
-      const response = axios.patch(`http://localhost:5500/update/${ID}`, values);
+      const response = axios.patch(`http://localhost:5500/earning-heads/update/${ID}`, values);
       console.log("Patch successful");
     } catch (error) {
       console.log("Error in patch ", error);
@@ -52,7 +52,6 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
     try {
       const response = await axios.get(`http://localhost:5500/earning-heads/get/${ID}`);
       const data = response.data;
-      console.log("hello", data);
       setDetails(data.EarningHeadByID);
     } catch (error) {
       console.log("Error while fetching course data: ", error.message);
@@ -108,12 +107,12 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
     });
   };
 
-  // useEffect(() => {
-  //   const selectedEarningHead = EarningHeads.find((entry) => entry.EarningHeadId === ID);
-  //   if (selectedEarningHead) {
-  //     setDetails(selectedEarningHead);
-  //   }
-  // }, [ID]);
+  useEffect(() => {
+    const selectedEarningHead = EarningHeads.find((entry) => entry.id === ID);
+    if (selectedEarningHead) {
+      setDetails(selectedEarningHead);
+    }
+  }, [ID]);
 
   if (!visible) return null;
   return (

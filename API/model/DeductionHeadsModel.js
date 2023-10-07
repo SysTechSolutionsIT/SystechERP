@@ -11,7 +11,7 @@ const sequelize = new Sequelize(
     }
 )
 
-const EarningHeadsMaster = sequelize.define("EarningHeadsMaster", {
+const DeductionHeadsMaster = sequelize.define("DeductionHeadsMaster", {
     Name: {
         type: DataTypes.STRING,
     },
@@ -71,10 +71,10 @@ const EarningHeadsMaster = sequelize.define("EarningHeadsMaster", {
 sequelize
     .sync()
     .then(() => {
-        console.log("Earning Heads Master table created successfully.");
+        console.log("Deduction Heads Master table created successfully.");
     })
     .catch((error) => {
-        console.error("Error Heads creating Earning Master table:", error);
+        console.error("Error creating Deduction Heads Master table:", error);
     });
 
-module.exports = EarningHeadsMaster;
+module.exports = DeductionHeadsMaster;

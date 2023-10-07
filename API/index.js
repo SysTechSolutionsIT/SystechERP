@@ -31,6 +31,7 @@ const LeaveMaster = require("./route/LeaveMasterRoute");
 const LeaveApplication = require("./route/LeaveApplicationRoute");
 const WeeklyOffMaster = require("./route/WeeklyOffRoute");
 const EarningHeadsMaster = require("./route/EarningHeadsRoute");
+const DeductionHeadsMaster = require("./route/DeductionHeadsRoute");
 
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());
@@ -61,6 +62,7 @@ app.use("/leave-master", LeaveMaster);
 app.use("/leave-application", LeaveApplication);
 app.use("/weekly-off-master", WeeklyOffMaster);
 app.use("/earning-heads", EarningHeadsMaster);
+app.use("/deduction-heads", DeductionHeadsMaster);
 
 // Start the server
 const port = 5500;

@@ -121,7 +121,7 @@ const EarningHeadsModal = ({ visible, onClick }) => {
                   Earning Head ID
                 </p>
                 <input
-                  id="EarningHeadId"
+                  id="id"
                   type="number"
                   // value={formik.values.EarningHeadId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
