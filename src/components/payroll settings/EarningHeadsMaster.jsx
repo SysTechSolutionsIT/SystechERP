@@ -4,6 +4,7 @@ import { Icon } from "@iconify/react";
 import EarningHeadsModal from "./EarningHeadsModal";
 import ViewEarningHeads from "./ViewEarningHeads";
 import axios from "axios";
+import { useAuth } from "../Login";
 
 export const EarningHeads = [
   {
@@ -68,6 +69,7 @@ export const EarningHeads = [
 const EarningHeadsMaster = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
+  const { token } = useAuth();
 
   // View and Edit
   const [veEarningH, setVeEarningH] = useState(false);
@@ -158,7 +160,11 @@ const EarningHeadsMaster = () => {
 
   const fetchHeadsData = async () => {
     try {
-      const response = await axios.get("http://localhost:5500/earning-heads/get");
+      const response = await axios.get("http://localhost:5500/earning-heads/get", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       console.log("Response Object", response);
       const data = response.data;
       console.log(data);

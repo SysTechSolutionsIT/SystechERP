@@ -4,9 +4,11 @@ import { useState, useEffect } from 'react'
 import { useFormik } from 'formik'
 import { Icon } from '@iconify/react'
 import axios from 'axios'
+import { useAuth } from '../Login'
 
 const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
-  const [details, setDetails] = useState([])
+  const [details, setDetails] = useState([]);
+  const { token } = useAuth();
   const formik = useFormik({
     initialValues: {
       Name: "",
@@ -36,7 +38,11 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
 
   const updateHead = async (values) => {
     try {
-      const response = axios.patch(`http://localhost:5500/deduction-heads/update/${ID}`, values);
+      const response = axios.patch(`http://localhost:5500/deduction-heads/update/${ID}`, values, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       console.log("Patch successful");
     } catch (error) {
       console.log("Error in patch ", error);
@@ -49,7 +55,11 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
 
   const fetchHeadsData = async () => {
     try {
-      const response = await axios.get(`http://localhost:5500/deduction-heads/get/${ID}`);
+      const response = await axios.get(`http://localhost:5500/deduction-heads/get/${ID}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       const data = response.data;
       setDetails(data.DeductionHeadByID);
     } catch (error) {
@@ -63,7 +73,7 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
     if (details) {
       formik.setValues(details);
     }
-  }, [details])
+  }, [details]);
 
   const [isStatusChecked, setStatusChecked] = useState(false)
   const handleCheckboxChange = (fieldName, setChecked, event) => {
@@ -166,7 +176,7 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
                 <input
                   id="DeductionHeadId"
                   type="number"
-                  value={formik.values.id}
+                  value={details?.id}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   disabled={!edit}
                   onChange={formik.handleChange}

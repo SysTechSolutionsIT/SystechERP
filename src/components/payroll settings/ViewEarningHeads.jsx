@@ -1,13 +1,14 @@
 import React from "react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
-import EarningHeadsModal from "./EarningHeadsModal";
 import { useFormik } from "formik";
 import { EarningHeads } from "./EarningHeadsMaster";
 import axios from "axios";
+import { useAuth } from "../Login";
 
 const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
   const [details, setDetails] = useState([]);
+  const { token } = useAuth();
   const formik = useFormik({
     initialValues: {
       Name: "",
@@ -37,7 +38,11 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
 
   const updateHead = async (values) => {
     try {
-      const response = axios.patch(`http://localhost:5500/earning-heads/update/${ID}`, values);
+      const response = axios.patch(`http://localhost:5500/earning-heads/update/${ID}`, values, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       console.log("Patch successful");
     } catch (error) {
       console.log("Error in patch ", error);
@@ -50,7 +55,11 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
 
   const fetchHeadsData = async () => {
     try {
-      const response = await axios.get(`http://localhost:5500/earning-heads/get/${ID}`);
+      const response = await axios.get(`http://localhost:5500/earning-heads/get/${ID}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       const data = response.data;
       setDetails(data.EarningHeadByID);
     } catch (error) {
@@ -96,6 +105,12 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
       </>
     );
   }
+
+  useEffect(() => {
+    if (details) {
+      formik.setValues(details);
+    }
+  }, [details]);
 
   const [isStatusChecked, setStatusChecked] = useState(false)
   const handleCheckboxChange = (fieldName, setChecked, event) => {
@@ -154,7 +169,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                 <input
                   id="Name"
                   type="text"
-                  value={details?.Name}
+                  value={formik.values.Name}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -165,7 +180,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                 <input
                   id="ShortName"
                   type="text"
-                  value={details?.ShortName}
+                  value={formik.values.ShortName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -176,7 +191,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                 <input
                   id="HeadPosition"
                   type="text"
-                  value={details?.HeadPosition}
+                  value={formik.values.HeadPosition}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -187,7 +202,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                 <select
                   id="CalculationType"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                  value={details?.CalculationType}
+                  value={formik.values.CalculationType}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
@@ -201,7 +216,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                 <input
                   id="CalculationValue"
                   type="text"
-                  value={details?.CalculationValue}
+                  value={formik.values.CalculationValue}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -212,7 +227,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                 <select
                   id="SalaryParameter1"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                  value={details?.SalaryParameter1}
+                  value={formik.values.SalaryParameter1}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
@@ -225,7 +240,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                 <select
                   id="SalaryParameter2"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                  value={details?.SalaryParameter2}
+                  value={formik.values.SalaryParameter2}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
@@ -238,7 +253,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                 <select
                   id="SalaryParameter3"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                  value={details?.SalaryParameter3}
+                  value={formik.values.SalaryParameter3}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
@@ -251,7 +266,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                 <select
                   id="SalaryParameter4"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                  value={details?.SalaryParameter4}
+                  value={formik.values.SalaryParameter4}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
@@ -264,7 +279,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                 <select
                   id="SalaryParameter5"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                  value={details?.SalaryParameter5}
+                  value={formik.values.SalaryParameter5}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
@@ -277,7 +292,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                 <select
                   id="SalaryParameter6"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                  value={details?.SalaryParameter6}
+                  value={formik.values.SalaryParameter6}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
@@ -290,7 +305,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                 <select
                   id="SalaryParameter7"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                  value={details?.SalaryParameter7}
+                  value={formik.values.SalaryParameter7}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
@@ -303,7 +318,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                 <select
                   id="SalaryParameter8"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                  value={details?.SalaryParameter8}
+                  value={formik.values.SalaryParameter8}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
@@ -316,7 +331,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                 <select
                   id="SalaryParameter9"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                  value={details?.SalaryParameter9}
+                  value={formik.values.SalaryParameter9}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
@@ -329,7 +344,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                 <select
                   id="SalaryParameter10"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                  value={details?.SalaryParameter10}
+                  value={formik.values.SalaryParameter10}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
@@ -342,7 +357,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                 <input
                   id="Formula"
                   type="text"
-                  value={details?.Formula}
+                  value={formik.values.Formula}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -353,7 +368,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                 <input
                   id="Remark"
                   type="text"
-                  value={details?.Remark}
+                  value={formik.values.Remark}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}

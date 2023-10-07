@@ -3,8 +3,10 @@ import React from 'react'
 import { useState } from 'react'
 import { Icon } from '@iconify/react'
 import axios from 'axios'
+import { useAuth } from '../Login'
 
 const EarningHeadsModal = ({ visible, onClick }) => {
+  const { token } = useAuth();
   const formik = useFormik({
     initialValues: {
       Name: "",
@@ -34,7 +36,11 @@ const EarningHeadsModal = ({ visible, onClick }) => {
 
   const addHead = async (values) => {
     try {
-      const response = await axios.post("http://localhost:5500/earning-heads/add", values);
+      const response = await axios.post("http://localhost:5500/earning-heads/add", values, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       if (response.status === 200) {
         const data = response.data;
         console.log(data);

@@ -4,6 +4,7 @@ import { Icon } from "@iconify/react";
 import DeductionHeadsModal from "./DeductionHeadsModal";
 import ViewDeductionHeads from "./ViewDeductionHeads";
 import axios from "axios";
+import { useAuth } from "../Login";
 
 export const DeductionHeads = [
   {
@@ -68,6 +69,7 @@ export const DeductionHeads = [
 const DeductionHeadsMaster = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
+  const { token } = useAuth();
 
   // View and Edit
   const [veDeductionH, setVeDeductionH] = useState(false);
@@ -158,7 +160,11 @@ const DeductionHeadsMaster = () => {
 
   const fetchHeadsData = async () => {
     try {
-      const response = await axios.get("http://localhost:5500/deduction-heads/get");
+      const response = await axios.get("http://localhost:5500/deduction-heads/get", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       console.log("Response Object", response);
       const data = response.data;
       console.log(data);
