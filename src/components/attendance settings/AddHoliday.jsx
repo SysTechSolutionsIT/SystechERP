@@ -6,7 +6,6 @@ import axios from "axios";
 import { useAuth } from "../Login";
 
 const AddHoliday = ({ visible, onClick }) => {
-  const [details, setDetails] = useState([]);
   const [state, setState] = useState(false);
   const { token } = useAuth();
   const formik = useFormik({
