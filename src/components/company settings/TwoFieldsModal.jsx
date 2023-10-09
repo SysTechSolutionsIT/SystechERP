@@ -3,8 +3,10 @@ import React, { useState } from "react";
 import { TwoFData } from "./TwoFieldsMaster";
 import { Icon } from "@iconify/react";
 import axios from "axios";
+import { useAuth } from "../Login";
 
 const TwoFieldsModal = ({ visible, onClick }) => {
+  const { token } = useAuth();
   const formik = useFormik({
     initialValues: {
       masterName: "",
@@ -20,7 +22,11 @@ const TwoFieldsModal = ({ visible, onClick }) => {
 
   const addField = async (values) => {
     try {
-      const response = await axios.post("http://localhost:5500/twofieldmaster/add/", values)
+      const response = await axios.post("http://localhost:5500/twofieldmaster/add/", values, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       if (response.status === 200) {
         const data = response.data;
         console.log(data);

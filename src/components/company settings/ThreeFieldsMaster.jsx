@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import ThreeFieldsModal from "./ThreeFieldsModal";
 import ViewThreeF from "./ViewThreeF";
 import axios from "axios";
+import { useAuth } from "../Login";
 
 export const ThreeFData = [
   {
@@ -17,6 +18,7 @@ export const ThreeFData = [
 const ThreeFieldsMaster = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
+  const { token } = useAuth();
 
   // View and Edit
   const [veTf, setVeTf] = useState(false);
@@ -107,7 +109,11 @@ const ThreeFieldsMaster = () => {
 
   const fetchThreeFieldData = async () => {
     try {
-      const response = await axios.get("http://localhost:5500/threefieldmaster/");
+      const response = await axios.get("http://localhost:5500/threefieldmaster/", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       console.log("Response Object", response);
       const data = response.data;
       console.log(data);
