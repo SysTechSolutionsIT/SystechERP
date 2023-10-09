@@ -2,12 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { Icon } from "@iconify/react";
 import { HolidayData } from "./Holidaymaster";
+import axios from "axios";
+import { useAuth } from "../Login";
 
 const AddHoliday = ({ visible, onClick }) => {
   const [details, setDetails] = useState([]);
+  const [state, setState] = useState(false);
+  const { token } = useAuth();
   const formik = useFormik({
     initialValues: {
-      id: "",
       description: "",
       date: "",
       type: "",
@@ -15,19 +18,51 @@ const AddHoliday = ({ visible, onClick }) => {
       remark: "",
       status: "",
     },
-    onSubmit: (values) => {
-      console.log(values);
-      HolidayData.push(values);
-      alert("Added Successfully");
+    onSubmit: async (values) => {
+      const status = state === true;
+
+      const formData = {
+        description: values.description,
+        date: values.date,
+        type: values.type,
+        year: values.year,
+        remark: values.remark,
+        status: status,
+      };
       onClick();
+      console.log(formData);
+      try {
+        const response = await axios.post(
+          "http://localhost:5500/holiday-master/add",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (response.status === 201) {
+          const data = response.data;
+          console.log(data);
+          alert("Record added successfully");
+          window.location.refresh();
+          onClick();
+
+          // Handle successful response
+        } else {
+          console.error(`HTTP error! Status: ${response.status}`);
+          // Handle error response
+        }
+      } catch (error) {
+        console.error("Error:", error.message);
+        // Handle network error
+      }
     },
   });
 
-  const [status, setStatus] = useState(false);
-
-  const handleStatusChange = () => {
-    setStatus(!status);
-  };
+  useEffect(() => {
+    formik.resetForm();
+  }, []);
 
   if (!visible) return null;
   return (
@@ -49,17 +84,6 @@ const AddHoliday = ({ visible, onClick }) => {
           </div>
           <div className="py-4">
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-[13px] font-semibold">Holiday ID</p>
-                <input
-                  id="id"
-                  type="text"
-                  placeholder="Enter Holiday ID"
-                  value={formik.values.id}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                />
-              </div>
               <div>
                 <p className="text-[13px] font-semibold">Holiday Description</p>
                 <input
@@ -150,10 +174,11 @@ const AddHoliday = ({ visible, onClick }) => {
                   <input
                     id="status"
                     type="checkbox"
-                    checked={status}
-                    value={formik.values.status}
+                    checked={state}
                     className={` relative w-4 h-4 mr-2 peer shrink-0 appearance-none checked:bg-blue-800 border-2 border-blue-900 rounded-sm`}
-                    onChange={handleStatusChange}
+                    onChange={() => {
+                      setState(!state);
+                    }}
                   />
                   <Icon
                     className="absolute w-4 h-4 hidden peer-checked:block"

@@ -3,7 +3,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { Button } from "react-bootstrap";
 import ViewHoliday from "./viewHoliday";
 import AddHoliday from "./AddHoliday";
-
+import axios from "axios";
+import { useAuth } from "../Login";
 export const HolidayData = [
   {
     id: 1,
@@ -86,6 +87,7 @@ const HolidayMaster = () => {
   const [HVE, setHVE] = useState(false);
   const [edit, setEdit] = useState(false);
   const [Hid, setHid] = useState();
+  const { token } = useAuth();
 
   //Hamburger Menu
   const [menuOpen, setMenuOpen] = useState(false);
@@ -100,18 +102,6 @@ const HolidayMaster = () => {
     status: true,
   });
 
-  const handleSearchChange = (title, searchWord) => {
-    const newFilter = HolidayData.filter((item) => {
-      const value = item[title];
-      return value && value.toLowerCase().includes(searchWord.toLowerCase());
-    });
-
-    if (searchWord === "") {
-      setFilteredData([]);
-    } else {
-      setFilteredData(newFilter);
-    }
-  };
   //Toggle
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedColumns, setSelectedColumns] = useState([
@@ -174,6 +164,56 @@ const HolidayMaster = () => {
     const context = canvas.getContext("2d");
     context.font = fontSize + " sans-serif";
     return context.measureText(text).width;
+  };
+
+  //API
+  //API CALL
+
+  const [Holiday, setHoliday] = useState([]);
+
+  useEffect(() => {
+    fetchHolidayData();
+  }, []);
+
+  const fetchHolidayData = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5500/holiday-master/get",
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Response Object", response);
+      const data = response.data;
+      console.log(data);
+      setHoliday(data);
+    } catch (error) {
+      console.log("Error while fetching course data: ", error.message);
+    }
+  };
+  console.log(Holiday);
+
+  const handleSearchChange = (title, searchWord) => {
+    const searchData = [...Holiday];
+
+    const newFilter = searchData.filter((item) => {
+      // Check if the item matches the search term in any of the selected columns
+      const matches = selectedColumns.some((columnName) => {
+        const newCol = columnName.charAt(0).toLowerCase() + columnName.slice(1);
+        const value = item[newCol];
+        return (
+          value &&
+          value.toString().toLowerCase().includes(searchWord.toLowerCase())
+        );
+      });
+
+      return matches;
+    });
+
+    // Update the filtered data
+    setFilteredData(newFilter);
   };
 
   return (
@@ -392,7 +432,8 @@ const HolidayMaster = () => {
                       )}
                     </tr>
                   ))
-                : HolidayData.map((entry, index) => (
+                : Holiday.length > 0 &&
+                  Holiday.map((entry, index) => (
                     <tr key={index}>
                       <td className="px-2 border-2">
                         <div className="flex items-center gap-2 text-center justify-center">

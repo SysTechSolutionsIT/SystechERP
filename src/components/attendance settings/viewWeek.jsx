@@ -145,7 +145,7 @@ const ViewWeek = ({ visible, onClick, edit, ID }) => {
                     id="status"
                     type="checkbox"
                     checked={formik.values.status}
-                    value={formik.values.status}
+                    value={state}
                     className={` relative w-4 h-4 mr-2 peer shrink-0 appearance-none checked:bg-blue-800 border-2 border-blue-900 rounded-sm`}
                     onChange={() => setState(!state)}
                   />
