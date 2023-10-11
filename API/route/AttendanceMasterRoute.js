@@ -23,7 +23,7 @@ router.get("/", authToken, async (req, res) => {
     records,
   });
 });
-router.get("/:id", async (req, res) => {
+router.get("/:id", authToken, async (req, res) => {
   const record = await AttMaster.findByPk(req.params.id);
 
   res.status(200).json({

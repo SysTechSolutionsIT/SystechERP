@@ -204,6 +204,29 @@ const DeviceMaster = () => {
     // Update the filtered data
     setFilteredData(newFilter);
   };
+  //Delete
+  const deleteAtt = async (ID) => {
+    alert("Are you sure you want to delete this bank?");
+    try {
+      const apiUrl = `http://localhost:5500/bankmaster/delete-record/${ID}`;
+
+      const response = await axios.delete(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 204) {
+        console.log(`record with ID ${ID} deleted successfully.`);
+        alert("record Deleted");
+        window.location.reload();
+      } else {
+        console.error(`Failed to delete record with ID ${ID}.`);
+      }
+    } catch (error) {
+      console.error("Error deleting record:", error);
+    }
+  };
 
   return (
     <div className="top-25 min-w-[40%]">
@@ -407,6 +430,7 @@ const DeviceMaster = () => {
                             color="#556987"
                             width="20"
                             height="20"
+                            onClick={() => deleteBank(result.DeviceId)}
                           />
                         </div>
                       </td>
@@ -467,6 +491,7 @@ const DeviceMaster = () => {
                             color="#556987"
                             width="20"
                             height="20"
+                            onClick={() => deleteBank(entry.DeviceId)}
                           />
                         </div>
                       </td>
