@@ -33,6 +33,7 @@ const WeeklyOffMaster = require("./route/WeeklyOffRoute");
 const EarningHeadsMaster = require("./route/EarningHeadsRoute");
 const HolidayMaster = require("./route/HolidayMasterRoute");
 const DeductionHeadsMaster = require("./route/DeductionHeadsRoute");
+const AttendanceMaster = require("./route/AttendanceMasterRoute");
 
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());
@@ -65,6 +66,7 @@ app.use("/weekly-off-master", WeeklyOffMaster);
 app.use("/earning-heads", EarningHeadsMaster);
 app.use("/holiday-master", HolidayMaster);
 app.use("/deduction-heads", DeductionHeadsMaster);
+app.use("/attendance-master", AttendanceMaster);
 
 // Start the server
 const port = 5500;
