@@ -206,9 +206,9 @@ const DeviceMaster = () => {
   };
   //Delete
   const deleteAtt = async (ID) => {
-    alert("Are you sure you want to delete this bank?");
+    alert("Are you sure you want to delete this Record?");
     try {
-      const apiUrl = `http://localhost:5500/bankmaster/delete-record/${ID}`;
+      const apiUrl = `http://localhost:5500/attendance-master/delete-record/${ID}`;
 
       const response = await axios.delete(apiUrl, {
         headers: {
@@ -430,7 +430,7 @@ const DeviceMaster = () => {
                             color="#556987"
                             width="20"
                             height="20"
-                            onClick={() => deleteBank(result.DeviceId)}
+                            onClick={() => deleteAtt(result.DeviceId)}
                           />
                         </div>
                       </td>
@@ -491,7 +491,7 @@ const DeviceMaster = () => {
                             color="#556987"
                             width="20"
                             height="20"
-                            onClick={() => deleteBank(entry.DeviceId)}
+                            onClick={() => deleteAtt(entry.DeviceId)}
                           />
                         </div>
                       </td>
