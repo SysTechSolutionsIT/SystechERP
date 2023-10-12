@@ -2,37 +2,88 @@ import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { Icon } from "@iconify/react";
 import { DeviceData } from "./AttDevice";
+import axios from "axios";
+import { useAuth } from "../Login";
 
 const ViewAtt = ({ visible, onClick, edit, ID }) => {
   const [details, setDetails] = useState([]);
+  const { token } = useAuth();
+  const [state, setState] = useState(false);
+
   const formik = useFormik({
     initialValues: {
-      DeviceId: "",
       DeviceName: "",
       IpAddress: "",
       Port: "",
       Remark: "",
-      Status: "",
+      Status: state,
     },
-    onSubmit: (values) => {
-      console.log(values);
-      DeviceData.push(values);
-      alert("Added Successfully");
+    onSubmit: async (values) => {
+      const status = state === true;
+      const formData = {
+        DeviceName: values.DeviceName,
+        IpAddress: values.IpAddress,
+        Port: values.Port,
+        Remark: values.Remark,
+        Status: status,
+      };
+      console.log(formData);
+      axios
+        .patch(
+          `http://localhost:5500/attendance-master/update-record/${ID}`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          // Handle success
+          console.log("Data updated successfully", response);
+          // You can also perform additional actions here, like closing the modal or updating the UI.
+          window.location.reload();
+          onClick();
+        })
+        .catch((error) => {
+          // Handle error
+          console.error("Error updating data", error);
+        });
     },
   });
 
   useEffect(() => {
-    const selectedDev = DeviceData.find((entry) => entry.DeviceId === ID);
-    if (selectedDev) {
-      setDetails(selectedDev);
-    }
+    fetchAttData();
   }, [ID]);
-
-  const [status, setStatus] = useState(false);
-
-  const handleStatusChange = () => {
-    setStatus(!status);
+  console.log(ID);
+  const fetchAttData = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5500/attendance-master/${ID}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      console.log("Response Object", response);
+      const data = response.data.record;
+      setDetails(data);
+      console.log(data);
+    } catch (error) {
+      console.log("Error while fetching course data: ", error.message);
+    }
   };
+
+  useEffect(() => {
+    if (details) {
+      formik.setValues({
+        DeviceName: details.DeviceName,
+        IpAddress: details.IpAddress,
+        Port: details.Port,
+        Remark: details.Remark,
+        Status: details.Status,
+      });
+    }
+  }, [details]);
 
   if (!visible) return null;
   return (
@@ -60,10 +111,10 @@ const ViewAtt = ({ visible, onClick, edit, ID }) => {
                   id="DeviceId"
                   type="text"
                   placeholder="Enter Device ID"
-                  value={details.DeviceId}
+                  value={details?.DeviceId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
-                  disabled={!edit}
+                  disabled={true}
                 />
               </div>
               <div>
@@ -72,7 +123,7 @@ const ViewAtt = ({ visible, onClick, edit, ID }) => {
                   id="DeviceName"
                   type="text"
                   placeholder="Enter Device Name"
-                  value={details.DeviceName}
+                  value={formik.values.DeviceName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -84,7 +135,7 @@ const ViewAtt = ({ visible, onClick, edit, ID }) => {
                   id="IpAddress"
                   type="text"
                   placeholder="Enter IP Address"
-                  value={details.IpAddress}
+                  value={formik.values.IpAddress}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -96,7 +147,7 @@ const ViewAtt = ({ visible, onClick, edit, ID }) => {
                   id="Port"
                   type="text"
                   placeholder="Enter Port No."
-                  value={details.Port}
+                  value={formik.values.Port}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -108,7 +159,7 @@ const ViewAtt = ({ visible, onClick, edit, ID }) => {
                   id="remark"
                   type="text"
                   placeholder="Enter Remarks"
-                  value={details.Remark}
+                  value={formik.values.Remark}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -118,12 +169,12 @@ const ViewAtt = ({ visible, onClick, edit, ID }) => {
                 <p className="text-[13px] font-semibold">Status</p>
                 <div className="flex items-center">
                   <input
-                    id="status"
+                    id="Status"
                     type="checkbox"
-                    checked={status}
-                    value={details.Status}
+                    checked={formik.values.Status}
+                    value={state}
                     className={` relative w-4 h-4 mr-2 peer shrink-0 appearance-none checked:bg-blue-800 border-2 border-blue-900 rounded-sm`}
-                    onChange={handleStatusChange}
+                    onChange={() => setState(!state)}
                   />
                   <Icon
                     className="absolute w-4 h-4 hidden peer-checked:block"

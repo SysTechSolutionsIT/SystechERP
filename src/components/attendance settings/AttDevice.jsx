@@ -2,6 +2,8 @@ import { Icon } from "@iconify/react";
 import React, { useState, useEffect, useRef } from "react";
 import ViewAtt from "./ViewAtt";
 import AddAtt from "./AddAtt";
+import axios from "axios";
+import { useAuth } from "../Login";
 
 export const DeviceData = [
   {
@@ -78,6 +80,8 @@ const DeviceMaster = () => {
   const [edit, setEdit] = useState(false);
   const [DeviceId, setDeviceId] = useState();
 
+  const { token } = useAuth();
+
   //Hamburger Menu
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
@@ -90,18 +94,6 @@ const DeviceMaster = () => {
     Status: true,
   });
 
-  const handleSearchChange = (title, searchWord) => {
-    const newFilter = DeviceData.filter((item) => {
-      const value = item[title];
-      return value && value.toLowerCase().includes(searchWord.toLowerCase());
-    });
-
-    if (searchWord === "") {
-      setFilteredData([]);
-    } else {
-      setFilteredData(newFilter);
-    }
-  };
   //Toggle
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedColumns, setSelectedColumns] = useState([
@@ -164,6 +156,76 @@ const DeviceMaster = () => {
     const context = canvas.getContext("2d");
     context.font = fontSize + " sans-serif";
     return context.measureText(text).width;
+  };
+  // API
+  const [Att, setAtt] = useState([]);
+
+  useEffect(() => {
+    fetchAttData();
+  }, []);
+
+  const fetchAttData = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5500/attendance-master/",
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Response Object", response);
+      const data = response.data.records;
+      console.log(data);
+      setAtt(data);
+    } catch (error) {
+      console.log("Error while fetching course data: ", error.message);
+    }
+  };
+  console.log(Att);
+
+  const handleSearchChange = (title, searchWord) => {
+    const searchData = [...Att];
+
+    const newFilter = searchData.filter((item) => {
+      // Check if the item matches the search term in any of the selected columns
+      const matches = selectedColumns.some((columnName) => {
+        const newCol = columnName.charAt(0).toLowerCase() + columnName.slice(1);
+        const value = item[newCol];
+        return (
+          value &&
+          value.toString().toLowerCase().includes(searchWord.toLowerCase())
+        );
+      });
+
+      return matches;
+    });
+
+    // Update the filtered data
+    setFilteredData(newFilter);
+  };
+  //Delete
+  const deleteAtt = async (ID) => {
+    alert("Are you sure you want to delete this Record?");
+    try {
+      const apiUrl = `http://localhost:5500/attendance-master/delete-record/${ID}`;
+
+      const response = await axios.delete(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 204) {
+        console.log(`record with ID ${ID} deleted successfully.`);
+        alert("record Deleted");
+        window.location.reload();
+      } else {
+        console.error(`Failed to delete record with ID ${ID}.`);
+      }
+    } catch (error) {
+      console.error("Error deleting record:", error);
+    }
   };
 
   return (
@@ -368,6 +430,7 @@ const DeviceMaster = () => {
                             color="#556987"
                             width="20"
                             height="20"
+                            onClick={() => deleteAtt(result.DeviceId)}
                           />
                         </div>
                       </td>
@@ -389,7 +452,8 @@ const DeviceMaster = () => {
                       )}
                     </tr>
                   ))
-                : DeviceData.map((entry, index) => (
+                : Att.length > 0 &&
+                  Att.map((entry, index) => (
                     <tr key={index}>
                       <td className="px-2 border-2">
                         <div className="flex items-center gap-2 text-center justify-center">
@@ -427,6 +491,7 @@ const DeviceMaster = () => {
                             color="#556987"
                             width="20"
                             height="20"
+                            onClick={() => deleteAtt(entry.DeviceId)}
                           />
                         </div>
                       </td>
