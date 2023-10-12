@@ -10,16 +10,60 @@ const AddEmployee = ({visible, onClick}) => {
     const {token} = useAuth()
     const formik = useFormik({
         initialValues: {
-            EmployeeType: "",
-            EmployeeName: "",
+            EmpType: "",
+            FirstName: "",
+            LastName: "",
             CellNo: "",
-            EmailId: "",
+            EmailID1: "",
             Status: "",
         },
         onSubmit: (values) => {
           console.log(values);
+          addEmpRecord(values)
+          addEmpWork(values.Status)
+          addEmpSalary(values.Status)
         },
       });
+
+      const addEmpRecord = async (data) =>{
+        try{
+            const response = await axios.post('http://localhost:5500/employee/personal/add', data, {
+                headers:{
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            alert('Employee Record Added successfully. Please update details from Employee Master edit tab')
+        } catch(error){
+            console.error('Error', error);
+        }
+      }
+
+      const addEmpWork = async (data) =>{
+        try{
+          const response = await axios.post("http://localhost:5500/employee/work/add", data,
+          {
+            headers:{
+              Authorization: `Bearer ${token}`
+            }
+          })
+        //   alert('Employee Work Details have been added')
+        } catch(error){
+          console.error('Error', error.message)
+        }
+      }
+
+      const addEmpSalary = async(data) =>{
+        try{
+          const response = axios.post("http://localhost:5500/employee/salary/add", data ,{
+            headers:{
+              Authorization:`Bearer ${token}`
+            }
+          })
+        //   alert('Salary Details added successfully')
+        } catch(error){
+          console.error('Error', error.message)
+        }
+      }
 
       const [isStatusChecked, setStatusChecked] = useState(false)
       const handleCheckboxChange = (fieldName, setChecked, event) => {
@@ -60,10 +104,10 @@ if(!visible) return null
                       Employee Type
                       </p>
                       <select
-                        id="EmployeeType"
-                        name="EmployeeType"
+                        id="EmpType"
+                        name="EmpType"
                         className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                        value={formik.values.EmployeeType}
+                        value={formik.values.EmpType}
                         onChange={formik.handleChange}
                       >
                       <option value=''>Select Type</option>
@@ -74,12 +118,24 @@ if(!visible) return null
             </div>
             <div>
                 <p className="capatilize font-semibold text-[13px] mb-1 ">
-                  Employee Name
+                  First Name
                 </p>
                 <input
-                  id="EmployeeName"
+                  id="FirstName"
                   type="text"
-                  value={formik.values.EmployeeName}
+                  value={formik.values.FirstName}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  onChange={formik.handleChange}
+                />
+            </div>
+            <div>
+                <p className="capatilize font-semibold text-[13px] mb-1 ">
+                  Last Name
+                </p>
+                <input
+                  id="LastName"
+                  type="text"
+                  value={formik.values.LastName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -101,9 +157,9 @@ if(!visible) return null
                   Email Id
                 </p>
                 <input
-                  id="EmailId"
+                  id="EmailID1"
                   type="text"
-                  value={formik.values.EmailId}
+                  value={formik.values.EmailID1}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
