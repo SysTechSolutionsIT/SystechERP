@@ -87,7 +87,7 @@ export default function Personal({ ID }) {
   useEffect(() => {
     fetchPersonalData();
     console.log(details)
-  }, [ID);
+  }, [ID]);
   console.log(ID);
 
   const fetchPersonalData = async () => {
