@@ -13,9 +13,9 @@ router.get('/get', async (req, res) => {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
-    // finally {
-    //     Sequelize.close()
-    // }
+    finally {
+        Sequelize.close()
+    }
 });
 
 router.get('/get/:id', async (req, res) => {
