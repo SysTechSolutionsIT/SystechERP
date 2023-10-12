@@ -60,6 +60,7 @@ export default function Personal({ ID }) {
       addEmpPersonal(values);
     },
   });
+  
 
   const addEmpPersonal = async (values) => {
     try {

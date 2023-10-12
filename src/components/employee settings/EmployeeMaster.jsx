@@ -1,11 +1,15 @@
 import React from "react";
 import { Icon } from "@iconify/react";
 import { useState, useRef, useEffect } from "react";
-import { employeeData } from "./EmployeeData";
+// import { employeeData } from "./EmployeeData";
 import { useNavigate } from "react-router-dom";
 import AddEmployee from "./AddEmployee";
+import { useAuth } from "../Login";
+import axios from "axios";
 
 const EmployeeMaster = () => {
+  const { token } = useAuth()
+  const [employeeData, setEmployeeData] = useState([])
   const [veCost, setVeCost] = useState(false);
   const [edit, setEdit] = useState(false);
   const [CCid, setCCid] = useState();
@@ -15,10 +19,10 @@ const EmployeeMaster = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
   const [columnVisibility, setColumnVisibility] = useState({
-    EmployeeType: true,
     EmployeeName: true,
-    CellNo: true,
-    EmailId: true,
+    EmpType: true,
+    CellNo1: true,
+    EmailID1: true,
     Status: true,
   });
 
@@ -35,6 +39,24 @@ const EmployeeMaster = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  useEffect(() =>{
+    const fetchEmpData = async () =>{
+      try {
+        const response = await axios.get('http://localhost:5500/employee/personal/get', {
+          headers:{
+            Authorization: `Bearer ${token}`
+          }
+        })
+        const data = response.data
+        setEmployeeData(data)
+      } catch (error) {
+        console.error('Error', error);
+      }
+    }
+
+    fetchEmpData()
+  }, [token])
 
   const [filteredData, setFilteredData] = useState([]);
 
@@ -238,10 +260,10 @@ const EmployeeMaster = () => {
                   ID
                 </th>
                 <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px]">
-                  Employee Type
+                  Employee Name
                 </th>
                 <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px]">
-                  Employee Name
+                  Employee Type
                 </th>
                 <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px]">
                   Cell No.
@@ -331,7 +353,7 @@ const EmployeeMaster = () => {
                             onClick={() => {
                               setVeCost(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setCCid(result.EmployeeId); // Pass ID to VEModal
+                              setCCid(result.id); // Pass ID to VEModal
                             }}
                           />
                           {/* <VECost
@@ -348,7 +370,7 @@ const EmployeeMaster = () => {
                             onClick={() => {
                               setVeCost(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setCCid(result.EmployeeId); // Pass ID to VEModal
+                              setCCid(result.id); // Pass ID to VEModal
                             }}
                           />
                           {/* <VECost
@@ -390,7 +412,7 @@ const EmployeeMaster = () => {
                             width="20"
                             height="20"
                             onClick={() =>
-                              navigate(`/view-employee/${entry.EmployeeId}`)
+                              navigate(`/view-employee/${entry.id}`)
                             }
                           />
                           {/* <VECost
@@ -405,7 +427,7 @@ const EmployeeMaster = () => {
                             width="20"
                             height="20"
                             onClick={() => {
-                              navigate(`/edit-employee/${entry.EmployeeId}`);
+                              navigate(`/edit-employee/${entry.id}`);
                             }}
                           />
                           {/* <VECost
@@ -423,7 +445,7 @@ const EmployeeMaster = () => {
                         </div>
                       </td>
                       <td className="px-2 border-2 whitespace-normal text-center text-[11px]">
-                        {entry.EmployeeId}
+                        {entry.id}
                       </td>
                       {selectedColumns.map((columnName) => (
                         <td
@@ -432,8 +454,9 @@ const EmployeeMaster = () => {
                             columnVisibility[columnName] ? "" : "hidden"
                           }`}
                         >
-                          {entry[columnName]}
+                           {columnName === "EmployeeName" ? `${entry.FirstName} ${entry.LastName}` : entry[columnName]}
                         </td>
+
                       ))}
                     </tr>
                   ))}

@@ -2,36 +2,60 @@ import React from 'react'
 import { useFormik } from 'formik'
 import { useState } from 'react';
 import { Icon } from '@iconify/react';
+import { useAuth } from '../Login';
+import axios from 'axios';
 
-const ProfesionalTaxModal = ({visible, onClick}) => {
-    const formik = useFormik({
-        initialValues:{
-        ProfessionalTaxId:"",
-        Gender: "",
-        UpperLimit: "",
-        LowerLimit: "",
-        PTAmount: "",
-        PTAmountFebruary: "",
-         Remark:"",
-         Status: "",
-        },
-        onSubmit:(values) =>{
-         console.log(values)
+const ProfesionalTaxModal = ({ visible, onClick }) => {
+  const { token } = useAuth();
+  const formik = useFormik({
+    initialValues: {
+      Gender: "",
+      UpperLimit: "",
+      LowerLimit: "",
+      PTAmount: "",
+      PTAmountFebruary: "",
+      Remark: "",
+      Status: "",
+    },
+    onSubmit: (values) => {
+      console.log(values);
+      addTax(values)
+    }
+  });
+
+  const addTax = async (values) => {
+    try {
+      const response = await axios.post("http://localhost:5500/professional-tax/add", values, {
+        headers: {
+          Authorization: `Bearer ${token}`
         }
-     })
+      });
+      if (response.status === 200) {
+        const data = response.data;
+        console.log(data);
+        // Handle successful response
+      } else {
+        console.error(`HTTP error! Status: ${response.status}`);
+        // Handle error response
+      }
+    } catch (error) {
+      console.log("Error: ", error.message);
+      // Handle network error
+    }
+  }
 
-     const [isStatusChecked, setStatusChecked] = useState(false)
-     const handleCheckboxChange = (fieldName, setChecked, event) => {
-         const checked = event.target.checked;
-         setChecked(checked);
-         formik.setValues({
-           ...formik.values,
-           [fieldName]: checked.toString(),
-         });
-       };
+  const [isStatusChecked, setStatusChecked] = useState(false)
+  const handleCheckboxChange = (fieldName, setChecked, event) => {
+    const checked = event.target.checked;
+    setChecked(checked);
+    formik.setValues({
+      ...formik.values,
+      [fieldName]: checked.toString(),
+    });
+  };
 
-       
-if (!visible) return null;
+
+  if (!visible) return null;
   return (
     <form onSubmit={formik.handleSubmit}>
       <div className="fixed overflow-y-scroll inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center w-full h-full">
@@ -56,14 +80,14 @@ if (!visible) return null;
                   Professional Tax ID
                 </p>
                 <input
-                  id="ProfessionalTaxId"
+                  id="id"
                   type="number"
-                  value={formik.values.ProfessionalTaxId}
+                  // value={formik.values.ProfessionalTaxId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
+                // onChange={formik.handleChange}
                 />
               </div>
-             <div>
+              <div>
                 <p className="capitalize font-semibold text-[13px]">Gender</p>
                 <div>
                   <input
@@ -130,7 +154,7 @@ if (!visible) return null;
                 <input
                   id="PTAmountFeburary"
                   type="number"
-                  value={formik.values.PTAmountFeburary}
+                  value={formik.values.PTAmountFebruary}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -154,7 +178,7 @@ if (!visible) return null;
                     checked={isStatusChecked}
                     value={formik.values.Status}
                     className={`w-5 h-5 mr-2 mt-2 focus:outline-gray-300 border-2 rounded-lg`}
-                    onChange={(event)=> handleCheckboxChange('Status', setStatusChecked, event)}
+                    onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}
                   />
                   Active
                 </label>

@@ -5,6 +5,8 @@ import { Icon } from "@iconify/react";
 import { useRef } from "react";
 import ProfesionalTaxModal from "./ProfesionalTaxModal";
 import ViewPT from "./ViewPT";
+import { useAuth } from "../Login";
+import axios from "axios";
 
 export const TaxData = [
   {
@@ -112,34 +114,18 @@ export const TaxData = [
 const ProfesssionalTaxMaster = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
+  const { token } = useAuth();
 
-  const handleSearchChange = (title, searchWord) => {
-    const newFilter = TaxData.filter((item) => {
-      const value = item[title];
-
-      if (typeof value === "string" || typeof value === "number") {
-        // Check if the value is a string or a number
-        const valueString = String(value); // Convert to string if it's a number
-        return valueString.toLowerCase().includes(searchWord.toLowerCase());
-      }
-
-      return false; // Ignore other data types
-    });
-
-    if (searchWord === "") {
-      setFilteredData([]);
-    } else {
-      setFilteredData(newFilter);
-    }
-  };
-
+  // View and Edit
   const [PTView, setPTView] = useState(false);
   const [edit, setEdit] = useState(false);
   const [PTId, setPTId] = useState();
 
+  // Hamburger Menu
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
+  // Menu click outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -213,6 +199,48 @@ const ProfesssionalTaxMaster = () => {
     setSelectedColumns([]);
   };
 
+  // API
+  const [tax, setTax] = useState([]);
+
+  useEffect(() => {
+    fetchTaxData();
+  }, []);
+
+  const fetchTaxData = async () => {
+    try {
+      const response = await axios.get("http://localhost:5500/professional-tax/get", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      console.log("Response Object", response);
+      const data = response.data;
+      console.log(data);
+      setTax(data);
+    } catch (error) {
+      console.log("Error while fetching course data: ", error);
+    }
+  };
+  console.log(tax);
+
+  const handleSearchChange = (title, searchWord) => {
+    const searchData = [...tax];
+
+    const newFilter = searchData.filter((item) => {
+      // Check if the item matches the search term in any selected columns
+      const matches = selectedColumns.some((columnName) => {
+        const newCol = columnName;
+        const value = item[newCol];
+        return (
+          value && value.toString().toLowerCase().includes(searchWord.toLowerCase())
+        );
+      })
+      return matches;
+    });
+    // Update the filtered data
+    setFilteredData(newFilter);
+  };
+
   return (
     <div className="top-25 min-w-[40%]">
       <div className="bg-blue-900 h-15 p-2 ml-2 px-8 sm:whitespace-nowrap text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-x-auto">
@@ -228,9 +256,8 @@ const ProfesssionalTaxMaster = () => {
               Column Visibility
               <Icon
                 icon="fe:arrow-down"
-                className={`mt-1.5 ml-2 ${
-                  showDropdown ? "rotate-180" : ""
-                } cursor-pointer`}
+                className={`mt-1.5 ml-2 ${showDropdown ? "rotate-180" : ""
+                  } cursor-pointer`}
               />
             </button>
           </div>
@@ -281,7 +308,7 @@ const ProfesssionalTaxMaster = () => {
               className="text-white font-semibold px-4 rounded-lg text-[13px] border border-white"
               onClick={() => setModalOpen(true)}
             >
-              Add Company
+              Add
             </button>
           </div>
         </div>
@@ -334,9 +361,8 @@ const ProfesssionalTaxMaster = () => {
                 {selectedColumns.map((columnName) => (
                   <th
                     key={columnName}
-                    className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 whitespace-normal ${
-                      columnVisibility[columnName] ? "" : "hidden"
-                    }`}
+                    className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 whitespace-normal ${columnVisibility[columnName] ? "" : "hidden"
+                      }`}
                   >
                     {columnName
                       .replace(/([a-z])([A-Z])/g, "$1 $2")
@@ -373,131 +399,119 @@ const ProfesssionalTaxMaster = () => {
             <tbody className="">
               {filteredData.length > 0
                 ? filteredData.map((result, key) => (
-                    <tr key={key}>
-                      <td className="px-2 border-2">
-                        <div className="flex gap-2 text-center">
-                          <Icon
-                            icon="lucide:eye"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => {
-                              setPTView(true); // Open VEModal
-                              setEdit(false); // Disable edit mode for VEModal
-                              setPTId(result.ProfessionalTaxId); // Pass ID to VEModal
-                            }}
-                          />
-                          <ViewPT
-                            visible={PTView}
-                            onClick={() => setPTView(false)}
-                            edit={edit}
-                            ID={PTId}
-                          />
-                          <Icon
-                            icon="mdi:edit"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => {
-                              setPTView(true); // Open VEModal
-                              setEdit(true); // Disable edit mode for VEModal
-                              setPTId(result.DeductionHeadId); // Pass ID to VEModal
-                            }}
-                          />
-                          <ViewPT
-                            visible={PTView}
-                            onClick={() => setPTView(false)}
-                            edit={edit}
-                            ID={PTId}
-                          />
-                          <Icon
-                            icon="material-symbols:delete-outline"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                          />
-                        </div>
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {result.ProfessionalTaxId}
-                      </td>
-                      {selectedColumns.map((columnName) => (
-                        <td
-                          key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-[11px] text-left${
-                            columnVisibility[columnName] ? "" : "hidden"
+                  <tr key={key}>
+                    <td className="px-2 border-2">
+                      <div className="flex gap-2 text-center">
+                        <Icon
+                          icon="lucide:eye"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          onClick={() => {
+                            setPTView(true); // Open VEModal
+                            setEdit(false); // Disable edit mode for VEModal
+                            setPTId(result.id); // Pass ID to VEModal
+                          }}
+                        />
+                        <Icon
+                          icon="mdi:edit"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          onClick={() => {
+                            setPTView(true); // Open VEModal
+                            setEdit(true); // Disable edit mode for VEModal
+                            setPTId(result.id); // Pass ID to VEModal
+                          }}
+                        />
+                        <Icon
+                          icon="material-symbols:delete-outline"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                        />
+                      </div>
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                      {result.id}
+                    </td>
+                    {selectedColumns.map((columnName) => (
+                      <td
+                        key={columnName}
+                        className={`px-4 border-2 whitespace-normal text-[11px] text-left${columnVisibility[columnName] ? "" : "hidden"
                           }`}
-                        >
-                          {result[columnName]}
-                        </td>
-                      ))}
-                    </tr>
-                  ))
-                : TaxData.map((entry, index) => (
-                    <tr key={index}>
-                      <td className="px-2 border-2">
-                        <div className="flex items-center gap-2 text-center justify-center">
-                          <Icon
-                            icon="lucide:eye"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => {
-                              setPTView(true); // Open VEModal
-                              setEdit(false); // Disable edit mode for VEModal
-                              setPTId(entry.DeductionHeadId); // Pass ID to VEModal
-                            }}
-                          />
-                          <ViewPT
-                            visible={PTView}
-                            onClick={() => setPTView(false)}
-                            edit={edit}
-                            ID={PTId}
-                          />
-                          <Icon
-                            icon="mdi:edit"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => {
-                              setPTView(true); // Open VEModal
-                              setEdit(true); // Disable edit mode for VEModal
-                              setPTId(entry.DeductionHeadId); // Pass ID to VEModal
-                            }}
-                          />
-                          <ViewPT
-                            visible={PTView}
-                            onClick={() => setPTView(false)}
-                            edit={edit}
-                            ID={PTId}
-                          />
-                          <Icon
-                            icon="material-symbols:delete-outline"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                          />
-                        </div>
+                      >
+                        {columnName === "Status"
+                          ? result[columnName]
+                            ? "Active"
+                            : "Inactive"
+                          : result[columnName]}
                       </td>
-                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {entry.ProfessionalTaxId}
-                      </td>
-                      {selectedColumns.map((columnName) => (
-                        <td
-                          key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-left text-[11px]${
-                            columnVisibility[columnName] ? "" : "hidden"
+                    ))}
+                  </tr>
+                ))
+                : tax.length > 0 && tax.map((result, index) => (
+                  <tr key={index}>
+                    <td className="px-2 border-2">
+                      <div className="flex items-center gap-2 text-center justify-center">
+                        <Icon
+                          icon="lucide:eye"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          onClick={() => {
+                            setPTView(true); // Open VEModal
+                            setEdit(false); // Disable edit mode for VEModal
+                            setPTId(result.id); // Pass ID to VEModal
+                          }}
+                        />
+                        <Icon
+                          icon="mdi:edit"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          onClick={() => {
+                            setPTView(true); // Open VEModal
+                            setEdit(true); // Disable edit mode for VEModal
+                            setPTId(result.id); // Pass ID to VEModal
+                          }}
+                        />
+                        <Icon
+                          icon="material-symbols:delete-outline"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                        />
+                      </div>
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                      {result.id}
+                    </td>
+                    {selectedColumns.map((columnName) => (
+                      <td
+                        key={columnName}
+                        className={`px-4 border-2 whitespace-normal text-left text-[11px]${columnVisibility[columnName] ? "" : "hidden"
                           }`}
-                        >
-                          {entry[columnName]}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
+                      >
+                        {columnName === "Status"
+                          ? result[columnName]
+                            ? "Active"
+                            : "Inactive"
+                          : result[columnName]}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
       </div>
+      <ViewPT
+        visible={PTView}
+        onClick={() => setPTView(false)}
+        edit={edit}
+        ID={PTId}
+      />
     </div>
   );
 };

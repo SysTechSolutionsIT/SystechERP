@@ -32,6 +32,7 @@ const WeeklyOffMaster = require("./route/WeeklyOffRoute");
 const EarningHeadsMaster = require("./route/EarningHeadsRoute");
 const HolidayMaster = require("./route/HolidayMasterRoute");
 const DeductionHeadsMaster = require("./route/DeductionHeadsRoute");
+const ProfessionalTaxMaster = require("./route/ProfessionalTaxMasterRoute");
 const EmployeeId = require("./route/EmployeeIdRoute")
 const AttendanceMaster = require("./route/AttendanceMasterRoute");
 
@@ -66,6 +67,7 @@ app.use("/weekly-off-master", WeeklyOffMaster);
 app.use("/earning-heads", EarningHeadsMaster);
 app.use("/holiday-master", HolidayMaster);
 app.use("/deduction-heads", DeductionHeadsMaster);
+app.use("/professional-tax", ProfessionalTaxMaster);
 app.use("/attendance-master", AttendanceMaster);
 app.use("/employeeid", EmployeeId)
 

@@ -134,6 +134,9 @@ const EmpPersonal = sequelize.define("EmpPersonal", {
     },
       Remark:{
         type: DataTypes.STRING,
+    },
+    Status:{
+      type: DataTypes.STRING
     }
 })
 
