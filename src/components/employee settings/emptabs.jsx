@@ -14,7 +14,7 @@ export default function EMPTabs() {
   const [openTab, setOpenTab] = React.useState(1);
   const [details, setDetails] = useState([]);
   const { employeeId } = useParams();
-  console.log('Employee ID from params', employeeId);
+  console.log(employeeId);
   const { token } = useAuth();
 
   // Get Name
@@ -44,6 +44,11 @@ export default function EMPTabs() {
       <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg items-center justify-between mb-1 sm:overflow-x-auto">
         <div className="mr-auto text-[15px] whitespace-normal">
           HRMS / Employee Settings / Employee Master
+        </div>
+        <div className="flex gap-4">
+          <button className="flex text-[13px] bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap">
+            Back
+          </button>
         </div>
       </div>
       <div className="flex font-[Inter] justify-center">

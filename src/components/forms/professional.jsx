@@ -40,21 +40,30 @@ const Professional = ({ ID }) => {
       EmployeeName: "",
     },
     onSubmit: (values) => {
-      const newEntry = {
-        Employer: newEmployer,
-        Experience: newExperience,
-        Designation: newDesignation,
-        JobResponsibility: newJobResponsibility,
-        Salary: newSalary,
-      };
+      const employerString = professionalData
+        .map((entry) => entry.Employer)
+        .join(", ");
+      const experienceString = professionalData
+        .map((entry) => entry.Experience)
+        .join(", ");
+      const designationString = professionalData
+        .map((entry) => entry.Designation)
+        .join(", ");
+      const jobResponsibilityString = professionalData
+        .map((entry) => entry.JobResponsibility)
+        .join(", ");
+      const salaryString = professionalData
+        .map((entry) => entry.Salary)
+        .join(", ");
 
-      professionalData.push(newEntry);
-      setProfessionalData([...professionalData]);
-      console.log(professionalData);
-      handleRemoveRow(professionalData.length - 1);
       const combinedData = {
-        ...values,
-        professionalData,
+        EmployeeId: values.EmployeeId,
+        EmployeeName: values.EmployeeName,
+        Employers: employerString,
+        Experiences: experienceString,
+        Designations: designationString,
+        JobResponsibilities: jobResponsibilityString,
+        Salaries: salaryString,
       };
 
       console.log("Submitted data:", combinedData);
