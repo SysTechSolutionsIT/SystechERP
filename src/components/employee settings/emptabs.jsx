@@ -14,7 +14,7 @@ export default function EMPTabs() {
   const [openTab, setOpenTab] = React.useState(1);
   const [details, setDetails] = useState([]);
   const { employeeId } = useParams();
-  console.log(employeeId);
+  console.log('Employee ID from params', employeeId);
   const { token } = useAuth();
 
   // Get Name
@@ -166,7 +166,7 @@ export default function EMPTabs() {
             <div className="px-4 py-5 flex-auto">
               <div className="tab-content tab-space">
                 <div className={openTab === 1 ? "block" : "hidden"}>
-                  <Personal />
+                  <Personal ID={employeeId} />
                 </div>
 
                 {/* Work Profile Tab */}

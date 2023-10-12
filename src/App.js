@@ -89,14 +89,14 @@ function App() {
               path="/jobs-responsibility-master"
               element={<JobsResponsibilityMaster />}
             />
-            <Route path="/add-employee" element={<EMPTabs />} />
+            {/* <Route path="/add-employee" element={<EMPTabs />} /> */}
             <Route path="/shift-master" element={<ShiftMaster />} />
             <Route path="/holiday-master" element={<HolidayMaster />} />
             <Route path="/weeklyoff-master" element={<WeeklyOffMaster />} />
             <Route path="/attDevice-master" element={<DeviceMaster />} />
             <Route path="/job-type-master" element={<JobTypeMaster />} />
             <Route path="/leave-type-master" element={<LeaveTypeMaster />} />
-            <Route path="/edit-employee/:empid" element={<EMPTabs />} />
+            <Route path="/edit-employee/:employeeId" element={<EMPTabs />} />
             <Route
               path="/earning-heads-master"
               element={<EarningHeadsMaster />}

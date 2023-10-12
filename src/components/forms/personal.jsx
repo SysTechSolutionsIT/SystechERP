@@ -61,7 +61,7 @@ export default function Personal({ ID }) {
     },
   });
   
-
+  // Patch
   const addEmpPersonal = async (values) => {
     try {
       const response = await axios.patch(
@@ -82,11 +82,14 @@ export default function Personal({ ID }) {
       console.error("Error:", error.message);
     }
   };
+
   // Get
   useEffect(() => {
     fetchPersonalData();
-  }, [ID]);
+    console.log(details)
+  }, [ID);
   console.log(ID);
+
   const fetchPersonalData = async () => {
     try {
       const response = await axios.get(
@@ -107,47 +110,47 @@ export default function Personal({ ID }) {
   useEffect(() => {
     if (details) {
       formik.setValues({
-        EmpType: details.EmpType,
-        EmpTypeGroup: details.EmpTypeGroup,
-        FirstName: details.FirstName,
-        MiddleName: details.MiddleName,
-        LastName: details.LastName,
-        Salutation: details.Salutation,
-        AadharCardNo: details.AadharCardNo,
-        PANNo: details.PANNo,
-        PassportNo: details.PassportNo,
-        PassportIssueDate: details.PassportIssueDate,
-        PassportExpireDate: details.PassportExpireDate,
-        CurrentAddress: details.CurrentAddress,
-        CurrentPinCode: details.CurrentPinCode,
-        PermanentAddress: details.PermanentAddress,
-        PermanentPinCode: details.PermanentPinCode,
-        DOB: details.DOB,
-        PhoneNo: details.PhoneNo,
-        CellNo1: details.CellNo1,
-        CellNo2: details.CellNo2,
-        EmailID1: details.EmailID1,
-        EmailID2: details.EmailID2,
-        BankId1: details.BankId1,
-        AccountNo1: details.AccountNo1,
-        IFSCCode1: details.IFSCCode1,
-        BankId2: details.BankId2,
-        AccountNo2: details.AccountNo2,
-        IFSCCode2: details.IFSCCode2,
-        AcFlag: details.AcFlag,
-        Category: details.Category,
-        Destination: details.Destination,
-        Caste: details.Caste,
-        MaritalStatus: details.MaritalStatus,
-        Reference: details.Reference,
-        EmployeePhoto: details.EmployeePhoto,
-        MEmployeeName: details.MEmployeeName,
-        Religion: details.Religion,
-        Gender: details.Gender,
-        BloodGroup: details.BloodGroup,
-        DrivingLicense: details.DrivingLicense,
-        FinanceAccountNo: details.FinanceAccountNo,
-        Remark: details.Remark,
+        EmpType: details?.EmpType,
+        EmpTypeGroup: details?.EmpTypeGroup,
+        FirstName: details?.FirstName,
+        MiddleName: details?.MiddleName,
+        LastName: details?.LastName,
+        Salutation: details?.Salutation,
+        AadharCardNo: details?.AadharCardNo,
+        PANNo: details?.PANNo,
+        PassportNo: details?.PassportNo,
+        PassportIssueDate: details?.PassportIssueDate,
+        PassportExpireDate: details?.PassportExpireDate,
+        CurrentAddress: details?.CurrentAddress,
+        CurrentPinCode: details?.CurrentPinCode,
+        PermanentAddress: details?.PermanentAddress,
+        PermanentPinCode: details?.PermanentPinCode,
+        DOB: details?.DOB,
+        PhoneNo: details?.PhoneNo,
+        CellNo1: details?.CellNo1,
+        CellNo2: details?.CellNo2,
+        EmailID1: details?.EmailID1,
+        EmailID2: details?.EmailID2,
+        BankId1: details?.BankId1,
+        AccountNo1: details?.AccountNo1,
+        IFSCCode1: details?.IFSCCode1,
+        BankId2: details?.BankId2,
+        AccountNo2: details?.AccountNo2,
+        IFSCCode2: details?.IFSCCode2,
+        AcFlag: details?.AcFlag,
+        Category: details?.Category,
+        Destination: details?.Destination,
+        Caste: details?.Caste,
+        MaritalStatus: details?.MaritalStatus,
+        Reference: details?.Reference,
+        EmployeePhoto: details?.EmployeePhoto,
+        MEmployeeName: details?.MEmployeeName,
+        Religion: details?.Religion,
+        Gender: details?.Gender,
+        BloodGroup: details?.BloodGroup,
+        DrivingLicense: details?.DrivingLicense,
+        FinanceAccountNo: details?.FinanceAccountNo,
+        Remark: details?.Remark,
       });
     }
   }, [details]);
@@ -178,6 +181,7 @@ export default function Personal({ ID }) {
                 value={formik.values.EmpType}
                 onChange={formik.handleChange}
               >
+                <option value={formik.values.EmpType}>{formik.values.EmpType}</option>
                 <option value="">Select Type</option>
                 <option value="Permenant">Permenant</option>
                 <option value="Probation">Probation</option>
@@ -207,6 +211,7 @@ export default function Personal({ ID }) {
                 value={formik.values.Salutation}
                 onChange={formik.handleChange}
               >
+                <option value={formik.values.Salutation}>{formik.values.Salutation}</option>
                 <option value="">Select Salutation</option>
                 <option value="Sir/Madam">Sir/Madam</option>
                 <option value="Dear [Mr./Ms./Dr.] [Last Name]">
@@ -238,6 +243,7 @@ export default function Personal({ ID }) {
                 value={formik.values.EmpTypeGroup}
                 onChange={formik.handleChange}
               >
+                <option value={formik.values.EmpTypeGroup}>{formik.values.EmpTypeGroup}</option>
                 <option value="">Select Group Type</option>
                 <option value="Worker">Worker</option>
                 <option value="Staff">Staff</option>
@@ -250,6 +256,7 @@ export default function Personal({ ID }) {
               <input
                 id="DOB"
                 type="text"
+                value={formik.values.DOB}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -261,6 +268,7 @@ export default function Personal({ ID }) {
               <input
                 id="FirstName"
                 type="text"
+                value={formik.values.FirstName}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -272,6 +280,7 @@ export default function Personal({ ID }) {
               <input
                 id="MiddleName"
                 type="text"
+                value={formik.values.MiddleName}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -283,6 +292,7 @@ export default function Personal({ ID }) {
               <input
                 id="LastName"
                 type="text"
+                value={formik.values.LastName}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -292,8 +302,9 @@ export default function Personal({ ID }) {
                 Current Address
               </p>
               <input
-                id="PermanentAddress"
+                id="CurrentAddress"
                 type="text"
+                value={formik.values.CurrentAddress}
                 className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
                 onChange={formik.handleChange}
               />
@@ -305,6 +316,7 @@ export default function Personal({ ID }) {
               <input
                 id="CurrentPinCode"
                 type="text"
+                value={formik.values.CurrentPinCode}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -316,6 +328,7 @@ export default function Personal({ ID }) {
               <input
                 id="PermanentAddress"
                 type="text"
+                value={formik.values.PermanentAddress}
                 className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
                 onChange={formik.handleChange}
               />
@@ -327,6 +340,7 @@ export default function Personal({ ID }) {
               <input
                 id="PermanentPinCode"
                 type="text"
+                value={formik.values.PermanentPinCode}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -337,6 +351,7 @@ export default function Personal({ ID }) {
               <input
                 id="PhoneNo"
                 type="text"
+                value={formik.values.PhoneNo}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -348,6 +363,7 @@ export default function Personal({ ID }) {
               <input
                 id="CellNo1"
                 type="text"
+                value={formik.values.CellNo1}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -359,6 +375,7 @@ export default function Personal({ ID }) {
               <input
                 id="CellNo2"
                 type="text"
+                value={formik.values.CellNo2}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -371,6 +388,7 @@ export default function Personal({ ID }) {
               <input
                 id="EmailID1"
                 type="text"
+                value={formik.values.EmailID1}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -382,6 +400,7 @@ export default function Personal({ ID }) {
               <input
                 id="EmailID2"
                 type="text"
+                value={formik.values.EmailID2}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -393,6 +412,7 @@ export default function Personal({ ID }) {
               <input
                 id="BankId1"
                 type="text"
+                value={formik.values.BankId1}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -404,6 +424,7 @@ export default function Personal({ ID }) {
               <input
                 id="AccountNo1"
                 type="text"
+                value={formik.values.AccountNo1}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -415,6 +436,7 @@ export default function Personal({ ID }) {
               <input
                 id="IFSCCode1"
                 type="text"
+                value={formik.values.IFSCCode1}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -426,6 +448,7 @@ export default function Personal({ ID }) {
               <input
                 id="BankId2"
                 type="text"
+                value={formik.values.BankId2}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -437,6 +460,7 @@ export default function Personal({ ID }) {
               <input
                 id="AccountNo2"
                 type="text"
+                value={formik.values.AccountNo2}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -448,6 +472,7 @@ export default function Personal({ ID }) {
               <input
                 id="IFSCCode2"
                 type="text"
+                value={formik.values.IFSCCode2}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -463,6 +488,7 @@ export default function Personal({ ID }) {
                 value={formik.values.Category}
                 onChange={formik.handleChange}
               >
+                <option value={formik.values.Category}>{formik.values.Category}</option>
                 <option value="">Select Category</option>
                 <option value="Category 1">Category 1</option>
                 <option value="Category 2">Category 2</option>
@@ -478,6 +504,7 @@ export default function Personal({ ID }) {
               <input
                 id="Destination"
                 type="text"
+                value={formik.values.Destination}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -493,6 +520,7 @@ export default function Personal({ ID }) {
                 value={formik.values.Religion}
                 onChange={formik.handleChange}
               >
+                <option value={formik.values.Destination}>{formik.values.Destination}</option>
                 <option value="">Select Religion</option>
                 <option value="Religion 1">Religion 1</option>
                 <option value="Religion 2">Religion 2</option>
@@ -510,6 +538,7 @@ export default function Personal({ ID }) {
                 value={formik.values.Reference}
                 onChange={formik.handleChange}
               >
+                <option value={formik.values.Reference}>{formik.values.Reference}</option>
                 <option value="">Select Reference</option>
                 <option value="Professional References">
                   Professional References
@@ -547,6 +576,7 @@ export default function Personal({ ID }) {
                 value={formik.values.Caste}
                 onChange={formik.handleChange}
               >
+                <option value={formik.values.Caste}>{formik.values.Caste}</option>
                 <option value="">Select Caste</option>
                 <option value="Caste 1">Caste 1</option>
                 <option value="Caste 2">Caste 2</option>
@@ -564,6 +594,8 @@ export default function Personal({ ID }) {
                 value={formik.values.BloodGroup}
                 onChange={formik.handleChange}
               >
+                <option  value={formik.values.BloodGroup}>{formik.values.BloodGroup}</option>
+                <option value="">Select Blood Group</option>
                 <option value="A+">A+</option>
                 <option value="A-">A-</option>
                 <option value="B+">B+</option>
@@ -584,6 +616,7 @@ export default function Personal({ ID }) {
                   className="mr-2"
                   name="Gender"
                   value="Male"
+                  checked={formik.values.Gender === 'Male'}
                   onChange={formik.handleChange}
                 />
                 <label className="text-[13px]">Male</label>
@@ -594,6 +627,7 @@ export default function Personal({ ID }) {
                   className="mr-2"
                   name="Gender"
                   value="Female"
+                  checked={formik.values.Gender === 'Female'}
                   style={{ marginTop: "10px" }}
                   onChange={formik.handleChange}
                 />
@@ -610,7 +644,8 @@ export default function Personal({ ID }) {
                     type="radio"
                     className="mr-2"
                     name="MaritalStatus"
-                    value="true"
+                    value="Married"
+                    checked={formik.values.MaritalStatus === 'Married'}
                     onChange={formik.handleChange}
                   />
                   <label className="text-[13px]">Married</label>
@@ -620,7 +655,8 @@ export default function Personal({ ID }) {
                     type="radio"
                     className="mr-2"
                     name="MaritalStatus"
-                    value="false"
+                    value="Unmarried"
+                    checked={formik.values.MaritalStatus === 'Unmarried'}
                     style={{ marginTop: "10px" }}
                     onChange={formik.handleChange}
                   />
@@ -635,6 +671,7 @@ export default function Personal({ ID }) {
               <input
                 id="MEmployeeName"
                 type="text"
+                value={formik.values.MEmployeeName}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -646,6 +683,7 @@ export default function Personal({ ID }) {
               <input
                 id="AadharCardNo"
                 type="text"
+                value={formik.values.AadharCardNo}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -657,6 +695,7 @@ export default function Personal({ ID }) {
               <input
                 id="PANNo"
                 type="text"
+                value={formik.values.PANNo}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -668,6 +707,7 @@ export default function Personal({ ID }) {
               <input
                 id="FinanceAccountNo"
                 type="text"
+                value={formik.values.FinanceAccountNo}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -679,6 +719,7 @@ export default function Personal({ ID }) {
               <input
                 id="PassportNo"
                 type="text"
+                value={formik.values.PassportNo}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -690,6 +731,7 @@ export default function Personal({ ID }) {
               <input
                 id="PassportIssueDate"
                 type="text"
+                value={formik.values.PassportIssueDate}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -701,6 +743,7 @@ export default function Personal({ ID }) {
               <input
                 id="PassportExpireDate"
                 type="text"
+                value={formik.values.PassportExpireDate}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -712,6 +755,7 @@ export default function Personal({ ID }) {
               <input
                 id="DrivingLicense"
                 type="text"
+                value={formik.values.DrivingLicense}
                 className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
               />
             </div>
@@ -722,6 +766,7 @@ export default function Personal({ ID }) {
               <input
                 id="AcFlag"
                 type="text"
+                value={formik.values.AcFlag}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -733,6 +778,7 @@ export default function Personal({ ID }) {
               <input
                 id="Remark"
                 type="text"
+                value={formik.values.Remark}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
