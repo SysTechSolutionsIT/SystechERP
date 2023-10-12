@@ -3,11 +3,13 @@ import { Icon } from "@iconify/react";
 import { useState, useRef, useEffect } from "react";
 import { employeeData } from "./EmployeeData";
 import { useNavigate } from "react-router-dom";
+import AddEmployee from "./AddEmployee";
 
 const EmployeeMaster = () => {
   const [veCost, setVeCost] = useState(false);
   const [edit, setEdit] = useState(false);
   const [CCid, setCCid] = useState();
+  const [isModalOpen, setModalOpen] = useState(false)
   const navigate = useNavigate();
 
   const [menuOpen, setMenuOpen] = useState(false);
@@ -177,7 +179,7 @@ const EmployeeMaster = () => {
           <div className="min-w-[40%]">
             <button
               className="text-white font-semibold px-4 rounded-lg text-[13px] border border-white"
-              onClick={() => navigate("/add-employee")}
+              onClick={() => setModalOpen(true)}
             >
               Add Record
             </button>
@@ -220,6 +222,10 @@ const EmployeeMaster = () => {
           )}
         </div>
       </div>
+      <AddEmployee 
+      visible={isModalOpen}
+      onClick={() => setModalOpen(false)}/>
+      
       <div className="grid gap-4 justify-between">
         <div className="my-0 rounded-2xl bg-white p-2">
           <table className="min-w-full text-center  rounded-lg justify-center whitespace-normal">

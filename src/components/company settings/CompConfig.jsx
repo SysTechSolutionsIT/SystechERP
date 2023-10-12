@@ -20,6 +20,7 @@ export default function EMPTabs() {
         remarks: "",
         status: "",
         empID: "",
+        empIdPrefix: "",
         cmulti: "",
         att: "",
         aProcess: "",
@@ -90,6 +91,7 @@ export default function EMPTabs() {
           sms: values.sms,
         }
         updateCompanyConfig(updatedData)
+        updateEmpId(values.empIdPrefix)
       },
     });
 
@@ -101,6 +103,41 @@ export default function EMPTabs() {
         }
       })
       alert('Company Configuration Updated')
+    } catch(error){
+      console.error('Error', error);
+    }
+  }
+
+  useEffect(() =>{
+    const getEmpIdPrefix = async () =>{
+      try {
+        const response = await axios.get('http://localhost:5500/employeeid/get',{
+        headers:{
+          Authorization: `Bearer ${token}`
+        }
+      })
+      const data = response.data[0]
+      console.log(data.EmpId)
+      formik.setValues({
+        ...formik.values,
+        ['empIdPrefix']: data.EmpId
+      });
+      } catch (error) {
+        console.error('Error', error);
+      }
+    }
+
+    getEmpIdPrefix()
+  }, [token])
+
+  const updateEmpId = async (empIdprefix) =>{
+    try{
+      const response = axios.put(`http://localhost:5500/employeeid/update/1`, empIdprefix, {
+        headers:{
+          Authorization: `Bearer ${token}`
+        }
+      })
+      alert('Employee ID Prefix Updated')
     } catch(error){
       console.error('Error', error);
     }
@@ -504,6 +541,21 @@ export default function EMPTabs() {
                         </label>
                       </div>
                     </div>
+                    {/* <div className="flex mb-6"> */}
+                    <div className="w-1/2 pr-4">
+                      <p className="mb-2 capitalize mt-2 font-semibold text-[13px]">
+                        Enter Prefix
+                      </p>
+                      <input
+                        id="empIdPrefix"
+                        type="text"
+                        value={formik.values.empIdPrefix}
+                        className={`text-[13px] w-full px-4 py-1 font-normal focus:outline-gray-300 border-2 rounded-lg`}
+                        onChange={formik.handleChange}
+                        disabled={!edit}
+                      />
+                    </div>
+                    {/* </div> */}
                     <div className="flex flex-col p-2">
                       <p className="mb-3 font-semibold text-[13px]">
                         Company Multibranch

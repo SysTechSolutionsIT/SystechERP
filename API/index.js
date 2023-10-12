@@ -5,7 +5,6 @@ const userRoutes = require("./route/userRoutes"); // Import the user routes and 
 const jwt = require("jsonwebtoken");
 const cors = require("cors"); // Import the cors middleware
 app.use(express.json()); // Parse JSON requests
-const secretKey = process.env.SECRET_KEY;
 const CompMaster = require("./route/CMRoute");
 const CompConfig = require("./route/CompanyConfigRoute");
 const BankMaster = require("./route/BankMasterRoute");
@@ -33,6 +32,7 @@ const WeeklyOffMaster = require("./route/WeeklyOffRoute");
 const EarningHeadsMaster = require("./route/EarningHeadsRoute");
 const HolidayMaster = require("./route/HolidayMasterRoute");
 const DeductionHeadsMaster = require("./route/DeductionHeadsRoute");
+const EmployeeId = require("./route/EmployeeIdRoute")
 
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());
@@ -65,6 +65,7 @@ app.use("/weekly-off-master", WeeklyOffMaster);
 app.use("/earning-heads", EarningHeadsMaster);
 app.use("/holiday-master", HolidayMaster);
 app.use("/deduction-heads", DeductionHeadsMaster);
+app.use("/employeeid", EmployeeId)
 
 // Start the server
 const port = 5500;

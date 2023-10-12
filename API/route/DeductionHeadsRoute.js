@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
+const { Sequelize } = require('sequelize');
 const DeductionHeadsMaster = require('../model/DeductionHeadsModel');
 
 // GET Route to retrieve all deduction head records
@@ -11,6 +12,8 @@ router.get('/get', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
+    } finally {
+        Sequelize.close()
     }
 });
 
@@ -26,6 +29,8 @@ router.get('/get/:id', async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: 'Internal Server Error' });
+    } finally {
+        Sequelize.close()
     }
 })
 
@@ -37,6 +42,8 @@ router.post('/add', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
+    } finally {
+        Sequelize.close()
     }
 });
 
@@ -55,6 +62,8 @@ router.patch('/update/:id', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
+    } finally {
+        Sequelize.close()
     }
 });
 
@@ -73,6 +82,8 @@ router.delete('/delete/:id', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
+    } finally {
+        Sequelize.close()
     }
 });
 
