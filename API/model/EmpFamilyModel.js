@@ -10,26 +10,29 @@ const sequelize = new Sequelize(
   }
 );
 
-const EmpAcademic = sequelize.define("EmpAcademic", {
-  EmployeeName: {
+const EmpFamily = sequelize.define("EmpFamily", {
+  PersonName: {
     type: DataTypes.STRING,
   },
-  Qualification: {
+  Relation: {
     type: DataTypes.STRING,
   },
-  Institute: {
+  Education: {
     type: DataTypes.STRING,
   },
-  Specialization: {
+  Occupation: {
     type: DataTypes.STRING,
   },
-  Grades: {
+  Address: {
     type: DataTypes.STRING,
   },
-  PassingYear: {
+  CellNo: {
     type: DataTypes.STRING,
   },
-  Languages: {
+  EmailID: {
+    type: DataTypes.STRING,
+  },
+  Nominee: {
     type: DataTypes.STRING,
   },
 });
@@ -43,4 +46,4 @@ sequelize
     console.error("Error creating Emp Academic table:", error);
   });
 
-module.exports = EmpAcademic;
+module.exports = EmpFamily;

@@ -60,7 +60,7 @@ export default function Personal({ ID }) {
       addEmpPersonal(values);
     },
   });
-  
+
   // Patch
   const addEmpPersonal = async (values) => {
     try {
@@ -86,7 +86,7 @@ export default function Personal({ ID }) {
   // Get
   useEffect(() => {
     fetchPersonalData();
-    console.log(details)
+    console.log(details);
   }, [ID]);
   console.log(ID);
 
@@ -110,13 +110,13 @@ export default function Personal({ ID }) {
   useEffect(() => {
     if (details) {
       formik.setValues({
-        EmpType: details?.EmpType,
-        EmpTypeGroup: details?.EmpTypeGroup,
-        FirstName: details?.FirstName,
-        MiddleName: details?.MiddleName,
-        LastName: details?.LastName,
-        Salutation: details?.Salutation,
-        AadharCardNo: details?.AadharCardNo,
+        EmpType: details.EmpType,
+        EmpTypeGroup: details.EmpTypeGroup,
+        FirstName: details.FirstName,
+        MiddleName: details.MiddleName,
+        LastName: details.LastName,
+        Salutation: details.Salutation,
+        AadharCardNo: details.AadharCardNo,
         PANNo: details?.PANNo,
         PassportNo: details?.PassportNo,
         PassportIssueDate: details?.PassportIssueDate,
@@ -181,7 +181,9 @@ export default function Personal({ ID }) {
                 value={formik.values.EmpType}
                 onChange={formik.handleChange}
               >
-                <option value={formik.values.EmpType}>{formik.values.EmpType}</option>
+                <option value={formik.values.EmpType}>
+                  {formik.values.EmpType}
+                </option>
                 <option value="">Select Type</option>
                 <option value="Permenant">Permenant</option>
                 <option value="Probation">Probation</option>
@@ -211,7 +213,9 @@ export default function Personal({ ID }) {
                 value={formik.values.Salutation}
                 onChange={formik.handleChange}
               >
-                <option value={formik.values.Salutation}>{formik.values.Salutation}</option>
+                <option value={formik.values.Salutation}>
+                  {formik.values.Salutation}
+                </option>
                 <option value="">Select Salutation</option>
                 <option value="Sir/Madam">Sir/Madam</option>
                 <option value="Dear [Mr./Ms./Dr.] [Last Name]">
@@ -243,7 +247,9 @@ export default function Personal({ ID }) {
                 value={formik.values.EmpTypeGroup}
                 onChange={formik.handleChange}
               >
-                <option value={formik.values.EmpTypeGroup}>{formik.values.EmpTypeGroup}</option>
+                <option value={formik.values.EmpTypeGroup}>
+                  {formik.values.EmpTypeGroup}
+                </option>
                 <option value="">Select Group Type</option>
                 <option value="Worker">Worker</option>
                 <option value="Staff">Staff</option>
@@ -488,7 +494,9 @@ export default function Personal({ ID }) {
                 value={formik.values.Category}
                 onChange={formik.handleChange}
               >
-                <option value={formik.values.Category}>{formik.values.Category}</option>
+                <option value={formik.values.Category}>
+                  {formik.values.Category}
+                </option>
                 <option value="">Select Category</option>
                 <option value="Category 1">Category 1</option>
                 <option value="Category 2">Category 2</option>
@@ -520,7 +528,9 @@ export default function Personal({ ID }) {
                 value={formik.values.Religion}
                 onChange={formik.handleChange}
               >
-                <option value={formik.values.Destination}>{formik.values.Destination}</option>
+                <option value={formik.values.Destination}>
+                  {formik.values.Destination}
+                </option>
                 <option value="">Select Religion</option>
                 <option value="Religion 1">Religion 1</option>
                 <option value="Religion 2">Religion 2</option>
@@ -538,7 +548,9 @@ export default function Personal({ ID }) {
                 value={formik.values.Reference}
                 onChange={formik.handleChange}
               >
-                <option value={formik.values.Reference}>{formik.values.Reference}</option>
+                <option value={formik.values.Reference}>
+                  {formik.values.Reference}
+                </option>
                 <option value="">Select Reference</option>
                 <option value="Professional References">
                   Professional References
@@ -576,7 +588,9 @@ export default function Personal({ ID }) {
                 value={formik.values.Caste}
                 onChange={formik.handleChange}
               >
-                <option value={formik.values.Caste}>{formik.values.Caste}</option>
+                <option value={formik.values.Caste}>
+                  {formik.values.Caste}
+                </option>
                 <option value="">Select Caste</option>
                 <option value="Caste 1">Caste 1</option>
                 <option value="Caste 2">Caste 2</option>
@@ -594,7 +608,9 @@ export default function Personal({ ID }) {
                 value={formik.values.BloodGroup}
                 onChange={formik.handleChange}
               >
-                <option  value={formik.values.BloodGroup}>{formik.values.BloodGroup}</option>
+                <option value={formik.values.BloodGroup}>
+                  {formik.values.BloodGroup}
+                </option>
                 <option value="">Select Blood Group</option>
                 <option value="A+">A+</option>
                 <option value="A-">A-</option>
@@ -616,7 +632,7 @@ export default function Personal({ ID }) {
                   className="mr-2"
                   name="Gender"
                   value="Male"
-                  checked={formik.values.Gender === 'Male'}
+                  checked={formik.values.Gender === "Male"}
                   onChange={formik.handleChange}
                 />
                 <label className="text-[13px]">Male</label>
@@ -627,7 +643,7 @@ export default function Personal({ ID }) {
                   className="mr-2"
                   name="Gender"
                   value="Female"
-                  checked={formik.values.Gender === 'Female'}
+                  checked={formik.values.Gender === "Female"}
                   style={{ marginTop: "10px" }}
                   onChange={formik.handleChange}
                 />
@@ -645,7 +661,7 @@ export default function Personal({ ID }) {
                     className="mr-2"
                     name="MaritalStatus"
                     value="Married"
-                    checked={formik.values.MaritalStatus === 'Married'}
+                    checked={formik.values.MaritalStatus === "Married"}
                     onChange={formik.handleChange}
                   />
                   <label className="text-[13px]">Married</label>
@@ -656,7 +672,7 @@ export default function Personal({ ID }) {
                     className="mr-2"
                     name="MaritalStatus"
                     value="Unmarried"
-                    checked={formik.values.MaritalStatus === 'Unmarried'}
+                    checked={formik.values.MaritalStatus === "Unmarried"}
                     style={{ marginTop: "10px" }}
                     onChange={formik.handleChange}
                   />
