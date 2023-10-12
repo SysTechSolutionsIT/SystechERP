@@ -60,13 +60,26 @@ const Company = sequelize.define("Company", {
   },
 });
 
+const closeDatabaseConnection = () => {
+  sequelize
+    .close()
+    .then(() => {
+      console.log("Database connection closed.");
+    })
+    .catch((error) => {
+      console.error("Error closing database connection:", error);
+    });
+};
+
 sequelize
   .sync()
   .then(() => {
-    console.log("company masters table created successfully.");
+    console.log("Company masters table created successfully.");
+    // closeDatabaseConnection();
   })
   .catch((error) => {
-    console.error("Error creating company masters table:", error);
+    console.error("Error creating Company masters table:", error);
+    closeDatabaseConnection();
   });
 
 module.exports = Company;
