@@ -33,7 +33,8 @@ const EarningHeadsMaster = require("./route/EarningHeadsRoute");
 const HolidayMaster = require("./route/HolidayMasterRoute");
 const DeductionHeadsMaster = require("./route/DeductionHeadsRoute");
 const ProfessionalTaxMaster = require("./route/ProfessionalTaxMasterRoute");
-const EmployeeId = require("./route/EmployeeIdRoute")
+const AdvanceRequest = require("./route/AdvanceRequestRoute");
+const EmployeeId = require("./route/EmployeeIdRoute");
 const AttendanceMaster = require("./route/AttendanceMasterRoute");
 
 // Apply the cors middleware to allow requests from any origin
@@ -68,6 +69,7 @@ app.use("/earning-heads", EarningHeadsMaster);
 app.use("/holiday-master", HolidayMaster);
 app.use("/deduction-heads", DeductionHeadsMaster);
 app.use("/professional-tax", ProfessionalTaxMaster);
+app.use("/advance-request", AdvanceRequest);
 app.use("/attendance-master", AttendanceMaster);
 app.use("/employeeid", EmployeeId)
 
