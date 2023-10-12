@@ -58,6 +58,7 @@ export default function Personal() {
       addEmpPersonal(values)
     },
   });
+  
 
   const addEmpPersonal = async (values) =>{
     try{

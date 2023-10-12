@@ -13,7 +13,7 @@ const AddEmployee = ({visible, onClick}) => {
             EmpType: "",
             FirstName: "",
             LastName: "",
-            CellNo: "",
+            CellNo1: "",
             EmailID1: "",
             Status: "",
         },
