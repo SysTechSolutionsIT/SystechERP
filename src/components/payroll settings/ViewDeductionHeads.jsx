@@ -174,7 +174,7 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
                   Deduction Head ID
                 </p>
                 <input
-                  id="DeductionHeadId"
+                  id="id"
                   type="number"
                   value={details?.id}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
@@ -400,7 +400,7 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
                   <input
                     id="status"
                     type="checkbox"
-                    checked={isStatusChecked}
+                    checked={formik.values.Status}
                     className={`w-5 h-5 mr-2 mt-2 focus:outline-gray-300 border-2 rounded-lg`}
                     disabled={!edit}
                     onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}

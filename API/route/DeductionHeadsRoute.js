@@ -12,9 +12,10 @@ router.get('/get', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
-    } finally {
-        Sequelize.close()
     }
+    // finally {
+    //     Sequelize.close()
+    // }
 });
 
 router.get('/get/:id', async (req, res) => {
@@ -29,9 +30,10 @@ router.get('/get/:id', async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: 'Internal Server Error' });
-    } finally {
-        Sequelize.close()
     }
+    // finally {
+    //     Sequelize.close()
+    // }
 })
 
 // POST Route to create a new deduction head record
@@ -42,9 +44,10 @@ router.post('/add', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
-    } finally {
-        Sequelize.close()
     }
+    // finally {
+    //     Sequelize.close()
+    // }
 });
 
 // PATCH Route to update an existing deduction head record by ID
@@ -62,9 +65,10 @@ router.patch('/update/:id', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
-    } finally {
-        Sequelize.close()
     }
+    // finally {
+    //     Sequelize.close()
+    // }
 });
 
 // DELETE Route to delete an existing deduction head record by ID
@@ -82,9 +86,10 @@ router.delete('/delete/:id', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
-    } finally {
-        Sequelize.close()
     }
+    // finally {
+    // Sequelize.close()
+    // }
 });
 
 module.exports = router;

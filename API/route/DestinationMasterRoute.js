@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const jwt = require('jsonwebtoken'); 
+const jwt = require('jsonwebtoken');
 const DestinationMaster = require('../model/DestinationMasterModel');
 
 // GET Route to retrieve all destination records
