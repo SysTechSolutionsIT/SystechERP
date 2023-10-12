@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import { Icon } from "@iconify/react";
 import { useRef } from "react";
 import AdvanceRequestModal from "./AdvanceRequestModal";
+import { useAuth } from "../Login";
+import axios from "axios";
 
 export const advanceData = [
   // Item 1
@@ -96,34 +98,17 @@ export const advanceData = [
 const AdvanceRequest = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
-
-  const handleSearchChange = (title, searchWord) => {
-    const newFilter = advanceData.filter((item) => {
-      const value = item[title];
-
-      if (typeof value === "string" || typeof value === "number") {
-        // Check if the value is a string or a number
-        const valueString = String(value); // Convert to string if it's a number
-        return valueString.toLowerCase().includes(searchWord.toLowerCase());
-      }
-
-      return false; // Ignore other data types
-    });
-
-    if (searchWord === "") {
-      setFilteredData([]);
-    } else {
-      setFilteredData(newFilter);
-    }
-  };
+  const { token } = useAuth();
 
   // const [PTView, setPTView] = useState(false);
   // const [edit, setEdit] = useState(false);
   // const [PTId, setPTId] = useState();
 
+  // Hamburger Menu
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
+  // Menu outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -197,6 +182,48 @@ const AdvanceRequest = () => {
     setSelectedColumns([]);
   };
 
+  // API
+  const [advanceReq, setAdvanceReq] = useState([]);
+
+  useEffect(() => {
+    fetchRequestData();
+  }, []);
+
+  const fetchRequestData = async () => {
+    try {
+      const response = await axios.get("http://localhost:5500/advance-request/get", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      console.log("Response Object", response);
+      const data = response.data;
+      console.log(data);
+      setAdvanceReq(data);
+    } catch (error) {
+      console.log("Error while fetching course data: ", error);
+    }
+  };
+  console.log(advanceReq);
+
+  const handleSearchChange = (title, searchWord) => {
+    const searchData = [...advanceReq];
+
+    const newFilter = searchData.filter((item) => {
+      // Check if the item matches the search term in any selected columns
+      const matches = selectedColumns.some((columnName) => {
+        const newCol = columnName;
+        const value = item[newCol];
+        return (
+          value && value.toString().toLowerCase().includes(searchWord.toLowerCase())
+        );
+      })
+      return matches;
+    });
+    // Update the filtered data
+    setFilteredData(newFilter);
+  };
+
   return (
     <div className="top-25 min-w-[40%]">
       <div className="bg-blue-900 h-15 p-2 ml-2 px-8 sm:whitespace-nowrap text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-x-auto">
@@ -212,9 +239,8 @@ const AdvanceRequest = () => {
               Column Visibility
               <Icon
                 icon="fe:arrow-down"
-                className={`mt-1.5 ml-2 ${
-                  showDropdown ? "rotate-180" : ""
-                } cursor-pointer`}
+                className={`mt-1.5 ml-2 ${showDropdown ? "rotate-180" : ""
+                  } cursor-pointer`}
               />
             </button>
           </div>
@@ -319,9 +345,8 @@ const AdvanceRequest = () => {
                 {selectedColumns.map((columnName) => (
                   <th
                     key={columnName}
-                    className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 ${
-                      columnVisibility[columnName] ? "" : "hidden"
-                    }`}
+                    className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 ${columnVisibility[columnName] ? "" : "hidden"
+                      }`}
                   >
                     {columnName}
                   </th>
@@ -350,45 +375,43 @@ const AdvanceRequest = () => {
             <tbody className="">
               {filteredData.length > 0
                 ? filteredData.map((result, key) => (
-                    <tr key={key}>
-                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {result.ApprovalFlag}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {result.AdvanceId}
-                      </td>
-                      {selectedColumns.map((columnName) => (
-                        <td
-                          key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-[11px] text-left${
-                            columnVisibility[columnName] ? "" : "hidden"
+                  <tr key={key}>
+                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                      {result.ApprovalFlag}
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                      {result.AdvanceId}
+                    </td>
+                    {selectedColumns.map((columnName) => (
+                      <td
+                        key={columnName}
+                        className={`px-4 border-2 whitespace-normal text-[11px] text-left${columnVisibility[columnName] ? "" : "hidden"
                           }`}
-                        >
-                          {result[columnName]}
-                        </td>
-                      ))}
-                    </tr>
-                  ))
+                      >
+                        {result[columnName]}
+                      </td>
+                    ))}
+                  </tr>
+                ))
                 : advanceData.map((entry, index) => (
-                    <tr key={index}>
-                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {entry.ApprovalFlag ? "Approved" : "Unapproved"}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {entry.AdvanceId}
-                      </td>
-                      {selectedColumns.map((columnName) => (
-                        <td
-                          key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-left text-[11px]${
-                            columnVisibility[columnName] ? "" : "hidden"
+                  <tr key={index}>
+                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                      {entry.ApprovalFlag ? "Approved" : "Unapproved"}
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                      {entry.AdvanceId}
+                    </td>
+                    {selectedColumns.map((columnName) => (
+                      <td
+                        key={columnName}
+                        className={`px-4 border-2 whitespace-normal text-left text-[11px]${columnVisibility[columnName] ? "" : "hidden"
                           }`}
-                        >
-                          {entry[columnName]}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
+                      >
+                        {entry[columnName]}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
