@@ -12,7 +12,6 @@ const Work = ({ID}) => {
   const {token} = useAuth()  
     const formik = useFormik({
         initialValues:{
-            // EmployeeID:"",
             EmployeeName:"",
             DOJ:"",
             ContractStartDate:"",

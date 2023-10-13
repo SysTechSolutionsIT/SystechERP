@@ -183,7 +183,7 @@ export default function EMPTabs() {
 
                 {/* Salary Structure Tab */}
                 <div className={openTab === 3 ? "block" : "hidden"}>
-                  <SalaryStructure />
+                  <SalaryStructure ID={employeeId} />
                 </div>
 
                 {/* Professional Profile Tab */}
