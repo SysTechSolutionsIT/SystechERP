@@ -5,7 +5,7 @@ import Personal from "../forms/personal";
 import Professional from "../forms/professional";
 import Work from "../forms/work";
 import SalaryStructure from "../forms/salary";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../Login";
 
@@ -15,6 +15,7 @@ export default function EMPTabs() {
   const [name, setName] = useState("");
   const { employeeId } = useParams(); // Accessing employeeId from the URL
   const { token } = useAuth();
+  const navigate = useNavigate()
   console.log(employeeId);
 
   // Get Name
@@ -46,7 +47,8 @@ export default function EMPTabs() {
           HRMS / Employee Settings / Employee Master
         </div>
         <div className="flex gap-4">
-          <button className="flex text-[13px] bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap">
+          <button className="flex text-[13px] bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap"
+          onClick={() => navigate('/employee-master')}>
             Back
           </button>
         </div>
@@ -176,7 +178,7 @@ export default function EMPTabs() {
 
                 {/* Work Profile Tab */}
                 <div className={openTab === 2 ? "block" : "hidden"}>
-                  <Work />
+                  <Work ID={employeeId} />
                 </div>
 
                 {/* Salary Structure Tab */}
