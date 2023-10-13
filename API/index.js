@@ -36,6 +36,7 @@ const ProfessionalTaxMaster = require("./route/ProfessionalTaxMasterRoute");
 const AdvanceRequest = require("./route/AdvanceRequestRoute");
 const EmployeeId = require("./route/EmployeeIdRoute");
 const AttendanceMaster = require("./route/AttendanceMasterRoute");
+const EDImports = require("./route/EDImportsRoute");
 
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());
@@ -71,7 +72,8 @@ app.use("/deduction-heads", DeductionHeadsMaster);
 app.use("/professional-tax", ProfessionalTaxMaster);
 app.use("/advance-request", AdvanceRequest);
 app.use("/attendance-master", AttendanceMaster);
-app.use("/employeeid", EmployeeId)
+app.use("/employeeid", EmployeeId);
+app.use("/ed-imports", EDImports);
 
 // Start the server
 const port = 5500;
