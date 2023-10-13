@@ -8,7 +8,7 @@ import { useAuth } from "../Login";
 
 export default function Personal({ ID }) {
   const { token } = useAuth();
-  const { details, setDetails } = useState([]);
+  const [details, setdetails] = useState([]);
 
   const formik = useFormik({
     initialValues: {
@@ -77,7 +77,7 @@ export default function Personal({ ID }) {
         const data = response.data;
         console.log(data);
       }
-      alert("Employee Personal Details added successfully");
+      alert("Employee Personal details added successfully");
     } catch (error) {
       console.error("Error:", error.message);
     }
@@ -100,8 +100,7 @@ export default function Personal({ ID }) {
       );
       console.log("Response Object", response);
       const data = response.data;
-      setDetails(data);
-      console.log(data);
+      setdetails(data);
     } catch (error) {
       console.log("Error while fetching course data: ", error.message);
     }
@@ -117,25 +116,25 @@ export default function Personal({ ID }) {
         LastName: details.LastName,
         Salutation: details.Salutation,
         AadharCardNo: details.AadharCardNo,
-        PANNo: details?.PANNo,
-        PassportNo: details?.PassportNo,
-        PassportIssueDate: details?.PassportIssueDate,
-        PassportExpireDate: details?.PassportExpireDate,
-        CurrentAddress: details?.CurrentAddress,
-        CurrentPinCode: details?.CurrentPinCode,
-        PermanentAddress: details?.PermanentAddress,
-        PermanentPinCode: details?.PermanentPinCode,
-        DOB: details?.DOB,
-        PhoneNo: details?.PhoneNo,
-        CellNo1: details?.CellNo1,
-        CellNo2: details?.CellNo2,
-        EmailID1: details?.EmailID1,
-        EmailID2: details?.EmailID2,
-        BankId1: details?.BankId1,
-        AccountNo1: details?.AccountNo1,
-        IFSCCode1: details?.IFSCCode1,
-        BankId2: details?.BankId2,
-        AccountNo2: details?.AccountNo2,
+        PANNo: details.PANNo,
+        PassportNo: details.PassportNo,
+        PassportIssueDate: details.PassportIssueDate,
+        PassportExpireDate: details.PassportExpireDate,
+        CurrentAddress: details.CurrentAddress,
+        CurrentPinCode: details.CurrentPinCode,
+        PermanentAddress: details.PermanentAddress,
+        PermanentPinCode: details.PermanentPinCode,
+        DOB: details.DOB,
+        PhoneNo: details.PhoneNo,
+        CellNo1: details.CellNo1,
+        CellNo2: details.CellNo2,
+        EmailID1: details.EmailID1,
+        EmailID2: details.EmailID2,
+        BankId1: details.BankId1,
+        AccountNo1: details.AccountNo1,
+        IFSCCode1: details.IFSCCode1,
+        BankId2: details.BankId2,
+        AccountNo2: details.AccountNo2,
         IFSCCode2: details?.IFSCCode2,
         AcFlag: details?.AcFlag,
         Category: details?.Category,
@@ -807,7 +806,7 @@ export default function Personal({ ID }) {
           type="submit"
           className="px-8 py-2 bg-blue-900 text-white text-lg rounded-md"
         >
-          Save Details
+          Save details
         </button>
       </div>
     </form>

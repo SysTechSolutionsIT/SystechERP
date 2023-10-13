@@ -4,7 +4,6 @@ import Family from "../forms/family";
 import Personal from "../forms/personal";
 import Professional from "../forms/professional";
 import Work from "../forms/work";
-import { Icon } from "@iconify/react";
 import SalaryStructure from "../forms/salary";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -13,15 +12,16 @@ import { useAuth } from "../Login";
 export default function EMPTabs() {
   const [openTab, setOpenTab] = React.useState(1);
   const [details, setDetails] = useState([]);
-  const { employeeId } = useParams();
-  console.log(employeeId);
+  const [name, setName] = useState("");
+  const { employeeId } = useParams(); // Accessing employeeId from the URL
   const { token } = useAuth();
+  console.log(employeeId);
 
   // Get Name
   useEffect(() => {
     fetchName();
   }, [employeeId]);
-  console.log(employeeId);
+
   const fetchName = async () => {
     try {
       const response = await axios.get(
@@ -30,10 +30,10 @@ export default function EMPTabs() {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      console.log("Response Object", response);
       const data = response.data;
+      const fullName = `${data.FirstName} ${data.LastName}`;
+      setName(fullName);
       setDetails(data);
-      console.log(data);
     } catch (error) {
       console.log("Error while fetching course data: ", error.message);
     }
@@ -186,7 +186,7 @@ export default function EMPTabs() {
 
                 {/* Professional Profile Tab */}
                 <div className={openTab === 4 ? "block" : "hidden"}>
-                  <Professional ID={employeeId} />
+                  <Professional ID={employeeId} name={name} />
                 </div>
 
                 {/* Academic Profile Tab */}

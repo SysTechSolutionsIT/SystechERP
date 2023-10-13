@@ -97,6 +97,7 @@ function App() {
             <Route path="/job-type-master" element={<JobTypeMaster />} />
             <Route path="/leave-type-master" element={<LeaveTypeMaster />} />
             <Route path="/edit-employee/:employeeId" element={<EMPTabs />} />
+
             <Route
               path="/earning-heads-master"
               element={<EarningHeadsMaster />}

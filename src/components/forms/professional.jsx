@@ -26,7 +26,7 @@ export const ProfessionalData = [
   },
 ];
 
-const Professional = ({ ID }) => {
+const Professional = ({ ID, name }) => {
   const [professionalData, setProfessionalData] = useState([]);
   const [newEmployer, setNewEmployer] = useState("");
   const [newExperience, setNewExperience] = useState("");
@@ -107,9 +107,9 @@ const Professional = ({ ID }) => {
               Employee ID
             </p>
             <input
-              id="EmployeeId"
+              id="ID"
               type="number"
-              value={formik.values.EmployeeId}
+              value={ID}
               className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg `}
               onChange={formik.handleChange}
             />
@@ -119,9 +119,9 @@ const Professional = ({ ID }) => {
               Employee Name
             </p>
             <input
-              id="EmployeeName"
+              id="name"
               type="text"
-              value={formik.values.EmployeeName}
+              value={name}
               className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg `}
               onChange={formik.handleChange}
             />
