@@ -33,6 +33,15 @@ const AdvanceRequest = sequelize.define("AdvanceRequest", {
     Installment: {
         type: DataTypes.STRING,
     },
+    StartingMonth: {
+        type: DataTypes.STRING,
+    },
+    StartingYear: {
+        type: DataTypes.STRING,
+    },
+    Purpose: {
+        type: DataTypes.STRING,
+    },
     Remark: {
         type: DataTypes.STRING,
     },

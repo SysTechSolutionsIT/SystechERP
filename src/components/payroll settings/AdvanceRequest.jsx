@@ -337,6 +337,9 @@ const AdvanceRequest = () => {
             <thead>
               <tr>
                 <th className=" w-auto px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
+                  Actions
+                </th>
+                <th className=" w-auto px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
                   Approval Flag
                 </th>
                 <th className=" w-auto px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
@@ -353,6 +356,8 @@ const AdvanceRequest = () => {
                 ))}
               </tr>
               <tr>
+                <th className="p-2 font-bold text-black border-2 " />
+                <th className="p-2 font-bold text-black border-2 " />
                 <th className="p-2 font-bold text-black border-2 " />
                 {selectedColumns.map((columnName) => (
                   <th
@@ -376,11 +381,36 @@ const AdvanceRequest = () => {
               {filteredData.length > 0
                 ? filteredData.map((result, key) => (
                   <tr key={key}>
+                    <td className="px-2 text-[11px] border-2">
+                      <div className="flex items-center gap-2 text-center justify-center">
+                        <Icon
+                          className="cursor-pointer"
+                          icon="lucide:eye"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                        />
+                        <Icon
+                          className="cursor-pointer"
+                          icon="mdi:edit"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                        />
+                        <Icon
+                          className="cursor-pointer"
+                          icon="material-symbols:delete-outline"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                        />
+                      </div>
+                    </td>
                     <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
                       {result.ApprovalFlag}
                     </td>
                     <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                      {result.AdvanceId}
+                      {result.id}
                     </td>
                     {selectedColumns.map((columnName) => (
                       <td
@@ -393,13 +423,38 @@ const AdvanceRequest = () => {
                     ))}
                   </tr>
                 ))
-                : advanceData.map((entry, index) => (
+                : advanceReq.length > 0 && advanceReq.map((result, index) => (
                   <tr key={index}>
+                    <td className="px-2 text-[11px] border-2">
+                      <div className="flex items-center gap-2 text-center justify-center">
+                        <Icon
+                          className="cursor-pointer"
+                          icon="lucide:eye"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                        />
+                        <Icon
+                          className="cursor-pointer"
+                          icon="mdi:edit"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                        />
+                        <Icon
+                          className="cursor-pointer"
+                          icon="material-symbols:delete-outline"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                        />
+                      </div>
+                    </td>
                     <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {entry.ApprovalFlag ? "Approved" : "Unapproved"}
+                      {result.ApprovalFlag ? "Approved" : "Unapproved"}
                     </td>
                     <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                      {entry.AdvanceId}
+                      {result.id}
                     </td>
                     {selectedColumns.map((columnName) => (
                       <td
@@ -407,7 +462,7 @@ const AdvanceRequest = () => {
                         className={`px-4 border-2 whitespace-normal text-left text-[11px]${columnVisibility[columnName] ? "" : "hidden"
                           }`}
                       >
-                        {entry[columnName]}
+                        {result[columnName]}
                       </td>
                     ))}
                   </tr>
