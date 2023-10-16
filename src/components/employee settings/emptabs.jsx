@@ -16,7 +16,6 @@ export default function EMPTabs() {
   const [name, setName] = useState("");
   const { employeeId } = useParams(); // Accessing employeeId from the URL
   const { token } = useAuth();
-  const navigate = useNavigate();
   console.log(employeeId);
 
   // Get Name
@@ -198,12 +197,12 @@ export default function EMPTabs() {
 
                 {/* Academic Profile Tab */}
                 <div className={openTab === 5 ? "block" : "hidden"}>
-                  <Academic />
+                  <Academic ID={employeeId} name={name} />
                 </div>
 
                 {/* Family Profile Tab */}
                 <div className={openTab === 6 ? "block" : "hidden"}>
-                  <Family />
+                  <Family ID={employeeId} name={name} />
                 </div>
 
                 {/* Documents Tab */}
