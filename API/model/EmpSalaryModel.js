@@ -27,6 +27,9 @@ const EmpSalary = sequelize.define("EmpSalary", {
             CTC:{
         type: DataTypes.STRING,
     },
+            UANNo:{
+                type: DataTypes.STRING
+            },
             OTFlag: {
         type: DataTypes.STRING,
     },

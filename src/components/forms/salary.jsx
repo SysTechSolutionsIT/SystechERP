@@ -1,13 +1,15 @@
 import { useFormik } from 'formik'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react';
 import { useAuth } from '../Login';
 import DeductionHeadsTable from './DeductionHeadsTable';
 import EarningHeadsTable from './EarningHeadsTable';
 import axios from 'axios';
+import { FormFloating } from 'react-bootstrap';
 
-const SalaryStructure = () => {
+const SalaryStructure = ({ ID }) => {
   const { token } = useAuth()
+  const [details, setDetails] = useState([])
     const [isOTFlagChecked, setOTFlagChecked] = useState(false);
     const [isPFFlagChecked, setPFFlagChecked] = useState(false)
     const [isESICFlagChecked, setESICFlagChecked] = useState(false)
@@ -17,13 +19,13 @@ const SalaryStructure = () => {
 
     const formik = useFormik({
         initialValues:{
-            // EmployeeId:"",
             EmployeeName:"",
             Grade:"",
             Band:"",
             Salary:"",
             CTC:"",
-            OTFlag: isOTFlagChecked.toString(),
+            UANNo:"",
+            OTFlag: "",
             OTAmount:"",
             PFFlag:"",
             PFNo:"",
@@ -36,26 +38,92 @@ const SalaryStructure = () => {
             GratuityApplicable:"",
             GratuityAmount:"",
             Remark:"",
-            Status: isStatusChecked.toString()
+            Status: ""
         },
         onSubmit: (values) => {
+          const updatedData = {
+            EmployeeName: values.EmployeeName,
+              Grade: values.Grade,
+              Band: values.Band,
+              Salary: values.Salary,
+              CTC: values.CTC,
+              UANNo: values.UANNo,
+              OTFlag:  values.OTFlag,
+              OTAmount: values.OTAmount,
+              PFFlag: values.PFFlag,
+              PFNo: values.PFNo,
+              PFDate: values.PFDate,
+              ESICFlag: values.ESICFlag,
+              ESICNo: values.ESICNo,
+              ESICDate: values.ESICDate,
+              MLWFFlag: values.MLWFFlag,
+              MLWFNo: values.MLWFNo,
+              GratuityApplicable: values.GratuityApplicable,
+              GratuityAmount: values.GratuityAmount,
+              Remark: values.Remark,
+              Status:  values.Status
+          }
             console.log(values);
-            addEmpSalary()
+            updateEmpSalary(updatedData)
           },
         });
 
-        const addEmpSalary = async() =>{
-          try{
-            const response = axios.post("http://localhost:5500/employee/salary/add",formik.values,{
+        const updateEmpSalary = async (data) =>{
+          try {
+            const response = await axios.patch(`http://localhost:5500/employee/salary/update/${ID}`, data, {
               headers:{
-                Authorization:`Bearer ${token}`
+                Authorization: `Bearer ${token}`
               }
             })
-            alert('Salary Details added successfully')
-          } catch(error){
-            console.error('Error', error.message)
+            alert('Salary Details Updated')
+          } catch (error) {
+            console.error('Error', error);
           }
         }
+
+        useEffect(() =>{
+          const fetchEmpSalary = async () =>{
+            try {
+              const response = await axios.get(`http://localhost:5500/employee/salary/get/${ID}`, {
+                headers:{
+                  Authorization: `Bearer ${token}`
+                }
+              })
+              const data = response.data
+              setDetails(data)
+            } catch (error) {
+              console.error('Error', error);
+            }
+          }
+          fetchEmpSalary()
+        }, [ID])
+
+        useEffect(() =>{
+          if (details){
+            formik.setValues({
+              EmployeeName: details.EmployeeName,
+              Grade: details.Grade,
+              Band: details.Band,
+              Salary: details.Salary,
+              CTC: details.CTC,
+              UANNo: details.UANNo,
+              OTFlag:  details.OTFlag,
+              OTAmount: details.OTAmount,
+              PFFlag: details.PFFlag,
+              PFNo: details.PFNo,
+              PFDate: details.PFDate,
+              ESICFlag: details.ESICFlag,
+              ESICNo: details.ESICNo,
+              ESICDate: details.ESICDate,
+              MLWFFlag: details.MLWFFlag,
+              MLWFNo: details.MLWFNo,
+              GratuityApplicable: details.GratuityApplicable,
+              GratuityAmount: details.GratuityAmount,
+              Remark: details.Remark,
+              Status:  details.Status
+            })
+          }
+        }, [details])
 
         const handleCheckboxChange = (fieldName, setChecked, event) => {
             const checked = event.target.checked;
@@ -76,9 +144,10 @@ const SalaryStructure = () => {
               <input
                 id="EmployeeId"
                 type="number"
-                value={formik.values.EmployeeId}
+                value={ID}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg `}
                 onChange={formik.handleChange}
+                disabled={true}
               />
         </div>
         <div className="py-1">
@@ -159,7 +228,7 @@ const SalaryStructure = () => {
             <input
             type="checkbox"
             className='w-5 h-5 mr-2 mt-2 focus:outline-gray-300 border border-blue-900 rounded-lg'
-            checked={isOTFlagChecked}
+            checked={formik.values.OTFlag}
             onChange={(event)=> handleCheckboxChange('OTFlag', setOTFlagChecked, event )}
             />
             Active
@@ -181,7 +250,7 @@ const SalaryStructure = () => {
             <input
             type="checkbox"
             className='w-5 h-5 mr-2 mt-2 focus:outline-gray-300 border border-blue-900 rounded-lg'
-            checked={isPFFlagChecked}
+            checked={formik.values.PFFlag}
             onChange={(event)=> handleCheckboxChange('PFFlag', setPFFlagChecked, event )}
             />
             Active
@@ -213,7 +282,7 @@ const SalaryStructure = () => {
             <input
             type="checkbox"
             className='w-5 h-5 mr-2 mt-2 focus:outline-gray-300 border border-blue-900 rounded-lg'
-            checked={isESICFlagChecked}
+            checked={formik.values.ESICFlag}
             onChange={(event)=> handleCheckboxChange('ESICFlag', setESICFlagChecked, event )}
             />
             Active
@@ -245,7 +314,7 @@ const SalaryStructure = () => {
             <input
             type="checkbox"
             className='w-5 h-5 mr-2 mt-2 focus:outline-gray-300 border border-blue-900 rounded-lg'
-            checked={isMLWFFlagChecked}
+            checked={formik.values.MLWFFlag}
             onChange={(event)=> handleCheckboxChange('MLWFFlag', setMLWFFlagChecked, event )}
             />
             Active
@@ -267,7 +336,7 @@ const SalaryStructure = () => {
             <input
             type="checkbox"
             className='w-5 h-5 mr-2 mt-2 focus:outline-gray-300 border border-blue-900 rounded-lg'
-            checked={isGratuatyApplicableChecked}
+            checked={formik.values.GratuityApplicable}
             onChange={(event)=> handleCheckboxChange('GratuityApplicable', setGratuatyApplicableChecked, event )}
             />
             Active
@@ -298,7 +367,7 @@ const SalaryStructure = () => {
                 <label className="capitalize font-semibold text-[13px]">
                   <input
                     type="checkbox"
-                    checked={isStatusChecked}
+                    checked={formik.values.Status}
                     className={`w-5 h-5 mr-2 mt-2 focus:outline-gray-300 border border-blue-900 rounded-lg`}
                     onChange={(event)=> handleCheckboxChange('Status', setStatusCheched, event )}
                   />

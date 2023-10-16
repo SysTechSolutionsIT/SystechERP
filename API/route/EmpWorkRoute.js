@@ -28,7 +28,7 @@ router.get('/get', authToken, async (req, res) => {
   });
   
   // GET an employee by ID
-  router.get('/:id', authToken, async (req, res) => {
+  router.get('/get/:id', authToken, async (req, res) => {
     const { id } = req.params;
     try {
       const employee = await EmpWork.findByPk(id);

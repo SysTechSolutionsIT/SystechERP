@@ -5,13 +5,13 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../Login';
 
-const Work = () => {
+const Work = ({ID}) => {
   const [statusCheck, setStatusCheck] = useState(false);
+  const [details, setDetails] = useState()
   const [bondApplicableCheck, setBondApplicableCheck] = useState(false);
   const {token} = useAuth()  
     const formik = useFormik({
         initialValues:{
-            // EmployeeID:"",
             EmployeeName:"",
             DOJ:"",
             ContractStartDate:"",
@@ -29,31 +29,96 @@ const Work = () => {
             Contractor:"",
             DOL:"",
             ContractEndDate:"",
-            BondApplicable:bondApplicableCheck,
-            Status: statusCheck,
+            BondApplicable: "",
+            Status: "",
             Remark:""
 
         },
-        onSubmit: (values, { resetForm }) => {
+        onSubmit: (values) => {
+          const updatedData = {
+            EmployeeName: values.EmployeeName,
+            DOJ: values.DOJ,
+            ContractStartDate: values.ContractStartDate,
+            WeeklyOff: values.WeeklyOff,
+            CostCenter: values.CostCenter,
+            DepartmentGroup: values.DepartmentGroup,
+            Department: values.Department,
+            SubDepartment: values.SubDepartment,
+            Designation: values.Designation,
+            ReportingTo: values.ReportingTo,
+            Shift: values.Shift,
+            Band: values.Band,
+            Zone: values.Zone,
+            Grade: values.Grade,
+            Contractor: values.Contractor,
+            DOL: values.DOL,
+            ContractEndDate: values.ContractEndDate,
+            BondApplicable:  values.BondApplicable,
+            Status:  values.Status,
+            Remark: values.Remark
+          }
             console.log(values);
-            addEmpWork()
+            updateEmpWork(updatedData)
           },
         });
 
-        const addEmpWork = async () =>{
-          try{
-            const response = await axios.post("http://localhost:5500/employee/work/add", formik.values,
-            {
+        const updateEmpWork = async (data) =>{
+          try {
+            const response = await axios.patch(`http://localhost:5500/employee/work/update/${ID}`, data, {
               headers:{
                 Authorization: `Bearer ${token}`
               }
             })
-            alert('Employee Work Details have been added')
-          } catch(error){
-            console.error('Error', error.message)
+            alert('Employee Work Details Added')
+          } catch (error) {
+            console.error('Error', error);
           }
         }
 
+        useEffect(() =>{
+          const fetchEmpWork = async () =>{
+            try {
+              const response = await axios.get(`http://localhost:5500/employee/work/get/${ID}`,{
+                headers:{
+                  Authorization: `Bearer ${token}`
+                }
+              })
+              const data = response.data
+              console.log(data)
+              setDetails(data)
+            } catch (error) {
+              console.error('Error', error);
+            }
+          }
+          fetchEmpWork()
+        },[ID])
+
+        useEffect(() =>{
+          if (details) {
+            formik.setValues({
+            EmployeeName: details.EmployeeName,
+            DOJ: details.DOJ,
+            ContractStartDate: details.ContractStartDate,
+            WeeklyOff: details.WeeklyOff,
+            CostCenter: details.CostCenter,
+            DepartmentGroup: details.DepartmentGroup,
+            Department: details.Department,
+            SubDepartment: details.SubDepartment,
+            Designation: details.Designation,
+            ReportingTo: details.ReportingTo,
+            Shift: details.Shift,
+            Band: details.Band,
+            Zone: details.Zone,
+            Grade: details.Grade,
+            Contractor: details.Contractor,
+            DOL: details.DOL,
+            ContractEndDate: details.ContractEndDate,
+            BondApplicable:  details.BondApplicable,
+            Status:  details.Status,
+            Remark: details.Remark
+            })
+          }
+        }, [details])
         
         const handleCheckboxChange = (fieldName, setChecked, event) => {
           const checked = event.target.checked;
@@ -74,9 +139,10 @@ const Work = () => {
               <input
                 id="EmployeeID"
                 type="number"
-                value={formik.values.EmployeeID}
+                value={ID}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg `}
                 onChange={formik.handleChange}
+                disabled={true}
               />
         </div>
         <div className="py-1">
@@ -340,7 +406,7 @@ const Work = () => {
                   <input
                     id="BondApplicable"
                     type="checkbox"
-                    checked={bondApplicableCheck}
+                    checked={formik.values.BondApplicable}
                     className={`w-5 h-5 mr-2 mt-2 focus:outline-gray-300 border border-blue-900 rounded-lg`}
                     onChange={(e) => handleCheckboxChange('BondApplicable', setBondApplicableCheck, e) }
                   />
@@ -353,7 +419,7 @@ const Work = () => {
                   <input
                     id="Status"
                     type="checkbox"
-                    checked={statusCheck}
+                    checked={formik.values.Status}
                     className={`w-5 h-5 mr-2 mt-2 focus:outline-gray-300 border border-blue-900 rounded-lg`}
                     onChange={(e) => handleCheckboxChange('Status', setStatusCheck, e)}
                   />
