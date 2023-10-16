@@ -18,6 +18,8 @@ const AddEmployee = ({ visible, onClick }) => {
     },
     onSubmit: (values) => {
       console.log(values);
+      onClick();
+      window.location.reload();
       addEmpRecord(values);
       addEmpWork(values.Status);
       addEmpSalary(values.Status);
@@ -41,6 +43,7 @@ const AddEmployee = ({ visible, onClick }) => {
       alert(
         "Employee Record Added successfully. Please update details from Employee Master edit tab"
       );
+      window.location.reload();
     } catch (error) {
       console.error("Error", error);
     }
@@ -117,7 +120,7 @@ const AddEmployee = ({ visible, onClick }) => {
   const addFamily = async (data) => {
     try {
       const response = axios.post(
-        "http://localhost:5500/employee/academic/add",
+        "http://localhost:5500/employee/family/add",
         data,
         {
           headers: {
@@ -206,9 +209,9 @@ const AddEmployee = ({ visible, onClick }) => {
                   Cell No.
                 </p>
                 <input
-                  id="CellNo"
+                  id="CellNo1"
                   type="number"
-                  value={formik.values.CellNo}
+                  value={formik.values.CellNo1}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />

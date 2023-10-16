@@ -11,26 +11,23 @@ const sequelize = new Sequelize(
   }
 );
 
-const EmpProfessional = sequelize.define('EmpProfessional', {
-    EmployeeName:{
-        type: DataTypes.STRING,
-    },
-    Employer: {
-        type: DataTypes.STRING,
-    },
-    Experience: {
-        type: DataTypes.STRING,
-    },
-    Designation: {
-        type: DataTypes.STRING,
-    },
-    JobResponsibility: {
-        type: DataTypes.STRING,
-    },
-    Salary: {
-        type: DataTypes.STRING,
-    },
-})
+const EmpProfessional = sequelize.define("EmpProfessional", {
+  Employer: {
+    type: DataTypes.STRING,
+  },
+  Experience: {
+    type: DataTypes.STRING,
+  },
+  Designation: {
+    type: DataTypes.STRING,
+  },
+  JobResponsibility: {
+    type: DataTypes.STRING,
+  },
+  Salary: {
+    type: DataTypes.STRING,
+  },
+});
 
 sequelize
   .sync()

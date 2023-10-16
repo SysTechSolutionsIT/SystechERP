@@ -166,7 +166,6 @@ const HolidayMaster = () => {
     return context.measureText(text).width;
   };
 
-  //API
   //API CALL
 
   const [Holiday, setHoliday] = useState([]);

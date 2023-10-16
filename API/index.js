@@ -37,6 +37,7 @@ const AdvanceRequest = require("./route/AdvanceRequestRoute");
 const EmployeeId = require("./route/EmployeeIdRoute");
 const AttendanceMaster = require("./route/AttendanceMasterRoute");
 const EDImports = require("./route/EDImportsRoute");
+const EmpFamily = require("./route/EmpFamilyRoute");
 
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());
@@ -74,6 +75,7 @@ app.use("/advance-request", AdvanceRequest);
 app.use("/attendance-master", AttendanceMaster);
 app.use("/employeeid", EmployeeId);
 app.use("/ed-imports", EDImports);
+app.use("/employee/family", EmpFamily);
 
 // Start the server
 const port = 5500;

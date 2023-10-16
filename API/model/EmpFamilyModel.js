@@ -40,10 +40,10 @@ const EmpFamily = sequelize.define("EmpFamily", {
 sequelize
   .sync()
   .then(() => {
-    console.log("Emp Academic table created successfully.");
+    console.log("Emp Family table created successfully.");
   })
   .catch((error) => {
-    console.error("Error creating Emp Academic table:", error);
+    console.error("Error creating Emp Family table:", error);
   });
 
 module.exports = EmpFamily;

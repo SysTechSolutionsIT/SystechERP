@@ -1,6 +1,8 @@
 import React from "react";
 import { useFormik } from "formik";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useAuth } from "../Login";
 
 export const ProfessionalData = [
   {
@@ -33,13 +35,15 @@ const Professional = ({ ID, name }) => {
   const [newDesignation, setNewDesignation] = useState("");
   const [newJobResponsibility, setNewJobResponsibility] = useState("");
   const [newSalary, setNewSalary] = useState("");
+  const { token } = useAuth();
+  console.log(ID);
 
   const formik = useFormik({
     initialValues: {
       EmployeeId: ID,
-      EmployeeName: "",
+      EmployeeName: name,
     },
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       const employerString = professionalData
         .map((entry) => entry.Employer)
         .join(", ");
@@ -57,16 +61,36 @@ const Professional = ({ ID, name }) => {
         .join(", ");
 
       const combinedData = {
-        EmployeeId: values.EmployeeId,
-        EmployeeName: values.EmployeeName,
-        Employers: employerString,
-        Experiences: experienceString,
-        Designations: designationString,
-        JobResponsibilities: jobResponsibilityString,
-        Salaries: salaryString,
+        EmployeeName: name,
+        Employer: employerString,
+        Experience: experienceString,
+        Designation: designationString,
+        JobResponsibility: jobResponsibilityString,
+        Salary: salaryString,
       };
 
       console.log("Submitted data:", combinedData);
+      try {
+        const response = await axios.patch(
+          `http://localhost:5500/employee/professional/update/${ID}`,
+          combinedData, // Combined data
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (response.status === 200) {
+          const updatedData = response.data;
+          console.log("Updated data:", updatedData);
+          alert("Professional data updated successfully");
+        }
+      } catch (error) {
+        console.error(
+          "Error while updating professional data: ",
+          error.message
+        );
+      }
     },
   });
 
@@ -96,6 +120,31 @@ const Professional = ({ ID, name }) => {
     const updatedData = [...professionalData];
     updatedData.splice(index, 1);
     setProfessionalData(updatedData);
+  };
+
+  //API CALL
+
+  useEffect(() => {
+    fetchProfDataData();
+  }, []);
+
+  const fetchProfDataData = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5500/employee/professional/get/${ID}`,
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Response Object", response);
+      const data = response.data;
+      console.log(data);
+      setProfessionalData(...data);
+    } catch (error) {
+      console.log("Error while fetching course data: ", error.message);
+    }
   };
 
   return (
@@ -158,56 +207,59 @@ const Professional = ({ ID, name }) => {
               </tr>
             </thead>
             <tbody>
-              {professionalData.map((item, index) => (
-                <tr key={index}>
-                  <td
-                    className="text-[11px] border-2 cursor-pointer font-normal border-r-2 border-white py-1 px-2 bg-red-600 rounded-md text-white"
-                    onClick={() => handleRemoveRow(index)}
-                  >
-                    Remove
-                  </td>
-                  <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                    <input
-                      type="text"
-                      name={`professionalData[${index}].Employer`}
-                      value={professionalData.Employer}
-                      onChange={(e) => setNewEmployer(e.target.value)}
-                    />
-                  </td>
-                  <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                    <input
-                      type="text"
-                      name={`professionalData[${index}].Experience`}
-                      value={professionalData.Experience}
-                      onChange={(e) => setNewExperience(e.target.value)}
-                    />
-                  </td>
-                  <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                    <input
-                      type="text"
-                      name={`professionalData[${index}].Designation`}
-                      value={professionalData.Designation}
-                      onChange={(e) => setNewDesignation(e.target.value)}
-                    />
-                  </td>
-                  <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                    <input
-                      type="text"
-                      name={`professionalData[${index}].JobResponsibility`}
-                      value={professionalData.JobResponsibility}
-                      onChange={(e) => setNewJobResponsibility(e.target.value)}
-                    />
-                  </td>
-                  <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                    <input
-                      type="text"
-                      name={`professionalData[${index}].Salary`}
-                      value={professionalData.Salary}
-                      onChange={(e) => setNewSalary(e.target.value)}
-                    />
-                  </td>
-                </tr>
-              ))}
+              {professionalData.length > 0 &&
+                professionalData.map((item, index) => (
+                  <tr key={index}>
+                    <td
+                      className="text-[11px] border-2 cursor-pointer font-normal border-r-2 border-white py-1 px-2 bg-red-600 rounded-md text-white"
+                      onClick={() => handleRemoveRow(index)}
+                    >
+                      Remove
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                      <input
+                        type="text"
+                        name={`professionalData[${index}].Employer`}
+                        value={professionalData.Employer}
+                        onChange={(e) => setNewEmployer(e.target.value)}
+                      />
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                      <input
+                        type="text"
+                        name={`professionalData[${index}].Experience`}
+                        value={professionalData.Experience}
+                        onChange={(e) => setNewExperience(e.target.value)}
+                      />
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                      <input
+                        type="text"
+                        name={`professionalData[${index}].Designation`}
+                        value={professionalData.Designation}
+                        onChange={(e) => setNewDesignation(e.target.value)}
+                      />
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                      <input
+                        type="text"
+                        name={`professionalData[${index}].JobResponsibility`}
+                        value={professionalData.JobResponsibility}
+                        onChange={(e) =>
+                          setNewJobResponsibility(e.target.value)
+                        }
+                      />
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                      <input
+                        type="text"
+                        name={`professionalData[${index}].Salary`}
+                        value={professionalData.Salary}
+                        onChange={(e) => setNewSalary(e.target.value)}
+                      />
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>

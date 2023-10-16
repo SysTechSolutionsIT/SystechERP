@@ -1,93 +1,124 @@
-import React from 'react'
-import { useFormik } from 'formik'
-import { useState } from 'react';
-import axios from 'axios';
-import { useEffect } from 'react';
+import React from "react";
+import { useFormik } from "formik";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useAuth } from "../Login";
 
 export const qualificationsArray = [
   {
-    Qualification: 'Bachelor of Science',
-    Institute: 'University of ABC',
-    Specialization: 'Computer Science',
-    Grades: 'A',
-    PassingYear: '2022',
-    Languages: 'English, French',
+    Qualification: "Bachelor of Science",
+    Institute: "University of ABC",
+    Specialization: "Computer Science",
+    Grades: "A",
+    PassingYear: "2022",
+    Languages: "English, French",
   },
   {
-    Qualification: 'Master of Business Administration',
-    Institute: 'XYZ Business School',
-    Specialization: 'Marketing',
-    Grades: 'B',
-    PassingYear: '2021',
-    Languages: 'English, Spanish',
+    Qualification: "Master of Business Administration",
+    Institute: "XYZ Business School",
+    Specialization: "Marketing",
+    Grades: "B",
+    PassingYear: "2021",
+    Languages: "English, Spanish",
   },
   {
-    Qualification: 'Diploma in Graphic Design',
-    Institute: 'Design Institute',
-    Specialization: 'Graphic Design',
-    Grades: 'A+',
-    PassingYear: '2023',
-    Languages: 'English',
+    Qualification: "Diploma in Graphic Design",
+    Institute: "Design Institute",
+    Specialization: "Graphic Design",
+    Grades: "A+",
+    PassingYear: "2023",
+    Languages: "English",
   },
   // Add more qualifications as needed
 ];
 
-
-const Academic = () => {
-  const [academicData, setAcademicData] = useState([])
-  const [Qualification, setQualification] = useState('');
-  const [Institute, setInstitute] = useState('');
-  const [Specialization, setSpecialization] = useState('');
-  const [Grades, setGrades] = useState('');
-  const [PassingYear, setPassingYear] = useState('');
-  const [Languages, setLanguages] = useState('');
+const Academic = ({ ID, name }) => {
+  const [academicData, setAcademicData] = useState([]);
+  const [Qualification, setQualification] = useState("");
+  const [Institute, setInstitute] = useState("");
+  const [Specialization, setSpecialization] = useState("");
+  const [Grades, setGrades] = useState("");
+  const [PassingYear, setPassingYear] = useState("");
+  const [Languages, setLanguages] = useState("");
+  const { token } = useAuth();
 
   const formik = useFormik({
     initialValues: {
-      EmployeeId: "",
-      EmployeeName: "",
+      EmployeeId: ID,
+      EmployeeName: name,
     },
-    onSubmit: (values) => {
-      console.log(values)
+    onSubmit: async (values) => {
+      const qualString = academicData
+        .map((entry) => entry.Qualification)
+        .join(", ");
+      const instString = academicData
+        .map((entry) => entry.Institute)
+        .join(", ");
+      const specializationString = academicData
+        .map((entry) => entry.Specialization)
+        .join(", ");
+      const gradesString = academicData.map((entry) => entry.Grades).join(", ");
+      const passString = academicData
+        .map((entry) => entry.PassingYear)
+        .join(", ");
+      const LangString = academicData
+        .map((entry) => entry.Languages)
+        .join(", ");
 
-      const newEntry = {
-        Qualification: Qualification,
-        Institute: Institute,
-        Specialization: Specialization,
-        Grades: Grades,
-        PassingYear: PassingYear,
-        Languages: Languages
+      const combinedData = {
+        EmployeeName: name,
+        Qualification: qualString,
+        Institute: instString,
+        Specialization: specializationString,
+        Grades: gradesString,
+        PassingYear: passString,
+        Languages: LangString,
       };
 
-      // academicData.push(newEntry)
-      setAcademicData(...academicData, newEntry)
-      console.log(academicData)
-      handleRemoveRow(academicData.length - 1)
-
-      const data = {
-        academicData: values.academicData.map(item => ({
-          ...item,
-          EmployeeId: values.EmployeeId,
-          EmployeeName: values.EmployeeName,
-        })),
+      console.log("Submitted data:", combinedData);
+      try {
+        const response = await axios.patch(
+          `http://localhost:5500/employee/academic/update/${ID}`,
+          combinedData, // Combined data
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (response.status === 200) {
+          const updatedData = response.data;
+          console.log("Updated data:", updatedData);
+          alert("Academic data updated successfully");
+        }
+      } catch (error) {
+        console.error("Error while updating Academic data: ", error.message);
       }
-
-      console.log('data', data.academicData)
-      addEmpAcademic(data.academicData)
     },
-  })
+  });
 
-  const addEmpAcademic = async (data) => {
+  useEffect(() => {
+    fetchAcademicData();
+  }, []);
+
+  const fetchAcademicData = async () => {
     try {
-      data.map(async (entry, key) => {
-        const response = await axios.post("http://localhost:5500/employee/academic/add", entry)
-      })
-
-      alert('Academic Details Added')
+      const response = await axios.get(
+        `http://localhost:5500/employee/academic/get/${ID}`,
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Response Object", response);
+      const data = response.data;
+      console.log(data);
+      setAcademicData(...data);
     } catch (error) {
-      console.error('Error', error)
+      console.log("Error while fetching course data: ", error.message);
     }
-  }
+  };
 
   const handleAddRow = () => {
     const newEntry = {
@@ -96,19 +127,19 @@ const Academic = () => {
       Specialization: Specialization,
       Grades: Grades,
       PassingYear: PassingYear,
-      Languages: Languages
+      Languages: Languages,
     };
 
     // academicData.push(newEntry)
-    setAcademicData(...academicData, newEntry)
-    console.log(academicData)
+    setAcademicData(...academicData, newEntry);
+    console.log(academicData);
 
-    setQualification('')
-    setInstitute('')
-    setSpecialization('')
-    setGrades('')
-    setPassingYear('')
-    setLanguages('')
+    setQualification("");
+    setInstitute("");
+    setSpecialization("");
+    setGrades("");
+    setPassingYear("");
+    setLanguages("");
   };
 
   const handleRemoveRow = (index) => {
@@ -117,28 +148,31 @@ const Academic = () => {
     setAcademicData(updatedData);
   };
 
-
   return (
     <form onSubmit={formik.handleSubmit}>
       <formik onSubmit={formik.handleSubmit}>
-        <div className='p-4 bg-white font-[Inter]'>
-          <div className='grid grid-cols-3 gap-x-4'>
+        <div className="p-4 bg-white font-[Inter]">
+          <div className="grid grid-cols-3 gap-x-4">
             <div className="py-1">
-              <p className="mb-1 capitalize font-semibold text-[13px]">Employee ID</p>
+              <p className="mb-1 capitalize font-semibold text-[13px]">
+                Employee ID
+              </p>
               <input
                 id="EmployeeId"
                 type="number"
-                value={formik.values.EmployeeId}
+                value={ID}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg `}
                 onChange={formik.handleChange}
               />
             </div>
             <div className="py-1">
-              <p className="mb-1 capitalize font-semibold text-[13px]">Employee Name</p>
+              <p className="mb-1 capitalize font-semibold text-[13px]">
+                Employee Name
+              </p>
               <input
                 id="EmployeeName"
                 type="text"
-                value={formik.values.EmployeeName}
+                value={name}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg `}
                 onChange={formik.handleChange}
               />
@@ -149,77 +183,87 @@ const Academic = () => {
               <table className="text-center h-auto text-[11px] rounded-lg justify-center whitespace-normal">
                 <thead>
                   <tr>
-                    <th className='text-[13px] font-normal border-2 border-white py-1 px-2 bg-blue-500 rounded-md cursor-pointer text-white'
-                      onClick={handleAddRow}>
+                    <th
+                      className="text-[13px] font-normal border-2 border-white py-1 px-2 bg-blue-500 rounded-md cursor-pointer text-white"
+                      onClick={handleAddRow}
+                    >
                       Add
                     </th>
-                    <th className='text-[13px] font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
+                    <th className="text-[13px] font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white">
                       Qualification
                     </th>
-                    <th className='text-[13px] font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
+                    <th className="text-[13px] font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white">
                       Institute
                     </th>
-                    <th className='text-[13px] font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
+                    <th className="text-[13px] font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white">
                       Specialization
                     </th>
-                    <th className='text-[13px] font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
+                    <th className="text-[13px] font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white">
                       Grades
                     </th>
-                    <th className='text-[13px] font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
+                    <th className="text-[13px] font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white">
                       Passing Year
                     </th>
-                    <th className='text-[13px] font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
+                    <th className="text-[13px] font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white">
                       Languages
                     </th>
                   </tr>
                 </thead>
                 {academicData.map((item, index) => (
                   <tr>
-                    <td className='text-[11px] border-2 cursor-pointer font-normal border-r-2 border-white py-1 px-2 bg-red-600 rounded-md text-white'
-                      onClick={() => handleRemoveRow(index)}>
+                    <td
+                      className="text-[11px] border-2 cursor-pointer font-normal border-r-2 border-white py-1 px-2 bg-red-600 rounded-md text-white"
+                      onClick={() => handleRemoveRow(index)}
+                    >
                       Remove
                     </td>
-                    <td className='px-4 border-2 whitespace-normal text-left text-[11px]'>
+                    <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
                       <input
-                        type='text'
+                        type="text"
                         name={`academicData[${index}].Qualification`}
                         value={academicData.Qualification}
-                        onChange={formik.handleChange} />
+                        onChange={formik.handleChange}
+                      />
                     </td>
-                    <td className='px-4 border-2 whitespace-normal text-left text-[11px]'>
+                    <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
                       <input
-                        type='text'
+                        type="text"
                         name={`academicData[${index}].Institute`}
                         value={academicData.Institute}
-                        onChange={formik.handleChange} />
+                        onChange={formik.handleChange}
+                      />
                     </td>
-                    <td className='px-4 border-2 whitespace-normal text-left text-[11px]'>
+                    <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
                       <input
-                        type='text'
+                        type="text"
                         name={`academicData[${index}].Specialization`}
                         value={academicData.Specialization}
-                        onChange={formik.handleChange} />
+                        onChange={formik.handleChange}
+                      />
                     </td>
-                    <td className='px-4 border-2 whitespace-normal text-left text-[11px]'>
+                    <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
                       <input
-                        type='text'
+                        type="text"
                         name={`academicData[${index}].Grades`}
                         value={academicData.Grades}
-                        onChange={formik.handleChange} />
+                        onChange={formik.handleChange}
+                      />
                     </td>
-                    <td className='px-4 border-2 whitespace-normal text-left text-[11px]'>
+                    <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
                       <input
-                        type='text'
+                        type="text"
                         name={`academicData[${index}].PassingYear`}
                         value={academicData.PassingYear}
-                        onChange={formik.handleChange} />
+                        onChange={formik.handleChange}
+                      />
                     </td>
-                    <td className='px-4 border-2 whitespace-normal text-left text-[11px]'>
+                    <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
                       <input
-                        type='text'
+                        type="text"
                         name={`academicData[${index}].Languages`}
                         value={academicData.Languages}
-                        onChange={formik.handleChange} />
+                        onChange={formik.handleChange}
+                      />
                     </td>
                   </tr>
                 ))}
@@ -237,7 +281,7 @@ const Academic = () => {
         </div>
       </formik>
     </form>
-  )
-}
+  );
+};
 
-export default Academic
+export default Academic;

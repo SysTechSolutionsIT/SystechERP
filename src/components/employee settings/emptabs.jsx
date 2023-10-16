@@ -5,17 +5,17 @@ import Personal from "../forms/personal";
 import Professional from "../forms/professional";
 import Work from "../forms/work";
 import SalaryStructure from "../forms/salary";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../Login";
 
 export default function EMPTabs() {
   const [openTab, setOpenTab] = React.useState(1);
   const [details, setDetails] = useState([]);
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const { employeeId } = useParams(); // Accessing employeeId from the URL
   const { token } = useAuth();
-  console.log(employeeId);
 
   // Get Name
   useEffect(() => {
@@ -46,7 +46,12 @@ export default function EMPTabs() {
           HRMS / Employee Settings / Employee Master
         </div>
         <div className="flex gap-4">
-          <button className="flex text-[13px] bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap">
+          <button
+            className="flex text-[13px] bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap"
+            onClick={() => {
+              navigate("/employee-master");
+            }}
+          >
             Back
           </button>
         </div>
