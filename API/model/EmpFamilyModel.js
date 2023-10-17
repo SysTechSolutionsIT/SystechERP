@@ -35,6 +35,9 @@ const EmpFamily = sequelize.define("EmpFamily", {
   Nominee: {
     type: DataTypes.STRING,
   },
+  Status: {
+    type: DataTypes.STRING,
+  }
 });
 
 sequelize

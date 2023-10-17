@@ -27,6 +27,9 @@ const EmpProfessional = sequelize.define("EmpProfessional", {
   Salary: {
     type: DataTypes.STRING,
   },
+  Status: {
+    type: DataTypes.STRING,
+  }
 });
 
 sequelize
