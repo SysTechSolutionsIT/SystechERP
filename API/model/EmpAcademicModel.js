@@ -32,6 +32,9 @@ const EmpAcademic = sequelize.define("EmpAcademic", {
   Languages: {
     type: DataTypes.STRING,
   },
+  Status: {
+    type: DataTypes.STRING,
+  }
 });
 
 sequelize
