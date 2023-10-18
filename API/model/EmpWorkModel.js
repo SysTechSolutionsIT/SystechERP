@@ -71,7 +71,10 @@ const EmpWork = sequelize.define("EmpWork", {
     },
     Remark:{
         type: DataTypes.STRING,
-    }
+    },
+    Status: {
+        type: DataTypes.STRING,
+      }
 })
 
 sequelize
