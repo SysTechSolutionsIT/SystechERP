@@ -12,7 +12,7 @@ export const family = [
     Occupation: "Engineer",
     Address: "123 Main Street, Anytown, CA 12345",
     CellNo: "123-456-7890",
-    EmailId: "john.doe@example.com",
+    EmailID: "john.doe@example.com",
     Nomminee: "Jane Doe",
   },
   {
@@ -22,7 +22,7 @@ export const family = [
     Occupation: "Doctor",
     Address: "456 Elm Street, Anytown, CA 12345",
     CellNo: "555-678-9012",
-    EmailId: "jane.doe@example.com",
+    EmailID: "jane.doe@example.com",
     Nomminee: "John Doe",
   },
   {
@@ -32,7 +32,7 @@ export const family = [
     Occupation: "Truck Driver",
     Address: "789 Oak Street, Anytown, CA 12345",
     CellNo: "987-654-3210",
-    EmailId: "peter.smith@example.com",
+    EmailID: "peter.smith@example.com",
     Nomminee: "John Doe",
   },
   {
@@ -42,7 +42,7 @@ export const family = [
     Occupation: "Teacher",
     Address: "1011 Main Street, Anytown, CA 12345",
     CellNo: "234-567-8901",
-    EmailId: "mary.jones@example.com",
+    EmailID: "mary.jones@example.com",
     Nomminee: "Jane Doe",
   },
   {
@@ -52,7 +52,7 @@ export const family = [
     Occupation: "Scientist",
     Address: "1234 Elm Street, Anytown, CA 12345",
     CellNo: "345-678-9012",
-    EmailId: "bill.brown@example.com",
+    EmailID: "bill.brown@example.com",
     Nomminee: "John Doe",
   },
 ];
@@ -65,7 +65,7 @@ const Family = ({ ID, name }) => {
   const [Occupation, setOccupation] = useState("");
   const [Address, setAddress] = useState("");
   const [CellNo, setCellNo] = useState("");
-  const [EmailId, setEmailId] = useState("");
+  const [EmailID, setEmailID] = useState("");
   const [Nomminee, setNomminee] = useState("");
   const { token } = useAuth();
 
@@ -90,9 +90,9 @@ const Family = ({ ID, name }) => {
       const addString = familyMembers.map((entry) => entry.Address).join(", ");
       const cellString = familyMembers.map((entry) => entry.CellNo).join(", ");
       const emailString = familyMembers
-        .map((entry) => entry.EmailId)
+        .map((entry) => entry.EmailID)
         .join(", ");
-      const nomString = familyMembers.map((entry) => entry.Nomminee).join(", ");
+      const nomString = familyMembers.map((entry) => entry.Nominee).join(", ");
 
       const combinedData = {
         PersonName: personString,
@@ -101,8 +101,8 @@ const Family = ({ ID, name }) => {
         Occupation: occString,
         Address: addString,
         CellNo: cellString,
-        EmailId: emailString,
-        Nomminee: nomString,
+        EmailID: emailString,
+        Nominee: nomString,
       };
 
       console.log("Submitted data:", combinedData);
@@ -158,7 +158,7 @@ const Family = ({ ID, name }) => {
       Occupation: Occupation,
       Address: Address,
       CellNo: CellNo,
-      EmailId: EmailId,
+      EmailID: EmailID,
       Nomminee: Nomminee,
     };
     familyMembers.push(newEntry);
@@ -171,7 +171,7 @@ const Family = ({ ID, name }) => {
     setOccupation("");
     setAddress("");
     setCellNo("");
-    setEmailId("");
+    setEmailID("");
     setNomminee("");
   };
 
@@ -306,9 +306,9 @@ const Family = ({ ID, name }) => {
                   <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
                     <input
                       type="text"
-                      name={`familyMembers[${index}].EmailId`}
-                      value={familyMembers.EmailId}
-                      onChange={(e) => setEmailId(e.target.value)}
+                      name={`familyMembers[${index}].EmailID`}
+                      value={familyMembers.EmailID}
+                      onChange={(e) => setEmailID(e.target.value)}
                     />
                   </td>
                   <td className="px-4 border-2 whitespace-normal text-center text-[11px">
