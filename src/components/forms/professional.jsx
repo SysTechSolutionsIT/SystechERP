@@ -29,7 +29,7 @@ export const ProfessionalData = [
 ];
 
 const Professional = ({ ID, name }) => {
-  const [professionalData, setProfessionalData] = useState([]);
+  const [professionalData, setProfessionalData] = useState({});
   const [newEmployer, setNewEmployer] = useState("");
   const [newExperience, setNewExperience] = useState("");
   const [newDesignation, setNewDesignation] = useState("");
@@ -143,9 +143,9 @@ const Professional = ({ ID, name }) => {
       const data = response.data;
       console.log(data);
       setProfessionalData(data);
-      // const rows = SplitData();
-      // setProfessionalData([...rows]);
-      // console.log("after split", professionalData);
+      const rows = SplitData();
+      setProfessionalData([...rows]);
+      console.log("after split", professionalData);
     } catch (error) {
       console.log(
         "Error while fetching professional data data: ",
@@ -178,6 +178,7 @@ const Professional = ({ ID, name }) => {
       rows.push(row);
     }
     console.log(rows);
+
     // Return the rows array.
     return rows;
   };
