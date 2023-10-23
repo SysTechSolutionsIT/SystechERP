@@ -155,23 +155,22 @@ const DestinationMaster = () => {
   return (
     <div className="top-25 min-w-[40%]">
       <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
-        <div className="mr-auto text-[15px]">
+        <div className="text-[15px]">
           Company Settings / Destination Master
         </div>
-        <div className="flex gap-4 relative sticky lg:ml-96 sm:ml-8">
+        <div className="flex gap-4">
           <button
             onClick={() => setShowDropdown(!showDropdown)}
-            className="flex text-[13px] bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap"
+            className="flex items-center text-[13px] bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap"
           >
             Column Visibility
             <Icon
               icon="fe:arrow-down"
-              className={`mt-1.5 ml-2 ${showDropdown ? "rotate-180" : ""
-                } cursor-pointer`}
+              className={`ml-2 ${showDropdown ? "rotate-180" : ""} cursor-pointer`}
             />
           </button>
           {showDropdown && (
-            <div className="absolute top-32 bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50">
+            <div className="absolute top-32 bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50 top-[calc(100% + 10px)]">
               {/* Dropdown content */}
               <div className="flex items-center mb-2">
                 <button
@@ -216,7 +215,7 @@ const DestinationMaster = () => {
             className="text-white font-semibold px-4 rounded-lg text-[13px] border border-white"
             onClick={() => setModalOpen(true)}
           >
-            Add Dest.
+            Add
           </button>
           <div className="flex items-center">
             <button

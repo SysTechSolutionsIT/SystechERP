@@ -10,19 +10,19 @@ const DepartmentMaster = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
   const [departments, setDepartments] = useState([])
-  const {token} = useAuth()
+  const { token } = useAuth()
 
   const deleteDept = async (deptid) => {
     try {
       const apiUrl = `http://localhost:5500/departmentmaster/delete-dept/${deptid}`;
-  
+
       const response = await axios.delete(apiUrl,
         {
-          headers:{
+          headers: {
             Authorization: `Bearer ${token}`
           }
         });
-  
+
       if (response.status === 204) {
         console.log(`Department with ID ${deptid} deleted successfully.`);
         alert('Department Deleted')
@@ -35,15 +35,15 @@ const DepartmentMaster = () => {
     }
   };
 
-  useEffect(() =>{
+  useEffect(() => {
     const fetchDept = async () => {
       try {
         const response = await axios.get("http://localhost:5500/departmentmaster/get",
-        {
-          headers:{
-            Authorization: `Bearer ${token}`
-          }
-        });
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
         console.log("Response Object", response);
         const data = response.data;
         console.log(data);
@@ -68,7 +68,7 @@ const DepartmentMaster = () => {
     }
   };
   const [columnVisibility, setColumnVisibility] = useState({
-    deptName:  true,
+    deptName: true,
     companyBranchName: true,
     parentDept: true,
     deptType: true,
@@ -83,7 +83,7 @@ const DepartmentMaster = () => {
   });
 
   const columnNames = {
-    deptName:  "Department Name",
+    deptName: "Department Name",
     companyBranchName: "Company Branch Name",
     parentDept: "Parent Department",
     deptType: "Department Type",
@@ -123,7 +123,7 @@ const DepartmentMaster = () => {
       return updatedVisibility;
     });
   };
-  
+
   const deselectAllColumns = () => {
     setSelectedColumns([]);
     setColumnVisibility((prevVisibility) => {
@@ -181,26 +181,22 @@ const DepartmentMaster = () => {
   return (
     <div className="top-25 min-w-[40%]">
       <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
-        <div className="flex items-center gap-4 whitespace-normal">
-          <div className="mr-auto text-[15px] whitespace-normal min-w-fit">
-            Company Settings / Department Master
-          </div>
-          <div className="relative sticky lg:ml-96 sm:ml-64">
-            <button
-              onClick={() => setShowDropdown(!showDropdown)}
-              className="flex text-[13px] bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap"
-            >
-              Column Visibility
-              <Icon
-                icon="fe:arrow-down"
-                className={`mt-1.5 ml-2 ${
-                  showDropdown ? "rotate-180" : ""
-                } cursor-pointer`}
-              />
-            </button>
-          </div>
+        <div className="text-[15px]">
+          Company Settings / Department Master
+        </div>
+        <div className="flex gap-4">
+          <button
+            onClick={() => setShowDropdown(!showDropdown)}
+            className="flex items-center text-[13px] bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap"
+          >
+            Column Visibility
+            <Icon
+              icon="fe:arrow-down"
+              className={`ml-2 ${showDropdown ? "rotate-180" : ""} cursor-pointer`}
+            />
+          </button>
           {showDropdown && (
-            <div className="absolute top-[16%] lg:ml-[42%] sm:ml-[70%] bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50 top-[calc(100% + 10px)]">
+            <div className="absolute top-32 bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50 top-[calc(100% + 10px)]">
               {/* Dropdown content */}
               <div className="flex items-center mb-2">
                 <button
@@ -224,12 +220,12 @@ const DepartmentMaster = () => {
                   <input
                     type="checkbox"
                     className="mr-2"
-                    checked={columnVisibility[columnName]}
+                    checked={selectedColumns.includes(columnName)}
                     onChange={() => toggleColumn(columnName)}
                   />
                   <span
                     className={
-                      columnVisibility[columnName]
+                      selectedColumns.includes(columnName)
                         ? "font-semibold"
                         : ""
                     }
@@ -241,44 +237,42 @@ const DepartmentMaster = () => {
             </div>
           )}
 
-          <div className="min-w-[40%]">
-            <button
-              className="text-white font-semibold px-4 rounded-lg text-[13px] border border-white"
-              onClick={() => setModalOpen(true)}
-            >
-              Add Dept.
-            </button>
-          </div>
-        </div>
-        <div className="flex items-center mb-2 lg:mr-[210px] sm:mr-[60px]">
           <button
-            className=" cursor-pointer"
-            onClick={() => setMenuOpen(!menuOpen)}
+            className="text-white font-semibold px-4 rounded-lg text-[13px] border border-white"
+            onClick={() => setModalOpen(true)}
           >
-            <Icon icon="carbon:menu" color="white" width="27" height="27" />
+            Add
           </button>
-          {menuOpen && (
-            <div
-              ref={menuRef}
-              className="w-24 flex flex-col absolute lg:top-28 lg:right-38 bg-white border border-gray-300 shadow-md rounded-lg p-1 items-center mb-2"
+          <div className="flex items-center">
+            <button
+              className=" cursor-pointer"
+              onClick={() => setMenuOpen(!menuOpen)}
             >
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2 z-50">
-                Copy
-              </button>
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2 z-50">
-                CSV
-              </button>
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
-                Excel
-              </button>
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
-                PDF
-              </button>
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
-                Print
-              </button>
-            </div>
-          )}
+              <Icon icon="carbon:menu" color="white" width="27" height="27" />
+            </button>
+            {menuOpen && (
+              <div
+                ref={menuRef}
+                className="w-24 -ml-10 flex flex-col absolute lg:top-32 bg-white border border-gray-300 shadow-md rounded-lg p-1 items-center"
+              >
+                <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2 z-50">
+                  Copy
+                </button>
+                <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2 z-50">
+                  CSV
+                </button>
+                <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+                  Excel
+                </button>
+                <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+                  PDF
+                </button>
+                <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+                  Print
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <DepartmentModal
@@ -297,165 +291,153 @@ const DepartmentMaster = () => {
                   ID
                 </th>
                 {selectedColumns.map((columnName) => (
-                columnVisibility[columnName] ? (
-                  <th
-                    key={columnName}
-                    className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal`}
-                  >
-                    {columnNames[columnName]}
-                  </th>
-                ) : null
-              ))} 
+                  columnVisibility[columnName] ? (
+                    <th
+                      key={columnName}
+                      className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal`}
+                    >
+                      {columnNames[columnName]}
+                    </th>
+                  ) : null
+                ))}
               </tr>
               <tr>
                 <th className="border-2" />
                 <th className="p-2 font-bold text-black border-2 whitespace-normal" />
                 {selectedColumns.map((columnName) => (
-                columnVisibility[columnName] ? (
-                  <th key={columnName} className="p-2 font-semibold text-black border-2">
-                    <input
-                      type="text"
-                      placeholder={`Search `}
-                      className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
-                      style={{ maxWidth: getColumnMaxWidth(columnName) + "px" }}
-                      onChange={(e) => handleSearchChange(columnName, e.target.value)}
-                    />
-                  </th>
-                ) : null
-              ))}
+                  columnVisibility[columnName] ? (
+                    <th key={columnName} className="p-2 font-semibold text-black border-2">
+                      <input
+                        type="text"
+                        placeholder={`Search `}
+                        className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
+                        style={{ maxWidth: getColumnMaxWidth(columnName) + "px" }}
+                        onChange={(e) => handleSearchChange(columnName, e.target.value)}
+                      />
+                    </th>
+                  ) : null
+                ))}
               </tr>
             </thead>
             <tbody>
               {filteredData.length > 0
                 ? filteredData.map((result, key) => (
-                    <tr key={key}>
-                      <td className="px-2 border-2">
-                        <div className="flex items-center gap-2 text-center justify-center">
-                          <Icon
-                            icon="lucide:eye"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => {
-                              setVeDept(true); // Open VEModal
-                              setEdit(false); // Disable edit mode for VEModal
-                              setDid(result.id); // Pass ID to VEModal
-                            }}
-                          />
-                          <VEDept
-                            visible={veDept}
-                            onClick={() => setVeDept(false)}
-                            edit={edit}
-                            ID={Did}
-                          />
-                          <Icon
-                            icon="mdi:edit"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => {
-                              setVeDept(true); // Open VEModal
-                              setEdit(true); // Disable edit mode for VEModal
-                              setDid(result.id); // Pass ID to VEModal
-                            }}
-                          />
-                          <VEDept
-                            visible={veDept}
-                            onClick={() => setVeDept(false)}
-                            edit={edit}
-                            ID={Did}
-                          />
-                          <Icon
-                            icon="material-symbols:delete-outline"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                          />
-                        </div>
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
-                        {result.id}
-                      </td>
-                      {selectedColumns.map((columnName) => (
-                    columnVisibility[columnName] ? (
-                      <td
-                        key={columnName}
-                        className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                      >
-                        {result[columnName]}
-                      </td>
-                    ) : null
-                  ))}
-                    </tr>
-                  ))
+                  <tr key={key}>
+                    <td className="px-2 border-2">
+                      <div className="flex items-center gap-2 text-center justify-center">
+                        <Icon
+                          icon="lucide:eye"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() => {
+                            setVeDept(true); // Open VEModal
+                            setEdit(false); // Disable edit mode for VEModal
+                            setDid(result.id); // Pass ID to VEModal
+                          }}
+                        />
+                        <Icon
+                          icon="mdi:edit"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() => {
+                            setVeDept(true); // Open VEModal
+                            setEdit(true); // Disable edit mode for VEModal
+                            setDid(result.id); // Pass ID to VEModal
+                          }}
+                        />
+                        <Icon
+                          icon="material-symbols:delete-outline"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                        />
+                      </div>
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
+                      {result.id}
+                    </td>
+                    {selectedColumns.map((columnName) => (
+                      columnVisibility[columnName] ? (
+                        <td
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                        >
+                          {result[columnName]}
+                        </td>
+                      ) : null
+                    ))}
+                  </tr>
+                ))
                 : departments.map((result, index) => (
-                    <tr key={index}>
-                      <td className="px-2 border-2">
-                        <div className="flex items-center gap-2 text-center justify-center">
-                          <Icon
-                            icon="lucide:eye"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => {
-                              setVeDept(true); // Open VEModal
-                              setEdit(false); // Disable edit mode for VEModal
-                              setDid(result.id); // Pass ID to VEModal
-                            }}
-                          />
-                          <VEDept
-                            visible={veDept}
-                            onClick={() => setVeDept(false)}
-                            edit={edit}
-                            ID={Did}
-                          />
-                          <Icon
-                            icon="mdi:edit"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => {
-                              setVeDept(true); // Open VEModal
-                              setEdit(true); // Disable edit mode for VEModal
-                              setDid(result.id); // Pass ID to VEModal
-                            }}
-                          />
-                          <VEDept
-                            visible={veDept}
-                            onClick={() => setVeDept(false)}
-                            edit={edit}
-                            ID={Did}
-                          />
-                          <Icon
-                            icon="material-symbols:delete-outline"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => deleteDept(result.id)}
-                          />
-                        </div>
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
-                        {result.id}
-                      </td>
-                      {selectedColumns.map((columnName) => (
-                    columnVisibility[columnName] ? (
-                      <td
-                        key={columnName}
-                        className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                      >
-                        {result[columnName]}
-                      </td>
-                    ) : (
-                      <td key={columnName} className="hidden"></td>
-                    )
-                  ))}
-                    </tr>
-                  ))}
+                  <tr key={index}>
+                    <td className="px-2 border-2">
+                      <div className="flex items-center gap-2 text-center justify-center">
+                        <Icon
+                          icon="lucide:eye"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() => {
+                            setVeDept(true); // Open VEModal
+                            setEdit(false); // Disable edit mode for VEModal
+                            setDid(result.id); // Pass ID to VEModal
+                          }}
+                        />
+                        <Icon
+                          icon="mdi:edit"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() => {
+                            setVeDept(true); // Open VEModal
+                            setEdit(true); // Disable edit mode for VEModal
+                            setDid(result.id); // Pass ID to VEModal
+                          }}
+                        />
+                        <Icon
+                          icon="material-symbols:delete-outline"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() => deleteDept(result.id)}
+                        />
+                      </div>
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
+                      {result.id}
+                    </td>
+                    {selectedColumns.map((columnName) => (
+                      columnVisibility[columnName] ? (
+                        <td
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                        >
+                          {result[columnName]}
+                        </td>
+                      ) : (
+                        <td key={columnName} className="hidden"></td>
+                      )
+                    ))}
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
       </div>
+      <VEDept
+        visible={veDept}
+        onClick={() => setVeDept(false)}
+        edit={edit}
+        ID={Did}
+      />
     </div>
   );
 };
