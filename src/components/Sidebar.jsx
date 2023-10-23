@@ -219,7 +219,6 @@ const Sidebar = () => {
                   title="Two Field Master"
                   onClick={() => navigate("/two-field-master")}
                 />
-                <SubMenuEntry title="Project Master" />
               </SubMenuGroup>
             )}
 

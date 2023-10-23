@@ -6,84 +6,6 @@ import DepartmentModal from "./DepartmentModal";
 import VEDept from "./ViewDept";
 import { useAuth } from "../Login";
 
-export const departments = [
-  {
-    deptID: 1,
-    deptName: "Payroll Department",
-    companyBranchName: "Main Office",
-    parentDept: "Human Resource Department",
-    deptType: "Sub",
-    deptGroup: "Engineering",
-    deptHead: "John Doe",
-    deptSubHead: "Jane Smith",
-    costCenter: "Floor 3",
-    standardStaffStrength: 50,
-    standardWorkerStrength: 30,
-    remark: "Handles engineering projects",
-    status: true,
-  },
-  {
-    deptID: 2,
-    deptName: "Times Keeping Department",
-    companyBranchName: "Main Office",
-    parentDept: "Human Resource Department",
-    deptType: "Sub",
-    deptGroup: "HR",
-    deptHead: "Alice Johnson",
-    deptSubHead: "Bob Brown",
-    costCenter: "Floor 4",
-    standardStaffStrength: 25,
-    standardWorkerStrength: 20,
-    remark: "Manages HR activities",
-    status: true,
-  },
-  {
-    deptID: 3,
-    deptName: "Accounts Department",
-    companyBranchName: "Main Office",
-    parentDept: "Finance Department",
-    deptType: "Sub",
-    deptGroup: "IT",
-    deptHead: "Michael Clark",
-    deptSubHead: "Emily White",
-    costCenter: "Floor 5",
-    standardStaffStrength: 40,
-    standardWorkerStrength: 35,
-    remark: "Handles IT infrastructure",
-    status: true,
-  },
-  {
-    deptID: 4,
-    deptName: "Sales",
-    companyBranchName: "Main Office",
-    parentDept: "Procurement Department",
-    deptType: "main",
-    deptGroup: "Sales",
-    deptHead: "Alex Turner",
-    deptSubHead: "Olivia Green",
-    costCenter: "Floor 2",
-    standardStaffStrength: 45,
-    standardWorkerStrength: 40,
-    remark: "Manages sales operations",
-    status: true,
-  },
-  {
-    deptID: 5,
-    deptName: "Finance",
-    companyBranchName: "Main Office",
-    parentDept: "Dispatch Department",
-    deptType: "main",
-    deptGroup: "Finance",
-    deptHead: "William Brown",
-    deptSubHead: "Sophia Martinez",
-    costCenter: "Floor 6",
-    standardStaffStrength: 30,
-    standardWorkerStrength: 25,
-    remark: "Handles financial operations",
-    status: true,
-  },
-];
-
 const DepartmentMaster = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
@@ -146,12 +68,34 @@ const DepartmentMaster = () => {
     }
   };
   const [columnVisibility, setColumnVisibility] = useState({
-    deptName: true,
+    deptName:  true,
     companyBranchName: true,
-    deptType: true,
     parentDept: true,
+    deptType: true,
+    deptGroup: true,
     deptHead: true,
+    deptSubHead: false,
+    costCenter: false,
+    standardStaffStrength: false,
+    standardWorkerStrength: false,
+    remark: false,
+    status: false,
   });
+
+  const columnNames = {
+    deptName:  "Department Name",
+    companyBranchName: "Company Branch Name",
+    parentDept: "Parent Department",
+    deptType: "Department Type",
+    deptGroup: "Department Group",
+    deptHead: "Department Head",
+    deptSubHead: "Department Sub-Head",
+    costCenter: "Cost Center",
+    standardStaffStrength: "Standard Staff Strength",
+    standardWorkerStrength: "Standard Worker Strength",
+    remark: "Remarks",
+    status: "Status",
+  }
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedColumns, setSelectedColumns] = useState([
@@ -159,13 +103,10 @@ const DepartmentMaster = () => {
   ]);
 
   const toggleColumn = (columnName) => {
-    if (selectedColumns.includes(columnName)) {
-      setSelectedColumns((prevSelected) =>
-        prevSelected.filter((col) => col !== columnName)
-      );
-    } else {
-      setSelectedColumns((prevSelected) => [...prevSelected, columnName]);
-    }
+    setColumnVisibility((prevVisibility) => ({
+      ...prevVisibility,
+      [columnName]: !prevVisibility[columnName],
+    }));
   };
 
   useEffect(() => {
@@ -174,10 +115,24 @@ const DepartmentMaster = () => {
 
   const selectAllColumns = () => {
     setSelectedColumns([...Object.keys(columnVisibility)]);
+    setColumnVisibility((prevVisibility) => {
+      const updatedVisibility = { ...prevVisibility };
+      Object.keys(updatedVisibility).forEach((columnName) => {
+        updatedVisibility[columnName] = true;
+      });
+      return updatedVisibility;
+    });
   };
-
+  
   const deselectAllColumns = () => {
     setSelectedColumns([]);
+    setColumnVisibility((prevVisibility) => {
+      const updatedVisibility = { ...prevVisibility };
+      Object.keys(updatedVisibility).forEach((columnName) => {
+        updatedVisibility[columnName] = false;
+      });
+      return updatedVisibility;
+    });
   };
 
   const [veDept, setVeDept] = useState(false);
@@ -269,12 +224,12 @@ const DepartmentMaster = () => {
                   <input
                     type="checkbox"
                     className="mr-2"
-                    checked={selectedColumns.includes(columnName)}
+                    checked={columnVisibility[columnName]}
                     onChange={() => toggleColumn(columnName)}
                   />
                   <span
                     className={
-                      selectedColumns.includes(columnName)
+                      columnVisibility[columnName]
                         ? "font-semibold"
                         : ""
                     }
@@ -342,35 +297,32 @@ const DepartmentMaster = () => {
                   ID
                 </th>
                 {selectedColumns.map((columnName) => (
+                columnVisibility[columnName] ? (
                   <th
                     key={columnName}
-                    className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] capitalize whitespace-normal${
-                      columnVisibility[columnName] ? "" : "hidden"
-                    }`}
+                    className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal`}
                   >
-                    {columnName}
+                    {columnNames[columnName]}
                   </th>
-                ))}
+                ) : null
+              ))} 
               </tr>
               <tr>
                 <th className="border-2" />
                 <th className="p-2 font-bold text-black border-2 whitespace-normal" />
                 {selectedColumns.map((columnName) => (
-                  <th
-                    key={columnName}
-                    className="p-2 font-semibold text-black border-2 whitespace-normal"
-                  >
+                columnVisibility[columnName] ? (
+                  <th key={columnName} className="p-2 font-semibold text-black border-2">
                     <input
                       type="text"
                       placeholder={`Search `}
-                      className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px] whitespace-normal"
+                      className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
                       style={{ maxWidth: getColumnMaxWidth(columnName) + "px" }}
-                      onChange={(e) =>
-                        handleSearchChange(columnName, e.target.value)
-                      }
+                      onChange={(e) => handleSearchChange(columnName, e.target.value)}
                     />
                   </th>
-                ))}
+                ) : null
+              ))}
               </tr>
             </thead>
             <tbody>
@@ -425,18 +377,18 @@ const DepartmentMaster = () => {
                         {result.id}
                       </td>
                       {selectedColumns.map((columnName) => (
-                        <td
-                          key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-left text-[11px] ${
-                            columnVisibility[columnName] ? "" : "hidden"
-                          }`}
-                        >
-                          {result[columnName]}
-                        </td>
-                      ))}
+                    columnVisibility[columnName] ? (
+                      <td
+                        key={columnName}
+                        className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                      >
+                        {result[columnName]}
+                      </td>
+                    ) : null
+                  ))}
                     </tr>
                   ))
-                : departments.map((entry, index) => (
+                : departments.map((result, index) => (
                     <tr key={index}>
                       <td className="px-2 border-2">
                         <div className="flex items-center gap-2 text-center justify-center">
@@ -448,7 +400,7 @@ const DepartmentMaster = () => {
                             onClick={() => {
                               setVeDept(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setDid(entry.id); // Pass ID to VEModal
+                              setDid(result.id); // Pass ID to VEModal
                             }}
                           />
                           <VEDept
@@ -465,7 +417,7 @@ const DepartmentMaster = () => {
                             onClick={() => {
                               setVeDept(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setDid(entry.id); // Pass ID to VEModal
+                              setDid(result.id); // Pass ID to VEModal
                             }}
                           />
                           <VEDept
@@ -479,23 +431,25 @@ const DepartmentMaster = () => {
                             color="#556987"
                             width="20"
                             height="20"
-                            onClick={() => deleteDept(entry.id)}
+                            onClick={() => deleteDept(result.id)}
                           />
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
-                        {entry.id}
+                        {result.id}
                       </td>
                       {selectedColumns.map((columnName) => (
-                        <td
-                          key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-left text-[11px] ${
-                            columnVisibility[columnName] ? "" : "hidden"
-                          }`}
-                        >
-                          {entry[columnName]}
-                        </td>
-                      ))}
+                    columnVisibility[columnName] ? (
+                      <td
+                        key={columnName}
+                        className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                      >
+                        {result[columnName]}
+                      </td>
+                    ) : (
+                      <td key={columnName} className="hidden"></td>
+                    )
+                  ))}
                     </tr>
                   ))}
             </tbody>

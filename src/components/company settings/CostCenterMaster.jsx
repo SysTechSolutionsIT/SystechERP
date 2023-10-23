@@ -123,7 +123,7 @@ const CostCenterMaster = () => {
 
   useEffect(() => {
     fetchCompData();
-  }, []);
+  }, [token]);
 
   const fetchCompData = async () => {
     try {

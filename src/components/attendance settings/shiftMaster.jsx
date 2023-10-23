@@ -185,6 +185,25 @@ const ShiftMaster = () => {
     status: true,
   });
 
+  const columnNames = {
+    eType: "Employee Type",
+    sName: "Shift Name",
+    startT: "Start Time",
+    endT: "End Time",
+    OTstartT: "Overtime Start Time",
+    GRstartT: "Grace Period Start Time",
+    GRendT: "Grace Period End Time",
+    halfDayHour: "Half-Day Hours",
+    fullDayHours: "Full-Day Hours",
+    twoDayShift: "Two-Day Shift",
+    autoRotateFlag: "Auto-Rotate Flag",
+    graceMin: "Grace Period Minimum",
+    graceMax: "Grace Period Maximum",
+    remarks: "Remarks",
+    status: "Status",
+  };
+  
+
   //Toggle
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedColumns, setSelectedColumns] = useState([
@@ -192,13 +211,10 @@ const ShiftMaster = () => {
   ]);
 
   const toggleColumn = (columnName) => {
-    if (selectedColumns.includes(columnName)) {
-      setSelectedColumns((prevSelected) =>
-        prevSelected.filter((col) => col !== columnName)
-      );
-    } else {
-      setSelectedColumns((prevSelected) => [...prevSelected, columnName]);
-    }
+    setColumnVisibility((prevVisibility) => ({
+      ...prevVisibility,
+      [columnName]: !prevVisibility[columnName],
+    }));
   };
 
   useEffect(() => {
@@ -207,10 +223,24 @@ const ShiftMaster = () => {
 
   const selectAllColumns = () => {
     setSelectedColumns([...Object.keys(columnVisibility)]);
+    setColumnVisibility((prevVisibility) => {
+      const updatedVisibility = { ...prevVisibility };
+      Object.keys(updatedVisibility).forEach((columnName) => {
+        updatedVisibility[columnName] = true;
+      });
+      return updatedVisibility;
+    });
   };
-
+  
   const deselectAllColumns = () => {
     setSelectedColumns([]);
+    setColumnVisibility((prevVisibility) => {
+      const updatedVisibility = { ...prevVisibility };
+      Object.keys(updatedVisibility).forEach((columnName) => {
+        updatedVisibility[columnName] = false;
+      });
+      return updatedVisibility;
+    });
   };
 
   //Menu
@@ -226,7 +256,7 @@ const ShiftMaster = () => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [token]);
 
   //Max Searchbar width
   const getColumnMaxWidth = (columnName) => {
@@ -340,12 +370,12 @@ const ShiftMaster = () => {
                   <input
                     type="checkbox"
                     className="mr-2"
-                    checked={selectedColumns.includes(columnName)}
+                    checked={columnVisibility[columnName]}
                     onChange={() => toggleColumn(columnName)}
                   />
                   <span
                     className={
-                      selectedColumns.includes(columnName)
+                      columnVisibility[columnName]
                         ? "font-semibold"
                         : ""
                     }
@@ -410,51 +440,33 @@ const ShiftMaster = () => {
                 <th className="w-auto text-[13px] px-1 font-bold text-black border-2 border-gray-400 whitespace-normal">
                   ID
                 </th>
-                {selectedColumns.map(
-                  (columnName) =>
-                    columnVisibility[columnName] && (
-                      <th
-                        key={columnName}
-                        className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 capitalize whitespace-normal max-w-xs ${
-                          columnVisibility[columnName] ? "" : "hidden"
-                        }`}
-                      >
-                        {columnName
-                          .replace(/([a-z])([A-Z])/g, "$1 $2")
-                          .split(" ")
-                          .map((word, index) => (
-                            <div key={index} className="whitespace-nowrap">
-                              {word}
-                            </div>
-                          ))}
-                      </th>
-                    )
-                )}
+                {selectedColumns.map((columnName) => (
+                columnVisibility[columnName] ? (
+                  <th
+                    key={columnName}
+                    className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal`}
+                  >
+                    {columnNames[columnName]}
+                  </th>
+                ) : null
+              ))} 
               </tr>
               <tr>
                 <th className="border-2"></th>
                 <th className="p-2 font-bold text-black border-2 " />
-                {selectedColumns.map(
-                  (columnName) =>
-                    columnVisibility[columnName] && (
-                      <th
-                        key={columnName}
-                        className="p-2 font-bold text-black border-2 text-[11px] capitalize"
-                      >
-                        <input
-                          type="text"
-                          placeholder={`Search `}
-                          className="w-auto text-[11px] h-6 border-2 border-slate-500 rounded-lg justify-center text-center whitespace-normal"
-                          style={{
-                            maxWidth: getColumnMaxWidth(columnName) + "px",
-                          }}
-                          onChange={(e) =>
-                            handleSearchChange(columnName, e.target.value)
-                          }
-                        />
-                      </th>
-                    )
-                )}
+                {selectedColumns.map((columnName) => (
+                columnVisibility[columnName] ? (
+                  <th key={columnName} className="p-2 font-semibold text-black border-2">
+                    <input
+                      type="text"
+                      placeholder={`Search `}
+                      className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
+                      style={{ maxWidth: getColumnMaxWidth(columnName) + "px" }}
+                      onChange={(e) => handleSearchChange(columnName, e.target.value)}
+                    />
+                  </th>
+                ) : null
+              ))}
               </tr>
             </thead>
             <tbody className="">
@@ -502,23 +514,29 @@ const ShiftMaster = () => {
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
                         {result.sID}
                       </td>
-                      {selectedColumns.map(
-                        (columnName) =>
-                          columnVisibility[columnName] && (
-                            <td
-                              key={columnName}
-                              className={`px-4 border-2 whitespace-normal text-[11px] text-left${
-                                columnVisibility[columnName] ? "" : "hidden"
-                              }`}
-                            >
-                              {result[columnName]}
-                            </td>
-                          )
-                      )}
+                      {selectedColumns.map((columnName) => (
+                    columnVisibility[columnName] ? (
+                      <td
+                        key={columnName}
+                        className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                      >
+                        {columnName === "twoDayShift" ||
+                              columnName === "autoRotateFlag"
+                                ? result[columnName] === "yes"
+                                  ? "Yes"
+                                  : "No"
+                                : columnName === "status"
+                                ? result[columnName] === "active"
+                                  ? "Active"
+                                  : "Inactive"
+                                : result[columnName]}
+                      </td>
+                    ) : null
+                  ))}
                     </tr>
                   ))
                 : Shift.length > 0 &&
-                  Shift.map((entry, index) => (
+                  Shift.map((result, index) => (
                     <tr key={index}>
                       <td className="px-2 border-2">
                         <div className="flex items-center gap-2 text-center justify-center">
@@ -530,7 +548,7 @@ const ShiftMaster = () => {
                             onClick={() => {
                               setSVE(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setShiftId(entry.sID); // Pass ID to VEModal
+                              setShiftId(result.sID); // Pass ID to VEModal
                             }}
                           />
 
@@ -542,7 +560,7 @@ const ShiftMaster = () => {
                             onClick={() => {
                               setSVE(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setShiftId(entry.sID); // Pass ID to VEModal
+                              setShiftId(result.sID); // Pass ID to VEModal
                             }}
                           />
                           <ViewShift
@@ -561,30 +579,29 @@ const ShiftMaster = () => {
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {entry.sID}
+                        {result.sID}
                       </td>
-                      {selectedColumns.map(
-                        (columnName) =>
-                          columnVisibility[columnName] && (
-                            <td
-                              key={columnName}
-                              className={`px-4 border-2 whitespace-normal text-left text-[11px]${
-                                columnVisibility[columnName] ? "" : "hidden"
-                              }`}
-                            >
-                              {columnName === "twoDayShift" ||
+                      {selectedColumns.map((columnName) => (
+                    columnVisibility[columnName] ? (
+                      <td
+                        key={columnName}
+                        className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                      >
+                        {columnName === "twoDayShift" ||
                               columnName === "autoRotateFlag"
-                                ? entry[columnName] === "yes"
+                                ? result[columnName] === "yes"
                                   ? "Yes"
                                   : "No"
                                 : columnName === "status"
-                                ? entry[columnName] === "active"
+                                ? result[columnName] === "active"
                                   ? "Active"
                                   : "Inactive"
-                                : entry[columnName]}
-                            </td>
-                          )
-                      )}
+                                : result[columnName]}
+                      </td>
+                    ) : (
+                      <td key={columnName} className="hidden"></td>
+                    )
+                  ))}
                     </tr>
                   ))}
             </tbody>

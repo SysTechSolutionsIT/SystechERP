@@ -44,6 +44,7 @@ const EarningHeadsModal = ({ visible, onClick }) => {
       if (response.status === 200) {
         const data = response.data;
         console.log(data);
+        alert('Earning Head Added')
         // Handle successful response
       } else {
         console.error(`HTTP error! Status: ${response.status}`);

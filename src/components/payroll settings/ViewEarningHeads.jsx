@@ -43,6 +43,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
           Authorization: `Bearer ${token}`
         }
       });
+      alert('Earning Head Updated')
       console.log("Patch successful");
     } catch (error) {
       console.log("Error in patch ", error);
@@ -378,9 +379,9 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                 <p className="capitalize font-semibold  text-[13px]">Status</p>
                 <label className="capitalize font-semibold  text-[11px]">
                   <input
-                    id="status"
+                    id="Status"
                     type="checkbox"
-                    checked={isStatusChecked}
+                    checked={formik.values.Status}
                     className={`w-5 h-5 mr-2 mt-2 focus:outline-gray-300 border-2 rounded-lg`}
                     onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}
                   />

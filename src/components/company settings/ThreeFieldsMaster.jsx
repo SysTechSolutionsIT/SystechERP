@@ -30,9 +30,10 @@ const ThreeFieldsMaster = () => {
   const menuRef = useRef(null);
 
   const [columnVisibility, setColumnVisibility] = useState({
-    MasterName: true,
-    FieldDetails1: true,
-    FieldDetails2: true,
+    masterName: true,
+    fieldDetails1: true,
+    fieldDetails2: true,
+    remark: true,
     Status: true,
   });
 

@@ -43,7 +43,7 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
           Authorization: `Bearer ${token}`
         }
       });
-      console.log("Patch successful");
+      alert("Deduction Head Updated");
     } catch (error) {
       console.log("Error in patch ", error);
     }

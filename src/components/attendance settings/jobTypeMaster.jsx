@@ -89,6 +89,17 @@ const JobTypeMaster = () => {
     status: true,
   });
 
+  const columnNames = {
+    jobName: "Job Name",
+    jobShortName: "Job Short Name",
+    ratePerDay: "Rate Per Day",
+    rateGroup: "Rate Group",
+    category: "Category",
+    position: "Position",
+    remark: "Remarks",
+    status: "Status",
+  }
+
   //Toggle
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedColumns, setSelectedColumns] = useState([
@@ -96,13 +107,10 @@ const JobTypeMaster = () => {
   ]);
 
   const toggleColumn = (columnName) => {
-    if (selectedColumns.includes(columnName)) {
-      setSelectedColumns((prevSelected) =>
-        prevSelected.filter((col) => col !== columnName)
-      );
-    } else {
-      setSelectedColumns((prevSelected) => [...prevSelected, columnName]);
-    }
+    setColumnVisibility((prevVisibility) => ({
+      ...prevVisibility,
+      [columnName]: !prevVisibility[columnName],
+    }));
   };
 
   useEffect(() => {
@@ -111,10 +119,24 @@ const JobTypeMaster = () => {
 
   const selectAllColumns = () => {
     setSelectedColumns([...Object.keys(columnVisibility)]);
+    setColumnVisibility((prevVisibility) => {
+      const updatedVisibility = { ...prevVisibility };
+      Object.keys(updatedVisibility).forEach((columnName) => {
+        updatedVisibility[columnName] = true;
+      });
+      return updatedVisibility;
+    });
   };
-
+  
   const deselectAllColumns = () => {
     setSelectedColumns([]);
+    setColumnVisibility((prevVisibility) => {
+      const updatedVisibility = { ...prevVisibility };
+      Object.keys(updatedVisibility).forEach((columnName) => {
+        updatedVisibility[columnName] = false;
+      });
+      return updatedVisibility;
+    });
   };
 
   //Menu
@@ -265,12 +287,12 @@ const JobTypeMaster = () => {
                   <input
                     type="checkbox"
                     className="mr-2"
-                    checked={selectedColumns.includes(columnName)}
+                    checked={columnVisibility[columnName]}
                     onChange={() => toggleColumn(columnName)}
                   />
                   <span
                     className={
-                      selectedColumns.includes(columnName)
+                      columnVisibility[columnName]
                         ? "font-semibold"
                         : ""
                     }
@@ -335,44 +357,33 @@ const JobTypeMaster = () => {
                 <th className="w-auto text-[13px] px-1 font-bold text-black border-2 border-gray-400 whitespace-normal">
                   ID
                 </th>
-                {selectedColumns.map(
-                  (columnName) =>
-                    columnVisibility[columnName] && (
-                      <th
-                        key={columnName}
-                        className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 capitalize ${
-                          columnVisibility[columnName] ? "" : "hidden"
-                        }`}
-                      >
-                        {columnName}
-                      </th>
-                    )
-                )}
+                {selectedColumns.map((columnName) => (
+                columnVisibility[columnName] ? (
+                  <th
+                    key={columnName}
+                    className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal`}
+                  >
+                    {columnNames[columnName]}
+                  </th>
+                ) : null
+              ))}
               </tr>
               <tr>
                 <th className="border-2"></th>
                 <th className="p-2 font-bold text-black border-2 " />
-                {selectedColumns.map(
-                  (columnName) =>
-                    columnVisibility[columnName] && (
-                      <th
-                        key={columnName}
-                        className="p-2 font-bold text-black border-2 text-[11px] capitalize"
-                      >
-                        <input
-                          type="text"
-                          placeholder={`Search `}
-                          className="w-auto text-[11px] h-6 border-2 border-slate-500 rounded-lg justify-center text-center whitespace-normal"
-                          style={{
-                            maxWidth: getColumnMaxWidth(columnName) + "px",
-                          }}
-                          onChange={(e) =>
-                            handleSearchChange(columnName, e.target.value)
-                          }
-                        />
-                      </th>
-                    )
-                )}
+                {selectedColumns.map((columnName) => (
+                columnVisibility[columnName] ? (
+                  <th key={columnName} className="p-2 font-semibold text-black border-2">
+                    <input
+                      type="text"
+                      placeholder={`Search `}
+                      className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
+                      style={{ maxWidth: getColumnMaxWidth(columnName) + "px" }}
+                      onChange={(e) => handleSearchChange(columnName, e.target.value)}
+                    />
+                  </th>
+                ) : null
+              ))}
               </tr>
             </thead>
             <tbody className="">
@@ -421,23 +432,24 @@ const JobTypeMaster = () => {
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
                         {result.jobID}
                       </td>
-                      {selectedColumns.map(
-                        (columnName) =>
-                          columnVisibility[columnName] && (
-                            <td
-                              key={columnName}
-                              className={`px-4 border-2 whitespace-normal text-[11px] text-left${
-                                columnVisibility[columnName] ? "" : "hidden"
-                              }`}
-                            >
-                              {result[columnName]}
-                            </td>
-                          )
-                      )}
+                      {selectedColumns.map((columnName) => (
+                    columnVisibility[columnName] ? (
+                      <td
+                        key={columnName}
+                        className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                      >
+                        {columnName === "status"
+                            ? result[columnName]
+                              ? "Active"
+                              : "Inactive"
+                            : result[columnName]}
+                      </td>
+                    ) : null
+                  ))}
                     </tr>
                   ))
                 : job.length > 0 &&
-                  job.map((entry, index) => (
+                  job.map((result, index) => (
                     <tr key={index}>
                       <td className="px-2 border-2">
                         <div className="flex items-center gap-2 text-center justify-center">
@@ -449,7 +461,7 @@ const JobTypeMaster = () => {
                             onClick={() => {
                               setJVE(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setJid(entry.jobID); // Pass ID to VEModal
+                              setJid(result.jobID); // Pass ID to VEModal
                             }}
                           />
 
@@ -461,7 +473,7 @@ const JobTypeMaster = () => {
                             onClick={() => {
                               setJVE(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setJid(entry.jobID); // Pass ID to VEModal
+                              setJid(result.jobID); // Pass ID to VEModal
                             }}
                           />
                           <ViewJob
@@ -476,33 +488,27 @@ const JobTypeMaster = () => {
                             color="#556987"
                             width="20"
                             height="20"
-                            onClick={() => deleteRecord(entry.jobID)}
+                            onClick={() => deleteRecord(result.jobID)}
                           />
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {entry.jobID}
+                        {result.jobID}
                       </td>
-                      {selectedColumns.map(
-                        (columnName) =>
-                          columnVisibility[columnName] && (
-                            <td
-                              key={columnName}
-                              className={`px-4 border-2 whitespace-normal text-left text-[11px]${
-                                columnVisibility[columnName] ? "" : "hidden"
-                              }`}
-                            >
-                              {columnName === "status"
-                                ? entry.status
-                                  ? "Active"
-                                  : "Inactive"
-                                : entry[
-                                    columnName.charAt(0).toLowerCase() +
-                                      columnName.slice(1)
-                                  ]}
-                            </td>
-                          )
-                      )}
+                      {selectedColumns.map((columnName) => (
+                        <td
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-left text-[11px] ${
+                            columnVisibility[columnName] ? "" : "hidden"
+                          }`}
+                        >
+                          {columnName === "status"
+                            ? result[columnName]
+                              ? "Active"
+                              : "Inactive"
+                            : result[columnName]}
+                        </td>
+                      ))}
                     </tr>
                   ))}
             </tbody>
