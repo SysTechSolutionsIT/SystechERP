@@ -91,7 +91,7 @@ export default function EMPTabs() {
           sms: values.sms,
         }
         updateCompanyConfig(updatedData)
-        updateEmpId(values.empIdPrefix)
+        // updateEmpId(values.empIdPrefix)
       },
     });
 
