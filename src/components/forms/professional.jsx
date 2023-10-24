@@ -25,7 +25,7 @@ const Professional = ({ ID, name }) => {
       const employerString = professionalData
         .map((entry) => entry.Employer)
         .join(", ")
-        .replace(/,\s+/g, ','); // Remove whitespace after a comma
+        .replace(/,\s+/g, ',');
   
       const experienceString = professionalData
         .map((entry) => entry.Experience)
@@ -134,6 +134,13 @@ const Professional = ({ ID, name }) => {
     }
     return rows;
   };
+
+  const handleDeleteEntry = (index) => {
+    const updatedProfessionalData = [...professionalData];
+    updatedProfessionalData.splice(index, 1);
+    setProfessionalData(updatedProfessionalData);
+  };
+  
 
   const AddProfessional = ({visible, name, ID, onClick}) =>{
     const formik = useFormik({
@@ -339,9 +346,8 @@ const Professional = ({ ID, name }) => {
                   <tr key={index}>
                     <td className="px-2 border-2">
                       <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon icon="lucide:eye" color="#556987" width="20" height="20" />
-                        <Icon icon="mdi:edit" color="#556987" width="20" height="20" />
-                        <Icon icon="material-symbols:delete-outline" color="#556987" width="20" height="20" />
+                        <Icon icon="material-symbols:delete-outline" color="#556987" width="20" height="20" 
+                         onClick={() => handleDeleteEntry(index)}/>
                       </div>
                     </td>
                     <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
