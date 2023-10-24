@@ -185,7 +185,7 @@ const DeductionHeadsMaster = () => {
       return updatedVisibility;
     });
   };
-  
+
   const deselectAllColumns = () => {
     setSelectedColumns([]);
     setColumnVisibility((prevVisibility) => {
@@ -241,26 +241,24 @@ const DeductionHeadsMaster = () => {
 
   return (
     <div className="top-25 min-w-[40%]">
-      <div className="bg-blue-900 h-15 p-2 ml-2 px-8 sm:whitespace-nowrap text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-x-auto">
-        <div className="flex items-center gap-4">
-          <div className="mr-auto text-[15px] whitespace-nowrap">
-            Payroll Settings / Deduction Heads Master
-          </div>
-          <div className="relative sticky lg:ml-[340px] sm:ml-8">
-            <button
-              onClick={() => setShowDropdown(!showDropdown)}
-              className="flex text-[13px] bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap"
-            >
-              Column Visibility
-              <Icon
-                icon="fe:arrow-down"
-                className={`mt-1.5 ml-2 ${showDropdown ? "rotate-180" : ""
-                  } cursor-pointer`}
-              />
-            </button>
-          </div>
+      <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
+        <div className="mr-auto text-[15px]">
+          Payroll Settings / Deduction Heads Master
+        </div>
+        <div className="flex gap-4">
+          <button
+            onClick={() => setShowDropdown(!showDropdown)}
+            className="flex text-[13px] bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap"
+          >
+            Column Visibility
+            <Icon
+              icon="fe:arrow-down"
+              className={`mt-1.5 ml-2 ${showDropdown ? "rotate-180" : ""
+                } cursor-pointer`}
+            />
+          </button>
           {showDropdown && (
-            <div className="absolute top-[16%] lg:ml-[42%] sm:mr-[20%] bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50 top-[calc(100% + 10px)]">
+            <div className="absolute top-32 bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50">
               {/* Dropdown content */}
               <div className="flex items-center mb-2">
                 <button
@@ -284,12 +282,12 @@ const DeductionHeadsMaster = () => {
                   <input
                     type="checkbox"
                     className="mr-2"
-                    checked={columnVisibility[columnName]}
+                    checked={selectedColumns.includes(columnName)}
                     onChange={() => toggleColumn(columnName)}
                   />
                   <span
                     className={
-                      columnVisibility[columnName]
+                      selectedColumns.includes(columnName)
                         ? "font-semibold"
                         : ""
                     }
@@ -301,44 +299,42 @@ const DeductionHeadsMaster = () => {
             </div>
           )}
 
-          <div className="min-w-[40%]">
-            <button
-              className="text-white font-semibold px-4 rounded-lg text-[13px] border border-white"
-              onClick={() => setModalOpen(true)}
-            >
-              Add
-            </button>
-          </div>
-        </div>
-        <div className="flex items-center mb-2 lg:mr-[210px] sm:mr-[60px]">
           <button
-            className=" cursor-pointer"
-            onClick={() => setMenuOpen(!menuOpen)}
+            className="text-white font-semibold px-4 rounded-lg text-[13px] border border-white"
+            onClick={() => setModalOpen(true)}
           >
-            <Icon icon="carbon:menu" color="white" width="27" height="27" />
+            Add
           </button>
-          {menuOpen && (
-            <div
-              ref={menuRef}
-              className="w-24 flex flex-col absolute lg:top-28 lg:right-38 bg-white border border-gray-300 shadow-md rounded-lg p-1 items-center mb-2"
+          <div className="flex items-center">
+            <button
+              className=" cursor-pointer"
+              onClick={() => setMenuOpen(!menuOpen)}
             >
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2 z-50">
-                Copy
-              </button>
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2 z-50">
-                CSV
-              </button>
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
-                Excel
-              </button>
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
-                PDF
-              </button>
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
-                Print
-              </button>
-            </div>
-          )}
+              <Icon icon="carbon:menu" color="white" width="27" height="27" />
+            </button>
+            {menuOpen && (
+              <div
+                ref={menuRef}
+                className="w-24 -ml-10 flex flex-col absolute lg:top-32 bg-white border border-gray-300 shadow-md rounded-lg p-1 items-center"
+              >
+                <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2 z-50">
+                  Copy
+                </button>
+                <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2 z-50">
+                  CSV
+                </button>
+                <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+                  Excel
+                </button>
+                <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+                  PDF
+                </button>
+                <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+                  Print
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <DeductionHeadsModal
@@ -357,15 +353,15 @@ const DeductionHeadsMaster = () => {
                   ID
                 </th>
                 {selectedColumns.map((columnName) => (
-                columnVisibility[columnName] ? (
-                  <th
-                    key={columnName}
-                    className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal`}
-                  >
-                    {columnNames[columnName]}
-                  </th>
-                ) : null
-              ))} 
+                  columnVisibility[columnName] ? (
+                    <th
+                      key={columnName}
+                      className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal`}
+                    >
+                      {columnNames[columnName]}
+                    </th>
+                  ) : null
+                ))}
               </tr>
               <tr>
                 <th className="border-2"></th>
@@ -396,6 +392,7 @@ const DeductionHeadsMaster = () => {
                           color="#556987"
                           width="20"
                           height="20"
+                          className="cursor-pointer"
                           onClick={() => {
                             setVeDeductionH(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
@@ -407,6 +404,7 @@ const DeductionHeadsMaster = () => {
                           color="#556987"
                           width="20"
                           height="20"
+                          className="cursor-pointer"
                           onClick={() => {
                             setVeDeductionH(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
@@ -418,6 +416,7 @@ const DeductionHeadsMaster = () => {
                           color="#556987"
                           width="20"
                           height="20"
+                          className="cursor-pointer"
                         />
                       </div>
                     </td>
@@ -425,19 +424,19 @@ const DeductionHeadsMaster = () => {
                       {result.id}
                     </td>
                     {selectedColumns.map((columnName) => (
-                    columnVisibility[columnName] ? (
-                      <td
-                        key={columnName}
-                        className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                      >
-                        {columnName === "Status"
-                          ? result[columnName]
-                            ? "Active"
-                            : "Inactive"
-                          : result[columnName]}
-                      </td>
-                    ) : null
-                  ))}
+                      columnVisibility[columnName] ? (
+                        <td
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                        >
+                          {columnName === "Status"
+                            ? result[columnName]
+                              ? "Active"
+                              : "Inactive"
+                            : result[columnName]}
+                        </td>
+                      ) : null
+                    ))}
                   </tr>
                 ))
                 : heads.length > 0 && heads.map((result, index) => (
@@ -449,6 +448,7 @@ const DeductionHeadsMaster = () => {
                           color="#556987"
                           width="20"
                           height="20"
+                          className="cursor-pointer"
                           onClick={() => {
                             setVeDeductionH(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
@@ -460,6 +460,7 @@ const DeductionHeadsMaster = () => {
                           color="#556987"
                           width="20"
                           height="20"
+                          className="cursor-pointer"
                           onClick={() => {
                             setVeDeductionH(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
@@ -471,6 +472,7 @@ const DeductionHeadsMaster = () => {
                           color="#556987"
                           width="20"
                           height="20"
+                          className="cursor-pointer"
                         />
                       </div>
                     </td>
@@ -478,31 +480,31 @@ const DeductionHeadsMaster = () => {
                       {result.id}
                     </td>
                     {selectedColumns.map((columnName) => (
-                    columnVisibility[columnName] ? (
-                      <td
-                        key={columnName}
-                        className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                      >
-                        {
-                        columnName === "Status"
-                          ? result[columnName]
-                            ? "Active"
-                            : "Inactive"
-                          : columnName === "CalculationValue"
-                          ? result[columnName] || "N/A"
-                          : columnName === "Formula" 
-                          ? result[columnName] || "N/A"
-                          : columnName.startsWith("SalaryParameter")
-                          ? result[columnName] || "N/A"
-                          : result[columnName]
-                      }
+                      columnVisibility[columnName] ? (
+                        <td
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                        >
+                          {
+                            columnName === "Status"
+                              ? result[columnName]
+                                ? "Active"
+                                : "Inactive"
+                              : columnName === "CalculationValue"
+                                ? result[columnName] || "N/A"
+                                : columnName === "Formula"
+                                  ? result[columnName] || "N/A"
+                                  : columnName.startsWith("SalaryParameter")
+                                    ? result[columnName] || "N/A"
+                                    : result[columnName]
+                          }
 
 
-                      </td>
-                    ) : (
-                      <td key={columnName} className="hidden"></td>
-                    )
-                  ))}
+                        </td>
+                      ) : (
+                        <td key={columnName} className="hidden"></td>
+                      )
+                    ))}
                   </tr>
                 ))}
             </tbody>

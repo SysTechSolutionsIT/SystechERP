@@ -32,7 +32,7 @@ const CompMaster = () => {
     ModifiedBy: true,
   });
 
-  const columnNames ={
+  const columnNames = {
     Name: "Name",
     ShortName: "Short Name",
     SectorDetails: "Sector Details",
@@ -176,26 +176,22 @@ const CompMaster = () => {
   return (
     <div className="top-25 min-w-[40%]">
       <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-x-clip">
-        <div className="flex items-center gap-4 whitespace-normal">
-          <div className="mr-auto text-[15px] whitespace-normal min-w-fit">
-            Company Settings / Company Master
-          </div>
-          <div className="relative sticky lg:ml-96 sm:ml-64">
-            <button
-              onClick={() => setShowDropdown(!showDropdown)}
-              className="flex text-[13px] bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap"
-            >
-              Column Visibility
-              <Icon
-                icon="fe:arrow-down"
-                className={`mt-1.5 ml-2 ${
-                  showDropdown ? "rotate-180" : ""
-                } cursor-pointer`}
-              />
-            </button>
-          </div>
+        <div className="text-[15px]">
+          Company Settings / Company Master
+        </div>
+        <div className="flex gap-4">
+          <button
+            onClick={() => setShowDropdown(!showDropdown)}
+            className="flex items-center text-[13px] bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap"
+          >
+            Column Visibility
+            <Icon
+              icon="fe:arrow-down"
+              className={`ml-2 ${showDropdown ? "rotate-180" : ""} cursor-pointer`}
+            />
+          </button>
           {showDropdown && (
-            <div className="absolute top-[16%] lg:ml-[42%] sm:mr-[20%] bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50 top-[calc(100% + 10px)]">
+            <div className="absolute top-32 bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50 top-[calc(100% + 10px)]">
               {/* Dropdown content */}
               <div className="flex items-center mb-2">
                 <button
@@ -236,44 +232,42 @@ const CompMaster = () => {
             </div>
           )}
 
-          <div className="min-w-[40%]">
-            <button
-              className="text-white font-semibold px-4 rounded-lg text-[13px] border border-white"
-              onClick={() => setModalOpen(true)}
-            >
-              Add Company
-            </button>
-          </div>
-        </div>
-        <div className="flex items-center mb-2 lg:mr-[210px] sm:mr-[60px]">
           <button
-            className=" cursor-pointer"
-            onClick={() => setMenuOpen(!menuOpen)}
+            className="text-white font-semibold px-4 rounded-lg text-[13px] border border-white"
+            onClick={() => setModalOpen(true)}
           >
-            <Icon icon="carbon:menu" color="white" width="27" height="27" />
+            Add
           </button>
-          {menuOpen && (
-            <div
-              ref={menuRef}
-              className="w-24 flex flex-col absolute lg:top-28 lg:right-38 bg-white border border-gray-300 shadow-md rounded-lg p-1 items-center mb-2"
+          <div className="flex items-center">
+            <button
+              className=" cursor-pointer"
+              onClick={() => setMenuOpen(!menuOpen)}
             >
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2 z-50">
-                Copy
-              </button>
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2 z-50">
-                CSV
-              </button>
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
-                Excel
-              </button>
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
-                PDF
-              </button>
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
-                Print
-              </button>
-            </div>
-          )}
+              <Icon icon="carbon:menu" color="white" width="27" height="27" />
+            </button>
+            {menuOpen && (
+              <div
+                ref={menuRef}
+                className="w-24 -ml-10 flex flex-col absolute lg:top-32 bg-white border border-gray-300 shadow-md rounded-lg p-1 items-center"
+              >
+                <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2 z-50">
+                  Copy
+                </button>
+                <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2 z-50">
+                  CSV
+                </button>
+                <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+                  Excel
+                </button>
+                <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+                  PDF
+                </button>
+                <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+                  Print
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <CompanyModal visible={isModalOpen} onClick={() => setModalOpen(false)} />
@@ -292,9 +286,8 @@ const CompMaster = () => {
                 {selectedColumns.map((columnName) => (
                   <th
                     key={columnName}
-                    className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 ${
-                      columnVisibility[columnName] ? "" : "hidden"
-                    }`}
+                    className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 ${columnVisibility[columnName] ? "" : "hidden"
+                      }`}
                   >
                     {columnNames[columnName]}
                   </th>
@@ -324,137 +317,135 @@ const CompMaster = () => {
             <tbody className="">
               {filteredData.length > 0
                 ? filteredData.map((result, key) => (
-                    <tr key={key}>
-                      <td className="px-2 border-2">
-                        <div className="flex items-center gap-2 text-center justify-center">
-                          <Icon
-                            icon="lucide:eye"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => {
-                              setVE(true); // Open VEModal
-                              setEdit(false); // Disable edit mode for VEModal
-                              setCid(result.id); // Pass ID to VEModal
-                            }}
-                          />
-                          <Icon
-                            icon="mdi:edit"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => {
-                              setVE(true); // Open VEModal
-                              setEdit(true); // Disable edit mode for VEModal
-                              setCid(result.id); // Pass ID to VEModal
-                            }}
-                          />
-                          <VEModal
-                            visible={VE}
-                            onClick={() => setVE(false)}
-                            edit={edit}
-                            ID={Cid}
-                          />
-                          <Icon
-                            icon="material-symbols:delete-outline"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => deleteComp(result.id)}
-                          />
-                        </div>
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {result.id}
-                      </td>
-                      {selectedColumns.map((columnName) => (
-                        <td
-                          key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-[11px] text-left${
-                            columnVisibility[columnName] ? "" : "hidden"
+                  <tr key={key}>
+                    <td className="px-2 border-2">
+                      <div className="flex items-center gap-2 text-center justify-center">
+                        <Icon
+                          icon="lucide:eye"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() => {
+                            setVE(true); // Open VEModal
+                            setEdit(false); // Disable edit mode for VEModal
+                            setCid(result.id); // Pass ID to VEModal
+                          }}
+                        />
+                        <Icon
+                          icon="mdi:edit"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() => {
+                            setVE(true); // Open VEModal
+                            setEdit(true); // Disable edit mode for VEModal
+                            setCid(result.id); // Pass ID to VEModal
+                          }}
+                        />
+                        <Icon
+                          icon="material-symbols:delete-outline"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() => deleteComp(result.id)}
+                        />
+                      </div>
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                      {result.id}
+                    </td>
+                    {selectedColumns.map((columnName) => (
+                      <td
+                        key={columnName}
+                        className={`px-4 border-2 whitespace-normal text-[11px] text-left${columnVisibility[columnName] ? "" : "hidden"
                           }`}
-                        >
-                          {columnName === "status"
-                            ? result.status === 1
-                              ? "Active"
-                              : "Inactive"
-                            : result[
-                                columnName.charAt(0).toLowerCase() +
-                                  columnName.slice(1)
-                              ]}
-                        </td>
-                      ))}
-                    </tr>
-                  ))
+                      >
+                        {columnName === "status"
+                          ? result.status === 1
+                            ? "Active"
+                            : "Inactive"
+                          : result[
+                          columnName.charAt(0).toLowerCase() +
+                          columnName.slice(1)
+                          ]}
+                      </td>
+                    ))}
+                  </tr>
+                ))
                 : companies.length > 0 &&
-                  companies.map((result, key) => (
-                    <tr key={key}>
-                      {/* ... Rest of the table data */}
-                      <td className="px-2 border-2">
-                        <div className="flex items-center gap-2 text-center justify-center">
-                          <Icon
-                            icon="lucide:eye"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => {
-                              setVE(true); // Open VEModal
-                              setEdit(false); // Disable edit mode for VEModal
-                              setCid(result.id); // Pass ID to VEModal
-                            }}
-                          />
-                          <Icon
-                            icon="mdi:edit"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => {
-                              setVE(true); // Open VEModal
-                              setEdit(true); // Enable edit mode for VEModal
-                              setCid(result.id); // Pass ID to VEModal
-                            }}
-                          />
-                          <VEModal
-                            visible={VE}
-                            onClick={() => setVE(false)}
-                            edit={edit}
-                            ID={Cid}
-                          />
-                          <Icon
-                            icon="material-symbols:delete-outline"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => deleteComp(result.id)}
-                          />
-                        </div>
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {result.id}
-                      </td>
-                      {selectedColumns.map((columnName) => (
-                        <td
-                          key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-[11px] text-left${
-                            columnVisibility[columnName] ? "" : "hidden"
+                companies.map((result, key) => (
+                  <tr key={key}>
+                    {/* ... Rest of the table data */}
+                    <td className="px-2 border-2">
+                      <div className="flex items-center gap-2 text-center justify-center">
+                        <Icon
+                          icon="lucide:eye"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() => {
+                            setVE(true); // Open VEModal
+                            setEdit(false); // Disable edit mode for VEModal
+                            setCid(result.id); // Pass ID to VEModal
+                          }}
+                        />
+                        <Icon
+                          icon="mdi:edit"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() => {
+                            setVE(true); // Open VEModal
+                            setEdit(true); // Enable edit mode for VEModal
+                            setCid(result.id); // Pass ID to VEModal
+                          }}
+                        />
+                        <Icon
+                          icon="material-symbols:delete-outline"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() => deleteComp(result.id)}
+                        />
+                      </div>
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                      {result.id}
+                    </td>
+                    {selectedColumns.map((columnName) => (
+                      <td
+                        key={columnName}
+                        className={`px-4 border-2 whitespace-normal text-[11px] text-left${columnVisibility[columnName] ? "" : "hidden"
                           }`}
-                        >
-                          {columnName === "Status"
-                            ? result.status
-                              ? "Active"
-                              : "Inactive"
-                            : result[
-                                columnName.charAt(0).toLowerCase() +
-                                  columnName.slice(1)
-                              ]}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
+                      >
+                        {columnName === "Status"
+                          ? result.status
+                            ? "Active"
+                            : "Inactive"
+                          : result[
+                          columnName.charAt(0).toLowerCase() +
+                          columnName.slice(1)
+                          ]}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
       </div>
+      <VEModal
+        visible={VE}
+        onClick={() => setVE(false)}
+        edit={edit}
+        ID={Cid}
+      />
     </div>
   );
 };
