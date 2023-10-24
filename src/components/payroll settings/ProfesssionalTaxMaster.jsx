@@ -243,26 +243,24 @@ const ProfesssionalTaxMaster = () => {
 
   return (
     <div className="top-25 min-w-[40%]">
-      <div className="bg-blue-900 h-15 p-2 ml-2 px-8 sm:whitespace-nowrap text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-x-auto">
-        <div className="flex items-center gap-4">
-          <div className="mr-auto text-[15px] whitespace-nowrap">
-            Payroll Settings / Professional Tax Master
-          </div>
-          <div className="relative sticky lg:ml-[360px] sm:ml-8">
-            <button
-              onClick={() => setShowDropdown(!showDropdown)}
-              className="flex text-[13px] bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap"
-            >
-              Column Visibility
-              <Icon
-                icon="fe:arrow-down"
-                className={`mt-1.5 ml-2 ${showDropdown ? "rotate-180" : ""
-                  } cursor-pointer`}
-              />
-            </button>
-          </div>
+      <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
+        <div className="mr-auto text-[15px]">
+          Payroll Settings / Professional Tax Master
+        </div>
+        <div className="flex gap-4">
+          <button
+            onClick={() => setShowDropdown(!showDropdown)}
+            className="flex text-[13px] bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap"
+          >
+            Column Visibility
+            <Icon
+              icon="fe:arrow-down"
+              className={`mt-1.5 ml-2 ${showDropdown ? "rotate-180" : ""
+                } cursor-pointer`}
+            />
+          </button>
           {showDropdown && (
-            <div className="absolute top-[16%] lg:ml-[42%] sm:mr-[20%] bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50 top-[calc(100% + 10px)]">
+            <div className="absolute top-32 bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50">
               {/* Dropdown content */}
               <div className="flex items-center mb-2">
                 <button
@@ -303,44 +301,42 @@ const ProfesssionalTaxMaster = () => {
             </div>
           )}
 
-          <div className="min-w-[40%]">
-            <button
-              className="text-white font-semibold px-4 rounded-lg text-[13px] border border-white"
-              onClick={() => setModalOpen(true)}
-            >
-              Add
-            </button>
-          </div>
-        </div>
-        <div className="flex items-center mb-2 lg:mr-[210px] sm:mr-[60px]">
           <button
-            className=" cursor-pointer"
-            onClick={() => setMenuOpen(!menuOpen)}
+            className="text-white font-semibold px-4 rounded-lg text-[13px] border border-white"
+            onClick={() => setModalOpen(true)}
           >
-            <Icon icon="carbon:menu" color="white" width="27" height="27" />
+            Add
           </button>
-          {menuOpen && (
-            <div
-              ref={menuRef}
-              className="w-24 flex flex-col absolute lg:top-28 lg:right-38 bg-white border border-gray-300 shadow-md rounded-lg p-1 items-center mb-2"
+          <div className="flex items-center">
+            <button
+              className=" cursor-pointer"
+              onClick={() => setMenuOpen(!menuOpen)}
             >
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2 z-50">
-                Copy
-              </button>
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2 z-50">
-                CSV
-              </button>
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
-                Excel
-              </button>
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
-                PDF
-              </button>
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
-                Print
-              </button>
-            </div>
-          )}
+              <Icon icon="carbon:menu" color="white" width="27" height="27" />
+            </button>
+            {menuOpen && (
+              <div
+                ref={menuRef}
+                className="w-24 -ml-10 flex flex-col absolute lg:top-32 bg-white border border-gray-300 shadow-md rounded-lg p-1 items-center"
+              >
+                <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2 z-50">
+                  Copy
+                </button>
+                <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2 z-50">
+                  CSV
+                </button>
+                <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+                  Excel
+                </button>
+                <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+                  PDF
+                </button>
+                <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+                  Print
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <ProfesionalTaxModal
@@ -407,6 +403,7 @@ const ProfesssionalTaxMaster = () => {
                           color="#556987"
                           width="20"
                           height="20"
+                          className="cursor-pointer"
                           onClick={() => {
                             setPTView(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
@@ -418,6 +415,7 @@ const ProfesssionalTaxMaster = () => {
                           color="#556987"
                           width="20"
                           height="20"
+                          className="cursor-pointer"
                           onClick={() => {
                             setPTView(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
@@ -429,6 +427,7 @@ const ProfesssionalTaxMaster = () => {
                           color="#556987"
                           width="20"
                           height="20"
+                          className="cursor-pointer"
                         />
                       </div>
                     </td>
@@ -459,6 +458,7 @@ const ProfesssionalTaxMaster = () => {
                           color="#556987"
                           width="20"
                           height="20"
+                          className="cursor-pointer"
                           onClick={() => {
                             setPTView(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
@@ -470,6 +470,7 @@ const ProfesssionalTaxMaster = () => {
                           color="#556987"
                           width="20"
                           height="20"
+                          className="cursor-pointer"
                           onClick={() => {
                             setPTView(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
@@ -481,6 +482,7 @@ const ProfesssionalTaxMaster = () => {
                           color="#556987"
                           width="20"
                           height="20"
+                          className="cursor-pointer"
                         />
                       </div>
                     </td>
