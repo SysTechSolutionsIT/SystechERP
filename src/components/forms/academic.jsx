@@ -353,7 +353,7 @@ const Academic = ({ ID, name }) => {
                   </tr>
                 </thead>
                 <tbody>
-                {academicData.map((item, index) => (
+                {academicData.length > 0 && academicData.map((item, index) => (
                   <tr key={index}>
                   <td className="px-2 border-2">
                     <div className="flex items-center gap-2 text-center justify-center">
