@@ -38,7 +38,8 @@ export const AuthProvider = ({ children }) => {
 function Login() {
   const [username, setUsername] = useState("ggwpfax");
   const [password, setPassword] = useState("udayan@99");
-  const { setToken } = useAuth();
+  const [companies, setCompanies] = useState([]);
+  const { token, setToken } = useAuth();
   const navigate = useNavigate();
 
   const userLogin = async () => {
@@ -57,7 +58,7 @@ function Login() {
           },
         }
       );
-      
+
       const token = await response.data.token
       setToken(response.data.token);
       console.log("Token is", token);
@@ -74,6 +75,23 @@ function Login() {
     }
   };
 
+  useEffect(() => {
+    fetchCompData();
+  }, []);
+
+  const fetchCompData = async () => {
+    try {
+      const response = await axios.get("http://localhost:5500/companies/", {
+        headers: { authorization: `Bearer ${token}` },
+      });
+      console.log("Response Object", response);
+      const data = response.data.companies;
+      console.log(data);
+      setCompanies(data);
+    } catch (error) {
+      console.log("Error while fetching course data: ", error.message);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -105,6 +123,32 @@ function Login() {
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
+            className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-400"
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="password" className="block text-gray-700">
+            Company:
+          </label>
+          <select
+            type="dropdown"
+            id="company"
+            required
+            className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-400"
+          >
+            {companies.map((company, index) => (
+              <option key={index} value={company.name}>{company.name}</option>
+            ))}
+          </select>
+        </div>
+        <div className="mb-4">
+          <label htmlFor="password" className="block text-gray-700">
+            Financial Year:
+          </label>
+          <input
+            type="number"
+            id="year"
             required
             className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-400"
           />
