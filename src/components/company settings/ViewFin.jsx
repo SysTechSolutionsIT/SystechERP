@@ -3,21 +3,23 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import axios from "axios";
+import { useAuth } from "../Login";
 
 const VEFModal = ({ visible, onClick, edit, ID }) => {
   const [YearCloseCheck, setYearCloseCheck] = useState(false);
   const [StatusCheck, setStatusCheck] = useState(false);
   const [details, setDetails] = useState([]);
+  const { token } = useAuth()
 
   const formik = useFormik({
     initialValues: {
       fName: "",
-      sDate: [],
-      eDate: [],
+      sDate: "",
+      eDate: "",
       fShortName: "",
-      yearClose: YearCloseCheck,
+      yearClose: "",
       remarks: "",
-      status: StatusCheck,
+      status: "",
     },
     onSubmit: (values) => {
       console.log(values);
@@ -30,21 +32,22 @@ const VEFModal = ({ visible, onClick, edit, ID }) => {
         eDate: values.eDate,
       };
 
-      axios
-        .patch(`http://localhost:5500/update-record/${ID}`, updatedData)
-        .then((response) => {
-          console.log("Record updated successfully:", response.data);
-          // You can perform additional actions if needed after a successful update
+      try {
+        const response = axios.patch(`http://localhost:5500/financials/update-record/${ID}`, updatedData, {
+          headers:{
+            Authorization: `Bearer ${token}`
+          }
         })
-        .catch((error) => {
-          console.error("Error updating record:", error);
-          // Handle the error appropriately
-        });
+        alert("Record Updated Successfully")
+      } catch (error) {
+        
+      }
     },
   });
   useEffect(() => {
     fetchFinData();
   }, [ID]);
+
   console.log(ID);
   const fetchFinData = async () => {
     try {
@@ -60,12 +63,19 @@ const VEFModal = ({ visible, onClick, edit, ID }) => {
       console.log("Error while fetching course data: ", error.message);
     }
   };
-  const sDateFormatted = new Date(
-    details?.sDate ? details.sDate : null
-  ).toLocaleDateString();
-  const eDateFormatted = new Date(
-    details?.eDate ? details.eDate : null
-  ).toLocaleDateString();
+
+  useEffect(() => {
+    if (details) {
+      formik.setValues({
+        fName: details.fName,
+        fShortName: details.fShortName,
+        status: details.status,
+        remarks: details.remarks,
+        sDate: details.sDate,
+        eDate: details.eDate,
+      })
+    }
+  }, [details])
 
   console.log(typeof sDateFormatted);
   if (!visible) return null;
@@ -104,10 +114,10 @@ const VEFModal = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="capatilize font-semibold text-[13px]">Name</p>
                 <input
-                  id="Name"
+                  id="fName"
                   type="text"
                   placeholder="Enter Name"
-                  value={details?.fName}
+                  value={formik.values.fName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -119,9 +129,9 @@ const VEFModal = ({ visible, onClick, edit, ID }) => {
                 </p>
                 <input
                   id="sDate"
-                  type="Date"
+                  type="text"
                   placeholder="Enter Start Date"
-                  value={sDateFormatted}
+                  value={formik.values.sDate}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -131,9 +141,9 @@ const VEFModal = ({ visible, onClick, edit, ID }) => {
                 <p className="capatilize font-semibold text-[13px]">End Date</p>
                 <input
                   id="eDate"
-                  type="date"
+                  type="text"
                   placeholder="Enter End Date"
-                  value={eDateFormatted}
+                  value={formik.values.eDate}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -147,7 +157,7 @@ const VEFModal = ({ visible, onClick, edit, ID }) => {
                   id="ShortName"
                   type="text"
                   placeholder="Enter Short Name"
-                  value={details?.fShortName}
+                  value={formik.values.fShortName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -159,9 +169,9 @@ const VEFModal = ({ visible, onClick, edit, ID }) => {
                 </p>
                 <label className="capitalize font-semibold text-[11px]">
                   <input
-                    id="YearClose"
+                    id="yearClose"
                     type="checkbox"
-                    checked={details?.yearClose}
+                    checked={formik.values.yearClose}
                     className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border-2 rounded-lg`}
                     onChange={() => setYearCloseCheck(!YearCloseCheck)}
                     disabled={!edit}
@@ -174,7 +184,7 @@ const VEFModal = ({ visible, onClick, edit, ID }) => {
                 <textarea
                   id="Remark"
                   placeholder="Enter Remark"
-                  value={details?.remarks}
+                  value={formik.values.remarks}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -186,7 +196,7 @@ const VEFModal = ({ visible, onClick, edit, ID }) => {
                   <input
                     id="Status"
                     type="checkbox"
-                    checked={details?.status}
+                    checked={formik.values.status}
                     className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border-2 rounded-lg`}
                     onChange={() => setStatusCheck(!StatusCheck)}
                     disabled={!edit}
