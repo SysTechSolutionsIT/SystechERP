@@ -12,7 +12,7 @@ const Professional = ({ ID, name }) => {
   const [newDesignation, setNewDesignation] = useState("");
   const [newJobResponsibility, setNewJobResponsibility] = useState("");
   const [newSalary, setNewSalary] = useState("");
-  const [isModalOpen, setModalOpen] = useState(false)
+  const [isModalOpen, setModalOpen] = useState(false);
   const [row, setRow] = useState([]);
   const { token } = useAuth();
 
@@ -25,28 +25,28 @@ const Professional = ({ ID, name }) => {
       const employerString = professionalData
         .map((entry) => entry.Employer)
         .join(", ")
-        .replace(/,\s+/g, ',');
-  
+        .replace(/,\s+/g, ",");
+
       const experienceString = professionalData
         .map((entry) => entry.Experience)
         .join(", ")
-        .replace(/,\s+/g, ',');
-  
+        .replace(/,\s+/g, ",");
+
       const designationString = professionalData
         .map((entry) => entry.Designation)
         .join(", ")
-        .replace(/,\s+/g, ',');
-  
+        .replace(/,\s+/g, ",");
+
       const jobResponsibilityString = professionalData
         .map((entry) => entry.JobResponsibility)
         .join(", ")
-        .replace(/,\s+/g, ',');
-  
+        .replace(/,\s+/g, ",");
+
       const salaryString = professionalData
         .map((entry) => entry.Salary)
         .join(", ")
-        .replace(/,\s+/g, ',');
-  
+        .replace(/,\s+/g, ",");
+
       const combinedData = {
         EmployeeName: name,
         Employer: employerString,
@@ -55,7 +55,7 @@ const Professional = ({ ID, name }) => {
         JobResponsibility: jobResponsibilityString,
         Salary: salaryString,
       };
-  
+
       console.log("Submitted data:", combinedData);
       try {
         const response = await axios.patch(
@@ -73,18 +73,20 @@ const Professional = ({ ID, name }) => {
           alert("Professional data updated successfully");
         }
       } catch (error) {
-        console.error("Error while updating professional data: ", error.message);
+        console.error(
+          "Error while updating professional data: ",
+          error.message
+        );
       }
     },
   });
-  
 
   //API CALL
 
   useEffect(() => {
     fetchProfData();
   }, [token]);
-  
+
   const fetchProfData = async () => {
     try {
       const response = await axios.get(
@@ -98,17 +100,20 @@ const Professional = ({ ID, name }) => {
       console.log("Response Object", response);
       const data = response.data;
       console.log(data);
-  
+
       // Split the data and store it in a separate variable
       const splitData = SplitData(data);
-      
+
       setProfessionalData(splitData);
       console.log("after split", splitData);
     } catch (error) {
-      console.log("Error while fetching professional data data: ", error.message);
+      console.log(
+        "Error while fetching professional data data: ",
+        error.message
+      );
     }
   };
-  
+
   // Split data into rows
   const SplitData = (data) => {
     const empRows = data.Employer.split(",");
@@ -116,10 +121,10 @@ const Professional = ({ ID, name }) => {
     const desgRows = data.Designation.split(",");
     const jobRows = data.JobResponsibility.split(",");
     const salRows = data.Salary.split(",");
-  
+
     // Create a new array to store the rows of the table.
     const rows = [];
-  
+
     // Iterate over the data arrays and create a new row object for each element.
     for (let i = 0; i < empRows.length; i++) {
       const row = {
@@ -129,7 +134,7 @@ const Professional = ({ ID, name }) => {
         JobResponsibility: jobRows[i],
         Salary: salRows[i],
       };
-  
+
       rows.push(row);
     }
     return rows;
@@ -140,149 +145,147 @@ const Professional = ({ ID, name }) => {
     updatedProfessionalData.splice(index, 1);
     setProfessionalData(updatedProfessionalData);
   };
-  
 
-  const AddProfessional = ({visible, name, ID, onClick}) =>{
+  const AddProfessional = ({ visible, name, ID, onClick }) => {
     const formik = useFormik({
-        initialValues:{
-            EmployeeId: ID,
-            EmployeeName: name,
-            Employer: "",
-            Experience:"",
-            Designation:"",
-            JobResponsibility:"",
-            Salary:""
-        },
-        onSubmit: (values) =>{
-          const updatedData={
-            Employer: values.Employer,
-            Experience: values.Experience,
-            Designation: values.Designation,
-            Experience: values.Experience,
-            JobResponsibility: values.JobResponsibility,
-            Salary: values.Salary,
-          }
-          setProfessionalData([...professionalData, updatedData]);
-          onClick();
-        }
-    })
-  
-  if(!visible) return null
-  return(
-    <form>
+      initialValues: {
+        EmployeeId: ID,
+        EmployeeName: name,
+        Employer: "",
+        Experience: "",
+        Designation: "",
+        JobResponsibility: "",
+        Salary: "",
+      },
+      onSubmit: (values) => {
+        const updatedData = {
+          Employer: values.Employer,
+          Experience: values.Experience,
+          Designation: values.Designation,
+          Experience: values.Experience,
+          JobResponsibility: values.JobResponsibility,
+          Salary: values.Salary,
+        };
+        setProfessionalData([...professionalData, updatedData]);
+        onClick();
+      },
+    });
+
+    if (!visible) return null;
+    return (
+      <form>
         <div className="fixed overflow-y-scroll inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center w-full h-full">
-        <div className="bg-gray-200 w-[60%] p-8 rounded-lg">
-        <div className="bg-blue-900 py-2 px-4 rounded-lg flex justify-between items-center">
-            <p className="text-white text-[15px] font-semibold text-center">
-              Professional Data
-            </p>
-            <Icon
-              icon="maki:cross"
-              color="white"
-              className="cursor-pointer"
-              onClick={onClick}
-              width="24"
-              height="24"
-            />
-          </div>
-          <div className="py-4">
-            <div className="grid grid-cols-2 gap-4">
-            <div>
-                <p className="capatilize font-semibold  text-[13px]">
-                  Employee ID
-                </p>
-                <input
-                  id="EmployeeId"
-                  type="text"
-                  value={formik.values.EmployeeId}
-                  className={`w-full mt-1 px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                  disabled={true}
-                />
-              </div>
-              <div>
-                <p className="capatilize font-semibold  text-[13px]">
-                  Employer
-                </p>
-                <input
-                  id="Employer"
-                  type="text"
-                  value={formik.values.Employer}
-                  className={`w-full mt-1 px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                />
-              </div>
-              <div>
-                <p className="capatilize font-semibold  text-[13px]">
-                  Experience
-                </p>
-                <input
-                  id="Experience"
-                  type="text"
-                  value={formik.values.Experience}
-                  className={`w-full mt-1 px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                />
-              </div>
-              <div>
-                <p className="capatilize font-semibold  text-[13px]">
-                  Designation
-                </p>
-                <input
-                  id="Designation"
-                  type="text"
-                  value={formik.values.Designation}
-                  className={`w-full mt-1 px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                />
-              </div>
-              <div>
-                <p className="capatilize font-semibold  text-[13px]">
-                  Job Responsibility
-                </p>
-                <input
-                  id="JobResponsibility"
-                  type="text"
-                  value={formik.values.JobResponsibility}
-                  className={`w-full mt-1 px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                />
-              </div>
-              <div>
-                <p className="capatilize font-semibold  text-[13px]">
-                  Salary
-                </p>
-                <input
-                  id="Salary"
-                  type="text"
-                  value={formik.values.Salary}
-                  className={`w-full mt-1 px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                />
-              </div>
+          <div className="bg-gray-200 w-[60%] p-8 rounded-lg">
+            <div className="bg-blue-900 py-2 px-4 rounded-lg flex justify-between items-center">
+              <p className="text-white text-[15px] font-semibold text-center">
+                Professional Data
+              </p>
+              <Icon
+                icon="maki:cross"
+                color="white"
+                className="cursor-pointer"
+                onClick={onClick}
+                width="24"
+                height="24"
+              />
             </div>
+            <div className="py-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="capatilize font-semibold  text-[13px]">
+                    Employee ID
+                  </p>
+                  <input
+                    id="EmployeeId"
+                    type="text"
+                    value={formik.values.EmployeeId}
+                    className={`w-full mt-1 px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                    onChange={formik.handleChange}
+                    disabled={true}
+                  />
+                </div>
+                <div>
+                  <p className="capatilize font-semibold  text-[13px]">
+                    Employer
+                  </p>
+                  <input
+                    id="Employer"
+                    type="text"
+                    value={formik.values.Employer}
+                    className={`w-full mt-1 px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                    onChange={formik.handleChange}
+                  />
+                </div>
+                <div>
+                  <p className="capatilize font-semibold  text-[13px]">
+                    Experience
+                  </p>
+                  <input
+                    id="Experience"
+                    type="text"
+                    value={formik.values.Experience}
+                    className={`w-full mt-1 px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                    onChange={formik.handleChange}
+                  />
+                </div>
+                <div>
+                  <p className="capatilize font-semibold  text-[13px]">
+                    Designation
+                  </p>
+                  <input
+                    id="Designation"
+                    type="text"
+                    value={formik.values.Designation}
+                    className={`w-full mt-1 px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                    onChange={formik.handleChange}
+                  />
+                </div>
+                <div>
+                  <p className="capatilize font-semibold  text-[13px]">
+                    Job Responsibility
+                  </p>
+                  <input
+                    id="JobResponsibility"
+                    type="text"
+                    value={formik.values.JobResponsibility}
+                    className={`w-full mt-1 px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                    onChange={formik.handleChange}
+                  />
+                </div>
+                <div>
+                  <p className="capatilize font-semibold  text-[13px]">
+                    Salary
+                  </p>
+                  <input
+                    id="Salary"
+                    type="text"
+                    value={formik.values.Salary}
+                    className={`w-full mt-1 px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                    onChange={formik.handleChange}
+                  />
+                </div>
+              </div>
             </div>
             <div className="flex gap-10 justify-center">
-            <button
-              type="submit"
-              onClick={formik.handleSubmit}
-              className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg w-36"
-            >
-              Save
-            </button>
-            <button
-              className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg w-36"
-              onClick={onClick}
-            >
-              Close
-            </button>
+              <button
+                type="submit"
+                onClick={formik.handleSubmit}
+                className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg w-36"
+              >
+                Save
+              </button>
+              <button
+                className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg w-36"
+                onClick={onClick}
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
-        </div>
-    </form>
-  )
-  }
-  
+      </form>
+    );
+  };
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -313,7 +316,12 @@ const Professional = ({ ID, name }) => {
             />
           </div>
         </div>
-      <AddProfessional ID={ID} name={name} visible={isModalOpen} onClick={() => setModalOpen(false)}/>
+        <AddProfessional
+          ID={ID}
+          name={name}
+          visible={isModalOpen}
+          onClick={() => setModalOpen(false)}
+        />
       </div>
       <div className="gap-4 justify-between">
         <div className="my-1 rounded-2xl bg-white p-2 pr-8">
@@ -346,8 +354,13 @@ const Professional = ({ ID, name }) => {
                   <tr key={index}>
                     <td className="px-2 border-2">
                       <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon icon="material-symbols:delete-outline" color="#556987" width="20" height="20" 
-                         onClick={() => handleDeleteEntry(index)}/>
+                        <Icon
+                          icon="material-symbols:delete-outline"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          onClick={() => handleDeleteEntry(index)}
+                        />
                       </div>
                     </td>
                     <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
@@ -379,7 +392,9 @@ const Professional = ({ ID, name }) => {
                         type="text"
                         name={`professionalData[${index}].JobResponsibility`}
                         value={item.JobResponsibility}
-                        onChange={(e) => setNewJobResponsibility(e.target.value)}
+                        onChange={(e) =>
+                          setNewJobResponsibility(e.target.value)
+                        }
                       />
                     </td>
                     <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
@@ -397,14 +412,19 @@ const Professional = ({ ID, name }) => {
         </div>
       </div>
       <div className="flex mt-5 justify-center gap-4">
-        <button type="submit" className="px-8 py-2 bg-blue-900 text-white text-lg rounded-md">
+        <button
+          type="submit"
+          className="px-8 py-2 bg-blue-900 text-white text-lg rounded-md"
+        >
           Save Details
         </button>
-        <button className="px-8 py-2 bg-blue-900 text-white text-lg rounded-md"
-        onClick={(e) =>{
-          e.preventDefault()
-          setModalOpen(true)
-        }}>
+        <button
+          className="px-8 py-2 bg-blue-900 text-white text-lg rounded-md"
+          onClick={(e) => {
+            e.preventDefault();
+            setModalOpen(true);
+          }}
+        >
           Add
         </button>
       </div>
