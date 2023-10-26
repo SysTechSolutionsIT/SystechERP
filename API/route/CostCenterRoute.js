@@ -3,6 +3,7 @@ const router = express.Router();
 const CCMaster = require("../model/CostCenterModel"); // Import your CCMaster model
 
 const jwt = require("jsonwebtoken"); // Import the jwt library
+const CostCenter = require("../model/CostCenterModel");
 const secretKey = process.env.SECRET_KEY; // Replace with your actual secret key
 
 const authToken = (req, res, next) => {
