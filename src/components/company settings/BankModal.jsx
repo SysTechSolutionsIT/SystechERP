@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import { useFormik } from "formik";
 import { bankData } from "./BankMaster";
@@ -6,7 +6,7 @@ import axios from "axios";
 import { useAuth } from "../Login";
 
 const BankModal = ({ visible, onClick }) => {
-  const { token }  = useAuth()
+  const { token } = useAuth();
   const formik = useFormik({
     initialValues: {
       // bankId: "",
@@ -32,33 +32,56 @@ const BankModal = ({ visible, onClick }) => {
     },
     onSubmit: (values) => {
       console.log(values);
-      addBank()
+      addBank();
       // alert("Bank Added Successfully");
     },
   });
 
-  const addBank = async () =>{
-    try{
-      const response = await axios.post("http://localhost:5500/bankmaster/add-bank", formik.values,
-      {
-        headers:{
-          Authorization: `Bearer ${token}`
+  const addBank = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5500/bankmaster/add-bank",
+        formik.values,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      })
+      );
       if (response.status === 200) {
         const data = response.data;
         console.log(data);
-        alert('Bank added successfully')
+        alert("Bank added successfully");
         // Handle successful response
       } else {
         console.error(`HTTP error! Status: ${response.status}`);
         // Handle error response
       }
-    }catch (error) {
-      console.error('Error:', error.message);
+    } catch (error) {
+      console.error("Error:", error.message);
       // Handle network error
     }
-  }
+  };
+
+  const [currencies, setCurrencies] = useState([]);
+  useEffect(() => {
+    const fetchCurrencyData = async () => {
+      try {
+        const response = await axios.get("http://localhost:5500/currency/", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = response.data.records;
+        console.log("Currency", data);
+        setCurrencies(data);
+      } catch (error) {
+        console.error("Error fetching currencies:", error);
+      }
+    };
+
+    fetchCurrencyData();
+  }, []);
 
   if (!visible) return null;
   return (
@@ -223,22 +246,18 @@ const BankModal = ({ visible, onClick }) => {
                   Currency Type
                 </p>
                 <select
-                  id="currencyType"
-                  value={formik.values.currencyType}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  id="currency"
+                  name="currency"
+                  className="text-[13px] w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
+                  value={formik.values.currency}
                   onChange={formik.handleChange}
                 >
-                  <option value="">Select Currency Type</option>
-                  <option value="INR">Indian Rupee (INR)</option>
-                  <option value="USD">United States Dollar (USD)</option>
-                  <option value="EUR">Euro (EUR)</option>
-                  <option value="GBP">British Pound Sterling (GBP)</option>
-                  <option value="JPY">Japanese Yen (JPY)</option>
-                  <option value="AUD">Australian Dollar (AUD)</option>
-                  <option value="CAD">Canadian Dollar (CAD)</option>
-                  <option value="SGD">Singapore Dollar (SGD)</option>
-                  <option value="CHF">Swiss Franc (CHF)</option>
-                  <option value="CNY">Chinese Yuan (CNY)</option>
+                  {currencies.length > 0 &&
+                    currencies.map((currency) => (
+                      <option key={currency.id} value={currency.abbr}>
+                        {currency.name}
+                      </option>
+                    ))}
                 </select>
               </div>
               <div>
