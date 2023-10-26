@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
+const multer = require("multer");
+const path = require("path");
 const EmpPersonal = require("../model/EmpPersonalModel"); // Replace with the actual path to your model file
 
 const authToken = (req, res, next) => {
@@ -14,6 +16,20 @@ const authToken = (req, res, next) => {
     next();
   });
 };
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    // Set the destination folder where files will be stored
+    const uploadDir = path.join(__dirname, "..", "uploads"); // Go up one directory to reach the 'uploads' folder
+    cb(null, uploadDir);
+  },
+  filename: function (req, file, cb) {
+    // Set the file name for the uploaded file (you can customize this)
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage }); // Create the upload object
 
 // GET all employees
 router.get("/get", authToken, async (req, res) => {

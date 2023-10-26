@@ -46,12 +46,12 @@ export default function Personal({ ID }) {
       Caste: "",
       MaritalStatus: "",
       Reference: "",
-      EmployeePhoto: "",
+      EmployeePhoto: null,
       MEmployeeName: "",
       Religion: "",
       Gender: "",
       BloodGroup: "",
-      DrivingLicense: "",
+      DrivingLicense: null,
       FinanceAccountNo: "",
       Remark: "",
     },
@@ -154,6 +154,16 @@ export default function Personal({ ID }) {
     }
   }, [details]);
 
+  const handlePhotoChange = (event) => {
+    const file = event.target.files[0];
+    formik.setFieldValue("EmployeePhoto", file);
+  };
+
+  const handleDLChange = (event) => {
+    const file = event.target.files[0];
+    formik.setFieldValue("DrivingLicense", file);
+  };
+
   return (
     <form onSubmit={formik.handleSubmit}>
       <div className="p-0 font-[Inter]">
@@ -194,12 +204,11 @@ export default function Personal({ ID }) {
                 Employee Photo
               </p>
               <input
-                id="logo"
+                id="EmployeePhoto"
                 type="file"
                 placeholder="Upload File"
-                value={formik.values.EmployeePhoto}
                 className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
-                onChange={formik.handleChange}
+                onChange={handlePhotoChange}
               />
             </div>
 
@@ -769,9 +778,9 @@ export default function Personal({ ID }) {
               </p>
               <input
                 id="DrivingLicense"
-                type="text"
-                value={formik.values.DrivingLicense}
+                type="file"
                 className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
+                onChange={handleDLChange}
               />
             </div>
             <div className="py-1">
