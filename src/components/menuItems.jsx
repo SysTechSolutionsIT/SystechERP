@@ -84,7 +84,58 @@ export const menuItems = [
           { label: "Advance Repayment", path: "/advance-repayment" },
         ],
       },
-      // Add more sub-menus here
+      {
+        label: "Leaves Management",
+        // onClick: () => setPayrollSubmenuOpen((prevState) => !prevState),
+        subMenu: [
+          { label: "Leave Type Master", path: "/leave-type-master" },
+          {
+            label: "Leave Balance Upload",
+            path: "/leave-balance-master",
+          },
+          {
+            label: "Leave Application",
+            path: "/leave-approval",
+          },
+        ],
+      },
+      {
+        label: "Attendance Management",
+        // onClick: () => setPayrollSubmenuOpen((prevState) => !prevState),
+        subMenu: [
+          { label: "Shift roster", path: "/leave-type-master" },
+          { label: "Manual Attendance Entry", path: "/leave-type-master" },
+          { label: "Manual Attendance Approval", path: "/leave-type-master" },
+          { label: "Outdoor Duty Attendance Entry", path: "/leave-type-master" },
+          { label: "Outdoor Duty Attendance Application", path: "/leave-type-master" },
+          { label: "Employee Gate Pass Entry", path: "/leave-type-master" },
+          { label: "Employee Gate Pass Approval", path: "/leave-type-master" },
+          { label: "Job Allocation", path: "/leave-type-master" },
+          { label: "Daily Attendance Processing", path: "/leave-type-master" },
+          { label: "Attendance Import", path: "/leave-type-master" },
+          { label: "Monthly Attendance Master", path: "/leave-type-master" },
+        ],
+      },
+      {
+        label: "Salary Management",
+        // onClick: () => setPayrollSubmenuOpen((prevState) => !prevState),
+        subMenu: [
+          { label: "Daily Overtime Processing", path: "/leave-type-master" },
+          { label: "Monthly Overtime Processing", path: "/leave-type-master" },
+          { label: "Overtime Approvals", path: "/leave-type-master" },
+          { label: "Advance Management", path: "/leave-type-master" },
+          { label: "Earning-Deducation Imports", path: "/ED-imports" },
+          { label: "Salary Processing", path: "/salary-processing" },
+          { label: "Salary Corrections", path: "/leave-type-master" },
+        ],
+      },
+      {
+        label: "Master Management",
+        // onClick: () => setPayrollSubmenuOpen((prevState) => !prevState),
+        subMenu: [
+          { label: "Master Register", path: "/leave-type-master" },
+        ],
+      },
     ],
   },
   {

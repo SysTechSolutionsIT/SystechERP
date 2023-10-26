@@ -33,7 +33,7 @@ const upload = multer({ storage: storage }); // Create the upload object
 
 // router.use(authorize)
 
-router.post("/add", authToken, upload.single("logo"), async (req, res) => {
+router.post("/add", upload.single("logo"), async (req, res) => {
   try {
     if (req.file) {
       // Create a new Company record with the file path
@@ -65,7 +65,7 @@ router.post("/add", authToken, upload.single("logo"), async (req, res) => {
 
 router.put(
   "/update/:id",
-  authToken,
+
   upload.single("logo"),
   async (req, res) => {
     const company = await Company.findByPk(req.params.id);
@@ -94,7 +94,7 @@ router.put(
   }
 );
 
-router.get("/", authToken, async (req, res) => {
+router.get("/", async (req, res) => {
   const companies = await Company.findAll();
 
   res.status(200).json({
@@ -102,7 +102,7 @@ router.get("/", authToken, async (req, res) => {
   });
 });
 
-router.get("/:id", authToken, async (req, res) => {
+router.get("/:id", async (req, res) => {
   const company = await Company.findByPk(req.params.id);
 
   res.status(200).json({
@@ -110,7 +110,7 @@ router.get("/:id", authToken, async (req, res) => {
   });
 });
 
-router.delete("/delete/:id", authToken, async (req, res) => {
+router.delete("/delete/:id", async (req, res) => {
   const company = await Company.findByPk(req.params.id);
 
   if (!company) {
