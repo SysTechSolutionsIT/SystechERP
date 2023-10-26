@@ -99,7 +99,7 @@ const Academic = ({ ID, name }) => {
 
   useEffect(() => {
     fetchAcademicData();
-  }, []);
+  }, [ID]);
 
   const fetchAcademicData = async () => {
     try {
@@ -209,64 +209,65 @@ const Academic = ({ ID, name }) => {
                     </th>
                   </tr>
                 </thead>
-                {academicData.map((item, index) => (
-                  <tr>
-                    <td
-                      className="text-[11px] border-2 cursor-pointer font-normal border-r-2 border-white py-1 px-2 bg-red-600 rounded-md text-white"
-                      onClick={() => handleRemoveRow(index)}
-                    >
-                      Remove
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                      <input
-                        type="text"
-                        name={`academicData[${index}].Qualification`}
-                        value={academicData.Qualification}
-                        onChange={formik.handleChange}
-                      />
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                      <input
-                        type="text"
-                        name={`academicData[${index}].Institute`}
-                        value={academicData.Institute}
-                        onChange={formik.handleChange}
-                      />
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                      <input
-                        type="text"
-                        name={`academicData[${index}].Specialization`}
-                        value={academicData.Specialization}
-                        onChange={formik.handleChange}
-                      />
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                      <input
-                        type="text"
-                        name={`academicData[${index}].Grades`}
-                        value={academicData.Grades}
-                        onChange={formik.handleChange}
-                      />
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                      <input
-                        type="text"
-                        name={`academicData[${index}].PassingYear`}
-                        value={academicData.PassingYear}
-                        onChange={formik.handleChange}
-                      />
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                      <input
-                        type="text"
-                        name={`academicData[${index}].Languages`}
-                        value={academicData.Languages}
-                        onChange={formik.handleChange}
-                      />
-                    </td>
-                  </tr>
-                ))}
+                {academicData.length > 0 &&
+                  academicData.map((item, index) => (
+                    <tr>
+                      <td
+                        className="text-[11px] border-2 cursor-pointer font-normal border-r-2 border-white py-1 px-2 bg-red-600 rounded-md text-white"
+                        onClick={() => handleRemoveRow(index)}
+                      >
+                        Remove
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                        <input
+                          type="text"
+                          name={`academicData[${index}].Qualification`}
+                          value={academicData.Qualification}
+                          onChange={formik.handleChange}
+                        />
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                        <input
+                          type="text"
+                          name={`academicData[${index}].Institute`}
+                          value={academicData.Institute}
+                          onChange={formik.handleChange}
+                        />
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                        <input
+                          type="text"
+                          name={`academicData[${index}].Specialization`}
+                          value={academicData.Specialization}
+                          onChange={formik.handleChange}
+                        />
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                        <input
+                          type="text"
+                          name={`academicData[${index}].Grades`}
+                          value={academicData.Grades}
+                          onChange={formik.handleChange}
+                        />
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                        <input
+                          type="text"
+                          name={`academicData[${index}].PassingYear`}
+                          value={academicData.PassingYear}
+                          onChange={formik.handleChange}
+                        />
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                        <input
+                          type="text"
+                          name={`academicData[${index}].Languages`}
+                          value={academicData.Languages}
+                          onChange={formik.handleChange}
+                        />
+                      </td>
+                    </tr>
+                  ))}
               </table>
             </div>
           </div>

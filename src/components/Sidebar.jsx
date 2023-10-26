@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Icon } from "@iconify/react";
 import { useNavigate } from "react-router-dom";
+import { menuItems } from "./menuItems";
 
 const Sidebar = () => {
   const [isSubMenuOpen, setSubMenuOpen] = useState(false);
@@ -12,6 +13,8 @@ const Sidebar = () => {
   const [isLeaveSubmenuOpen, setLeaveSubmenuOpen] = useState(false);
   const [isSalarySubmenuOpen, setSalarySubmenuOpen] = useState(false);
   const [isRegisterSubmenuOpen, setRegisterSubmenuOpen] = useState(false);
+  const [filteredData, setFilteredData] = useState([]);
+
   const [open, setOpen] = useState(true);
   const navigate = useNavigate();
 
@@ -80,6 +83,48 @@ const Sidebar = () => {
     </span>
   );
 
+  const searchSubmenuLabels = (menu, searchQuery) => {
+    const filteredData = [];
+
+    if (menu.subMenu) {
+      menu.subMenu.forEach((subMenuItem) => {
+        if (subMenuItem.label.toLowerCase().includes(searchQuery)) {
+          filteredData.push({
+            label: subMenuItem.label,
+            path: subMenuItem.path,
+          });
+        }
+
+        // Recursively search within sub-submenus
+        filteredData.push(...searchSubmenuLabels(subMenuItem, searchQuery));
+      });
+    }
+
+    return filteredData;
+  };
+
+  const handleSearchChange = (word) => {
+    const query = word.toLowerCase();
+
+    if (query.trim() === "") {
+      // If the search query is empty, clear the results
+      setFilteredData([]);
+    } else {
+      // Search for matching submenu labels
+      const filteredData = [];
+
+      menuItems.forEach((menuItem) => {
+        if (menuItem.subMenu) {
+          // Search within top-level submenus
+          const submenuData = searchSubmenuLabels(menuItem, query);
+          filteredData.push(...submenuData);
+        }
+      });
+
+      setFilteredData(filteredData);
+    }
+  };
+
   return (
     <div className="flex">
       <div
@@ -110,443 +155,465 @@ const Sidebar = () => {
                 id="search"
                 placeholder="Search something..."
                 className="bg-gray-100 focus:outline-none w-full text-[13px] ml-1"
-                onClick={() => setOpen(true)}
+                onChange={(e) => {
+                  handleSearchChange(e.target.value);
+                }}
               />
             )}
           </div>
-          <div>
-            <div className="mt-1 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white">
-              <Icon
-                icon="ic:round-dashboard"
-                color="white"
-                width="24"
-                height="24"
-              />
-              {open && (
-                <div className="flex justify-between w-full items-center">
-                  <span className="font-[Inter] font-semibold text-[15px] ml-4 text-white-200">
-                    Dashboard
-                  </span>
-                </div>
-              )}
-            </div>
-            {/* <hr className="text-gray-200 text-opacity-25" /> */}
-
-            <div className="mt-1 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white">
-              <Icon
-                icon="akar-icons:person-add"
-                color="white"
-                width="24"
-                height="24"
-              />
-
-              {open && (
-                <div className="flex justify-between w-full items-center">
-                  <span className="font-[Inter] font-semibold text-[15px] ml-4 text-white-200">
-                    User Settings
-                  </span>
-                </div>
-              )}
-            </div>
-
-            <div
-              className="mt-1 flex items-center rounded-md px-4 duration-300
-            cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white whitespace-nowrap"
-            >
-              <Icon icon="ci:settings" color="white" width="24" height="24" />
-              {open && (
-                <div
-                  className="flex justify-between w-full items-center"
-                  onClick={() =>
-                    setCompanySubmenuOpen((prevState) => !prevState)
-                  }
-                >
-                  <span className="font-[Inter] font-semibold text-[15px] ml-4 text-white-200">
-                    Company Settings
-                  </span>
-                  <span
-                    className={`text-sm ${
-                      isCompanySubmenuOpen ? "" : "rotate-180"
-                    } ease-linear duration-200`}
-                    id="arrow"
-                  >
-                    <Icon
-                      icon="iconamoon:arrow-up-2"
-                      color="white"
-                      width="30"
-                      height="30"
-                      className=""
-                    />
-                  </span>
-                </div>
-              )}
-            </div>
-            {isCompanySubmenuOpen && (
-              <SubMenuGroup>
-                <SubMenuEntry
-                  title="Company Configuration"
-                  onClick={() => navigate("/company-configurations")}
-                />
-                <SubMenuEntry
-                  title="Company Master"
-                  onClick={() => navigate("/company-masters")}
-                />
-                <SubMenuEntry
-                  title="Financial Year Master"
-                  onClick={() => navigate("/financial-masters")}
-                />
-                <SubMenuEntry
-                  title="Bank Master"
-                  onClick={() => navigate("/bank-master")}
-                />
-                <SubMenuEntry
-                  title="Cost Center Master"
-                  onClick={() => navigate("/costcenter-master")}
-                />
-                <SubMenuEntry
-                  title="Department Master"
-                  onClick={() => navigate("/department-master")}
-                />
-                <SubMenuEntry
-                  title="Destination Master"
-                  onClick={() => navigate("/destination-master")}
-                />
-                <SubMenuEntry
-                  title="Three Field Master"
-                  onClick={() => navigate("/three-field-master")}
-                />
-                <SubMenuEntry
-                  title="Two Field Master"
-                  onClick={() => navigate("/two-field-master")}
-                />
-                <SubMenuEntry title="Project Master" />
-              </SubMenuGroup>
-            )}
-
-            <div
-              className="mt-1 flex items-center rounded-md px-4 duration-300
-            cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white"
-            >
-              <Icon
-                icon="clarity:employee-group-line"
-                color="white"
-                width="24"
-                height="24"
-              />
-              {open && (
-                <div
-                  className="flex justify-between w-full items-center"
-                  onClick={() => setSubMenuOpen((prevState) => !prevState)}
-                >
-                  <span className="font-[Inter] font-semibold text-[15px] ml-4 text-white-200">
-                    HRM
-                  </span>
-                  <span
-                    className={`text-sm ${
-                      isSubMenuOpen ? "" : "rotate-180"
-                    } ease-linear duration-200`}
-                    id="arrow"
-                  >
-                    <Icon
-                      icon="iconamoon:arrow-up-2"
-                      color="white"
-                      width="30"
-                      height="30"
-                    />
-                  </span>
-                </div>
-              )}
-            </div>
-            {isSubMenuOpen && (
+          {filteredData.length > 0 ? (
+            filteredData.map((menuItem, index) => (
               <div
-                className="leading-7 text-left text-sm font-thin mt-2 px-2 w-full ease-in-out duration-200 whitespace-nowrap"
-                id="submenu"
+                key={index}
+                className="mt-1 flex items-center rounded-md px-4 duration-300 cursor-pointer hover-bg-gray-300 hover-bg-opacity-25 text-white"
+                onClick={() => navigate(menuItem.path)}
               >
-                <SubMenuMain
-                  title="Employee Settings"
-                  isOpen={isEmployeeSubmenuOpen}
-                  onClick={() =>
-                    setEmployeeSubmenuOpen((prevState) => !prevState)
-                  }
-                />
-                {isEmployeeSubmenuOpen && (
-                  <SubMenuGroup>
-                    <SubMenuEntry
-                      title="Employee Master"
-                      onClick={() => navigate("/employee-master")}
-                    />
-                    <SubMenuEntry
-                      title="Employee Type Master"
-                      onClick={() => navigate("/employee-type-master")}
-                    />
-                    <SubMenuEntry
-                      title="Employee Grade Master"
-                      onClick={() => navigate("/employee-grade-master")}
-                    />
-                    <SubMenuEntry
-                      title="Designation Master"
-                      onClick={() => navigate("/designation-master")}
-                    />
-                    <SubMenuEntry
-                      title="KRA Master"
-                      onClick={() => navigate("/kra-master")}
-                    />
-                    <SubMenuEntry
-                      title="Job Responsibility Master"
-                      onClick={() => navigate("/jobs-responsibility-master")}
-                    />
-                    <SubMenuEntry title="Employee Band Master" />
-                  </SubMenuGroup>
-                )}
-                <SubMenuMain
-                  title="Attendance Settings"
-                  isOpen={isAttendanceSubmenuOpen}
-                  onClick={() =>
-                    setAttendanceSubmenuOpen((prevState) => !prevState)
-                  }
-                />
-                {isAttendanceSubmenuOpen && (
-                  <SubMenuGroup>
-                    <SubMenuEntry
-                      title="Job Type Master"
-                      onClick={() => navigate("/job-type-master")}
-                    />
-                    <SubMenuEntry
-                      title="Shift Master"
-                      onClick={() => navigate("/shift-master")}
-                    />
-                    <SubMenuEntry
-                      title="Weekly Off Master"
-                      onClick={() => navigate("/weeklyoff-master")}
-                    />
-                    <SubMenuEntry
-                      title="Holiday Master"
-                      onClick={() => navigate("/holiday-master")}
-                    />
-                    <SubMenuEntry
-                      title="Atten. Device Master"
-                      onClick={() => navigate("/attDevice-master")}
-                    />
-                  </SubMenuGroup>
-                )}
-                <SubMenuMain
-                  title="Payroll Management"
-                  isOpen={isPayrollSubmenuOpen}
-                  onClick={() =>
-                    setPayrollSubmenuOpen((prevState) => !prevState)
-                  }
-                />
-                {isPayrollSubmenuOpen && (
-                  <SubMenuGroup>
-                    <SubMenuEntry
-                      title="Earning Heads Master"
-                      onClick={() => navigate("/earning-heads-master")}
-                    />
-                    <SubMenuEntry
-                      title="Deduction Heads Master"
-                      onClick={() => navigate("/deduction-heads-master")}
-                    />
-                    <SubMenuEntry
-                      title="Employee Type Earning Deduciton"
-                      onClick={() =>
-                        navigate("/employee-type-earning-deduction")
-                      }
-                    />
-                    <SubMenuEntry
-                      title="Professional Tax Setting"
-                      onClick={() => navigate("/professional-tax-master")}
-                    />
-                    <SubMenuEntry
-                      title="Advance Request"
-                      onClick={() => navigate("/advance-request")}
-                    />
-                    <SubMenuEntry title="Advance Approval" />
-                    <SubMenuEntry title="Advance Repayment" />
-                  </SubMenuGroup>
-                )}
-                <SubMenuMain
-                  title="Leaves Management"
-                  isOpen={isLeaveSubmenuOpen}
-                  onClick={() => setLeaveSubmenuOpen((prevState) => !prevState)}
-                />
-                {isLeaveSubmenuOpen && (
-                  <SubMenuGroup>
-                    <SubMenuEntry
-                      title="Leave Type Master"
-                      onClick={() => navigate("/leave-type-master")}
-                    />
-                    <SubMenuEntry
-                      title="Leave Balance Upload"
-                      onClick={() => navigate("/leave-balance-master")}
-                    />
-                    <SubMenuEntry
-                      title="Leave Application"
-                      onClick={() => navigate("/leave-application")}
-                    />
-                    <SubMenuEntry
-                      title="Leave Approvals"
-                      onClick={() => navigate("/leave-approval")}
-                    />
-                  </SubMenuGroup>
-                )}
-                <SubMenuMain
-                  title="Attendance Management"
-                  isOpen={isAttMgtSubmenuOpen}
-                  onClick={() =>
-                    setAttMgtSubmenuOpen((prevState) => !prevState)
-                  }
-                />
-                {isAttMgtSubmenuOpen && (
-                  <SubMenuGroup>
-                    <SubMenuEntry title="Shift roster" />
-                    <SubMenuEntry title="Mnual Attendance Entry" />
-                    <SubMenuEntry title="Manual Attendance Approval" />
-                    <SubMenuEntry title="Out Door Duty Attendance Entry " />
-                    <SubMenuEntry title="Out Door Duty Attendance Application" />
-                    <SubMenuEntry title="Employee Gate Pass Entry" />
-                    <SubMenuEntry title="Employee Gate Pass Approval" />
-                    <SubMenuEntry title="Job Allocation" />
-                    <SubMenuEntry title="Daily Atttendance Processing" />
-                    <SubMenuEntry title="Attendance Import" />
-                    <SubMenuEntry title="Monthly Attendance Provessing" />
-                  </SubMenuGroup>
-                )}
-                <SubMenuMain
-                  title="Salary Management"
-                  isOpen={isSalarySubmenuOpen}
-                  onClick={() =>
-                    setSalarySubmenuOpen((prevState) => !prevState)
-                  }
-                />
-                {isSalarySubmenuOpen && (
-                  <SubMenuGroup>
-                    <SubMenuEntry title="Daily Overtime Processing" />
-                    <SubMenuEntry title="Monthly Overtime Processing" />
-                    <SubMenuEntry title="Overtime Approvals" />
-                    <SubMenuEntry title="Advance Management " />
-                    <SubMenuEntry
-                      title="Earning-Deduction Imports"
-                      onClick={() => navigate("/ED-imports")}
-                    />
-                    <SubMenuEntry
-                      title="Salary Processing"
-                      onClick={() => navigate("/salary-processing")}
-                    />
-                    <SubMenuEntry title="Salary Corrections" />
-                  </SubMenuGroup>
-                )}
-                <SubMenuMain
-                  title="Registers"
-                  isOpen={isRegisterSubmenuOpen}
-                  onClick={() =>
-                    setRegisterSubmenuOpen((prevState) => !prevState)
-                  }
-                />
-                {isRegisterSubmenuOpen && (
-                  <SubMenuGroup>
-                    <SubMenuEntry title="Master Register" />
-                  </SubMenuGroup>
+                {open && (
+                  <div className="flex justify-between w-full items-center">
+                    <span className="font-[Inter] font-semibold text-[15px] ml-4 text-white-200">
+                      {menuItem.label}
+                    </span>
+                  </div>
                 )}
               </div>
-            )}
+            ))
+          ) : (
+            <div>
+              <div className="mt-1 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white">
+                <Icon
+                  icon="ic:round-dashboard"
+                  color="white"
+                  width="24"
+                  height="24"
+                />
+                {open && (
+                  <div className="flex justify-between w-full items-center">
+                    <span className="font-[Inter] font-semibold text-[15px] ml-4 text-white-200">
+                      Dashboard
+                    </span>
+                  </div>
+                )}
+              </div>
+              {/* <hr className="text-gray-200 text-opacity-25" /> */}
 
-            <div
-              className="mt-1 flex items-center rounded-md px-4 duration-300
-            cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white"
-            >
-              <Icon
-                icon="radix-icons:calendar"
-                color="white"
-                width="24"
-                height="24"
-              />
-              {open && (
-                <span className="font-[Inter] font-semibold text-[15px] ml-4 text-white-200 ease-in-out duration-200">
-                  Allocations
-                </span>
-              )}
-            </div>
+              <div className="mt-1 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white">
+                <Icon
+                  icon="akar-icons:person-add"
+                  color="white"
+                  width="24"
+                  height="24"
+                />
 
-            <div
-              className="mt-1 flex items-center rounded-md px-4 duration-300
-            cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white"
-            >
-              <Icon
-                icon="streamline:money-atm-card-1-credit-pay-payment-debit-card-finance-plastic-money"
-                color="white"
-                width="24"
-                height="24"
-              />
-              {open && (
-                <span className="font-[Inter] font-semibold text-[15px] ml-4 text-white-200">
-                  Finance
-                </span>
-              )}
-            </div>
+                {open && (
+                  <div className="flex justify-between w-full items-center">
+                    <span className="font-[Inter] font-semibold text-[15px] ml-4 text-white-200">
+                      User Settings
+                    </span>
+                  </div>
+                )}
+              </div>
 
-            <div
-              className="mt-1 flex items-center rounded-md px-4 duration-300
-            cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white"
-            >
-              <Icon
-                icon="eos-icons:project-outlined"
-                color="white"
-                width="24"
-                height="24"
-              />
-              {open && (
-                <span className="font-[Inter] font-semibold text-[15px] ml-4 text-white-200">
-                  Projects
-                </span>
+              <div
+                className="mt-1 flex items-center rounded-md px-4 duration-300
+            cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white whitespace-nowrap"
+              >
+                <Icon icon="ci:settings" color="white" width="24" height="24" />
+                {open && (
+                  <div
+                    className="flex justify-between w-full items-center"
+                    onClick={() =>
+                      setCompanySubmenuOpen((prevState) => !prevState)
+                    }
+                  >
+                    <span className="font-[Inter] font-semibold text-[15px] ml-4 text-white-200">
+                      Company Settings
+                    </span>
+                    <span
+                      className={`text-sm ${
+                        isCompanySubmenuOpen ? "" : "rotate-180"
+                      } ease-linear duration-200`}
+                      id="arrow"
+                    >
+                      <Icon
+                        icon="iconamoon:arrow-up-2"
+                        color="white"
+                        width="30"
+                        height="30"
+                        className=""
+                      />
+                    </span>
+                  </div>
+                )}
+              </div>
+              {isCompanySubmenuOpen && (
+                <SubMenuGroup>
+                  <SubMenuEntry
+                    title="Company Configuration"
+                    onClick={() => navigate("/company-configurations")}
+                  />
+                  <SubMenuEntry
+                    title="Company Master"
+                    onClick={() => navigate("/company-masters")}
+                  />
+                  <SubMenuEntry
+                    title="Financial Year Master"
+                    onClick={() => navigate("/financial-masters")}
+                  />
+                  <SubMenuEntry
+                    title="Bank Master"
+                    onClick={() => navigate("/bank-master")}
+                  />
+                  <SubMenuEntry
+                    title="Cost Center Master"
+                    onClick={() => navigate("/costcenter-master")}
+                  />
+                  <SubMenuEntry
+                    title="Department Master"
+                    onClick={() => navigate("/department-master")}
+                  />
+                  <SubMenuEntry
+                    title="Destination Master"
+                    onClick={() => navigate("/destination-master")}
+                  />
+                  <SubMenuEntry
+                    title="Three Field Master"
+                    onClick={() => navigate("/three-field-master")}
+                  />
+                  <SubMenuEntry
+                    title="Two Field Master"
+                    onClick={() => navigate("/two-field-master")}
+                  />
+                  <SubMenuEntry title="Project Master" />
+                </SubMenuGroup>
               )}
-            </div>
 
-            <div
-              className="mt-1 flex items-center rounded-md px-4 duration-300
+              <div
+                className="mt-1 flex items-center rounded-md px-4 duration-300
             cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white"
-            >
-              <Icon
-                icon="bx:purchase-tag-alt"
-                color="white"
-                width="24"
-                height="24"
-              />
-              {open && (
-                <span className="font-[Inter] font-semibold text-[15px] ml-4 text-white-200">
-                  Purchase
-                </span>
+              >
+                <Icon
+                  icon="clarity:employee-group-line"
+                  color="white"
+                  width="24"
+                  height="24"
+                />
+                {open && (
+                  <div
+                    className="flex justify-between w-full items-center"
+                    onClick={() => setSubMenuOpen((prevState) => !prevState)}
+                  >
+                    <span className="font-[Inter] font-semibold text-[15px] ml-4 text-white-200">
+                      HRM
+                    </span>
+                    <span
+                      className={`text-sm ${
+                        isSubMenuOpen ? "" : "rotate-180"
+                      } ease-linear duration-200`}
+                      id="arrow"
+                    >
+                      <Icon
+                        icon="iconamoon:arrow-up-2"
+                        color="white"
+                        width="30"
+                        height="30"
+                      />
+                    </span>
+                  </div>
+                )}
+              </div>
+              {isSubMenuOpen && (
+                <div
+                  className="leading-7 text-left text-sm font-thin mt-2 px-2 w-full ease-in-out duration-200 whitespace-nowrap"
+                  id="submenu"
+                >
+                  <SubMenuMain
+                    title="Employee Settings"
+                    isOpen={isEmployeeSubmenuOpen}
+                    onClick={() =>
+                      setEmployeeSubmenuOpen((prevState) => !prevState)
+                    }
+                  />
+                  {isEmployeeSubmenuOpen && (
+                    <SubMenuGroup>
+                      <SubMenuEntry
+                        title="Employee Master"
+                        onClick={() => navigate("/employee-master")}
+                      />
+                      <SubMenuEntry
+                        title="Employee Type Master"
+                        onClick={() => navigate("/employee-type-master")}
+                      />
+                      <SubMenuEntry
+                        title="Employee Grade Master"
+                        onClick={() => navigate("/employee-grade-master")}
+                      />
+                      <SubMenuEntry
+                        title="Designation Master"
+                        onClick={() => navigate("/designation-master")}
+                      />
+                      <SubMenuEntry
+                        title="KRA Master"
+                        onClick={() => navigate("/kra-master")}
+                      />
+                      <SubMenuEntry
+                        title="Job Responsibility Master"
+                        onClick={() => navigate("/jobs-responsibility-master")}
+                      />
+                      <SubMenuEntry title="Employee Band Master" />
+                    </SubMenuGroup>
+                  )}
+                  <SubMenuMain
+                    title="Attendance Settings"
+                    isOpen={isAttendanceSubmenuOpen}
+                    onClick={() =>
+                      setAttendanceSubmenuOpen((prevState) => !prevState)
+                    }
+                  />
+                  {isAttendanceSubmenuOpen && (
+                    <SubMenuGroup>
+                      <SubMenuEntry
+                        title="Job Type Master"
+                        onClick={() => navigate("/job-type-master")}
+                      />
+                      <SubMenuEntry
+                        title="Shift Master"
+                        onClick={() => navigate("/shift-master")}
+                      />
+                      <SubMenuEntry
+                        title="Weekly Off Master"
+                        onClick={() => navigate("/weeklyoff-master")}
+                      />
+                      <SubMenuEntry
+                        title="Holiday Master"
+                        onClick={() => navigate("/holiday-master")}
+                      />
+                      <SubMenuEntry
+                        title="Atten. Device Master"
+                        onClick={() => navigate("/attDevice-master")}
+                      />
+                    </SubMenuGroup>
+                  )}
+                  <SubMenuMain
+                    title="Payroll Management"
+                    isOpen={isPayrollSubmenuOpen}
+                    onClick={() =>
+                      setPayrollSubmenuOpen((prevState) => !prevState)
+                    }
+                  />
+                  {isPayrollSubmenuOpen && (
+                    <SubMenuGroup>
+                      <SubMenuEntry
+                        title="Earning Heads Master"
+                        onClick={() => navigate("/earning-heads-master")}
+                      />
+                      <SubMenuEntry
+                        title="Deduction Heads Master"
+                        onClick={() => navigate("/deduction-heads-master")}
+                      />
+                      <SubMenuEntry
+                        title="Employee Type Earning Deduciton"
+                        onClick={() =>
+                          navigate("/employee-type-earning-deduction")
+                        }
+                      />
+                      <SubMenuEntry
+                        title="Professional Tax Setting"
+                        onClick={() => navigate("/professional-tax-master")}
+                      />
+                      <SubMenuEntry
+                        title="Advance Request"
+                        onClick={() => navigate("/advance-request")}
+                      />
+                      <SubMenuEntry title="Advance Approval" />
+                      <SubMenuEntry title="Advance Repayment" />
+                    </SubMenuGroup>
+                  )}
+                  <SubMenuMain
+                    title="Leaves Management"
+                    isOpen={isLeaveSubmenuOpen}
+                    onClick={() =>
+                      setLeaveSubmenuOpen((prevState) => !prevState)
+                    }
+                  />
+                  {isLeaveSubmenuOpen && (
+                    <SubMenuGroup>
+                      <SubMenuEntry
+                        title="Leave Type Master"
+                        onClick={() => navigate("/leave-type-master")}
+                      />
+                      <SubMenuEntry
+                        title="Leave Balance Upload"
+                        onClick={() => navigate("/leave-balance-master")}
+                      />
+                      <SubMenuEntry
+                        title="Leave Application"
+                        onClick={() => navigate("/leave-application")}
+                      />
+                      <SubMenuEntry
+                        title="Leave Approvals"
+                        onClick={() => navigate("/leave-approval")}
+                      />
+                    </SubMenuGroup>
+                  )}
+                  <SubMenuMain
+                    title="Attendance Management"
+                    isOpen={isAttMgtSubmenuOpen}
+                    onClick={() =>
+                      setAttMgtSubmenuOpen((prevState) => !prevState)
+                    }
+                  />
+                  {isAttMgtSubmenuOpen && (
+                    <SubMenuGroup>
+                      <SubMenuEntry title="Shift roster" />
+                      <SubMenuEntry title="Mnual Attendance Entry" />
+                      <SubMenuEntry title="Manual Attendance Approval" />
+                      <SubMenuEntry title="Out Door Duty Attendance Entry " />
+                      <SubMenuEntry title="Out Door Duty Attendance Application" />
+                      <SubMenuEntry title="Employee Gate Pass Entry" />
+                      <SubMenuEntry title="Employee Gate Pass Approval" />
+                      <SubMenuEntry title="Job Allocation" />
+                      <SubMenuEntry title="Daily Atttendance Processing" />
+                      <SubMenuEntry title="Attendance Import" />
+                      <SubMenuEntry title="Monthly Attendance Provessing" />
+                    </SubMenuGroup>
+                  )}
+                  <SubMenuMain
+                    title="Salary Management"
+                    isOpen={isSalarySubmenuOpen}
+                    onClick={() =>
+                      setSalarySubmenuOpen((prevState) => !prevState)
+                    }
+                  />
+                  {isSalarySubmenuOpen && (
+                    <SubMenuGroup>
+                      <SubMenuEntry title="Daily Overtime Processing" />
+                      <SubMenuEntry title="Monthly Overtime Processing" />
+                      <SubMenuEntry title="Overtime Approvals" />
+                      <SubMenuEntry title="Advance Management " />
+                      <SubMenuEntry
+                        title="Earning-Deduction Imports"
+                        onClick={() => navigate("/ED-imports")}
+                      />
+                      <SubMenuEntry
+                        title="Salary Processing"
+                        onClick={() => navigate("/salary-processing")}
+                      />
+                      <SubMenuEntry title="Salary Corrections" />
+                    </SubMenuGroup>
+                  )}
+                  <SubMenuMain
+                    title="Registers"
+                    isOpen={isRegisterSubmenuOpen}
+                    onClick={() =>
+                      setRegisterSubmenuOpen((prevState) => !prevState)
+                    }
+                  />
+                  {isRegisterSubmenuOpen && (
+                    <SubMenuGroup>
+                      <SubMenuEntry title="Master Register" />
+                    </SubMenuGroup>
+                  )}
+                </div>
               )}
-            </div>
 
-            <div
-              className="mt-1 flex items-center rounded-md px-4 duration-300
+              <div
+                className="mt-1 flex items-center rounded-md px-4 duration-300
             cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white"
-            >
-              <Icon
-                icon="streamline:shipping-transfer-cart-package-box-fulfillment-cart-warehouse-shipping-delivery"
-                color="white"
-                width="24"
-                height="24"
-              />
-              {open && (
-                <span className="font-[Inter] font-semibold text-[15px] ml-4 text-white-200">
-                  Store
-                </span>
-              )}
-            </div>
+              >
+                <Icon
+                  icon="radix-icons:calendar"
+                  color="white"
+                  width="24"
+                  height="24"
+                />
+                {open && (
+                  <span className="font-[Inter] font-semibold text-[15px] ml-4 text-white-200 ease-in-out duration-200">
+                    Allocations
+                  </span>
+                )}
+              </div>
 
-            <div
-              className="mt-1 flex items-center rounded-md px-4 duration-300
+              <div
+                className="mt-1 flex items-center rounded-md px-4 duration-300
             cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white"
-            >
-              <Icon icon="ep:sell" color="white" width="24" height="24" />
-              {open && (
-                <span className="font-[Inter] font-semibold text-[15px] ml-4 text-white-200">
-                  Sales
-                </span>
-              )}
+              >
+                <Icon
+                  icon="streamline:money-atm-card-1-credit-pay-payment-debit-card-finance-plastic-money"
+                  color="white"
+                  width="24"
+                  height="24"
+                />
+                {open && (
+                  <span className="font-[Inter] font-semibold text-[15px] ml-4 text-white-200">
+                    Finance
+                  </span>
+                )}
+              </div>
+
+              <div
+                className="mt-1 flex items-center rounded-md px-4 duration-300
+            cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white"
+              >
+                <Icon
+                  icon="eos-icons:project-outlined"
+                  color="white"
+                  width="24"
+                  height="24"
+                />
+                {open && (
+                  <span className="font-[Inter] font-semibold text-[15px] ml-4 text-white-200">
+                    Projects
+                  </span>
+                )}
+              </div>
+
+              <div
+                className="mt-1 flex items-center rounded-md px-4 duration-300
+            cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white"
+              >
+                <Icon
+                  icon="bx:purchase-tag-alt"
+                  color="white"
+                  width="24"
+                  height="24"
+                />
+                {open && (
+                  <span className="font-[Inter] font-semibold text-[15px] ml-4 text-white-200">
+                    Purchase
+                  </span>
+                )}
+              </div>
+
+              <div
+                className="mt-1 flex items-center rounded-md px-4 duration-300
+            cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white"
+              >
+                <Icon
+                  icon="streamline:shipping-transfer-cart-package-box-fulfillment-cart-warehouse-shipping-delivery"
+                  color="white"
+                  width="24"
+                  height="24"
+                />
+                {open && (
+                  <span className="font-[Inter] font-semibold text-[15px] ml-4 text-white-200">
+                    Store
+                  </span>
+                )}
+              </div>
+
+              <div
+                className="mt-1 flex items-center rounded-md px-4 duration-300
+            cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white"
+              >
+                <Icon icon="ep:sell" color="white" width="24" height="24" />
+                {open && (
+                  <span className="font-[Inter] font-semibold text-[15px] ml-4 text-white-200">
+                    Sales
+                  </span>
+                )}
+              </div>
             </div>
-          </div>
+          )}
           <div
             className="mt-1 flex items-center rounded-md px-4 duration-300
             cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white"
@@ -564,7 +631,6 @@ const Sidebar = () => {
               </span>
             )}
           </div>
-
           <div
             className="mt-1 flex items-center rounded-md px-4 duration-300
             cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white"
@@ -584,20 +650,20 @@ const Sidebar = () => {
           </div>
         </div>
         <div
-            className={`mt-5 w-full px-2.5 pb-3 flex relative ${
-              open ? "ml-40" : "ml-5"
-            } ease-in-out duration-200 bg-gray-200 bg-opacity-20 items-center rounded-lg cursor-pointer`}
-            onClick={handleClose}
-          >
-            <Icon
-              icon="streamline:interface-arrows-button-left-double-arrow-arrows-double-left"
-              color="white"
-              width="28"
-              height="28"
-              rotate={`${open ? "" : "2"}`}
-              className="mt-4 cursor-pointer ease-in-out duration-300"
-            />
-          </div>
+          className={`mt-5 w-full px-2.5 pb-3 flex relative ${
+            open ? "ml-40" : "ml-5"
+          } ease-in-out duration-200 bg-gray-200 bg-opacity-20 items-center rounded-lg cursor-pointer`}
+          onClick={handleClose}
+        >
+          <Icon
+            icon="streamline:interface-arrows-button-left-double-arrow-arrows-double-left"
+            color="white"
+            width="28"
+            height="28"
+            rotate={`${open ? "" : "2"}`}
+            className="mt-4 cursor-pointer ease-in-out duration-300"
+          />
+        </div>
       </div>
     </div>
   );

@@ -29,13 +29,13 @@ export const ProfessionalData = [
 ];
 
 const Professional = ({ ID, name }) => {
-  const [professionalData, setProfessionalData] = useState({});
+  const [professionalData, setProfessionalData] = useState([]);
   const [newEmployer, setNewEmployer] = useState("");
   const [newExperience, setNewExperience] = useState("");
   const [newDesignation, setNewDesignation] = useState("");
   const [newJobResponsibility, setNewJobResponsibility] = useState("");
   const [newSalary, setNewSalary] = useState("");
-  const [row, setRow] = useState([]);
+  const [rows, setRows] = useState([]);
   const { token } = useAuth();
   console.log(ID);
 
@@ -143,9 +143,7 @@ const Professional = ({ ID, name }) => {
       const data = response.data;
       console.log(data);
       setProfessionalData(data);
-      const rows = SplitData();
-      setProfessionalData([...rows]);
-      console.log("after split", professionalData);
+      SplitData();
     } catch (error) {
       console.log(
         "Error while fetching professional data data: ",
@@ -162,9 +160,6 @@ const Professional = ({ ID, name }) => {
     const jobRows = professionalData.JobResponsibility.split(",");
     const salRows = professionalData.Salary.split(",");
 
-    // Create a new array to store the rows of the table.
-    const rows = [];
-
     // Iterate over the data arrays and create a new row object for each element.
     for (let i = 0; i < empRows.length; i++) {
       const row = {
@@ -177,10 +172,9 @@ const Professional = ({ ID, name }) => {
 
       rows.push(row);
     }
-    console.log(rows);
-
+    console.log("rows", rows);
     // Return the rows array.
-    return rows;
+    setRows(rows);
   };
 
   return (
