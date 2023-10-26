@@ -38,6 +38,7 @@ const EmployeeId = require("./route/EmployeeIdRoute");
 const AttendanceMaster = require("./route/AttendanceMasterRoute");
 const EDImports = require("./route/EDImportsRoute");
 const EmpFamily = require("./route/EmpFamilyRoute");
+const Currencies = require("./route/CurrenciesRoute");
 
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());
@@ -76,6 +77,7 @@ app.use("/attendance-master", AttendanceMaster);
 app.use("/employeeid", EmployeeId);
 app.use("/ed-imports", EDImports);
 app.use("/employee/family", EmpFamily);
+app.use("/currency", Currencies);
 
 // Start the server
 const port = 5500;
