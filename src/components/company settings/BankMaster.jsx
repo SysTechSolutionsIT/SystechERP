@@ -22,8 +22,11 @@ const BankMaster = () => {
     authPersonCount: false,
     remark: false,
     authPerson1: false,
+    authPerson1Op: false,
     authPerson2: false,
+    authPerson2Op: false,
     authPerson3: false,
+    authPerson3Op: false,
   });
 
   const columnNames = {
@@ -40,8 +43,11 @@ const BankMaster = () => {
     authPersonCount: "Authorized Person Count",
     remark: "Remark",
     authPerson1: "Auth Person 1",
+    authPerson1Op: "Auth Person 1 Operation",
     authPerson2: "Auth Person 2",
+    authPerson2Op: "Auth Person 2 Operation",
     authPerson3: "Auth Person 3",
+    authPerson3Op: "Auth Person 3 Operation",
   };
 
 
@@ -233,12 +239,12 @@ const BankMaster = () => {
                   <input
                     type="checkbox"
                     className="mr-2"
-                    checked={selectedColumns.includes(columnName)}
+                    checked={columnVisibility[columnName]}
                     onChange={() => toggleColumn(columnName)}
                   />
                   <span
                     className={
-                      selectedColumns.includes(columnName)
+                      columnVisibility[columnName]
                         ? "font-semibold"
                         : ""
                     }

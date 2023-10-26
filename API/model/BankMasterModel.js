@@ -55,10 +55,19 @@ const BankMaster = sequelize.define("BankMaster", {
     authPerson1: {
         type: DataTypes.STRING,
     },
+    authPerson1Op: {
+        type: DataTypes.STRING,
+    },
     authPerson2: {
         type: DataTypes.STRING,
     },
+    authPerson2Op: {
+        type: DataTypes.STRING,
+    },
     authPerson3: {
+        type: DataTypes.STRING,
+    },
+    authPerson3Op: {
         type: DataTypes.STRING,
     },
 })

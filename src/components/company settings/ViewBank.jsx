@@ -23,23 +23,48 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
       authPersonCount: "",
       remark: "",
       authPerson1: "",
+      authPerson1Op: "",
       authPerson2: "",
+      authPerson2Op: "",
       authPerson3: "",
+      authPerson3Op: "",
     },
     onSubmit: (values) => {
       console.log(values);
+      const updatedData = {
+      bankName: values.bankName,
+      branchName: values.branchName,
+      branchAddress: values.branchAddress,
+      accountType: values.accountType,
+      accountNo: values.accountNo,
+      ifscCode: values.ifscCode,
+      swiftCode: values.swiftCode,
+      registeredEmail: values.registeredEmail,
+      registeredContact: values.registeredContact,
+      currencyType: values.currencyType,
+      bankGst: values.bankGst,
+      authPersonCount: values.authPersonCount,
+      remark: values.remark,
+      authPerson1: values.authPerson1,
+      authPerson1Op: values.authPerson1Op,
+      authPerson2: values.authPerson2,
+      authPerson2Op: values.authPerson2Op,
+      authPerson3: values.authPerson3,
+      authPerson3Op: values.authPerson3Op,
+      }
+      updateBanks(updatedData)
     },
   });
 
-  const updateBanks = async () =>{
+  const updateBanks = async (data) =>{
     try{
-      const response = axios.patch(`http://localhost:5500/bankmaster/update-bank/${ID}`, formik.values,
+      const response = axios.patch(`http://localhost:5500/bankmaster/update-bank/${ID}`, data,
       {
         headers:{
           Authorization: `Bearer ${token}`
         }
       })
-      console.log('Patch successful')
+      alert('Bank Data Updated')
     } catch(error){
       console.log('Error in patch', error)
     }
@@ -66,6 +91,32 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
         console.log("Error while fetching course data: ", error.message);
       }
     }
+
+    useEffect(() =>{
+      if(details){
+        formik.setValues({
+      bankName: details.bankName,
+      branchName: details.branchName,
+      branchAddress: details.branchAddress,
+      accountType: details.accountType,
+      accountNo: details.accountNo,
+      ifscCode: details.ifscCode,
+      swiftCode: details.swiftCode,
+      registeredEmail: details.registeredEmail,
+      registeredContact: details.registeredContact,
+      currencyType: details.currencyType,
+      bankGst: details.bankGst,
+      authPersonCount: details.authPersonCount,
+      remark: details.remark,
+      authPerson1: details.authPerson1,
+      authPerson1Op: details.authPerson1Op,
+      authPerson2: details.authPerson2,
+      authPerson2Op: details.authPerson2Op,
+      authPerson3: details.authPerson3,
+      authPerson3Op: details.authPerson3Op,
+        })
+      }
+    },[details])
 
 console.log('Details array', details)
   if (!visible) return null;
@@ -108,7 +159,7 @@ console.log('Details array', details)
                   id="bankName"
                   type="text"
                   placeholder="Enter Bank Name"
-                  value={details?.bankName}
+                  value={formik.values.bankName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -122,7 +173,7 @@ console.log('Details array', details)
                   id="branchName"
                   type="text"
                   placeholder="Enter Branch Name"
-                  value={details?.branchName}
+                  value={formik.values.branchName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -136,7 +187,7 @@ console.log('Details array', details)
                   id="branchAddress"
                   type="text"
                   placeholder=" Enter Branch Address"
-                  value={details?.branchAddress}
+                  value={formik.values.branchAddress}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -148,7 +199,7 @@ console.log('Details array', details)
                 </p>
                 <select
                   id="accountType"
-                  value={details?.accountType}
+                  value={formik.values.accountType}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -175,7 +226,7 @@ console.log('Details array', details)
                   id="accountNo"
                   type="number"
                   placeholder=" Enter Account No."
-                  value={details?.accountNo}
+                  value={formik.values.accountNo}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -189,7 +240,7 @@ console.log('Details array', details)
                   id="ifscCode"
                   type="text"
                   placeholder=" Enter IFSC Code"
-                  value={details?.ifscCode}
+                  value={formik.values.ifscCode}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -203,7 +254,7 @@ console.log('Details array', details)
                   id="swiftCode"
                   type="text"
                   placeholder=" Enter SWIFT Code"
-                  value={details?.swiftCode}
+                  value={formik.values.swiftCode}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -217,7 +268,7 @@ console.log('Details array', details)
                   id="registeredEmail"
                   type="text"
                   placeholder=" Enter Registered Email"
-                  value={details?.registeredEmail}
+                  value={formik.values.registeredEmail}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -231,7 +282,7 @@ console.log('Details array', details)
                   id="registeredContact"
                   type="number"
                   placeholder=" Enter Registered Contact No."
-                  value={details?.registeredContact}
+                  value={formik.values.registeredContact}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -243,7 +294,7 @@ console.log('Details array', details)
                 </p>
                 <select
                   id="currencyType"
-                  value={details?.currencyType}
+                  value={formik.values.currencyType}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -269,7 +320,7 @@ console.log('Details array', details)
                   id="bankGst"
                   type="text"
                   placeholder=" Enter Bank GST"
-                  value={details?.bankGst}
+                  value={formik.values.bankGst}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -283,7 +334,7 @@ console.log('Details array', details)
                   id="authPersonCount"
                   type="number"
                   placeholder=" Enter Authorized Person Count."
-                  value={details?.authPersonCount}
+                  value={formik.values.authPersonCount}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -295,7 +346,7 @@ console.log('Details array', details)
                   id="remark"
                   type="text"
                   placeholder=" Enter Remarks."
-                  value={details?.remark}
+                  value={formik.values.remark}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -305,18 +356,14 @@ console.log('Details array', details)
                 <p className="capitalize text-left font-semibold  text-[13px]">
                   Authorized Person 1
                 </p>
-                <select
+                <input
                   id="authPerson1"
-                  value={details?.authPerson1}
+                  type="text"
+                  value={formik.values.authPerson1}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
-                >
-                  <option value="">Select Authorized Person 1</option>
-                  <option value="ABC">Abc</option>
-                  <option value="XYZ">Xyz</option>
-                  <option value="PQR">Pqr</option>
-                </select>
+                />
               </div>
               <div>
                 <p className="capitalize text-left text-[13px] font-semibold">Authorized Person 1</p>
@@ -324,9 +371,9 @@ console.log('Details array', details)
                   <label className="flex items-center text-[11px]">
                     <input
                       type="radio"
-                      id="authPerson1"
+                      id="authPerson1Op"
                       value="View"
-                      checked={details?.authPerson1 === "View"}
+                      checked={formik.values.authPerson1Op === "View"}
                       onChange={formik.handleChange}
                       disabled={!edit}
                       className="mr-2"
@@ -336,9 +383,9 @@ console.log('Details array', details)
                   <label className="flex items-center text-[11px]">
                     <input
                       type="radio"
-                      id="authPerson1"
+                      id="authPerson1Op"
                       value="Operation"
-                      checked={details?.authPerson1 === "Operation"}
+                      checked={formik.values.authPerson1Op === "Operation"}
                       onChange={formik.handleChange}
                       disabled={!edit}
                       className="mr-2"
@@ -351,18 +398,14 @@ console.log('Details array', details)
                 <p className="capitalize text-left font-semibold text-[13px]">
                   Authorized Person 2
                 </p>
-                <select
+                <input
                   id="authPerson2"
-                  value={details?.authPerson2}
+                  type="text"
+                  value={formik.values.authPerson2}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
-                >
-                  <option value="">Select Authorized Person 2</option>
-                  <option value="ABC">Abc</option>
-                  <option value="XYZ">Xyz</option>
-                  <option value="PQR">Pqr</option>
-                </select>
+                />
               </div>
               <div>
                 <p className="capitalize text-left font-semibold text-[13px]">
@@ -372,9 +415,9 @@ console.log('Details array', details)
                   <label className="flex items-center text-[11px]">
                     <input
                       type="radio"
-                      id="authPerson2"
+                      id="authPerson2Op"
                       value="View"
-                      checked={details?.authPerson2 === "View"}
+                      checked={formik.values.authPerson2Op === "View"}
                       onChange={formik.handleChange}
                       disabled={!edit}
                       className="mr-2"
@@ -384,9 +427,9 @@ console.log('Details array', details)
                   <label className="flex items-center text-[11px]">
                     <input
                       type="radio"
-                      id="authPerson2"
+                      id="authPerson2Op"
                       value="Operation"
-                      checked={details?.authPerson2 === "Operation"}
+                      checked={formik.values.authPerson2Op === "Operation"}
                       onChange={formik.handleChange}
                       disabled={!edit}
                       className="mr-2"
@@ -399,18 +442,14 @@ console.log('Details array', details)
                 <p className="capitalize text-left font-semibold text-[13px]">
                   Authorized Person 3
                 </p>
-                <select
+                <input
                   id="authPerson3"
-                  value={details?.authPerson3}
+                  type="text"
+                  value={formik.values.authPerson3}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
-                >
-                  <option value="">Select Authorized Person 3</option>
-                  <option value="ABC">Abc</option>
-                  <option value="XYZ">Xyz</option>
-                  <option value="PQR">Pqr</option>
-                </select>
+                />
               </div>
               <div>
                 <p className="capitalize text-left text-[13px] font-semibold">Authorized Person 3</p>
@@ -418,9 +457,9 @@ console.log('Details array', details)
                   <label className="flex items-center text-[11px]">
                     <input
                       type="radio"
-                      id="authPerson3"
+                      id="authPerson3Op"
                       value="View"
-                      checked={details?.authPerson3 === "View"}
+                      checked={formik.values.authPerson3Op === "View"}
                       onChange={formik.handleChange}
                       disabled={!edit}
                       className="mr-2 text-[11px]"
@@ -430,9 +469,9 @@ console.log('Details array', details)
                   <label className="flex items-center text-[11px]">
                     <input
                       type="radio"
-                      id="authPerson3"
+                      id="authPerson3Op"
                       value="Operation"
-                      checked={details?.authPerson3 === "Operation"}
+                      checked={formik.values.authPerson3Op === "Operation"}
                       onChange={formik.handleChange}
                       disabled={!edit}
                       className="mr-2 "
@@ -446,7 +485,6 @@ console.log('Details array', details)
           <div className="flex gap-10 justify-center">
             <button
               type="submit"
-              onClick={updateBanks}
               className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg w-36"
             >
               Save
