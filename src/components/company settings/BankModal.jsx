@@ -24,8 +24,11 @@ const BankModal = ({ visible, onClick }) => {
       authPersonCount: "",
       remark: "",
       authPerson1: "",
+      authPerson1Op: "",
       authPerson2: "",
+      authPerson2Op: "",
       authPerson3: "",
+      authPerson3Op: "",
     },
     onSubmit: (values) => {
       console.log(values);
@@ -277,17 +280,13 @@ const BankModal = ({ visible, onClick }) => {
                 <p className="capitalize font-semibold text-[13px]">
                   Authorized Person 1
                 </p>
-                <select
+                <input
                   id="authPerson1"
+                  type="text"
                   value={formik.values.authPerson1}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
-                >
-                  <option value="">Select Authorized Person 1</option>
-                  <option value="ABC">Abc</option>
-                  <option value="XYZ">Xyz</option>
-                  <option value="PQR">Pqr</option>
-                </select>
+                />
               </div>
               <div>
                 <p className="capitalize font-semibold text-[13px]">
@@ -297,9 +296,9 @@ const BankModal = ({ visible, onClick }) => {
                   <label className="flex items-center">
                     <input
                       type="radio"
-                      id="authPerson1"
+                      id="authPerson1Op"
                       value="View"
-                      checked={formik.values.authPerson1 === "View"}
+                      checked={formik.values.authPerson1Op === "View"}
                       onChange={formik.handleChange}
                       className="mr-2"
                     />
@@ -308,9 +307,9 @@ const BankModal = ({ visible, onClick }) => {
                   <label className="flex items-center">
                     <input
                       type="radio"
-                      id="authPerson1"
+                      id="authPerson1Op"
                       value="Operation"
-                      checked={formik.values.authPerson1 === "Operation"}
+                      checked={formik.values.authPerson1Op === "Operation"}
                       onChange={formik.handleChange}
                       className="mr-2"
                     />
@@ -322,17 +321,13 @@ const BankModal = ({ visible, onClick }) => {
                 <p className="capitalize font-semibold text-[13px]">
                   Authorized Person 2
                 </p>
-                <select
+                <input
                   id="authPerson2"
+                  type="text"
                   value={formik.values.authPerson2}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
-                >
-                  <option value="">Select Authorized Person 2</option>
-                  <option value="ABC">Abc</option>
-                  <option value="XYZ">Xyz</option>
-                  <option value="PQR">Pqr</option>
-                </select>
+                />
               </div>
               <div>
                 <p className="capitalize font-semibold text-[13px]">
@@ -342,9 +337,9 @@ const BankModal = ({ visible, onClick }) => {
                   <label className="flex items-center">
                     <input
                       type="radio"
-                      id="authPerson2"
+                      id="authPerson2Op"
                       value="View"
-                      checked={formik.values.authPerson2 === "View"}
+                      checked={formik.values.authPerson2Op === "View"}
                       onChange={formik.handleChange}
                       className="mr-2"
                     />
@@ -353,9 +348,9 @@ const BankModal = ({ visible, onClick }) => {
                   <label className="flex items-center">
                     <input
                       type="radio"
-                      id="authPerson2"
+                      id="authPerson2Op"
                       value="Operation"
-                      checked={formik.values.authPerson2 === "Operation"}
+                      checked={formik.values.authPerson2Op === "Operation"}
                       onChange={formik.handleChange}
                       className="mr-2"
                     />
@@ -367,17 +362,13 @@ const BankModal = ({ visible, onClick }) => {
                 <p className="capitalize font-semibold text-[13px]">
                   Authorized Person 3
                 </p>
-                <select
+                <input
                   id="authPerson3"
+                  type="text"
                   value={formik.values.authPerson3}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
-                >
-                  <option value="">Select Authorized Person 3</option>
-                  <option value="ABC">Abc</option>
-                  <option value="XYZ">Xyz</option>
-                  <option value="PQR">Pqr</option>
-                </select>
+                />
               </div>
               <div>
                 <p className="capitalize font-semibold text-[13px]">
@@ -387,9 +378,9 @@ const BankModal = ({ visible, onClick }) => {
                   <label className="flex items-center">
                     <input
                       type="radio"
-                      id="authPerson3"
+                      id="authPerson3Op"
                       value="View"
-                      checked={formik.values.authPerson3 === "View"}
+                      checked={formik.values.authPerson3Op === "View"}
                       onChange={formik.handleChange}
                       className="mr-2"
                     />
@@ -398,9 +389,9 @@ const BankModal = ({ visible, onClick }) => {
                   <label className="flex items-center">
                     <input
                       type="radio"
-                      id="authPerson3"
+                      id="authPerson3Op"
                       value="Operation"
-                      checked={formik.values.authPerson3 === "Operation"}
+                      checked={formik.values.authPerson3Op === "Operation"}
                       onChange={formik.handleChange}
                       className="mr-2 text-[11px]"
                     />
