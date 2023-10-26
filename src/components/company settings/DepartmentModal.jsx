@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import { useState } from "react";
 import { departments } from "./DepartmentMaster";
 import { Icon } from "@iconify/react";
 import axios from "axios";
 import { useAuth } from "../Login";
+// import { costCenters } from "./CostCenterMaster";
 
 const DepartmentModal = ({ visible, onClick }) => {
   const {token} = useAuth()
+  const [CostCenters, setCostCenters] = useState([])
   const formik = useFormik({
     initialValues: {
       // deptID: "",
@@ -53,6 +55,24 @@ const DepartmentModal = ({ visible, onClick }) => {
       // Handle network error
     }
   }
+
+  useEffect(() =>{
+    const fetchCostCenters = async () =>{
+      try {
+        const response = await axios.get('http://localhost:5500/cost-center/', {
+          headers:{
+            Authorization: `Bearer ${token}`
+          }
+        })
+        const data = response.data.records
+        setCostCenters(data)
+        console.log(data)
+      } catch (error) {
+        console.error('Error fetching cost centers', error);
+      }
+    }
+    fetchCostCenters()
+  }, [token])
 
   const [status, setStatus] = useState(false);
 
@@ -204,38 +224,30 @@ const DepartmentModal = ({ visible, onClick }) => {
                 <p className="capatilize font-semibold text-[13px]">
                   Department Head
                 </p>
-                <select
+                <input
                   id="deptHead"
+                  type="text"
+                  placeholder="Enter Department Head"
                   value={formik.values.deptHead}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
-                >
-                  <option value="">Select Department Head</option>
-                  <option value="Head 1">Head 1</option>
-                  <option value="Head 2">Head 2</option>
-                  <option value="Head 3">Head 3</option>
-                  <option value="Head 4">Head 4</option>
-                </select>
+                />
               </div>
               <div>
                 <p className="capatilize font-semibold text-[11px] text-[11px]">
                   Department Sub Head
                 </p>
-                <select
+                <input
                   id="deptSubHead"
+                  type="text"
+                  placeholder="Enter Department Sub-Head"
                   value={formik.values.deptSubHead}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
-                >
-                  <option value="">Select Department Sub Head</option>
-                  <option value="Sub Head 1">Sub Head 1</option>
-                  <option value="Sub Head 2">Sub Head 2</option>
-                  <option value="Sub Head 3">Sub Head 3</option>
-                  <option value="Sub Head 4">Sub Head 4</option>
-                </select>
+                />
               </div>
               <div>
-                <p className="capatilize font-semibold text-[13px]">
+                <p className="capitalize font-semibold text-[13px]">
                   Select Cost Center
                 </p>
                 <select
@@ -245,10 +257,11 @@ const DepartmentModal = ({ visible, onClick }) => {
                   onChange={formik.handleChange}
                 >
                   <option value="">Select Cost Center</option>
-                  <option value="Cost Center 1">Cost Center 1</option>
-                  <option value="Cost Center 2">Cost Center 2</option>
-                  <option value="Cost Center 3">Cost Center 3</option>
-                  <option value="Cost Center 4">Cost Center 4</option>
+                  {CostCenters.map((entry) => (
+                    <option key={entry.id} value={entry.cName}>
+                      {entry.cName}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div>

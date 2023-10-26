@@ -1,125 +1,62 @@
-import React from "react";
 import { Icon } from "@iconify/react";
-import BankModal from "./BankModal";
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { Button } from "react-bootstrap";
+import CompanyModal from "./CompanyModal";
+import VEModal from "./ViewComp";
 import axios from "axios";
-import ViewBank from "./ViewBank";
 import { useAuth } from "../Login";
 
-const BankMaster = () => {
+const CompMaster = () => {
+  const [filteredData, setFilteredData] = useState([]);
+  const [isModalOpen, setModalOpen] = useState(false); //Add Modal
+
   const { token } = useAuth();
+
+  //View and Edit
+  const [VE, setVE] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const [Cid, setCid] = useState();
+
+  //Hamburger Menu
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+
   const [columnVisibility, setColumnVisibility] = useState({
-    bankName: true,
-    branchName: true,
-    accountType: true,
-    accountNo: true,
-    ifscCode: true,
-    swiftCode: false,
-    registeredEmail: false,
-    registeredContact: false,
-    currencyType: false,
-    bankGst: false,
-    authPersonCount: false,
-    remark: false,
-    authPerson1: false,
-    authPerson2: false,
-    authPerson3: false,
+    Name: true,
+    ShortName: true,
+    SectorDetails: true,
+    NatureOfBusiness: true,
+    Status: true,
+    CreatedBy: true,
+    CreatedOn: true,
+    ModifiedBy: true,
   });
 
   const columnNames = {
-    bankName: "Bank Name",
-    branchName: "Branch Name",
-    accountType: "Account Type",
-    accountNo: "Account No",
-    ifscCode: "IFSC Code",
-    swiftCode: "SWIFT Code",
-    registeredEmail: "Registered Email",
-    registeredContact: "Registered Contact",
-    currencyType: "Currency Type",
-    bankGst: "Bank GST",
-    authPersonCount: "Authorized Person Count",
-    remark: "Remark",
-    authPerson1: "Auth Person 1",
-    authPerson2: "Auth Person 2",
-    authPerson3: "Auth Person 3",
-  };
+    Name: "Name",
+    ShortName: "Short Name",
+    SectorDetails: "Sector Details",
+    NatureOfBusiness: "Nature of Business",
+    Status: "Status",
+    CreatedBy: "Created By",
+    CreatedOn: "Created On",
+    ModifiedBy: "Modified By",
+  }
 
-
-  const [banks, setBanks] = useState([]);
-
-  const deleteBank = async (bankid) => {
-    alert("Are you sure you want to delete this bank?");
-    try {
-      const apiUrl = `http://localhost:5500/bankmaster/delete-bank/${bankid}`;
-
-      const response = await axios.delete(apiUrl, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (response.status === 204) {
-        console.log(`Bank with ID ${bankid} deleted successfully.`);
-        alert("Bank Deleted");
-        window.location.reload();
-      } else {
-        console.error(`Failed to delete bank with ID ${bankid}.`);
-      }
-    } catch (error) {
-      console.error("Error deleting bank:", error);
-    }
-  };
-
-  useEffect(() => {
-    const fetchBanks = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:5500/bankmaster/banks",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        console.log("Response Object", response);
-        const data = response.data;
-        console.log(data);
-        setBanks(data);
-      } catch (error) {
-        console.log("Error while fetching bank data: ", error.message);
-      }
-    };
-    fetchBanks();
-  }, [token]);
-
-  const [isModalOpen, setModalOpen] = useState(false);
-  const handleModalClose = () => {
-    setModalOpen(false);
-  };
-  const [filteredData, setFilteredData] = useState([]);
-
-  const handleSearchChange = (title, searchWord) => {
-    const newFilter = banks.filter((item) => {
-      const value = item[title];
-      return value && value.toLowerCase().includes(searchWord.toLowerCase());
-    });
-
-    if (searchWord === "") {
-      setFilteredData([]);
-    } else {
-      setFilteredData(newFilter);
-    }
-  };
+  //Toggle
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedColumns, setSelectedColumns] = useState([
     ...Object.keys(columnVisibility),
   ]);
 
   const toggleColumn = (columnName) => {
-    setColumnVisibility((prevVisibility) => ({
-      ...prevVisibility,
-      [columnName]: !prevVisibility[columnName],
-    }));
+    if (selectedColumns.includes(columnName)) {
+      setSelectedColumns((prevSelected) =>
+        prevSelected.filter((col) => col !== columnName)
+      );
+    } else {
+      setSelectedColumns((prevSelected) => [...prevSelected, columnName]);
+    }
   };
 
   useEffect(() => {
@@ -128,34 +65,13 @@ const BankMaster = () => {
 
   const selectAllColumns = () => {
     setSelectedColumns([...Object.keys(columnVisibility)]);
-    setColumnVisibility((prevVisibility) => {
-      const updatedVisibility = { ...prevVisibility };
-      Object.keys(updatedVisibility).forEach((columnName) => {
-        updatedVisibility[columnName] = true;
-      });
-      return updatedVisibility;
-    });
   };
 
   const deselectAllColumns = () => {
     setSelectedColumns([]);
-    setColumnVisibility((prevVisibility) => {
-      const updatedVisibility = { ...prevVisibility };
-      Object.keys(updatedVisibility).forEach((columnName) => {
-        updatedVisibility[columnName] = false;
-      });
-      return updatedVisibility;
-    });
   };
 
-  const [vebank, setVeBank] = useState(false);
-  const [edit, setEdit] = useState(false);
-  const [bid, setBid] = useState();
-
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef(null);
-
-  //Menu click outside
+  //Menu
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -173,7 +89,7 @@ const BankMaster = () => {
   //Max Searchbar width
   const getColumnMaxWidth = (columnName) => {
     let maxWidth = 0;
-    const allRows = [...banks, ...filteredData];
+    const allRows = [...companies, ...filteredData];
 
     allRows.forEach((row) => {
       const cellContent = row[columnName];
@@ -191,11 +107,77 @@ const BankMaster = () => {
     return context.measureText(text).width;
   };
 
+  //For API
+  const [companies, setCompanies] = useState([]);
+
+  useEffect(() => {
+    fetchCompData();
+  }, [token]);
+
+  const fetchCompData = async () => {
+    try {
+      const response = await axios.get("http://localhost:5500/companies/", {
+        headers: { authorization: `Bearer ${token}` },
+      });
+      console.log("Response Object", response);
+      const data = response.data.companies;
+      console.log(data);
+      setCompanies(data);
+    } catch (error) {
+      console.log("Error while fetching course data: ", error.message);
+    }
+  };
+  console.log(companies);
+
+  const handleSearchChange = (title, searchWord) => {
+    const searchData = [...companies];
+
+    const newFilter = searchData.filter((item) => {
+      // Check if the item matches the search term in any of the selected columns
+      const matches = selectedColumns.some((columnName) => {
+        const newCol = columnName.charAt(0).toLowerCase() + columnName.slice(1);
+        const value = item[newCol];
+        return (
+          value &&
+          value.toString().toLowerCase().includes(searchWord.toLowerCase())
+        );
+      });
+
+      return matches;
+    });
+
+    // Update the filtered data
+    setFilteredData(newFilter);
+  };
+  // Deleting Entry
+  const deleteComp = async (ID) => {
+    alert("Are you sure you want to delete this bank?");
+    try {
+      const apiUrl = `http://localhost:5500/companies/delete/${ID}`;
+
+      const response = await axios.delete(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 204) {
+        console.log(`Record with ID ${ID} deleted successfully.`);
+        alert("Record Deleted");
+        window.location.reload();
+      } else {
+        console.error(`Failed to delete record with ID ${ID}.`);
+      }
+    } catch (error) {
+      console.error("Error deleting record:", error);
+    }
+  };
+
   return (
     <div className="top-25 min-w-[40%]">
-      <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
+      <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-x-clip">
         <div className="text-[15px]">
-          Company Settings / Bank Master
+          Company Settings / Company Master
         </div>
         <div className="flex gap-4">
           <button
@@ -288,50 +270,53 @@ const BankMaster = () => {
           </div>
         </div>
       </div>
-      <BankModal visible={isModalOpen} onClick={handleModalClose} />
-      <div className="grid gap-4 justify-between">
-        <div className="my-1 rounded-2xl bg-white p-2 pr-8">
-          <table className="min-w-full text-center rounded-lg whitespace-normal">
-            <thead>
-              <tr>
-                <th className="px-1 text-[13px] font-bold text-black border-2 border-gray-400 whitespace-normal">
+      <CompanyModal visible={isModalOpen} onClick={() => setModalOpen(false)} />
+
+      <div className="grid gap-2 justify-between">
+        <div className="my-1 rounded-2xl bg-white p-2 pr-8 ">
+          <table className="min-w-full text-center whitespace-normal z-0">
+            <thead className="border-b-2">
+              <tr className="">
+                <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
                   Actions
                 </th>
-                <th className=" w-auto px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
+                <th className="w-auto text-[13px] px-1 font-bold text-black border-2 border-gray-400 whitespace-normal">
                   ID
                 </th>
                 {selectedColumns.map((columnName) => (
-                  columnVisibility[columnName] ? (
-                    <th
-                      key={columnName}
-                      className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal`}
-                    >
-                      {columnNames[columnName]}
-                    </th>
-                  ) : null
+                  <th
+                    key={columnName}
+                    className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 ${columnVisibility[columnName] ? "" : "hidden"
+                      }`}
+                  >
+                    {columnNames[columnName]}
+                  </th>
                 ))}
               </tr>
               <tr>
                 <th className="border-2"></th>
-                <th className="p-2 font-bold text-black border-2 whitespace-normal" />
+                <th className="p-2 font-bold text-black border-2 " />
                 {selectedColumns.map((columnName) => (
-                  columnVisibility[columnName] ? (
-                    <th key={columnName} className="p-2 font-semibold text-black border-2">
-                      <input
-                        type="text"
-                        placeholder={`Search `}
-                        className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
-                        style={{ maxWidth: getColumnMaxWidth(columnName) + "px" }}
-                        onChange={(e) => handleSearchChange(columnName, e.target.value)}
-                      />
-                    </th>
-                  ) : null
+                  <th
+                    key={columnName}
+                    className="p-2 font-bold text-black border-2 text-[11px]"
+                  >
+                    <input
+                      type="text"
+                      placeholder={`Search `}
+                      className="w-auto text-[11px] h-6 border-2 border-slate-500 rounded-lg justify-center text-center whitespace-normal"
+                      style={{ maxWidth: getColumnMaxWidth(columnName) + "px" }}
+                      onChange={(e) =>
+                        handleSearchChange(columnName, e.target.value)
+                      }
+                    />
+                  </th>
                 ))}
               </tr>
             </thead>
-            <tbody>
-              {filteredData.length > 0 ? (
-                filteredData.map((result, key) => (
+            <tbody className="">
+              {filteredData.length > 0
+                ? filteredData.map((result, key) => (
                   <tr key={key}>
                     <td className="px-2 border-2">
                       <div className="flex items-center gap-2 text-center justify-center">
@@ -342,9 +327,9 @@ const BankMaster = () => {
                           height="20"
                           className="cursor-pointer"
                           onClick={() => {
-                            setVeBank(true);
-                            setEdit(false);
-                            setBid(result.id);
+                            setVE(true); // Open VEModal
+                            setEdit(false); // Disable edit mode for VEModal
+                            setCid(result.id); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -354,9 +339,9 @@ const BankMaster = () => {
                           height="20"
                           className="cursor-pointer"
                           onClick={() => {
-                            setVeBank(true);
-                            setEdit(true);
-                            setBid(result.id);
+                            setVE(true); // Open VEModal
+                            setEdit(true); // Disable edit mode for VEModal
+                            setCid(result.id); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -365,7 +350,7 @@ const BankMaster = () => {
                           width="20"
                           height="20"
                           className="cursor-pointer"
-                          onClick={() => deleteBank(result.id)}
+                          onClick={() => deleteComp(result.id)}
                         />
                       </div>
                     </td>
@@ -373,23 +358,29 @@ const BankMaster = () => {
                       {result.id}
                     </td>
                     {selectedColumns.map((columnName) => (
-                      columnVisibility[columnName] ? (
-                        <td
-                          key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                        >
-                          {result[columnName]}
-                        </td>
-                      ) : null
+                      <td
+                        key={columnName}
+                        className={`px-4 border-2 whitespace-normal text-[11px] text-left${columnVisibility[columnName] ? "" : "hidden"
+                          }`}
+                      >
+                        {columnName === "status"
+                          ? result.status === 1
+                            ? "Active"
+                            : "Inactive"
+                          : result[
+                          columnName.charAt(0).toLowerCase() +
+                          columnName.slice(1)
+                          ]}
+                      </td>
                     ))}
                   </tr>
                 ))
-              ) : (
-                banks.length > 0 &&
-                banks.map((result, index) => (
-                  <tr key={index}>
-                    <td className="border-2">
-                      <div className="flex items-center gap-2">
+                : companies.length > 0 &&
+                companies.map((result, key) => (
+                  <tr key={key}>
+                    {/* ... Rest of the table data */}
+                    <td className="px-2 border-2">
+                      <div className="flex items-center gap-2 text-center justify-center">
                         <Icon
                           icon="lucide:eye"
                           color="#556987"
@@ -397,9 +388,9 @@ const BankMaster = () => {
                           height="20"
                           className="cursor-pointer"
                           onClick={() => {
-                            setVeBank(true);
-                            setEdit(false);
-                            setBid(result.id);
+                            setVE(true); // Open VEModal
+                            setEdit(false); // Disable edit mode for VEModal
+                            setCid(result.id); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -409,9 +400,9 @@ const BankMaster = () => {
                           height="20"
                           className="cursor-pointer"
                           onClick={() => {
-                            setVeBank(true);
-                            setEdit(true);
-                            setBid(result.id);
+                            setVE(true); // Open VEModal
+                            setEdit(true); // Enable edit mode for VEModal
+                            setCid(result.id); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -420,40 +411,43 @@ const BankMaster = () => {
                           width="20"
                           height="20"
                           className="cursor-pointer"
-                          onClick={() => deleteBank(result.id)}
+                          onClick={() => deleteComp(result.id)}
                         />
                       </div>
                     </td>
-                    <td className="px-4 border-2 whitespace-normal text-center text-[11px] capitalize">
+                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
                       {result.id}
                     </td>
                     {selectedColumns.map((columnName) => (
-                      columnVisibility[columnName] ? (
-                        <td
-                          key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                        >
-                          {result[columnName]}
-                        </td>
-                      ) : (
-                        <td key={columnName} className="hidden"></td>
-                      )
+                      <td
+                        key={columnName}
+                        className={`px-4 border-2 whitespace-normal text-[11px] text-left${columnVisibility[columnName] ? "" : "hidden"
+                          }`}
+                      >
+                        {columnName === "Status"
+                          ? result.status
+                            ? "Active"
+                            : "Inactive"
+                          : result[
+                          columnName.charAt(0).toLowerCase() +
+                          columnName.slice(1)
+                          ]}
+                      </td>
                     ))}
                   </tr>
-                ))
-              )}
+                ))}
             </tbody>
           </table>
         </div>
       </div>
-      <ViewBank
-        visible={vebank}
-        onClick={() => setVeBank(false)}
+      <VEModal
+        visible={VE}
+        onClick={() => setVE(false)}
         edit={edit}
-        ID={bid}
+        ID={Cid}
       />
     </div>
   );
 };
 
-export default BankMaster;
+export default CompMaster;

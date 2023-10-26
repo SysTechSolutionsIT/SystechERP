@@ -3,30 +3,7 @@ import { useFormik } from "formik";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../Login";
-
-export const ProfessionalData = [
-  {
-    Employer: "ABC Corporation",
-    Experience: "5 years",
-    Designation: "Senior Software Engineer",
-    JobResponsibility: "Lead development team, code review, system design",
-    Salary: "₹1,00,000",
-  },
-  {
-    Employer: "XYZ Tech",
-    Experience: "3 years",
-    Designation: "Frontend Developer",
-    JobResponsibility: "Develop user interfaces, collaborate with design team",
-    Salary: "₹80,000",
-  },
-  {
-    Employer: "Tech Innovators",
-    Experience: "7 years",
-    Designation: "Data Scientist",
-    JobResponsibility: "Analyze data, build predictive models",
-    Salary: "₹1,20,000",
-  },
-];
+import { Icon } from "@iconify/react";
 
 const Professional = ({ ID, name }) => {
   const [professionalData, setProfessionalData] = useState([]);
@@ -35,9 +12,9 @@ const Professional = ({ ID, name }) => {
   const [newDesignation, setNewDesignation] = useState("");
   const [newJobResponsibility, setNewJobResponsibility] = useState("");
   const [newSalary, setNewSalary] = useState("");
-  const [rows, setRows] = useState([]);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [row, setRow] = useState([]);
   const { token } = useAuth();
-  console.log(ID);
 
   const formik = useFormik({
     initialValues: {
@@ -47,19 +24,28 @@ const Professional = ({ ID, name }) => {
     onSubmit: async (values) => {
       const employerString = professionalData
         .map((entry) => entry.Employer)
-        .join(", ");
+        .join(", ")
+        .replace(/,\s+/g, ",");
+
       const experienceString = professionalData
         .map((entry) => entry.Experience)
-        .join(", ");
+        .join(", ")
+        .replace(/,\s+/g, ",");
+
       const designationString = professionalData
         .map((entry) => entry.Designation)
-        .join(", ");
+        .join(", ")
+        .replace(/,\s+/g, ",");
+
       const jobResponsibilityString = professionalData
         .map((entry) => entry.JobResponsibility)
-        .join(", ");
+        .join(", ")
+        .replace(/,\s+/g, ",");
+
       const salaryString = professionalData
         .map((entry) => entry.Salary)
-        .join(", ");
+        .join(", ")
+        .replace(/,\s+/g, ",");
 
       const combinedData = {
         EmployeeName: name,
@@ -74,7 +60,7 @@ const Professional = ({ ID, name }) => {
       try {
         const response = await axios.patch(
           `http://localhost:5500/employee/professional/update/${ID}`,
-          combinedData, // Combined data
+          combinedData,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -95,39 +81,11 @@ const Professional = ({ ID, name }) => {
     },
   });
 
-  const handleAddRow = () => {
-    const newEntry = {
-      Employer: newEmployer,
-      Experience: newExperience,
-      Designation: newDesignation,
-      JobResponsibility: newJobResponsibility,
-      Salary: newSalary,
-    };
-
-    professionalData.push(newEntry);
-    setProfessionalData([...professionalData]);
-    console.log(professionalData);
-
-    // Reset the state variables for the new row.
-    setNewEmployer("");
-    setNewExperience("");
-    setNewDesignation("");
-    setNewJobResponsibility("");
-    setNewSalary("");
-  };
-
-  // Function to remove a row from the table
-  const handleRemoveRow = (index) => {
-    const updatedData = [...professionalData];
-    updatedData.splice(index, 1);
-    setProfessionalData(updatedData);
-  };
-
   //API CALL
 
   useEffect(() => {
     fetchProfData();
-  }, []);
+  }, [token]);
 
   const fetchProfData = async () => {
     try {
@@ -142,8 +100,12 @@ const Professional = ({ ID, name }) => {
       console.log("Response Object", response);
       const data = response.data;
       console.log(data);
-      setProfessionalData(data);
-      SplitData();
+
+      // Split the data and store it in a separate variable
+      const splitData = SplitData(data);
+
+      setProfessionalData(splitData);
+      console.log("after split", splitData);
     } catch (error) {
       console.log(
         "Error while fetching professional data data: ",
@@ -153,12 +115,15 @@ const Professional = ({ ID, name }) => {
   };
 
   // Split data into rows
-  const SplitData = () => {
-    const empRows = professionalData.Employer.split(",");
-    const expRows = professionalData.Experience.split(",");
-    const desgRows = professionalData.Designation.split(",");
-    const jobRows = professionalData.JobResponsibility.split(",");
-    const salRows = professionalData.Salary.split(",");
+  const SplitData = (data) => {
+    const empRows = data.Employer.split(",");
+    const expRows = data.Experience.split(",");
+    const desgRows = data.Designation.split(",");
+    const jobRows = data.JobResponsibility.split(",");
+    const salRows = data.Salary.split(",");
+
+    // Create a new array to store the rows of the table.
+    const rows = [];
 
     // Iterate over the data arrays and create a new row object for each element.
     for (let i = 0; i < empRows.length; i++) {
@@ -172,9 +137,154 @@ const Professional = ({ ID, name }) => {
 
       rows.push(row);
     }
-    console.log("rows", rows);
-    // Return the rows array.
-    setRows(rows);
+    return rows;
+  };
+
+  const handleDeleteEntry = (index) => {
+    const updatedProfessionalData = [...professionalData];
+    updatedProfessionalData.splice(index, 1);
+    setProfessionalData(updatedProfessionalData);
+  };
+
+  const AddProfessional = ({ visible, name, ID, onClick }) => {
+    const formik = useFormik({
+      initialValues: {
+        EmployeeId: ID,
+        EmployeeName: name,
+        Employer: "",
+        Experience: "",
+        Designation: "",
+        JobResponsibility: "",
+        Salary: "",
+      },
+      onSubmit: (values) => {
+        const updatedData = {
+          Employer: values.Employer,
+          Experience: values.Experience,
+          Designation: values.Designation,
+          Experience: values.Experience,
+          JobResponsibility: values.JobResponsibility,
+          Salary: values.Salary,
+        };
+        setProfessionalData([...professionalData, updatedData]);
+        onClick();
+      },
+    });
+
+    if (!visible) return null;
+    return (
+      <form>
+        <div className="fixed overflow-y-scroll inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center w-full h-full">
+          <div className="bg-gray-200 w-[60%] p-8 rounded-lg">
+            <div className="bg-blue-900 py-2 px-4 rounded-lg flex justify-between items-center">
+              <p className="text-white text-[15px] font-semibold text-center">
+                Professional Data
+              </p>
+              <Icon
+                icon="maki:cross"
+                color="white"
+                className="cursor-pointer"
+                onClick={onClick}
+                width="24"
+                height="24"
+              />
+            </div>
+            <div className="py-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="capatilize font-semibold  text-[13px]">
+                    Employee ID
+                  </p>
+                  <input
+                    id="EmployeeId"
+                    type="text"
+                    value={formik.values.EmployeeId}
+                    className={`w-full mt-1 px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                    onChange={formik.handleChange}
+                    disabled={true}
+                  />
+                </div>
+                <div>
+                  <p className="capatilize font-semibold  text-[13px]">
+                    Employer
+                  </p>
+                  <input
+                    id="Employer"
+                    type="text"
+                    value={formik.values.Employer}
+                    className={`w-full mt-1 px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                    onChange={formik.handleChange}
+                  />
+                </div>
+                <div>
+                  <p className="capatilize font-semibold  text-[13px]">
+                    Experience
+                  </p>
+                  <input
+                    id="Experience"
+                    type="text"
+                    value={formik.values.Experience}
+                    className={`w-full mt-1 px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                    onChange={formik.handleChange}
+                  />
+                </div>
+                <div>
+                  <p className="capatilize font-semibold  text-[13px]">
+                    Designation
+                  </p>
+                  <input
+                    id="Designation"
+                    type="text"
+                    value={formik.values.Designation}
+                    className={`w-full mt-1 px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                    onChange={formik.handleChange}
+                  />
+                </div>
+                <div>
+                  <p className="capatilize font-semibold  text-[13px]">
+                    Job Responsibility
+                  </p>
+                  <input
+                    id="JobResponsibility"
+                    type="text"
+                    value={formik.values.JobResponsibility}
+                    className={`w-full mt-1 px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                    onChange={formik.handleChange}
+                  />
+                </div>
+                <div>
+                  <p className="capatilize font-semibold  text-[13px]">
+                    Salary
+                  </p>
+                  <input
+                    id="Salary"
+                    type="text"
+                    value={formik.values.Salary}
+                    className={`w-full mt-1 px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                    onChange={formik.handleChange}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-10 justify-center">
+              <button
+                type="submit"
+                onClick={formik.handleSubmit}
+                className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg w-36"
+              >
+                Save
+              </button>
+              <button
+                className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg w-36"
+                onClick={onClick}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    );
   };
 
   return (
@@ -206,32 +316,34 @@ const Professional = ({ ID, name }) => {
             />
           </div>
         </div>
+        <AddProfessional
+          ID={ID}
+          name={name}
+          visible={isModalOpen}
+          onClick={() => setModalOpen(false)}
+        />
       </div>
-
       <div className="gap-4 justify-between">
         <div className="my-1 rounded-2xl bg-white p-2 pr-8">
           <table className="text-center h-auto text-[11px] rounded-lg justify-center whitespace-normal">
             <thead>
               <tr>
-                <th
-                  className="text-[13px] font-normal border-2 border-white py-1 px-2 bg-blue-500 rounded-md cursor-pointer text-white"
-                  onClick={handleAddRow}
-                >
-                  Add
+                <th className="px-1 text-[13px] font-bold text-black border-2 border-gray-400">
+                  Actions
                 </th>
-                <th className="text-[13px]  font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white">
+                <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px]">
                   Employer
                 </th>
-                <th className="text-[13px]  font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white ">
+                <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px]">
                   Experience
                 </th>
-                <th className="text-[13px]  font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white">
-                  Designation
+                <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px]">
+                  Designations
                 </th>
-                <th className="text-[13px]  font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white">
+                <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px]">
                   Job Responsibility
                 </th>
-                <th className="text-[13px]  font-normal border-r-2 border-white py-1 px-2 bg-blue-900 text-white">
+                <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px]">
                   Salary
                 </th>
               </tr>
@@ -240,17 +352,22 @@ const Professional = ({ ID, name }) => {
               {professionalData.length > 0 &&
                 professionalData.map((item, index) => (
                   <tr key={index}>
-                    <td
-                      className="text-[11px] border-2 cursor-pointer font-normal border-r-2 border-white py-1 px-2 bg-red-600 rounded-md text-white"
-                      onClick={() => handleRemoveRow(index)}
-                    >
-                      Remove
+                    <td className="px-2 border-2">
+                      <div className="flex items-center gap-2 text-center justify-center">
+                        <Icon
+                          icon="material-symbols:delete-outline"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          onClick={() => handleDeleteEntry(index)}
+                        />
+                      </div>
                     </td>
                     <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
                       <input
                         type="text"
                         name={`professionalData[${index}].Employer`}
-                        value={professionalData.Employer}
+                        value={item.Employer}
                         onChange={(e) => setNewEmployer(e.target.value)}
                       />
                     </td>
@@ -258,7 +375,7 @@ const Professional = ({ ID, name }) => {
                       <input
                         type="text"
                         name={`professionalData[${index}].Experience`}
-                        value={professionalData.Experience}
+                        value={item.Experience}
                         onChange={(e) => setNewExperience(e.target.value)}
                       />
                     </td>
@@ -266,7 +383,7 @@ const Professional = ({ ID, name }) => {
                       <input
                         type="text"
                         name={`professionalData[${index}].Designation`}
-                        value={professionalData.Designation}
+                        value={item.Designation}
                         onChange={(e) => setNewDesignation(e.target.value)}
                       />
                     </td>
@@ -274,7 +391,7 @@ const Professional = ({ ID, name }) => {
                       <input
                         type="text"
                         name={`professionalData[${index}].JobResponsibility`}
-                        value={professionalData.JobResponsibility}
+                        value={item.JobResponsibility}
                         onChange={(e) =>
                           setNewJobResponsibility(e.target.value)
                         }
@@ -284,7 +401,7 @@ const Professional = ({ ID, name }) => {
                       <input
                         type="text"
                         name={`professionalData[${index}].Salary`}
-                        value={professionalData.Salary}
+                        value={item.Salary}
                         onChange={(e) => setNewSalary(e.target.value)}
                       />
                     </td>
@@ -294,13 +411,21 @@ const Professional = ({ ID, name }) => {
           </table>
         </div>
       </div>
-
       <div className="flex mt-5 justify-center gap-4">
         <button
           type="submit"
           className="px-8 py-2 bg-blue-900 text-white text-lg rounded-md"
         >
           Save Details
+        </button>
+        <button
+          className="px-8 py-2 bg-blue-900 text-white text-lg rounded-md"
+          onClick={(e) => {
+            e.preventDefault();
+            setModalOpen(true);
+          }}
+        >
+          Add
         </button>
       </div>
     </form>

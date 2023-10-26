@@ -116,8 +116,15 @@ const EmployeeGradeMaster = () => {
 
     const [columnVisibility, setColumnVisibility] = useState({
         Name: true,
+        Remark: true,
         Status: true
     });
+
+    const columnNames = {
+        Name: "Name",
+        Remark: "Remarks",
+        Status: "Status"
+    }
 
     const [showDropdown, setShowDropdown] = useState(false);
     const [selectedColumns, setSelectedColumns] = useState([
@@ -125,26 +132,38 @@ const EmployeeGradeMaster = () => {
     ]);
 
     const toggleColumn = (columnName) => {
-        if (selectedColumns.includes(columnName)) {
-            setSelectedColumns((prevSelected) =>
-                prevSelected.filter((col) => col !== columnName)
-            );
-        } else {
-            setSelectedColumns((prevSelected) => [...prevSelected, columnName]);
-        }
-    };
-
-    useEffect(() => {
+        setColumnVisibility((prevVisibility) => ({
+          ...prevVisibility,
+          [columnName]: !prevVisibility[columnName],
+        }));
+      };
+    
+      useEffect(() => {
         console.log("Selected Columns:", selectedColumns);
-    }, [selectedColumns]);
-
-    const selectAllColumns = () => {
+      }, [selectedColumns]);
+    
+      const selectAllColumns = () => {
         setSelectedColumns([...Object.keys(columnVisibility)]);
-    };
-
-    const deselectAllColumns = () => {
+        setColumnVisibility((prevVisibility) => {
+          const updatedVisibility = { ...prevVisibility };
+          Object.keys(updatedVisibility).forEach((columnName) => {
+            updatedVisibility[columnName] = true;
+          });
+          return updatedVisibility;
+        });
+      };
+      
+      const deselectAllColumns = () => {
         setSelectedColumns([]);
-    };
+        setColumnVisibility((prevVisibility) => {
+          const updatedVisibility = { ...prevVisibility };
+          Object.keys(updatedVisibility).forEach((columnName) => {
+            updatedVisibility[columnName] = false;
+          });
+          return updatedVisibility;
+        });
+      };
+    
 
     const [veEGrade, setVeEGrade] = useState(false);
     const [edit, setEdit] = useState(false);
@@ -226,24 +245,24 @@ const EmployeeGradeMaster = () => {
                             </div>
                             {Object.keys(columnVisibility).map((columnName) => (
                                 <label
-                                    key={columnName}
-                                    className="flex items-center capitalize text-black text-[13px]"
+                                key={columnName}
+                                className="flex items-center capitalize text-black text-[13px]"
                                 >
-                                    <input
-                                        type="checkbox"
-                                        className="mr-2"
-                                        checked={selectedColumns.includes(columnName)}
-                                        onChange={() => toggleColumn(columnName)}
-                                    />
-                                    <span
-                                        className={
-                                            selectedColumns.includes(columnName)
-                                                ? "font-semibold"
-                                                : ""
-                                        }
-                                    >
-                                        {columnName}
-                                    </span>
+                                <input
+                                    type="checkbox"
+                                    className="mr-2"
+                                    checked={columnVisibility[columnName]}
+                                    onChange={() => toggleColumn(columnName)}
+                                />
+                                <span
+                                    className={
+                                    columnVisibility[columnName]
+                                        ? "font-semibold"
+                                        : ""
+                                    }
+                                >
+                                    {columnName}
+                                </span>
                                 </label>
                             ))}
                         </div>
@@ -303,38 +322,37 @@ const EmployeeGradeMaster = () => {
                                     ID
                                 </th>
                                 {selectedColumns.map((columnName) => (
-                                    <th
-                                        key={columnName}
-                                        className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] capitalize whitespace-normal${columnVisibility[columnName] ? "" : "hidden"}`}
-                                    >
-                                        {columnName}
-                                    </th>
-                                ))}
+                                columnVisibility[columnName] ? (
+                                <th
+                                    key={columnName}
+                                    className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal`}
+                                >
+                                    {columnNames[columnName]}
+                                </th>
+                                ) : null
+                            ))} 
                             </tr>
                             <tr>
                                 <th className="border-2" />
                                 <th className="p-2 font-bold text-black border-2 whitespace-normal" />
                                 {selectedColumns.map((columnName) => (
-                                    <th
-                                        key={columnName}
-                                        className="p-2 font-semibold text-black border-2 whitespace-normal"
-                                    >
-                                        <input
-                                            type="text"
-                                            placeholder={`Search `}
-                                            className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px] whitespace-normal"
-                                            style={{ maxWidth: getColumnMaxWidth(columnName) + "px" }}
-                                            onChange={(e) =>
-                                                handleSearchChange(columnName, e.target.value)
-                                            }
-                                        />
-                                    </th>
-                                ))}
+                                columnVisibility[columnName] ? (
+                                <th key={columnName} className="p-2 font-semibold text-black border-2">
+                                    <input
+                                    type="text"
+                                    placeholder={`Search `}
+                                    className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
+                                    style={{ maxWidth: getColumnMaxWidth(columnName) + "px" }}
+                                    onChange={(e) => handleSearchChange(columnName, e.target.value)}
+                                    />
+                                </th>
+                                ) : null
+                            ))}
                             </tr>
                         </thead>
                         <tbody>
                             {filteredData.length > 0
-                                ? filteredData.map((entry, index) => (
+                                ? filteredData.map((result, index) => (
                                     <tr key={index}>
                                         <td className="px-2 border-2">
                                             <div className="flex items-center gap-2 text-center justify-center">
@@ -347,7 +365,7 @@ const EmployeeGradeMaster = () => {
                                                     onClick={() => {
                                                         setVeEGrade(true); // Open VEModal
                                                         setEdit(false); // Disable edit mode for VEModal
-                                                        setid(entry.id); // Pass id to VEModal
+                                                        setid(result.id); // Pass id to VEModal
                                                     }}
                                                 />
                                                 <Icon
@@ -359,7 +377,7 @@ const EmployeeGradeMaster = () => {
                                                     onClick={() => {
                                                         setVeEGrade(true); // Open VEModal
                                                         setEdit(true); // Disable edit mode for VEModal
-                                                        setid(entry.id); // Pass id to VEModal
+                                                        setid(result.id); // Pass id to VEModal
                                                     }}
                                                 />
                                                 <Icon
@@ -368,25 +386,26 @@ const EmployeeGradeMaster = () => {
                                                     color="#556987"
                                                     width="20"
                                                     height="20"
-                                                    onClick={() => deleteEmpGrade(entry.id)}
+                                                    onClick={() => deleteEmpGrade(result.id)}
                                                 />
                                             </div>
                                         </td>
                                         <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
-                                            {entry.id}
+                                            {result.id}
                                         </td>
                                         {selectedColumns.map((columnName) => (
-                                            <td
-                                                key={columnName}
-                                                className={`px-4 text-[11px] border-2 whitespace-normal text-left${columnVisibility[columnName] ? "" : "hidden"
-                                                    }`}
-                                            >
-                                                {entry[columnName]}
-                                            </td>
-                                        ))}
+                                        columnVisibility[columnName] ? (
+                                        <td
+                                            key={columnName}
+                                            className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                                        >
+                                            {result[columnName]}
+                                        </td>
+                                        ) : null
+                                    ))}
                                     </tr>
                                 ))
-                                : EmployeeGradeData.map((entry, index) => (
+                                : EmployeeGradeData.map((result, index) => (
                                     <tr key={index}>
                                         <td className="px-2 text-[11px] border-2">
                                             <div className="flex items-center gap-2 text-center justify-center">
@@ -399,7 +418,7 @@ const EmployeeGradeMaster = () => {
                                                     onClick={() => {
                                                         setVeEGrade(true); // Open VEModal
                                                         setEdit(false); // Disable edit mode for VEModal
-                                                        setid(entry.id); // Pass id to VEModal
+                                                        setid(result.id); // Pass id to VEModal
                                                     }}
                                                 />
                                                 <Icon
@@ -411,7 +430,7 @@ const EmployeeGradeMaster = () => {
                                                     onClick={() => {
                                                         setVeEGrade(true); // Open VEModal
                                                         setEdit(true); // Disable edit mode for VEModal
-                                                        setid(entry.id); // Pass id to VEModal
+                                                        setid(result.id); // Pass id to VEModal
                                                     }}
                                                 />
                                                 {/* <ViewEmployeeGrade
@@ -426,23 +445,25 @@ const EmployeeGradeMaster = () => {
                                                     color="#556987"
                                                     width="20"
                                                     height="20"
-                                                    onClick={() => deleteEmpGrade(entry.id)}
+                                                    onClick={() => deleteEmpGrade(result.id)}
                                                 />
                                             </div>
                                         </td>
                                         <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
-                                            {entry.id}
+                                            {result.id}
                                         </td>
                                         {selectedColumns.map((columnName) => (
-                                            <td
-                                                key={columnName}
-                                                className={`px-4 text-[11px] border-2 whitespace-normal ${columnName === "EmployeeFare" && "text-right"
-                                                    } ${columnVisibility[columnName] ? "" : "hidden"}`}
-                                            >
-                                                {columnName === "EmployeeFare" && "₹"}
-                                                {entry[columnName]}
-                                            </td>
-                                        ))}
+                                        columnVisibility[columnName] ? (
+                                        <td
+                                            key={columnName}
+                                            className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                                        >
+                                            {result[columnName]}
+                                        </td>
+                                        ) : (
+                                        <td key={columnName} className="hidden"></td>
+                                        )
+                                    ))}
                                     </tr>
                                 ))}
                         </tbody>

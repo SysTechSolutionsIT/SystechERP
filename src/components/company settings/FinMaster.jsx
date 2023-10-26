@@ -1,115 +1,105 @@
-import React from "react";
 import { Icon } from "@iconify/react";
-import BankModal from "./BankModal";
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import FinancialModal from "./FinancialModal";
+import VEFModal from "./ViewFin";
 import axios from "axios";
-import ViewBank from "./ViewBank";
 import { useAuth } from "../Login";
 
-const BankMaster = () => {
+export const finData = [
+  {
+    finId: 1,
+    Name: "Systech Solutions Pvt. Ltd",
+    ShortName: "SYS",
+    YearClose: 2021,
+    StartDate: 22 / 1 / 22,
+    EndDate: 10 / 8 / 22,
+    Remark: "text",
+    Status: "Active",
+  },
+  {
+    finId: 2,
+    Name: "TechCorp Inc.",
+    ShortName: "TCI",
+    YearClose: 2021,
+    StartDate: 22 / 1 / 22,
+    EndDate: 10 / 8 / 22,
+    Remark: "text",
+    Status: "Active",
+  },
+  {
+    finId: 3,
+    Name: "Global Finance Group",
+    ShortName: "GFG",
+    StartDate: 22 / 1 / 22,
+    EndDate: 10 / 8 / 22,
+    Remark: "text",
+    YearClose: 2021,
+    Status: "Active",
+  },
+  {
+    finId: 4,
+    Name: "Investment Innovators Ltd.",
+    ShortName: "IIL",
+    StartDate: 22 / 1 / 22,
+    EndDate: 10 / 8 / 22,
+    Remark: "text",
+    YearClose: 2021,
+    Status: "Active",
+  },
+  {
+    finId: 5,
+    Name: "Capital Ventures International",
+    ShortName: "CVI",
+    StartDate: 22 / 1 / 22,
+    EndDate: 10 / 8 / 22,
+    Remark: "text",
+    YearClose: 2021,
+    Status: "Active",
+  },
+  {
+    finId: 6,
+    Name: "Alpha Financial Services",
+    ShortName: "AFS",
+    StartDate: 22 / 1 / 22,
+    EndDate: 10 / 8 / 22,
+    Remark: "text",
+    YearClose: 2021,
+    Status: "Active",
+  },
+];
+
+const FinMaster = () => {
+  const [filteredData, setFilteredData] = useState([]);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [veFin, setFin] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const [Fid, setFid] = useState();
+
   const { token } = useAuth();
+
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+
   const [columnVisibility, setColumnVisibility] = useState({
-    bankName: true,
-    branchName: true,
-    accountType: true,
-    accountNo: true,
-    ifscCode: true,
-    swiftCode: false,
-    registeredEmail: false,
-    registeredContact: false,
-    currencyType: false,
-    bankGst: false,
-    authPersonCount: false,
-    remark: false,
-    authPerson1: false,
-    authPerson2: false,
-    authPerson3: false,
+    fName: true,
+    fShortName: true,
+    yearClose: false,
+    sDate: false,
+    eDate: false,
+    remarks: true,
+    status: true,
   });
 
   const columnNames = {
-    bankName: "Bank Name",
-    branchName: "Branch Name",
-    accountType: "Account Type",
-    accountNo: "Account No",
-    ifscCode: "IFSC Code",
-    swiftCode: "SWIFT Code",
-    registeredEmail: "Registered Email",
-    registeredContact: "Registered Contact",
-    currencyType: "Currency Type",
-    bankGst: "Bank GST",
-    authPersonCount: "Authorized Person Count",
-    remark: "Remark",
-    authPerson1: "Auth Person 1",
-    authPerson2: "Auth Person 2",
-    authPerson3: "Auth Person 3",
-  };
+    fName: "Financial Year Name",
+    fShortName: "Short Name",
+    yearClose: "Year Close",
+    sDate: "Start Date",
+    eDate: "End Date",
+    remarks: "Remarks",
+    status: "Status",
+  }
 
-
-  const [banks, setBanks] = useState([]);
-
-  const deleteBank = async (bankid) => {
-    alert("Are you sure you want to delete this bank?");
-    try {
-      const apiUrl = `http://localhost:5500/bankmaster/delete-bank/${bankid}`;
-
-      const response = await axios.delete(apiUrl, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (response.status === 204) {
-        console.log(`Bank with ID ${bankid} deleted successfully.`);
-        alert("Bank Deleted");
-        window.location.reload();
-      } else {
-        console.error(`Failed to delete bank with ID ${bankid}.`);
-      }
-    } catch (error) {
-      console.error("Error deleting bank:", error);
-    }
-  };
-
-  useEffect(() => {
-    const fetchBanks = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:5500/bankmaster/banks",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        console.log("Response Object", response);
-        const data = response.data;
-        console.log(data);
-        setBanks(data);
-      } catch (error) {
-        console.log("Error while fetching bank data: ", error.message);
-      }
-    };
-    fetchBanks();
-  }, [token]);
-
-  const [isModalOpen, setModalOpen] = useState(false);
-  const handleModalClose = () => {
-    setModalOpen(false);
-  };
-  const [filteredData, setFilteredData] = useState([]);
-
-  const handleSearchChange = (title, searchWord) => {
-    const newFilter = banks.filter((item) => {
-      const value = item[title];
-      return value && value.toLowerCase().includes(searchWord.toLowerCase());
-    });
-
-    if (searchWord === "") {
-      setFilteredData([]);
-    } else {
-      setFilteredData(newFilter);
-    }
-  };
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedColumns, setSelectedColumns] = useState([
     ...Object.keys(columnVisibility),
@@ -121,6 +111,7 @@ const BankMaster = () => {
       [columnName]: !prevVisibility[columnName],
     }));
   };
+
 
   useEffect(() => {
     console.log("Selected Columns:", selectedColumns);
@@ -148,13 +139,6 @@ const BankMaster = () => {
     });
   };
 
-  const [vebank, setVeBank] = useState(false);
-  const [edit, setEdit] = useState(false);
-  const [bid, setBid] = useState();
-
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef(null);
-
   //Menu click outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -173,7 +157,7 @@ const BankMaster = () => {
   //Max Searchbar width
   const getColumnMaxWidth = (columnName) => {
     let maxWidth = 0;
-    const allRows = [...banks, ...filteredData];
+    const allRows = [...finData, ...filteredData];
 
     allRows.forEach((row) => {
       const cellContent = row[columnName];
@@ -191,11 +175,52 @@ const BankMaster = () => {
     return context.measureText(text).width;
   };
 
+  //For API
+  const [Fins, setFins] = useState([]);
+
+  useEffect(() => {
+    fetchCompData();
+  }, [token]);
+
+  const fetchCompData = async () => {
+    try {
+      const response = await axios.get("http://localhost:5500/financials/");
+      console.log("Response Object", response);
+      const data = response.data.records;
+      console.log(data);
+      setFins(data);
+    } catch (error) {
+      console.log("Error while fetching course data: ", error.message);
+    }
+  };
+  console.log(Fins);
+
+  const handleSearchChange = (title, searchWord) => {
+    const searchData = [...Fins];
+
+    const newFilter = searchData.filter((item) => {
+      // Check if the item matches the search term in any of the selected columns
+      const matches = selectedColumns.some((columnName) => {
+        const newCol = columnName.charAt(0).toLowerCase() + columnName.slice(1);
+        const value = item[newCol];
+        return (
+          value &&
+          value.toString().toLowerCase().includes(searchWord.toLowerCase())
+        );
+      });
+
+      return matches;
+    });
+
+    // Update the filtered data
+    setFilteredData(newFilter);
+  };
+
   return (
     <div className="top-25 min-w-[40%]">
       <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
         <div className="text-[15px]">
-          Company Settings / Bank Master
+          Company Settings / Financial Master
         </div>
         <div className="flex gap-4">
           <button
@@ -288,32 +313,34 @@ const BankMaster = () => {
           </div>
         </div>
       </div>
-      <BankModal visible={isModalOpen} onClick={handleModalClose} />
-      <div className="grid gap-4 justify-between">
-        <div className="my-1 rounded-2xl bg-white p-2 pr-8">
-          <table className="min-w-full text-center rounded-lg whitespace-normal">
+      <FinancialModal
+        visible={isModalOpen}
+        onClick={() => setModalOpen(false)}
+      />
+      <div className="grid gap-2 justify-between">
+        <div className="rounded-2xl bg-white p-2 pr-8">
+          <table className="min-w-full text-center rounded-lg justify-center whitespace-normal">
             <thead>
               <tr>
-                <th className="px-1 text-[13px] font-bold text-black border-2 border-gray-400 whitespace-normal">
+                <th className="px-1 text-[13px] font-bold text-black border-2 border-gray-400">
                   Actions
                 </th>
                 <th className=" w-auto px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
                   ID
                 </th>
                 {selectedColumns.map((columnName) => (
-                  columnVisibility[columnName] ? (
-                    <th
-                      key={columnName}
-                      className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal`}
-                    >
-                      {columnNames[columnName]}
-                    </th>
-                  ) : null
+                  <th
+                    key={columnName}
+                    className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] ${columnVisibility[columnName] ? "" : "hidden"
+                      }`}
+                  >
+                    {columnNames[columnName]}
+                  </th>
                 ))}
               </tr>
               <tr>
                 <th className="border-2"></th>
-                <th className="p-2 font-bold text-black border-2 whitespace-normal" />
+                <th className="p-2 font-bold text-black border-2 "></th>
                 {selectedColumns.map((columnName) => (
                   columnVisibility[columnName] ? (
                     <th key={columnName} className="p-2 font-semibold text-black border-2">
@@ -329,9 +356,9 @@ const BankMaster = () => {
                 ))}
               </tr>
             </thead>
-            <tbody>
-              {filteredData.length > 0 ? (
-                filteredData.map((result, key) => (
+            <tbody className="">
+              {filteredData.length > 0
+                ? filteredData.map((result, key) => (
                   <tr key={key}>
                     <td className="px-2 border-2">
                       <div className="flex items-center gap-2 text-center justify-center">
@@ -342,9 +369,9 @@ const BankMaster = () => {
                           height="20"
                           className="cursor-pointer"
                           onClick={() => {
-                            setVeBank(true);
-                            setEdit(false);
-                            setBid(result.id);
+                            setFin(true); // Open VEModal
+                            setEdit(false); // Disable edit mode for VEModal
+                            setFid(result.finId); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -354,9 +381,9 @@ const BankMaster = () => {
                           height="20"
                           className="cursor-pointer"
                           onClick={() => {
-                            setVeBank(true);
-                            setEdit(true);
-                            setBid(result.id);
+                            setFin(true); // Open VEModal
+                            setEdit(true); // Disable edit mode for VEModal
+                            setFid(result.finId); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -365,31 +392,36 @@ const BankMaster = () => {
                           width="20"
                           height="20"
                           className="cursor-pointer"
-                          onClick={() => deleteBank(result.id)}
                         />
                       </div>
                     </td>
                     <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {result.id}
+                      {result.finId}
                     </td>
                     {selectedColumns.map((columnName) => (
-                      columnVisibility[columnName] ? (
-                        <td
-                          key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                        >
-                          {result[columnName]}
-                        </td>
-                      ) : null
+                      <td
+                        key={columnName}
+                        className={`px-4 border-2 whitespace-normal text-left text-[11px] ${columnVisibility[columnName] ? "" : "hidden"
+                          }`}
+                      >
+                        {columnName === "YearClose"
+                          ? result[columnName]
+                            ? "Active"
+                            : "Inactive"
+                          : columnName === "Status"
+                            ? result[columnName]
+                              ? "Active"
+                              : "Inactive"
+                            : result[columnName]}
+                      </td>
                     ))}
                   </tr>
                 ))
-              ) : (
-                banks.length > 0 &&
-                banks.map((result, index) => (
+                : Fins.length > 0 &&
+                Fins.map((result, index) => (
                   <tr key={index}>
-                    <td className="border-2">
-                      <div className="flex items-center gap-2">
+                    <td className="px-2 border-2">
+                      <div className="flex items-center gap-2 text-center justify-center">
                         <Icon
                           icon="lucide:eye"
                           color="#556987"
@@ -397,9 +429,9 @@ const BankMaster = () => {
                           height="20"
                           className="cursor-pointer"
                           onClick={() => {
-                            setVeBank(true);
-                            setEdit(false);
-                            setBid(result.id);
+                            setFin(true); // Open VEModal
+                            setEdit(false); // Disable edit mode for VEModal
+                            setFid(result.finId); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -409,9 +441,9 @@ const BankMaster = () => {
                           height="20"
                           className="cursor-pointer"
                           onClick={() => {
-                            setVeBank(true);
-                            setEdit(true);
-                            setBid(result.id);
+                            setFin(true); // Open VEModal
+                            setEdit(true); // Disable edit mode for VEModal
+                            setFid(result.finId); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -420,40 +452,43 @@ const BankMaster = () => {
                           width="20"
                           height="20"
                           className="cursor-pointer"
-                          onClick={() => deleteBank(result.id)}
                         />
                       </div>
                     </td>
-                    <td className="px-4 border-2 whitespace-normal text-center text-[11px] capitalize">
-                      {result.id}
+                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                      {result.finId}
                     </td>
                     {selectedColumns.map((columnName) => (
-                      columnVisibility[columnName] ? (
-                        <td
-                          key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                        >
-                          {result[columnName]}
-                        </td>
-                      ) : (
-                        <td key={columnName} className="hidden"></td>
-                      )
+                      <td
+                        key={columnName}
+                        className={`px-4 border-2 whitespace-normal text-left text-[11px] ${columnVisibility[columnName] ? "" : "hidden"
+                          }`}
+                      >
+                        {columnName === "yearClose"
+                          ? result[columnName]
+                            ? "Active"
+                            : "Inactive"
+                          : columnName === "status"
+                            ? result[columnName]
+                              ? "Active"
+                              : "Inactive"
+                            : result[columnName]}
+                      </td>
                     ))}
                   </tr>
-                ))
-              )}
+                ))}
             </tbody>
           </table>
         </div>
       </div>
-      <ViewBank
-        visible={vebank}
-        onClick={() => setVeBank(false)}
+      <VEFModal
+        visible={veFin}
+        onClick={() => setFin(false)}
         edit={edit}
-        ID={bid}
+        ID={Fid}
       />
     </div>
   );
 };
 
-export default BankMaster;
+export default FinMaster;

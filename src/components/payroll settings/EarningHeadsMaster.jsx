@@ -83,9 +83,45 @@ const EarningHeadsMaster = () => {
   const [columnVisibility, setColumnVisibility] = useState({
     Name: true,
     ShortName: true,
+    HeadPosition: true,
     CalculationType: true,
+    CalculationValue: false,
+    Formula: false,
+    SalaryParameter1: false,
+    SalaryParameter2: false,
+    SalaryParameter3: false,
+    SalaryParameter4: false,
+    SalaryParameter5: false,
+    SalaryParameter6: false,
+    SalaryParameter7: false,
+    SalaryParameter8: false,
+    SalaryParameter9: false,
+    SalaryParameter10: false,
     Status: true,
+    Remark: false
   });
+
+  const columnNames = {
+    Name: "Name",
+    ShortName: "Short Name",
+    HeadPosition: "Head Position",
+    CalculationType: "Calculation Type",
+    CalculationValue: "Calculation Value",
+    Formula: "Formula",
+    SalaryParameter1: "Salary Parameter 1",
+    SalaryParameter2: "Salary Parameter 2",
+    SalaryParameter3: "Salary Parameter 3",
+    SalaryParameter4: "Salary Parameter 4",
+    SalaryParameter5: "Salary Parameter 5",
+    SalaryParameter6: "Salary Parameter 6",
+    SalaryParameter7: "Salary Parameter 7",
+    SalaryParameter8: "Salary Parameter 8",
+    SalaryParameter9: "Salary Parameter 9",
+    SalaryParameter10: "Salary Parameter 10",
+    Status: "Status",
+    Remark: "Remarks",
+  };
+
 
   // Menu click outside
   useEffect(() => {
@@ -130,13 +166,10 @@ const EarningHeadsMaster = () => {
   ]);
 
   const toggleColumn = (columnName) => {
-    if (selectedColumns.includes(columnName)) {
-      setSelectedColumns((prevSelected) =>
-        prevSelected.filter((col) => col !== columnName)
-      );
-    } else {
-      setSelectedColumns((prevSelected) => [...prevSelected, columnName]);
-    }
+    setColumnVisibility((prevVisibility) => ({
+      ...prevVisibility,
+      [columnName]: !prevVisibility[columnName],
+    }));
   };
 
   useEffect(() => {
@@ -145,10 +178,24 @@ const EarningHeadsMaster = () => {
 
   const selectAllColumns = () => {
     setSelectedColumns([...Object.keys(columnVisibility)]);
+    setColumnVisibility((prevVisibility) => {
+      const updatedVisibility = { ...prevVisibility };
+      Object.keys(updatedVisibility).forEach((columnName) => {
+        updatedVisibility[columnName] = true;
+      });
+      return updatedVisibility;
+    });
   };
 
   const deselectAllColumns = () => {
     setSelectedColumns([]);
+    setColumnVisibility((prevVisibility) => {
+      const updatedVisibility = { ...prevVisibility };
+      Object.keys(updatedVisibility).forEach((columnName) => {
+        updatedVisibility[columnName] = false;
+      });
+      return updatedVisibility;
+    });
   };
 
   // For API
@@ -195,26 +242,24 @@ const EarningHeadsMaster = () => {
 
   return (
     <div className="top-25 min-w-[40%]">
-      <div className="bg-blue-900 h-15 p-2 ml-2 px-8 sm:whitespace-nowrap text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-x-auto">
-        <div className="flex items-center gap-4">
-          <div className="mr-auto text-[15px] whitespace-nowrap">
-            Payroll Settings / Earning Heads Master
-          </div>
-          <div className="relative sticky lg:ml-96 sm:ml-8">
-            <button
-              onClick={() => setShowDropdown(!showDropdown)}
-              className="flex text-[13px] bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap"
-            >
-              Column Visibility
-              <Icon
-                icon="fe:arrow-down"
-                className={`mt-1.5 ml-2 ${showDropdown ? "rotate-180" : ""
-                  } cursor-pointer`}
-              />
-            </button>
-          </div>
+      <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
+        <div className="mr-auto text-[15px]">
+          Payroll Settings / Earning Heads Master
+        </div>
+        <div className="flex gap-4">
+          <button
+            onClick={() => setShowDropdown(!showDropdown)}
+            className="flex text-[13px] bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap"
+          >
+            Column Visibility
+            <Icon
+              icon="fe:arrow-down"
+              className={`mt-1.5 ml-2 ${showDropdown ? "rotate-180" : ""
+                } cursor-pointer`}
+            />
+          </button>
           {showDropdown && (
-            <div className="absolute top-[16%] lg:ml-[42%] sm:mr-[20%] bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50 top-[calc(100% + 10px)]">
+            <div className="absolute top-32 bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50">
               {/* Dropdown content */}
               <div className="flex items-center mb-2">
                 <button
@@ -255,44 +300,42 @@ const EarningHeadsMaster = () => {
             </div>
           )}
 
-          <div className="min-w-[40%]">
-            <button
-              className="text-white font-semibold px-4 rounded-lg text-[13px] border border-white"
-              onClick={() => setModalOpen(true)}
-            >
-              Add
-            </button>
-          </div>
-        </div>
-        <div className="flex items-center mb-2 lg:mr-[210px] sm:mr-[60px]">
           <button
-            className=" cursor-pointer"
-            onClick={() => setMenuOpen(!menuOpen)}
+            className="text-white font-semibold px-4 rounded-lg text-[13px] border border-white"
+            onClick={() => setModalOpen(true)}
           >
-            <Icon icon="carbon:menu" color="white" width="27" height="27" />
+            Add
           </button>
-          {menuOpen && (
-            <div
-              ref={menuRef}
-              className="w-24 flex flex-col absolute lg:top-28 lg:right-38 bg-white border border-gray-300 shadow-md rounded-lg p-1 items-center mb-2"
+          <div className="flex items-center">
+            <button
+              className=" cursor-pointer"
+              onClick={() => setMenuOpen(!menuOpen)}
             >
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2 z-50">
-                Copy
-              </button>
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2 z-50">
-                CSV
-              </button>
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
-                Excel
-              </button>
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
-                PDF
-              </button>
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
-                Print
-              </button>
-            </div>
-          )}
+              <Icon icon="carbon:menu" color="white" width="27" height="27" />
+            </button>
+            {menuOpen && (
+              <div
+                ref={menuRef}
+                className="w-24 -ml-10 flex flex-col absolute lg:top-32 bg-white border border-gray-300 shadow-md rounded-lg p-1 items-center"
+              >
+                <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2 z-50">
+                  Copy
+                </button>
+                <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2 z-50">
+                  CSV
+                </button>
+                <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+                  Excel
+                </button>
+                <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+                  PDF
+                </button>
+                <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+                  Print
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <EarningHeadsModal
@@ -311,33 +354,31 @@ const EarningHeadsMaster = () => {
                   ID
                 </th>
                 {selectedColumns.map((columnName) => (
-                  <th
-                    key={columnName}
-                    className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 ${columnVisibility[columnName] ? "" : "hidden"
-                      }`}
-                  >
-                    {columnName}
-                  </th>
+                  columnVisibility[columnName] ? (
+                    <th
+                      key={columnName}
+                      className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal`}
+                    >
+                      {columnNames[columnName]}
+                    </th>
+                  ) : null
                 ))}
               </tr>
               <tr>
                 <th className="border-2"></th>
                 <th className="p-2 font-bold text-black border-2 " />
                 {selectedColumns.map((columnName) => (
-                  <th
-                    key={columnName}
-                    className="p-2 font-bold text-black border-2 text-[11px]"
-                  >
-                    <input
-                      type="text"
-                      placeholder={`Search `}
-                      className="w-auto text-[11px] h-6 border-2 border-slate-500 rounded-lg justify-center text-center whitespace-normal"
-                      style={{ maxWidth: getColumnMaxWidth(columnName) + "px" }}
-                      onChange={(e) =>
-                        handleSearchChange(columnName, e.target.value)
-                      }
-                    />
-                  </th>
+                  columnVisibility[columnName] ? (
+                    <th key={columnName} className="p-2 font-semibold text-black border-2">
+                      <input
+                        type="text"
+                        placeholder={`Search `}
+                        className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
+                        style={{ maxWidth: getColumnMaxWidth(columnName) + "px" }}
+                        onChange={(e) => handleSearchChange(columnName, e.target.value)}
+                      />
+                    </th>
+                  ) : null
                 ))}
               </tr>
             </thead>
@@ -352,6 +393,7 @@ const EarningHeadsMaster = () => {
                           color="#556987"
                           width="20"
                           height="20"
+                          className="cursor-pointer"
                           onClick={() => {
                             setVeEarningH(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
@@ -363,6 +405,7 @@ const EarningHeadsMaster = () => {
                           color="#556987"
                           width="20"
                           height="20"
+                          className="cursor-pointer"
                           onClick={() => {
                             setVeEarningH(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
@@ -374,6 +417,7 @@ const EarningHeadsMaster = () => {
                           color="#556987"
                           width="20"
                           height="20"
+                          className="cursor-pointer"
                         />
                       </div>
                     </td>
@@ -381,17 +425,18 @@ const EarningHeadsMaster = () => {
                       {result.id}
                     </td>
                     {selectedColumns.map((columnName) => (
-                      <td
-                        key={columnName}
-                        className={`px-4 border-2 whitespace-normal text-[11px] text-left${columnVisibility[columnName] ? "" : "hidden"
-                          }`}
-                      >
-                        {columnName === "Status"
-                          ? result[columnName]
-                            ? "Active"
-                            : "Inactive"
-                          : result[columnName]}
-                      </td>
+                      columnVisibility[columnName] ? (
+                        <td
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                        >
+                          {columnName === "Status"
+                            ? result[columnName]
+                              ? "Active"
+                              : "Inactive"
+                            : result[columnName]}
+                        </td>
+                      ) : null
                     ))}
                   </tr>
                 ))
@@ -404,6 +449,7 @@ const EarningHeadsMaster = () => {
                           color="#556987"
                           width="20"
                           height="20"
+                          className="cursor-pointer"
                           onClick={() => {
                             setVeEarningH(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
@@ -415,6 +461,7 @@ const EarningHeadsMaster = () => {
                           color="#556987"
                           width="20"
                           height="20"
+                          className="cursor-pointer"
                           onClick={() => {
                             setVeEarningH(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
@@ -426,6 +473,7 @@ const EarningHeadsMaster = () => {
                           color="#556987"
                           width="20"
                           height="20"
+                          className="cursor-pointer"
                         />
                       </div>
                     </td>
@@ -433,17 +481,30 @@ const EarningHeadsMaster = () => {
                       {result.id}
                     </td>
                     {selectedColumns.map((columnName) => (
-                      <td
-                        key={columnName}
-                        className={`px-4 border-2 whitespace-normal text-left text-[11px]${columnVisibility[columnName] ? "" : "hidden"
-                          }`}
-                      >
-                        {columnName === "Status"
-                          ? result[columnName]
-                            ? "Active"
-                            : "Inactive"
-                          : result[columnName]}
-                      </td>
+                      columnVisibility[columnName] ? (
+                        <td
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                        >
+                          {
+                            columnName === "Status"
+                              ? result[columnName]
+                                ? "Active"
+                                : "Inactive"
+                              : columnName === "CalculationValue"
+                                ? result[columnName] || "N/A"
+                                : columnName === "Formula"
+                                  ? result[columnName] || "N/A"
+                                  : columnName.startsWith("SalaryParameter")
+                                    ? result[columnName] || "N/A"
+                                    : result[columnName]
+                          }
+
+
+                        </td>
+                      ) : (
+                        <td key={columnName} className="hidden"></td>
+                      )
                     ))}
                   </tr>
                 ))}

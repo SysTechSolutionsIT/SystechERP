@@ -65,7 +65,7 @@ const EmployeeTypeMaster = () => {
       }
     }
     fetchEmpTypeData()
-  },[])
+  },[token])
 
   const deleteEmpType = async (id) =>{
     alert('Are you sure you want to delete this entry?')
@@ -99,8 +99,17 @@ const EmployeeTypeMaster = () => {
     EmployeeType: true,
     EmployeeTypeGroup: true,
     ShortName: true,
+    Remark: false,
     Status: true
   });
+
+  const columnNames = {
+    EmployeeType: "Employee Type",
+    EmployeeTypeGroup: "Employee Type Group",
+    ShortName: "Short Name",
+    Remark: "Remarks",
+    Status: "Status"
+  }
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedColumns, setSelectedColumns] = useState([
@@ -108,13 +117,10 @@ const EmployeeTypeMaster = () => {
   ]);
 
   const toggleColumn = (columnName) => {
-    if (selectedColumns.includes(columnName)) {
-      setSelectedColumns((prevSelected) =>
-        prevSelected.filter((col) => col !== columnName)
-      );
-    } else {
-      setSelectedColumns((prevSelected) => [...prevSelected, columnName]);
-    }
+    setColumnVisibility((prevVisibility) => ({
+      ...prevVisibility,
+      [columnName]: !prevVisibility[columnName],
+    }));
   };
 
   useEffect(() => {
@@ -123,10 +129,24 @@ const EmployeeTypeMaster = () => {
 
   const selectAllColumns = () => {
     setSelectedColumns([...Object.keys(columnVisibility)]);
+    setColumnVisibility((prevVisibility) => {
+      const updatedVisibility = { ...prevVisibility };
+      Object.keys(updatedVisibility).forEach((columnName) => {
+        updatedVisibility[columnName] = true;
+      });
+      return updatedVisibility;
+    });
   };
-
+  
   const deselectAllColumns = () => {
     setSelectedColumns([]);
+    setColumnVisibility((prevVisibility) => {
+      const updatedVisibility = { ...prevVisibility };
+      Object.keys(updatedVisibility).forEach((columnName) => {
+        updatedVisibility[columnName] = false;
+      });
+      return updatedVisibility;
+    });
   };
 
   const [veEType, setVeEType] = useState(false);
@@ -215,12 +235,12 @@ const EmployeeTypeMaster = () => {
                   <input
                     type="checkbox"
                     className="mr-2"
-                    checked={selectedColumns.includes(columnName)}
+                    checked={columnVisibility[columnName]}
                     onChange={() => toggleColumn(columnName)}
                   />
                   <span
                     className={
-                      selectedColumns.includes(columnName)
+                      columnVisibility[columnName]
                         ? "font-semibold"
                         : ""
                     }
@@ -286,39 +306,37 @@ const EmployeeTypeMaster = () => {
                   ID
                 </th>
                 {selectedColumns.map((columnName) => (
+                columnVisibility[columnName] ? (
                   <th
                     key={columnName}
-                    className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] capitalize whitespace-normal${columnVisibility[columnName] ? "" : "hidden"
-                      }`}
+                    className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal`}
                   >
-                    {columnName}
+                    {columnNames[columnName]}
                   </th>
-                ))}
+                ) : null
+              ))}
               </tr>
               <tr>
                 <th className="border-2" />
                 <th className="p-2 font-bold text-black border-2 whitespace-normal" />
                 {selectedColumns.map((columnName) => (
-                  <th
-                    key={columnName}
-                    className="p-2 font-semibold text-black border-2 whitespace-normal"
-                  >
+                columnVisibility[columnName] ? (
+                  <th key={columnName} className="p-2 font-semibold text-black border-2">
                     <input
                       type="text"
                       placeholder={`Search `}
-                      className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px] whitespace-normal"
+                      className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
                       style={{ maxWidth: getColumnMaxWidth(columnName) + "px" }}
-                      onChange={(e) =>
-                        handleSearchChange(columnName, e.target.value)
-                      }
+                      onChange={(e) => handleSearchChange(columnName, e.target.value)}
                     />
                   </th>
-                ))}
+                ) : null
+              ))}
               </tr>
             </thead>
             <tbody>
               {filteredData.length > 0
-                ? filteredData.map((entry, index) => (
+                ? filteredData.map((result, index) => (
                   <tr key={index}>
                     <td className="px-2 border-2">
                       <div className="flex items-center gap-2 text-center justify-center">
@@ -331,7 +349,7 @@ const EmployeeTypeMaster = () => {
                           onClick={() => {
                             setVeEType(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
-                            setid(entry.id); // Pass ID to VEModal
+                            setid(result.id); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -343,7 +361,7 @@ const EmployeeTypeMaster = () => {
                           onClick={() => {
                             setVeEType(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
-                            setid(entry.id); // Pass ID to VEModal
+                            setid(result.id); // Pass ID to VEModal
                           }}
                         />
                         {/* <ViewEmployeeType
@@ -358,25 +376,26 @@ const EmployeeTypeMaster = () => {
                           color="#556987"
                           width="20"
                           height="20"
-                          onClick={() => deleteEmpType(entry.id)}
+                          onClick={() => deleteEmpType(result.id)}
                         />
                       </div>
                     </td>
                     <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
-                      {entry.id}
+                      {result.id}
                     </td>
                     {selectedColumns.map((columnName) => (
+                    columnVisibility[columnName] ? (
                       <td
                         key={columnName}
-                        className={`px-4 text-[11px] border-2 whitespace-normal text-left${columnVisibility[columnName] ? "" : "hidden"
-                          }`}
+                        className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
                       >
-                        {entry[columnName]}
+                        {result[columnName]}
                       </td>
-                    ))}
+                    ) : null
+                  ))}
                   </tr>
                 ))
-                : EmployeeTypeData.map((entry, index) => (
+                : EmployeeTypeData.map((result, index) => (
                   <tr key={index}>
                     <td className="px-2 text-[11px] border-2">
                       <div className="flex items-center gap-2 text-center justify-center">
@@ -389,7 +408,7 @@ const EmployeeTypeMaster = () => {
                           onClick={() => {
                             setVeEType(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
-                            setid(entry.id); // Pass ID to VEModal
+                            setid(result.id); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -401,7 +420,7 @@ const EmployeeTypeMaster = () => {
                           onClick={() => {
                             setVeEType(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
-                            setid(entry.id); // Pass ID to VEModal
+                            setid(result.id); // Pass ID to VEModal
                           }}
                         />
                         {/* <ViewEmployeeType
@@ -416,23 +435,25 @@ const EmployeeTypeMaster = () => {
                           color="#556987"
                           width="20"
                           height="20"
-                          onClick={() => deleteEmpType(entry.id)}
+                          onClick={() => deleteEmpType(result.id)}
                         />
                       </div>
                     </td>
                     <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
-                      {entry.id}
+                      {result.id}
                     </td>
                     {selectedColumns.map((columnName) => (
+                    columnVisibility[columnName] ? (
                       <td
                         key={columnName}
-                        className={`px-4 text-[11px] border-2 whitespace-normal ${columnName === "EmployeeFare" && "text-right"
-                          } ${columnVisibility[columnName] ? "" : "hidden"}`}
+                        className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
                       >
-                        {columnName === "EmployeeFare" && "₹"}
-                        {entry[columnName]}
+                        {result[columnName]}
                       </td>
-                    ))}
+                    ) : (
+                      <td key={columnName} className="hidden"></td>
+                    )
+                  ))}
                   </tr>
                 ))}
             </tbody>

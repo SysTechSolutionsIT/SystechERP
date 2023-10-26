@@ -123,7 +123,7 @@ const CostCenterMaster = () => {
 
   useEffect(() => {
     fetchCompData();
-  }, []);
+  }, [token]);
 
   const fetchCompData = async () => {
     try {
@@ -178,49 +178,47 @@ const CostCenterMaster = () => {
   };
   return (
     <div className="top-25 min-w-[40%]">
-      <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-x-clip">
-        <div className="flex items-center gap-4 whitespace-normal">
-          <div className="mr-auto text-[15px] whitespace-normal min-w-fit">
-            Company Settings / Cost Center Master
-          </div>
-          <div className="relative sticky lg:ml-96 sm:ml-8">
-            <button
-              className="text-white font-semibold py-1 px-4 rounded-lg text-[13px] border border-white"
-              onClick={() => setModalOpen(true)}
-            >
-              Add Record
-            </button>
-          </div>
+      <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
+        <div className="text-[15px]">
+          Company Settings / Cost Center Master
         </div>
-        <div className="flex items-center mb-2 mr-96">
+        <div className="flex gap-4">
           <button
-            className=" cursor-pointer"
-            onClick={() => setMenuOpen(!menuOpen)}
+            className="text-white font-semibold px-4 rounded-lg text-[13px] border border-white"
+            onClick={() => setModalOpen(true)}
           >
-            <Icon icon="carbon:menu" color="white" width="27" height="27" />
+            Add
           </button>
-          {menuOpen && (
-            <div
-              ref={menuRef}
-              className="w-24 flex flex-col absolute lg:top-[16%] lg:right-[23%] bg-white border border-gray-300 shadow-md rounded-lg p-1 items-center mb-2"
+          <div className="flex items-center">
+            <button
+              className=" cursor-pointer"
+              onClick={() => setMenuOpen(!menuOpen)}
             >
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
-                Copy
-              </button>
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
-                CSV
-              </button>
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
-                Excel
-              </button>
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
-                PDF
-              </button>
-              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
-                Print
-              </button>
-            </div>
-          )}
+              <Icon icon="carbon:menu" color="white" width="27" height="27" />
+            </button>
+            {menuOpen && (
+              <div
+                ref={menuRef}
+                className="w-24 -ml-10 flex flex-col absolute lg:top-32 bg-white border border-gray-300 shadow-md rounded-lg p-1 items-center"
+              >
+                <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2 z-50">
+                  Copy
+                </button>
+                <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2 z-50">
+                  CSV
+                </button>
+                <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+                  Excel
+                </button>
+                <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+                  PDF
+                </button>
+                <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+                  Print
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <CostCenterModal
@@ -277,116 +275,116 @@ const CostCenterMaster = () => {
             <tbody className="">
               {filteredData.length > 0
                 ? filteredData.map((result, key) => (
-                    <tr key={key}>
-                      <td className="px-2 border-2">
-                        <div className="flex items-center gap-2 text-center justify-center">
-                          <Icon
-                            icon="lucide:eye"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => {
-                              setVeCost(true); // Open VEModal
-                              setEdit(false); // Disable edit mode for VEModal
-                              setCCid(result.cID); // Pass ID to VEModal
-                            }}
-                          />
-                          <Icon
-                            icon="mdi:edit"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => {
-                              setVeCost(true); // Open VEModal
-                              setEdit(true); // Disable edit mode for VEModal
-                              setCCid(result.cID); // Pass ID to VEModal
-                            }}
-                          />
-                          <VECost
-                            visible={veCost}
-                            onClick={() => setVeCost(false)}
-                            edit={edit}
-                            ID={CCid}
-                          />
-                          <Icon
-                            icon="material-symbols:delete-outline"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => deleteRecord(result.cID)}
-                          />
-                        </div>
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {result.cID}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {result.cName}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {result.status ? "Active" : "Inactive"}
-                      </td>
-                    </tr>
-                  ))
+                  <tr key={key}>
+                    <td className="px-2 border-2">
+                      <div className="flex items-center gap-2 text-center justify-center">
+                        <Icon
+                          icon="lucide:eye"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          onClick={() => {
+                            setVeCost(true); // Open VEModal
+                            setEdit(false); // Disable edit mode for VEModal
+                            setCCid(result.cID); // Pass ID to VEModal
+                          }}
+                        />
+                        <Icon
+                          icon="mdi:edit"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          onClick={() => {
+                            setVeCost(true); // Open VEModal
+                            setEdit(true); // Disable edit mode for VEModal
+                            setCCid(result.cID); // Pass ID to VEModal
+                          }}
+                        />
+                        <VECost
+                          visible={veCost}
+                          onClick={() => setVeCost(false)}
+                          edit={edit}
+                          ID={CCid}
+                        />
+                        <Icon
+                          icon="material-symbols:delete-outline"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          onClick={() => deleteRecord(result.cID)}
+                        />
+                      </div>
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                      {result.cID}
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                      {result.cName}
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                      {result.status ? "Active" : "Inactive"}
+                    </td>
+                  </tr>
+                ))
                 : CC.length > 0 &&
-                  CC.map((entry, index) => (
-                    <tr key={index}>
-                      <td className="px-2 border-2">
-                        <div className="flex items-center gap-2 text-center justify-center">
-                          <Icon
-                            icon="lucide:eye"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => {
-                              setVeCost(true); // Open VEModal
-                              setEdit(false); // Disable edit mode for VEModal
-                              setCCid(entry.cID); // Pass ID to VEModal
-                            }}
-                          />
-                          {/* <VECost
+                CC.map((entry, index) => (
+                  <tr key={index}>
+                    <td className="px-2 border-2">
+                      <div className="flex items-center gap-2 text-center justify-center">
+                        <Icon
+                          icon="lucide:eye"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          onClick={() => {
+                            setVeCost(true); // Open VEModal
+                            setEdit(false); // Disable edit mode for VEModal
+                            setCCid(entry.cID); // Pass ID to VEModal
+                          }}
+                        />
+                        {/* <VECost
                             visible={veCost}
                             onClick={() => setVeCost(false)}
                             edit={edit}
                             ID={CCid}
                           /> */}
-                          <Icon
-                            icon="mdi:edit"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => {
-                              setVeCost(true); // Open VEModal
-                              setEdit(true); // Disable edit mode for VEModal
-                              setCCid(entry.cID); // Pass ID to VEModal
-                            }}
-                          />
-                          <VECost
-                            visible={veCost}
-                            onClick={() => setVeCost(false)}
-                            edit={edit}
-                            ID={CCid}
-                          />
-                          <Icon
-                            icon="material-symbols:delete-outline"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => deleteRecord(entry.cID)}
-                          />
-                        </div>
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {entry.cID}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {entry.cName}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {entry.status ? "Active" : "Inactive"}
-                      </td>
-                    </tr>
-                  ))}
+                        <Icon
+                          icon="mdi:edit"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          onClick={() => {
+                            setVeCost(true); // Open VEModal
+                            setEdit(true); // Disable edit mode for VEModal
+                            setCCid(entry.cID); // Pass ID to VEModal
+                          }}
+                        />
+                        <VECost
+                          visible={veCost}
+                          onClick={() => setVeCost(false)}
+                          edit={edit}
+                          ID={CCid}
+                        />
+                        <Icon
+                          icon="material-symbols:delete-outline"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          onClick={() => deleteRecord(entry.cID)}
+                        />
+                      </div>
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                      {entry.cID}
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                      {entry.cName}
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                      {entry.status ? "Active" : "Inactive"}
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>

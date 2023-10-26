@@ -91,7 +91,7 @@ export default function EMPTabs() {
           sms: values.sms,
         }
         updateCompanyConfig(updatedData)
-        updateEmpId(values.empIdPrefix)
+        // updateEmpId(values.empIdPrefix)
       },
     });
 
@@ -494,7 +494,7 @@ export default function EMPTabs() {
                           id="status"
                           name="status"
                           className="form-checkbox h-5 w-5 text-blue-600"
-                          checked={formik.values.Status}
+                          checked={formik.values.status}
                           onChange={(event) => handleCheckboxChange('status', setStatusChecked, event)}
                         />
                         <label

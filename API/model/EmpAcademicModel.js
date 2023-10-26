@@ -11,9 +11,6 @@ const sequelize = new Sequelize(
 );
 
 const EmpAcademic = sequelize.define("EmpAcademic", {
-  EmployeeName: {
-    type: DataTypes.STRING,
-  },
   Qualification: {
     type: DataTypes.STRING,
   },

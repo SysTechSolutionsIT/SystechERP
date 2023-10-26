@@ -41,14 +41,7 @@ const DeductionHeadsModal = ({ visible, onClick }) => {
           Authorization: `Bearer ${token}`
         }
       });
-      if (response.status === 200) {
-        const data = response.data;
-        console.log(data);
-        // Handle successful response
-      } else {
-        console.error(`HTTP error! Status: ${response.status}`);
-        // Handle error response
-      }
+      alert('Deduction Head Added')
     } catch (error) {
       console.log("Error: ", error.message);
       // Handle network error
