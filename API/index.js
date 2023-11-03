@@ -76,7 +76,7 @@ app.use("/deduction-heads", DeductionHeadsMaster);
 app.use("/professional-tax", ProfessionalTaxMaster);
 app.use("/advance-request", AdvanceRequest);
 app.use("/attendance-master", AttendanceMaster);
-app.use("/employeeid", EmployeeId);
+// app.use("/employeeid", EmployeeId);
 app.use("/ed-imports", EDImports);
 app.use("/employee/family", EmpFamily);
 app.use("/currency", Currencies);

@@ -44,6 +44,7 @@ import Login from "./components/Login";
 import Registration from "./components/Registration";
 import Dashboard from "./components/Dashboard";
 import ShiftRoster from "./components/attendance management/ShiftRoster";
+import ManualAttendanceEntry from "./components/attendance management/ManualAttendanceEntry";
 
 function App() {
   return (
@@ -99,6 +100,7 @@ function App() {
             <Route path="/leave-type-master" element={<LeaveTypeMaster />} />
             <Route path="/edit-employee/:employeeId" element={<EMPTabs />} />
             <Route path="/shift-roster" element={<ShiftRoster/>} />
+            <Route path='/manual-attendance-entry' element={<ManualAttendanceEntry/>}/>
 
             <Route
               path="/earning-heads-master"

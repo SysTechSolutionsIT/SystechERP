@@ -92,7 +92,7 @@ const months = [
         <div className="bg-gray-200 w-[90%] p-8 rounded-lg">
           <div className="bg-blue-900 py-2 px-4 rounded-lg flex justify-between items-center">
             <p className="text-white text-[13px] font-semibold text-center">
-              Shift Roster
+              Attendance Management/ Shift Roster
             </p>
           </div>
           <div className="py-4">

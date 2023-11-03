@@ -466,7 +466,9 @@ const Sidebar = () => {
                       <SubMenuEntry 
                       title="Shift roster" 
                       onClick={() => navigate('/shift-roster')}/>
-                      <SubMenuEntry title="Mnual Attendance Entry" />
+                      <SubMenuEntry 
+                      title="Mnual Attendance Entry"
+                      onClick={() => navigate('/manual-attendance-entry')} />
                       <SubMenuEntry title="Manual Attendance Approval" />
                       <SubMenuEntry title="Out Door Duty Attendance Entry " />
                       <SubMenuEntry title="Out Door Duty Attendance Application" />
