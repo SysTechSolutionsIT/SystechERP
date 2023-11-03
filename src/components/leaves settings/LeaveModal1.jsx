@@ -166,32 +166,13 @@ const LeaveModal1 = ({ visible, onClick }) => {
                   Employee Name
                 </label>
                 <div className="flex items-center">
-                  <select
-                    id="EmployeeName"
-                    name="EmployeeName"
-                    value={formik.values.EmployeeName}
-                    onChange={formik.handleChange}
-                    className="w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
-                  >
-                   <option value="">Select an Employee</option>
-                    <option value="Alice">Alice</option>
-                    <option value="Bob">Bob</option>
-                    <option value="Charlie">Charlie</option>
-                    <option value="David">David</option>
-                    <option value="Eve">Eve</option>
-                    <option value="Frank">Frank</option>
-                    <option value="Grace">Grace</option>
-                    <option value="Henry">Henry</option>
-                    <option value="Isabel">Isabel</option>
-                    <option value="Jack">Jack</option>
-                  </select>
-                  <button
-                    type="button"
-                    // onClick={addEmployee}
-                    className="ml-2 px-3 py-1 text-[11px] bg-blue-500 text-white rounded-md"
-                  >
-                    +
-                  </button>
+                <input
+                  id="EmployeeName"
+                  type="text"
+                  value={formik.values.EmployeeName}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  onChange={formik.handleChange}
+                />
                 </div>
               </div>
               <div>

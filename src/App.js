@@ -43,6 +43,7 @@ import LeaveTypeMaster from "./components/leaves settings/LeaveType";
 import Login from "./components/Login";
 import Registration from "./components/Registration";
 import Dashboard from "./components/Dashboard";
+import ShiftRoster from "./components/attendance management/ShiftRoster";
 
 function App() {
   return (
@@ -97,6 +98,7 @@ function App() {
             <Route path="/job-type-master" element={<JobTypeMaster />} />
             <Route path="/leave-type-master" element={<LeaveTypeMaster />} />
             <Route path="/edit-employee/:employeeId" element={<EMPTabs />} />
+            <Route path="/shift-roster" element={<ShiftRoster/>} />
 
             <Route
               path="/earning-heads-master"

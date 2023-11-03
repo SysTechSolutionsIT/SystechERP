@@ -463,7 +463,9 @@ const Sidebar = () => {
                   />
                   {isAttMgtSubmenuOpen && (
                     <SubMenuGroup>
-                      <SubMenuEntry title="Shift roster" />
+                      <SubMenuEntry 
+                      title="Shift roster" 
+                      onClick={() => navigate('/shift-roster')}/>
                       <SubMenuEntry title="Mnual Attendance Entry" />
                       <SubMenuEntry title="Manual Attendance Approval" />
                       <SubMenuEntry title="Out Door Duty Attendance Entry " />
