@@ -469,9 +469,15 @@ const Sidebar = () => {
                       <SubMenuEntry 
                       title="Mnual Attendance Entry"
                       onClick={() => navigate('/manual-attendance-entry')} />
-                      <SubMenuEntry title="Manual Attendance Approval" />
-                      <SubMenuEntry title="Out Door Duty Attendance Entry " />
-                      <SubMenuEntry title="Out Door Duty Attendance Application" />
+                      <SubMenuEntry 
+                      title="Manual Attendance Approval"
+                      onClick={() => navigate('/manual-attendance-approval')} />
+                      <SubMenuEntry 
+                      title="Out Door Duty Attendance Entry"
+                      onClick={() => navigate('/outdoor-attendance-entry')} />
+                      <SubMenuEntry 
+                      title="Out Door Duty Attendance Approval"
+                      onClick={() => navigate('/outdoor-attendance-approval')} />
                       <SubMenuEntry title="Employee Gate Pass Entry" />
                       <SubMenuEntry title="Employee Gate Pass Approval" />
                       <SubMenuEntry title="Job Allocation" />

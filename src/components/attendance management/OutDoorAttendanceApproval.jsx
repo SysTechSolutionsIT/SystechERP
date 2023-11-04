@@ -3,9 +3,9 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../Login';
 import { useRef } from 'react';
 import { Icon } from '@iconify/react';
-import ManualAttendanceEntryModal from './ManualAttendanceEntryModal';
+import OutDoorAttendanceEntryModal from './OutDoorAttendanceEntryModal';
 
-const ManualAttendanceEntry = () => {
+const OutDoorAttendanceApproval = () => {
   const attData = [
     {
       "ApprovalFlag": true,
@@ -151,7 +151,7 @@ const ManualAttendanceEntry = () => {
   
     const [filteredData, setFilteredData] = useState([]);
     const [isModalOpen, setModalOpen] = useState(false); //Add Modal
-    const [manualAttendanceEntry, setManualAttendanceEntry] = useState([])
+    const [OutDoorAttendanceEntry, setOutDoorAttendanceEntry] = useState([])
     const { token } = useAuth()
     //View and Edit
     const [LVE, setLVE] = useState(false);
@@ -159,7 +159,7 @@ const ManualAttendanceEntry = () => {
     const [LeaveId, setLeaveId] = useState();
 
     useEffect(() =>{
-      setManualAttendanceEntry(attData)
+      setOutDoorAttendanceEntry(attData)
     }, [attData])
   
     // useEffect(() => {
@@ -171,7 +171,7 @@ const ManualAttendanceEntry = () => {
     //         }
     //       })
     //       const data = response.data
-    //       setmanualAttendanceEntry(data)
+    //       setOutDoorAttendanceEntry(data)
     //     } catch (error) {
     //       console.error('Error', error);
     //     }
@@ -216,7 +216,7 @@ const ManualAttendanceEntry = () => {
 
   
     const handleSearchChange = (title, searchWord) => {
-      const newFilter = manualAttendanceEntry.filter((item) => {
+      const newFilter = OutDoorAttendanceEntry.filter((item) => {
         const value = item[title];
         return value && value.toLowerCase().includes(searchWord.toLowerCase());
       });
@@ -285,7 +285,7 @@ const ManualAttendanceEntry = () => {
     //Max Searchbar width
     const getColumnMaxWidth = (columnName) => {
       let maxWidth = 0;
-      const allRows = [...manualAttendanceEntry, ...filteredData];
+      const allRows = [...OutDoorAttendanceEntry, ...filteredData];
   
       allRows.forEach((row) => {
         const cellContent = row[columnName];
@@ -307,7 +307,7 @@ const ManualAttendanceEntry = () => {
     <div className="top-25 min-w-[40%]">
     <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
       <div className="mr-auto text-[15px]">
-        Attendance Management / Manual Attendance Entry
+        Attendance Management / Manual Attendance Approval
       </div>
       <div className="flex gap-4">
         <button
@@ -401,7 +401,7 @@ const ManualAttendanceEntry = () => {
         </div>
       </div>
       </div>
-      <ManualAttendanceEntryModal visible={isModalOpen} onClick={() => setModalOpen(false)}/>
+      <OutDoorAttendanceEntryModal visible={isModalOpen} onClick={() => setModalOpen(false)}/>
       <div className="grid gap-2 justify-between">
         <div className="my-1 rounded-2xl bg-white p-2 pr-8 ">
           <table className="min-w-full text-center whitespace-normal z-0">
@@ -447,92 +447,30 @@ const ManualAttendanceEntry = () => {
                 ? filteredData.map((result, key) => (
                   <tr key={key}>
                     <td className="px-2 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setLVE(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setLeaveId(result.id); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setLVE(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setLeaveId(result.id); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {key + 1}
-                    </td>
-                    {selectedColumns.map((columnName) => (
-                      columnVisibility[columnName] ? (
-                        <td
-                          key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                    <div className="flex items-center gap-2 text-center justify-center">
+                        <button
+                        type="submit"
+                        className="bg-blue-900 text-white font-semibold py-1 px-1 rounded-lg text-[11px]"
                         >
-                          {result[columnName]}
-                        </td>
-                      ) : null
-                    ))}
+                        Approve
+                        </button>
+                    </div>
+                    </td>
                   </tr>
                 ))
-                : manualAttendanceEntry.map((result, index) => (
+                : OutDoorAttendanceEntry
+                .filter((result) => !result.ApprovalFlag)
+                .map((result, index) => (
                   <tr key={index}>
                     <td className="px-2 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setLVE(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setLeaveId(result.id); // Pass ID to VEModal
-                          }}
-                        />
-
-                        <Icon
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setLVE(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setLeaveId(result.id); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                        />
-                      </div>
+                    <div className="flex items-center gap-2 text-center justify-center">
+                        <button
+                        type="submit"
+                        className="bg-blue-900 text-white font-semibold py-1 px-1 rounded-lg text-[11px]"
+                        >
+                        Approve
+                        </button>
+                    </div>
                     </td>
                     <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
                       {index + 1}
@@ -567,4 +505,4 @@ const ManualAttendanceEntry = () => {
   )
 }
 
-export default ManualAttendanceEntry
+export default OutDoorAttendanceApproval

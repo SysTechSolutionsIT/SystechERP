@@ -3,7 +3,7 @@ import React from 'react'
 import { Icon } from '@iconify/react'
 import { useState } from 'react'
 
-const ManualAttendanceEntryModal = ({visible, onClick}) => {
+const OutDoorAttendanceEntryModal = ({visible, onClick}) => {
     const formik = useFormik({
         initialValues:{
           ApprovalFlag: "",
@@ -42,7 +42,7 @@ const ManualAttendanceEntryModal = ({visible, onClick}) => {
         <div className="bg-gray-200 w-[60%] p-8 rounded-lg max-h-[80%] overflow-y-scroll">
             <div className="bg-blue-900 py-2 px-4 rounded-lg flex justify-between items-center">
                 <p className="text-white text-[13px] font-semibold">
-                  Manual Attendance Entry
+                  Out Door Attendance Entry
                 </p>
                 <Icon
                     icon="maki:cross"
@@ -199,4 +199,4 @@ const ManualAttendanceEntryModal = ({visible, onClick}) => {
   )
 }
 
-export default ManualAttendanceEntryModal
+export default OutDoorAttendanceEntryModal

@@ -307,7 +307,7 @@ const ManualAttendanceEntry = () => {
     <div className="top-25 min-w-[40%]">
     <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
       <div className="mr-auto text-[15px]">
-        Attendance Management / Manual Attendance Entry
+        Attendance Management / Manual Attendance Approval
       </div>
       <div className="flex gap-4">
         <button
@@ -447,92 +447,30 @@ const ManualAttendanceEntry = () => {
                 ? filteredData.map((result, key) => (
                   <tr key={key}>
                     <td className="px-2 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setLVE(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setLeaveId(result.id); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setLVE(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setLeaveId(result.id); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {key + 1}
-                    </td>
-                    {selectedColumns.map((columnName) => (
-                      columnVisibility[columnName] ? (
-                        <td
-                          key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                    <div className="flex items-center gap-2 text-center justify-center">
+                        <button
+                        type="submit"
+                        className="bg-blue-900 text-white font-semibold py-1 px-1 rounded-lg text-[11px]"
                         >
-                          {result[columnName]}
-                        </td>
-                      ) : null
-                    ))}
+                        Approve
+                        </button>
+                    </div>
+                    </td>
                   </tr>
                 ))
-                : manualAttendanceEntry.map((result, index) => (
+                : manualAttendanceEntry
+                .filter((result) => !result.ApprovalFlag)
+                .map((result, index) => (
                   <tr key={index}>
                     <td className="px-2 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setLVE(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setLeaveId(result.id); // Pass ID to VEModal
-                          }}
-                        />
-
-                        <Icon
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setLVE(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setLeaveId(result.id); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                        />
-                      </div>
+                    <div className="flex items-center gap-2 text-center justify-center">
+                        <button
+                        type="submit"
+                        className="bg-blue-900 text-white font-semibold py-1 px-1 rounded-lg text-[11px]"
+                        >
+                        Approve
+                        </button>
+                    </div>
                     </td>
                     <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
                       {index + 1}

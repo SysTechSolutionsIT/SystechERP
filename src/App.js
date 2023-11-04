@@ -45,6 +45,9 @@ import Registration from "./components/Registration";
 import Dashboard from "./components/Dashboard";
 import ShiftRoster from "./components/attendance management/ShiftRoster";
 import ManualAttendanceEntry from "./components/attendance management/ManualAttendanceEntry";
+import ManualAttendanceApproval from "./components/attendance management/ManualAttendanceApproval";
+import OutDoorAttendanceEntry from "./components/attendance management/OutDoorAttendanceEntry";
+import OutDoorAttendanceApproval from "./components/attendance management/OutDoorAttendanceApproval";
 
 function App() {
   return (
@@ -101,7 +104,9 @@ function App() {
             <Route path="/edit-employee/:employeeId" element={<EMPTabs />} />
             <Route path="/shift-roster" element={<ShiftRoster/>} />
             <Route path='/manual-attendance-entry' element={<ManualAttendanceEntry/>}/>
-
+            <Route path='/manual-attendance-approval' element={<ManualAttendanceApproval/>}/>
+            <Route path='/outdoor-attendance-entry' element={<OutDoorAttendanceEntry/>}/>
+            <Route path='/outdoor-attendance-approval' element={<OutDoorAttendanceApproval/>}/>
             <Route
               path="/earning-heads-master"
               element={<EarningHeadsMaster />}

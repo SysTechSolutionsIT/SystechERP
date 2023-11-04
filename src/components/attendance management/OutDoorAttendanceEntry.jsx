@@ -3,9 +3,9 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../Login';
 import { useRef } from 'react';
 import { Icon } from '@iconify/react';
-import ManualAttendanceEntryModal from './ManualAttendanceEntryModal';
+import OutDoorAttendanceEntryModal from './OutDoorAttendanceEntryModal';
 
-const ManualAttendanceEntry = () => {
+const OutDoorAttendanceEntry = () => {
   const attData = [
     {
       "ApprovalFlag": true,
@@ -151,7 +151,7 @@ const ManualAttendanceEntry = () => {
   
     const [filteredData, setFilteredData] = useState([]);
     const [isModalOpen, setModalOpen] = useState(false); //Add Modal
-    const [manualAttendanceEntry, setManualAttendanceEntry] = useState([])
+    const [OutDoorAttendanceEntry, setOutDoorAttendanceEntry] = useState([])
     const { token } = useAuth()
     //View and Edit
     const [LVE, setLVE] = useState(false);
@@ -159,7 +159,7 @@ const ManualAttendanceEntry = () => {
     const [LeaveId, setLeaveId] = useState();
 
     useEffect(() =>{
-      setManualAttendanceEntry(attData)
+      setOutDoorAttendanceEntry(attData)
     }, [attData])
   
     // useEffect(() => {
@@ -171,7 +171,7 @@ const ManualAttendanceEntry = () => {
     //         }
     //       })
     //       const data = response.data
-    //       setmanualAttendanceEntry(data)
+    //       setOutDoorAttendanceEntry(data)
     //     } catch (error) {
     //       console.error('Error', error);
     //     }
@@ -216,7 +216,7 @@ const ManualAttendanceEntry = () => {
 
   
     const handleSearchChange = (title, searchWord) => {
-      const newFilter = manualAttendanceEntry.filter((item) => {
+      const newFilter = OutDoorAttendanceEntry.filter((item) => {
         const value = item[title];
         return value && value.toLowerCase().includes(searchWord.toLowerCase());
       });
@@ -285,7 +285,7 @@ const ManualAttendanceEntry = () => {
     //Max Searchbar width
     const getColumnMaxWidth = (columnName) => {
       let maxWidth = 0;
-      const allRows = [...manualAttendanceEntry, ...filteredData];
+      const allRows = [...OutDoorAttendanceEntry, ...filteredData];
   
       allRows.forEach((row) => {
         const cellContent = row[columnName];
@@ -401,7 +401,7 @@ const ManualAttendanceEntry = () => {
         </div>
       </div>
       </div>
-      <ManualAttendanceEntryModal visible={isModalOpen} onClick={() => setModalOpen(false)}/>
+      <OutDoorAttendanceEntryModal visible={isModalOpen} onClick={() => setModalOpen(false)}/>
       <div className="grid gap-2 justify-between">
         <div className="my-1 rounded-2xl bg-white p-2 pr-8 ">
           <table className="min-w-full text-center whitespace-normal z-0">
@@ -496,7 +496,7 @@ const ManualAttendanceEntry = () => {
                     ))}
                   </tr>
                 ))
-                : manualAttendanceEntry.map((result, index) => (
+                : OutDoorAttendanceEntry.map((result, index) => (
                   <tr key={index}>
                     <td className="px-2 border-2">
                       <div className="flex items-center gap-2 text-center justify-center">
@@ -567,4 +567,4 @@ const ManualAttendanceEntry = () => {
   )
 }
 
-export default ManualAttendanceEntry
+export default OutDoorAttendanceEntry
