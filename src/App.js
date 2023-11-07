@@ -43,6 +43,7 @@ import LeaveTypeMaster from "./components/leaves settings/LeaveType";
 import Login from "./components/Login";
 import Registration from "./components/Registration";
 import Dashboard from "./components/Dashboard";
+import GateEntryMaster from "./components/attendance management/empGatePassEntry";
 
 function App() {
   return (
@@ -120,6 +121,10 @@ function App() {
             <Route path="/ED-imports" element={<EDImports />} />
             <Route path="/salary-processing" element={<SalProcessing />} />
             <Route path="registration" element={<Registration />} />
+            <Route
+              path="/attendance-master/empGatePassEntry"
+              element={<GateEntryMaster />}
+            />
           </Route>
         </Routes>
       </AuthProvider>

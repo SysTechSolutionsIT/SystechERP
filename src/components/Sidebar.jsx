@@ -469,7 +469,12 @@ const Sidebar = () => {
                       <SubMenuEntry title="Manual Attendance Approval" />
                       <SubMenuEntry title="Out Door Duty Attendance Entry " />
                       <SubMenuEntry title="Out Door Duty Attendance Application" />
-                      <SubMenuEntry title="Employee Gate Pass Entry" />
+                      <SubMenuEntry
+                        title="Employee Gate Pass Entry"
+                        onClick={() =>
+                          navigate("/attendance-master/empGatePassEntry")
+                        }
+                      />
                       <SubMenuEntry title="Employee Gate Pass Approval" />
                       <SubMenuEntry title="Job Allocation" />
                       <SubMenuEntry title="Daily Atttendance Processing" />
