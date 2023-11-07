@@ -293,7 +293,7 @@ export default function EMPTabs() {
             <li className="-mb-px mr-2 ml-2 cursor-pointer">
               <p
                 className={
-                  "inline-block p-4 font-bold " +
+                  "inline-block px-2 py-1 font-bold " +
                   (openTab === 1
                     ? "text-s font-bold uppercase text-white bg-blue-900 rounded-lg active"
                     : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
@@ -309,7 +309,7 @@ export default function EMPTabs() {
             <li className="-mb-px mr-2 ml-2 cursor-pointer">
               <p
                 className={
-                  "inline-block p-4 font-semibold  rounded-lg " +
+                  "inline-block px-2 py-1 font-semibold  rounded-lg " +
                   (openTab === 2
                     ? "text-s font-bold uppercase text-white bg-blue-900 rounded-lg active"
                     : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
@@ -325,7 +325,7 @@ export default function EMPTabs() {
             <li className="-mb-px mr-2 cursor-pointer">
               <p
                 className={
-                  "inline-block p-4 font-semibold  rounded-lg " +
+                  "inline-block px-2 py-1 font-semibold  rounded-lg " +
                   (openTab === 3
                     ? "text-s font-bold uppercase text-white bg-blue-900 rounded-lg active"
                     : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
@@ -341,7 +341,7 @@ export default function EMPTabs() {
             <li className="-mb-px mr-2 cursor-pointer">
               <p
                 className={
-                  "inline-block p-4 font-semibold  rounded-lg " +
+                  "inline-block px-2 py-1 font-semibold  rounded-lg " +
                   (openTab === 4
                     ? "text-s font-bold uppercase text-white bg-blue-900 rounded-lg active"
                     : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
@@ -357,7 +357,7 @@ export default function EMPTabs() {
             <li className="-mb-px mr-2 cursor-pointer">
               <p
                 className={
-                  "inline-block p-4 font-semibold  rounded-lg " +
+                  "inline-block px-2 py-1 font-semibold  rounded-lg " +
                   (openTab === 5
                     ? "text-s font-bold uppercase text-white bg-blue-900 rounded-lg active"
                     : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
@@ -373,7 +373,7 @@ export default function EMPTabs() {
             <li className="-mb-px mr-2 cursor-pointer">
               <p
                 className={
-                  "inline-block p-4 font-semibold  rounded-lg " +
+                  "inline-block px-2 py-1 font-semibold  rounded-lg " +
                   (openTab === 6
                     ? "text-s font-bold uppercase text-white bg-blue-900 rounded-lg active"
                     : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")
@@ -389,7 +389,7 @@ export default function EMPTabs() {
             <li className="-mb-px mr-2 cursor-pointer">
               <p
                 className={
-                  "inline-block p-4 font-semibold  rounded-lg " +
+                  "inline-block px-2 py-1 font-semibold  rounded-lg " +
                   (openTab === 7
                     ? "text-s font-bold uppercase text-white bg-blue-900 rounded-lg active"
                     : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg")

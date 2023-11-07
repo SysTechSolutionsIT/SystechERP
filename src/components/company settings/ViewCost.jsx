@@ -15,32 +15,28 @@ const VECost = ({ visible, onClick, edit, ID }) => {
       cID: "",
       cName: "",
       cRemarks: "",
-      status: status,
+      status: "",
     },
     onSubmit: async (values) => {
       console.log(values);
-      const state = status === true;
-
+      const updatedData = {
+        cName: values.cName,
+        cRemarks: values.cRemarks,
+        status: values.status,
+      }
       try {
         // Make a PATCH request to update the cost center
         const response = await axios.patch(
-          `http://localhost:5500/cost-center/update-cost-center/${ID}}`,
+          `http://localhost:5500/cost-center/update-cost-center/${ID}`,
+          updatedData,
           {
-            // Pass the updated values to the server
-            cName: values.cName,
-            cRemarks: values.cRemarks,
-            status: state, // Use the status value from the form
-          },
-          {
-            header: {
+            headers: {
               Authorization: `Bearer ${token}`,
             },
           }
         );
 
-        // Handle the response from the server here if needed
-        console.log("Server response:", response.data);
-
+        alert('Cost Center Updated')
         // You may want to update your local data (costCenters) or perform other actions here
       } catch (error) {
         console.error("Error while sending PATCH request:", error);
@@ -72,11 +68,26 @@ const VECost = ({ visible, onClick, edit, ID }) => {
       console.log("Error while fetching course data: ", error.message);
     }
   };
-  const handleStatusChange = () => {
-    const newStatus = !status; // Toggle the status
-    setStatus(newStatus); // Update the local state
-    formik.setFieldValue("status", newStatus); // Update the formik field value
-  };
+ const [isStatusChecked, setStatusChecked] = useState(false)
+    const handleCheckboxChange = (fieldName, setChecked, event) => {
+      //This is how to use it (event) => handleCheckboxChange('Status', setStatusChecked, event)
+        const checked = event.target.checked;
+        setChecked(checked);
+        formik.setValues({
+          ...formik.values,
+          [fieldName]: checked.toString(),
+        });
+      };
+
+  useEffect(() =>{
+    if(details){
+      formik.setValues({
+        cName: details.cName,
+        cRemarks: details.cRemarks,
+        status: details.status,
+      })
+    }
+  }, [details])
 
   if (!visible) return null;
   return (
@@ -105,7 +116,6 @@ const VECost = ({ visible, onClick, edit, ID }) => {
                 <input
                   id="cID"
                   type="number"
-                  placeholder="Enter Financial Year ID"
                   value={details?.cID}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
@@ -119,8 +129,7 @@ const VECost = ({ visible, onClick, edit, ID }) => {
                 <input
                   id="cName"
                   type="text"
-                  placeholder="Enter Name"
-                  value={details?.cName}
+                  value={formik.values.cName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -130,7 +139,6 @@ const VECost = ({ visible, onClick, edit, ID }) => {
                 <p className="capatilize font-semibold  text-[13px]">Remarks</p>
                 <textarea
                   id="cRemarks"
-                  placeholder="Enter Remark"
                   value={details?.cRemarks}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
@@ -139,15 +147,15 @@ const VECost = ({ visible, onClick, edit, ID }) => {
               </div>
               <div>
                 <p className="capitalize font-semibold  text-[13px]">
-                  Year Active
+                  Status
                 </p>
                 <label className="capitalize font-semibold  text-[11px]">
                   <input
-                    id="YearClose"
+                    id="status"
                     type="checkbox"
-                    checked={details?.status}
+                    checked={formik.values.status}
                     className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border-2 rounded-lg`}
-                    onChange={handleStatusChange}
+                    onChange={(event) => handleCheckboxChange('status', setStatusChecked, event)}
                     disabled={!edit}
                   />
                   Active

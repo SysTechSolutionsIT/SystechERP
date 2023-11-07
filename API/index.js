@@ -40,12 +40,14 @@ const EDImports = require("./route/EDImportsRoute");
 const EmpFamily = require("./route/EmpFamilyRoute");
 const Currencies = require("./route/CurrenciesRoute");
 
+
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());
 // Use the user routes
 app.use("/users", userRoutes);
 app.use("/companies", CompMaster);
 app.use("/company-config", CompConfig);
+
 app.use("/bankmaster", BankMaster);
 app.use("/departmentmaster", DepartmentMaster);
 app.use("/threefieldmaster", ThreeFieldMaster);
@@ -74,7 +76,7 @@ app.use("/deduction-heads", DeductionHeadsMaster);
 app.use("/professional-tax", ProfessionalTaxMaster);
 app.use("/advance-request", AdvanceRequest);
 app.use("/attendance-master", AttendanceMaster);
-app.use("/employeeid", EmployeeId);
+// app.use("/employeeid", EmployeeId);
 app.use("/ed-imports", EDImports);
 app.use("/employee/family", EmpFamily);
 app.use("/currency", Currencies);

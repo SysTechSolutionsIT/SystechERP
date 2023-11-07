@@ -283,7 +283,6 @@ const Sidebar = () => {
                     title="Two Field Master"
                     onClick={() => navigate("/two-field-master")}
                   />
-                  <SubMenuEntry title="Project Master" />
                 </SubMenuGroup>
               )}
 
@@ -464,11 +463,26 @@ const Sidebar = () => {
                   />
                   {isAttMgtSubmenuOpen && (
                     <SubMenuGroup>
-                      <SubMenuEntry title="Shift roster" />
-                      <SubMenuEntry title="Mnual Attendance Entry" />
-                      <SubMenuEntry title="Manual Attendance Approval" />
-                      <SubMenuEntry title="Out Door Duty Attendance Entry " />
-                      <SubMenuEntry title="Out Door Duty Attendance Application" />
+                      <SubMenuEntry
+                        title="Shift roster"
+                        onClick={() => navigate("/shift-roster")}
+                      />
+                      <SubMenuEntry
+                        title="Mnual Attendance Entry"
+                        onClick={() => navigate("/manual-attendance-entry")}
+                      />
+                      <SubMenuEntry
+                        title="Manual Attendance Approval"
+                        onClick={() => navigate("/manual-attendance-approval")}
+                      />
+                      <SubMenuEntry
+                        title="Out Door Duty Attendance Entry"
+                        onClick={() => navigate("/outdoor-attendance-entry")}
+                      />
+                      <SubMenuEntry
+                        title="Out Door Duty Attendance Approval"
+                        onClick={() => navigate("/outdoor-attendance-approval")}
+                      />
                       <SubMenuEntry
                         title="Employee Gate Pass Entry"
                         onClick={() =>
