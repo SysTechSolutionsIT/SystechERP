@@ -463,22 +463,32 @@ const Sidebar = () => {
                   />
                   {isAttMgtSubmenuOpen && (
                     <SubMenuGroup>
-                      <SubMenuEntry 
-                      title="Shift roster" 
-                      onClick={() => navigate('/shift-roster')}/>
-                      <SubMenuEntry 
-                      title="Mnual Attendance Entry"
-                      onClick={() => navigate('/manual-attendance-entry')} />
-                      <SubMenuEntry 
-                      title="Manual Attendance Approval"
-                      onClick={() => navigate('/manual-attendance-approval')} />
-                      <SubMenuEntry 
-                      title="Out Door Duty Attendance Entry"
-                      onClick={() => navigate('/outdoor-attendance-entry')} />
-                      <SubMenuEntry 
-                      title="Out Door Duty Attendance Approval"
-                      onClick={() => navigate('/outdoor-attendance-approval')} />
-                      <SubMenuEntry title="Employee Gate Pass Entry" />
+                      <SubMenuEntry
+                        title="Shift roster"
+                        onClick={() => navigate("/shift-roster")}
+                      />
+                      <SubMenuEntry
+                        title="Mnual Attendance Entry"
+                        onClick={() => navigate("/manual-attendance-entry")}
+                      />
+                      <SubMenuEntry
+                        title="Manual Attendance Approval"
+                        onClick={() => navigate("/manual-attendance-approval")}
+                      />
+                      <SubMenuEntry
+                        title="Out Door Duty Attendance Entry"
+                        onClick={() => navigate("/outdoor-attendance-entry")}
+                      />
+                      <SubMenuEntry
+                        title="Out Door Duty Attendance Approval"
+                        onClick={() => navigate("/outdoor-attendance-approval")}
+                      />
+                      <SubMenuEntry
+                        title="Employee Gate Pass Entry"
+                        onClick={() =>
+                          navigate("/attendance-master/empGatePassEntry")
+                        }
+                      />
                       <SubMenuEntry title="Employee Gate Pass Approval" />
                       <SubMenuEntry title="Job Allocation" />
                       <SubMenuEntry title="Daily Atttendance Processing" />
