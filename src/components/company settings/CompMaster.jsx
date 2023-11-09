@@ -7,6 +7,7 @@ import axios from "axios";
 import { useAuth } from "../Login";
 
 const CompMaster = () => {
+  const [companies, setCompanies] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false); //Add Modal
 
@@ -22,25 +23,41 @@ const CompMaster = () => {
   const menuRef = useRef(null);
 
   const [columnVisibility, setColumnVisibility] = useState({
-    Name: true,
-    ShortName: true,
-    SectorDetails: true,
-    NatureOfBusiness: true,
-    Status: true,
-    CreatedBy: true,
-    CreatedOn: true,
-    ModifiedBy: true,
+    CompanyId : false,
+    CompanySectorId : true,
+    CompanySector : true,
+    CompanyName : true,
+    ShortName : true,
+    NatureOfBusiness : true,
+    Logo : false,
+    CreatedBy : true,
+    CreatedByName : false,
+    ModifiedBy : true,
+    ModifiedByName : false,
+    SingleCompany : true,
+    createdAt : true,
+    updatedAt : true,
+    FieldId : false,
+    FieldName : false,
   });
 
   const columnNames = {
-    Name: "Name",
-    ShortName: "Short Name",
-    SectorDetails: "Sector Details",
-    NatureOfBusiness: "Nature of Business",
-    Status: "Status",
-    CreatedBy: "Created By",
-    CreatedOn: "Created On",
-    ModifiedBy: "Modified By",
+    CompanyId: 'Company ID',
+    CompanySectorId: 'Sector ID',
+    CompanySector: 'Company Sector',
+    CompanyName: 'Company Name',
+    ShortName: 'Short Name',
+    NatureOfBusiness: 'Nature of Business',
+    Logo: 'Logo',
+    CreatedBy: 'Created By',
+    CreatedByName: 'Created By Name',
+    ModifiedBy: 'Modified By',
+    ModifiedByName: 'Modified By Name',
+    SingleCompany: 'Single Company',
+    createdAt: 'Created On',
+    updatedAt: 'Modified On',
+    FieldId: 'Field ID',
+    FieldName: 'Field Name'
   }
 
   //Toggle
@@ -50,13 +67,10 @@ const CompMaster = () => {
   ]);
 
   const toggleColumn = (columnName) => {
-    if (selectedColumns.includes(columnName)) {
-      setSelectedColumns((prevSelected) =>
-        prevSelected.filter((col) => col !== columnName)
-      );
-    } else {
-      setSelectedColumns((prevSelected) => [...prevSelected, columnName]);
-    }
+    setColumnVisibility((prevVisibility) => ({
+      ...prevVisibility,
+      [columnName]: !prevVisibility[columnName],
+    }));
   };
 
   useEffect(() => {
@@ -65,10 +79,24 @@ const CompMaster = () => {
 
   const selectAllColumns = () => {
     setSelectedColumns([...Object.keys(columnVisibility)]);
+    setColumnVisibility((prevVisibility) => {
+      const updatedVisibility = { ...prevVisibility };
+      Object.keys(updatedVisibility).forEach((columnName) => {
+        updatedVisibility[columnName] = true;
+      });
+      return updatedVisibility;
+    });
   };
 
   const deselectAllColumns = () => {
     setSelectedColumns([]);
+    setColumnVisibility((prevVisibility) => {
+      const updatedVisibility = { ...prevVisibility };
+      Object.keys(updatedVisibility).forEach((columnName) => {
+        updatedVisibility[columnName] = false;
+      });
+      return updatedVisibility;
+    });
   };
 
   //Menu
@@ -108,7 +136,6 @@ const CompMaster = () => {
   };
 
   //For API
-  const [companies, setCompanies] = useState([]);
 
   useEffect(() => {
     fetchCompData();
@@ -116,18 +143,21 @@ const CompMaster = () => {
 
   const fetchCompData = async () => {
     try {
-      const response = await axios.get("http://localhost:5500/companies/", {
-        headers: { authorization: `Bearer ${token}` },
+      const response = await axios.get("http://localhost:5500/companies/FnShowAllData", {
+        headers: { Authorization: `Bearer ${token}` },
       });
-      console.log("Response Object", response);
-      const data = response.data.companies;
-      console.log(data);
-      setCompanies(data);
+  
+      if (response.status === 200) {
+        const data = response.data;
+        setCompanies(data);
+      } else {
+        console.error("Failed to fetch data");
+      }
     } catch (error) {
-      console.log("Error while fetching course data: ", error.message);
+      console.error("Error while fetching company data: ", error.message);
     }
   };
-  console.log(companies);
+  
 
   const handleSearchChange = (title, searchWord) => {
     const searchData = [...companies];
@@ -280,47 +310,46 @@ const CompMaster = () => {
                 <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
                   Actions
                 </th>
-                <th className="w-auto text-[13px] px-1 font-bold text-black border-2 border-gray-400 whitespace-normal">
+                <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
                   ID
                 </th>
+                
                 {selectedColumns.map((columnName) => (
-                  <th
-                    key={columnName}
-                    className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 ${columnVisibility[columnName] ? "" : "hidden"
-                      }`}
-                  >
-                    {columnNames[columnName]}
-                  </th>
+                  columnVisibility[columnName] ? (
+                    <th
+                      key={columnName}
+                      className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal`}
+                    >
+                      {columnNames[columnName]}
+                    </th>
+                  ) : null
                 ))}
               </tr>
               <tr>
                 <th className="border-2"></th>
                 <th className="p-2 font-bold text-black border-2 " />
                 {selectedColumns.map((columnName) => (
-                  <th
-                    key={columnName}
-                    className="p-2 font-bold text-black border-2 text-[11px]"
-                  >
-                    <input
-                      type="text"
-                      placeholder={`Search `}
-                      className="w-auto text-[11px] h-6 border-2 border-slate-500 rounded-lg justify-center text-center whitespace-normal"
-                      style={{ maxWidth: getColumnMaxWidth(columnName) + "px" }}
-                      onChange={(e) =>
-                        handleSearchChange(columnName, e.target.value)
-                      }
-                    />
-                  </th>
+                  columnVisibility[columnName] ? (
+                    <th key={columnName} className="p-2 font-semibold text-black border-2">
+                      <input
+                        type="text"
+                        placeholder={`Search `}
+                        className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
+                        style={{ maxWidth: getColumnMaxWidth(columnName) + "px" }}
+                        onChange={(e) => handleSearchChange(columnName, e.target.value)}
+                      />
+                    </th>
+                  ) : null
                 ))}
               </tr>
             </thead>
             <tbody className="">
-              {filteredData.length > 0
-                ? filteredData.map((result, key) => (
+            {filteredData.length > 0
+              ? filteredData.map((result, key) => (
                   <tr key={key}>
                     <td className="px-2 border-2">
                       <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
+                      <Icon
                           icon="lucide:eye"
                           color="#556987"
                           width="20"
@@ -329,7 +358,7 @@ const CompMaster = () => {
                           onClick={() => {
                             setVE(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
-                            setCid(result.id); // Pass ID to VEModal
+                            setCid(result.CompanyId); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -341,7 +370,7 @@ const CompMaster = () => {
                           onClick={() => {
                             setVE(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
-                            setCid(result.id); // Pass ID to VEModal
+                            setCid(result.CompanyId); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -350,12 +379,11 @@ const CompMaster = () => {
                           width="20"
                           height="20"
                           className="cursor-pointer"
-                          onClick={() => deleteComp(result.id)}
                         />
                       </div>
                     </td>
-                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {result.id}
+                    <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
+                      {result.CompanyId}
                     </td>
                     {selectedColumns.map((columnName) => (
                       <td
@@ -363,25 +391,18 @@ const CompMaster = () => {
                         className={`px-4 border-2 whitespace-normal text-[11px] text-left${columnVisibility[columnName] ? "" : "hidden"
                           }`}
                       >
-                        {columnName === "status"
-                          ? result.status === 1
-                            ? "Active"
-                            : "Inactive"
-                          : result[
-                          columnName.charAt(0).toLowerCase() +
-                          columnName.slice(1)
-                          ]}
+                         {result[
+                              columnName
+                            ]}
                       </td>
                     ))}
                   </tr>
                 ))
-                : companies.length > 0 &&
-                companies.map((result, key) => (
+              : Array.isArray(companies) && companies.length > 0 && companies.map((result, key) => (
                   <tr key={key}>
-                    {/* ... Rest of the table data */}
                     <td className="px-2 border-2">
                       <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
+                      <Icon
                           icon="lucide:eye"
                           color="#556987"
                           width="20"
@@ -390,7 +411,7 @@ const CompMaster = () => {
                           onClick={() => {
                             setVE(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
-                            setCid(result.id); // Pass ID to VEModal
+                            setCid(result.CompanyId); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -401,8 +422,8 @@ const CompMaster = () => {
                           className="cursor-pointer"
                           onClick={() => {
                             setVE(true); // Open VEModal
-                            setEdit(true); // Enable edit mode for VEModal
-                            setCid(result.id); // Pass ID to VEModal
+                            setEdit(true); // Disable edit mode for VEModal
+                            setCid(result.CompanyId); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -411,32 +432,30 @@ const CompMaster = () => {
                           width="20"
                           height="20"
                           className="cursor-pointer"
-                          onClick={() => deleteComp(result.id)}
                         />
                       </div>
                     </td>
-                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {result.id}
+                    <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
+                      {result.CompanyId}
                     </td>
                     {selectedColumns.map((columnName) => (
-                      <td
-                        key={columnName}
-                        className={`px-4 border-2 whitespace-normal text-[11px] text-left${columnVisibility[columnName] ? "" : "hidden"
-                          }`}
-                      >
-                        {columnName === "Status"
-                          ? result.status
-                            ? "Active"
-                            : "Inactive"
-                          : result[
-                          columnName.charAt(0).toLowerCase() +
-                          columnName.slice(1)
-                          ]}
-                      </td>
-                    ))}
+  columnVisibility[columnName] ? (
+    <td
+      key={columnName}
+      className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+    >
+      {result[columnName] === 'Y' ? 'Yes' : result[columnName] === 'N' ? 'No' : result[columnName] === null ? 'N/A' : result[columnName]}
+    </td>
+  ) : (
+    <td key={columnName} className="hidden"></td>
+  )
+))}
+
+
                   </tr>
                 ))}
-            </tbody>
+          </tbody>
+
           </table>
         </div>
       </div>

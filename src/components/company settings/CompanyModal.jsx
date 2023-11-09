@@ -12,62 +12,44 @@ const CompanyModal = ({ visible, onClick }) => {
 
   const formik = useFormik({
     initialValues: {
-      name: "",
-      shortName: "",
-      sectorDetails: "",
-      status: statusCheck,
-      createdBy: "",
-      natureOfBusiness: "",
-      logo: null,
-      singleBranch: singleBranchCheck,
+    CompanyId : "",
+    CompanySectorId : "",
+    CompanySector : "",
+    CompanyName : "",
+    ShortName : "",
+    NatureOfBusiness : "",
+    Logo : "",
+    AcFlag : "",
+    CreatedBy : "",
+    CreatedByName : "",
+    ModifiedBy : "",
+    ModifiedByName : "",
+    IUFlag : "I",
+    SingleCompany : "",
+    CreatedOn : "",
+    ModifiedOn : "",
+    FieldId : "",
+    FieldName : "",
     },
     onSubmit: async (values) => {
-      console.log(values);
-      const status = statusCheck === true;
-      const singleBranch = singleBranchCheck === true;
-
-      // Create a FormData object to send the form data with the file
-      const formData = new FormData();
-      formData.append("name", values.name);
-      formData.append("shortName", values.shortName);
-      formData.append("sectorDetails", values.sectorDetails);
-      formData.append("status", status);
-      formData.append("singleBranch", singleBranch);
-      formData.append("createdBy", values.createdBy);
-      formData.append("natureOfBusiness", values.natureOfBusiness);
-      formData.append("logo", values.logo); // Append the selected file
-
-      try {
-        // Send the POST request to your server
-        const response = await axios.post(
-          "http://localhost:5500/companies/add",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data", // Set the content type for file upload
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (response.status === 201) {
-          // The company was created successfully
-          window.alert("Company created successfully!");
-
-          // Close the modal
-          onClick();
-          window.location.reload();
-        } else {
-          // An error occurred while creating the company
-          console.log("Error creating company:", response.status);
-        }
-      } catch (error) {
-        console.error("Error:", error);
-        // Handle any network or server error
-        window.alert("An error occurred. Please try again.");
-      }
+      console.log(values)
+      addCompany()
     },
   });
+
+  const addCompany = async () =>{
+    try{
+      const response = await axios.post("http://localhost:5500/companies/FnAddUpdateDeleteRecord", formik.values, {
+        headers:{
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      })
+      console.log(response)
+    } catch(error){
+      console.error('Error', error);
+    }
+  }
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -99,10 +81,10 @@ const CompanyModal = ({ visible, onClick }) => {
                   Company Name
                 </p>
                 <input
-                  id="name"
+                  id="CompanyName"
                   type="text"
                   placeholder="Enter Company Name"
-                  value={formik.values.name}
+                  value={formik.values.CompanyName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -112,10 +94,10 @@ const CompanyModal = ({ visible, onClick }) => {
                   Company Short Name
                 </p>
                 <input
-                  id="shortName"
+                  id="ShortName"
                   type="text"
                   placeholder="Enter Company Short Name"
-                  value={formik.values.shortName}
+                  value={formik.values.ShortName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -125,10 +107,10 @@ const CompanyModal = ({ visible, onClick }) => {
                   Company Sector
                 </p>
                 <input
-                  id="sectorDetails"
+                  id="CompanySector"
                   type="text"
                   placeholder="Enter Company Sector"
-                  value={formik.values.sectorDetails}
+                  value={formik.values.CompanySector}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -138,9 +120,9 @@ const CompanyModal = ({ visible, onClick }) => {
                   Nature of Business
                 </p>
                 <input
-                  id="natureOfBusiness"
+                  id="NatureOfBusiness"
                   placeholder="Enter Nature of Business"
-                  value={formik.values.natureOfBusiness}
+                  value={formik.values.NatureOfBusiness}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -150,10 +132,10 @@ const CompanyModal = ({ visible, onClick }) => {
                   Created By
                 </p>
                 <input
-                  id="createdBy"
+                  id="CreatedBy"
                   type="text"
                   placeholder="Enter Creator"
-                  value={formik.values.createdBy}
+                  value={formik.values.CreatedBy}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -162,7 +144,7 @@ const CompanyModal = ({ visible, onClick }) => {
                 <p className="capitalize font-semibold text-[13px]">Status</p>
                 <label className="capitalize font-semibold text-[13px]">
                   <input
-                    id="status"
+                    id="Status"
                     type="checkbox"
                     checked={statusCheck}
                     className={`w-5 h-5 mr-2 mt-4 focus:outline-gray-300 border border-blue-900 rounded-lg`}
@@ -176,10 +158,10 @@ const CompanyModal = ({ visible, onClick }) => {
               <div>
                 <p className="capatilize font-semibold text-[13px]">Logo</p>
                 <input
-                  id="logo"
+                  id="Logo"
                   type="file"
                   placeholder="Upload File"
-                  // value={formik.values.logo}
+                  // value={formik.values.Logo}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={handleFileChange}
                 />
@@ -190,7 +172,7 @@ const CompanyModal = ({ visible, onClick }) => {
                 </p>
                 <label className="capitalize font-semibold text-[13px]">
                   <input
-                    id="singleBranch"
+                    id="SingleCompany"
                     type="checkbox"
                     checked={singleBranchCheck}
                     className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border border-blue-900 rounded-lg`}
