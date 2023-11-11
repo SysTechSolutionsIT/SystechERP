@@ -105,7 +105,7 @@ router.get('/FnShowActiveData', authToken, async (req, res) => {
 router.get('/FnShowParticularData', authToken, async (req, res) => {
   const companyId = req.query.CompanyId;
   try {
-    const companies = await MCompany.findAll({
+    const companies = await MCompany.findOne({
       where: {
         CompanyId: companyId,
       },

@@ -12,35 +12,52 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
   const { token } = useAuth();
   const formik = useFormik({
     initialValues: {
-      companyName: "",
-      shortName: "",
-      sectorDetails: "",
-      status: statusCheck,
-      natureOfBusiness: "",
-      logo: null,
-      singleBranch: singleBranchCheck,
-      modifiedBy: "",
+      CompanyId : "",
+      CompanySectorId : "",
+      CompanySector : "",
+      CompanyName : "",
+      ShortName : "",
+      NatureOfBusiness : "",
+      Logo : "",
+      CreatedBy : "",
+      CreatedByName : "",
+      ModifiedBy : "",
+      ModifiedByName : "",
+      Status: "",
+      SingleCompany : "",
+      CreatedOn : "",
+      ModifiedOn : "",
+      FieldId : "",
+      FieldName : "",
     },
     onSubmit: (values) => {
       console.log(values);
       // compData.push(values);
       const updatedData = {
-        id: ID,
-        name: values.name,
-        shortName: values.shortName,
-        sectorDetails: values.sectorDetails,
-        status: values.status,
-        natureOfBusiness: values.natureOfBusiness,
-        logo: values.logo,
-        logoName: values.logoName,
-        singleBranch: values.singleBranch,
-        modifiedBy: values.modifiedBy,
-        modifiedOn: new Date(),
+        CompanyId : ID,
+        CompanySectorId : "",
+        CompanySector : values.CompanySector,
+        CompanyName : values.CompanyName,
+        ShortName : values.ShortName,
+        NatureOfBusiness : values.NatureOfBusiness,
+        // Logo : values.Logo,
+        CreatedBy : values.CreatedBy,
+        CreatedByName : values.CreatedByName,
+        ModifiedBy : values.ModifiedBy,
+        ModifiedByName : values.ModifiedByName,
+        IUFlag : "U",
+        Status: values.Status,
+        SingleCompany : values.SingleCompany,
+        CreatedOn : values.createdAt,
+        ModifiedOn : values.updatedAt,
+        FieldId : "",
+        FieldName : values.FieldName,
       };
 
       // Send a PUT request to update the data
       axios
-        .put(`http://localhost:5500/companies/update/${ID}`, updatedData, {
+        .post(`http://localhost:5500/companies/FnAddUpdateDeleteRecord`, updatedData, {
+          params:{CompanyId : ID},
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((response) => {
@@ -62,38 +79,55 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
   console.log(ID);
   const fetchCompData = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:5500/companies/${ID}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      console.log("Response Object", response);
-      const data = response.data.company;
-      setDetails(data);
-      console.log(data);
+      const response = await axios.get("http://localhost:5500/companies/FnShowParticularData",
+      {
+        params:{CompanyId : ID},
+        headers: { Authorization: `Bearer ${token}` },
+      });
+        const data = response.data;
+        setDetails(data);
     } catch (error) {
-      console.log("Error while fetching course data: ", error.message);
+      console.error("Error while fetching company data: ", error.message);
     }
   };
-  // console.log("ID:", ID);
+  console.log("ID:", ID);
   console.log(details);
 
   useEffect(() => {
     if (details) {
       formik.setValues({
-        companyId: details.id,
-        name: details.name,
-        shortName: details.shortName,
-        sectorDetails: details.sectorDetails,
-        status: details.status,
-        natureOfBusiness: details.natureOfBusiness,
-        logo: null, // You might want to handle file inputs differently
-        singleBranch: singleBranchCheck,
-        modifiedBy: details.modifiedBy,
+        CompanyId : details.CompanyId,
+        CompanySectorId : details.CompanySectorId,
+        CompanySector : details.CompanySector,
+        CompanyName : details.CompanyName,
+        ShortName : details.ShortName,
+        NatureOfBusiness : details.NatureOfBusiness,
+        Logo : details.Logo,
+        CreatedBy : details.CreatedBy,
+        CreatedByName : details.CreatedByName,
+        ModifiedBy : details.ModifiedBy,
+        ModifiedByName : details.ModifiedByName,
+        Status: details.Status,
+        SingleCompany : details.SingleCompany,
+        CreatedOn : details.createdAt,
+        ModifiedOn : details.updatedAt,
+        FieldId : details.FieldId,
+        FieldName : details.FieldName,
       });
     }
   }, [details]);
+
+  const [isStatusChecked, setStatusChecked] = useState(0)
+  const [isSingleBranchChecked, setSingleBranchChecked] = useState(0);
+  const handleCheckboxChange = (fieldName, setChecked, event) => {
+    //This is how to use it (event) => handleCheckboxChange('Status', setStatusChecked, event)
+      const checked = event.target.checked;
+      setChecked(checked);
+      formik.setValues({
+        ...formik.values,
+        [fieldName]: checked.toString(),
+      });
+    }
 
   if (!visible) return null;
   return (
@@ -120,10 +154,10 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                   Company ID
                 </p>
                 <input
-                  id="companyId"
+                  id="CompanyId"
                   type="number"
                   placeholder="Enter Company ID"
-                  value={details?.id || ""}
+                  value={details.CompanyId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -134,10 +168,10 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                   Company Name
                 </p>
                 <input
-                  id="name"
+                  id="CompanyName"
                   type="text"
                   placeholder="Enter Company Name"
-                  value={formik.values.name}
+                  value={formik.values.CompanyName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -148,10 +182,10 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                   Company Short Name
                 </p>
                 <input
-                  id="shortName"
+                  id="ShortName"
                   type="text"
                   placeholder="Enter Company Short Name"
-                  value={formik.values.shortName}
+                  value={formik.values.ShortName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -162,10 +196,10 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                   Company Sector
                 </p>
                 <input
-                  id="sectorDetails"
+                  id="CompanySector"
                   type="text"
                   placeholder="Enter Company Sector"
-                  value={formik.values.sectorDetails}
+                  value={formik.values.CompanySector}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -176,9 +210,9 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                   Nature of Business
                 </p>
                 <textarea
-                  id="natureOfBusiness"
+                  id="NatureOfBusiness"
                   placeholder="Enter Nature of Business"
-                  value={formik.values.natureOfBusiness}
+                  value={formik.values.NatureOfBusiness}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -188,15 +222,11 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                 <p className="capitalize font-semibold text-[13px]">Status</p>
                 <label className="capitalize font-semibold text-[11px]">
                   <input
-                    id="status"
+                    id="Status"
                     type="checkbox"
-                    checked={formik.values.status}
+                    checked={formik.values.Status}
                     className={`w-5 h-5 mr-2 mt-5 focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px]`}
-                    onChange={() => {
-                      console.log("Status checkbox clicked");
-                      setStatusCheck(!statusCheck);
-                      console.log("Status after updating", statusCheck);
-                    }}
+                    onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}
                   />
                   Active
                 </label>
@@ -212,11 +242,11 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                       className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                       onChange={formik.handleChange}
                     />
-                    <p className="text-[11px]">{details?.logoName}</p>
+                    <p className="text-[11px]"></p>
                   </>
                 ) : (
                   // If edit is false, just display the logoName
-                  <p className="text-[11px]">{details?.logoName}</p>
+                  <p className="text-[11px]"></p>
                 )}
               </div>
               <div>
@@ -225,11 +255,11 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                 </p>
                 <label className="capitalize font-semibold text-[11px]">
                   <input
-                    id="singleBranch"
+                    id="SingleCompany"
                     type="checkbox"
-                    checked={singleBranchCheck}
+                    checked={formik.values.SingleCompany}
                     className={`w-5 h-5 mr-2 mt-5 focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px]`}
-                    onChange={() => setSingleBranchCheck(!singleBranchCheck)}
+                    onChange={(event) => handleCheckboxChange('SingleCompany', setStatusChecked, event)}
                   />
                   Active
                 </label>
@@ -240,9 +270,9 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                     Modified By
                   </p>
                   <input
-                    id="modifiedBy"
+                    id="ModifiedBy"
                     placeholder="Enter Updater"
-                    value={formik.values.modifiedBy}
+                    value={formik.values.ModifiedBy}
                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                     onChange={formik.handleChange}
                     disabled={!edit}
