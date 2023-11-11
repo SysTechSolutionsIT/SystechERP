@@ -6,8 +6,6 @@ import axios from "axios";
 import { useAuth } from "../Login";
 
 const CompanyModal = ({ visible, onClick }) => {
-  const [statusCheck, setStatusCheck] = useState(false);
-  const [singleBranchCheck, setSingleBranchCheck] = useState(false);
   const { token } = useAuth();
 
   const formik = useFormik({
@@ -19,12 +17,13 @@ const CompanyModal = ({ visible, onClick }) => {
     ShortName : "",
     NatureOfBusiness : "",
     Logo : "",
-    AcFlag : "",
+    AcFlag : "Y",
     CreatedBy : "",
     CreatedByName : "",
-    ModifiedBy : "",
+    ModifiedBy : null,
     ModifiedByName : "",
     IUFlag : "I",
+    Status: "",
     SingleCompany : "",
     CreatedOn : "",
     ModifiedOn : "",
@@ -37,6 +36,18 @@ const CompanyModal = ({ visible, onClick }) => {
     },
   });
 
+  const [isStatusChecked, setStatusChecked] = useState(0)
+  const [isSingleBranchChecked, setSingleBranchChecked] = useState(0);
+  const handleCheckboxChange = (fieldName, setChecked, event) => {
+    //This is how to use it (event) => handleCheckboxChange('Status', setStatusChecked, event)
+      const checked = event.target.checked;
+      setChecked(checked);
+      formik.setValues({
+        ...formik.values,
+        [fieldName]: checked.toString(),
+      });
+    }
+
   const addCompany = async () =>{
     try{
       const response = await axios.post("http://localhost:5500/companies/FnAddUpdateDeleteRecord", formik.values, {
@@ -46,6 +57,8 @@ const CompanyModal = ({ visible, onClick }) => {
         }
       })
       console.log(response)
+      alert('Company Added Successfully')
+      onClick()
     } catch(error){
       console.error('Error', error);
     }
@@ -146,11 +159,9 @@ const CompanyModal = ({ visible, onClick }) => {
                   <input
                     id="Status"
                     type="checkbox"
-                    checked={statusCheck}
+                    checked={isStatusChecked}
                     className={`w-5 h-5 mr-2 mt-4 focus:outline-gray-300 border border-blue-900 rounded-lg`}
-                    onChange={() => {
-                      setStatusCheck(!statusCheck); // Toggle between true and false
-                    }}
+                    onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}
                   />
                   Active
                 </label>
@@ -174,9 +185,9 @@ const CompanyModal = ({ visible, onClick }) => {
                   <input
                     id="SingleCompany"
                     type="checkbox"
-                    checked={singleBranchCheck}
+                    checked={isSingleBranchChecked}
                     className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border border-blue-900 rounded-lg`}
-                    onChange={() => setSingleBranchCheck(!singleBranchCheck)}
+                    onChange={(event) => handleCheckboxChange('SingleCompany', setSingleBranchChecked, event)}
                   />
                   Active
                 </label>

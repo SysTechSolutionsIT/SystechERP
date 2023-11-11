@@ -24,16 +24,17 @@ const CompMaster = () => {
 
   const [columnVisibility, setColumnVisibility] = useState({
     CompanyId : false,
-    CompanySectorId : true,
-    CompanySector : true,
     CompanyName : true,
     ShortName : true,
+    CompanySectorId : false,
+    CompanySector : true,
     NatureOfBusiness : true,
     Logo : false,
     CreatedBy : true,
     CreatedByName : false,
     ModifiedBy : true,
     ModifiedByName : false,
+    Status: true,
     SingleCompany : true,
     createdAt : true,
     updatedAt : true,
@@ -53,6 +54,7 @@ const CompMaster = () => {
     CreatedByName: 'Created By Name',
     ModifiedBy: 'Modified By',
     ModifiedByName: 'Modified By Name',
+    Status: 'Status',
     SingleCompany: 'Single Company',
     createdAt: 'Created On',
     updatedAt: 'Modified On',
@@ -143,7 +145,7 @@ const CompMaster = () => {
 
   const fetchCompData = async () => {
     try {
-      const response = await axios.get("http://localhost:5500/companies/FnShowAllData", {
+      const response = await axios.get("http://localhost:5500/companies/FnShowActiveData", {
         headers: { Authorization: `Bearer ${token}` },
       });
   
@@ -159,49 +161,62 @@ const CompMaster = () => {
   };
   
 
-  const handleSearchChange = (title, searchWord) => {
+  const handleSearchChange = (columnName, searchWord) => {
     const searchData = [...companies];
-
+  
     const newFilter = searchData.filter((item) => {
-      // Check if the item matches the search term in any of the selected columns
-      const matches = selectedColumns.some((columnName) => {
-        const newCol = columnName.charAt(0).toLowerCase() + columnName.slice(1);
-        const value = item[newCol];
-        return (
-          value &&
-          value.toString().toLowerCase().includes(searchWord.toLowerCase())
-        );
-      });
-
-      return matches;
+      // Check if the item matches the search term in the selected column
+      const newCol = columnName.charAt(0).toLowerCase() + columnName.slice(1);
+      const value = item[newCol];
+      
+      return (
+        value &&
+        value.toString().toLowerCase().includes(searchWord.toLowerCase())
+      );
     });
-
+  
     // Update the filtered data
     setFilteredData(newFilter);
   };
-  // Deleting Entry
-  const deleteComp = async (ID) => {
-    alert("Are you sure you want to delete this bank?");
+
+  
+  const deleteComp = async (
+    DeleteId,
+  ) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this company?");
+  
+    if (!confirmDelete) {
+      return; // If the user cancels deletion, do nothing
+    }
+  
     try {
-      const apiUrl = `http://localhost:5500/companies/delete/${ID}`;
-
-      const response = await axios.delete(apiUrl, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const apiUrl = `http://localhost:5500/companies/FnAddUpdateDeleteRecord`;
+  
+      const response = await axios.post(
+        apiUrl,
+        {
+          CompanyId: DeleteId,
+          IUFlag: 'D',
         },
-      });
-
-      if (response.status === 204) {
-        console.log(`Record with ID ${ID} deleted successfully.`);
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      if (response.data.message === 'Record Deleted Successfully') {
+        console.log(`Record with ID ${DeleteId} deleted successfully.`);
         alert("Record Deleted");
         window.location.reload();
       } else {
-        console.error(`Failed to delete record with ID ${ID}.`);
+        console.error(`Failed to delete record with ID ${DeleteId}.`);
       }
     } catch (error) {
       console.error("Error deleting record:", error);
     }
   };
+  
 
   return (
     <div className="top-25 min-w-[40%]">
@@ -379,6 +394,10 @@ const CompMaster = () => {
                           width="20"
                           height="20"
                           className="cursor-pointer"
+                          onClick={() => 
+                            deleteComp(
+                            result.CompanyId, 
+                            )}
                         />
                       </div>
                     </td>
@@ -391,9 +410,13 @@ const CompMaster = () => {
                         className={`px-4 border-2 whitespace-normal text-[11px] text-left${columnVisibility[columnName] ? "" : "hidden"
                           }`}
                       >
-                         {result[
-                              columnName
-                            ]}
+                         {
+                            result[columnName] === 'true' ? 'Yes' 
+                            : result[columnName] === 'false' ? 'No' 
+                            : result[columnName] === null ? 'N/A'
+                            : result[columnName] 
+                          }
+
                       </td>
                     ))}
                   </tr>
@@ -432,6 +455,10 @@ const CompMaster = () => {
                           width="20"
                           height="20"
                           className="cursor-pointer"
+                          onClick={() => 
+                            deleteComp(
+                            result.CompanyId, 
+                            )}
                         />
                       </div>
                     </td>
@@ -439,19 +466,23 @@ const CompMaster = () => {
                       {result.CompanyId}
                     </td>
                     {selectedColumns.map((columnName) => (
-  columnVisibility[columnName] ? (
-    <td
-      key={columnName}
-      className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-    >
-      {result[columnName] === 'Y' ? 'Yes' : result[columnName] === 'N' ? 'No' : result[columnName] === null ? 'N/A' : result[columnName]}
-    </td>
-  ) : (
-    <td key={columnName} className="hidden"></td>
-  )
-))}
+                      columnVisibility[columnName] ? (
+                        <td
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                        >
+                           {
+                            result[columnName] === 'true' ? 'Yes' 
+                            : result[columnName] === 'false' ? 'No' 
+                            : result[columnName] === null ? 'N/A'
+                            : result[columnName] 
+                          }
 
-
+                        </td>
+                      ) : (
+                        <td key={columnName} className="hidden"></td>
+                      )
+                    ))}
                   </tr>
                 ))}
           </tbody>

@@ -121,19 +121,35 @@ router.get('/FnShowParticularData', authToken, async (req, res) => {
   }
 });
 
-// POST endpoint to add, update, or delete a company
+// POST endpoint to add, update, or "soft-delete" a company
 router.post('/FnAddUpdateDeleteRecord', authToken, async (req, res) => {
   const company = req.body;
   try {
-    const result = await MCompany.upsert(company, {
-      returning: true,
-    });
-    res.json({ message: result ? 'Operation successful' : 'Operation failed' });
+    if (company.IUFlag === 'D') {
+      // "Soft-delete" operation
+      const result = await MCompany.update(
+        { AcFlag: 'N' },
+        { where: { CompanyId: company.CompanyId } }
+      );
+
+      res.json({ message: result[0] ? 'Record Deleted Successfully' : 'Record Not Found' });
+    } else {
+      // Add or update operation
+      const result = await MCompany.upsert(company, {
+        returning: true,
+      });
+
+      res.json({ message: result ? 'Operation successful' : 'Operation failed' });
+    }
   } catch (error) {
     console.error('Error performing operation:', error);
     res.status(500).send('Internal Server Error');
   }
 });
+
+
+
+
 
 // Export the router
 module.exports = router;
