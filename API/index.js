@@ -7,13 +7,13 @@ const cors = require("cors"); // Import the cors middleware
 app.use(express.json()); // Parse JSON requests
 const CompMaster = require("./route/CMRoute");
 const CompConfig = require("./route/CompanyConfigRoute");
-const BankMaster = require("./route/BankMasterRoute");
+const BankMaster = require("./route/MBankRoutes");
 const DepartmentMaster = require("./route/DepartmentMasterRoute");
 const DestinationMaster = require("./route/DestinationMasterRoute");
 const ThreeFieldMaster = require("./route/ThreeFieldsRoutes");
 const TwoFieldMaster = require("./route/TwoFieldsRoutes");
 const FinMaster = require("./route/FinMasterRoute");
-const CCMaster = require("./route/CostCenterRoute");
+const CCMaster = require("./route/MCostCenterRoute");
 const EmpPersonal = require("./route/EmpPersonalRoute");
 const EmpWork = require("./route/EmpWorkRoute");
 const EmpSalary = require("./route/EmpSalaryRoute");
@@ -39,8 +39,7 @@ const AttendanceMaster = require("./route/AttendanceMasterRoute");
 const EDImports = require("./route/EDImportsRoute");
 const EmpFamily = require("./route/EmpFamilyRoute");
 const Currencies = require("./route/CurrenciesRoute");
-const MCompany = require("./route/MCompany")
-
+const MCompany = require("./route/MCompany");
 
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());

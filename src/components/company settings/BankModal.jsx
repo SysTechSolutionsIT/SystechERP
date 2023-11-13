@@ -9,26 +9,25 @@ const BankModal = ({ visible, onClick }) => {
   const { token } = useAuth();
   const formik = useFormik({
     initialValues: {
-      // bankId: "",
-      bankName: "",
+      BankName: "",
       branchName: "",
-      branchAddress: "",
-      accountType: "",
-      accountNo: "",
-      ifscCode: "",
-      swiftCode: "",
-      registeredEmail: "",
-      registeredContact: "",
-      currencyType: "",
-      bankGst: "",
-      authPersonCount: "",
-      remark: "",
-      authPerson1: "",
-      authPerson1Op: "",
-      authPerson2: "",
-      authPerson2Op: "",
-      authPerson3: "",
-      authPerson3Op: "",
+      BranchAddress: "",
+      AccountType: "",
+      AccountNo: "",
+      IFSCCode: "",
+      SwiftCode: "",
+      RegisteredEmailId: "",
+      RegisteredContactNo: "",
+      CurrencyType: "",
+      BankGST: "",
+      AuthorizedPersonCount: "",
+      Remark: "",
+      AuthorizedPerson1: "",
+      AuthorizedPersonRole1: "",
+      AuthorizedPerson2: "",
+      AuthorizedPersonRole2: "",
+      AuthorizedPerson3: "",
+      AuthorizedPersonRole3: "",
     },
     onSubmit: (values) => {
       console.log(values);
@@ -40,7 +39,7 @@ const BankModal = ({ visible, onClick }) => {
   const addBank = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:5500/bankmaster/add-bank",
+        "http://localhost:5500/bankmaster/FnAddUpdateDeleteRecord",
         formik.values,
         {
           headers: {
@@ -104,24 +103,14 @@ const BankModal = ({ visible, onClick }) => {
           <div className="py-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="capatilize font-semibold text-[13px]">Bank ID</p>
-                <input
-                  id="bankId"
-                  type="number"
-                  placeholder="Bank ID"
-                  // value={formik.values.bankId}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                />
-              </div>
-              <div>
                 <p className="capatilize font-semibold text-[13px]">
                   Bank Name
                 </p>
                 <input
-                  id="bankName"
+                  id="BankName"
                   type="text"
                   placeholder="Enter Bank Name"
-                  value={formik.values.bankName}
+                  value={formik.values.BankName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -157,8 +146,8 @@ const BankModal = ({ visible, onClick }) => {
                   Account Type
                 </p>
                 <select
-                  id="accountType"
-                  value={formik.values.accountType}
+                  id="AccountType"
+                  value={formik.values.AccountType}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 >
@@ -181,10 +170,10 @@ const BankModal = ({ visible, onClick }) => {
                   Account No.
                 </p>
                 <input
-                  id="accountNo"
+                  id="AccountNo"
                   type="number"
                   placeholder=" Enter Account No."
-                  value={formik.values.accountNo}
+                  value={formik.values.AccountNo}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -194,10 +183,10 @@ const BankModal = ({ visible, onClick }) => {
                   IFSC Code
                 </p>
                 <input
-                  id="ifscCode"
+                  id="IFSCCode"
                   type="text"
                   placeholder=" Enter IFSC Code"
-                  value={formik.values.ifscCode}
+                  value={formik.values.IFSCCode}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -207,10 +196,10 @@ const BankModal = ({ visible, onClick }) => {
                   SWIFT Code.
                 </p>
                 <input
-                  id="swiftCode"
+                  id="SwiftCode"
                   type="text"
                   placeholder=" Enter SWIFT Code"
-                  value={formik.values.swiftCode}
+                  value={formik.values.SwiftCode}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -220,10 +209,10 @@ const BankModal = ({ visible, onClick }) => {
                   Registered Email ID
                 </p>
                 <input
-                  id="registeredEmail"
+                  id="RegisteredEmailId"
                   type="text"
                   placeholder=" Enter Registered Email"
-                  value={formik.values.registeredEmail}
+                  value={formik.values.RegisteredEmailId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -233,10 +222,10 @@ const BankModal = ({ visible, onClick }) => {
                   Registered Contact No.
                 </p>
                 <input
-                  id="registeredContact"
+                  id="RegisteredContactNo"
                   type="number"
                   placeholder=" Enter Registered Contact No."
-                  value={formik.values.registeredContact}
+                  value={formik.values.RegisteredContactNo}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -263,10 +252,10 @@ const BankModal = ({ visible, onClick }) => {
               <div>
                 <p className="capatilize font-semibold text-[13px]">Bank GST</p>
                 <input
-                  id="bankGst"
+                  id="BankGST"
                   type="text"
                   placeholder=" Enter Bank GST"
-                  value={formik.values.bankGst}
+                  value={formik.values.BankGST}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -276,10 +265,10 @@ const BankModal = ({ visible, onClick }) => {
                   Authorized Person Count
                 </p>
                 <input
-                  id="authPersonCount"
+                  id="AuthorizedPersonCount"
                   type="number"
                   placeholder=" Enter Authorized Person Count."
-                  value={formik.values.authPersonCount}
+                  value={formik.values.AuthorizedPersonCount}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -287,10 +276,10 @@ const BankModal = ({ visible, onClick }) => {
               <div>
                 <p className="capatilize font-semibold text-[13px]">Remarks</p>
                 <input
-                  id="remark"
+                  id="Remark"
                   type="text"
                   placeholder=" Enter Remarks."
-                  value={formik.values.remark}
+                  value={formik.values.Remark}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -300,9 +289,9 @@ const BankModal = ({ visible, onClick }) => {
                   Authorized Person 1
                 </p>
                 <input
-                  id="authPerson1"
+                  id="AuthorizedPerson1"
                   type="text"
-                  value={formik.values.authPerson1}
+                  value={formik.values.AuthorizedPerson1}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -315,9 +304,9 @@ const BankModal = ({ visible, onClick }) => {
                   <label className="flex items-center">
                     <input
                       type="radio"
-                      id="authPerson1Op"
+                      id="AuthorizedPersonRole1"
                       value="View"
-                      checked={formik.values.authPerson1Op === "View"}
+                      checked={formik.values.AuthorizedPersonRole1 === "View"}
                       onChange={formik.handleChange}
                       className="mr-2"
                     />
@@ -326,9 +315,11 @@ const BankModal = ({ visible, onClick }) => {
                   <label className="flex items-center">
                     <input
                       type="radio"
-                      id="authPerson1Op"
+                      id="AuthorizedPersonRole1"
                       value="Operation"
-                      checked={formik.values.authPerson1Op === "Operation"}
+                      checked={
+                        formik.values.AuthorizedPersonRole1 === "Operation"
+                      }
                       onChange={formik.handleChange}
                       className="mr-2"
                     />
@@ -341,9 +332,9 @@ const BankModal = ({ visible, onClick }) => {
                   Authorized Person 2
                 </p>
                 <input
-                  id="authPerson2"
+                  id="AuthorizedPerson2"
                   type="text"
-                  value={formik.values.authPerson2}
+                  value={formik.values.AuthorizedPerson2}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -356,9 +347,9 @@ const BankModal = ({ visible, onClick }) => {
                   <label className="flex items-center">
                     <input
                       type="radio"
-                      id="authPerson2Op"
+                      id="AuthorizedPersonRole2"
                       value="View"
-                      checked={formik.values.authPerson2Op === "View"}
+                      checked={formik.values.AuthorizedPersonRole2 === "View"}
                       onChange={formik.handleChange}
                       className="mr-2"
                     />
@@ -367,9 +358,11 @@ const BankModal = ({ visible, onClick }) => {
                   <label className="flex items-center">
                     <input
                       type="radio"
-                      id="authPerson2Op"
+                      id="AuthorizedPersonRole2"
                       value="Operation"
-                      checked={formik.values.authPerson2Op === "Operation"}
+                      checked={
+                        formik.values.AuthorizedPersonRole2 === "Operation"
+                      }
                       onChange={formik.handleChange}
                       className="mr-2"
                     />
@@ -382,9 +375,9 @@ const BankModal = ({ visible, onClick }) => {
                   Authorized Person 3
                 </p>
                 <input
-                  id="authPerson3"
+                  id="AuthorizedPerson3"
                   type="text"
-                  value={formik.values.authPerson3}
+                  value={formik.values.AuthorizedPerson3}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -397,9 +390,9 @@ const BankModal = ({ visible, onClick }) => {
                   <label className="flex items-center">
                     <input
                       type="radio"
-                      id="authPerson3Op"
+                      id="AuthorizedPersonRole3"
                       value="View"
-                      checked={formik.values.authPerson3Op === "View"}
+                      checked={formik.values.AuthorizedPersonRole3 === "View"}
                       onChange={formik.handleChange}
                       className="mr-2"
                     />
@@ -408,9 +401,11 @@ const BankModal = ({ visible, onClick }) => {
                   <label className="flex items-center">
                     <input
                       type="radio"
-                      id="authPerson3Op"
+                      id="AuthorizedPersonRole3"
                       value="Operation"
-                      checked={formik.values.authPerson3Op === "Operation"}
+                      checked={
+                        formik.values.AuthorizedPersonRole3 === "Operation"
+                      }
                       onChange={formik.handleChange}
                       className="mr-2 text-[11px]"
                     />

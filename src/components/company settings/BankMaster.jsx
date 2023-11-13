@@ -9,47 +9,49 @@ import { useAuth } from "../Login";
 const BankMaster = () => {
   const { token } = useAuth();
   const [columnVisibility, setColumnVisibility] = useState({
-    bankName: true,
-    branchName: true,
-    accountType: true,
-    accountNo: true,
-    ifscCode: true,
-    swiftCode: false,
-    registeredEmail: false,
-    registeredContact: false,
-    currencyType: false,
-    bankGst: false,
-    authPersonCount: false,
-    remark: false,
-    authPerson1: false,
-    authPerson1Op: false,
-    authPerson2: false,
-    authPerson2Op: false,
-    authPerson3: false,
-    authPerson3Op: false,
+    BankId: true,
+    BankName: true,
+    BranchName: true,
+    AccountType: true,
+    AccountNo: true,
+    IFSCCode: true,
+    SwiftCode: false,
+    RegisteredEmailId: false,
+    RegisteredContactNo: false,
+    CurrencyType: false,
+    BankGST: false,
+    AuthorizedPersonCount: false,
+    Remark: false,
+    AuthorizedPerson1: false,
+    AuthorizedPersonRole1: false,
+    AuthorizedPerson2: false,
+    AuthorizedPersonRole2: false,
+    AuthorizedPerson3: false,
+    AuthorizedPersonRole3: false,
+    BranchAddress: false,
   });
 
   const columnNames = {
-    bankName: "Bank Name",
-    branchName: "Branch Name",
-    accountType: "Account Type",
-    accountNo: "Account No",
-    ifscCode: "IFSC Code",
-    swiftCode: "SWIFT Code",
-    registeredEmail: "Registered Email",
-    registeredContact: "Registered Contact",
-    currencyType: "Currency Type",
-    bankGst: "Bank GST",
-    authPersonCount: "Authorized Person Count",
-    remark: "Remark",
-    authPerson1: "Auth Person 1",
-    authPerson1Op: "Auth Person 1 Operation",
-    authPerson2: "Auth Person 2",
-    authPerson2Op: "Auth Person 2 Operation",
-    authPerson3: "Auth Person 3",
-    authPerson3Op: "Auth Person 3 Operation",
+    BankId: "Bank ID",
+    BankName: "Bank Name",
+    BranchName: "Branch Name",
+    AccountType: "Account Type",
+    AccountNo: "Account No",
+    IFSCCode: "IFSC Code",
+    SwiftCode: "SWIFT Code",
+    RegisteredEmailId: "Registered Email",
+    RegisteredContactNo: "Registered Contact",
+    CurrencyType: "Currency Type",
+    BankGST: "Bank GST",
+    AuthorizedPersonCount: "Authorized Person Count",
+    Remark: "Remark",
+    AuthorizedPerson1: "Auth Person 1",
+    AuthorizedPersonRole1: "Auth Person 1 Operation",
+    AuthorizedPerson2: "Auth Person 2",
+    AuthorizedPersonRole2: "Auth Person 2 Operation",
+    AuthorizedPerson3: "Auth Person 3",
+    AuthorizedPersonRole3: "Auth Person 3 Operation",
   };
-
 
   const [banks, setBanks] = useState([]);
 
@@ -80,7 +82,7 @@ const BankMaster = () => {
     const fetchBanks = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5500/bankmaster/banks",
+          "http://localhost:5500/bankmaster/FnShowAllData",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -200,9 +202,7 @@ const BankMaster = () => {
   return (
     <div className="top-25 min-w-[40%]">
       <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
-        <div className="text-[15px]">
-          Company Settings / Bank Master
-        </div>
+        <div className="text-[15px]">Company Settings / Bank Master</div>
         <div className="flex gap-4">
           <button
             onClick={() => setShowDropdown(!showDropdown)}
@@ -211,7 +211,9 @@ const BankMaster = () => {
             Column Visibility
             <Icon
               icon="fe:arrow-down"
-              className={`ml-2 ${showDropdown ? "rotate-180" : ""} cursor-pointer`}
+              className={`ml-2 ${
+                showDropdown ? "rotate-180" : ""
+              } cursor-pointer`}
             />
           </button>
           {showDropdown && (
@@ -244,9 +246,7 @@ const BankMaster = () => {
                   />
                   <span
                     className={
-                      columnVisibility[columnName]
-                        ? "font-semibold"
-                        : ""
+                      columnVisibility[columnName] ? "font-semibold" : ""
                     }
                   >
                     {columnName}
@@ -306,7 +306,7 @@ const BankMaster = () => {
                 <th className=" w-auto px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
                   ID
                 </th>
-                {selectedColumns.map((columnName) => (
+                {selectedColumns.map((columnName) =>
                   columnVisibility[columnName] ? (
                     <th
                       key={columnName}
@@ -315,139 +315,144 @@ const BankMaster = () => {
                       {columnNames[columnName]}
                     </th>
                   ) : null
-                ))}
+                )}
               </tr>
               <tr>
                 <th className="border-2"></th>
                 <th className="p-2 font-bold text-black border-2 whitespace-normal" />
-                {selectedColumns.map((columnName) => (
+                {selectedColumns.map((columnName) =>
                   columnVisibility[columnName] ? (
-                    <th key={columnName} className="p-2 font-semibold text-black border-2">
+                    <th
+                      key={columnName}
+                      className="p-2 font-semibold text-black border-2"
+                    >
                       <input
                         type="text"
                         placeholder={`Search `}
                         className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
-                        style={{ maxWidth: getColumnMaxWidth(columnName) + "px" }}
-                        onChange={(e) => handleSearchChange(columnName, e.target.value)}
+                        style={{
+                          maxWidth: getColumnMaxWidth(columnName) + "px",
+                        }}
+                        onChange={(e) =>
+                          handleSearchChange(columnName, e.target.value)
+                        }
                       />
                     </th>
                   ) : null
-                ))}
+                )}
               </tr>
             </thead>
             <tbody>
-              {filteredData.length > 0 ? (
-                filteredData.map((result, key) => (
-                  <tr key={key}>
-                    <td className="px-2 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setVeBank(true);
-                            setEdit(false);
-                            setBid(result.id);
-                          }}
-                        />
-                        <Icon
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setVeBank(true);
-                            setEdit(true);
-                            setBid(result.id);
-                          }}
-                        />
-                        <Icon
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => deleteBank(result.id)}
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {result.id}
-                    </td>
-                    {selectedColumns.map((columnName) => (
-                      columnVisibility[columnName] ? (
-                        <td
-                          key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                        >
-                          {result[columnName]}
-                        </td>
-                      ) : null
-                    ))}
-                  </tr>
-                ))
-              ) : (
-                banks.length > 0 &&
-                banks.map((result, index) => (
-                  <tr key={index}>
-                    <td className="border-2">
-                      <div className="flex items-center gap-2">
-                        <Icon
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setVeBank(true);
-                            setEdit(false);
-                            setBid(result.id);
-                          }}
-                        />
-                        <Icon
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setVeBank(true);
-                            setEdit(true);
-                            setBid(result.id);
-                          }}
-                        />
-                        <Icon
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => deleteBank(result.id)}
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-center text-[11px] capitalize">
-                      {result.id}
-                    </td>
-                    {selectedColumns.map((columnName) => (
-                      columnVisibility[columnName] ? (
-                        <td
-                          key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                        >
-                          {result[columnName]}
-                        </td>
-                      ) : (
-                        <td key={columnName} className="hidden"></td>
-                      )
-                    ))}
-                  </tr>
-                ))
-              )}
+              {filteredData.length > 0
+                ? filteredData.map((result, key) => (
+                    <tr key={key}>
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setVeBank(true);
+                              setEdit(false);
+                              setBid(result.BankId);
+                            }}
+                          />
+                          <Icon
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setVeBank(true);
+                              setEdit(true);
+                              setBid(result.BankId);
+                            }}
+                          />
+                          <Icon
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => deleteBank(result.BankId)}
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                        {result.BankId}
+                      </td>
+                      {selectedColumns.map((columnName) =>
+                        columnVisibility[columnName] ? (
+                          <td
+                            key={columnName}
+                            className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                          >
+                            {result[columnName]}
+                          </td>
+                        ) : null
+                      )}
+                    </tr>
+                  ))
+                : banks.length > 0 &&
+                  banks.map((result, index) => (
+                    <tr key={index}>
+                      <td className="border-2">
+                        <div className="flex items-center gap-2">
+                          <Icon
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setVeBank(true);
+                              setEdit(false);
+                              setBid(result.BankId);
+                            }}
+                          />
+                          <Icon
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setVeBank(true);
+                              setEdit(true);
+                              setBid(result.BankId);
+                            }}
+                          />
+                          <Icon
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => deleteBank(result.BankId)}
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-center text-[11px] capitalize">
+                        {result.BankId}
+                      </td>
+                      {selectedColumns.map((columnName) =>
+                        columnVisibility[columnName] ? (
+                          <td
+                            key={columnName}
+                            className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                          >
+                            {result[columnName]}
+                          </td>
+                        ) : (
+                          <td key={columnName} className="hidden"></td>
+                        )
+                      )}
+                    </tr>
+                  ))}
             </tbody>
           </table>
         </div>
