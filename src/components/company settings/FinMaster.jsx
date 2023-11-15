@@ -81,23 +81,31 @@ const FinMaster = () => {
   const menuRef = useRef(null);
 
   const [columnVisibility, setColumnVisibility] = useState({
-    fName: true,
-    fShortName: true,
-    yearClose: false,
-    sDate: false,
-    eDate: false,
-    remarks: true,
-    status: true,
+    FYearId: true,
+    Name: true,
+    StartDate: true,
+    EndDate: true,
+    ShortName: true,
+    YearClose: true,
+    CreatedBy: true,
+    ModifiedBy: true,
+    CreatedOn: true,
+    ModifiedOn: true,
+    Remark: true,
   });
 
   const columnNames = {
-    fName: "Financial Year Name",
-    fShortName: "Short Name",
-    yearClose: "Year Close",
-    sDate: "Start Date",
-    eDate: "End Date",
-    remarks: "Remarks",
-    status: "Status",
+    FYearId: "ID",
+    Name: "Financial Year",
+    StartDate: "Start Date",
+    EndDate: "End Date",
+    ShortName: "Short Name",
+    YearClose: "Year Close",
+    CreatedBy: "Created By",
+    ModifiedBy: "Modified By",
+    CreatedOn: "Created On",
+    ModifiedOn: "Modified On",
+    Remark: "Remark",
   }
 
   const [showDropdown, setShowDropdown] = useState(false);
@@ -179,18 +187,21 @@ const FinMaster = () => {
   const [Fins, setFins] = useState([]);
 
   useEffect(() => {
-    fetchCompData();
+    fetchFinData();
   }, [token]);
 
-  const fetchCompData = async () => {
+  const fetchFinData = async () => {
     try {
-      const response = await axios.get("http://localhost:5500/financials/");
-      console.log("Response Object", response);
-      const data = response.data.records;
-      console.log(data);
-      setFins(data);
+      const response = await axios.get("http://localhost:5500/financials/FnShowActiveData");
+      if (response.status === 200) {
+        const data = response.data;
+        setFins(data);
+      } else {
+        console.error("Failed to fetch data");
+      }
     } catch (error) {
-      console.log("Error while fetching course data: ", error.message);
+      console.error("Error while fetching financial year data: ", error.message);
+
     }
   };
   console.log(Fins);
