@@ -63,6 +63,7 @@ const MCostCenter = sequelize.define(
     ModifiedBy: DataTypes.STRING(500),
     ModifiedOn: DataTypes.DATE,
     Remark: DataTypes.STRING(500),
+    Status: DataTypes.STRING(10),
   },
   {
     tableName: "MCostCenter", // Specify the table name if it differs from the model name

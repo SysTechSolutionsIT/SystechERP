@@ -4,7 +4,7 @@ import { Icon } from "@iconify/react";
 import CostCenterModal from "./CostCenterModal";
 import VECost from "./ViewCost";
 import axios from "axios";
-import { useAuth } from "../Login";
+import { useAuth, useDetails } from "../Login";
 
 export const costCenters = [
   {
@@ -74,6 +74,8 @@ const CostCenterMaster = () => {
   const [filteredData, setFilteredData] = useState([]);
 
   const { token } = useAuth();
+  const { companyId, setCompanyId } = useDetails();
+  console.log(companyId);
 
   const [veCost, setVeCost] = useState(false);
   const [edit, setEdit] = useState(false);
@@ -127,11 +129,14 @@ const CostCenterMaster = () => {
 
   const fetchCompData = async () => {
     try {
-      const response = await axios.get("http://localhost:5500/cost-center/", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        "http://localhost:5500/cost-center/FnShowActiveData",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       console.log("Response Object", response);
       const data = response.data.records;
       console.log(data);
@@ -179,9 +184,7 @@ const CostCenterMaster = () => {
   return (
     <div className="top-25 min-w-[40%]">
       <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
-        <div className="text-[15px]">
-          Company Settings / Cost Center Master
-        </div>
+        <div className="text-[15px]">Company Settings / Cost Center Master</div>
         <div className="flex gap-4">
           <button
             className="text-white font-semibold px-4 rounded-lg text-[13px] border border-white"
@@ -275,116 +278,116 @@ const CostCenterMaster = () => {
             <tbody className="">
               {filteredData.length > 0
                 ? filteredData.map((result, key) => (
-                  <tr key={key}>
-                    <td className="px-2 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          onClick={() => {
-                            setVeCost(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setCCid(result.cID); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          onClick={() => {
-                            setVeCost(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setCCid(result.cID); // Pass ID to VEModal
-                          }}
-                        />
-                        <VECost
-                          visible={veCost}
-                          onClick={() => setVeCost(false)}
-                          edit={edit}
-                          ID={CCid}
-                        />
-                        <Icon
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          onClick={() => deleteRecord(result.cID)}
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {result.cID}
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                      {result.cName}
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                      {result.status ? "Active" : "Inactive"}
-                    </td>
-                  </tr>
-                ))
+                    <tr key={key}>
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            onClick={() => {
+                              setVeCost(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setCCid(result.CostCenterId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            onClick={() => {
+                              setVeCost(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setCCid(result.CostCenterId); // Pass ID to VEModal
+                            }}
+                          />
+                          <VECost
+                            visible={veCost}
+                            onClick={() => setVeCost(false)}
+                            edit={edit}
+                            ID={CCid}
+                          />
+                          <Icon
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            onClick={() => deleteRecord(result.cID)}
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                        {result.CostCenterId}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                        {result.CostCenterName}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                        {result.searchWordtatus ? "Active" : "Inactive"}
+                      </td>
+                    </tr>
+                  ))
                 : CC.length > 0 &&
-                CC.map((entry, index) => (
-                  <tr key={index}>
-                    <td className="px-2 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          onClick={() => {
-                            setVeCost(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setCCid(entry.cID); // Pass ID to VEModal
-                          }}
-                        />
-                        {/* <VECost
+                  CC.map((entry, index) => (
+                    <tr key={index}>
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            onClick={() => {
+                              setVeCost(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setCCid(entry.CostCenterId); // Pass ID to VEModal
+                            }}
+                          />
+                          {/* <VECost
                             visible={veCost}
                             onClick={() => setVeCost(false)}
                             edit={edit}
                             ID={CCid}
                           /> */}
-                        <Icon
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          onClick={() => {
-                            setVeCost(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setCCid(entry.cID); // Pass ID to VEModal
-                          }}
-                        />
-                        <VECost
-                          visible={veCost}
-                          onClick={() => setVeCost(false)}
-                          edit={edit}
-                          ID={CCid}
-                        />
-                        <Icon
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          onClick={() => deleteRecord(entry.cID)}
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {entry.cID}
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                      {entry.cName}
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                      {entry.status ? "Active" : "Inactive"}
-                    </td>
-                  </tr>
-                ))}
+                          <Icon
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            onClick={() => {
+                              setVeCost(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setCCid(entry.CostCenterId); // Pass ID to VEModal
+                            }}
+                          />
+                          <VECost
+                            visible={veCost}
+                            onClick={() => setVeCost(false)}
+                            edit={edit}
+                            ID={CCid}
+                          />
+                          <Icon
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            onClick={() => deleteRecord(entry.cID)}
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                        {entry.CostCenterId}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                        {entry.CostCenterName}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                        {entry.Status ? "Active" : "Inactive"}
+                      </td>
+                    </tr>
+                  ))}
             </tbody>
           </table>
         </div>

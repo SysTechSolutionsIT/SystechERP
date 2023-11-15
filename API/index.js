@@ -57,7 +57,7 @@ app.use("/employee/personal", MEmployee)
 // app.use("/twofieldmaster", TwoFieldMaster);
 // app.use("/financials", FinMaster);
 // app.use("/destinationmaster", DestinationMaster);
-// app.use("/cost-center", CCMaster);
+app.use("/cost-center", CCMaster);
 // app.use("/employee/personal", EmpPersonal);
 // app.use("/employee/work", EmpWork);
 // app.use("/employee/salary", EmpSalary);
