@@ -3,14 +3,17 @@ import { useState } from "react";
 import { useFormik } from "formik";
 import { Icon } from "@iconify/react";
 import axios from "axios";
+import { useAuth } from "../Login";
 
 const CostCenterModal = ({ visible, onClick }) => {
   const [statusCheck, setStatus] = useState(false);
+  const { token, companyID, branchID } = useAuth();
+  console.log("IDs: ", companyID, branchID);
 
   const formik = useFormik({
     initialValues: {
-      cName: "",
-      cRemarks: "",
+      CostCenterName: "",
+      Remark: "",
       status: statusCheck,
     },
     onSubmit: async (values) => {
@@ -19,20 +22,22 @@ const CostCenterModal = ({ visible, onClick }) => {
 
       try {
         const formData = {
-          cName: values.cName,
-          cRemarks: values.cRemarks,
-          status: status, // StatusCheck was already part of formik.values
+          CompanyId: companyID,
+          BranchId: branchID,
+          CostCenterName: values.CostCenterName,
+          Remark: values.Remark,
+          Status: status, // StatusCheck was already part of formik.values
         };
 
         const response = await axios.post(
-          "http://localhost:5500/financials/add-record",
+          "http://localhost:5500/cost-center/FnAddUpdateDeleteRecord",
           formData // Send the extracted form data
         );
 
         if (response.status === 200) {
           const data = response.data;
           console.log(data);
-          alert("Financial record added successfully");
+          alert("cost center record added successfully");
           // Handle successful response
           onClick();
         } else {
@@ -72,10 +77,10 @@ const CostCenterModal = ({ visible, onClick }) => {
                   Cost Center Name
                 </p>
                 <input
-                  id="cName"
+                  id=" CostCenterName"
                   type="text"
                   placeholder="Cost Center Name"
-                  value={formik.values.cName}
+                  value={formik.values.CostCenterName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -83,10 +88,10 @@ const CostCenterModal = ({ visible, onClick }) => {
               <div>
                 <p className="capatilize font-semibold  text-[13px]">Remark</p>
                 <input
-                  id="cRemarks"
+                  id="Remark"
                   type="text"
                   placeholder="Enter Remarks"
-                  value={formik.values.cRemarks}
+                  value={formik.values.Remark}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
