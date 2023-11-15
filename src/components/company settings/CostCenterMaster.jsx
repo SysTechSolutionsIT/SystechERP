@@ -74,9 +74,8 @@ const CostCenterMaster = () => {
   const [filteredData, setFilteredData] = useState([]);
 
   const { token } = useAuth();
-  const { companyId, setCompanyId } = useDetails();
+  const { companyId } = useDetails();
   console.log(companyId);
-
   const [veCost, setVeCost] = useState(false);
   const [edit, setEdit] = useState(false);
   const [CCid, setCCid] = useState();
