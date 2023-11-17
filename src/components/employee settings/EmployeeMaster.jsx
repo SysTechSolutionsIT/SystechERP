@@ -19,12 +19,92 @@ const EmployeeMaster = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
   const [columnVisibility, setColumnVisibility] = useState({
-    EmployeeName: true,
-    EmpType: true,
-    CellNo1: true,
-    EmailID1: true,
-    Status: true,
+    EmployeeId: true,
+    EmployeeName:true ,
+    EmployeeTypeGroupId: true,
+    Salutation:false ,
+    LastName:false ,
+    FirstName:false ,
+    MiddleName:false ,
+    MEmployeeName:false ,
+    AadharCardNo:false ,
+    PANNo:false ,
+    PassportNo:false ,
+    PassportIssueDate:false ,
+    PassportExpireDate:false ,
+    CurrentAddress:false ,
+    CurrentPincode:false ,
+    PermanentAddress:false ,
+    PermanentPincode:false ,
+    DOB:false ,
+    EmailId1:true ,
+    EmailId2: false ,
+    PhoneNo: false ,
+    CellNo1: true ,
+    CellNo2: false ,
+    BankId1: false ,
+    AccountNo1: false ,
+    IFSCCode1: false ,
+    BankId2: false ,
+    AccountNo2: false ,
+    IFSCCode2: false ,
+    MaritalStatus: false ,
+    ReferenceId: false ,
+    DestinationId: false ,
+    ReligionId: false ,
+    CategoryId: false ,
+    CasteId: false ,
+    EmployeePhoto: false ,
+    Gender: false ,
+    BloodGroup: false ,
+    DrivingLicence: false ,
+    FinanceAccountNo: false ,
+    Remark: false ,
   });
+
+  const columnNames = {
+    EmployeeId: "ID",
+    EmployeeName:"Employee Name" ,
+    EmployeeTypeGroupId: "Employee Type",
+    Salutation:"Salutation" ,
+    LastName:"Last Name" ,
+    FirstName:"First Name" ,
+    MiddleName:"Middle Name" ,
+    MEmployeeName:"MEmployee Name" ,
+    AadharCardNo:"Adhar Card No." ,
+    PANNo:"PAN No." ,
+    PassportNo:"Passport No." ,
+    PassportIssueDate:"Passport Issue Date" ,
+    PassportExpireDate:"Passport Expire Date" ,
+    CurrentAddress:"Current Address" ,
+    CurrentPincode:"Current Pincode" ,
+    PermanentAddress:"Permanent Address" ,
+    PermanentPincode:"Permanent Pincode" ,
+    DOB:"DOB" ,
+    EmailId1:"Email ID 1" ,
+    EmailId2: "Email ID 2" ,
+    PhoneNo: "Phone No." ,
+    CellNo1: "Cell No 1" ,
+    CellNo2: "Cell No 2" ,
+    BankId1: "Bank ID 1" ,
+    AccountNo1: "Account No 1" ,
+    IFSCCode1: "IFSC Code 1" ,
+    BankId2: "Bank ID 2" ,
+    AccountNo2: "Account No 2" ,
+    IFSCCode2: "IFSC Code 2" ,
+    MaritalStatus: "Marital Status" ,
+    ReferenceId: "Reference" ,
+    DestinationId: "Destination" ,
+    ReligionId: "Religion" ,
+    CategoryId: "Category" ,
+    CasteId: "Caste" ,
+    EmployeePhoto: "Photo" ,
+    Gender: "Gender" ,
+    BloodGroup: "Blood Group" ,
+    DrivingLicence: "Driving Liscence" ,
+    FinanceAccountNo: "Finance Account No" ,
+    Remark: "Remark" ,
+  }
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -43,7 +123,7 @@ const EmployeeMaster = () => {
   useEffect(() => {
     const fetchEmpData = async () => {
       try {
-        const response = await axios.get('http://localhost:5500/employee/personal/get', {
+        const response = await axios.get('http://localhost:5500/employee/personal/FnShowActiveData', {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -73,19 +153,17 @@ const EmployeeMaster = () => {
     }
   };
 
+  //Toggle
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedColumns, setSelectedColumns] = useState([
     ...Object.keys(columnVisibility),
   ]);
 
   const toggleColumn = (columnName) => {
-    if (selectedColumns.includes(columnName)) {
-      setSelectedColumns((prevSelected) =>
-        prevSelected.filter((col) => col !== columnName)
-      );
-    } else {
-      setSelectedColumns((prevSelected) => [...prevSelected, columnName]);
-    }
+    setColumnVisibility((prevVisibility) => ({
+      ...prevVisibility,
+      [columnName]: !prevVisibility[columnName],
+    }));
   };
 
   useEffect(() => {
@@ -94,10 +172,24 @@ const EmployeeMaster = () => {
 
   const selectAllColumns = () => {
     setSelectedColumns([...Object.keys(columnVisibility)]);
+    setColumnVisibility((prevVisibility) => {
+      const updatedVisibility = { ...prevVisibility };
+      Object.keys(updatedVisibility).forEach((columnName) => {
+        updatedVisibility[columnName] = true;
+      });
+      return updatedVisibility;
+    });
   };
 
   const deselectAllColumns = () => {
     setSelectedColumns([]);
+    setColumnVisibility((prevVisibility) => {
+      const updatedVisibility = { ...prevVisibility };
+      Object.keys(updatedVisibility).forEach((columnName) => {
+        updatedVisibility[columnName] = false;
+      });
+      return updatedVisibility;
+    });
   };
 
   //Menu
@@ -115,9 +207,10 @@ const EmployeeMaster = () => {
     };
   }, []);
 
+  //Max Searchbar width
   const getColumnMaxWidth = (columnName) => {
     let maxWidth = 0;
-    const allRows = [...employeeData];
+    const allRows = [...employeeData, ...filteredData];
 
     allRows.forEach((row) => {
       const cellContent = row[columnName];
@@ -177,14 +270,12 @@ const EmployeeMaster = () => {
                   <input
                     type="checkbox"
                     className="mr-2"
-                    checked={selectedColumns.includes(columnName)}
+                    checked={columnVisibility[columnName]}
                     onChange={() => toggleColumn(columnName)}
                   />
                   <span
                     className={
-                      selectedColumns.includes(columnName)
-                        ? "font-semibold"
-                        : ""
+                      columnVisibility[columnName] ? "font-semibold" : ""
                     }
                   >
                     {columnName}
@@ -244,87 +335,40 @@ const EmployeeMaster = () => {
                 <th className=" px-1 text-[13px] font-bold text-black border-2 border-gray-400">
                   Actions
                 </th>
-                <th className=" w-auto px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
-                  ID
-                </th>
-                <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px]">
-                  Employee Name
-                </th>
-                <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px]">
-                  Employee Type
-                </th>
-                <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px]">
-                  Cell No.
-                </th>
-                <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px]">
-                  Email ID
-                </th>
-                <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px]">
-                  Status
-                </th>
+                {selectedColumns.map((columnName) =>
+                  columnVisibility[columnName] ? (
+                    <th
+                      key={columnName}
+                      className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal`}
+                    >
+                      {columnNames[columnName]}
+                    </th>
+                  ) : null
+                )}
               </tr>
               <tr>
                 <th className="border-2"></th>
-                <th className="p-2 font-semibold text-black border-2 " />
-                <th className="p-2 font-semibold text-black border-2">
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
-                    style={{
-                      maxWidth: getColumnMaxWidth("EmployeeType") + "px",
-                    }}
-                    onChange={(e) =>
-                      handleSearchChange("EmployeeType", e.target.value)
-                    }
-                  />
-                </th>
-                <th className="p-2 font-semibold text-black border-2">
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    className="w-auto h-6 border-2 whitespace-normal border-slate-500 rounded-lg justify-center text-center text-[13px]"
-                    style={{
-                      maxWidth: getColumnMaxWidth("EmployeeName") + "px",
-                    }}
-                    onChange={(e) =>
-                      handleSearchChange("EmployeeName", e.target.value)
-                    }
-                  />
-                </th>
-                <th className="p-2 font-semibold text-black border-2">
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
-                    style={{ maxWidth: getColumnMaxWidth("CellNo") + "px" }}
-                    onChange={(e) =>
-                      handleSearchChange("CellNo", e.target.value)
-                    }
-                  />
-                </th>
-                <th className="p-2 font-semibold text-black border-2">
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
-                    style={{ maxWidth: getColumnMaxWidth("EmailId") + "px" }}
-                    onChange={(e) =>
-                      handleSearchChange("EmailId", e.target.value)
-                    }
-                  />
-                </th>
-                <th className="p-2 font-semibold text-black border-2">
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
-                    style={{ maxWidth: getColumnMaxWidth("Status") + "px" }}
-                    onChange={(e) =>
-                      handleSearchChange("Status", e.target.value)
-                    }
-                  />
-                </th>
+                {/* <th className="p-2 font-semibold text-black border-2 " /> */}
+                {selectedColumns.map((columnName) =>
+                  columnVisibility[columnName] ? (
+                    <th
+                      key={columnName}
+                      className="p-2 font-semibold text-black border-2"
+                    >
+                      <input
+                        type="text"
+                        placeholder={`Search `}
+                        className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
+                        style={{
+                          maxWidth: getColumnMaxWidth(columnName) + "px",
+                        }}
+                        onChange={(e) =>
+                          handleSearchChange(columnName, e.target.value)
+                        }
+                      />
+                    </th>
+                  ) : null
+                )}
               </tr>
             </thead>
             <tbody className="">
@@ -370,17 +414,17 @@ const EmployeeMaster = () => {
                       {result.EmployeeId}
                     </td>
                     {selectedColumns.map((columnName) => (
-                      <td
-                        key={columnName}
-                        className={`px-4 border-2 whitespace-normal text-[11px] text-left${columnVisibility[columnName] ? "" : "hidden"
+                        <td
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-[11px] text-left${
+                            columnVisibility[columnName] ? "" : "hidden"
                           }`}
-                      >
-                        {result[columnName]}
-                      </td>
-                    ))}
+                        >
+                        </td>
+                      ))}
                   </tr>
                 ))
-                : employeeData.map((entry, index) => (
+                : employeeData.length > 0 && employeeData.map((result, index) => (
                   <tr key={index}>
                     <td className="px-4 border-2">
                       <div className="flex items-center gap-2 text-center justify-center cur">
@@ -391,7 +435,7 @@ const EmployeeMaster = () => {
                           height="20"
                           className="cursor-pointer"
                           onClick={() =>
-                            navigate(`/view-employee/${entry.id}`)
+                            navigate(`/view-employee/${result.EmployeeId}`)
                           }
                         />
                         <Icon
@@ -401,7 +445,7 @@ const EmployeeMaster = () => {
                           height="20"
                           className="cursor-pointer"
                           onClick={() => {
-                            navigate(`/edit-employee/${entry.id}`);
+                            navigate(`/edit-employee/${result.EmployeeId}`);
                           }}
                         />
                         <Icon
@@ -413,21 +457,20 @@ const EmployeeMaster = () => {
                         />
                       </div>
                     </td>
-                    <td className="px-2 border-2 whitespace-normal text-center text-[11px]">
-                      {entry.id}
-                    </td>
-                    {selectedColumns.map((columnName) => (
-                      <td
-                        key={columnName}
-                        className={`px-4 border-2 whitespace-normal text-left text-[11px]${columnVisibility[columnName] ? "" : "hidden"
-                          }`}
-                      >
-                        {columnName === "EmployeeName" ? `${entry.FirstName} ${entry.LastName}` : entry[columnName]}
-                      </td>
-
-                    ))}
-                  </tr>
-                ))}
+                    {selectedColumns.map((columnName) =>
+                        columnVisibility[columnName] ? (
+                          <td
+                            key={columnName}
+                            className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                          >
+                            {result[columnName]}
+                          </td>
+                        ) : (
+                          <td key={columnName} className="hidden"></td>
+                        )
+                      )}
+                    </tr>
+                  ))}
             </tbody>
           </table>
         </div>
