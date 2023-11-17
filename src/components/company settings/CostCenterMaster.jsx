@@ -386,7 +386,7 @@ const CostCenterMaster = () => {
                             color="#556987"
                             width="20"
                             height="20"
-                            onClick={() => deleteRecord(entry.cID)}
+                            onClick={() => deleteRecord(entry.CostCenterId)}
                           />
                         </div>
                       </td>

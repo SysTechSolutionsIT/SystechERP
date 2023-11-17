@@ -15,7 +15,7 @@ const CostCenterModal = ({ visible, onClick }) => {
     initialValues: {
       CostCenterName: "",
       Remark: "",
-      status: statusCheck,
+      Status: statusCheck,
     },
     onSubmit: async (values) => {
       console.log(values);
@@ -47,6 +47,7 @@ const CostCenterModal = ({ visible, onClick }) => {
         console.log(response);
         alert("Cost Center Added Successfully");
         onClick();
+        window.location.reload();
       } catch (error) {
         console.error("Error", error);
       }
@@ -101,7 +102,7 @@ const CostCenterModal = ({ visible, onClick }) => {
                 <p className="capitalize font-semibold  text-[13px]">Status</p>
                 <label className="capitalize font-semibold  text-[11px]">
                   <input
-                    id="status"
+                    id="Status"
                     type="checkbox"
                     checked={statusCheck}
                     value={formik.values.status}
