@@ -36,9 +36,8 @@ const MCostCenter = sequelize.define(
   "MCostCenter",
   {
     CompanyId: {
-      type: DataTypes.STRING(5),
+      type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: "00001",
     },
     BranchId: {
       type: DataTypes.STRING(5),
@@ -46,9 +45,16 @@ const MCostCenter = sequelize.define(
       defaultValue: "00001",
     },
     CostCenterId: {
-      type: DataTypes.STRING(7),
+      type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
+      autoIncrement: true,
+      field: "CostCenterId", // Set the field name to maintain the "CostCenterId" format
+      get() {
+        // Format the CostCenterId as "0001"
+        const rawValue = this.getDataValue("CostCenterId");
+        return rawValue ? rawValue.toString().padStart(4, "0") : null;
+      },
     },
     CostCenterName: {
       type: DataTypes.STRING(500),
@@ -58,10 +64,6 @@ const MCostCenter = sequelize.define(
       type: DataTypes.STRING(1),
       defaultValue: "Y",
     },
-    CreatedBy: DataTypes.STRING(500),
-    CreatedOn: DataTypes.DATE,
-    ModifiedBy: DataTypes.STRING(500),
-    ModifiedOn: DataTypes.DATE,
     Remark: DataTypes.STRING(500),
     Status: DataTypes.STRING(10),
   },
@@ -92,8 +94,6 @@ router.get("/FnShowAllData", authToken, async (req, res) => {
   } catch (error) {
     console.error("Error retrieving data:", error);
     res.status(500).send("Internal Server Error");
-  } finally {
-    await sequelize.close(); // Close the database connection
   }
 });
 
@@ -113,8 +113,6 @@ router.get("/FnShowActiveData", authToken, async (req, res) => {
   } catch (error) {
     console.error("Error retrieving data:", error);
     res.status(500).send("Internal Server Error");
-  } finally {
-    await sequelize.close(); // Close the database connection
   }
 });
 
@@ -135,8 +133,6 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
   } catch (error) {
     console.error("Error retrieving data:", error);
     res.status(500).send("Internal Server Error");
-  } finally {
-    await sequelize.close(); // Close the database connection
   }
 });
 
@@ -144,15 +140,29 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
 router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
   const costCenter = req.body;
   try {
-    const result = await MCostCenter.upsert(costCenter, {
-      returning: true,
-    });
-    res.json({ message: result ? "Operation successful" : "Operation failed" });
+    if (costCenter.IUFlag === "D") {
+      // "Soft-delete" operation
+      const result = await MCostCenter.update(
+        { AcFlag: "N" },
+        { where: { CostCenterId: costCenter.CostCenterId } }
+      );
+
+      res.json({
+        message: result[0] ? "Record Deleted Successfully" : "Record Not Found",
+      });
+    } else {
+      // Add or update operation
+      const result = await MCostCenter.upsert(costCenter, {
+        returning: true,
+      });
+
+      res.json({
+        message: result ? "Operation successful" : "Operation failed",
+      });
+    }
   } catch (error) {
-    console.error("Error retrieving data:", error);
+    console.error("Error performing operation:", error);
     res.status(500).send("Internal Server Error");
-  } finally {
-    await sequelize.close(); // Close the database connection
   }
 });
 

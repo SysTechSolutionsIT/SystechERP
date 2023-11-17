@@ -74,9 +74,8 @@ const CostCenterMaster = () => {
   const [filteredData, setFilteredData] = useState([]);
 
   const { token } = useAuth();
-  const { companyId, setCompanyId } = useDetails();
+  const { companyId } = useDetails();
   console.log(companyId);
-
   const [veCost, setVeCost] = useState(false);
   const [edit, setEdit] = useState(false);
   const [CCid, setCCid] = useState();
@@ -125,7 +124,7 @@ const CostCenterMaster = () => {
 
   useEffect(() => {
     fetchCompData();
-  }, [token]);
+  }, []);
 
   const fetchCompData = async () => {
     try {
@@ -138,7 +137,7 @@ const CostCenterMaster = () => {
         }
       );
       console.log("Response Object", response);
-      const data = response.data.records;
+      const data = response.data;
       console.log(data);
       setCC(data);
     } catch (error) {
@@ -158,24 +157,37 @@ const CostCenterMaster = () => {
   };
 
   //For Deletion
+  const deleteRecord = async (DeleteId) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this company?"
+    );
 
-  const deleteRecord = async (ID) => {
-    alert("Are you sure you want to delete this Record?");
+    if (!confirmDelete) {
+      return; // If the user cancels deletion, do nothing
+    }
+
     try {
-      const apiUrl = `http://localhost:5500/cost-center/delete-record/${ID}`;
+      const apiUrl = `http://localhost:5500/cost-center/FnAddUpdateDeleteRecord`;
 
-      const response = await axios.delete(apiUrl, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await axios.post(
+        apiUrl,
+        {
+          CostCenterId: DeleteId,
+          IUFlag: "D",
         },
-      });
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-      if (response.status === 204) {
-        console.log(`Record with ID ${ID} deleted successfully.`);
+      if (response.data.message === "Record Deleted Successfully") {
+        console.log(`Record with ID ${DeleteId} deleted successfully.`);
         alert("Record Deleted");
         window.location.reload();
       } else {
-        console.error(`Failed to delete record with ID ${ID}.`);
+        console.error(`Failed to delete record with ID ${DeleteId}.`);
       }
     } catch (error) {
       console.error("Error deleting record:", error);
@@ -329,7 +341,8 @@ const CostCenterMaster = () => {
                       </td>
                     </tr>
                   ))
-                : CC.length > 0 &&
+                : CC &&
+                  CC.length > 0 &&
                   CC.map((entry, index) => (
                     <tr key={index}>
                       <td className="px-2 border-2">

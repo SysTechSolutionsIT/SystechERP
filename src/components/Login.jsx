@@ -42,15 +42,25 @@ export function useDetails() {
 
 export const DetailsProvider = ({ children }) => {
   const [companyId, setCompanyId] = useState("");
-  const [branchId, setBranchId] = useState("");
+  const handleSetCompanyId = (newID) => {
+    setCompanyId(newID);
+    // Save token to a cookie whenever it changes
+    Cookies.set("companyId", newID, { expires: 7 }); // Set an expiration date if needed
+  };
+
+  useEffect(() => {
+    // Check if a token exists in cookies and set it in the state
+    const savedToken = Cookies.get("companyId");
+    if (savedToken) {
+      setCompanyId(savedToken);
+    }
+  }, []);
 
   return (
     <DetailsContext.Provider
       value={{
         companyId,
-        setCompanyId,
-        // branchId,
-        // setBranchId,
+        setCompanyId: handleSetCompanyId,
       }}
     >
       {children}
@@ -63,7 +73,7 @@ function Login() {
   const [password, setPassword] = useState("udayan@99");
   const [companies, setCompanies] = useState([]);
   const { token, setToken } = useAuth();
-  const [companyId, setCompanyId] = useState();
+  const { companyId, setCompanyId } = useDetails();
   const [branchId, setBranchId] = useState("");
 
   const handleCompanyChange = (e) => {
@@ -106,8 +116,7 @@ function Login() {
       // Redirect if token is available
       if (token) {
         navigate("/dashboard");
-        console.log(companyId);
-        console.log(branchId);
+        console.log("Company Id", companyId);
       }
     } catch (error) {
       console.log("Error", error);
@@ -156,9 +165,7 @@ function Login() {
               value={companyId}
               className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-400 text-[13px]"
             >
-              <option value="" disabled hidden>
-                Select a company
-              </option>
+              <option value="">Select a company</option>
               {companies.map((company) => (
                 <option key={company.CompanyId} value={company.CompanyId}>
                   {company.CompanyName}

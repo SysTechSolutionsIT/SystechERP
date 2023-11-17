@@ -3,12 +3,13 @@ import { useState } from "react";
 import { useFormik } from "formik";
 import { Icon } from "@iconify/react";
 import axios from "axios";
-import { useAuth } from "../Login";
+import { useAuth, useDetails } from "../Login";
 
 const CostCenterModal = ({ visible, onClick }) => {
   const [statusCheck, setStatus] = useState(false);
-  const { token, companyID, branchID } = useAuth();
-  console.log("IDs: ", companyID, branchID);
+  const { token } = useAuth();
+  const { companyId } = useDetails();
+  console.log("IDs: ", companyId);
 
   const formik = useFormik({
     initialValues: {
@@ -22,32 +23,32 @@ const CostCenterModal = ({ visible, onClick }) => {
 
       try {
         const formData = {
-          CompanyId: companyID,
-          BranchId: branchID,
+          CompanyId: companyId,
           CostCenterName: values.CostCenterName,
           Remark: values.Remark,
+          AcFlag: "Y",
+          IUFlag: "I",
+          CreatedOn: "",
+          ModifiedOn: "",
           Status: status, // StatusCheck was already part of formik.values
         };
 
         const response = await axios.post(
           "http://localhost:5500/cost-center/FnAddUpdateDeleteRecord",
-          formData // Send the extracted form data
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          } //Send the extracted form data
         );
 
-        if (response.status === 200) {
-          const data = response.data;
-          console.log(data);
-          alert("cost center record added successfully");
-          // Handle successful response
-          onClick();
-        } else {
-          console.error(`HTTP error! Status: ${response.status}`);
-          // Handle error response
-        }
+        console.log(response);
+        alert("Cost Center Added Successfully");
+        onClick();
       } catch (error) {
-        console.error("Error:", error.message);
-        alert(error.message);
-        // Handle network error
+        console.error("Error", error);
       }
     },
   });
@@ -77,7 +78,7 @@ const CostCenterModal = ({ visible, onClick }) => {
                   Cost Center Name
                 </p>
                 <input
-                  id=" CostCenterName"
+                  id="CostCenterName"
                   type="text"
                   placeholder="Cost Center Name"
                   value={formik.values.CostCenterName}
