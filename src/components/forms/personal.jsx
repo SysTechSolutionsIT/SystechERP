@@ -1,10 +1,12 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { Icon } from "@iconify/react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import axios from "axios";
 import { useAuth } from "../Login";
+
+
 
 export default function Personal({ ID }) {
   const { token } = useAuth();
@@ -12,90 +14,132 @@ export default function Personal({ ID }) {
 
   const formik = useFormik({
     initialValues: {
-      // EmployeeID: "",
-      EmpType: "",
-      EmpTypeGroup: "",
-      FirstName: "",
-      MiddleName: "",
-      LastName: "",
-      Salutation: "",
-      AadharCardNo: "",
-      PANNo: "",
-      PassportNo: "",
-      PassportIssueDate: "",
-      PassportExpireDate: "",
-      CurrentAddress: "",
-      CurrentPinCode: "",
-      PermanentAddress: "",
-      PermanentPinCode: "",
-      DOB: "",
-      PhoneNo: "",
-      CellNo1: "",
-      CellNo2: "",
-      EmailID1: "",
-      EmailID2: "",
-      BankId1: "",
-      AccountNo1: "",
-      IFSCCode1: "",
-      BankId2: "",
-      AccountNo2: "",
-      IFSCCode2: "",
-      AcFlag: "",
-      Category: "",
-      Destination: "",
-      Caste: "",
-      MaritalStatus: "",
-      Reference: "",
-      EmployeePhoto: null,
-      MEmployeeName: "",
-      Religion: "",
-      Gender: "",
-      BloodGroup: "",
-      DrivingLicense: null,
-      FinanceAccountNo: "",
-      Remark: "",
+      EmployeeName:"" ,
+      EmployeeTypeGroupId:"" ,
+      Salutation:"" ,
+      LastName:"" ,
+      FirstName:"" ,
+      MiddleName:"" ,
+      MEmployeeName:"" ,
+      AadharCardNo:"" ,
+      PANNo:"" ,
+      PassportNo:"" ,
+      PassportIssueDate:"" ,
+      PassportExpireDate:"" ,
+      CurrentAddress:"" ,
+      CurrentPincode:"" ,
+      PermanentAddress:"" ,
+      PermanentPincode:"" ,
+      DOB:"" ,
+      EmailId1:"" ,
+      EmailId2:"" ,
+      PhoneNo:"" ,
+      CellNo1:"" ,
+      CellNo2:"" ,
+      BankId1:"" ,
+      AccountNo1:"" ,
+      IFSCCode1:"" ,
+      BankId2:"" ,
+      AccountNo2:"" ,
+      IFSCCode2:"" ,
+      MaritalStatus:"" ,
+      ReferenceId:"" ,
+      DestinationId:"" ,
+      ReligionId:"" ,
+      CategoryId:"" ,
+      CasteId:"" ,
+      EmployeePhoto:"" ,
+      Gender:"" ,
+      BloodGroup:"" ,
+      DrivingLicence:"" ,
+      FinanceAccountNo:"" ,
+      Remark:"" ,
+      IUFlag: "U",
+      CreatedBy:"" ,
+      CreatedOn:"" ,
+      ModifiedBy:"" ,
+      ModifiedOn:""     
     },
     onSubmit: (values, { resetForm }) => {
       console.log(values);
-      addEmpPersonal(values);
+
+      const updatedData = {
+        EmployeeName: values.EmployeeName,
+        EmployeeTypeId: values.EmployeeTypeId,
+        EmployeeTypeGroupId: values.EmployeeTypeGroupId,
+        Salutation: values.Salutation,
+        LastName: values.LastName,
+        FirstName: values.FirstName,
+        MiddleName: values.MiddleName,
+        MEmployeeName: values.MEmployeeName,
+        AadharCardNo: values.AadharCardNo,
+        PANNo: values.PANNo,
+        PassportNo: values.PassportNo,
+        PassportIssueDate: values.PassportIssueDate,
+        PassportExpireDate: values.PassportExpireDate,
+        CurrentAddress: values.CurrentAddress,
+        CurrentPincode: values.CurrentPincode,
+        PermanentAddress: values.PermanentAddress,
+        PermanentPincode: values.PermanentPincode,
+        DOB: values.DOB,
+        EmailId1: values.EmailId1,
+        EmailId2: values.EmailId2,
+        PhoneNo: values.PhoneNo,
+        CellNo1: values.CellNo1,
+        CellNo2: values.CellNo2,
+        BankId1: values.BankId1,
+        AccountNo1: values.AccountNo1,
+        IFSCCode1: values.IFSCCode1,
+        BankId2: values.BankId2,
+        AccountNo2: values.AccountNo2,
+        IFSCCode2: values.IFSCCode2,
+        MaritalStatus: values.MaritalStatus,
+        ReferenceId: values.ReferenceId,
+        DestinationId: values.DestinationId,
+        ReligionId: values.ReligionId,
+        CategoryId: values.CategoryId,
+        CasteId: values.CasteId,
+        EmployeePhoto: values.EmployeePhoto,
+        Gender: values.Gender,
+        BloodGroup: values.BloodGroup,
+        DrivingLicence: values.DrivingLicence,
+        FinanceAccountNo: values.FinanceAccountNo,
+        Remark: values.Remark,
+        IUFlag: "U",
+        CreatedBy: values.CreatedBy,
+        CreatedOn: values.CreatedOn,
+        ModifiedBy: values.ModifiedBy,
+        ModifiedOn: values.ModifiedOn        
+      }
+      updateEmpPersonal(updatedData);
     },
   });
 
   // Patch
-  const addEmpPersonal = async (values) => {
+  const updateEmpPersonal = async (data) => {
     try {
-      const response = await axios.patch(
-        `http://localhost:5500/employee/personal/update/${ID}`,
-        values,
+      const response = await axios.post(
+        `http://localhost:5500/employee/personal/FnAddUpdateDeleteRecord`,
+        data,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          params: {EmployeeId: ID,},
+          headers: { Authorization: `Bearer ${token}` }, // Moved headers here
         }
       );
-      if (response.status === 200) {
-        const data = response.data;
-        console.log(data);
-      }
-      alert("Employee Personal details added successfully");
+      alert('Employee details updated successfully')
     } catch (error) {
       console.error("Error:", error.message);
     }
   };
 
-  // Get
-  useEffect(() => {
-    fetchPersonalData();
-    console.log(details);
-  }, [ID]);
-  console.log(ID);
 
   const fetchPersonalData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5500/employee/personal/get/${ID}`,
+        `http://localhost:5500/employee/personal/FnShowPerticularData`,
         {
-          headers: { Authorization: `Bearer ${token}` },
+          params: {EmployeeId: ID,},
+          headers: { Authorization: `Bearer ${token}` }, // Moved headers here
         }
       );
       console.log("Response Object", response);
@@ -105,51 +149,64 @@ export default function Personal({ ID }) {
       console.log("Error while fetching course data: ", error.message);
     }
   };
+  
+  // Get
+  useEffect(() => {
+    fetchPersonalData();
+    console.log(details);
+  }, [ID]);
+  console.log(ID);
+  
+
 
   useEffect(() => {
     if (details) {
       formik.setValues({
-        EmpType: details.EmpType,
-        EmpTypeGroup: details.EmpTypeGroup,
+        EmployeeName: details.EmployeeName,
+        EmployeeTypeId: details.EmployeeTypeId,
+        EmployeeTypeGroupId: details.EmployeeTypeGroupId,
+        Salutation: details.Salutation,
+        LastName: details.LastName,
         FirstName: details.FirstName,
         MiddleName: details.MiddleName,
-        LastName: details.LastName,
-        Salutation: details.Salutation,
+        MEmployeeName: details.MEmployeeName,
         AadharCardNo: details.AadharCardNo,
         PANNo: details.PANNo,
         PassportNo: details.PassportNo,
         PassportIssueDate: details.PassportIssueDate,
         PassportExpireDate: details.PassportExpireDate,
         CurrentAddress: details.CurrentAddress,
-        CurrentPinCode: details.CurrentPinCode,
+        CurrentPincode: details.CurrentPincode,
         PermanentAddress: details.PermanentAddress,
-        PermanentPinCode: details.PermanentPinCode,
+        PermanentPincode: details.PermanentPincode,
         DOB: details.DOB,
+        EmailId1: details.EmailId1,
+        EmailId2: details.EmailId2,
         PhoneNo: details.PhoneNo,
         CellNo1: details.CellNo1,
         CellNo2: details.CellNo2,
-        EmailID1: details.EmailID1,
-        EmailID2: details.EmailID2,
         BankId1: details.BankId1,
         AccountNo1: details.AccountNo1,
         IFSCCode1: details.IFSCCode1,
         BankId2: details.BankId2,
         AccountNo2: details.AccountNo2,
         IFSCCode2: details.IFSCCode2,
-        AcFlag: details.AcFlag,
-        Category: details.Category,
-        Destination: details.Destination,
-        Caste: details.Caste,
         MaritalStatus: details.MaritalStatus,
-        Reference: details.Reference,
+        ReferenceId: details.ReferenceId,
+        DestinationId: details.DestinationId,
+        ReligionId: details.ReligionId,
+        CategoryId: details.CategoryId,
+        CasteId: details.CasteId,
         EmployeePhoto: details.EmployeePhoto,
-        MEmployeeName: details.MEmployeeName,
-        Religion: details.Religion,
         Gender: details.Gender,
         BloodGroup: details.BloodGroup,
-        DrivingLicense: details.DrivingLicense,
+        DrivingLicence: details.DrivingLicence,
         FinanceAccountNo: details.FinanceAccountNo,
         Remark: details.Remark,
+        CreatedBy: details.CreatedBy,
+        CreatedOn: details.CreatedOn,
+        ModifiedBy: details.ModifiedBy,
+        ModifiedOn: details.ModifiedOn 
       });
     }
   }, [details]);
@@ -184,14 +241,14 @@ export default function Personal({ ID }) {
             <div className="py-1">
               <p className="mb-1 font-semibold text-[13px]">Employee Type</p>
               <select
-                id="EmpType"
-                name="EmpType"
+                id="EmployeeTypeId"
+                name="EmployeeTypeId"
                 className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                value={formik.values.EmpType}
+                value={formik.values.EmployeeTypeId}
                 onChange={formik.handleChange}
               >
-                <option value={formik.values.EmpType}>
-                  {formik.values.EmpType}
+                <option value={formik.values.EmployeeTypeId}>
+                  {formik.values.EmployeeTypeId}
                 </option>
                 <option value="">Select Type</option>
                 <option value="Permenant">Permenant</option>
@@ -249,14 +306,14 @@ export default function Personal({ ID }) {
                 Employee Type Group
               </p>
               <select
-                id="EmpTypeGroup"
-                name="EmpTypeGroup"
+                id="EmployeeTypeGroupId"
+                name="EmployeeTypeGroupId"
                 className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                value={formik.values.EmpTypeGroup}
+                value={formik.values.EmployeeTypeGroupId}
                 onChange={formik.handleChange}
               >
-                <option value={formik.values.EmpTypeGroup}>
-                  {formik.values.EmpTypeGroup}
+                <option value={formik.values.EmployeeTypeGroupId}>
+                  {formik.values.EmployeeTypeGroupId}
                 </option>
                 <option value="">Select Group Type</option>
                 <option value="Worker">Worker</option>
@@ -328,9 +385,9 @@ export default function Personal({ ID }) {
                 Current Address Pincode
               </p>
               <input
-                id="CurrentPinCode"
+                id="CurrentPincode"
                 type="text"
-                value={formik.values.CurrentPinCode}
+                value={formik.values.CurrentPincode}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -352,9 +409,9 @@ export default function Personal({ ID }) {
                 Permanent Address Pincode
               </p>
               <input
-                id="PermanentPinCode"
+                id="PermanentPincode"
                 type="text"
-                value={formik.values.PermanentPinCode}
+                value={formik.values.PermanentPincode}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -400,9 +457,9 @@ export default function Personal({ ID }) {
                 Email ID 1
               </p>
               <input
-                id="EmailID1"
+                id="EmailId1"
                 type="text"
-                value={formik.values.EmailID1}
+                value={formik.values.EmailId1}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -412,9 +469,9 @@ export default function Personal({ ID }) {
                 Email ID 2
               </p>
               <input
-                id="EmailID2"
+                id="EmailId2"
                 type="text"
-                value={formik.values.EmailID2}
+                value={formik.values.EmailId2}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -496,14 +553,14 @@ export default function Personal({ ID }) {
                 Category
               </p>
               <select
-                id="Category"
-                name="Category"
+                id="CategoryId"
+                name="CategoryId"
                 className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                value={formik.values.Category}
+                value={formik.values.CategoryId}
                 onChange={formik.handleChange}
               >
-                <option value={formik.values.Category}>
-                  {formik.values.Category}
+                <option value={formik.values.CategoryId}>
+                  {formik.values.CategoryId}
                 </option>
                 <option value="">Select Category</option>
                 <option value="Category 1">Category 1</option>
@@ -518,9 +575,9 @@ export default function Personal({ ID }) {
                 Destination
               </p>
               <input
-                id="Destination"
+                id="DestinationId"
                 type="text"
-                value={formik.values.Destination}
+                value={formik.values.DestinationId}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
               />
@@ -530,14 +587,14 @@ export default function Personal({ ID }) {
                 Religion
               </p>
               <select
-                id="Religion"
-                name="Religion"
+                id="ReligionId"
+                name="ReligionId"
                 className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                value={formik.values.Religion}
+                value={formik.values.ReligionId}
                 onChange={formik.handleChange}
               >
-                <option value={formik.values.Destination}>
-                  {formik.values.Destination}
+                <option value={formik.values.ReligionId}>
+                  {formik.values.ReligionId}
                 </option>
                 <option value="">Select Religion</option>
                 <option value="Religion 1">Religion 1</option>
@@ -550,14 +607,14 @@ export default function Personal({ ID }) {
             <div className="py-1">
               <p className="mb-1 font-semibold text-[13px]">Reference</p>
               <select
-                id="Reference"
-                name="Reference"
+                id="ReferenceId"
+                name="ReferenceId"
                 className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                value={formik.values.Reference}
+                value={formik.values.ReferenceId}
                 onChange={formik.handleChange}
               >
-                <option value={formik.values.Reference}>
-                  {formik.values.Reference}
+                <option value={formik.values.ReferenceId}>
+                  {formik.values.ReferenceId}
                 </option>
                 <option value="">Select Reference</option>
                 <option value="Professional References">
@@ -590,14 +647,14 @@ export default function Personal({ ID }) {
             <div className="py-1">
               <p className="mb-1 font-semibold text-[13px]">Caste</p>
               <select
-                id="Caste"
-                name="Caste"
+                id="CasteId"
+                name="CasteId"
                 className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                value={formik.values.Caste}
+                value={formik.values.CasteId}
                 onChange={formik.handleChange}
               >
-                <option value={formik.values.Caste}>
-                  {formik.values.Caste}
+                <option value={formik.values.CasteId}>
+                  {formik.values.CasteId}
                 </option>
                 <option value="">Select Caste</option>
                 <option value="Caste 1">Caste 1</option>
@@ -781,18 +838,6 @@ export default function Personal({ ID }) {
                 type="file"
                 className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
                 onChange={handleDLChange}
-              />
-            </div>
-            <div className="py-1">
-              <p className="mb-1 capitalize  font-semibold text-[13px]">
-                Account Flag
-              </p>
-              <input
-                id="AcFlag"
-                type="text"
-                value={formik.values.AcFlag}
-                className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
-                onChange={formik.handleChange}
               />
             </div>
             <div className="py-1">

@@ -2,8 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { Sequelize, DataTypes } = require('sequelize');
 const jwt = require('jsonwebtoken');
-
 const router = express.Router();
+
 const authToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -284,7 +284,7 @@ router.get('/FnShowActiveData', authToken, async (req, res) => {
   });
 
 router.get('/FnShowPerticularData', authToken, async (req, res) => {
-  const employeeId = req.query.value;
+  const employeeId = req.query.EmployeeId;
   try {
     const employees = await MEmployee.findOne({
       where: {
@@ -302,7 +302,6 @@ router.get('/FnShowPerticularData', authToken, async (req, res) => {
   }
 });
 
-// Add other routes similarly...
 
 router.post('/FnAddUpdateDeleteRecord', authToken, async (req, res) => {
   const employee = req.body;

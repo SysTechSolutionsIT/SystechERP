@@ -8,6 +8,50 @@ import SalaryStructure from "../forms/salary";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../Login";
+import { createContext, useContext } from 'react';
+
+// Create context
+const EmployeeContext = createContext();
+
+// Create a provider component
+const EmployeeProvider = ({ children }) => {
+  const { ID } = useParams()
+  const [employeeData, setEmployeeData] = useState({ EmployeeId: null, EmployeeName: null });
+
+  const fetchPersonalData = async (ID, token) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5500/employee/personal/FnShowPerticularData`,
+        {
+          params: { EmployeeId: ID },
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      console.log("Response Object", response);
+      const data = response.data;
+      setEmployeeData(data);
+    } catch (error) {
+      console.log("Error while fetching employee data: ", error.message);
+    }
+  };
+
+  return (
+    <EmployeeContext.Provider value={{ employeeData, fetchPersonalData }}>
+      {children}
+    </EmployeeContext.Provider>
+  );
+};
+
+// Create a custom hook to use the context
+const useEmployeeData = () => {
+  const context = useContext(EmployeeContext);
+  if (!context) {
+    throw new Error('useEmployeeData must be used within an EmployeeProvider');
+  }
+  return context;
+};
+
+export { EmployeeProvider, useEmployeeData };
 
 export default function EMPTabs() {
   const [openTab, setOpenTab] = React.useState(1);
@@ -16,29 +60,6 @@ export default function EMPTabs() {
   const [name, setName] = useState("");
   const { employeeId } = useParams(); // Accessing employeeId from the URL
   const { token } = useAuth();
-  console.log(employeeId);
-
-  // Get Name
-  useEffect(() => {
-    fetchName();
-  }, [employeeId]);
-
-  const fetchName = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:5500/employee/personal/get/${employeeId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      const data = response.data;
-      const fullName = `${data.FirstName} ${data.LastName}`;
-      setName(fullName);
-      setDetails(data);
-    } catch (error) {
-      console.log("Error while fetching course data: ", error.message);
-    }
-  };
 
   return (
     <>

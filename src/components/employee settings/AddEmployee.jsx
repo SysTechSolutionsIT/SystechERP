@@ -21,6 +21,7 @@ const AddEmployee = ({ visible, onClick }) => {
   return (
        <div className="fixed overflow-y-scroll inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center w-full h-full">
         <div className="bg-none h-full p-2 rounded-lg">
+
       <div className="flex font-[Inter] justify-center relative top-[0px]">
         <div>
           <ul className="flex mb-0 list-none flex-wrap pt-0 pb-4 flex-row border-b-2 border-blue-900">
@@ -136,7 +137,18 @@ const AddEmployee = ({ visible, onClick }) => {
                 Documents
               </p>
             </li>
+            <li>
+            <div className="flex gap-4">
+          <button
+            className="flex text-[15px] py-1 bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap"
+            onClick={onClick}
+          >
+            Close
+          </button>
+        </div>
+            </li>
           </ul>
+          
           <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded-xl">
             <div className="px-4 py-5 flex-auto">
               <div className="tab-content tab-space">

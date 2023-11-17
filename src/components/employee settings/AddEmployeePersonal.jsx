@@ -105,15 +105,12 @@ export default function AddEmployeePersonal({ ID }) {
             <div className="py-1">
               <p className="mb-1 font-semibold text-[13px]">Employee Type</p>
               <select
-                id="EmployeeTypeId"
-                name="EmployeeTypeId"
+                id="EmployeeTypeGroupId"
+                name="EmployeeTypeGroupId"
                 className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                value={formik.values.EmployeeTypeId}
+                value={formik.values.EmployeeTypeGroupId}
                 onChange={formik.handleChange}
               >
-                <option value={formik.values.EmployeeTypeId}>
-                  {formik.values.EmployeeTypeId}
-                </option>
                 <option value="">Select Type</option>
                 <option value="Permenant">Permenant</option>
                 <option value="Probation">Probation</option>
@@ -141,9 +138,8 @@ export default function AddEmployeePersonal({ ID }) {
                 value={formik.values.Salutation}
                 onChange={formik.handleChange}
               >
-                <option value={formik.values.Salutation}>
-                  {formik.values.Salutation}
-                </option>
+                
+                
                 <option value="">Select Salutation</option>
                 <option value="Sir/Madam">Sir/Madam</option>
                 <option value="Dear [Mr./Ms./Dr.] [Last Name]">
@@ -175,9 +171,6 @@ export default function AddEmployeePersonal({ ID }) {
                 value={formik.values.EmpTypeGroupId}
                 onChange={formik.handleChange}
               >
-                <option value={formik.values.EmpTypeGroupId}>
-                  {formik.values.EmpTypeGroupId}
-                </option>
                 <option value="">Select Group Type</option>
                 <option value="Worker">Worker</option>
                 <option value="Staff">Staff</option>

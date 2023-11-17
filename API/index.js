@@ -42,6 +42,7 @@ const CCMaster = require("./route/MCostCenterRoute");
 const MCompany = require("./route/MCompany");
 const MFinancialYear = require("./route/MFinancialYear");
 const MEmployee = require('./route/MEmployee')
+const MEmployeeWorkProfile = require('./route/MEmployeeWorkProfile')
 
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());
@@ -59,7 +60,7 @@ app.use("/employee/personal", MEmployee)
 // app.use("/destinationmaster", DestinationMaster);
 app.use("/cost-center", CCMaster);
 // app.use("/employee/personal", EmpPersonal);
-// app.use("/employee/work", EmpWork);
+app.use("/employee/work", MEmployeeWorkProfile);
 // app.use("/employee/salary", EmpSalary);
 // app.use("/employee/professional", EmpProfessional);
 // app.use("/employee/academic", EmpAcademic);
