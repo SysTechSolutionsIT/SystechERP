@@ -8,14 +8,9 @@ import { useAuth } from "../Login";
 
 export default function AddEmployeePersonal({ ID }) {
   const { token } = useAuth();
-  const [details, setdetails] = useState([]);
 
   const formik = useFormik({
     initialValues: {
-      CompanyId:"" ,
-      BranchId:"" ,
-      EmployeeId:"" ,
-      EmployeeTypeId:"" ,
       EmployeeName:"" ,
       EmployeeTypeGroupId:"" ,
       Salutation:"" ,
@@ -68,6 +63,8 @@ export default function AddEmployeePersonal({ ID }) {
       addEmpPersonal()
     },
   });
+
+  formik.values.EmployeeName = `${formik.values.FirstName} ${formik.values.LastName}`;
 
   const addEmpPersonal = async () => {
     try {

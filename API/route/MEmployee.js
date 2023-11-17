@@ -43,8 +43,7 @@ const MEmployee = sequelize.define('MEmployee', {
       primaryKey: true,
     },
     EmployeeId: {
-      type: DataTypes.STRING,
-      allowNull: false,
+      type: DataTypes.INTEGER,
       primaryKey: true,
     },
     EmployeeTypeId: {
