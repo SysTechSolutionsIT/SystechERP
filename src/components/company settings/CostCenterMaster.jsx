@@ -124,7 +124,7 @@ const CostCenterMaster = () => {
 
   useEffect(() => {
     fetchCompData();
-  }, []);
+  }, [token]);
 
   const fetchCompData = async () => {
     try {
@@ -288,120 +288,102 @@ const CostCenterMaster = () => {
               </tr>
             </thead>
             <tbody className="">
-              {filteredData.length > 0
-                ? filteredData.map((result, key) => (
-                    <tr key={key}>
-                      <td className="px-2 border-2">
-                        <div className="flex items-center gap-2 text-center justify-center">
-                          <Icon
-                            icon="lucide:eye"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => {
-                              setVeCost(true); // Open VEModal
-                              setEdit(false); // Disable edit mode for VEModal
-                              setCCid(result.CostCenterId); // Pass ID to VEModal
-                            }}
-                          />
-                          <Icon
-                            icon="mdi:edit"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => {
-                              setVeCost(true); // Open VEModal
-                              setEdit(true); // Disable edit mode for VEModal
-                              setCCid(result.CostCenterId); // Pass ID to VEModal
-                            }}
-                          />
-                          <VECost
-                            visible={veCost}
-                            onClick={() => setVeCost(false)}
-                            edit={edit}
-                            ID={CCid}
-                          />
-                          <Icon
-                            icon="material-symbols:delete-outline"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => deleteRecord(result.cID)}
-                          />
-                        </div>
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {result.CostCenterId}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {result.CostCenterName}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {result.searchWordtatus ? "Active" : "Inactive"}
-                      </td>
-                    </tr>
-                  ))
-                : CC &&
-                  CC.length > 0 &&
-                  CC.map((entry, index) => (
-                    <tr key={index}>
-                      <td className="px-2 border-2">
-                        <div className="flex items-center gap-2 text-center justify-center">
-                          <Icon
-                            icon="lucide:eye"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => {
+                {filteredData.length > 0
+                  ? filteredData.map((result, key) => (
+                      <tr key={key}>
+                        <td className="px-2 border-2">
+                          <div className="flex items-center gap-2 text-center justify-center">
+                            <Icon
+                              icon="lucide:eye"
+                              color="#556987"
+                              width="20"
+                              height="20"
+                              onClick={() => {
+                                setVeCost(true); // Open VEModal
+                                setEdit(false); // Disable edit mode for VEModal
+                                setCCid(result.CostCenterId); // Pass ID to VEModal
+                              }}
+                            />
+                            <Icon
+                              icon="mdi:edit"
+                              color="#556987"
+                              width="20"
+                              height="20"
+                              onClick={() => {
+                                setVeCost(true); // Open VEModal
+                                setEdit(false); // Disable edit mode for VEModal
+                                setCCid(result.CostCenterId); // Pass ID to VEModal
+                              }}
+                            />
+                            <Icon
+                              icon="material-symbols:delete-outline"
+                              color="#556987"
+                              width="20"
+                              height="20"
+                              onClick={() => deleteRecord(result.CostCenterId)}
+                            />
+                          </div>
+                        </td>
+                        <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                          {result.CostCenterId}
+                        </td>
+                        <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                          {result.CostCenterName}
+                        </td>
+                        <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                          {result.searchWordtatus ? "Active" : "Inactive"}
+                        </td>
+                      </tr>
+                    ))
+                  : CC &&
+                    CC.length > 0 &&
+                    CC.map((entry, index) => (
+                      <tr key={index}>
+                        <td className="px-2 border-2">
+                          <div className="flex items-center gap-2 text-center justify-center">
+                            <Icon
+                              icon="lucide:eye"
+                              color="#556987"
+                              width="20"
+                              height="20"
+                              onClick={() => {
                               setVeCost(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
                               setCCid(entry.CostCenterId); // Pass ID to VEModal
                             }}
-                          />
-                          {/* <VECost
-                            visible={veCost}
-                            onClick={() => setVeCost(false)}
-                            edit={edit}
-                            ID={CCid}
-                          /> */}
-                          <Icon
-                            icon="mdi:edit"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => {
+                            />
+                            <Icon
+                              icon="mdi:edit"
+                              color="#556987"
+                              width="20"
+                              height="20"
+                              onClick={() => {
                               setVeCost(true); // Open VEModal
-                              setEdit(true); // Disable edit mode for VEModal
+                              setEdit(false); // Disable edit mode for VEModal
                               setCCid(entry.CostCenterId); // Pass ID to VEModal
                             }}
-                          />
-                          <VECost
-                            visible={veCost}
-                            onClick={() => setVeCost(false)}
-                            edit={edit}
-                            ID={CCid}
-                          />
-                          <Icon
-                            icon="material-symbols:delete-outline"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            onClick={() => deleteRecord(entry.CostCenterId)}
-                          />
-                        </div>
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {entry.CostCenterId}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {entry.CostCenterName}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                        {entry.Status ? "Active" : "Inactive"}
-                      </td>
-                    </tr>
-                  ))}
-            </tbody>
+                            />
+                            <Icon
+                              icon="material-symbols:delete-outline"
+                              color="#556987"
+                              width="20"
+                              height="20"
+                              onClick={() => deleteRecord(entry.CostCenterId)}
+                            />
+                          </div>
+                        </td>
+                        <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                          {entry.CostCenterId}
+                        </td>
+                        <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                          {entry.CostCenterName}
+                        </td>
+                        <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                          {entry.Status ? "Active" : "Inactive"}
+                        </td>
+                      </tr>
+                    ))}
+              </tbody>
           </table>
         </div>
       </div>
