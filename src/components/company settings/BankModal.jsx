@@ -22,6 +22,7 @@ const BankModal = ({ visible, onClick }) => {
       BankGST: "",
       AuthorizedPersonCount: "",
       Remark: "",
+      IUFlag: "I",
       AuthorizedPerson1: "",
       AuthorizedPersonRole1: "",
       AuthorizedPerson2: "",

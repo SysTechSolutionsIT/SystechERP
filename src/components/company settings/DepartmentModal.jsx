@@ -12,30 +12,35 @@ const DepartmentModal = ({ visible, onClick }) => {
   const [CostCenters, setCostCenters] = useState([])
   const formik = useFormik({
     initialValues: {
-      // deptID: "",
-      deptName: "",
-      companyBranchName: "",
-      parentDept: "" | "NA",
-      deptType: "",
-      deptGroup: "",
-      deptHead: "",
-      deptSubHead: "",
-      costCenter: "",
-      standardStaffStrength: "",
-      standardWorkerStrength: "",
-      remark: "",
-      status: "",
-    },
+      DepartmentId: "",
+        DepartmentId: "",
+        ParentDeptId: "",
+        DepartmentType: "",
+        DepartmentName: "",
+        DepartmentGroupId: "",
+        CostCenterId: "",
+        DepartmentHeadId: "",
+        DepartmentSubHeadId: "",
+        DepartmentStdStaffStrength: "",
+        DepartmentStdWorkerStrength: "",
+        Remark: "",
+        Status:"",
+        AcFlag: "Y",
+        IUFlag :"I",
+        CreatedBy: "",
+        CreatedOn: "",
+        ModifiedBy: "",
+        ModifiedOn: "",
+  },
     onSubmit: (values) => {
       console.log(values);
       addDept()
-      // alert("Department Added Successfully");
     },
   });
 
   const addDept = async () =>{
     try{
-      const response = await axios.post("http://localhost:5500/departmentmaster/add-dept", formik.values,
+      const response = await axios.post("http://localhost:5500/departmentmaster/FnAddUpdateDeleteRecord", formik.values,
       {
         headers:{
           Authorization: `Bearer ${token}`
@@ -80,6 +85,19 @@ const DepartmentModal = ({ visible, onClick }) => {
     setStatus(!status);
   };
 
+  
+  const [isStatusChecked, setStatusChecked] = useState(false)
+  const handleCheckboxChange = (fieldName, setChecked, event) => {
+    //This is how to use it (event) => handleCheckboxChange('Status', setStatusChecked, event)
+      const checked = event.target.checked;
+      setChecked(checked);
+      formik.setValues({
+        ...formik.values,
+        [fieldName]: checked.toString(),
+      });
+    };
+
+
   if (!visible) return null;
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -105,12 +123,12 @@ const DepartmentModal = ({ visible, onClick }) => {
                   Department ID
                 </p>
                 <input
-                  id="deptID"
+                  id="DepartmentId"
                   type="number"
                   placeholder="Enter Department ID"
-                  value=''
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
+                  disabled={true}
                 />
               </div>
               <div>
@@ -118,10 +136,10 @@ const DepartmentModal = ({ visible, onClick }) => {
                   Department Name
                 </p>
                 <input
-                  id="deptName"
+                  id="DepartmentName"
                   type="text"
                   placeholder="Enter Department Name"
-                  value={formik.values.deptName}
+                  value={formik.values.DepartmentName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -131,8 +149,8 @@ const DepartmentModal = ({ visible, onClick }) => {
                   Company Branch Name
                 </p>
                 <select
-                  id="companyBranchName"
-                  value={formik.values.companyBranchName}
+                  id="CompanyBranchName"
+                  value={formik.values.CompanyBranchName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 >
@@ -145,8 +163,8 @@ const DepartmentModal = ({ visible, onClick }) => {
                   Parent Department Name
                 </p>
                 <select
-                  id="parentDept"
-                  value={formik.values.parentDept}
+                  id="ParentDeptId"
+                  value={formik.values.ParentDeptId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 >
@@ -181,9 +199,9 @@ const DepartmentModal = ({ visible, onClick }) => {
                   <label className="flex items-center">
                     <input
                       type="radio"
-                      id="deptType"
+                      id="DepartmentType"
                       value="Main"
-                      checked={formik.values.deptType === "Main"}
+                      checked={formik.values.DepartmentType === "Main"}
                       onChange={formik.handleChange}
                       className="mr-2 h-5 w-5"
                     />
@@ -192,9 +210,9 @@ const DepartmentModal = ({ visible, onClick }) => {
                   <label className="flex items-center">
                     <input
                       type="radio"
-                      id="deptType"
+                      id="DepartmentType"
                       value="Sub"
-                      checked={formik.values.deptType === "Sub"}
+                      checked={formik.values.DepartmentType === "Sub"}
                       onChange={formik.handleChange}
                       className="mr-3 h-5 w-5"
                     />
@@ -207,8 +225,8 @@ const DepartmentModal = ({ visible, onClick }) => {
                   Department Group
                 </p>
                 <select
-                  id="deptGroup"
-                  value={formik.values.deptGroup}
+                  id="DepartmentGroupId"
+                  value={formik.values.DepartmentGroupId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 >
@@ -225,23 +243,23 @@ const DepartmentModal = ({ visible, onClick }) => {
                   Department Head
                 </p>
                 <input
-                  id="deptHead"
+                  id="DepartmentHeadId"
                   type="text"
                   placeholder="Enter Department Head"
-                  value={formik.values.deptHead}
+                  value={formik.values.DepartmentHeadId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
               </div>
               <div>
-                <p className="capatilize font-semibold text-[11px] text-[11px]">
+                <p className="capatilize font-semibold text-[11px]">
                   Department Sub Head
                 </p>
                 <input
-                  id="deptSubHead"
+                  id="DepartmentSubHeadId"
                   type="text"
                   placeholder="Enter Department Sub-Head"
-                  value={formik.values.deptSubHead}
+                  value={formik.values.DepartmentSubHeadId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -251,8 +269,8 @@ const DepartmentModal = ({ visible, onClick }) => {
                   Select Cost Center
                 </p>
                 <select
-                  id="costCenter"
-                  value={formik.values.costCenter}
+                  id="CostCenterId"
+                  value={formik.values.CostCenterId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 >
@@ -269,10 +287,10 @@ const DepartmentModal = ({ visible, onClick }) => {
                   Standard Staff Strength
                 </p>
                 <input
-                  id="standardStaffStrength"
+                  id="DepartmentStdStaffStrength"
                   type="text"
                   placeholder="Enter Standard Staff Strength"
-                  value={formik.values.standardStaffStrength}
+                  value={formik.values.DepartmentStdStaffStrength}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -282,10 +300,10 @@ const DepartmentModal = ({ visible, onClick }) => {
                   Standard Worker Strength
                 </p>
                 <input
-                  id="standardWorkerStrength"
+                  id="DepartmentStdWorkerStrength"
                   type="text"
                   placeholder="Enter Standard worker Strength"
-                  value={formik.values.standardWorkerStrength}
+                  value={formik.values.DepartmentStdWorkerStrength}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -293,10 +311,10 @@ const DepartmentModal = ({ visible, onClick }) => {
               <div>
                 <p className="capatilize font-semibold text-[13px]">Remarks</p>
                 <input
-                  id="remark"
+                  id="Remark"
                   type="text"
                   placeholder="Enter Remarks"
-                  value={formik.values.remark}
+                  value={formik.values.Remark}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -305,12 +323,11 @@ const DepartmentModal = ({ visible, onClick }) => {
                 <p className="capatilize font-semibold text-[13px] ">Status</p>
                 <label className="capitalize font-semibold text-[11px]">
                   <input
-                    id="status"
+                    id="Status"
                     type="checkbox"
-                    checked={status}
-                    value={formik.values.status}
+                    checked={formik.values.Status}
                     className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border-2 rounded-lg`}
-                    onChange={handleStatusChange}
+                    onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}
                   />
                   Active
                 </label>

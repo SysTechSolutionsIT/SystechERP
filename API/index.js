@@ -43,6 +43,7 @@ const MCompany = require("./route/MCompany");
 const MFinancialYear = require("./route/MFinancialYear");
 const MEmployee = require('./route/MEmployee')
 const MEmployeeWorkProfile = require('./route/MEmployeeWorkProfile')
+const MDepartment = require('./route/MDepartment')
 
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());
@@ -53,7 +54,7 @@ app.use("/financials", MFinancialYear);
 app.use("/employee/personal", MEmployee)
 // app.use("/company-config", CompConfig);
 // app.use("/bankmaster", BankMaster);
-// app.use("/departmentmaster", DepartmentMaster);
+app.use("/departmentmaster", MDepartment);
 // app.use("/threefieldmaster", ThreeFieldMaster);
 // app.use("/twofieldmaster", TwoFieldMaster);
 // app.use("/financials", FinMaster);
