@@ -8,61 +8,45 @@ import SalaryStructure from "../forms/salary";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../Login";
-import { createContext, useContext } from 'react';
-
-// Create context
-const EmployeeContext = createContext();
-
-// Create a provider component
-const EmployeeProvider = ({ children }) => {
-  const { ID } = useParams()
-  const [employeeData, setEmployeeData] = useState({ EmployeeId: null, EmployeeName: null });
-
-  const fetchPersonalData = async (ID, token) => {
-    try {
-      const response = await axios.get(
-        `http://localhost:5500/employee/personal/FnShowPerticularData`,
-        {
-          params: { EmployeeId: ID },
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      console.log("Response Object", response);
-      const data = response.data;
-      setEmployeeData(data);
-    } catch (error) {
-      console.log("Error while fetching employee data: ", error.message);
-    }
-  };
-
-  return (
-    <EmployeeContext.Provider value={{ employeeData, fetchPersonalData }}>
-      {children}
-    </EmployeeContext.Provider>
-  );
-};
-
-// Create a custom hook to use the context
-const useEmployeeData = () => {
-  const context = useContext(EmployeeContext);
-  if (!context) {
-    throw new Error('useEmployeeData must be used within an EmployeeProvider');
-  }
-  return context;
-};
-
-export { EmployeeProvider, useEmployeeData };
+// import { useEmployeeData } from "./EmployeeMaster";
 
 export default function EMPTabs() {
+  const { employeeId } = useParams();
+  console.log("in emp tabs: ", employeeId);
+
   const [openTab, setOpenTab] = React.useState(1);
   const [details, setDetails] = useState([]);
   const navigate = useNavigate();
   const [name, setName] = useState("");
-  const { employeeId } = useParams(); // Accessing employeeId from the URL
+  // const { employeeId } = useEmployeeData(); // Accessing employeeId from the URL
   const { token } = useAuth();
+
+  useEffect(() => {
+    const fetchEmpName = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5500/employee/personal/FnShowPerticularData`,
+          {
+            params: { EmployeeId: employeeId },
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const data = response.data;
+        if (data.EmployeeName) {
+          setName(data.EmployeeName);
+        }
+      } catch (error) {
+        console.error("Error", error);
+      }
+    };
+    fetchEmpName();
+  }, [employeeId]);
 
   return (
     <>
+      {/* <EmployeeContext> */}
       <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg items-center justify-between mb-1 sm:overflow-x-auto">
         <div className="mr-auto text-[15px] whitespace-normal">
           HRMS / Employee Settings / Employee Master
@@ -233,6 +217,7 @@ export default function EMPTabs() {
           </div>
         </div>
       </div>
+      {/* </EmployeeContext> */}
     </>
   );
 }

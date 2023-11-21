@@ -1,68 +1,64 @@
-import React, {useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { Icon } from "@iconify/react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import axios from "axios";
 import { useAuth } from "../Login";
-
-
+// import { useEmployeeData } from "../employee settings/EmployeeMaster";
 
 export default function Personal({ ID }) {
   const { token } = useAuth();
   const [details, setdetails] = useState([]);
-
   const formik = useFormik({
     initialValues: {
-      EmployeeName:"" ,
-      EmployeeTypeGroupId:"" ,
-      Salutation:"" ,
-      LastName:"" ,
-      FirstName:"" ,
-      MiddleName:"" ,
-      MEmployeeName:"" ,
-      AadharCardNo:"" ,
-      PANNo:"" ,
-      PassportNo:"" ,
-      PassportIssueDate:"" ,
-      PassportExpireDate:"" ,
-      CurrentAddress:"" ,
-      CurrentPincode:"" ,
-      PermanentAddress:"" ,
-      PermanentPincode:"" ,
-      DOB:"" ,
-      EmailId1:"" ,
-      EmailId2:"" ,
-      PhoneNo:"" ,
-      CellNo1:"" ,
-      CellNo2:"" ,
-      BankId1:"" ,
-      AccountNo1:"" ,
-      IFSCCode1:"" ,
-      BankId2:"" ,
-      AccountNo2:"" ,
-      IFSCCode2:"" ,
-      MaritalStatus:"" ,
-      ReferenceId:"" ,
-      DestinationId:"" ,
-      ReligionId:"" ,
-      CategoryId:"" ,
-      CasteId:"" ,
-      EmployeePhoto:"" ,
-      Gender:"" ,
-      BloodGroup:"" ,
-      DrivingLicence:"" ,
-      FinanceAccountNo:"" ,
-      Remark:"" ,
+      EmployeeName: "",
+      EmployeeTypeGroupId: "",
+      Salutation: "",
+      LastName: "",
+      FirstName: "",
+      MiddleName: "",
+      MEmployeeName: "",
+      AadharCardNo: "",
+      PANNo: "",
+      PassportNo: "",
+      PassportIssueDate: "",
+      PassportExpireDate: "",
+      CurrentAddress: "",
+      CurrentPincode: "",
+      PermanentAddress: "",
+      PermanentPincode: "",
+      DOB: "",
+      EmailId1: "",
+      EmailId2: "",
+      PhoneNo: "",
+      CellNo1: "",
+      CellNo2: "",
+      BankId1: "",
+      AccountNo1: "",
+      IFSCCode1: "",
+      BankId2: "",
+      AccountNo2: "",
+      IFSCCode2: "",
+      MaritalStatus: "",
+      ReferenceId: "",
+      DestinationId: "",
+      ReligionId: "",
+      CategoryId: "",
+      CasteId: "",
+      EmployeePhoto: "",
+      Gender: "",
+      BloodGroup: "",
+      DrivingLicence: "",
+      FinanceAccountNo: "",
+      Remark: "",
       IUFlag: "U",
-      CreatedBy:"" ,
-      CreatedOn:"" ,
-      ModifiedBy:"" ,
-      ModifiedOn:""     
+      CreatedBy: "",
+      CreatedOn: "",
+      ModifiedBy: "",
+      ModifiedOn: "",
     },
     onSubmit: (values, { resetForm }) => {
-      console.log(values);
-
       const updatedData = {
         EmployeeName: values.EmployeeName,
         EmployeeTypeId: values.EmployeeTypeId,
@@ -109,8 +105,8 @@ export default function Personal({ ID }) {
         CreatedBy: values.CreatedBy,
         CreatedOn: values.CreatedOn,
         ModifiedBy: values.ModifiedBy,
-        ModifiedOn: values.ModifiedOn        
-      }
+        ModifiedOn: values.ModifiedOn,
+      };
       updateEmpPersonal(updatedData);
     },
   });
@@ -122,23 +118,29 @@ export default function Personal({ ID }) {
         `http://localhost:5500/employee/personal/FnAddUpdateDeleteRecord`,
         data,
         {
-          params: {EmployeeId: ID,},
+          params: { EmployeeId: ID },
           headers: { Authorization: `Bearer ${token}` }, // Moved headers here
         }
       );
-      alert('Employee details updated successfully')
+      if (response.data && response.data.success) {
+        alert("Employee details updated successfully");
+      } else {
+        console.error(
+          "Failed to update employee details. Response:",
+          response.data
+        );
+      }
     } catch (error) {
       console.error("Error:", error.message);
     }
   };
-
 
   const fetchPersonalData = async () => {
     try {
       const response = await axios.get(
         `http://localhost:5500/employee/personal/FnShowPerticularData`,
         {
-          params: {EmployeeId: ID,},
+          params: { EmployeeId: ID },
           headers: { Authorization: `Bearer ${token}` }, // Moved headers here
         }
       );
@@ -149,15 +151,11 @@ export default function Personal({ ID }) {
       console.log("Error while fetching course data: ", error.message);
     }
   };
-  
+
   // Get
   useEffect(() => {
     fetchPersonalData();
-    console.log(details);
   }, [ID]);
-  console.log(ID);
-  
-
 
   useEffect(() => {
     if (details) {
@@ -206,7 +204,7 @@ export default function Personal({ ID }) {
         CreatedBy: details.CreatedBy,
         CreatedOn: details.CreatedOn,
         ModifiedBy: details.ModifiedBy,
-        ModifiedOn: details.ModifiedOn 
+        ModifiedOn: details.ModifiedOn,
       });
     }
   }, [details]);
@@ -326,7 +324,7 @@ export default function Personal({ ID }) {
               </p>
               <input
                 id="DOB"
-                type="text"
+                type="DATE"
                 value={formik.values.DOB}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
@@ -811,7 +809,7 @@ export default function Personal({ ID }) {
               </p>
               <input
                 id="PassportIssueDate"
-                type="text"
+                type="date"
                 value={formik.values.PassportIssueDate}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}
@@ -823,7 +821,7 @@ export default function Personal({ ID }) {
               </p>
               <input
                 id="PassportExpireDate"
-                type="text"
+                type="date"
                 value={formik.values.PassportExpireDate}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg`}
                 onChange={formik.handleChange}

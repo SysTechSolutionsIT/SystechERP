@@ -113,7 +113,9 @@ function App() {
               <Route path="/attDevice-master" element={<DeviceMaster />} />
               <Route path="/job-type-master" element={<JobTypeMaster />} />
               <Route path="/leave-type-master" element={<LeaveTypeMaster />} />
+
               <Route path="/edit-employee/:employeeId" element={<EMPTabs />} />
+
               <Route path="/shift-roster" element={<ShiftRoster />} />
               <Route
                 path="/manual-attendance-entry"

@@ -1,55 +1,58 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const { Sequelize, DataTypes } = require('sequelize');
-const jwt = require('jsonwebtoken');
+const express = require("express");
+const bodyParser = require("body-parser");
+const { Sequelize, DataTypes } = require("sequelize");
+const jwt = require("jsonwebtoken");
 const router = express.Router();
 
 const authToken = (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-    if (token == null) return res.sendStatus(401);
-  
-    jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
-      if (err) return res.sendStatus(403);
-      req.user = user;
-      next();
-    });
-  };
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  if (token == null) return res.sendStatus(401);
+
+  jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
+  });
+};
 
 // Configure Sequelize with database connection details
 const sequelize = new Sequelize(
-    "u172510268_systech",
-    "u172510268_devs",
-    "Ggwpfax@9990",
-    {
-        host: "srv1001.hstgr.io",
-        dialect: "mysql",
-        port: 3306,
-    }
+  "u172510268_systech",
+  "u172510268_devs",
+  "Ggwpfax@9990",
+  {
+    host: "srv1001.hstgr.io",
+    dialect: "mysql",
+    port: 3306,
+  }
 );
-  
 
-const MEmployee = sequelize.define('MEmployee', {
+const MEmployee = sequelize.define(
+  "MEmployee",
+  {
     CompanyId: {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: '00001',
+      defaultValue: "00001",
       primaryKey: true,
     },
     BranchId: {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: '00001',
+      defaultValue: "00001",
       primaryKey: true,
     },
     EmployeeId: {
       type: DataTypes.INTEGER,
       primaryKey: true,
+      defaultValue: "001",
+      autoIncrement: true,
     },
     EmployeeTypeId: {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: '001',
+      defaultValue: "001",
     },
     EmployeeName: {
       type: DataTypes.STRING,
@@ -214,11 +217,11 @@ const MEmployee = sequelize.define('MEmployee', {
     AcFlag: {
       type: DataTypes.STRING,
       allowNull: true,
-      defaultValue: 'Y',
+      defaultValue: "Y",
     },
     IUFlag: {
-        type: DataTypes.STRING,
-      },
+      type: DataTypes.STRING,
+    },
     CreatedBy: {
       type: DataTypes.STRING,
       allowNull: true,
@@ -235,55 +238,56 @@ const MEmployee = sequelize.define('MEmployee', {
       type: DataTypes.DATE,
       allowNull: true,
     },
-  }, {
-    tableName: 'MEmployee',
+  },
+  {
+    tableName: "MEmployee",
     timestamps: false,
-  });
-  
-  // Middleware for parsing JSON
-  router.use(bodyParser.json());
-  
-  // Model synchronization
-  sequelize.sync().then(() => {
-    console.log('Models synced');
-  });
+  }
+);
 
+// Middleware for parsing JSON
+router.use(bodyParser.json());
 
-router.get('/FnShowAllData', authToken, async (req, res) => {
+// Model synchronization
+sequelize.sync().then(() => {
+  console.log("Models synced");
+});
+
+router.get("/FnShowAllData", authToken, async (req, res) => {
   try {
     const employees = await MEmployee.findAll({
       attributes: {
         // Your attribute configuration here
       },
-      order: [['EmployeeId', 'ASC']],
+      order: [["EmployeeId", "ASC"]],
     });
     res.json(employees);
   } catch (error) {
-    console.error('Error retrieving data:', error);
-    res.status(500).send('Internal Server Error');
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
   }
 });
 
 // GET endpoint to retrieve active companies
-router.get('/FnShowActiveData', authToken, async (req, res) => {
-    try {
-      const employees = await MEmployee.findAll({
-        where: {
-          AcFlag: 'Y',
-        },
-        attributes: {
-          exclude: ['IUFlag'],
-        },
-        order: [['EmployeeId', 'ASC']],
-      });
-      res.json(employees);
-    } catch (error) {
-      console.error('Error retrieving data:', error);
-      res.status(500).send('Internal Server Error');
-    }
-  });
+router.get("/FnShowActiveData", authToken, async (req, res) => {
+  try {
+    const employees = await MEmployee.findAll({
+      where: {
+        AcFlag: "Y",
+      },
+      attributes: {
+        exclude: ["IUFlag"],
+      },
+      order: [["EmployeeId", "ASC"]],
+    });
+    res.json(employees);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
-router.get('/FnShowPerticularData', authToken, async (req, res) => {
+router.get("/FnShowPerticularData", authToken, async (req, res) => {
   const employeeId = req.query.EmployeeId;
   try {
     const employees = await MEmployee.findOne({
@@ -291,40 +295,43 @@ router.get('/FnShowPerticularData', authToken, async (req, res) => {
         EmployeeId: employeeId,
       },
       attributes: {
-        exclude: ['IUFlag'],
+        exclude: ["IUFlag"],
       },
-      order: [['EmployeeId', 'ASC']],
+      order: [["EmployeeId", "ASC"]],
     });
     res.json(employees);
   } catch (error) {
-    console.error('Error retrieving data:', error);
-    res.status(500).send('Internal Server Error');
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
   }
 });
 
-
-router.post('/FnAddUpdateDeleteRecord', authToken, async (req, res) => {
+router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
   const employee = req.body;
   try {
-    if (employee.IUFlag === 'D') {
+    if (employee.IUFlag === "D") {
       // "Soft-delete" operation
       const result = await MEmployee.update(
-        { AcFlag: 'N' },
+        { AcFlag: "N" },
         { where: { EmployeeId: employee.EmployeeId } }
       );
 
-      res.json({ message: result[0] ? 'Record Deleted Successfully' : 'Record Not Found' });
+      res.json({
+        message: result[0] ? "Record Deleted Successfully" : "Record Not Found",
+      });
     } else {
       // Add or update operation
       const result = await MEmployee.upsert(employee, {
         returning: true,
       });
 
-      res.json({ message: result ? 'Operation successful' : 'Operation failed' });
+      res.json({
+        message: result ? "Operation successful" : "Operation failed",
+      });
     }
   } catch (error) {
-    console.error('Error performing operation:', error);
-    res.status(500).send('Internal Server Error');
+    console.error("Error performing operation:", error);
+    res.status(500).send("Internal Server Error");
   }
 });
 
