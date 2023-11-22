@@ -32,13 +32,13 @@ const MEmployee = sequelize.define(
   "MEmployee",
   {
     CompanyId: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: "00001",
       primaryKey: true,
     },
     BranchId: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: "00001",
       primaryKey: true,
@@ -50,7 +50,7 @@ const MEmployee = sequelize.define(
       autoIncrement: true,
     },
     EmployeeTypeId: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: "001",
     },

@@ -6,61 +6,61 @@ import { useFormik } from "formik";
 import axios from "axios";
 import { useAuth } from "../Login";
 
-export default function AddEmployeePersonal({ ID }) {
+export default function AddEmployeePersonal() {
   const { token } = useAuth();
 
   const formik = useFormik({
     initialValues: {
-      EmployeeName:"" ,
-      EmployeeTypeGroupId:"" ,
-      Salutation:"" ,
-      LastName:"" ,
-      FirstName:"" ,
-      MiddleName:"" ,
-      MEmployeeName:"" ,
-      AadharCardNo:"" ,
-      PANNo:"" ,
-      PassportNo:"" ,
-      PassportIssueDate:"" ,
-      PassportExpireDate:"" ,
-      CurrentAddress:"" ,
-      CurrentPincode:"" ,
-      PermanentAddress:"" ,
-      PermanentPincode:"" ,
-      DOB:"" ,
-      EmailId1:"" ,
-      EmailId2:"" ,
-      PhoneNo:"" ,
-      CellNo1:"" ,
-      CellNo2:"" ,
-      BankId1:"" ,
-      AccountNo1:"" ,
-      IFSCCode1:"" ,
-      BankId2:"" ,
-      AccountNo2:"" ,
-      IFSCCode2:"" ,
-      MaritalStatus:"" ,
-      ReferenceId:"" ,
-      DestinationId:"" ,
-      ReligionId:"" ,
-      CategoryId:"" ,
-      CasteId:"" ,
-      EmployeePhoto:"" ,
-      Gender:"" ,
-      BloodGroup:"" ,
-      DrivingLicence:"" ,
-      FinanceAccountNo:"" ,
-      Remark:"" ,
-      AcFlag:"Y" ,
+      EmployeeName: "",
+      EmployeeTypeGroupId: "",
+      Salutation: "",
+      LastName: "",
+      FirstName: "",
+      MiddleName: "",
+      MEmployeeName: "",
+      AadharCardNo: "",
+      PANNo: "",
+      PassportNo: "",
+      PassportIssueDate: "",
+      PassportExpireDate: "",
+      CurrentAddress: "",
+      CurrentPincode: "",
+      PermanentAddress: "",
+      PermanentPincode: "",
+      DOB: "",
+      EmailId1: "",
+      EmailId2: "",
+      PhoneNo: "",
+      CellNo1: "",
+      CellNo2: "",
+      BankId1: "",
+      AccountNo1: "",
+      IFSCCode1: "",
+      BankId2: "",
+      AccountNo2: "",
+      IFSCCode2: "",
+      MaritalStatus: "",
+      ReferenceId: "",
+      DestinationId: "",
+      ReligionId: "",
+      CategoryId: "",
+      CasteId: "",
+      EmployeePhoto: "",
+      Gender: "",
+      BloodGroup: "",
+      DrivingLicence: "",
+      FinanceAccountNo: "",
+      Remark: "",
+      AcFlag: "Y",
       IUFlag: "I",
-      CreatedBy:"" ,
-      CreatedOn:"" ,
-      ModifiedBy:"" ,
-      ModifiedOn:""     
+      CreatedBy: "",
+      CreatedOn: "",
+      ModifiedBy: "",
+      ModifiedOn: "",
     },
     onSubmit: (values, { resetForm }) => {
       console.log(values);
-      addEmpPersonal()
+      addEmpPersonal();
     },
   });
 
@@ -68,23 +68,22 @@ export default function AddEmployeePersonal({ ID }) {
 
   const addEmpPersonal = async () => {
     try {
-        const response = await axios.post(
-            "http://localhost:5500/employee/personal/FnAddUpdateDeleteRecord",
-            formik.values,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'application/json', // Specify the content type
-                },
-            }
-        );
-        alert('Employee Personal Details Added Successfully');
-        console.log(response);
+      const response = await axios.post(
+        "http://localhost:5500/employee/personal/FnAddUpdateDeleteRecord",
+        formik.values,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json", // Specify the content type
+          },
+        }
+      );
+      alert("Employee Personal Details Added Successfully");
+      console.log(response);
     } catch (error) {
-        console.error('Error', error);
+      console.error("Error", error);
     }
-};
-
+  };
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -96,7 +95,7 @@ export default function AddEmployeePersonal({ ID }) {
                 Employee ID
               </p>
               <input
-                id="EmployeeID"
+                id="EmployeeId"
                 type="text"
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg `}
                 disabled={true}
@@ -138,8 +137,6 @@ export default function AddEmployeePersonal({ ID }) {
                 value={formik.values.Salutation}
                 onChange={formik.handleChange}
               >
-                
-                
                 <option value="">Select Salutation</option>
                 <option value="Sir/Madam">Sir/Madam</option>
                 <option value="Dear [Mr./Ms./Dr.] [Last Name]">

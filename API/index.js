@@ -15,7 +15,7 @@ const BankMaster = require("./route/MBankRoutes");
 // const FinMaster = require("./route/FinMasterRoute");
 const CCMaster = require("./route/MCostCenterRoute");
 // const EmpPersonal = require("./route/EmpPersonalRoute");
-// const EmpWork = require("./route/EmpWorkRoute");
+const EmpWork = require("./route/MEmployeeWorkProfile");
 // const EmpSalary = require("./route/EmpSalaryRoute");
 // const EmpProfessional = require("./route/EmpProfessionalRoute");
 // const EmpAcademic = require("./route/EmpAcademicRoute");
@@ -41,9 +41,9 @@ const CCMaster = require("./route/MCostCenterRoute");
 // const Currencies = require("./route/CurrenciesRoute");
 const MCompany = require("./route/MCompany");
 const MFinancialYear = require("./route/MFinancialYear");
-const MEmployee = require('./route/MEmployee')
-const MEmployeeWorkProfile = require('./route/MEmployeeWorkProfile')
-const MDepartment = require('./route/MDepartment')
+const MEmployee = require("./route/MEmployee");
+const MEmployeeWorkProfile = require("./route/MEmployeeWorkProfile");
+const MDepartment = require("./route/MDepartment");
 
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());
@@ -51,7 +51,7 @@ app.use(cors());
 app.use("/users", userRoutes);
 app.use("/companies", MCompany);
 app.use("/financials", MFinancialYear);
-app.use("/employee/personal", MEmployee)
+app.use("/employee/personal", MEmployee);
 // app.use("/company-config", CompConfig);
 // app.use("/bankmaster", BankMaster);
 app.use("/departmentmaster", MDepartment);

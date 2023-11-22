@@ -4,39 +4,38 @@ import axios from "axios";
 import { useAuth } from "../Login";
 import { useParams } from "react-router-dom";
 // import { useEmployeeData } from "../employee settings/EmployeeMaster";
-const Work = () => {
+const Work = ({ ID, name }) => {
   const [statusCheck, setStatusCheck] = useState(false);
   const [details, setDetails] = useState();
   const [workDetails, setWorkDetails] = useState();
   const [bondApplicableCheck, setBondApplicableCheck] = useState(false);
   const { token } = useAuth();
-  const { ID } = useParams();
+  console.log("in work profile:", ID, name);
 
   const formik = useFormik({
     initialValues: {
-      EmployeeId: "",
       DOJ: "",
       DOL: "",
-      ContractorId: "",
+      Contractor: "",
       ContractorStartDate: "",
       ContractorEndDate: "",
-      DeptGroupId: "",
-      DeptId: "",
-      SubDeptId: "",
-      DesgId: "",
+      DeptGroup: "",
+      Dept: "",
+      SubDept: "",
+      Desg: "",
       ReportingTo: "",
       WeeklyOff: "",
-      ShiftId: "",
-      BandId: "",
-      ZoneId: "",
-      GradeId: "",
-      CostCenterId: "",
+      Shift: "",
+      Band: "",
+      Zone: "",
+      Grade: "",
+      CostCenter: "",
       BondApplicable: "",
       BondAttachment: "",
       CurrentJob: "",
       Remark: "",
       AcFlag: "",
-      IUFlag: "U",
+      IUFlag: "I",
       CreatedBy: "",
       CreatedOn: "",
       ModifiedBy: "",
@@ -44,29 +43,27 @@ const Work = () => {
     },
     onSubmit: (values) => {
       const updatedData = {
-        EmployeeId: values.EmployeeId,
         DOJ: values.DOJ,
         DOL: values.DOL,
-        ContractorId: values.ContractorId,
+        Contractor: values.Contractor,
         ContractorStartDate: values.ContractorStartDate,
         ContractorEndDate: values.ContractorEndDate,
-        DeptGroupId: values.DeptGroupId,
-        DeptId: values.DeptId,
-        SubDeptId: values.SubDeptId,
-        DesgId: values.DesgId,
+        DeptGroup: values.DeptGroup,
+        Dept: values.Dept,
+        SubDept: values.SubDept,
+        Desg: values.Desg,
         ReportingTo: values.ReportingTo,
         WeeklyOff: values.WeeklyOff,
-        ShiftId: values.ShiftId,
-        BandId: values.BandId,
-        ZoneId: values.ZoneId,
-        GradeId: values.GradeId,
-        CostCenterId: values.CostCenterId,
+        Shift: values.Shift,
+        Band: values.Band,
+        Zone: values.Zone,
+        Grade: values.Grade,
+        CostCenter: values.CostCenter,
         BondApplicable: values.BondApplicable,
         BondAttachment: values.BondAttachment,
         CurrentJob: values.CurrentJob,
         Remark: values.Remark,
-        AcFlag: values.AcFlag,
-        IUFlag: values.IUFlag,
+        IUFlag: "I",
         CreatedBy: values.CreatedBy,
         CreatedOn: values.CreatedOn,
         ModifiedBy: values.ModifiedBy,
@@ -83,14 +80,19 @@ const Work = () => {
         `http://localhost:5500/employee/work/FnAddUpdateDeleteRecord`,
         data,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` }, // Moved headers here
         }
       );
-      alert("Employee Work Details Updates");
+      if (response.data && response.data.success) {
+        alert("Employee details updated successfully");
+      } else {
+        console.error(
+          "Failed to update employee details. Response:",
+          response.data
+        );
+      }
     } catch (error) {
-      console.error("Error", error);
+      console.error("Error:", error.message);
     }
   };
 
@@ -108,6 +110,7 @@ const Work = () => {
         console.log(response);
         // Check if the data is empty, and set to a blank array if so
         const workdetails = data.length > 0 ? data : [];
+        setWorkDetails(workdetails);
       } catch (error) {
         console.error("Error", error);
       }
@@ -123,6 +126,37 @@ const Work = () => {
       [fieldName]: checked.toString(),
     });
   };
+
+  useEffect(() => {
+    if (details) {
+      formik.setValues({
+        DOJ: details.DOJ,
+        DOL: details.DOL,
+        Contractor: details.Contractor,
+        ContractorStartDate: details.ContractorStartDate,
+        ContractorEndDate: details.ContractorEndDate,
+        DeptGroup: details.DeptGroup,
+        Dept: details.Dept,
+        SubDept: details.SubDept,
+        Desg: details.Desg,
+        ReportingTo: details.ReportingTo,
+        WeeklyOff: details.WeeklyOff,
+        Shift: details.Shift,
+        Band: details.Band,
+        Zone: details.Zone,
+        Grade: details.Grade,
+        CostCenter: details.CostCenter,
+        BondApplicable: details.BondApplicable,
+        BondAttachment: details.BondAttachment,
+        CurrentJob: details.CurrentJob,
+        Remark: details.Remark,
+        CreatedBy: details.CreatedBy,
+        CreatedOn: details.CreatedOn,
+        ModifiedBy: details.ModifiedBy,
+        ModifiedOn: details.ModifiedOn,
+      });
+    }
+  }, [details]);
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -148,7 +182,7 @@ const Work = () => {
             <input
               id="EmployeeName"
               type="text"
-              value={details?.EmployeeName}
+              value={name}
               className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg `}
               onChange={formik.handleChange}
               readOnly={true}
@@ -169,16 +203,16 @@ const Work = () => {
               Contract Start Date
             </p>
             <input
-              id="ContractStartDate"
+              id="ContractorStartDate"
               type="date"
-              value={formik.values.ContractStartDate}
+              value={formik.values.ContractorStartDate}
               className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg `}
               onChange={formik.handleChange}
             />
           </div>
           <div className="py-1">
             <p className="mb-0.5 capitalize font-semibold text-[13px]">
-              Contract Start Date
+              Weekly Off
             </p>
             <select
               id="WeeklyOff"
@@ -218,8 +252,8 @@ const Work = () => {
               Department Group
             </p>
             <select
-              id="DepartmentGroup"
-              value={formik.values.DepartmentGroup}
+              id="DeptGroup"
+              value={formik.values.DeptGroup}
               className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
               onChange={formik.handleChange}
             >
@@ -235,8 +269,8 @@ const Work = () => {
               Department
             </p>
             <select
-              id="Department"
-              value={formik.values.Department}
+              id="Dept"
+              value={formik.values.Dept}
               className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
               onChange={formik.handleChange}
             >
@@ -252,8 +286,8 @@ const Work = () => {
               Sub-Department
             </p>
             <select
-              id="SubDepartment"
-              value={formik.values.SubDepartment}
+              id="SubDept"
+              value={formik.values.SubDept}
               className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
               onChange={formik.handleChange}
             >
@@ -269,8 +303,8 @@ const Work = () => {
               Designation
             </p>
             <select
-              id="Designation"
-              value={formik.values.Designation}
+              id="Desg"
+              value={formik.values.Desg}
               className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
               onChange={formik.handleChange}
             >
@@ -390,9 +424,9 @@ const Work = () => {
               Contract End Date
             </p>
             <input
-              id="ContractEndDate"
+              id="ContractorEndDate"
               type="date"
-              value={formik.values.ContractEndDate}
+              value={formik.values.ContractorEndDate}
               className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg `}
               onChange={formik.handleChange}
             />
