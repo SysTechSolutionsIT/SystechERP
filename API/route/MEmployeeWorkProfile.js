@@ -28,136 +28,41 @@ const sequelize = new Sequelize(
   }
 );
 
-const MEmployeeWorkProfile = sequelize.define("MEmployeeWorkProfile", {
-  WorkProfileId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    autoIncrement: true,
+const MEmployeeWorkProfile = sequelize.define(
+  'MEmployeeWorkProfile',
+  {
+    CompanyId: { type: DataTypes.STRING(5), allowNull: false, defaultValue: '00001' },
+    BranchId: { type: DataTypes.STRING(5), allowNull: false, defaultValue: '00001' },
+    EmployeeId: { type: DataTypes.STRING(5), allowNull: false },
+    DOJ: { type: DataTypes.DATE, allowNull: true },
+    DOL: { type: DataTypes.DATE, allowNull: true },
+    ContractorId: { type: DataTypes.STRING(5), allowNull: true, defaultValue: null },
+    DeptGroupId: { type: DataTypes.STRING(5), allowNull: true, defaultValue: null },
+    DeptId: { type: DataTypes.STRING(5), allowNull: true, defaultValue: null },
+    SubDeptId: { type: DataTypes.STRING(5), allowNull: true, defaultValue: null },
+    DesgId: { type: DataTypes.STRING(5), allowNull: true, defaultValue: null },
+    ReportingTo: { type: DataTypes.STRING(5), allowNull: true, defaultValue: null },
+    WeeklyOff: { type: DataTypes.STRING(5), allowNull: true, defaultValue: null },
+    ShiftId: { type: DataTypes.STRING(5), allowNull: true, defaultValue: null },
+    BandId: { type: DataTypes.STRING(5), allowNull: true, defaultValue: null },
+    ZoneId: { type: DataTypes.STRING(5), allowNull: true, defaultValue: null },
+    GradeId: { type: DataTypes.STRING(5), allowNull: true, defaultValue: null },
+    CostCenterId: { type: DataTypes.STRING(5), allowNull: true, defaultValue: null },
+    BondApplicable: { type: DataTypes.STRING(1), allowNull: true, defaultValue: 'N' },
+    BondAttachment: { type: DataTypes.STRING(500), allowNull: true },
+    CurrentJob: { type: DataTypes.STRING(500), allowNull: true },
+    Remark: { type: DataTypes.STRING(1000), allowNull: true },
+    AcFlag: { type: DataTypes.STRING(1), allowNull: true, defaultValue: 'Y' },
+    CreatedBy: { type: DataTypes.STRING(5), allowNull: true },
+    CreatedOn: { type: DataTypes.DATE, allowNull: true },
+    ModifiedBy: { type: DataTypes.STRING(5), allowNull: true },
+    ModifiedOn: { type: DataTypes.DATE, allowNull: true },
   },
-  CompanyId: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    allowNull: false,
-  },
-  BranchId: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    allowNull: false,
-  },
-  EmployeeId: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    allowNull: false,
-  },
-  DOJ: {
-    type: DataTypes.DATE,
-    allowNull: true,
-  },
-  DOL: {
-    type: DataTypes.DATE,
-    allowNull: true,
-  },
-  Contractor: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  ContractorStartDate: {
-    type: DataTypes.DATE,
-    allowNull: true,
-  },
-  ContractorEndDate: {
-    type: DataTypes.DATE,
-    allowNull: true,
-  },
-  DeptGroup: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  Dept: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  SubDept: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  Desg: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  ReportingTo: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  WeeklyOff: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  Shift: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  Band: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  Zone: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  Grade: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  CostCenter: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  BondApplicable: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  BondAttachment: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  CurrentJob: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  Remark: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  AcFlag: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  IUFlag: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  CreatedBy: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  CreatedOn: {
-    type: DataTypes.DATE,
-    allowNull: true,
-  },
-  ModifiedBy: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  ModifiedOn: {
-    type: DataTypes.DATE,
-    allowNull: true,
-  },
-  Status: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-  },
-});
+  {
+    timestamps: false,
+    primaryKey: ['CompanyId', 'BranchId', 'EmployeeId'],
+  }
+);
 
 // Middleware for parsing JSON
 router.use(bodyParser.json());

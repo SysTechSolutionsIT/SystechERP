@@ -29,219 +29,61 @@ const sequelize = new Sequelize(
 );
 
 const MEmployee = sequelize.define(
-  "MEmployee",
+  'MEmployee',
   {
-    CompanyId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: "00001",
-      primaryKey: true,
-    },
-    BranchId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: "00001",
-      primaryKey: true,
-    },
-    EmployeeId: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      defaultValue: "001",
-      autoIncrement: true,
-    },
-    EmployeeTypeId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: "001",
-    },
-    EmployeeName: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    EmployeeTypeGroupId: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    Salutation: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    LastName: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    FirstName: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    MiddleName: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    MEmployeeName: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    AadharCardNo: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    PANNo: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    PassportNo: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    PassportIssueDate: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
-    PassportExpireDate: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
-    CurrentAddress: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    CurrentPincode: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    PermanentAddress: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    PermanentPincode: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    DOB: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
-    EmailId1: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    EmailId2: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    PhoneNo: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    CellNo1: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    CellNo2: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    BankId1: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    AccountNo1: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    IFSCCode1: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    BankId2: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    AccountNo2: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    IFSCCode2: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    MaritalStatus: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    ReferenceId: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    DestinationId: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    ReligionId: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    CategoryId: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    CasteId: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    EmployeePhoto: {
-      type: DataTypes.BLOB,
-      allowNull: true,
-    },
-    Gender: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    BloodGroup: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    DrivingLicence: {
-      type: DataTypes.BLOB,
-      allowNull: true,
-    },
-    FinanceAccountNo: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    Remark: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    AcFlag: {
-      type: DataTypes.STRING,
-      allowNull: true,
-      defaultValue: "Y",
-    },
-    IUFlag: {
-      type: DataTypes.STRING,
-    },
-    CreatedBy: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    CreatedOn: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
-    ModifiedBy: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    ModifiedOn: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
+    CompanyId: { type: DataTypes.STRING(5), allowNull: false, defaultValue: '00001' },
+    BranchId: { type: DataTypes.STRING(5), allowNull: false, defaultValue: '00001' },
+    EmployeeId: { type: DataTypes.STRING(5), allowNull: false },
+    EmployeeTypeId: { type: DataTypes.STRING(5), allowNull: false, defaultValue: '001' },
+    EmployeeName: { type: DataTypes.STRING(500), allowNull: true },
+    EmployeeTypeGroupId: { type: DataTypes.STRING(5), allowNull: true, defaultValue: '00001' },
+    Salutation: { type: DataTypes.STRING(5), allowNull: true, defaultValue: '00013' },
+    LastName: { type: DataTypes.STRING(500), allowNull: true },
+    FirstName: { type: DataTypes.STRING(500), allowNull: true },
+    MiddleName: { type: DataTypes.STRING(500), allowNull: true },
+    MEmployeeName: { type: DataTypes.STRING(500), allowNull: true },
+    AadharCardNo: { type: DataTypes.STRING(100), allowNull: true },
+    PANNo: { type: DataTypes.STRING(100), allowNull: true },
+    PassportNo: { type: DataTypes.STRING(100), allowNull: true },
+    PassportIssueDate: { type: DataTypes.DATE, allowNull: true },
+    PassportExpireDate: { type: DataTypes.DATE, allowNull: true },
+    CurrentAddress: { type: DataTypes.STRING(1000), allowNull: true },
+    CurrentPincode: { type: DataTypes.STRING(10), allowNull: true },
+    PermanantAddress: { type: DataTypes.STRING(1000), allowNull: true },
+    PermanantPincode: { type: DataTypes.STRING(10), allowNull: true },
+    DOB: { type: DataTypes.DATE, allowNull: true },
+    EmailId1: { type: DataTypes.STRING(100), allowNull: true },
+    EmailId2: { type: DataTypes.STRING(100), allowNull: true },
+    PhoneNo: { type: DataTypes.STRING(15), allowNull: true },
+    CellNo1: { type: DataTypes.STRING(15), allowNull: true },
+    CellNo2: { type: DataTypes.STRING(15), allowNull: true },
+    BankId1: { type: DataTypes.STRING(5), allowNull: true, defaultValue: '00001' },
+    AccountNo1: { type: DataTypes.STRING(100), allowNull: true },
+    IFSCCode1: { type: DataTypes.STRING(50), allowNull: true },
+    BankId2: { type: DataTypes.STRING(5), allowNull: true },
+    AccountNo2: { type: DataTypes.STRING(100), allowNull: true },
+    IFSCCode2: { type: DataTypes.STRING(50), allowNull: true },
+    MaritalStatus: { type: DataTypes.STRING(15), allowNull: true, defaultValue: 'UnMarried' },
+    ReferenceId: { type: DataTypes.STRING(5), allowNull: true, defaultValue: '00024' },
+    DestinationId: { type: DataTypes.STRING(5), allowNull: true, defaultValue: '00001' },
+    ReligionId: { type: DataTypes.STRING(5), allowNull: true, defaultValue: '00028' },
+    CategoryId: { type: DataTypes.STRING(5), allowNull: true, defaultValue: '00033' },
+    CasteId: { type: DataTypes.STRING(5), allowNull: true, defaultValue: '00039' },
+    EmployeePhoto: { type: DataTypes.STRING(1000), allowNull: true },
+    Gender: { type: DataTypes.STRING(10), allowNull: true, defaultValue: 'Male' },
+    BloodGroup: { type: DataTypes.STRING(10), allowNull: true },
+    DrivingLicence: { type: DataTypes.STRING(500), allowNull: true },
+    FinanceAccountNo: { type: DataTypes.STRING(100), allowNull: true },
+    Remark: { type: DataTypes.STRING(500), allowNull: true },
+    AcFlag: { type: DataTypes.STRING(1), allowNull: true, defaultValue: 'Y' },
+    CreatedBy: { type: DataTypes.STRING(5), allowNull: true },
+    CreatedOn: { type: DataTypes.DATE, allowNull: true },
+    ModifiedBy: { type: DataTypes.STRING(5), allowNull: true },
+    ModifiedOn: { type: DataTypes.DATE, allowNull: true },
   },
   {
-    tableName: "MEmployee",
     timestamps: false,
+    primaryKey: ['CompanyId', 'BranchId', 'EmployeeId', 'EmployeeTypeId'],
   }
 );
 
