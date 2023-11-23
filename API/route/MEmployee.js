@@ -33,57 +33,57 @@ const MEmployee = sequelize.define(
   {
     CompanyId: { type: DataTypes.STRING(5), allowNull: false, defaultValue: '00001' },
     BranchId: { type: DataTypes.STRING(5), allowNull: false, defaultValue: '00001' },
-    EmployeeId: { type: DataTypes.STRING(5), allowNull: false },
-    EmployeeTypeId: { type: DataTypes.STRING(5), allowNull: false, defaultValue: '001' },
+    EmployeeTypeId: { type: DataTypes.STRING(50), allowNull: false, defaultValue: '001' },
+    EmployeeId: { type: DataTypes.INTEGER, autoIncrement: true, allowNull: false, primaryKey: true },
     EmployeeName: { type: DataTypes.STRING(500), allowNull: true },
-    EmployeeTypeGroupId: { type: DataTypes.STRING(5), allowNull: true, defaultValue: '00001' },
-    Salutation: { type: DataTypes.STRING(5), allowNull: true, defaultValue: '00013' },
-    LastName: { type: DataTypes.STRING(500), allowNull: true },
-    FirstName: { type: DataTypes.STRING(500), allowNull: true },
-    MiddleName: { type: DataTypes.STRING(500), allowNull: true },
-    MEmployeeName: { type: DataTypes.STRING(500), allowNull: true },
+    EmployeeTypeGroupId: { type: DataTypes.STRING(50), allowNull: true },
+    Salutation: { type: DataTypes.STRING(50), allowNull: true },
+    LastName: { type: DataTypes.STRING(255), allowNull: true },
+    FirstName: { type: DataTypes.STRING(255), allowNull: true },
+    MiddleName: { type: DataTypes.STRING(255), allowNull: true },
+    MEmployeeName: { type: DataTypes.STRING(255), allowNull: true },
     AadharCardNo: { type: DataTypes.STRING(100), allowNull: true },
     PANNo: { type: DataTypes.STRING(100), allowNull: true },
     PassportNo: { type: DataTypes.STRING(100), allowNull: true },
-    PassportIssueDate: { type: DataTypes.DATE, allowNull: true },
+    PassportIssueDate: { type: DataTypes.STRING(50), allowNull: true },
     PassportExpireDate: { type: DataTypes.DATE, allowNull: true },
     CurrentAddress: { type: DataTypes.STRING(1000), allowNull: true },
     CurrentPincode: { type: DataTypes.STRING(10), allowNull: true },
-    PermanantAddress: { type: DataTypes.STRING(1000), allowNull: true },
-    PermanantPincode: { type: DataTypes.STRING(10), allowNull: true },
-    DOB: { type: DataTypes.DATE, allowNull: true },
+    PermanentAddress: { type: DataTypes.STRING(1000), allowNull: true },
+    PermanentPincode: { type: DataTypes.STRING(10), allowNull: true },
+    DOB: { type: DataTypes.STRING(50), allowNull: true },
     EmailId1: { type: DataTypes.STRING(100), allowNull: true },
     EmailId2: { type: DataTypes.STRING(100), allowNull: true },
     PhoneNo: { type: DataTypes.STRING(15), allowNull: true },
     CellNo1: { type: DataTypes.STRING(15), allowNull: true },
     CellNo2: { type: DataTypes.STRING(15), allowNull: true },
-    BankId1: { type: DataTypes.STRING(5), allowNull: true, defaultValue: '00001' },
+    BankId1: { type: DataTypes.STRING(50), allowNull: true },
     AccountNo1: { type: DataTypes.STRING(100), allowNull: true },
     IFSCCode1: { type: DataTypes.STRING(50), allowNull: true },
-    BankId2: { type: DataTypes.STRING(5), allowNull: true },
+    BankId2: { type: DataTypes.STRING(50), allowNull: true },
     AccountNo2: { type: DataTypes.STRING(100), allowNull: true },
     IFSCCode2: { type: DataTypes.STRING(50), allowNull: true },
-    MaritalStatus: { type: DataTypes.STRING(15), allowNull: true, defaultValue: 'UnMarried' },
-    ReferenceId: { type: DataTypes.STRING(5), allowNull: true, defaultValue: '00024' },
-    DestinationId: { type: DataTypes.STRING(5), allowNull: true, defaultValue: '00001' },
-    ReligionId: { type: DataTypes.STRING(5), allowNull: true, defaultValue: '00028' },
-    CategoryId: { type: DataTypes.STRING(5), allowNull: true, defaultValue: '00033' },
-    CasteId: { type: DataTypes.STRING(5), allowNull: true, defaultValue: '00039' },
-    EmployeePhoto: { type: DataTypes.STRING(1000), allowNull: true },
-    Gender: { type: DataTypes.STRING(10), allowNull: true, defaultValue: 'Male' },
+    MaritalStatus: { type: DataTypes.STRING(15), allowNull: true },
+    ReferenceId: { type: DataTypes.STRING(50), allowNull: true },
+    DestinationId: { type: DataTypes.STRING(50), allowNull: true },
+    ReligionId: { type: DataTypes.STRING(50), allowNull: true },
+    CategoryId: { type: DataTypes.STRING(50), allowNull: true },
+    CasteId: { type: DataTypes.STRING(50), allowNull: true },
+    EmployeePhoto: { type: DataTypes.BLOB, allowNull: true },
+    Gender: { type: DataTypes.STRING(10), allowNull: true },
     BloodGroup: { type: DataTypes.STRING(10), allowNull: true },
-    DrivingLicence: { type: DataTypes.STRING(500), allowNull: true },
+    DrivingLicence: { type: DataTypes.BLOB, allowNull: true },
     FinanceAccountNo: { type: DataTypes.STRING(100), allowNull: true },
-    Remark: { type: DataTypes.STRING(500), allowNull: true },
+    Remark: { type: DataTypes.STRING(255), allowNull: true },
     AcFlag: { type: DataTypes.STRING(1), allowNull: true, defaultValue: 'Y' },
-    CreatedBy: { type: DataTypes.STRING(5), allowNull: true },
-    CreatedOn: { type: DataTypes.DATE, allowNull: true },
-    ModifiedBy: { type: DataTypes.STRING(5), allowNull: true },
-    ModifiedOn: { type: DataTypes.DATE, allowNull: true },
+    CreatedBy: { type: DataTypes.STRING(50), allowNull: true },
+    CreatedOn: { type: DataTypes.STRING(50), allowNull: true },
+    ModifiedBy: { type: DataTypes.STRING(50), allowNull: true },
+    ModifiedOn: { type: DataTypes.STRING(50), allowNull: true },
   },
   {
     timestamps: false,
-    primaryKey: ['CompanyId', 'BranchId', 'EmployeeId', 'EmployeeTypeId'],
+    primaryKey: ['CompanyId', 'BranchId', 'EmployeeId'],
   }
 );
 
@@ -150,12 +150,14 @@ router.get("/FnShowPerticularData", authToken, async (req, res) => {
 
 router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
   const employee = req.body;
+  const employeeId = req.query.EmployeeId;  // Access the EmployeeId from query parameters
+
   try {
     if (employee.IUFlag === "D") {
       // "Soft-delete" operation
       const result = await MEmployee.update(
         { AcFlag: "N" },
-        { where: { EmployeeId: employee.EmployeeId } }
+        { where: { EmployeeId: employeeId } }
       );
 
       res.json({
@@ -164,6 +166,7 @@ router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
     } else {
       // Add or update operation
       const result = await MEmployee.upsert(employee, {
+        where: { EmployeeId: employeeId },  // Specify the where condition for update
         returning: true,
       });
 
@@ -176,5 +179,6 @@ router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
 
 module.exports = router;
