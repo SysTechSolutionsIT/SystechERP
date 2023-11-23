@@ -12,6 +12,7 @@ export default function AddEmployeePersonal() {
   const formik = useFormik({
     initialValues: {
       EmployeeName: "",
+      EmployeeTypeId: "",
       EmployeeTypeGroupId: "",
       Salutation: "",
       LastName: "",
@@ -104,10 +105,10 @@ export default function AddEmployeePersonal() {
             <div className="py-1">
               <p className="mb-1 font-semibold text-[13px]">Employee Type</p>
               <select
-                id="EmployeeTypeGroupId"
-                name="EmployeeTypeGroupId"
+                id="EmployeeTypeId"
+                name="EmployeeTypeId"
                 className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                value={formik.values.EmployeeTypeGroupId}
+                value={formik.values.EmployeeTypeId}
                 onChange={formik.handleChange}
               >
                 <option value="">Select Type</option>
@@ -162,10 +163,10 @@ export default function AddEmployeePersonal() {
                 Employee Type Group
               </p>
               <select
-                id="EmpTypeGroupId"
-                name="EmpTypeGroupId"
+                id="EmployeeTypeGroupId"
+                name="EmployeeTypeGroupId"
                 className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                value={formik.values.EmpTypeGroupId}
+                value={formik.values.EmployeeTypeGroupId}
                 onChange={formik.handleChange}
               >
                 <option value="">Select Group Type</option>

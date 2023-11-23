@@ -12,6 +12,7 @@ export default function Personal({ ID }) {
   const [details, setdetails] = useState([]);
   const formik = useFormik({
     initialValues: {
+      EmployeeId: "",
       EmployeeName: "",
       EmployeeTypeGroupId: "",
       Salutation: "",
@@ -60,6 +61,7 @@ export default function Personal({ ID }) {
     },
     onSubmit: (values, { resetForm }) => {
       const updatedData = {
+        EmployeeId: values.EmployeeId,
         EmployeeName: values.EmployeeName,
         EmployeeTypeId: values.EmployeeTypeId,
         EmployeeTypeGroupId: values.EmployeeTypeGroupId,
@@ -160,6 +162,7 @@ export default function Personal({ ID }) {
   useEffect(() => {
     if (details) {
       formik.setValues({
+        EmployeeId: details.EmployeeId,
         EmployeeName: details.EmployeeName,
         EmployeeTypeId: details.EmployeeTypeId,
         EmployeeTypeGroupId: details.EmployeeTypeGroupId,
@@ -231,7 +234,7 @@ export default function Personal({ ID }) {
               <input
                 id="EmployeeId"
                 type="text"
-                value={ID}
+                value={formik.values.EmployeeId}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg `}
                 disabled={true}
               />
