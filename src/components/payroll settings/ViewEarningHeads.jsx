@@ -11,7 +11,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
   const { token } = useAuth();
   const formik = useFormik({
     initialValues: {
-      Name: "",
+      EarningHead: "",
       HeadPosition: "",
       ShortName: "",
       CalculationType: "",
@@ -31,24 +31,28 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
       Status: "",
     },
     onSubmit: (values) => {
-      console.log(values)
+      console.log(values);
       updateHead(values);
-    }
+    },
   });
 
   const updateHead = async (values) => {
     try {
-      const response = axios.patch(`http://localhost:5500/earning-heads/update/${ID}`, values, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const response = axios.patch(
+        `http://localhost:5500/earning-heads/update/${ID}`,
+        values,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
-      alert('Earning Head Updated')
+      );
+      alert("Earning Head Updated");
       console.log("Patch successful");
     } catch (error) {
       console.log("Error in patch ", error);
     }
-  }
+  };
 
   useEffect(() => {
     fetchHeadsData();
@@ -56,17 +60,20 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
 
   const fetchHeadsData = async () => {
     try {
-      const response = await axios.get(`http://localhost:5500/earning-heads/get/${ID}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const response = await axios.get(
+        `http://localhost:5500/earning-heads/get/${ID}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
+      );
       const data = response.data;
       setDetails(data.EarningHeadByID);
     } catch (error) {
       console.log("Error while fetching course data: ", error.message);
     }
-  }
+  };
 
   console.log("Details array", details);
 
@@ -90,7 +97,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
     "Education Allowance",
     "Child Care Allowance",
     "Travel Allowances",
-    "Bonus Leave"
+    "Bonus Leave",
   ];
 
   function generateSelectWithOptions(optionsArray) {
@@ -100,11 +107,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
       </option>
     ));
 
-    return (
-      <>
-        {optionsHTML}
-      </>
-    );
+    return <>{optionsHTML}</>;
   }
 
   useEffect(() => {
@@ -113,7 +116,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
     }
   }, [details]);
 
-  const [isStatusChecked, setStatusChecked] = useState(false)
+  const [isStatusChecked, setStatusChecked] = useState(false);
   const handleCheckboxChange = (fieldName, setChecked, event) => {
     const checked = event.target.checked;
     setChecked(checked);
@@ -157,7 +160,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                 <input
                   id="id"
                   type="number"
-                  value={details?.id}
+                  value={details?.EarningHeadId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -168,16 +171,18 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                   Earning Head Name
                 </p>
                 <input
-                  id="Name"
+                  id="EarningHead"
                   type="text"
-                  value={formik.values.Name}
+                  value={formik.values.EarningHead}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
               </div>
               <div>
-                <p className="capatilize font-semibold  text-[13px]">Short Name</p>
+                <p className="capatilize font-semibold  text-[13px]">
+                  Short Name
+                </p>
                 <input
                   id="ShortName"
                   type="text"
@@ -188,7 +193,9 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                 />
               </div>
               <div>
-                <p className="capatilize font-semibold  text-[13px]">Head Position</p>
+                <p className="capatilize font-semibold  text-[13px]">
+                  Head Position
+                </p>
                 <input
                   id="HeadPosition"
                   type="text"
@@ -199,7 +206,9 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                 />
               </div>
               <div>
-                <p className="capitalize font-semibold text-[13px]">Calculation Type</p>
+                <p className="capitalize font-semibold text-[13px]">
+                  Calculation Type
+                </p>
                 <select
                   id="CalculationType"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
@@ -207,13 +216,15 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
-                  <option value=''>Select Calculation Type</option>
+                  <option value="">Select Calculation Type</option>
                   <option value="Amount">Amount</option>
                   <option value="Formula">Formula</option>
                 </select>
               </div>
               <div>
-                <p className="capatilize font-semibold  text-[13px]">Calculation Value</p>
+                <p className="capatilize font-semibold  text-[13px]">
+                  Calculation Value
+                </p>
                 <input
                   id="CalculationValue"
                   type="text"
@@ -224,7 +235,9 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                 />
               </div>
               <div>
-                <p className="capitalize font-semibold text-[13px]">Salary Parameter 1</p>
+                <p className="capitalize font-semibold text-[13px]">
+                  Salary Parameter 1
+                </p>
                 <select
                   id="SalaryParameter1"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
@@ -232,12 +245,14 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
-                  <option value=''>Select Salary Parameter 1</option>
+                  <option value="">Select Salary Parameter 1</option>
                   {generateSelectWithOptions(salaryParemeters)}
                 </select>
               </div>
               <div>
-                <p className="capitalize font-semibold text-[13px]">Salary Parameter 2</p>
+                <p className="capitalize font-semibold text-[13px]">
+                  Salary Parameter 2
+                </p>
                 <select
                   id="SalaryParameter2"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
@@ -245,12 +260,14 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
-                  <option value=''>Select Salary Parameter 2</option>
+                  <option value="">Select Salary Parameter 2</option>
                   {generateSelectWithOptions(salaryParemeters)}
                 </select>
               </div>
               <div>
-                <p className="capitalize font-semibold text-[13px]">Salary Parameter 3</p>
+                <p className="capitalize font-semibold text-[13px]">
+                  Salary Parameter 3
+                </p>
                 <select
                   id="SalaryParameter3"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
@@ -258,12 +275,14 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
-                  <option value=''>Select Salary Parameter 3</option>
+                  <option value="">Select Salary Parameter 3</option>
                   {generateSelectWithOptions(salaryParemeters)}
                 </select>
               </div>
               <div>
-                <p className="capitalize font-semibold text-[13px]">Salary Parameter 4</p>
+                <p className="capitalize font-semibold text-[13px]">
+                  Salary Parameter 4
+                </p>
                 <select
                   id="SalaryParameter4"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
@@ -271,12 +290,14 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
-                  <option value=''>Select Salary Parameter 4</option>
+                  <option value="">Select Salary Parameter 4</option>
                   {generateSelectWithOptions(salaryParemeters)}
                 </select>
               </div>
               <div>
-                <p className="capitalize font-semibold text-[13px]">Salary Parameter 5</p>
+                <p className="capitalize font-semibold text-[13px]">
+                  Salary Parameter 5
+                </p>
                 <select
                   id="SalaryParameter5"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
@@ -284,12 +305,14 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
-                  <option value=''>Select Salary Parameter 5</option>
+                  <option value="">Select Salary Parameter 5</option>
                   {generateSelectWithOptions(salaryParemeters)}
                 </select>
               </div>
               <div>
-                <p className="capitalize font-semibold text-[13px]">Salary Parameter 6</p>
+                <p className="capitalize font-semibold text-[13px]">
+                  Salary Parameter 6
+                </p>
                 <select
                   id="SalaryParameter6"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
@@ -297,12 +320,14 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
-                  <option value=''>Select Salary Parameter 6</option>
+                  <option value="">Select Salary Parameter 6</option>
                   {generateSelectWithOptions(salaryParemeters)}
                 </select>
               </div>
               <div>
-                <p className="capitalize font-semibold text-[13px]">Salary Parameter 7</p>
+                <p className="capitalize font-semibold text-[13px]">
+                  Salary Parameter 7
+                </p>
                 <select
                   id="SalaryParameter7"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
@@ -310,12 +335,14 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
-                  <option value=''>Select Salary Parameter 7</option>
+                  <option value="">Select Salary Parameter 7</option>
                   {generateSelectWithOptions(salaryParemeters)}
                 </select>
               </div>
               <div>
-                <p className="capitalize font-semibold text-[13px]">Salary Parameter 8</p>
+                <p className="capitalize font-semibold text-[13px]">
+                  Salary Parameter 8
+                </p>
                 <select
                   id="SalaryParameter8"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
@@ -323,12 +350,14 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
-                  <option value=''>Select Salary Parameter 8</option>
+                  <option value="">Select Salary Parameter 8</option>
                   {generateSelectWithOptions(salaryParemeters)}
                 </select>
               </div>
               <div>
-                <p className="capitalize font-semibold text-[13px]">Salary Parameter 9</p>
+                <p className="capitalize font-semibold text-[13px]">
+                  Salary Parameter 9
+                </p>
                 <select
                   id="SalaryParameter9"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
@@ -336,12 +365,14 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
-                  <option value=''>Select Salary Parameter 9</option>
+                  <option value="">Select Salary Parameter 9</option>
                   {generateSelectWithOptions(salaryParemeters)}
                 </select>
               </div>
               <div>
-                <p className="capitalize font-semibold text-[13px]">Salary Parameter 10</p>
+                <p className="capitalize font-semibold text-[13px]">
+                  Salary Parameter 10
+                </p>
                 <select
                   id="SalaryParameter10"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
@@ -349,11 +380,11 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
-                  <option value=''>Select Salary Parameter 10</option>
+                  <option value="">Select Salary Parameter 10</option>
                   {generateSelectWithOptions(salaryParemeters)}
                 </select>
               </div>
-              <div className='col-span-2'>
+              <div className="col-span-2">
                 <p className="capatilize font-semibold  text-[13px]">Formula</p>
                 <input
                   id="Formula"
@@ -383,7 +414,9 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                     type="checkbox"
                     checked={formik.values.Status}
                     className={`w-5 h-5 mr-2 mt-2 focus:outline-gray-300 border-2 rounded-lg`}
-                    onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}
+                    onChange={(event) =>
+                      handleCheckboxChange("Status", setStatusChecked, event)
+                    }
                   />
                   Active
                 </label>
@@ -407,7 +440,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
         </div>
       </div>
     </form>
-  )
-}
+  );
+};
 
-export default ViewEarningHeads
+export default ViewEarningHeads;
