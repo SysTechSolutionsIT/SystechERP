@@ -28,40 +28,28 @@ const sequelize = new Sequelize(
   }
 );
 
-const MEmployeeWorkProfile = sequelize.define(
-  'MEmployeeWorkProfile',
-  {
-    CompanyId: { type: DataTypes.STRING(5), allowNull: false, defaultValue: '00001' },
-    BranchId: { type: DataTypes.STRING(5), allowNull: false, defaultValue: '00001' },
-    EmployeeId: { type: DataTypes.INTEGER(5), allowNull: false, autoIncrement: true, primaryKey: true },
-    DOJ: { type: DataTypes.STRING(50), allowNull: true },
-    DOL: { type: DataTypes.STRING(50), allowNull: true },
-    ContractorId: { type: DataTypes.STRING(50), allowNull: true, defaultValue: null },
-    DeptGroupId: { type: DataTypes.STRING(50), allowNull: true, defaultValue: null },
-    DeptId: { type: DataTypes.STRING(50), allowNull: true, defaultValue: null },
-    SubDeptId: { type: DataTypes.STRING(50), allowNull: true, defaultValue: null },
-    DesgId: { type: DataTypes.STRING(50), allowNull: true, defaultValue: null },
-    ReportingTo: { type: DataTypes.STRING(50), allowNull: true, defaultValue: null },
-    WeeklyOff: { type: DataTypes.STRING(50), allowNull: true, defaultValue: null },
-    ShiftId: { type: DataTypes.STRING(50), allowNull: true, defaultValue: null },
-    BandId: { type: DataTypes.STRING(50), allowNull: true, defaultValue: null },
-    ZoneId: { type: DataTypes.STRING(50), allowNull: true, defaultValue: null },
-    GradeId: { type: DataTypes.STRING(50), allowNull: true, defaultValue: null },
-    CostCenterId: { type: DataTypes.STRING(50), allowNull: true, defaultValue: null },
-    BondApplicable: { type: DataTypes.STRING(1), allowNull: true, defaultValue: 'N' },
-    BondAttachment: { type: DataTypes.STRING(500), allowNull: true },
-    CurrentJob: { type: DataTypes.STRING(500), allowNull: true },
-    Remark: { type: DataTypes.STRING(100), allowNull: true },
-    AcFlag: { type: DataTypes.STRING(1), allowNull: true, defaultValue: 'Y' },
-    CreatedBy: { type: DataTypes.STRING(50), allowNull: true },
-    CreatedOn: { type: DataTypes.STRING(50), allowNull: true },
-    ModifiedBy: { type: DataTypes.STRING(50), allowNull: true },
-    ModifiedOn: { type: DataTypes.STRING(50), allowNull: true },
-  },
-  {
-    timestamps: false,
-  }
-);
+const MEmployeeAcademic = sequelize.define(
+    'MEmployeeAcademic',
+    {
+        CompanyId: { type: DataTypes.STRING(5), allowNull: false, defaultValue: '00001' },
+        BranchId: { type: DataTypes.STRING(5), allowNull: false, defaultValue: '00001' },
+        EmployeeId: { type: DataTypes.INTEGER(5), allowNull: false, autoIncrement: true, primaryKey: true },
+        Qualification: { type: DataTypes.STRING(350), allowNull: false },
+        Institute: { type: DataTypes.STRING(500) },
+        Specialization: { type: DataTypes.STRING(500) },
+        GradePercent: { type: DataTypes.STRING(1000) },
+        PassingYear: { type: DataTypes.STRING(15) },
+        Remark: { type: DataTypes.STRING(1000) },
+        AcFlag: { type: DataTypes.STRING(1), defaultValue: "Y" },
+        CreatedBy: { type: DataTypes.STRING(5), allowNull: false },
+        CreatedOn: { type: DataTypes.DATE },
+        ModifiedBy: { type: DataTypes.STRING(5), allowNull: false },
+        ModifiedOn: { type: DataTypes.DATE },
+    },
+    {
+        timestamps: false
+    }
+)
 
 // Middleware for parsing JSON
 router.use(bodyParser.json());
@@ -73,7 +61,7 @@ sequelize.sync().then(() => {
 
 router.get("/FnShowAllData", authToken, async (req, res) => {
   try {
-    const employees = await MEmployeeWorkProfile.findAll({
+    const employees = await MEmployeeAcademic.findAll({
       attributes: {
         // Your attribute configuration here
       },
@@ -89,7 +77,7 @@ router.get("/FnShowAllData", authToken, async (req, res) => {
 // GET endpoint to retrieve active companies
 router.get("/FnShowActiveData", authToken, async (req, res) => {
   try {
-    const employees = await MEmployeeWorkProfile.findAll({
+    const employees = await MEmployeeAcademic.findAll({
       where: {
         AcFlag: "Y",
       },
@@ -108,7 +96,7 @@ router.get("/FnShowActiveData", authToken, async (req, res) => {
 router.get("/FnShowParticularData", authToken, async (req, res) => {
   const employeeId = req.query.EmployeeId;
   try {
-    const employees = await MEmployeeWorkProfile.findOne({
+    const employees = await MEmployeeAcademic.findOne({
       where: {
         EmployeeId: employeeId,
       },
@@ -125,13 +113,13 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
 });
 
 router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
-  const work = req.body;
+  const academic = req.body;
   try {
-    if (work.IUFlag === "D") {
+    if (academic.IUFlag === "D") {
       // "Soft-delete" operation
-      const result = await MEmployeeWorkProfile.update(
+      const result = await MEmployeeAcademic.update(
         { AcFlag: "N" },
-        { where: { EmployeeId: work.EmployeeId } }
+        { where: { EmployeeId: academic.EmployeeId } }
       );
 
       res.json({
@@ -139,7 +127,7 @@ router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
       });
     } else {
       // Add or update operation
-      const result = await MEmployeeWorkProfile.upsert(work, {
+      const result = await MEmployeeAcademic.upsert(academic, {
         returning: true,
       });
 
