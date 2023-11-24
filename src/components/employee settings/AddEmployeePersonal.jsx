@@ -62,6 +62,12 @@ export default function AddEmployeePersonal() {
     onSubmit: (values, { resetForm }) => {
       console.log(values);
       addEmpPersonal();
+      addEmpWork()
+      addEmpSal()
+      addEmpPro()
+      addEmpAcademic()
+      addEmpFam()
+      alert("Employee Personal Details Added Successfully. Please add further details in the edit section.");
     },
   });
 
@@ -69,7 +75,7 @@ export default function AddEmployeePersonal() {
 
   const addEmpPersonal = async () => {
     try {
-      const response = await axios.post(
+      const personal = await axios.post(
         "http://localhost:5500/employee/personal/FnAddUpdateDeleteRecord",
         formik.values,
         {
@@ -79,12 +85,184 @@ export default function AddEmployeePersonal() {
           },
         }
       );
-      alert("Employee Personal Details Added Successfully");
-      console.log(response);
     } catch (error) {
       console.error("Error", error);
     }
   };
+
+  const addEmpWork = async () =>{
+    try {
+      const work = await axios.post(
+        "http://localhost:5500/employee/work/FnAddUpdateDeleteRecord",
+        {
+          DOJ: "",
+          DOL: "",
+          ContractorId: "", 
+          DeptGroupId: "", 
+          DeptId: "", 
+          SubDeptId: "", 
+          DesgId: "", 
+          ReportingTo: "", 
+          WeeklyOff: "", 
+          ShiftId: "", 
+          BandId: "", 
+          ZoneId: "", 
+          GradeId: "", 
+          CostCenterId: "", 
+          BondApplicable: "",
+          BondAttachment: "",
+          CurrentJob: "",
+          Remark: "",
+          AcFlag: "Y",
+          IUFlag: "I",
+          CreatedBy: "",
+          CreatedOn: "",
+          ModifiedBy: "",
+          ModifiedOn: "",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json", // Specify the content type
+          },
+        }
+      );
+    } catch (error) {
+      console.error('Error Initializing work', error);
+    }
+  }
+  const addEmpSal = async () =>{
+    try {
+      const salary = await axios.post(
+        "http://localhost:5500/employee/salary/FnAddUpdateDeleteRecord",
+        {
+            GradeId: "",
+            BandId: "",
+            CTC: "",
+            GrossSalary: "",
+            OTFlag: "",
+            OTAmount: "",
+            PFFlag: "",
+            PFNo: "",
+            PFDate: "",
+            ESICFlag: "",
+            ESICNo: "",
+            ESICDate: "",
+            UANNo: "",
+            MLWFFlag: "",
+            MLWFNo: "",
+            GratuityApplicable: "",
+            GratuityAmount: "",
+            Remark: "",
+            AcFlag: "Y",
+            IUFlag: "I",
+            CreatedBy: "",
+            CreatedOn: "",
+            ModifiedBy: "",
+            ModifiedOn: ""         
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json", // Specify the content type
+          },
+        }
+      );
+    } catch (error) {
+      console.error('Error initializing salary', error);
+    }
+  }
+  const addEmpPro = async () =>{
+    try {
+      const professional = await axios.post(
+        "http://localhost:5500/employee/professional/FnAddUpdateDeleteRecord",
+        {
+          Employer: "",
+          Experience: "",
+          Designation: "",
+          JobResponsibility: "",
+          Salary: "",
+          CVFile: "",
+          SalarySlipFile: "",
+          AcFlag: "Y",
+          IUFlag: "I",
+          Remark: "",
+          CreatedBy: "",
+          CreatedOn: "",
+          ModifiedBy: "",
+          ModifiedOn: ""
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json", // Specify the content type
+          },
+        }
+      );
+    } catch (error) {
+      console.error('Error initializing professional', error);
+    }
+  }
+  const addEmpAcademic = async () =>{
+    try {
+      const academic = await axios.post(
+        "http://localhost:5500/employee/academic/FnAddUpdateDeleteRecord",
+        {
+          Qualification: "",
+          Institute: "",
+          Specialization: "",
+          GradePercent: "",
+          PassingYear: "",
+          Remark: "",
+          AcFlag: "Y",
+          IUFlag: "I",
+          CreatedBy: "",
+          CreatedOn: "",
+          ModifiedBy: "",
+          ModifiedOn: ""
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json", // Specify the content type
+          },
+        }
+      );
+    } catch (error) {
+      console.error('Error initializing academic', error);
+    }
+  }
+  const addEmpFam = async () =>{
+    try {
+      const family = await axios.post(
+        "http://localhost:5500/employee/family/FnAddUpdateDeleteRecord",
+        {
+          Relation: "",
+          Education: "",
+          Occupation: "",
+          Address: "",
+          CellNo: "",
+          EmailId: "",
+          Nominee: "",
+          Remark: "",
+          AcFlag: "Y",
+          IUFlag: "I",
+          CreatedBy: "",
+          CreatedOn: "",
+          ModifiedBy: "",
+          ModifiedOn: ""
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json", // Specify the content type
+          },
+        }
+      );
+    } catch (error) {
+      console.error('Error intializing family', error);
+    }
+  }
 
   return (
     <form onSubmit={formik.handleSubmit}>
