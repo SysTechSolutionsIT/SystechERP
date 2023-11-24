@@ -36,75 +36,120 @@ const MEarningHeads = sequelize.define(
   "MEarningHeads",
   {
     CompanyId: {
-      type: DataTypes.STRING(5),
+      type: DataTypes.STRING,
       allowNull: false,
       defaultValue: "00001",
     },
     BranchId: {
-      type: DataTypes.STRING(5),
+      type: DataTypes.STRING,
       allowNull: false,
       defaultValue: "00001",
     },
     EarningHeadId: {
-      type: DataTypes.INTEGER(5),
-      autoIncrement: true,
-      allowNull: false,
+      type: DataTypes.INTEGER,
       primaryKey: true,
+      autoIncrement: true,
     },
     EarningHead: {
-      type: DataTypes.STRING(500),
-      allowNull: true,
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     EarningType: {
-      type: DataTypes.STRING(100),
+      type: DataTypes.STRING,
       allowNull: true,
-      defaultValue: "Salary",
     },
     ShortName: {
-      type: DataTypes.STRING(3),
+      type: DataTypes.STRING,
       allowNull: true,
     },
     HeadPosition: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      defaultValue: 1,
+      allowNull: false,
     },
     CalculationType: {
-      type: DataTypes.STRING(10),
+      type: DataTypes.STRING,
       allowNull: true,
-      defaultValue: "Amount",
     },
     CalculationValue: {
       type: DataTypes.DECIMAL(10, 2),
-      allowNull: true,
-      defaultValue: 0,
+      allowNull: false,
     },
-
-    AcFlag: {
-      type: DataTypes.STRING(1),
+    SalaryParameter1: {
+      type: DataTypes.STRING,
       allowNull: true,
+    },
+    SalaryParameter2: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    SalaryParameter3: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    SalaryParameter4: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    SalaryParameter5: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    SalaryParameter6: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    SalaryParameter7: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    SalaryParameter8: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    SalaryParameter9: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    SalaryParameter10: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    Formula: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    Remark: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    AcFlag: {
+      type: DataTypes.STRING,
+      allowNull: false,
       defaultValue: "Y",
     },
-    CreatedBy: {
-      type: DataTypes.STRING(500),
+    IUFlag: {
+      type: DataTypes.STRING,
       allowNull: true,
     },
-    CreatedOn: {
-      type: DataTypes.DATE,
+    CreatedBy: {
+      type: DataTypes.STRING,
       allowNull: true,
     },
     ModifiedBy: {
-      type: DataTypes.STRING(500),
+      type: DataTypes.STRING,
       allowNull: true,
     },
-    ModifiedOn: {
-      type: DataTypes.DATE,
+    FieldId: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    FieldName: {
+      type: DataTypes.STRING,
       allowNull: true,
     },
   },
   {
-    tableName: "MEarningHeads",
-    timestamps: false, // Assuming you're not using createdAt and updatedAt fields
+    timestamps: false,
   }
 );
 

@@ -40,7 +40,7 @@ const EarningHeadsMaster = require("./route/MEarningHeads");
 // const EmpFamily = require("./route/EmpFamilyRoute");
 // const Currencies = require("./route/CurrenciesRoute");
 const MCompany = require("./route/MCompany");
-const MFinancialYear = require("./route/MFinancialYear");
+// const MFinancialYear = require("./route/MFinancialYear");
 const MEmployee = require("./route/MEmployee");
 const MEmployeeWorkProfile = require("./route/MEmployeeWorkProfile");
 const MDepartment = require("./route/MDepartment");
@@ -50,7 +50,7 @@ app.use(cors());
 // Use the user routes
 app.use("/users", userRoutes);
 app.use("/companies", MCompany);
-app.use("/financials", MFinancialYear);
+// app.use("/financials", MFinancialYear);
 app.use("/employee/personal", MEmployee);
 // app.use("/company-config", CompConfig);
 // app.use("/bankmaster", BankMaster);

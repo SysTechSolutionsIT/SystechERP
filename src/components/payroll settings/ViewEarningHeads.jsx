@@ -11,6 +11,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
   const { token } = useAuth();
   const formik = useFormik({
     initialValues: {
+      EarningHeadId: "",
       EarningHead: "",
       HeadPosition: "",
       ShortName: "",
@@ -27,30 +28,61 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
       SalaryParameter9: "",
       SalaryParameter10: "",
       Formula: "",
+      IUFlag: "U",
       Remark: "",
-      Status: "",
     },
     onSubmit: (values) => {
-      console.log(values);
-      updateHead(values);
+      const updatedData = {
+        EarningHeadId: values.EarningHeadId,
+        EarningHead: values.EarningHead,
+        HeadPosition: values.HeadPosition,
+        ShortName: values.ShortName,
+        CalculationType: values.CalculationType,
+        CalculationValue: values.CalculationValue,
+        SalaryParameter1: values.SalaryParameter1,
+        SalaryParameter2: values.SalaryParameter2,
+        SalaryParameter3: values.SalaryParameter3,
+        SalaryParameter4: values.SalaryParameter4,
+        SalaryParameter5: values.SalaryParameter5,
+        SalaryParameter6: values.SalaryParameter6,
+        SalaryParameter7: values.SalaryParameter7,
+        SalaryParameter8: values.SalaryParameter8,
+        SalaryParameter9: values.SalaryParameter9,
+        SalaryParameter10: values.SalaryParameter10,
+        Formula: values.Formula,
+        Remark: values.Remark,
+        IUFlag: "U", // Assuming this is a constant value
+        CreatedBy: values.CreatedBy,
+        CreatedOn: values.CreatedOn,
+        ModifiedBy: values.ModifiedBy,
+        ModifiedOn: values.ModifiedOn,
+      };
+      updateHead(updatedData);
     },
   });
 
   const updateHead = async (values) => {
     try {
-      const response = axios.patch(
-        `http://localhost:5500/earning-heads/update/${ID}`,
+      const response = axios.post(
+        `http://localhost:5500/earning-heads/FnAddUpdateDeleteRecord`,
         values,
         {
+          params: { EarningHeadId: ID },
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      alert("Earning Head Updated");
-      console.log("Patch successful");
+      if (response.data && response.data.success) {
+        alert("Employee details updated successfully");
+      } else {
+        console.error(
+          "Failed to update employee details. Response:",
+          response.data
+        );
+      }
     } catch (error) {
-      console.log("Error in patch ", error);
+      console.error("Error:", error.message);
     }
   };
 
@@ -61,8 +93,9 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
   const fetchHeadsData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5500/earning-heads/get/${ID}`,
+        `http://localhost:5500/earning-heads/FnShowParticularData`,
         {
+          params: { EarningHeadId: ID },
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -127,7 +160,9 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
   };
 
   useEffect(() => {
-    const selectedEarningHead = EarningHeads.find((entry) => entry.id === ID);
+    const selectedEarningHead = EarningHeads.find(
+      (entry) => entry.EarningHeadId === ID
+    );
     if (selectedEarningHead) {
       setDetails(selectedEarningHead);
     }

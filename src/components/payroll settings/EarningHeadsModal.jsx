@@ -24,15 +24,38 @@ const EarningHeadsModal = ({ visible, onClick }) => {
       SalaryParameter8: "",
       SalaryParameter9: "",
       SalaryParameter10: "",
-      ACFlag: "Y",
+      AcFlag: "Y",
       IUFlag: "I",
       Formula: "",
       Remark: "",
-      Status: "",
     },
     onSubmit: (values) => {
-      console.log(values);
-      addHead(values);
+      const updatedData = {
+        EarningHead: values.EarningHead,
+        HeadPosition: values.HeadPosition,
+        ShortName: values.ShortName,
+        CalculationType: values.CalculationType,
+        CalculationValue: values.CalculationValue,
+        SalaryParameter1: values.SalaryParameter1,
+        SalaryParameter2: values.SalaryParameter2,
+        SalaryParameter3: values.SalaryParameter3,
+        SalaryParameter4: values.SalaryParameter4,
+        SalaryParameter5: values.SalaryParameter5,
+        SalaryParameter6: values.SalaryParameter6,
+        SalaryParameter7: values.SalaryParameter7,
+        SalaryParameter8: values.SalaryParameter8,
+        SalaryParameter9: values.SalaryParameter9,
+        SalaryParameter10: values.SalaryParameter10,
+        Formula: values.Formula,
+        Remark: values.Remark,
+        AcFlag: "Y",
+        IUFlag: "I",
+        CreatedBy: values.CreatedBy,
+        CreatedOn: values.CreatedOn,
+        ModifiedBy: values.ModifiedBy,
+        ModifiedOn: values.ModifiedOn,
+      };
+      addHead(updatedData);
     },
   });
 
