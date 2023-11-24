@@ -81,7 +81,7 @@ const DeductionHeadsMaster = () => {
   const menuRef = useRef(null);
 
   const [columnVisibility, setColumnVisibility] = useState({
-    Name: true,
+    DeductionHead: true,
     ShortName: true,
     HeadPosition: true,
     CalculationType: true,
@@ -98,11 +98,11 @@ const DeductionHeadsMaster = () => {
     SalaryParameter9: false,
     SalaryParameter10: false,
     Status: true,
-    Remark: false
+    Remark: false,
   });
 
   const columnNames = {
-    Name: "Name",
+    DeductionHead: "Name",
     ShortName: "Short Name",
     HeadPosition: "Head Position",
     CalculationType: "Calculation Type",
@@ -206,11 +206,14 @@ const DeductionHeadsMaster = () => {
 
   const fetchHeadsData = async () => {
     try {
-      const response = await axios.get("http://localhost:5500/deduction-heads/get", {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const response = await axios.get(
+        "http://localhost:5500/deduction-heads/FnShowActiveData",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
+      );
       console.log("Response Object", response);
       const data = response.data;
       console.log(data);
@@ -230,9 +233,10 @@ const DeductionHeadsMaster = () => {
         const newCol = columnName;
         const value = item[newCol];
         return (
-          value && value.toString().toLowerCase().includes(searchWord.toLowerCase())
+          value &&
+          value.toString().toLowerCase().includes(searchWord.toLowerCase())
         );
-      })
+      });
       return matches;
     });
     // Update the filtered data
@@ -253,8 +257,9 @@ const DeductionHeadsMaster = () => {
             Column Visibility
             <Icon
               icon="fe:arrow-down"
-              className={`mt-1.5 ml-2 ${showDropdown ? "rotate-180" : ""
-                } cursor-pointer`}
+              className={`mt-1.5 ml-2 ${
+                showDropdown ? "rotate-180" : ""
+              } cursor-pointer`}
             />
           </button>
           {showDropdown && (
@@ -352,7 +357,7 @@ const DeductionHeadsMaster = () => {
                 <th className=" w-auto px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
                   ID
                 </th>
-                {selectedColumns.map((columnName) => (
+                {selectedColumns.map((columnName) =>
                   columnVisibility[columnName] ? (
                     <th
                       key={columnName}
@@ -361,152 +366,156 @@ const DeductionHeadsMaster = () => {
                       {columnNames[columnName]}
                     </th>
                   ) : null
-                ))}
+                )}
               </tr>
               <tr>
                 <th className="border-2"></th>
                 <th className="p-2 font-semibold text-black border-2" />
-                {selectedColumns.map((columnName) => (
+                {selectedColumns.map((columnName) =>
                   columnVisibility[columnName] ? (
-                    <th key={columnName} className="p-2 font-semibold text-black border-2">
+                    <th
+                      key={columnName}
+                      className="p-2 font-semibold text-black border-2"
+                    >
                       <input
                         type="text"
                         placeholder={`Search `}
                         className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
-                        style={{ maxWidth: getColumnMaxWidth(columnName) + "px" }}
-                        onChange={(e) => handleSearchChange(columnName, e.target.value)}
+                        style={{
+                          maxWidth: getColumnMaxWidth(columnName) + "px",
+                        }}
+                        onChange={(e) =>
+                          handleSearchChange(columnName, e.target.value)
+                        }
                       />
                     </th>
                   ) : null
-                ))}
+                )}
               </tr>
             </thead>
             <tbody className="">
               {filteredData.length > 0
                 ? filteredData.map((result, key) => (
-                  <tr key={key}>
-                    <td className="px-2 border-2">
-                      <div className="flex gap-2 text-center">
-                        <Icon
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setVeDeductionH(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setEHid(result.id); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setVeDeductionH(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setEHid(result.DeductionHeadId); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {result.id}
-                    </td>
-                    {selectedColumns.map((columnName) => (
-                      columnVisibility[columnName] ? (
-                        <td
-                          key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                        >
-                          {columnName === "Status"
-                            ? result[columnName]
-                              ? "Active"
-                              : "Inactive"
-                            : result[columnName]}
-                        </td>
-                      ) : null
-                    ))}
-                  </tr>
-                ))
-                : heads.length > 0 && heads.map((result, index) => (
-                  <tr key={index}>
-                    <td className="px-2 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setVeDeductionH(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setEHid(result.id); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setVeDeductionH(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setEHid(result.id); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {result.id}
-                    </td>
-                    {selectedColumns.map((columnName) => (
-                      columnVisibility[columnName] ? (
-                        <td
-                          key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                        >
-                          {
-                            columnName === "Status"
-                              ? result[columnName]
+                    <tr key={key}>
+                      <td className="px-2 border-2">
+                        <div className="flex gap-2 text-center">
+                          <Icon
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setVeDeductionH(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setEHid(result.DeductionHeadID); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setVeDeductionH(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setEHid(result.DeductionHeadID); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                        {result.DeductionHeadID}
+                      </td>
+                      {selectedColumns.map((columnName) =>
+                        columnVisibility[columnName] ? (
+                          <td
+                            key={columnName}
+                            className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                          >
+                            {columnName === "ACFlag"
+                              ? result[columnName] === "Y"
+                                ? "Active"
+                                : "Inactive"
+                              : result[columnName]}
+                          </td>
+                        ) : null
+                      )}
+                    </tr>
+                  ))
+                : heads.length > 0 &&
+                  heads.map((result, index) => (
+                    <tr key={index}>
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setVeDeductionH(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setEHid(result.DeductionHeadID); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setVeDeductionH(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setEHid(result.DeductionHeadID); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                        {result.DeductionHeadID}
+                      </td>
+                      {selectedColumns.map((columnName) =>
+                        columnVisibility[columnName] ? (
+                          <td
+                            key={columnName}
+                            className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                          >
+                            {columnName === "ACFlag"
+                              ? result[columnName] === "Y"
                                 ? "Active"
                                 : "Inactive"
                               : columnName === "CalculationValue"
-                                ? result[columnName] || "N/A"
-                                : columnName === "Formula"
-                                  ? result[columnName] || "N/A"
-                                  : columnName.startsWith("SalaryParameter")
-                                    ? result[columnName] || "N/A"
-                                    : result[columnName]
-                          }
-
-
-                        </td>
-                      ) : (
-                        <td key={columnName} className="hidden"></td>
-                      )
-                    ))}
-                  </tr>
-                ))}
+                              ? result[columnName] || "N/A"
+                              : columnName === "Formula"
+                              ? result[columnName] || "N/A"
+                              : columnName.startsWith("SalaryParameter")
+                              ? result[columnName] || "N/A"
+                              : result[columnName]}
+                          </td>
+                        ) : (
+                          <td key={columnName} className="hidden"></td>
+                        )
+                      )}
+                    </tr>
+                  ))}
             </tbody>
           </table>
         </div>

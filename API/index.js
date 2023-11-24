@@ -7,7 +7,7 @@ const cors = require("cors"); // Import the cors middleware
 app.use(express.json()); // Parse JSON requests
 // const CompMaster = require("./route/CMRoute");
 // const CompConfig = require("./route/CompanyConfigRoute");
-const BankMaster = require("./route/MBankRoutes");
+// const BankMaster = require("./route/MBankRoutes");
 // const DepartmentMaster = require("./route/DepartmentMasterRoute");
 // const DestinationMaster = require("./route/DestinationMasterRoute");
 // const ThreeFieldMaster = require("./route/ThreeFieldsRoutes");
@@ -31,7 +31,7 @@ const MEmployeeAcademic = require("./route/MEmployeeAcademic");
 // const WeeklyOffMaster = require("./route/WeeklyOffRoute");
 const EarningHeadsMaster = require("./route/MEarningHeads");
 // const HolidayMaster = require("./route/HolidayMasterRoute");
-// const DeductionHeadsMaster = require("./route/DeductionHeadsRoute");
+const DeductionHeadsMaster = require("./route/MDeductionHeads");
 // const ProfessionalTaxMaster = require("./route/ProfessionalTaxMasterRoute");
 // const AdvanceRequest = require("./route/AdvanceRequestRoute");
 // const EmployeeId = require("./route/EmployeeIdRoute");
@@ -43,7 +43,7 @@ const MCompany = require("./route/MCompany");
 // const MFinancialYear = require("./route/MFinancialYear");
 const MEmployee = require("./route/MEmployee");
 const MEmployeeWorkProfile = require("./route/MEmployeeWorkProfile");
-const MDepartment = require("./route/MDepartment")
+const MDepartment = require("./route/MDepartment");
 
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());
@@ -77,7 +77,7 @@ app.use("/cost-center", CCMaster);
 // app.use("/weekly-off-master", WeeklyOffMaster);
 app.use("/earning-heads", EarningHeadsMaster);
 // app.use("/holiday-master", HolidayMaster);
-// app.use("/deduction-heads", DeductionHeadsMaster);
+app.use("/deduction-heads", DeductionHeadsMaster);
 // app.use("/professional-tax", ProfessionalTaxMaster);
 // app.use("/advance-request", AdvanceRequest);
 // app.use("/attendance-master", AttendanceMaster);
