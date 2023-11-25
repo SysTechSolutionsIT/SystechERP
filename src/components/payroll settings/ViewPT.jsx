@@ -1,15 +1,16 @@
-import React from 'react'
-import { useFormik } from 'formik'
-import { useState } from 'react'
-import { useEffect } from 'react'
-import { TaxData } from './ProfesssionalTaxMaster'
-import { Icon } from '@iconify/react'
-import { useAuth } from '../Login'
-import axios from 'axios'
+import React from "react";
+import { useFormik } from "formik";
+import { useState } from "react";
+import { useEffect } from "react";
+import { TaxData } from "./ProfesssionalTaxMaster";
+import { Icon } from "@iconify/react";
+import { useAuth } from "../Login";
+import axios from "axios";
 
 const ViewPT = ({ visible, onClick, edit, ID }) => {
   const { token } = useAuth();
-  const [details, setDetails] = useState([])
+  console.log("PTID: ", ID);
+  const [details, setDetails] = useState([]);
   const formik = useFormik({
     initialValues: {
       Gender: "",
@@ -18,26 +19,36 @@ const ViewPT = ({ visible, onClick, edit, ID }) => {
       PTAmount: "",
       PTAmountFebruary: "",
       Remark: "",
-      Status: "",
+      AcFlag: "Y",
+      IUFlag: "U",
     },
     onSubmit: (values) => {
       console.log(values);
       updateTax(values);
-    }
+    },
   });
 
   const updateTax = async (values) => {
     try {
-      const response = axios.patch(`http://localhost:5500/professional-tax/update/${ID}`, values, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const response = axios.patch(
+        `http://localhost:5500/professional-tax/FnAddUpdateDeleteRecord`,
+        values,
+        {
+          params: { PTId: ID },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
-      console.log("Patch successful");
+      );
+      if (response.data && response.data.success) {
+        alert(" details updated successfully");
+      } else {
+        console.error("Failed to update details. Response:", response.data);
+      }
     } catch (error) {
-      console.log("Error in patch ", error);
+      console.error("Error:", error.message);
     }
-  }
+  };
 
   useEffect(() => {
     fetchTaxData();
@@ -45,19 +56,24 @@ const ViewPT = ({ visible, onClick, edit, ID }) => {
 
   const fetchTaxData = async () => {
     try {
-      const response = await axios.get(`http://localhost:5500/professional-tax/get/${ID}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const response = await axios.get(
+        `http://localhost:5500/professional-tax/FnShowParticularData`,
+        {
+          params: { PTId: ID },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
+      );
       const data = response.data;
-      setDetails(data.TaxByID);
+      console.log("response object", data);
+      setDetails(data);
     } catch (error) {
       console.log("Error while fetching course data: ", error.message);
     }
-  }
+  };
 
-  console.log("Details array", formik.values);
+  console.log("Details array", details);
 
   useEffect(() => {
     if (details) {
@@ -65,7 +81,7 @@ const ViewPT = ({ visible, onClick, edit, ID }) => {
     }
   }, [details]);
 
-  const [isStatusChecked, setStatusChecked] = useState(false)
+  const [isStatusChecked, setStatusChecked] = useState(false);
   const handleCheckboxChange = (fieldName, setChecked, event) => {
     const checked = event.target.checked;
     setChecked(checked);
@@ -76,12 +92,11 @@ const ViewPT = ({ visible, onClick, edit, ID }) => {
   };
 
   useEffect(() => {
-    const selectedPTId = TaxData.find((entry) => entry.ProfessionalTaxId === ID);
+    const selectedPTId = TaxData.find((entry) => entry.PTId === ID);
     if (selectedPTId) {
       setDetails(selectedPTId);
     }
   }, [ID]);
-
 
   if (!visible) return null;
   return (
@@ -108,9 +123,9 @@ const ViewPT = ({ visible, onClick, edit, ID }) => {
                   Professional Tax ID
                 </p>
                 <input
-                  id="id"
+                  id="PTId"
                   type="number"
-                  value={details?.id}
+                  value={details?.PTId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   disabled={!edit}
                   onChange={formik.handleChange}
@@ -186,9 +201,9 @@ const ViewPT = ({ visible, onClick, edit, ID }) => {
                   PT Amount Feburary
                 </p>
                 <input
-                  id="PTAmountFebruary"
+                  id="PTAmountFeb"
                   type="number"
-                  value={formik.values.PTAmountFebruary}
+                  value={formik.values.PTAmountFeb}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   disabled={!edit}
                   onChange={formik.handleChange}
@@ -211,11 +226,13 @@ const ViewPT = ({ visible, onClick, edit, ID }) => {
                   <input
                     id="status"
                     type="checkbox"
-                    checked={formik.values.Status}
+                    checked={formik.values.AcFlag}
                     // value={formik.values.Status}
                     className={`w-5 h-5 mr-2 mt-2 focus:outline-gray-300 border-2 rounded-lg`}
                     disabled={!edit}
-                    onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}
+                    onChange={(event) =>
+                      handleCheckboxChange("Status", setStatusChecked, event)
+                    }
                   />
                   Active
                 </label>
@@ -242,4 +259,4 @@ const ViewPT = ({ visible, onClick, edit, ID }) => {
   );
 };
 
-export default ViewPT
+export default ViewPT;

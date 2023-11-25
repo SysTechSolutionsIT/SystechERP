@@ -1,17 +1,17 @@
-import React from 'react'
-import { DeductionHeads } from './DeductionHeadsMaster'
-import { useState, useEffect } from 'react'
-import { useFormik } from 'formik'
-import { Icon } from '@iconify/react'
-import axios from 'axios'
-import { useAuth } from '../Login'
+import React from "react";
+import { DeductionHeads } from "./DeductionHeadsMaster";
+import { useState, useEffect } from "react";
+import { useFormik } from "formik";
+import { Icon } from "@iconify/react";
+import axios from "axios";
+import { useAuth } from "../Login";
 
 const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
   const [details, setDetails] = useState([]);
   const { token } = useAuth();
   const formik = useFormik({
     initialValues: {
-      Name: "",
+      DeductionHead: "",
       HeadPosition: "",
       ShortName: "",
       CalculationType: "",
@@ -27,27 +27,38 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
       SalaryParameter9: "",
       SalaryParameter10: "",
       Formula: "",
+      AcFlagg: "Y",
+      IUFlag: "U",
       Remark: "",
       Status: "",
     },
     onSubmit: (values) => {
       console.log(values);
       updateHead(values);
-    }
+    },
   });
 
   const updateHead = async (values) => {
     try {
-      const response = axios.patch(`http://localhost:5500/deduction-heads/update/${ID}`, values, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const response = axios.post(
+        `http://localhost:5500/deduction-heads/FnAddUpdateDeleteRecord`,
+        values,
+        {
+          params: { DeductionHeadID: ID },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
-      alert("Deduction Head Updated");
+      );
+      if (response.data && response.data.success) {
+        alert(" details updated successfully");
+      } else {
+        console.error("Failed to update details. Response:", response.data);
+      }
     } catch (error) {
-      console.log("Error in patch ", error);
+      console.error("Error:", error.message);
     }
-  }
+  };
 
   useEffect(() => {
     fetchHeadsData();
@@ -55,17 +66,21 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
 
   const fetchHeadsData = async () => {
     try {
-      const response = await axios.get(`http://localhost:5500/deduction-heads/get/${ID}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const response = await axios.get(
+        `http://localhost:5500/deduction-heads/FnShowParticularData`,
+        {
+          params: { DeductionHeadID: ID },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
+      );
       const data = response.data;
       setDetails(data.DeductionHeadByID);
     } catch (error) {
       console.log("Error while fetching course data: ", error.message);
     }
-  }
+  };
 
   console.log("Details array", details);
 
@@ -75,7 +90,7 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
     }
   }, [details]);
 
-  const [isStatusChecked, setStatusChecked] = useState(false)
+  const [isStatusChecked, setStatusChecked] = useState(false);
   const handleCheckboxChange = (fieldName, setChecked, event) => {
     const checked = event.target.checked;
     setChecked(checked);
@@ -86,46 +101,46 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
   };
 
   const salaryParemeters = [
-    'Income Tax',
-    'Provident Fund (PF)',
-    'Employees State Insurance (ESI)',
-    'Professional Tax',
-    'Gratuity',
-    'Employee Provident Fund (EPF) Contributions',
-    'Public Provident Fund (PPF)',
-    'National Pension System (NPS)',
-    'National Savings Certificate (NSC)',
-    'Tax-Saving Fixed Deposit',
-    'Life Insurance Premium',
-    'Health Insurance Premium',
-    'Employee Stock Options (ESOPs)',
-    'Voluntary Provident Fund (VPF)',
-    'House Rent Allowance (HRA)',
-    'Leave Travel Allowance (LTA)',
-    'Conveyance Allowance',
-    'Child Education Allowance',
-    'Special Allowance',
-    'Bonus',
-    'Gratuity',
-    'Professional Development Fund',
-    'Union Dues',
-    'Cafeteria Plan Deductions',
-    'Employee Stock Purchase Plan (ESPP)',
-    'Medical Reimbursement',
-    'Children Education Allowance',
-    'Transport Allowance',
-    'Uniform Allowance',
-    'Dress Allowance',
-    'Travel Allowances',
-    'Food Coupons',
-    'Employee Provident Fund (EPF) Withdrawal',
-    'Employee State Insurance (ESI) Withdrawal',
-    'Employee Gratuity Withdrawal',
-    'National Pension System (NPS) Withdrawal',
-    'Superannuation Fund',
-    'Housing Loan Interest Deduction',
-    'Standard Deduction',
-    'Tax on Employment',
+    "Income Tax",
+    "Provident Fund (PF)",
+    "Employees State Insurance (ESI)",
+    "Professional Tax",
+    "Gratuity",
+    "Employee Provident Fund (EPF) Contributions",
+    "Public Provident Fund (PPF)",
+    "National Pension System (NPS)",
+    "National Savings Certificate (NSC)",
+    "Tax-Saving Fixed Deposit",
+    "Life Insurance Premium",
+    "Health Insurance Premium",
+    "Employee Stock Options (ESOPs)",
+    "Voluntary Provident Fund (VPF)",
+    "House Rent Allowance (HRA)",
+    "Leave Travel Allowance (LTA)",
+    "Conveyance Allowance",
+    "Child Education Allowance",
+    "Special Allowance",
+    "Bonus",
+    "Gratuity",
+    "Professional Development Fund",
+    "Union Dues",
+    "Cafeteria Plan Deductions",
+    "Employee Stock Purchase Plan (ESPP)",
+    "Medical Reimbursement",
+    "Children Education Allowance",
+    "Transport Allowance",
+    "Uniform Allowance",
+    "Dress Allowance",
+    "Travel Allowances",
+    "Food Coupons",
+    "Employee Provident Fund (EPF) Withdrawal",
+    "Employee State Insurance (ESI) Withdrawal",
+    "Employee Gratuity Withdrawal",
+    "National Pension System (NPS) Withdrawal",
+    "Superannuation Fund",
+    "Housing Loan Interest Deduction",
+    "Standard Deduction",
+    "Tax on Employment",
   ];
 
   function generateSelectWithOptions(optionsArray) {
@@ -135,15 +150,13 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
       </option>
     ));
 
-    return (
-      <>
-        {optionsHTML}
-      </>
-    );
+    return <>{optionsHTML}</>;
   }
 
   useEffect(() => {
-    const selectedDeductionHead = DeductionHeads.find((entry) => entry.id === ID);
+    const selectedDeductionHead = DeductionHeads.find(
+      (entry) => entry.id === ID
+    );
     if (selectedDeductionHead) {
       setDetails(selectedDeductionHead);
     }
@@ -174,9 +187,9 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
                   Deduction Head ID
                 </p>
                 <input
-                  id="id"
+                  id="DeductionHeadID"
                   type="number"
-                  value={details?.id}
+                  value={details?.DeductionHeadID}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   disabled={!edit}
                   onChange={formik.handleChange}
@@ -187,16 +200,18 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
                   Deduction Head Name
                 </p>
                 <input
-                  id="Name"
+                  id="DeductionHead"
                   type="text"
-                  value={formik.values.Name}
+                  value={formik.values.DeductionHead}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   disabled={!edit}
                   onChange={formik.handleChange}
                 />
               </div>
               <div>
-                <p className="capatilize font-semibold  text-[13px]">Short Name</p>
+                <p className="capatilize font-semibold  text-[13px]">
+                  Short Name
+                </p>
                 <input
                   id="ShortName"
                   type="text"
@@ -207,7 +222,9 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
                 />
               </div>
               <div>
-                <p className="capatilize font-semibold  text-[13px]">Head Position</p>
+                <p className="capatilize font-semibold  text-[13px]">
+                  Head Position
+                </p>
                 <input
                   id="HeadPosition"
                   type="text"
@@ -218,7 +235,9 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
                 />
               </div>
               <div>
-                <p className="capitalize font-semibold text-[13px]">Calculation Type</p>
+                <p className="capitalize font-semibold text-[13px]">
+                  Calculation Type
+                </p>
                 <select
                   id="CalculationType"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
@@ -226,13 +245,15 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
                   disabled={!edit}
                   onChange={formik.handleChange}
                 >
-                  <option value=''>Select Calculation Type</option>
+                  <option value="">Select Calculation Type</option>
                   <option value="Amount">Amount</option>
                   <option value="Formula">Formula</option>
                 </select>
               </div>
               <div>
-                <p className="capatilize font-semibold  text-[13px]">Calculation Value</p>
+                <p className="capatilize font-semibold  text-[13px]">
+                  Calculation Value
+                </p>
                 <input
                   id="CalculationValue"
                   type="text"
@@ -243,7 +264,9 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
                 />
               </div>
               <div>
-                <p className="capitalize font-semibold text-[13px]">Salary Parameter 1</p>
+                <p className="capitalize font-semibold text-[13px]">
+                  Salary Parameter 1
+                </p>
                 <select
                   id="SalaryParameter1"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
@@ -251,12 +274,14 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
                   disabled={!edit}
                   onChange={formik.handleChange}
                 >
-                  <option value=''>Select Salary Parameter 1</option>
+                  <option value="">Select Salary Parameter 1</option>
                   {generateSelectWithOptions(salaryParemeters)}
                 </select>
               </div>
               <div>
-                <p className="capitalize font-semibold text-[13px]">Salary Parameter 2</p>
+                <p className="capitalize font-semibold text-[13px]">
+                  Salary Parameter 2
+                </p>
                 <select
                   id="SalaryParameter2"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
@@ -264,12 +289,14 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
                   disabled={!edit}
                   onChange={formik.handleChange}
                 >
-                  <option value=''>Select Salary Parameter 2</option>
+                  <option value="">Select Salary Parameter 2</option>
                   {generateSelectWithOptions(salaryParemeters)}
                 </select>
               </div>
               <div>
-                <p className="capitalize font-semibold text-[13px]">Salary Parameter 3</p>
+                <p className="capitalize font-semibold text-[13px]">
+                  Salary Parameter 3
+                </p>
                 <select
                   id="SalaryParameter3"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
@@ -277,12 +304,14 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
                   disabled={!edit}
                   onChange={formik.handleChange}
                 >
-                  <option value=''>Select Salary Parameter 3</option>
+                  <option value="">Select Salary Parameter 3</option>
                   {generateSelectWithOptions(salaryParemeters)}
                 </select>
               </div>
               <div>
-                <p className="capitalize font-semibold text-[13px]">Salary Parameter 4</p>
+                <p className="capitalize font-semibold text-[13px]">
+                  Salary Parameter 4
+                </p>
                 <select
                   id="SalaryParameter4"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
@@ -290,12 +319,14 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
                   disabled={!edit}
                   onChange={formik.handleChange}
                 >
-                  <option value=''>Select Salary Parameter 4</option>
+                  <option value="">Select Salary Parameter 4</option>
                   {generateSelectWithOptions(salaryParemeters)}
                 </select>
               </div>
               <div>
-                <p className="capitalize font-semibold text-[13px]">Salary Parameter 5</p>
+                <p className="capitalize font-semibold text-[13px]">
+                  Salary Parameter 5
+                </p>
                 <select
                   id="SalaryParameter5"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
@@ -303,12 +334,14 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
                   disabled={!edit}
                   onChange={formik.handleChange}
                 >
-                  <option value=''>Select Salary Parameter 5</option>
+                  <option value="">Select Salary Parameter 5</option>
                   {generateSelectWithOptions(salaryParemeters)}
                 </select>
               </div>
               <div>
-                <p className="capitalize font-semibold text-[13px]">Salary Parameter 6</p>
+                <p className="capitalize font-semibold text-[13px]">
+                  Salary Parameter 6
+                </p>
                 <select
                   id="SalaryParameter6"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
@@ -316,12 +349,14 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
                   disabled={!edit}
                   onChange={formik.handleChange}
                 >
-                  <option value=''>Select Salary Parameter 6</option>
+                  <option value="">Select Salary Parameter 6</option>
                   {generateSelectWithOptions(salaryParemeters)}
                 </select>
               </div>
               <div>
-                <p className="capitalize font-semibold text-[13px]">Salary Parameter 7</p>
+                <p className="capitalize font-semibold text-[13px]">
+                  Salary Parameter 7
+                </p>
                 <select
                   id="SalaryParameter7"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
@@ -329,12 +364,14 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
                   disabled={!edit}
                   onChange={formik.handleChange}
                 >
-                  <option value=''>Select Salary Parameter 7</option>
+                  <option value="">Select Salary Parameter 7</option>
                   {generateSelectWithOptions(salaryParemeters)}
                 </select>
               </div>
               <div>
-                <p className="capitalize font-semibold text-[13px]">Salary Parameter 8</p>
+                <p className="capitalize font-semibold text-[13px]">
+                  Salary Parameter 8
+                </p>
                 <select
                   id="SalaryParameter8"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
@@ -342,12 +379,14 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
                   disabled={!edit}
                   onChange={formik.handleChange}
                 >
-                  <option value=''>Select Salary Parameter 8</option>
+                  <option value="">Select Salary Parameter 8</option>
                   {generateSelectWithOptions(salaryParemeters)}
                 </select>
               </div>
               <div>
-                <p className="capitalize font-semibold text-[13px]">Salary Parameter 9</p>
+                <p className="capitalize font-semibold text-[13px]">
+                  Salary Parameter 9
+                </p>
                 <select
                   id="SalaryParameter9"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
@@ -355,12 +394,14 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
                   disabled={!edit}
                   onChange={formik.handleChange}
                 >
-                  <option value=''>Select Salary Parameter 9</option>
+                  <option value="">Select Salary Parameter 9</option>
                   {generateSelectWithOptions(salaryParemeters)}
                 </select>
               </div>
               <div>
-                <p className="capitalize font-semibold text-[13px]">Salary Parameter 10</p>
+                <p className="capitalize font-semibold text-[13px]">
+                  Salary Parameter 10
+                </p>
                 <select
                   id="SalaryParameter10"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
@@ -368,11 +409,11 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
                   disabled={!edit}
                   onChange={formik.handleChange}
                 >
-                  <option value=''>Select Salary Parameter 10</option>
+                  <option value="">Select Salary Parameter 10</option>
                   {generateSelectWithOptions(salaryParemeters)}
                 </select>
               </div>
-              <div className='col-span-2'>
+              <div className="col-span-2">
                 <p className="capatilize font-semibold  text-[13px]">Formula</p>
                 <input
                   id="Formula"
@@ -403,7 +444,9 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
                     checked={formik.values.Status}
                     className={`w-5 h-5 mr-2 mt-2 focus:outline-gray-300 border-2 rounded-lg`}
                     disabled={!edit}
-                    onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}
+                    onChange={(event) =>
+                      handleCheckboxChange("Status", setStatusChecked, event)
+                    }
                   />
                   Active
                 </label>
@@ -427,7 +470,7 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
         </div>
       </div>
     </form>
-  )
-}
+  );
+};
 
-export default ViewDeductionHeads
+export default ViewDeductionHeads;

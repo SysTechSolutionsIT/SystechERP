@@ -166,10 +166,20 @@ const ProfesssionalTaxMaster = () => {
     UpperLimit: true,
     LowerLimit: true,
     PTAmount: true,
-    PTAmountFebruary: true,
+    PTAmountFeb: true,
     Remark: true,
-    Status: true,
+    AcFlag: true,
   });
+
+  const columnNames = {
+    Gender: "Gender",
+    UpperLimit: "Upper Limit",
+    LowerLimit: "Lower Limit",
+    PTAmount: "PTAmount",
+    PTAmountFeb: "PTAmountFebruary",
+    Remark: "Remarks",
+    AcFlag: "Status",
+  };
 
   //Toggle columns
   const [showDropdown, setShowDropdown] = useState(false);
@@ -208,11 +218,14 @@ const ProfesssionalTaxMaster = () => {
 
   const fetchTaxData = async () => {
     try {
-      const response = await axios.get("http://localhost:5500/professional-tax/get", {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const response = await axios.get(
+        "http://localhost:5500/professional-tax/FnShowActiveData",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
+      );
       console.log("Response Object", response);
       const data = response.data;
       console.log(data);
@@ -232,9 +245,10 @@ const ProfesssionalTaxMaster = () => {
         const newCol = columnName;
         const value = item[newCol];
         return (
-          value && value.toString().toLowerCase().includes(searchWord.toLowerCase())
+          value &&
+          value.toString().toLowerCase().includes(searchWord.toLowerCase())
         );
-      })
+      });
       return matches;
     });
     // Update the filtered data
@@ -255,8 +269,9 @@ const ProfesssionalTaxMaster = () => {
             Column Visibility
             <Icon
               icon="fe:arrow-down"
-              className={`mt-1.5 ml-2 ${showDropdown ? "rotate-180" : ""
-                } cursor-pointer`}
+              className={`mt-1.5 ml-2 ${
+                showDropdown ? "rotate-180" : ""
+              } cursor-pointer`}
             />
           </button>
           {showDropdown && (
@@ -354,22 +369,16 @@ const ProfesssionalTaxMaster = () => {
                 <th className=" w-auto px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
                   ID
                 </th>
-                {selectedColumns.map((columnName) => (
-                  <th
-                    key={columnName}
-                    className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 whitespace-normal ${columnVisibility[columnName] ? "" : "hidden"
-                      }`}
-                  >
-                    {columnName
-                      .replace(/([a-z])([A-Z])/g, "$1 $2")
-                      .split(" ")
-                      .map((word, index) => (
-                        <div key={index} className="whitespace-nowrap">
-                          {word}
-                        </div>
-                      ))}
-                  </th>
-                ))}
+                {selectedColumns.map((columnName) =>
+                  columnVisibility[columnName] ? (
+                    <th
+                      key={columnName}
+                      className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal`}
+                    >
+                      {columnNames[columnName]}
+                    </th>
+                  ) : null
+                )}
               </tr>
               <tr>
                 <th className="border-2"></th>
@@ -395,115 +404,118 @@ const ProfesssionalTaxMaster = () => {
             <tbody className="">
               {filteredData.length > 0
                 ? filteredData.map((result, key) => (
-                  <tr key={key}>
-                    <td className="px-2 border-2">
-                      <div className="flex gap-2 text-center">
-                        <Icon
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setPTView(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setPTId(result.id); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setPTView(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setPTId(result.id); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {result.id}
-                    </td>
-                    {selectedColumns.map((columnName) => (
-                      <td
-                        key={columnName}
-                        className={`px-4 border-2 whitespace-normal text-[11px] text-left${columnVisibility[columnName] ? "" : "hidden"
-                          }`}
-                      >
-                        {columnName === "Status"
-                          ? result[columnName]
-                            ? "Active"
-                            : "Inactive"
-                          : result[columnName]}
+                    <tr key={key}>
+                      <td className="px-2 border-2">
+                        <div className="flex gap-2 text-center">
+                          <Icon
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setPTView(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setPTId(result.PTId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setPTView(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setPTId(result.PTId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                          />
+                        </div>
                       </td>
-                    ))}
-                  </tr>
-                ))
-                : tax.length > 0 && tax.map((result, index) => (
-                  <tr key={index}>
-                    <td className="px-2 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setPTView(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setPTId(result.id); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setPTView(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setPTId(result.id); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {result.id}
-                    </td>
-                    {selectedColumns.map((columnName) => (
-                      <td
-                        key={columnName}
-                        className={`px-4 border-2 whitespace-normal text-left text-[11px]${columnVisibility[columnName] ? "" : "hidden"
-                          }`}
-                      >
-                        {columnName === "Status"
-                          ? result[columnName]
-                            ? "Active"
-                            : "Inactive"
-                          : result[columnName]}
+                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                        {result.PTId}
                       </td>
-                    ))}
-                  </tr>
-                ))}
+                      {selectedColumns.map((columnName) => (
+                        <td
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-[11px] text-left${
+                            columnVisibility[columnName] ? "" : "hidden"
+                          }`}
+                        >
+                          {columnName === "AcFlag"
+                            ? result[columnName]
+                              ? "Active"
+                              : "Inactive"
+                            : result[columnName]}
+                        </td>
+                      ))}
+                    </tr>
+                  ))
+                : tax.length > 0 &&
+                  tax.map((result, index) => (
+                    <tr key={index}>
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setPTView(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setPTId(result.PTId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setPTView(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setPTId(result.PTId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                        {result.PTId}
+                      </td>
+                      {selectedColumns.map((columnName) => (
+                        <td
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-left text-[11px]${
+                            columnVisibility[columnName] ? "" : "hidden"
+                          }`}
+                        >
+                          {columnName === "AcFlag"
+                            ? result[columnName]
+                              ? "Active"
+                              : "Inactive"
+                            : result[columnName]}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
             </tbody>
           </table>
         </div>
