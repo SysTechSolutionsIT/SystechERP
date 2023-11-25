@@ -83,7 +83,6 @@ const MEmployee = sequelize.define(
   },
   {
     timestamps: false,
-    primaryKey: ['CompanyId', 'BranchId', 'EmployeeId'],
   }
 );
 

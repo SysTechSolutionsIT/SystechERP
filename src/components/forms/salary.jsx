@@ -21,26 +21,30 @@ const SalaryStructure = () => {
   const { ID } = useParams();
   const formik = useFormik({
     initialValues: {
-      EmployeeName: "",
-      Grade: "",
-      Band: "",
-      Salary: "",
+      EmployeeId: "",
+      GradeId: "",
+      BandId: "",
       CTC: "",
-      UANNo: "",
-      OTFlag: "",
+      GrossSalary: "",
+      OTFlag: 'N',
       OTAmount: "",
-      PFFlag: "",
-      PFNo: "",
-      PFDate: "",
-      ESICFlag: "",
-      ESICNo: "",
-      ESICDate: "",
-      MLWFFlag: "",
-      MLWFNo: "",
-      GratuityApplicable: "",
-      GratuityAmount: "",
-      Remark: "",
-      Status: "",
+      PFFlag: 'N',
+      PFNo: '',
+      PFDate: null,
+      ESICFlag: 'N',
+      ESICNo: '',
+      ESICDate: null,
+      UANNo: '',
+      MLWFFlag: 'N',
+      MLWFNo: '',
+      GratuityApplicable: 'N',
+      GratuityAmount: 0,
+      Remark: '',
+      AcFlag: 'Y',
+      CreatedBy: '',
+      CreatedOn: null,
+      ModifiedBy: '',
+      ModifiedOn: null,
     },
     onSubmit: (values) => {
       const updatedData = {
@@ -139,9 +143,10 @@ const SalaryStructure = () => {
     setChecked(checked);
     formik.setValues({
       ...formik.values,
-      [fieldName]: checked.toString(),
+      [fieldName]: checked ? 'Y' : 'N',
     });
   };
+  
 
   return (
     <form onSubmit={formik.handleSubmit}>

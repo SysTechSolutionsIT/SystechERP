@@ -14,6 +14,7 @@ export default function Personal({ ID }) {
     initialValues: {
       EmployeeId: "",
       EmployeeName: "",
+      EmployeeTypeId:"",
       EmployeeTypeGroupId: "",
       Salutation: "",
       LastName: "",
@@ -124,7 +125,7 @@ export default function Personal({ ID }) {
           headers: { Authorization: `Bearer ${token}` }, // Moved headers here
         }
       );
-      if (response.data && response.data.success) {
+      if (response.data) {
         alert("Employee details updated successfully");
       } else {
         console.error(

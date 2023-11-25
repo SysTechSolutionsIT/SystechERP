@@ -14,28 +14,27 @@ const Work = ({ ID, name }) => {
 
   const formik = useFormik({
     initialValues: {
+      EmployeeId: "",
       DOJ: "",
       DOL: "",
-      Contractor: "",
-      ContractorStartDate: "",
-      ContractorEndDate: "",
-      DeptGroup: "",
-      Dept: "",
-      SubDept: "",
-      Desg: "",
+      ContractorId: "",
+      DeptGroupId: "",
+      DeptId: "",
+      SubDeptId: "",
+      DesgId: "",
       ReportingTo: "",
       WeeklyOff: "",
-      Shift: "",
-      Band: "",
-      Zone: "",
-      Grade: "",
-      CostCenter: "",
-      BondApplicable: "",
+      ShiftId: "",
+      BandId: "",
+      ZoneId: "",
+      GradeId: "",
+      CostCenterId: "",
+      BondApplicable: null,
       BondAttachment: "",
       CurrentJob: "",
       Remark: "",
-      AcFlag: "",
-      IUFlag: "I",
+      AcFlag: 'Y',
+      IUFlag: "U",
       CreatedBy: "",
       CreatedOn: "",
       ModifiedBy: "",
@@ -43,31 +42,32 @@ const Work = ({ ID, name }) => {
     },
     onSubmit: (values) => {
       const updatedData = {
+        EmployeeId: values.EmployeeId,
         DOJ: values.DOJ,
         DOL: values.DOL,
-        Contractor: values.Contractor,
+        ContractorId: values.ContractorId,
         ContractorStartDate: values.ContractorStartDate,
         ContractorEndDate: values.ContractorEndDate,
-        DeptGroup: values.DeptGroup,
-        Dept: values.Dept,
-        SubDept: values.SubDept,
-        Desg: values.Desg,
+        DeptGroupId: values.DeptGroupId,
+        DeptId: values.DeptId,
+        SubDeptId: values.SubDeptId,
+        DesgId: values.DesgId,
         ReportingTo: values.ReportingTo,
         WeeklyOff: values.WeeklyOff,
-        Shift: values.Shift,
-        Band: values.Band,
-        Zone: values.Zone,
-        Grade: values.Grade,
-        CostCenter: values.CostCenter,
+        ShiftId: values.ShiftId,
+        BandId: values.BandId,
+        ZoneId: values.ZoneId,
+        GradeId: values.GradeId,
+        CostCenterId: values.CostCenterId,
         BondApplicable: values.BondApplicable,
         BondAttachment: values.BondAttachment,
         CurrentJob: values.CurrentJob,
         Remark: values.Remark,
-        IUFlag: "I",
         CreatedBy: values.CreatedBy,
         CreatedOn: values.CreatedOn,
         ModifiedBy: values.ModifiedBy,
         ModifiedOn: values.ModifiedOn,
+        IUFlag: 'U',
       };
       console.log(values);
       updateEmpWork(updatedData);
@@ -80,10 +80,11 @@ const Work = ({ ID, name }) => {
         `http://localhost:5500/employee/work/FnAddUpdateDeleteRecord`,
         data,
         {
+          params: { EmployeeId: ID },
           headers: { Authorization: `Bearer ${token}` }, // Moved headers here
         }
       );
-      if (response.data && response.data.success) {
+      if (response.data) {
         alert("Employee details updated successfully");
       } else {
         console.error(
@@ -99,24 +100,25 @@ const Work = ({ ID, name }) => {
   useEffect(() => {
     const fetchWorkDetails = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:5500/employee/work/FnShowPerticularData`,
-          {
-            params: { EmployeeId: ID },
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        const data = response.data;
-        console.log(response);
-        // Check if the data is empty, and set to a blank array if so
-        const workdetails = data.length > 0 ? data : [];
-        setWorkDetails(workdetails);
+        // Add a check for ID before making the API call
+        if (ID) {
+          const response = await axios.get(
+            `http://localhost:5500/employee/work/FnShowParticularData`,
+            {
+              params: { EmployeeId: ID },
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+          const data = response.data;
+          console.log('Work details data', response);
+          setDetails(data)
+        }
       } catch (error) {
         console.error("Error", error);
       }
     };
     fetchWorkDetails();
-  }, [ID]); // Include token in the dependency array if it is a dynamic value
+  }, [ID, token]);
 
   const handleCheckboxChange = (fieldName, setChecked, event) => {
     const checked = event.target.checked;
@@ -130,6 +132,7 @@ const Work = ({ ID, name }) => {
   useEffect(() => {
     if (details) {
       formik.setValues({
+        EmployeeId: details.EmployeeId,
         DOJ: details.DOJ,
         DOL: details.DOL,
         Contractor: details.Contractor,
@@ -235,8 +238,8 @@ const Work = ({ ID, name }) => {
               Cost Center
             </p>
             <select
-              id="CostCenter"
-              value={formik.values.CostCenter}
+              id="CostCenterId"
+              value={formik.values.CostCenterId}
               className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
               onChange={formik.handleChange}
             >
@@ -252,8 +255,8 @@ const Work = ({ ID, name }) => {
               Department Group
             </p>
             <select
-              id="DeptGroup"
-              value={formik.values.DeptGroup}
+              id="DeptGroupId"
+              value={formik.values.DeptGroupId}
               className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
               onChange={formik.handleChange}
             >
@@ -269,8 +272,8 @@ const Work = ({ ID, name }) => {
               Department
             </p>
             <select
-              id="Dept"
-              value={formik.values.Dept}
+              id="DeptId"
+              value={formik.values.DeptId}
               className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
               onChange={formik.handleChange}
             >
@@ -286,8 +289,8 @@ const Work = ({ ID, name }) => {
               Sub-Department
             </p>
             <select
-              id="SubDept"
-              value={formik.values.SubDept}
+              id="SubDeptId"
+              value={formik.values.SubDeptId}
               className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
               onChange={formik.handleChange}
             >
@@ -303,8 +306,8 @@ const Work = ({ ID, name }) => {
               Designation
             </p>
             <select
-              id="Desg"
-              value={formik.values.Desg}
+              id="DesgId"
+              value={formik.values.DesgId}
               className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
               onChange={formik.handleChange}
             >
@@ -335,8 +338,8 @@ const Work = ({ ID, name }) => {
           <div className="py-1">
             <p className="mb-0.5 capitalize font-semibold text-[13px]">Shift</p>
             <select
-              id="Shift"
-              value={formik.values.Shift}
+              id="ShiftId"
+              value={formik.values.ShiftId}
               className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
               onChange={formik.handleChange}
             >
@@ -350,8 +353,8 @@ const Work = ({ ID, name }) => {
           <div className="py-1">
             <p className="mb-0.5 capitalize font-semibold text-[13px]">Band</p>
             <select
-              id="Band"
-              value={formik.values.Band}
+              id="BandId"
+              value={formik.values.BandId}
               className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
               onChange={formik.handleChange}
             >
@@ -365,8 +368,8 @@ const Work = ({ ID, name }) => {
           <div className="py-1">
             <p className="mb-0.5 capitalize font-semibold text-[13px]">Zone</p>
             <select
-              id="Zone"
-              value={formik.values.Zone}
+              id="ZoneId"
+              value={formik.values.ZoneId}
               className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
               onChange={formik.handleChange}
             >
@@ -380,8 +383,8 @@ const Work = ({ ID, name }) => {
           <div className="py-1">
             <p className="mb-0.5 capitalize font-semibold text-[13px]">Grade</p>
             <select
-              id="Grade"
-              value={formik.values.Grade}
+              id="GradeId"
+              value={formik.values.GradeId}
               className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
               onChange={formik.handleChange}
             >
@@ -397,8 +400,8 @@ const Work = ({ ID, name }) => {
               Contractor
             </p>
             <select
-              id="Contractor"
-              value={formik.values.Contractor}
+              id="ContractorId"
+              value={formik.values.ContractorId}
               className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
               onChange={formik.handleChange}
             >

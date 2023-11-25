@@ -37,6 +37,8 @@ const MEmployeeWorkProfile = sequelize.define(
     DOJ: { type: DataTypes.STRING(50), allowNull: true },
     DOL: { type: DataTypes.STRING(50), allowNull: true },
     ContractorId: { type: DataTypes.STRING(50), allowNull: true, defaultValue: null },
+    ContractorStartDate: { type: DataTypes.STRING(50), allowNull: true, defaultValue: null },
+    ContractorEndDate: { type: DataTypes.STRING(50), allowNull: true, defaultValue: null },
     DeptGroupId: { type: DataTypes.STRING(50), allowNull: true, defaultValue: null },
     DeptId: { type: DataTypes.STRING(50), allowNull: true, defaultValue: null },
     SubDeptId: { type: DataTypes.STRING(50), allowNull: true, defaultValue: null },
@@ -126,12 +128,13 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
 
 router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
   const work = req.body;
+  const employeeId = req.query.EmployeeId;
   try {
     if (work.IUFlag === "D") {
       // "Soft-delete" operation
       const result = await MEmployeeWorkProfile.update(
         { AcFlag: "N" },
-        { where: { EmployeeId: work.EmployeeId } }
+        { where: { EmployeeId: employeeId } }
       );
 
       res.json({
