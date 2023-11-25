@@ -32,119 +32,73 @@ const sequelize = new Sequelize(
   }
 );
 
-const MDeductionHeads = sequelize.define("MDeductionHeads", {
-  CompanyId: {
-    type: DataTypes.STRING(5),
-    allowNull: false,
-    defaultValue: "00001",
+const MProfessTax = sequelize.define(
+  "MProfessTax",
+  {
+    CompanyId: {
+      type: DataTypes.STRING(5),
+      allowNull: false,
+      defaultValue: "00001",
+    },
+    BranchId: {
+      type: DataTypes.STRING(5),
+      allowNull: false,
+      defaultValue: "00001",
+    },
+    PTId: {
+      type: DataTypes.INTEGER(3),
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    Gender: {
+      type: DataTypes.STRING(10),
+      defaultValue: "Male",
+    },
+    UpperLimit: {
+      type: DataTypes.DECIMAL(10, 2),
+      defaultValue: 0,
+    },
+    LowerLimit: {
+      type: DataTypes.DECIMAL(10, 2),
+      defaultValue: 0,
+    },
+    PTAmount: {
+      type: DataTypes.DECIMAL(10, 2),
+      defaultValue: 0,
+    },
+    PTAmountFeb: {
+      type: DataTypes.DECIMAL(18, 2),
+      defaultValue: 0,
+    },
+    AcFlag: {
+      type: DataTypes.STRING(1),
+      defaultValue: "Y",
+    },
+    Remark: {
+      type: DataTypes.STRING(500),
+    },
+    CreatedBy: {
+      type: DataTypes.STRING(500),
+    },
+    CreatedOn: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    ModifiedBy: {
+      type: DataTypes.STRING(500),
+    },
+    ModifiedOn: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
   },
-  BranchId: {
-    type: DataTypes.STRING(5),
-    allowNull: false,
-    defaultValue: "00001",
-  },
-  DeductionHeadID: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    primaryKey: true,
-  },
-  DeductionHead: {
-    type: DataTypes.STRING(500),
-    allowNull: true,
-  },
-  DeductionType: {
-    type: DataTypes.STRING(100),
-    allowNull: true,
-    defaultValue: "Salary",
-  },
-  ShortName: {
-    type: DataTypes.STRING(3),
-    allowNull: true,
-  },
-  HeadPosition: {
-    type: DataTypes.INTEGER,
-    allowNull: true,
-  },
-  CalculationType: {
-    type: DataTypes.STRING(10),
-    allowNull: true,
-    defaultValue: "Amount",
-  },
-  CalculationValue: {
-    type: DataTypes.DECIMAL(10, 2),
-    allowNull: true,
-    defaultValue: 0,
-  },
-  SalaryParameter1: {
-    type: DataTypes.STRING(5),
-    allowNull: true,
-  },
-  SalaryParameter2: {
-    type: DataTypes.STRING(5),
-    allowNull: true,
-  },
-  SalaryParameter3: {
-    type: DataTypes.STRING(5),
-    allowNull: true,
-  },
-  SalaryParameter4: {
-    type: DataTypes.STRING(5),
-    allowNull: true,
-  },
-  SalaryParameter5: {
-    type: DataTypes.STRING(5),
-    allowNull: true,
-  },
-  SalaryParameter6: {
-    type: DataTypes.STRING(5),
-    allowNull: true,
-  },
-  SalaryParameter7: {
-    type: DataTypes.STRING(5),
-    allowNull: true,
-  },
-  SalaryParameter8: {
-    type: DataTypes.STRING(5),
-    allowNull: true,
-  },
-  SalaryParameter9: {
-    type: DataTypes.STRING(5),
-    allowNull: true,
-  },
-  SalaryParameter10: {
-    type: DataTypes.STRING(5),
-    allowNull: true,
-  },
-  Formula: {
-    type: DataTypes.STRING(500),
-    allowNull: true,
-  },
-  Remark: {
-    type: DataTypes.STRING(1000),
-    allowNull: true,
-  },
-  AcFlag: {
-    type: DataTypes.STRING(1),
-    allowNull: false,
-    defaultValue: "Y",
-  },
-  CreatedBy: {
-    type: DataTypes.STRING(500),
-    allowNull: true,
-  },
-  CreatedOn: {
-    type: DataTypes.DATE,
-    allowNull: true,
-  },
-  ModifiedBy: {
-    type: DataTypes.STRING(500),
-    allowNull: true,
-  },
-  ModifiedOn: {
-    type: DataTypes.DATE,
-    allowNull: true,
-  },
-});
+  {
+    tableName: "MProfessTax",
+    timestamps: false, // Set this to true if you have createdAt and updatedAt columns
+    // Other model options go here
+  }
+);
 // Middleware for parsing JSON
 router.use(bodyParser.json());
 
@@ -156,11 +110,11 @@ sequelize.sync().then(() => {
 // GET endpoint to retrieve all financial year entires
 router.get("/FnShowAllData", authToken, async (req, res) => {
   try {
-    const years = await MDeductionHeads.findAll({
+    const years = await MProfessTax.findAll({
       attributes: {
         exclude: ["IUFlag"],
       },
-      order: [["DeductionHeadID", "ASC"]],
+      order: [["PTId", "ASC"]],
     });
     res.json(years);
   } catch (error) {
@@ -172,14 +126,14 @@ router.get("/FnShowAllData", authToken, async (req, res) => {
 // GET endpoint to retrieve active financial year entries
 router.get("/FnShowActiveData", async (req, res) => {
   try {
-    const years = await MDeductionHeads.findAll({
+    const years = await MProfessTax.findAll({
       where: {
         AcFlag: "Y",
       },
       attributes: {
         exclude: ["IUFlag"],
       },
-      order: [["DeductionHeadID", "ASC"]],
+      order: [["PTId", "ASC"]],
     });
     res.json(years);
   } catch (error) {
@@ -190,16 +144,16 @@ router.get("/FnShowActiveData", async (req, res) => {
 
 // GET endpoint to retrieve a particular financial year entry by ID
 router.get("/FnShowParticularData", authToken, async (req, res) => {
-  const DeductionHeadID = req.query.DeductionHeadID;
+  const PTId = req.query.PTId;
   try {
-    const years = await MDeductionHeads.findOne({
+    const years = await MProfessTax.findOne({
       where: {
-        DeductionHeadID: DeductionHeadID,
+        PTId: PTId,
       },
       attributes: {
         exclude: ["IUFlag"],
       },
-      order: [["DeductionHeadID", "ASC"]],
+      order: [["PTId", "ASC"]],
     });
     res.json(years);
   } catch (error) {
@@ -213,9 +167,9 @@ router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
   try {
     if (earningHead.IUFlag === "D") {
       // "Soft-delete" operation
-      const result = await MDeductionHeads.update(
+      const result = await MProfessTax.update(
         { AcFlag: "N" },
-        { where: { DeductionHeadID: earningHead.DeductionHeadID } }
+        { where: { PTId: earningHead.PTId } }
       );
 
       res.json({
@@ -223,7 +177,7 @@ router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
       });
     } else {
       // Add or update operation
-      const result = await MDeductionHeads.upsert(earningHead, {
+      const result = await MProfessTax.upsert(earningHead, {
         returning: true,
       });
 

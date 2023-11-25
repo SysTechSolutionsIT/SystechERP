@@ -200,7 +200,7 @@ router.get("/FnShowActiveData", async (req, res) => {
 router.get("/FnShowParticularData", authToken, async (req, res) => {
   const earningHeadId = req.query.EarningHeadId;
   try {
-    const years = await MFinancialYear.findOne({
+    const years = await MEarningHeads.findOne({
       where: {
         EarningHeadId: earningHeadId,
       },
