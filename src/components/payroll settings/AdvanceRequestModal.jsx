@@ -1,40 +1,45 @@
-import React from 'react'
-import { useFormik } from 'formik'
-import { useState } from 'react';
-import { Icon } from '@iconify/react';
-import axios from 'axios';
-import { useAuth } from '../Login';
+import React from "react";
+import { useFormik } from "formik";
+import { useState } from "react";
+import { Icon } from "@iconify/react";
+import axios from "axios";
+import { useAuth } from "../Login";
 
 const AdvanceRequestModal = ({ visible, onClick }) => {
   const { token } = useAuth();
   const formik = useFormik({
     initialValues: {
       AdvanceDate: "",
-      Employee: "",
+      EmployeeName: "",
       AdvanceType: "",
       AdvanceStatus: "",
-      Project: "",
+      ProjectId: "",
       Amount: "",
       Installment: "",
-      StartingMonth: "",
-      StartingYear: "",
+      AMonth: "",
+      AYear: "",
       Purpose: "",
-      Status: "",
+      AcFlag: "Y",
+      IUFlag: "I",
       Remark: "",
     },
     onSubmit: (values) => {
       console.log(values);
       addReq(values);
-    }
+    },
   });
 
   const addReq = async (values) => {
     try {
-      const response = await axios.post("http://localhost:5500/advance-request/add", values, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const response = await axios.post(
+        "http://localhost:5500/advance-request/FnAddUpdateDeleteRecord",
+        values,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
+      );
       if (response.status === 200) {
         const data = response.data;
         console.log(data);
@@ -47,9 +52,9 @@ const AdvanceRequestModal = ({ visible, onClick }) => {
       console.log("Error: ", error.message);
       // Handle network error
     }
-  }
+  };
 
-  const [isStatusChecked, setStatusChecked] = useState(false)
+  const [isStatusChecked, setStatusChecked] = useState(false);
   const handleCheckboxChange = (fieldName, setChecked, event) => {
     const checked = event.target.checked;
     setChecked(checked);
@@ -81,18 +86,6 @@ const AdvanceRequestModal = ({ visible, onClick }) => {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <p className="capatilize font-semibold  text-[13px]">
-                  Advance ID
-                </p>
-                <input
-                  id="id"
-                  type="number"
-                  // value={formik.values.AdvanceId}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
-                // onChange={formik.handleChange}
-                />
-              </div>
-              <div>
-                <p className="capatilize font-semibold  text-[13px]">
                   Advance Date
                 </p>
                 <input
@@ -108,15 +101,17 @@ const AdvanceRequestModal = ({ visible, onClick }) => {
                   Employee Name
                 </p>
                 <input
-                  id="Employee"
+                  id="EmployeeName"
                   type="text"
-                  value={formik.values.Employee}
+                  value={formik.values.EmployeeName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
               </div>
               <div>
-                <p className="capitalize font-semibold text-[13px]">Advance Type</p>
+                <p className="capitalize font-semibold text-[13px]">
+                  Advance Type
+                </p>
                 <div>
                   <input
                     type="radio"
@@ -140,37 +135,37 @@ const AdvanceRequestModal = ({ visible, onClick }) => {
                 </div>
               </div>
               <div>
-                <p className="capitalize font-semibold text-[13px]">Advance Status</p>
+                <p className="capitalize font-semibold text-[13px]">
+                  Advance Status
+                </p>
                 <select
                   id="AdvanceStatus"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
                   value={formik.values.AdvanceStatus}
                   onChange={formik.handleChange}
                 >
-                  <option value=''>Select Advance Status</option>
-                  <option value='Pending'>Pending</option>
-                  <option value='Partial Repayment'>Partial Repayment</option>
-                  <option value='Repayment'>Repayment</option>
+                  <option value="">Select Advance Status</option>
+                  <option value="P">Pending</option>
+                  <option value="PR">Partial Repayment</option>
+                  <option value="R">Repayment</option>
                 </select>
               </div>
               <div>
                 <p className="capitalize font-semibold text-[13px]">Project</p>
                 <select
-                  id="Project"
+                  id="  ProjectId"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                  value={formik.values.Project}
+                  value={formik.values.ProjectId}
                   onChange={formik.handleChange}
                 >
-                  <option value=''>Select Project</option>
-                  <option value='Project 1'>Project 1</option>
-                  <option value='Project 2'>Project 2</option>
-                  <option value='Project 3'>Project 3</option>
+                  <option value="">Select Project</option>
+                  <option value="1">Project 1</option>
+                  <option value="2">Project 2</option>
+                  <option value="3">Project 3</option>
                 </select>
               </div>
               <div>
-                <p className="capatilize font-semibold  text-[13px]">
-                  Amount
-                </p>
+                <p className="capatilize font-semibold  text-[13px]">Amount</p>
                 <input
                   id="Amount"
                   type="number"
@@ -192,40 +187,44 @@ const AdvanceRequestModal = ({ visible, onClick }) => {
                 />
               </div>
               <div>
-                <p className="capitalize font-semibold text-[13px]">Advance Starting Month</p>
+                <p className="capitalize font-semibold text-[13px]">
+                  Advance Starting Month
+                </p>
                 <select
-                  id="StartingMonth"
+                  id="AMonth"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                  value={formik.values.StartingMonth}
+                  value={formik.values.AMonth}
                   onChange={formik.handleChange}
                 >
-                  <option value=''>Select Advance Starting Month</option>
-                  <option value='January'>January</option>
-                  <option value='Febuary'>Febuary</option>
-                  <option value='March'>March</option>
-                  <option value='April'>April</option>
-                  <option value='May'>May</option>
-                  <option value='June'>June</option>
-                  <option value='July'>July</option>
-                  <option value='August'>August</option>
-                  <option value='September'>September</option>
-                  <option value='October'>October</option>
-                  <option value='November'>November</option>
-                  <option value='December'>December</option>
+                  <option value="">Select Advance Starting Month</option>
+                  <option value="January">January</option>
+                  <option value="Febuary">Febuary</option>
+                  <option value="March">March</option>
+                  <option value="April">April</option>
+                  <option value="May">May</option>
+                  <option value="June">June</option>
+                  <option value="July">July</option>
+                  <option value="August">August</option>
+                  <option value="September">September</option>
+                  <option value="October">October</option>
+                  <option value="November">November</option>
+                  <option value="December">December</option>
                 </select>
               </div>
               <div>
-                <p className="capitalize font-semibold text-[13px]">Advance Starting Year</p>
+                <p className="capitalize font-semibold text-[13px]">
+                  Advance Starting Year
+                </p>
                 <select
-                  id="StartingYear"
+                  id="AYear"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                  value={formik.values.StartingYear}
+                  value={formik.values.AYear}
                   onChange={formik.handleChange}
                 >
-                  <option value=''>Select Advance Starting Year</option>
-                  <option value='2023'>2023</option>
-                  <option value='2024'>2024</option>
-                  <option value='2025'>2025</option>
+                  <option value="">Select Advance Starting Year</option>
+                  <option value="2023">2023</option>
+                  <option value="2024">2024</option>
+                  <option value="2025">2025</option>
                 </select>
               </div>
               <div>
@@ -248,7 +247,7 @@ const AdvanceRequestModal = ({ visible, onClick }) => {
                   onChange={formik.handleChange}
                 />
               </div>
-              <div>
+              {/* <div>
                 <p className="capitalize font-semibold  text-[13px]">Status</p>
                 <label className="capitalize font-semibold  text-[11px]">
                   <input
@@ -261,7 +260,7 @@ const AdvanceRequestModal = ({ visible, onClick }) => {
                   />
                   Active
                 </label>
-              </div>
+              </div> */}
             </div>
           </div>
           <div className="flex gap-10 justify-center">
@@ -283,4 +282,4 @@ const AdvanceRequestModal = ({ visible, onClick }) => {
     </form>
   );
 };
-export default AdvanceRequestModal
+export default AdvanceRequestModal;

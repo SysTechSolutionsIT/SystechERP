@@ -146,13 +146,13 @@ const AdvanceRequest = () => {
 
   const [columnVisibility, setColumnVisibility] = useState({
     AdvanceDate: true,
-    Employee: true,
+    EmployeeName: true,
     AdvanceType: true,
     AdvanceStatus: true,
     Project: true,
     Amount: true,
     Installment: true,
-    Status: true,
+    AcFlag: true,
   });
   //Toggle
   const [showDropdown, setShowDropdown] = useState(false);
@@ -191,11 +191,14 @@ const AdvanceRequest = () => {
 
   const fetchRequestData = async () => {
     try {
-      const response = await axios.get("http://localhost:5500/advance-request/get", {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const response = await axios.get(
+        "http://localhost:5500/advance-request/FnShowActiveData",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
+      );
       console.log("Response Object", response);
       const data = response.data;
       console.log(data);
@@ -215,9 +218,10 @@ const AdvanceRequest = () => {
         const newCol = columnName;
         const value = item[newCol];
         return (
-          value && value.toString().toLowerCase().includes(searchWord.toLowerCase())
+          value &&
+          value.toString().toLowerCase().includes(searchWord.toLowerCase())
         );
-      })
+      });
       return matches;
     });
     // Update the filtered data
@@ -238,8 +242,9 @@ const AdvanceRequest = () => {
             Column Visibility
             <Icon
               icon="fe:arrow-down"
-              className={`mt-1.5 ml-2 ${showDropdown ? "rotate-180" : ""
-                } cursor-pointer`}
+              className={`mt-1.5 ml-2 ${
+                showDropdown ? "rotate-180" : ""
+              } cursor-pointer`}
             />
           </button>
           {showDropdown && (
@@ -343,8 +348,9 @@ const AdvanceRequest = () => {
                 {selectedColumns.map((columnName) => (
                   <th
                     key={columnName}
-                    className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 ${columnVisibility[columnName] ? "" : "hidden"
-                      }`}
+                    className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 ${
+                      columnVisibility[columnName] ? "" : "hidden"
+                    }`}
                   >
                     {columnName}
                   </th>
@@ -375,93 +381,96 @@ const AdvanceRequest = () => {
             <tbody className="">
               {filteredData.length > 0
                 ? filteredData.map((result, key) => (
-                  <tr key={key}>
-                    <td className="px-2 text-[11px] border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          className="cursor-pointer"
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                        />
-                        <Icon
-                          className="cursor-pointer"
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                        />
-                        <Icon
-                          className="cursor-pointer"
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {result.ApprovalFlag}
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                      {result.id}
-                    </td>
-                    {selectedColumns.map((columnName) => (
-                      <td
-                        key={columnName}
-                        className={`px-4 border-2 whitespace-normal text-[11px] text-left${columnVisibility[columnName] ? "" : "hidden"
-                          }`}
-                      >
-                        {result[columnName]}
+                    <tr key={key}>
+                      <td className="px-2 text-[11px] border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            className="cursor-pointer"
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                          />
+                          <Icon
+                            className="cursor-pointer"
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                          />
+                          <Icon
+                            className="cursor-pointer"
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                          />
+                        </div>
                       </td>
-                    ))}
-                  </tr>
-                ))
-                : advanceReq.length > 0 && advanceReq.map((result, index) => (
-                  <tr key={index}>
-                    <td className="px-2 text-[11px] border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          className="cursor-pointer"
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                        />
-                        <Icon
-                          className="cursor-pointer"
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                        />
-                        <Icon
-                          className="cursor-pointer"
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {result.ApprovalFlag ? "Approved" : "Unapproved"}
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                      {result.id}
-                    </td>
-                    {selectedColumns.map((columnName) => (
-                      <td
-                        key={columnName}
-                        className={`px-4 border-2 whitespace-normal text-left text-[11px]${columnVisibility[columnName] ? "" : "hidden"
-                          }`}
-                      >
-                        {result[columnName]}
+                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                        {result.ApprovalFlag}
                       </td>
-                    ))}
-                  </tr>
-                ))}
+                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                        {result.AdvanceId}
+                      </td>
+                      {selectedColumns.map((columnName) => (
+                        <td
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-[11px] text-left${
+                            columnVisibility[columnName] ? "" : "hidden"
+                          }`}
+                        >
+                          {result[columnName]}
+                        </td>
+                      ))}
+                    </tr>
+                  ))
+                : advanceReq.length > 0 &&
+                  advanceReq.map((result, index) => (
+                    <tr key={index}>
+                      <td className="px-2 text-[11px] border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            className="cursor-pointer"
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                          />
+                          <Icon
+                            className="cursor-pointer"
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                          />
+                          <Icon
+                            className="cursor-pointer"
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                        {result.ApprovalFlag ? "Approved" : "Unapproved"}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                        {result.AdvanceId}
+                      </td>
+                      {selectedColumns.map((columnName) => (
+                        <td
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-left text-[11px]${
+                            columnVisibility[columnName] ? "" : "hidden"
+                          }`}
+                        >
+                          {result[columnName]}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
             </tbody>
           </table>
         </div>
