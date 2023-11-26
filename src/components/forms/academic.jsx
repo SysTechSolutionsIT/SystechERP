@@ -19,7 +19,6 @@ const Academic = ({ ID, name }) => {
   const formik = useFormik({
     initialValues: {
       EmployeeId: ID,
-      EmployeeName: name,
     },
     onSubmit: async (values) => {
       const qualString = academicData
@@ -48,35 +47,36 @@ const Academic = ({ ID, name }) => {
         .replace(/,\s+/g, ",");
 
       const combinedData = {
+        EmployeeId : values.EmployeeId,
         Qualification: qualString,
         Institute: instString,
         Specialization: specializationString,
         Grades: gradesString,
         PassingYear: passString,
         Languages: LangString,
+        IUFlag:"U"
       };
 
       console.log("Submitted data:", combinedData);
-      try {
-        const response = await axios.patch(
-          `http://localhost:5500/employee/academic/update/${ID}`,
-          combinedData, // Combined data
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        if (response.status === 200) {
-          const updatedData = response.data;
-          console.log("Updated data:", updatedData);
-          alert("Academic data updated successfully");
-        }
-      } catch (error) {
-        console.error("Error while updating Academic data: ", error.message);
-      }
+      updateAcademic(combinedData)
     },
   });
+
+  const updateAcademic = async (data) =>{
+    try {
+      const response = await axios.post(
+        `http://localhost:5500/employee/academic/FnAddUpdateDeleteRecord`,
+        data, 
+        {
+          params :{ EmployeeId: ID}, 
+          headers: {Authorization: `Bearer ${token}`},
+        }
+      );
+        alert("Academic data updated successfully");
+    } catch (error) {
+      console.error("Error while updating Academic data: ", error.message);
+    }
+  }
 
   useEffect(() => {
     fetchAcademicData();
@@ -85,11 +85,10 @@ const Academic = ({ ID, name }) => {
   const fetchAcademicData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5500/employee/academic/get/${ID}`,
+        `http://localhost:5500/employee/academic/FnShowParticularData`,
         {
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
+          params :{ EmployeeId: ID}, 
+          headers: {Authorization: `Bearer ${token}`},
         }
       );
       console.log("Response Object", response);

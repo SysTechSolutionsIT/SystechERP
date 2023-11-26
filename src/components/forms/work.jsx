@@ -29,7 +29,7 @@ const Work = ({ ID, name }) => {
       ZoneId: "",
       GradeId: "",
       CostCenterId: "",
-      BondApplicable: null,
+      BondApplicable: "",
       BondAttachment: "",
       CurrentJob: "",
       Remark: "",
@@ -125,7 +125,7 @@ const Work = ({ ID, name }) => {
     setChecked(checked);
     formik.setValues({
       ...formik.values,
-      [fieldName]: checked.toString(),
+      [fieldName]: checked ? 'Y' : 'N',
     });
   };
 
@@ -135,20 +135,20 @@ const Work = ({ ID, name }) => {
         EmployeeId: details.EmployeeId,
         DOJ: details.DOJ,
         DOL: details.DOL,
-        Contractor: details.Contractor,
+        ContractorId: details.ContractorId,
         ContractorStartDate: details.ContractorStartDate,
         ContractorEndDate: details.ContractorEndDate,
-        DeptGroup: details.DeptGroup,
-        Dept: details.Dept,
-        SubDept: details.SubDept,
-        Desg: details.Desg,
+        DeptGroupId: details.DeptGroupId,
+        DeptId: details.DeptId,
+        SubDeptId: details.SubDeptId,
+        DesgId: details.DesgId,
         ReportingTo: details.ReportingTo,
         WeeklyOff: details.WeeklyOff,
-        Shift: details.Shift,
-        Band: details.Band,
-        Zone: details.Zone,
-        Grade: details.Grade,
-        CostCenter: details.CostCenter,
+        ShiftId: details.ShiftId,
+        BandId: details.BandId,
+        ZoneId: details.ZoneId,
+        GradeId: details.GradeId,
+        CostCenterId: details.CostCenterId,
         BondApplicable: details.BondApplicable,
         BondAttachment: details.BondAttachment,
         CurrentJob: details.CurrentJob,
@@ -223,6 +223,7 @@ const Work = ({ ID, name }) => {
               value={formik.values.WeeklyOff}
               onChange={formik.handleChange}
             >
+              <option value={formik.values.WeeklyOff}>{formik.values.WeeklyOff}</option>
               <option value="">Select Weekly Off</option>
               <option value="Sunday">Sunday</option>
               <option value="Monday">Monday</option>
@@ -243,6 +244,7 @@ const Work = ({ ID, name }) => {
               className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
               onChange={formik.handleChange}
             >
+              <option value={formik.values.CostCenterId}>{formik.values.CostCenterId}</option>
               <option value="">Select Cost Center</option>
               <option value="Cost Center 1">Cost Center 1</option>
               <option value="Cost Center 2">Cost Center 2</option>
@@ -260,6 +262,7 @@ const Work = ({ ID, name }) => {
               className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
               onChange={formik.handleChange}
             >
+              <option value={formik.values.DeptGroupId}>{formik.values.DeptGroupId}</option>
               <option value="">Select Department Group</option>
               <option value="Example 1">Example 1</option>
               <option value="Example 2">Example 2</option>
@@ -277,6 +280,7 @@ const Work = ({ ID, name }) => {
               className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
               onChange={formik.handleChange}
             >
+              <option value={formik.values.DeptId}>{formik.values.DeptId}</option>
               <option value="">Select Department</option>
               <option value="Example 1">Example 1</option>
               <option value="Example 2">Example 2</option>
@@ -294,6 +298,7 @@ const Work = ({ ID, name }) => {
               className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
               onChange={formik.handleChange}
             >
+              <option value={formik.values.SubDeptId}>{formik.values.SubDeptId}</option>
               <option value="">Select Sub Department</option>
               <option value="Example 1">Example 1</option>
               <option value="Example 2">Example 2</option>
@@ -311,6 +316,7 @@ const Work = ({ ID, name }) => {
               className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
               onChange={formik.handleChange}
             >
+              <option value={formik.values.DesgId}>{formik.values.DesgId}</option>
               <option value="">Select Designation</option>
               <option value="Example 1">Example 1</option>
               <option value="Example 2">Example 2</option>
@@ -328,6 +334,7 @@ const Work = ({ ID, name }) => {
               className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
               onChange={formik.handleChange}
             >
+              <option value={formik.values.ReportingTo}>{formik.values.ReportingTo}</option>
               <option value="">Select Reporting To</option>
               <option value="Example 1">Example 1</option>
               <option value="Example 2">Example 2</option>
@@ -343,6 +350,7 @@ const Work = ({ ID, name }) => {
               className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
               onChange={formik.handleChange}
             >
+              <option value={formik.values.ShiftId}>{formik.values.ShiftId}</option>
               <option value="">Select Shift</option>
               <option value="Example 1">Example 1</option>
               <option value="Example 2">Example 2</option>
@@ -358,6 +366,7 @@ const Work = ({ ID, name }) => {
               className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
               onChange={formik.handleChange}
             >
+              <option value={formik.values.BandId}>{formik.values.BandId}</option>
               <option value="">Select Band</option>
               <option value="Example 1">Example 1</option>
               <option value="Example 2">Example 2</option>
@@ -373,6 +382,7 @@ const Work = ({ ID, name }) => {
               className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
               onChange={formik.handleChange}
             >
+              <option value={formik.values.ZoneId}>{formik.values.ZoneId}</option>
               <option value="">Select Zone</option>
               <option value="Example 1">Example 1</option>
               <option value="Example 2">Example 2</option>
@@ -388,6 +398,7 @@ const Work = ({ ID, name }) => {
               className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
               onChange={formik.handleChange}
             >
+              <option value={formik.values.GradeId}>{formik.values.GradeId}</option>
               <option value="">Select Grade</option>
               <option value="Example 1">Example 1</option>
               <option value="Example 2">Example 2</option>
@@ -405,6 +416,7 @@ const Work = ({ ID, name }) => {
               className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
               onChange={formik.handleChange}
             >
+              <option value={formik.values.ContractorId}>{formik.values.ContractorId}</option>
               <option value="">Select Contractor</option>
               <option value="Example 1">Example 1</option>
               <option value="Example 2">Example 2</option>

@@ -19,7 +19,6 @@ const Professional = ({ ID, name }) => {
   const formik = useFormik({
     initialValues: {
       EmployeeId: ID,
-      EmployeeName: name,
     },
     onSubmit: async (values) => {
       const employerString = professionalData
@@ -48,40 +47,39 @@ const Professional = ({ ID, name }) => {
         .replace(/,\s+/g, ",");
 
       const combinedData = {
-        EmployeeName: name,
+        EmployeeId : values.EmployeeId,
         Employer: employerString,
         Experience: experienceString,
         Designation: designationString,
         JobResponsibility: jobResponsibilityString,
         Salary: salaryString,
+        IUFlag:"U"
       };
-
       console.log("Submitted data:", combinedData);
-      try {
-        const response = await axios.patch(
-          `http://localhost:5500/employee/professional/update/${ID}`,
-          combinedData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        if (response.status === 200) {
-          const updatedData = response.data;
-          console.log("Updated data:", updatedData);
-          alert("Professional data updated successfully");
-        }
-      } catch (error) {
-        console.error(
-          "Error while updating professional data: ",
-          error.message
-        );
-      }
+      updateProfesional(combinedData)
     },
   });
 
   //API CALL
+
+  const updateProfesional = async (data) =>{
+    try {
+      const response = await axios.post(
+        `http://localhost:5500/employee/professional/FnAddUpdateDeleteRecord`,
+        data,
+        {
+          params :{ EmployeeId: ID}, 
+          headers: {Authorization: `Bearer ${token}`},
+        }
+      );
+      alert("Professional data updated successfully");
+    } catch (error) {
+      console.error(
+        "Error while updating professional data: ",
+        error.message
+      );
+    }
+  }
 
   useEffect(() => {
     fetchProfData();
@@ -90,12 +88,11 @@ const Professional = ({ ID, name }) => {
   const fetchProfData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5500/employee/professional/get/${ID}`,
+        `http://localhost:5500/employee/professional/FnShowParticularData`,
         {
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
-        }
+            params :{ EmployeeId: ID}, 
+            headers: {Authorization: `Bearer ${token}`},
+          }
       );
       console.log("Response Object", response);
       const data = response.data;

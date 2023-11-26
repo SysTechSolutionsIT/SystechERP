@@ -22,7 +22,6 @@ const Family = ({ ID, name }) => {
   const formik = useFormik({
     initialValues: {
       EmployeeId: ID,
-      EmployeeName: name,
     },
     onSubmit: async (values) => {
       const personString = familyMembers
@@ -60,6 +59,7 @@ const Family = ({ ID, name }) => {
     
 
       const combinedData = {
+        EmployeeId : values.EmployeeId,
         PersonName: personString,
         Relation: relationString,
         Education: eduString,
@@ -71,26 +71,25 @@ const Family = ({ ID, name }) => {
       };
 
       console.log("Submitted data:", combinedData);
-      try {
-        const response = await axios.patch(
-          `http://localhost:5500/employee/family/update/${ID}`,
-          combinedData, // Combined data
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        if (response.status === 200) {
-          const updatedData = response.data;
-          console.log("Updated data:", updatedData);
-          alert("Academic data updated successfully");
-        }
-      } catch (error) {
-        console.error("Error while updating Academic data: ", error.message);
-      }
+      updateFamily(combinedData)
     },
   });
+
+  const updateFamily = async (data) =>{
+    try {
+      const response = await axios.post(
+        `http://localhost:5500/employee/family/FnAddUpdateDeleteRecord`,
+        data,
+        {
+          params :{ EmployeeId: ID}, 
+          headers: {Authorization: `Bearer ${token}`},
+        }
+      );
+        alert("Academic data updated successfully");
+    } catch (error) {
+      console.error("Error while updating Academic data: ", error.message);
+    }
+  }
 
   useEffect(() => {
     fetchFamilyData();
@@ -99,11 +98,10 @@ const Family = ({ ID, name }) => {
   const fetchFamilyData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5500/employee/family/get/${ID}`,
+        `http://localhost:5500/employee/family/FnShowParticularData`,
         {
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
+          params :{ EmployeeId: ID}, 
+          headers: {Authorization: `Bearer ${token}`},
         }
       );
       console.log("Response Object", response);
