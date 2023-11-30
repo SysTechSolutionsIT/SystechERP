@@ -15,7 +15,7 @@ const Family = ({ ID, name }) => {
   const [Occupation, setOccupation] = useState("");
   const [Address, setAddress] = useState("");
   const [CellNo, setCellNo] = useState("");
-  const [EmailID, setEmailID] = useState("");
+  const [EmailId, setEmailID] = useState("");
   const [Nomminee, setNomminee] = useState("");
   const { token } = useAuth();
 
@@ -49,7 +49,7 @@ const Family = ({ ID, name }) => {
       .join(", ")
       .replace(/,\s+/g, ',');
     const emailString = familyMembers
-      .map((entry) => entry.EmailID)
+      .map((entry) => entry.EmailId)
       .join(", ")
       .replace(/,\s+/g, ',');
     const nomString = familyMembers
@@ -66,8 +66,9 @@ const Family = ({ ID, name }) => {
         Occupation: occString,
         Address: addString,
         CellNo: cellString,
-        EmailID: emailString,
+        EmailId: emailString,
         Nominee: nomString,
+        IUFlag:"U"
       };
 
       console.log("Submitted data:", combinedData);
@@ -85,9 +86,9 @@ const Family = ({ ID, name }) => {
           headers: {Authorization: `Bearer ${token}`},
         }
       );
-        alert("Academic data updated successfully");
+        alert("Family data updated successfully");
     } catch (error) {
-      console.error("Error while updating Academic data: ", error.message);
+      console.error("Error while updating Family data: ", error.message);
     }
   }
 
@@ -122,7 +123,7 @@ const Family = ({ ID, name }) => {
     const occRows = data.Occupation.split(",");
     const addRows = data.Address.split(",");
     const cellRows = data.CellNo.split(",");
-    const emailRows = data.EmailID.split(",");
+    const emailRows = data.EmailId.split(",");
     const nomineeRows = data.Nominee.split(",");
   
     // Create a new array to store the rows of the table.
@@ -137,7 +138,7 @@ const Family = ({ ID, name }) => {
         Occupation: occRows[i],
         Address: addRows[i],
         CellNo: cellRows[i],
-        EmailID: emailRows[i],
+        EmailId: emailRows[i],
         Nominee: nomineeRows[i],
       };
   
@@ -162,7 +163,7 @@ const Family = ({ ID, name }) => {
         Occupation: "",
         Address: "",
         CellNo: "",
-        EmailID: "",
+        EmailId: "",
         Nominee: "",
       },
       onSubmit: (values) => {
@@ -173,7 +174,7 @@ const Family = ({ ID, name }) => {
         Occupation: values.Occupation,
         Address: values.Address,
         CellNo: values.CellNo,
-        EmailID: values.EmailID,
+        EmailId: values.EmailId,
         Nominee: values.Nominee,
         }
         setFamilyMembers([...familyMembers, updatedData])
@@ -280,7 +281,7 @@ const Family = ({ ID, name }) => {
                   </p>
                   <input
                     id="CellNo"
-                    type="text"
+                    type="number"
                     value={formik.values.CellNo}
                     className={`w-full mt-1 px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                     onChange={formik.handleChange}
@@ -291,9 +292,9 @@ const Family = ({ ID, name }) => {
                     Email ID
                   </p>
                   <input
-                    id="EmailID"
+                    id="EmailId"
                     type="text"
-                    value={formik.values.EmailID}
+                    value={formik.values.EmailId}
                     className={`w-full mt-1 px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                     onChange={formik.handleChange}
                   />
@@ -450,8 +451,8 @@ const Family = ({ ID, name }) => {
                   <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
                     <input
                       type="text"
-                      name={`familyMembers[${index}].EmailID`}
-                      value={item.EmailID}
+                      name={`familyMembers[${index}].EmailId`}
+                      value={item.EmailId}
                       />
                   </td>
                   <td className="px-4 border-2 whitespace-normal text-center text-[11px">

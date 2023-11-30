@@ -147,7 +147,6 @@ const Professional = ({ ID, name }) => {
     const formik = useFormik({
       initialValues: {
         EmployeeId: ID,
-        EmployeeName: name,
         Employer: "",
         Experience: "",
         Designation: "",

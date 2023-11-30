@@ -37,14 +37,14 @@ const MEmployeeAcademic = sequelize.define(
         Qualification: { type: DataTypes.STRING(350), allowNull: false },
         Institute: { type: DataTypes.STRING(500) },
         Specialization: { type: DataTypes.STRING(500) },
-        GradePercent: { type: DataTypes.STRING(1000) },
+        Grades: { type: DataTypes.STRING(1000) },
         PassingYear: { type: DataTypes.STRING(15) },
         Remark: { type: DataTypes.STRING(1000) },
         AcFlag: { type: DataTypes.STRING(1), defaultValue: "Y" },
         CreatedBy: { type: DataTypes.STRING(5), allowNull: false },
-        CreatedOn: { type: DataTypes.DATE },
+        CreatedOn: { type: DataTypes.STRING(5) },
         ModifiedBy: { type: DataTypes.STRING(5), allowNull: false },
-        ModifiedOn: { type: DataTypes.DATE },
+        ModifiedOn: { type: DataTypes.STRING(5) },
     },
     {
         timestamps: false
@@ -82,7 +82,7 @@ router.get("/FnShowActiveData", authToken, async (req, res) => {
         AcFlag: "Y",
       },
       attributes: {
-        exclude: ["IUFlag"],
+        exclude: ["IUFlag","ACFlag","CreatedBy","CreatedOn","ModifiedBy","ModifiedOn","Remark","BranchId","CompanyId"],
       },
       order: [["EmployeeId", "ASC"]],
     });
