@@ -12,54 +12,58 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
   const { token } = useAuth();
   const formik = useFormik({
     initialValues: {
-      CompanyId : "",
-      CompanySectorId : "",
-      CompanySector : "",
-      CompanyName : "",
-      ShortName : "",
-      NatureOfBusiness : "",
-      Logo : "",
-      CreatedBy : "",
-      CreatedByName : "",
-      ModifiedBy : "",
-      ModifiedByName : "",
+      CompanyId: "",
+      CompanySectorId: "",
+      CompanySector: "",
+      CompanyName: "",
+      ShortName: "",
+      NatureOfBusiness: "",
+      Logo: "",
+      CreatedBy: "",
+      CreatedByName: "",
+      ModifiedBy: "",
+      ModifiedByName: "",
       Status: "",
-      SingleCompany : "",
-      CreatedOn : "",
-      ModifiedOn : "",
-      FieldId : "",
-      FieldName : "",
+      SingleCompany: "",
+      CreatedOn: "",
+      ModifiedOn: "",
+      FieldId: "",
+      FieldName: "",
     },
     onSubmit: (values) => {
       console.log(values);
       // compData.push(values);
       const updatedData = {
-        CompanyId : ID,
-        CompanySectorId : "",
-        CompanySector : values.CompanySector,
-        CompanyName : values.CompanyName,
-        ShortName : values.ShortName,
-        NatureOfBusiness : values.NatureOfBusiness,
+        CompanyId: ID,
+        CompanySectorId: "",
+        CompanySector: values.CompanySector,
+        CompanyName: values.CompanyName,
+        ShortName: values.ShortName,
+        NatureOfBusiness: values.NatureOfBusiness,
         // Logo : values.Logo,
-        CreatedBy : values.CreatedBy,
-        CreatedByName : values.CreatedByName,
-        ModifiedBy : values.ModifiedBy,
-        ModifiedByName : values.ModifiedByName,
-        IUFlag : "U",
-        Status: values.Status,
-        SingleCompany : values.SingleCompany,
-        CreatedOn : values.createdAt,
-        ModifiedOn : values.updatedAt,
-        FieldId : "",
-        FieldName : values.FieldName,
+        CreatedBy: values.CreatedBy,
+        CreatedByName: values.CreatedByName,
+        ModifiedBy: values.ModifiedBy,
+        ModifiedByName: values.ModifiedByName,
+        IUFlag: "U",
+        AcFlag: "Y",
+        SingleCompany: values.SingleCompany,
+        CreatedOn: values.createdAt,
+        ModifiedOn: values.updatedAt,
+        FieldId: "",
+        FieldName: values.FieldName,
       };
 
       // Send a PUT request to update the data
       axios
-        .post(`http://localhost:5500/companies/FnAddUpdateDeleteRecord`, updatedData, {
-          params:{CompanyId : ID},
-          headers: { Authorization: `Bearer ${token}` },
-        })
+        .post(
+          `http://localhost:5500/companies/FnAddUpdateDeleteRecord`,
+          updatedData,
+          {
+            params: { CompanyId: ID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        )
         .then((response) => {
           // Handle success
           console.log("Data updated successfully", response);
@@ -79,13 +83,15 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
   console.log(ID);
   const fetchCompData = async () => {
     try {
-      const response = await axios.get("http://localhost:5500/companies/FnShowParticularData",
-      {
-        params:{CompanyId : ID},
-        headers: { Authorization: `Bearer ${token}` },
-      });
-        const data = response.data;
-        setDetails(data);
+      const response = await axios.get(
+        "http://localhost:5500/companies/FnShowParticularData",
+        {
+          params: { CompanyId: ID },
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      const data = response.data;
+      setDetails(data);
     } catch (error) {
       console.error("Error while fetching company data: ", error.message);
     }
@@ -96,38 +102,38 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
   useEffect(() => {
     if (details) {
       formik.setValues({
-        CompanyId : details.CompanyId,
-        CompanySectorId : details.CompanySectorId,
-        CompanySector : details.CompanySector,
-        CompanyName : details.CompanyName,
-        ShortName : details.ShortName,
-        NatureOfBusiness : details.NatureOfBusiness,
-        Logo : details.Logo,
-        CreatedBy : details.CreatedBy,
-        CreatedByName : details.CreatedByName,
-        ModifiedBy : details.ModifiedBy,
-        ModifiedByName : details.ModifiedByName,
-        Status: details.Status,
-        SingleCompany : details.SingleCompany,
-        CreatedOn : details.createdAt,
-        ModifiedOn : details.updatedAt,
-        FieldId : details.FieldId,
-        FieldName : details.FieldName,
+        CompanyId: details.CompanyId,
+        CompanySectorId: details.CompanySectorId,
+        CompanySector: details.CompanySector,
+        CompanyName: details.CompanyName,
+        ShortName: details.ShortName,
+        NatureOfBusiness: details.NatureOfBusiness,
+        Logo: details.Logo,
+        CreatedBy: details.CreatedBy,
+        CreatedByName: details.CreatedByName,
+        ModifiedBy: details.ModifiedBy,
+        ModifiedByName: details.ModifiedByName,
+        AcFlag: details.AcFlag,
+        SingleCompany: details.SingleCompany,
+        CreatedOn: details.createdAt,
+        ModifiedOn: details.updatedAt,
+        FieldId: details.FieldId,
+        FieldName: details.FieldName,
       });
     }
   }, [details]);
 
-  const [isStatusChecked, setStatusChecked] = useState(0)
+  const [isStatusChecked, setStatusChecked] = useState(0);
   const [isSingleBranchChecked, setSingleBranchChecked] = useState(0);
   const handleCheckboxChange = (fieldName, setChecked, event) => {
     //This is how to use it (event) => handleCheckboxChange('Status', setStatusChecked, event)
-      const checked = event.target.checked;
-      setChecked(checked);
-      formik.setValues({
-        ...formik.values,
-        [fieldName]: checked.toString(),
-      });
-    }
+    const checked = event.target.checked;
+    setChecked(checked);
+    formik.setValues({
+      ...formik.values,
+      [fieldName]: checked.toString(),
+    });
+  };
 
   if (!visible) return null;
   return (
@@ -160,7 +166,7 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                   value={details.CompanyId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
-                  disabled={!edit}
+                  disabled={true}
                 />
               </div>
               <div>
@@ -222,11 +228,13 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                 <p className="capitalize font-semibold text-[13px]">Status</p>
                 <label className="capitalize font-semibold text-[11px]">
                   <input
-                    id="Status"
+                    id="AcFlag"
                     type="checkbox"
-                    checked={formik.values.Status}
+                    checked={formik.values.AcFlag}
                     className={`w-5 h-5 mr-2 mt-5 focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px]`}
-                    onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}
+                    onChange={(event) =>
+                      handleCheckboxChange("AcFlag", setStatusChecked, event)
+                    }
                   />
                   Active
                 </label>
@@ -259,7 +267,13 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                     type="checkbox"
                     checked={formik.values.SingleCompany}
                     className={`w-5 h-5 mr-2 mt-5 focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px]`}
-                    onChange={(event) => handleCheckboxChange('SingleCompany', setStatusChecked, event)}
+                    onChange={(event) =>
+                      handleCheckboxChange(
+                        "SingleCompany",
+                        setStatusChecked,
+                        event
+                      )
+                    }
                   />
                   Active
                 </label>

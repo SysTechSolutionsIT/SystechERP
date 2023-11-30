@@ -10,59 +10,76 @@ const CompanyModal = ({ visible, onClick }) => {
 
   const formik = useFormik({
     initialValues: {
-    CompanyId : "",
-    CompanySectorId : "",
-    CompanySector : "",
-    CompanyName : "",
-    ShortName : "",
-    NatureOfBusiness : "",
-    Logo : "",
-    AcFlag : "Y",
-    CreatedBy : "",
-    CreatedByName : "",
-    ModifiedBy : null,
-    ModifiedByName : "",
-    IUFlag : "I",
-    Status: "",
-    SingleCompany : "",
-    CreatedOn : "",
-    ModifiedOn : "",
-    FieldId : "",
-    FieldName : "",
+      CompanyId: "",
+      CompanySectorId: "",
+      CompanySector: "",
+      CompanyName: "",
+      ShortName: "",
+      NatureOfBusiness: "",
+      Logo: "",
+      AcFlag: "Y",
+      CreatedBy: "",
+      CreatedByName: "",
+      ModifiedBy: null,
+      ModifiedByName: "",
+      IUFlag: "I",
+      Status: "",
+      SingleCompany: "",
+      CreatedOn: "",
+      ModifiedOn: "",
+      FieldId: "",
+      FieldName: "",
     },
     onSubmit: async (values) => {
-      console.log(values)
-      addCompany()
+      console.log(values);
+      addCompany();
     },
   });
 
-  const [isStatusChecked, setStatusChecked] = useState(0)
+  const [isStatusChecked, setStatusChecked] = useState(0);
   const [isSingleBranchChecked, setSingleBranchChecked] = useState(0);
   const handleCheckboxChange = (fieldName, setChecked, event) => {
     //This is how to use it (event) => handleCheckboxChange('Status', setStatusChecked, event)
-      const checked = event.target.checked;
-      setChecked(checked);
-      formik.setValues({
-        ...formik.values,
-        [fieldName]: checked.toString(),
-      });
-    }
+    const checked = event.target.checked;
+    setChecked(checked);
+    formik.setValues({
+      ...formik.values,
+      [fieldName]: checked.toString(),
+    });
+  };
 
-  const addCompany = async () =>{
-    try{
-      const response = await axios.post("http://localhost:5500/companies/FnAddUpdateDeleteRecord", formik.values, {
-        headers:{
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json"
+  const addCompany = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5500/companies/FnAddUpdateDeleteRecord",
+        formik.values,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         }
-      })
-      console.log(response)
-      alert('Company Added Successfully')
-      onClick()
-    } catch(error){
-      console.error('Error', error);
+      );
+
+      console.log("Response:", response);
+
+      if (response.status === 200) {
+        console.log("Company Added Successfully");
+        alert("Company Added Successfully");
+        onClick();
+      } else {
+        console.error(
+          "Failed to add company. Server returned:",
+          response.status,
+          response.data
+        );
+        alert("Failed to add company. Please check the console for details.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("An error occurred. Please check the console for details.");
     }
-  }
+  };
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -161,7 +178,9 @@ const CompanyModal = ({ visible, onClick }) => {
                     type="checkbox"
                     checked={isStatusChecked}
                     className={`w-5 h-5 mr-2 mt-4 focus:outline-gray-300 border border-blue-900 rounded-lg`}
-                    onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}
+                    onChange={(event) =>
+                      handleCheckboxChange("Status", setStatusChecked, event)
+                    }
                   />
                   Active
                 </label>
@@ -187,7 +206,13 @@ const CompanyModal = ({ visible, onClick }) => {
                     type="checkbox"
                     checked={isSingleBranchChecked}
                     className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border border-blue-900 rounded-lg`}
-                    onChange={(event) => handleCheckboxChange('SingleCompany', setSingleBranchChecked, event)}
+                    onChange={(event) =>
+                      handleCheckboxChange(
+                        "SingleCompany",
+                        setSingleBranchChecked,
+                        event
+                      )
+                    }
                   />
                   Active
                 </label>

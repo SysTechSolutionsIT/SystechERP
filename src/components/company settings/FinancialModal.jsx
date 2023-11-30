@@ -3,46 +3,53 @@ import React from "react";
 import { useState } from "react";
 import { Icon } from "@iconify/react";
 import axios from "axios";
+import { useAuth } from "../Login";
 
 const FinancialModal = ({ visible, onClick }) => {
   const [YearCloseCheck, setYearCloseCheck] = useState(false);
   const [StatusCheck, setStatusCheck] = useState(false);
+  const { token } = useAuth();
 
   const formik = useFormik({
     initialValues: {
-      fName: "",
-      sDate: "",
-      eDate: "",
-      fShortName: "",
-      yearClose: YearCloseCheck,
-      remarks: "",
-      status: StatusCheck,
+      Name: "",
+      StartDate: "",
+      EndDate: "",
+      ShortName: "",
+      YearClose: YearCloseCheck,
+      Remark: "",
+      AcFlag: "Y",
+      IUFlag: "I",
     },
     onSubmit: async (values) => {
-      const status = StatusCheck === true;
       const YearClosed = YearCloseCheck === true;
-      console.log(values);
+      console.log("FOrm Data: ", values);
       try {
         const formData = {
-          fName: values.fName,
-          sDate: values.sDate,
-          eDate: values.eDate,
-          fShortName: values.fShortName,
-          yearClose: YearClosed, // YearCloseCheck was already part of formik.values
-          remarks: values.remarks,
-          status: status, // StatusCheck was already part of formik.values
+          Name: values.Name,
+          StartDate: values.StartDate,
+          EndDate: values.EndDate,
+          ShortName: values.ShortName,
+          YearClose: YearClosed, //YearCloseCheck was already part of formik.values
+          Remark: values.Remark,
+          AcFlag: "Y",
+          IUFlag: "I",
         };
 
         const response = await axios.post(
-          "http://localhost:5500/financials/add-record",
-          formData // Send the extracted form data
+          "http://localhost:5500/financials/FnAddUpdateDeleteRecord",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
 
         if (response.status === 200) {
           const data = response.data;
           console.log(data);
           alert("Financial record added successfully");
-          // Handle successful response
           onClick();
         } else {
           console.error(`HTTP error! Status: ${response.status}`);
@@ -79,10 +86,10 @@ const FinancialModal = ({ visible, onClick }) => {
               <div>
                 <p className="capatilize font-semibold text-[13px]">Name</p>
                 <input
-                  id="fName"
+                  id="Name"
                   type="text"
                   placeholder="Enter Name"
-                  value={formik.values.fName}
+                  value={formik.values.Name}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -92,10 +99,10 @@ const FinancialModal = ({ visible, onClick }) => {
                   Start Date
                 </p>
                 <input
-                  id="sDate"
+                  id="StartDate"
                   type="date"
                   placeholder="Enter Start Date"
-                  value={formik.values.sDate}
+                  value={formik.values.StartDate}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -103,10 +110,10 @@ const FinancialModal = ({ visible, onClick }) => {
               <div>
                 <p className="capatilize font-semibold text-[13px]">End Date</p>
                 <input
-                  id="eDate"
+                  id="EndDate"
                   type="date"
                   placeholder="Enter End Date"
-                  value={formik.values.eDate}
+                  value={formik.values.EndDate}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -116,10 +123,10 @@ const FinancialModal = ({ visible, onClick }) => {
                   Short Name
                 </p>
                 <input
-                  id="fShortName"
+                  id="ShortName"
                   type="text"
                   placeholder="Enter Short Name"
-                  value={formik.values.fShortName}
+                  value={formik.values.ShortName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -130,10 +137,10 @@ const FinancialModal = ({ visible, onClick }) => {
                 </p>
                 <label className="capitalize font-semibold text-[11px]">
                   <input
-                    id="yearClose"
+                    id="YearClose"
                     type="checkbox"
                     checked={YearCloseCheck}
-                    value={formik.values.yearClose}
+                    value={formik.values.YearClose}
                     className={`w-5 h-5 mr-2 mt-5 focus:outline-blue-900 border border-gray-300 rounded-lg`}
                     onChange={(e) => setYearCloseCheck(!YearCloseCheck)}
                   />
@@ -141,23 +148,24 @@ const FinancialModal = ({ visible, onClick }) => {
                 </label>
               </div>
               <div>
-                <p className="capatilize font-semibold text-[13px]">Remarks</p>
+                <p className="capatilize font-semibold text-[13px]">Remark</p>
                 <textarea
-                  id="remarks"
+                  id="Remark"
                   placeholder="Enter Remark"
-                  value={formik.values.remarks}
+                  value={formik.values.Remark}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
               </div>
+
               <div>
                 <p className="capitalize font-semibold text-[13px]">Status</p>
                 <label className="capitalize font-semibold text-[11px]">
                   <input
-                    id="status"
+                    id="AcFlag"
                     type="checkbox"
                     checked={StatusCheck}
-                    value={formik.values.status}
+                    value={formik.values.AcFlag}
                     className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border-2 rounded-lg`}
                     onChange={() => setStatusCheck(!StatusCheck)}
                   />
