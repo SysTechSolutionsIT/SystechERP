@@ -13,7 +13,6 @@ const Academic = ({ ID, name }) => {
   const [Specialization, setSpecialization] = useState("");
   const [Grades, setGrades] = useState("");
   const [PassingYear, setPassingYear] = useState("");
-  const [Languages, setLanguages] = useState("");
   const { token } = useAuth();
 
   const formik = useFormik({
@@ -41,10 +40,6 @@ const Academic = ({ ID, name }) => {
         .map((entry) => entry.PassingYear)
         .join(", ")
         .replace(/,\s+/g, ",");
-      const LangString = academicData
-        .map((entry) => entry.Languages)
-        .join(", ")
-        .replace(/,\s+/g, ",");
 
       const combinedData = {
         EmployeeId : values.EmployeeId,
@@ -53,7 +48,6 @@ const Academic = ({ ID, name }) => {
         Specialization: specializationString,
         Grades: gradesString,
         PassingYear: passString,
-        Languages: LangString,
         IUFlag:"U"
       };
 
@@ -96,40 +90,47 @@ const Academic = ({ ID, name }) => {
       console.log(data);
       // Split the data and store it in a separate variable
       const splitData = SplitData(data);
-      setAcademicData(splitData);
       console.log("after split", splitData);
+      setAcademicData(splitData);
     } catch (error) {
-      console.log("Error while fetching course data: ", error.message);
+      console.log("Error while fetching academic data: ", error.message);
     }
   };
 
-  // Split data into rows
-  const SplitData = (data) => {
-    const qualiRows = data.Qualification.split(",");
-    const instRows = data.Institute.split(",");
-    const specRows = data.Specialization.split(",");
-    const gradeRows = data.Grades.split(",");
-    const passRows = data.PassingYear.split(",");
-    const langRows = data.Languages.split(",");
+const SplitData = (data) => {
+  const qualiRows = data.Qualification ? data.Qualification.split(",") : [];
+  const instRows = data.Institute ? data.Institute.split(",") : [];
+  const specRows = data.Specialization ? data.Specialization.split(",") : [];
+  const gradeRows = data.Grades ? data.Grades.split(",") : [];
+  const passRows = data.PassingYear ? data.PassingYear.split(",") : [];
 
-    // Create a new array to store the rows of the table.
-    const rows = [];
+  // Create a new array to store the rows of the table.
+  const rows = [];
 
-    // Iterate over the data arrays and create a new row object for each element.
-    for (let i = 0; i < qualiRows.length; i++) {
-      const row = {
-        Qualification: qualiRows[i],
-        Institute: instRows[i],
-        Specialization: specRows[i],
-        Grades: gradeRows[i],
-        PassingYear: passRows[i],
-        Languages: langRows[i],
-      };
+  // Use the length of the longest array to determine the iteration limit
+  const maxLength = Math.max(
+    qualiRows.length,
+    instRows.length,
+    specRows.length,
+    gradeRows.length,
+    passRows.length
+  );
 
-      rows.push(row);
-    }
-    return rows;
-  };
+  // Iterate over the data arrays and create a new row object for each element.
+  for (let i = 0; i < maxLength; i++) {
+    const row = {
+      Qualification: qualiRows[i] || "",
+      Institute: instRows[i] || "",
+      Specialization: specRows[i] || "",
+      Grades: gradeRows[i] || "",
+      PassingYear: passRows[i] || "",
+    };
+
+    rows.push(row);
+  }
+
+  return rows;
+};
 
   const handleDeleteEntry = (index) => {
     const updatedAcademicData = [...academicData];
@@ -146,7 +147,6 @@ const Academic = ({ ID, name }) => {
         Specialization: "",
         Grades: "",
         PassingYear: "",
-        Languages: "",
       },
       onSubmit: (values) => {
         const updatedData = {
@@ -155,7 +155,6 @@ const Academic = ({ ID, name }) => {
           Specialization: values.Specialization,
           Grades: values.Grades,
           PassingYear: values.PassingYear,
-          Languages: values.Languages,
         };
         setAcademicData([...academicData, updatedData]);
         onClick();
@@ -255,18 +254,6 @@ const Academic = ({ ID, name }) => {
                     onChange={formik.handleChange}
                   />
                 </div>
-                <div>
-                  <p className="capatilize font-semibold  text-[13px]">
-                    Languages
-                  </p>
-                  <input
-                    id="Languages"
-                    type="text"
-                    value={formik.values.Languages}
-                    className={`w-full mt-1 px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
-                    onChange={formik.handleChange}
-                  />
-                </div>
               </div>
             </div>
             <div className="flex gap-10 justify-center">
@@ -349,9 +336,6 @@ const Academic = ({ ID, name }) => {
                     <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px]">
                       Passing Year
                     </th>
-                    <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px]">
-                      Languages
-                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -406,14 +390,6 @@ const Academic = ({ ID, name }) => {
                             type="text"
                             name={`academicData[${index}].PassingYear`}
                             value={item.PassingYear}
-                            onChange={formik.handleChange}
-                          />
-                        </td>
-                        <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                          <input
-                            type="text"
-                            name={`academicData[${index}].Languages`}
-                            value={item.Languages}
                             onChange={formik.handleChange}
                           />
                         </td>
