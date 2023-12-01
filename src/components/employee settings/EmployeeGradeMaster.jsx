@@ -72,7 +72,7 @@ const EmployeeGradeMaster = () => {
     useEffect(() =>{
         const fetchEmpGradeData = async() =>{
             try{
-                const response = await axios.get("http://localhost:5500/employee-grade/get", {
+                const response = await axios.get("http://localhost:5500/employee-grade/FnShowActiveData", {
                     headers:{
                         Authorization: `Bearer ${token}`
                     }
@@ -86,10 +86,21 @@ const EmployeeGradeMaster = () => {
         fetchEmpGradeData()
     },[token])
 
-    const deleteEmpGrade = async(id) =>{
-        alert('Are you sure you want to delete this entry?')
+    const deleteEmpGrade = async(DeleteId) =>{
+        const confirmDelete = window.confirm(
+            "Are you sure you want to delete this Employee Type?"
+          );
+      
+          if (!confirmDelete) {
+            return; // If the user cancels deletion, do nothing
+          }
         try{
-            const response = await axios.delete(`http://localhost:5500/employee-grade/delete/${id}`, {
+            const response = await axios.post(`http://localhost:5500/employee-grade/FnAddUpdateDeleteRecord`, 
+            {
+                EmployeeGradeId: DeleteId,
+                IUFlag:"D"
+            },
+            {
             headers:{
                 Authorization: `Bearer ${token}`
             }
@@ -115,15 +126,14 @@ const EmployeeGradeMaster = () => {
     };
 
     const [columnVisibility, setColumnVisibility] = useState({
-        Name: true,
+        EmployeeGradeName: true,
         Remark: true,
-        Status: true
+        
     });
 
     const columnNames = {
-        Name: "Name",
+        EmployeeGradeName: "Name",
         Remark: "Remarks",
-        Status: "Status"
     }
 
     const [showDropdown, setShowDropdown] = useState(false);
@@ -365,7 +375,7 @@ const EmployeeGradeMaster = () => {
                                                     onClick={() => {
                                                         setVeEGrade(true); // Open VEModal
                                                         setEdit(false); // Disable edit mode for VEModal
-                                                        setid(result.id); // Pass id to VEModal
+                                                        setid(result.EmployeeGradeId); // Pass id to VEModal
                                                     }}
                                                 />
                                                 <Icon
@@ -377,7 +387,7 @@ const EmployeeGradeMaster = () => {
                                                     onClick={() => {
                                                         setVeEGrade(true); // Open VEModal
                                                         setEdit(true); // Disable edit mode for VEModal
-                                                        setid(result.id); // Pass id to VEModal
+                                                        setid(result.EmployeeGradeId); // Pass id to VEModal
                                                     }}
                                                 />
                                                 <Icon
@@ -386,12 +396,12 @@ const EmployeeGradeMaster = () => {
                                                     color="#556987"
                                                     width="20"
                                                     height="20"
-                                                    onClick={() => deleteEmpGrade(result.id)}
+                                                    onClick={() => deleteEmpGrade(result.EmployeeGradeId)}
                                                 />
                                             </div>
                                         </td>
                                         <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
-                                            {result.id}
+                                            {result.EmployeeGradeId}
                                         </td>
                                         {selectedColumns.map((columnName) => (
                                         columnVisibility[columnName] ? (
@@ -418,7 +428,7 @@ const EmployeeGradeMaster = () => {
                                                     onClick={() => {
                                                         setVeEGrade(true); // Open VEModal
                                                         setEdit(false); // Disable edit mode for VEModal
-                                                        setid(result.id); // Pass id to VEModal
+                                                        setid(result.EmployeeGradeId); // Pass id to VEModal
                                                     }}
                                                 />
                                                 <Icon
@@ -430,7 +440,7 @@ const EmployeeGradeMaster = () => {
                                                     onClick={() => {
                                                         setVeEGrade(true); // Open VEModal
                                                         setEdit(true); // Disable edit mode for VEModal
-                                                        setid(result.id); // Pass id to VEModal
+                                                        setid(result.EmployeeGradeId); // Pass id to VEModal
                                                     }}
                                                 />
                                                 {/* <ViewEmployeeGrade
@@ -445,12 +455,12 @@ const EmployeeGradeMaster = () => {
                                                     color="#556987"
                                                     width="20"
                                                     height="20"
-                                                    onClick={() => deleteEmpGrade(result.id)}
+                                                    onClick={() => deleteEmpGrade(result.EmployeeGradeId)}
                                                 />
                                             </div>
                                         </td>
                                         <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
-                                            {result.id}
+                                            {result.EmployeeGradeId}
                                         </td>
                                         {selectedColumns.map((columnName) => (
                                         columnVisibility[columnName] ? (

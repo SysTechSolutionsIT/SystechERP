@@ -52,7 +52,7 @@ const EmployeeTypeMaster = () => {
   useEffect(() =>{
     const fetchEmpTypeData = async() =>{
       try{
-        const response = await axios.get("http://localhost:5500/employee-type/get", {
+        const response = await axios.get("http://localhost:5500/employee-type/FnShowActiveData", {
           headers:{
             Authorization: `Bearer ${token}`
           }
@@ -67,15 +67,26 @@ const EmployeeTypeMaster = () => {
     fetchEmpTypeData()
   },[token])
 
-  const deleteEmpType = async (id) =>{
-    alert('Are you sure you want to delete this entry?')
+  const deleteEmpType = async (DeleteId) =>{
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this Employee Type?"
+    );
+
+    if (!confirmDelete) {
+      return; // If the user cancels deletion, do nothing
+    }
     try{
-      const response = await axios.delete(`http://localhost:5500/employee-type/delete/${id}`, {
+      const response = await axios.post(`http://localhost:5500/employee-type/FnAddUpdateDeleteRecord`,
+      {
+        EmployeeTypeId: DeleteId,
+        IUFlag:"D"
+      },
+      {
         headers:{
           Authorization: `Bearer ${token}`
         }
       })
-      alert('Bank Deleted')
+      alert('Employee Type Deleted')
       window.location.reload()
     } catch (error){
       console.error('Error', error)
@@ -100,7 +111,6 @@ const EmployeeTypeMaster = () => {
     EmployeeTypeGroup: true,
     ShortName: true,
     Remark: false,
-    Status: true
   });
 
   const columnNames = {
@@ -108,7 +118,6 @@ const EmployeeTypeMaster = () => {
     EmployeeTypeGroup: "Employee Type Group",
     ShortName: "Short Name",
     Remark: "Remarks",
-    Status: "Status"
   }
 
   const [showDropdown, setShowDropdown] = useState(false);
@@ -349,7 +358,7 @@ const EmployeeTypeMaster = () => {
                           onClick={() => {
                             setVeEType(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
-                            setid(result.id); // Pass ID to VEModal
+                            setid(result.EmployeeTypeId); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -361,27 +370,21 @@ const EmployeeTypeMaster = () => {
                           onClick={() => {
                             setVeEType(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
-                            setid(result.id); // Pass ID to VEModal
+                            setid(result.EmployeeTypeId); // Pass ID to VEModal
                           }}
                         />
-                        {/* <ViewEmployeeType
-                          visible={veEType}
-                          onClick={() => setVeEType(false)}
-                          edit={edit}
-                          ID={id}
-                        /> */}
                         <Icon
                           className="cursor-pointer"
                           icon="material-symbols:delete-outline"
                           color="#556987"
                           width="20"
                           height="20"
-                          onClick={() => deleteEmpType(result.id)}
+                          onClick={() => deleteEmpType(result.EmployeeTypeId)}
                         />
                       </div>
                     </td>
                     <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
-                      {result.id}
+                      {result.EmployeeTypeId}
                     </td>
                     {selectedColumns.map((columnName) => (
                     columnVisibility[columnName] ? (
@@ -408,7 +411,7 @@ const EmployeeTypeMaster = () => {
                           onClick={() => {
                             setVeEType(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
-                            setid(result.id); // Pass ID to VEModal
+                            setid(result.EmployeeTypeId); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -420,27 +423,21 @@ const EmployeeTypeMaster = () => {
                           onClick={() => {
                             setVeEType(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
-                            setid(result.id); // Pass ID to VEModal
+                            setid(result.EmployeeTypeId); // Pass ID to VEModal
                           }}
                         />
-                        {/* <ViewEmployeeType
-                          visible={veEType}
-                          onClick={() => setVeEType(false)}
-                          edit={edit}
-                          ID={id}
-                        /> */}
                         <Icon
                           className="cursor-pointer"
                           icon="material-symbols:delete-outline"
                           color="#556987"
                           width="20"
                           height="20"
-                          onClick={() => deleteEmpType(result.id)}
+                          onClick={() => deleteEmpType(result.EmployeeTypeId)}
                         />
                       </div>
                     </td>
                     <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
-                      {result.id}
+                      {result.EmployeeTypeId}
                     </td>
                     {selectedColumns.map((columnName) => (
                     columnVisibility[columnName] ? (

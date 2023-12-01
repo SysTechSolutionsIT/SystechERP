@@ -3,27 +3,29 @@ import React, { useState } from 'react'
 import { EmployeeTypeData } from './EmployeeTypeMaster';
 import { Icon } from '@iconify/react';
 import axios from 'axios'
+import { useAuth } from '../Login';
 
 const EmployeeTypeModal = ({ visible, onClick }) => {
+  const { token } = useAuth()
   const formik = useFormik({
     initialValues: {
-      // ID: "",
       EmployeeType: "",
       EmployeeTypeGroup: "",
       ShortName: "",
-      Status: "",
-      Remark: ""
+      Remark: "",
+      IUFlag:"I"
     },
     onSubmit: (values, {resetForm}) => {
       console.log(values);
       addEmpType()
-      resetForm()
+      // resetForm()
     },
   });
 
   const addEmpType = async() =>{
     try{
-      const response = await axios.post("http://localhost:5500/employee-type/add", formik.values)
+      const response = await axios.post("http://localhost:5500/employee-type/FnAddUpdateDeleteRecord", formik.values,
+      {headers:{ Authorization: `Bearer ${token}`}})
       alert('Employee Type Added')
     } catch(error){
       console.error('Error', error)
@@ -67,7 +69,7 @@ const EmployeeTypeModal = ({ visible, onClick }) => {
                   id="ID"
                   type="number"
                   placeholder="Enter Employee Type ID"
-                  value=""
+                  disabled={true}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -118,20 +120,6 @@ const EmployeeTypeModal = ({ visible, onClick }) => {
                   onChange={formik.handleChange}
                 />
               </div>
-              <div>
-              <p className="capitalize font-semibold text-[13px]">Status</p>
-              <label className="capitalize font-semibold text-[11px]">
-              <input
-                  id="Status"
-                  type="checkbox"
-                  checked={formik.values.Status}
-                  value={formik.values.Status}
-                  className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border-2 rounded-lg`}
-                  onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}
-              />
-              Active
-              </label>
-          </div>
             </div>
           </div>
           <div className="flex gap-10 justify-center">

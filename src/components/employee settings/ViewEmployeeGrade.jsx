@@ -10,16 +10,18 @@ const ViewEmployeeGrade = ({ visible, onClick, edit, ID }) => {
     const {token} = useAuth()
     const formik = useFormik({
         initialValues: {
-            Name: "",
-            Status: "",
+            EmployeeGradeId: "",
+            EmployeeGradeName: "",
             Remark: ""
         },
         onSubmit: (values) => {
             console.log(values);
             const updatedData = {
-                Name: values.Name,
-                Status: values.Status,
-                Remark: values.Remark
+                EmployeeGradeId: details.EmployeeGradeId,
+                EmployeeGradeName: values.EmployeeGradeName,
+                Remark: values.Remark,
+                IUFlag:"U"
+
             }
 
             updateEmpGrade(updatedData)
@@ -28,10 +30,9 @@ const ViewEmployeeGrade = ({ visible, onClick, edit, ID }) => {
 
     const updateEmpGrade = async (data) =>{
         try{
-            const response = axios.patch(`http://localhost:5500/employee-grade/update/${ID}`, data, {
-                headers:{
-                    Authorization: `Bearer ${token}`
-                }
+            const response = axios.post(`http://localhost:5500/employee-grade/FnAddUpdateDeleteRecord`, data, {
+            params: { EmployeeGradeId: ID },
+            headers: { Authorization: `Bearer ${token}` },
             })
             alert('Employee Grade Updated')
         } catch (error){
@@ -54,10 +55,9 @@ const ViewEmployeeGrade = ({ visible, onClick, edit, ID }) => {
       useEffect(() => {
         const fetchEmpGradeData = async () => {
           try {
-            const response = await axios.get(`http://localhost:5500/employee-grade/get/${ID}`, {
-                headers:{
-                    Authorization: `Bearer ${token}`
-                }
+            const response = await axios.get(`http://localhost:5500/employee-grade/FnShowParticularData`, {
+            params: { EmployeeGradeId: ID },
+            headers: { Authorization: `Bearer ${token}` },
             });
               const data = response.data;
               console.log('fetched data', data);
@@ -72,8 +72,8 @@ const ViewEmployeeGrade = ({ visible, onClick, edit, ID }) => {
       useEffect(() =>{
         if (details){
             formik.setValues({
-                Name: details.Name,
-                Status: details.Status,
+                EmployeeGradeId: details.EmployeeGradeId,
+                EmployeeGradeName: details.EmployeeGradeName,
                 Remark: details.Remark
             })
         }
@@ -102,7 +102,7 @@ const ViewEmployeeGrade = ({ visible, onClick, edit, ID }) => {
                                 <input
                                     type="number"
                                     placeholder="Enter Employee Grade ID"
-                                    value={details?.id}
+                                    value={details?.EmployeeGradeId}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
@@ -111,10 +111,10 @@ const ViewEmployeeGrade = ({ visible, onClick, edit, ID }) => {
                             <div>
                                 <p className="text-[13px] text-left font-semibold">Employee Grade Name</p>
                                 <input
-                                    id='Name'
+                                    id='EmployeeGradeName'
                                     type="text"
                                     placeholder="Enter Employee Grade Name"
-                                    value={formik.values.Name}
+                                    value={formik.values.EmployeeGradeName}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
@@ -132,19 +132,6 @@ const ViewEmployeeGrade = ({ visible, onClick, edit, ID }) => {
                                     disabled={!edit}
                                 />
                             </div>
-                            <div>
-                            <p className="capitalize font-semibold text-[13px]">Status</p>
-                            <label className="capitalize font-semibold text-[11px]">
-                            <input
-                                id="Status"
-                                type="checkbox"
-                                checked={formik.values.Status}
-                                className={`w-5 h-5 mr-2 mt-5 focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px]`}
-                                onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}
-                            />
-                            Active
-                            </label>
-                        </div>
                         </div>
                     </div>
                     <div className="flex gap-10 justify-center">
