@@ -55,26 +55,40 @@ const BankMaster = () => {
 
   const [banks, setBanks] = useState([]);
 
-  const deleteBank = async (bankid) => {
-    alert("Are you sure you want to delete this bank?");
+  const deleteBank = async (DeleteId) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this company?"
+    );
+
+    if (!confirmDelete) {
+      return; // If the user cancels deletion, do nothing
+    }
+
     try {
-      const apiUrl = `http://localhost:5500/bankmaster/delete-bank/${bankid}`;
+      const apiUrl = `http://localhost:5500/bankmaster/FnAddUpdateDeleteRecord`;
 
-      const response = await axios.delete(apiUrl, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await axios.post(
+        apiUrl,
+        {
+          BankId: DeleteId,
+          IUFlag: "D",
         },
-      });
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-      if (response.status === 204) {
-        console.log(`Bank with ID ${bankid} deleted successfully.`);
-        alert("Bank Deleted");
+      if (response.data.message === "Record Deleted Successfully") {
+        console.log(`Record with ID ${DeleteId} deleted successfully.`);
+        alert("Record Deleted");
         window.location.reload();
       } else {
-        console.error(`Failed to delete bank with ID ${bankid}.`);
+        console.error(`Failed to delete record with ID ${DeleteId}.`);
       }
     } catch (error) {
-      console.error("Error deleting bank:", error);
+      console.error("Error deleting record:", error);
     }
   };
 
@@ -82,19 +96,22 @@ const BankMaster = () => {
     const fetchBanks = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5500/bankmaster/FnShowAllData",
+          "http://localhost:5500/bankmaster/FnShowActiveData",
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           }
         );
-        console.log("Response Object", response);
-        const data = response.data;
-        console.log(data);
-        setBanks(data);
+        if (response.status === 200) {
+          const data = response.data;
+          console.log("bank details", data);
+          setBanks(data);
+        } else {
+          console.error("Failed to fetch data");
+        }
       } catch (error) {
-        console.log("Error while fetching bank data: ", error.message);
+        console.error("Error while fetching company data: ", error.message);
       }
     };
     fetchBanks();
@@ -106,18 +123,24 @@ const BankMaster = () => {
   };
   const [filteredData, setFilteredData] = useState([]);
 
-  const handleSearchChange = (title, searchWord) => {
-    const newFilter = banks.filter((item) => {
-      const value = item[title];
-      return value && value.toLowerCase().includes(searchWord.toLowerCase());
+  const handleSearchChange = (columnName, searchWord) => {
+    const searchData = [...banks];
+
+    const newFilter = searchData.filter((item) => {
+      // Check if the item matches the search term in the selected column
+      const newCol = columnName.charAt(0).toLowerCase() + columnName.slice(1);
+      const value = item[newCol];
+
+      return (
+        value &&
+        value.toString().toLowerCase().includes(searchWord.toLowerCase())
+      );
     });
 
-    if (searchWord === "") {
-      setFilteredData([]);
-    } else {
-      setFilteredData(newFilter);
-    }
+    // Update the filtered data
+    setFilteredData(newFilter);
   };
+
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedColumns, setSelectedColumns] = useState([
     ...Object.keys(columnVisibility),
@@ -303,9 +326,6 @@ const BankMaster = () => {
                 <th className="px-1 text-[13px] font-bold text-black border-2 border-gray-400 whitespace-normal">
                   Actions
                 </th>
-                <th className=" w-auto px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
-                  ID
-                </th>
                 {selectedColumns.map((columnName) =>
                   columnVisibility[columnName] ? (
                     <th
@@ -318,8 +338,7 @@ const BankMaster = () => {
                 )}
               </tr>
               <tr>
-                <th className="border-2"></th>
-                <th className="p-2 font-bold text-black border-2 whitespace-normal" />
+                <th className="p-2 font-bold text-black border-2 " />
                 {selectedColumns.map((columnName) =>
                   columnVisibility[columnName] ? (
                     <th
@@ -382,9 +401,6 @@ const BankMaster = () => {
                           />
                         </div>
                       </td>
-                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {result.BankId}
-                      </td>
                       {selectedColumns.map((columnName) =>
                         columnVisibility[columnName] ? (
                           <td
@@ -435,9 +451,6 @@ const BankMaster = () => {
                             onClick={() => deleteBank(result.BankId)}
                           />
                         </div>
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-center text-[11px] capitalize">
-                        {result.BankId}
                       </td>
                       {selectedColumns.map((columnName) =>
                         columnVisibility[columnName] ? (

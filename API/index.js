@@ -7,7 +7,7 @@ const cors = require("cors"); // Import the cors middleware
 app.use(express.json()); // Parse JSON requests
 // const CompMaster = require("./route/CMRoute");
 // const CompConfig = require("./route/CompanyConfigRoute");
-// const BankMaster = require("./route/MBankRoutes");
+const BankMaster = require("./route/MBankRoutes");
 // const DepartmentMaster = require("./route/DepartmentMasterRoute");
 // const DestinationMaster = require("./route/DestinationMasterRoute");
 // const ThreeFieldMaster = require("./route/ThreeFieldsRoutes");
@@ -37,7 +37,7 @@ const AdvanceRequest = require("./route/MAdvanceRequest");
 // const AttendanceMaster = require("./route/AttendanceMasterRoute");
 // const EDImports = require("./route/EDImportsRoute");
 const MEmployeeFamily = require("./route/MEmployeeFamily");
-// const Currencies = require("./route/CurrenciesRoute");
+const Currencies = require("./route/CurrenciesRoute");
 const MCompany = require("./route/MCompany");
 const MFinancialYear = require("./route/MFinancialYear");
 const MEmployee = require("./route/MEmployee");
@@ -57,7 +57,7 @@ app.use("/employee/professional", MEmployeeProfessional);
 app.use("/employee/academic", MEmployeeAcademic);
 app.use("/employee/family", MEmployeeFamily);
 // app.use("/company-config", CompConfig);
-// app.use("/bankmaster", BankMaster);
+app.use("/bankmaster", BankMaster);
 app.use("/departmentmaster", MDepartment);
 // app.use("/threefieldmaster", ThreeFieldMaster);
 // app.use("/twofieldmaster", TwoFieldMaster);
@@ -82,7 +82,7 @@ app.use("/advance-request", AdvanceRequest);
 // app.use("/attendance-master", AttendanceMaster);
 // // app.use("/employeeid", EmployeeId);
 // app.use("/ed-imports", EDImports);
-// app.use("/currency", Currencies);
+app.use("/currency", Currencies);
 
 // Start the server
 const port = 5500;

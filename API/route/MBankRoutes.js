@@ -32,22 +32,22 @@ const sequelize = new Sequelize(
   }
 );
 
-// Define the MBank model
-const MBank = sequelize.define("MBank", {
+// Define the MBanks model
+const MBanks = sequelize.define("MBanks", {
   CompanyId: {
-    type: DataTypes.STRING(5),
+    type: DataTypes.INTEGER,
     allowNull: false,
-    defaultValue: "00001",
+    defaultValue: 1,
   },
   BranchId: {
-    type: DataTypes.STRING(5),
+    type: DataTypes.INTEGER,
     allowNull: false,
-    defaultValue: "00001",
+    defaultValue: 1,
   },
   BankId: {
-    type: DataTypes.STRING(5),
-    allowNull: false,
+    type: DataTypes.INTEGER,
     primaryKey: true,
+    autoIncrement: true,
   },
   AccountType: DataTypes.STRING(50),
   BankName: {
@@ -60,43 +60,36 @@ const MBank = sequelize.define("MBank", {
   },
   BranchAddress: DataTypes.STRING(500),
   RegisteredEmailId: DataTypes.STRING(100),
-  RegisteredContactNo: DataTypes.STRING(100),
-  Remark: DataTypes.STRING(500),
-  AccountNo: DataTypes.STRING(100),
+  RegisteredContactNo: DataTypes.INTEGER,
+  Remark: DataTypes.STRING(60),
+  AccountNo: DataTypes.STRING(50),
   CurrencyType: {
-    type: DataTypes.STRING(100),
+    type: DataTypes.STRING(50),
     defaultValue: "INR",
   },
   AuthorizedPersonCount: {
-    type: DataTypes.STRING(500),
-    defaultValue: "1",
+    type: DataTypes.INTEGER,
+    defaultValue: 1,
   },
-  AuthorizedPerson1: DataTypes.STRING(500),
-  AuthorizedPerson2: DataTypes.STRING(500),
-  AuthorizedPerson3: DataTypes.STRING(500),
+  AuthorizedPerson1: DataTypes.STRING(50),
+  AuthorizedPerson2: DataTypes.STRING(50),
+  AuthorizedPerson3: DataTypes.STRING(50),
   AuthorizedPersonRole1: {
-    type: DataTypes.STRING(500),
-    defaultValue: "V",
+    type: DataTypes.STRING(50),
   },
   AuthorizedPersonRole2: {
     type: DataTypes.STRING(500),
-    defaultValue: "V",
   },
   AuthorizedPersonRole3: {
     type: DataTypes.STRING(500),
-    defaultValue: "V",
   },
   IFSCCode: DataTypes.STRING(50),
   SwiftCode: DataTypes.STRING(50),
   BankGST: DataTypes.STRING(50),
-  CreatedBy: DataTypes.STRING(500),
   AcFlag: {
     type: DataTypes.STRING(1),
     defaultValue: "Y",
   },
-  CreatedOn: DataTypes.DATE,
-  ModifiedBy: DataTypes.STRING(500),
-  ModifiedOn: DataTypes.DATE,
 });
 
 // Middleware for parsing JSON
@@ -110,7 +103,7 @@ sequelize.sync().then(() => {
 // GET endpoint to retrieve all banks
 router.get("/FnShowAllData", authToken, async (req, res) => {
   try {
-    const banks = await MBank.findAll({
+    const banks = await MBanks.findAll({
       attributes: {
         exclude: ["IUFlag"],
       },
@@ -120,15 +113,13 @@ router.get("/FnShowAllData", authToken, async (req, res) => {
   } catch (error) {
     console.error("Error retrieving data:", error);
     res.status(500).send("Internal Server Error");
-  } finally {
-    await sequelize.close(); // Close the database connection
   }
 });
 
 // GET endpoint to retrieve active banks
 router.get("/FnShowActiveData", authToken, async (req, res) => {
   try {
-    const banks = await MBank.findAll({
+    const banks = await MBanks.findAll({
       where: {
         AcFlag: "Y",
       },
@@ -141,8 +132,6 @@ router.get("/FnShowActiveData", authToken, async (req, res) => {
   } catch (error) {
     console.error("Error retrieving data:", error);
     res.status(500).send("Internal Server Error");
-  } finally {
-    await sequelize.close(); // Close the database connection
   }
 });
 
@@ -150,7 +139,7 @@ router.get("/FnShowActiveData", authToken, async (req, res) => {
 router.get("/FnShowParticularData", authToken, async (req, res) => {
   const bankId = req.query.BankId;
   try {
-    const banks = await MBank.findAll({
+    const banks = await MBanks.findOne({
       where: {
         BankId: bankId,
       },
@@ -163,8 +152,6 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
   } catch (error) {
     console.error("Error retrieving data:", error);
     res.status(500).send("Internal Server Error");
-  } finally {
-    await sequelize.close(); // Close the database connection
   }
 });
 
@@ -172,15 +159,13 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
 router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
   const bank = req.body;
   try {
-    const result = await MBank.upsert(bank, {
+    const result = await MBanks.upsert(bank, {
       returning: true,
     });
     res.json({ message: result ? "Operation successful" : "Operation failed" });
   } catch (error) {
     console.error("Error retrieving data:", error);
     res.status(500).send("Internal Server Error");
-  } finally {
-    await sequelize.close(); // Close the database connection
   }
 });
 

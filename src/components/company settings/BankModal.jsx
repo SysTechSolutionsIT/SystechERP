@@ -10,7 +10,7 @@ const BankModal = ({ visible, onClick }) => {
   const formik = useFormik({
     initialValues: {
       BankName: "",
-      branchName: "",
+      BranchName: "",
       BranchAddress: "",
       AccountType: "",
       AccountNo: "",
@@ -22,6 +22,7 @@ const BankModal = ({ visible, onClick }) => {
       BankGST: "",
       AuthorizedPersonCount: "",
       Remark: "",
+      AcFlag: "Y",
       IUFlag: "I",
       AuthorizedPerson1: "",
       AuthorizedPersonRole1: "",
@@ -52,6 +53,8 @@ const BankModal = ({ visible, onClick }) => {
         const data = response.data;
         console.log(data);
         alert("Bank added successfully");
+        onClick();
+        window.location.reload();
         // Handle successful response
       } else {
         console.error(`HTTP error! Status: ${response.status}`);
@@ -121,10 +124,10 @@ const BankModal = ({ visible, onClick }) => {
                   Branch Name
                 </p>
                 <input
-                  id="branchName"
+                  id="BranchName"
                   type="text"
                   placeholder="Enter Branch Name"
-                  value={formik.values.branchName}
+                  value={formik.values.BranchName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -134,10 +137,10 @@ const BankModal = ({ visible, onClick }) => {
                   Branch Address
                 </p>
                 <input
-                  id="branchAddress"
+                  id="BranchAddress"
                   type="text"
                   placeholder=" Enter Branch Address"
-                  value={formik.values.branchAddress}
+                  value={formik.values.BranchAddress}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -236,10 +239,10 @@ const BankModal = ({ visible, onClick }) => {
                   Currency Type
                 </p>
                 <select
-                  id="currency"
+                  id="CurrencyType"
                   name="currency"
                   className="text-[13px] w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
-                  value={formik.values.currency}
+                  value={formik.values.CurrencyType}
                   onChange={formik.handleChange}
                 >
                   {currencies.length > 0 &&

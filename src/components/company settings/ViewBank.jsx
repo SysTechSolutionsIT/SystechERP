@@ -5,120 +5,130 @@ import { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import { useAuth } from "../Login";
 const ViewBank = ({ visible, onClick, edit, ID }) => {
-  const { token } = useAuth()
+  const { token } = useAuth();
   const [details, setDetails] = useState([]);
   const formik = useFormik({
     initialValues: {
-      bankName: "",
-      branchName: "",
-      branchAddress: "",
-      accountType: "",
-      accountNo: "",
-      ifscCode: "",
-      swiftCode: "",
-      registeredEmail: "",
-      registeredContact: "",
-      currencyType: "",
-      bankGst: "",
-      authPersonCount: "",
-      remark: "",
-      authPerson1: "",
-      authPerson1Op: "",
-      authPerson2: "",
-      authPerson2Op: "",
-      authPerson3: "",
-      authPerson3Op: "",
+      BankName: "",
+      BranchName: "",
+      BranchAddress: "",
+      AccountType: "",
+      AccountNo: "",
+      IFSCCode: "",
+      SwiftCode: "",
+      RegisteredEmailIdId: "",
+      RegisteredContactNoNo: "",
+      CurrencyType: "",
+      BankGST: "",
+      AuthorizedPersonCount: "",
+      Remark: "",
+      AcFlag: "Y",
+      IUFlag: "U",
+      AuthorizedPerson1: "",
+      AuthorizedPersonRole1: "",
+      AuthorizedPerson2: "",
+      AuthorizedPersonRole2: "",
+      AuthorizedPerson3: "",
+      AuthorizedPersonRole3: "",
     },
     onSubmit: (values) => {
       console.log(values);
       const updatedData = {
-      bankName: values.bankName,
-      branchName: values.branchName,
-      branchAddress: values.branchAddress,
-      accountType: values.accountType,
-      accountNo: values.accountNo,
-      ifscCode: values.ifscCode,
-      swiftCode: values.swiftCode,
-      registeredEmail: values.registeredEmail,
-      registeredContact: values.registeredContact,
-      currencyType: values.currencyType,
-      bankGst: values.bankGst,
-      authPersonCount: values.authPersonCount,
-      remark: values.remark,
-      authPerson1: values.authPerson1,
-      authPerson1Op: values.authPerson1Op,
-      authPerson2: values.authPerson2,
-      authPerson2Op: values.authPerson2Op,
-      authPerson3: values.authPerson3,
-      authPerson3Op: values.authPerson3Op,
-      }
-      updateBanks(updatedData)
+        BankId: ID,
+        BankName: values.BankName,
+        BranchName: values.BranchName,
+        BranchAddress: values.BranchAddress,
+        AccountType: values.AccountType,
+        AccountNo: values.AccountNo,
+        IFSCCode: values.IFSCCode,
+        SwiftCode: values.SwiftCode,
+        RegisteredEmailId: values.RegisteredEmailId,
+        RegisteredContactNo: values.RegisteredContactNo,
+        CurrencyType: values.CurrencyType,
+        BankGST: values.BankGST,
+        AuthorizedPersonCount: values.AuthorizedPersonCount,
+        Remark: values.Remark,
+        AuthorizedPerson1: values.AuthorizedPerson1,
+        AuthorizedPersonRole1: values.AuthorizedPersonRole1,
+        AuthorizedPerson2: values.AuthorizedPerson2,
+        AuthorizedPersonRole2: values.AuthorizedPersonRole2,
+        AuthorizedPerson3: values.AuthorizedPerson3,
+        AuthorizedPersonRole3: values.AuthorizedPersonRole3,
+      };
+      console.log(updatedData);
+      updateBanks(updatedData);
     },
   });
 
-  const updateBanks = async (data) =>{
-    try{
-      const response = axios.patch(`http://localhost:5500/bankmaster/update-bank/${ID}`, data,
-      {
-        headers:{
-          Authorization: `Bearer ${token}`
-        }
+  const updateBanks = async (data) => {
+    axios
+      .post(`http://localhost:5500/bankmaster/FnAddUpdateDeleteRecord`, data, {
+        params: { BankId: ID },
+        headers: { Authorization: `Bearer ${token}` },
       })
-      alert('Bank Data Updated')
-    } catch(error){
-      console.log('Error in patch', error)
-    }
-  }
+      .then((response) => {
+        // Handle success
+        console.log("Data updated successfully", response);
+        // You can also perform additional actions here, like closing the modal or updating the UI.
+        window.location.reload();
+      })
+      .catch((error) => {
+        // Handle error
+        console.error("Error updating data", error);
+      });
+  };
 
-  
   useEffect(() => {
-    fetchBanks()
+    fetchBanks();
   }, [ID]);
 
-    const fetchBanks = async () => {
-      try {
-        const response = await axios.get(`http://localhost:5500/bankmaster/banks/${ID}`,
+  const fetchBanks = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5500/bankmaster/FnShowParticularData`,
         {
-          headers:{
-            Authorization: `Bearer ${token}`
-          }
-        });
-        // console.log("Response Object", response);
-        const data = response.data;
-        // console.log(data);
-        setDetails(data.BankbyId);
-      } catch (error) {
-        console.log("Error while fetching course data: ", error.message);
-      }
+          params: { BankId: ID },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // console.log("Response Object", response);
+      const data = response.data;
+      console.log("data get:", data);
+      setDetails(data);
+    } catch (error) {
+      console.log("Error while fetching course data: ", error.message);
     }
+  };
 
-    useEffect(() =>{
-      if(details){
-        formik.setValues({
-      bankName: details.bankName,
-      branchName: details.branchName,
-      branchAddress: details.branchAddress,
-      accountType: details.accountType,
-      accountNo: details.accountNo,
-      ifscCode: details.ifscCode,
-      swiftCode: details.swiftCode,
-      registeredEmail: details.registeredEmail,
-      registeredContact: details.registeredContact,
-      currencyType: details.currencyType,
-      bankGst: details.bankGst,
-      authPersonCount: details.authPersonCount,
-      remark: details.remark,
-      authPerson1: details.authPerson1,
-      authPerson1Op: details.authPerson1Op,
-      authPerson2: details.authPerson2,
-      authPerson2Op: details.authPerson2Op,
-      authPerson3: details.authPerson3,
-      authPerson3Op: details.authPerson3Op,
-        })
-      }
-    },[details])
+  useEffect(() => {
+    if (details) {
+      formik.setValues({
+        BankName: details.BankName,
+        BranchName: details.BranchName,
+        BranchAddress: details.BranchAddress,
+        AccountType: details.AccountType,
+        AccountNo: details.AccountNo,
+        IFSCCode: details.IFSCCode,
+        SwiftCode: details.SwiftCode,
+        RegisteredEmailId: details.RegisteredEmailId,
+        RegisteredContactNo: details.RegisteredContactNo,
+        CurrencyType: details.CurrencyType,
+        BankGST: details.BankGST,
+        AuthorizedPersonCount: details.AuthorizedPersonCount,
+        Remark: details.Remark,
+        AuthorizedPerson1: details.AuthorizedPerson1,
+        AuthorizedPersonRole1: details.AuthorizedPersonRole1,
+        AuthorizedPerson2: details.AuthorizedPerson2,
+        AuthorizedPersonRole2: details.AuthorizedPersonRole2,
+        AuthorizedPerson3: details.AuthorizedPerson3,
+        AuthorizedPersonRole3: details.AuthorizedPersonRole3,
+      });
+    }
+  }, [details]);
 
-console.log('Details array', details)
+  console.log("Details array", details);
   if (!visible) return null;
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -140,15 +150,17 @@ console.log('Details array', details)
           <div className="py-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="capatilize text-left font-semibold text-[13px]">Bank ID</p>
+                <p className="capatilize text-left font-semibold text-[13px]">
+                  Bank ID
+                </p>
                 <input
-                  id="bankId"
+                  id="BankId"
                   type="number"
                   placeholder="Bank ID"
-                  value={details?.id}
+                  value={details?.BankId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
-                  disabled={!edit}
+                  disabled={true}
                 />
               </div>
               <div>
@@ -156,10 +168,10 @@ console.log('Details array', details)
                   Bank Name
                 </p>
                 <input
-                  id="bankName"
+                  id="BankName"
                   type="text"
                   placeholder="Enter Bank Name"
-                  value={formik.values.bankName}
+                  value={formik.values.BankName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -170,10 +182,10 @@ console.log('Details array', details)
                   Branch Name
                 </p>
                 <input
-                  id="branchName"
+                  id="BranchName"
                   type="text"
                   placeholder="Enter Branch Name"
-                  value={formik.values.branchName}
+                  value={formik.values.BranchName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -184,10 +196,10 @@ console.log('Details array', details)
                   Branch Address
                 </p>
                 <input
-                  id="branchAddress"
+                  id="BranchAddress"
                   type="text"
                   placeholder=" Enter Branch Address"
-                  value={formik.values.branchAddress}
+                  value={formik.values.BranchAddress}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -198,8 +210,8 @@ console.log('Details array', details)
                   Account Type
                 </p>
                 <select
-                  id="accountType"
-                  value={formik.values.accountType}
+                  id="AccountType"
+                  value={formik.values.AccountType}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -223,10 +235,10 @@ console.log('Details array', details)
                   Account No.
                 </p>
                 <input
-                  id="accountNo"
+                  id="AccountNo"
                   type="number"
                   placeholder=" Enter Account No."
-                  value={formik.values.accountNo}
+                  value={formik.values.AccountNo}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -237,10 +249,10 @@ console.log('Details array', details)
                   IFSC Code
                 </p>
                 <input
-                  id="ifscCode"
+                  id="IFSCCode"
                   type="text"
                   placeholder=" Enter IFSC Code"
-                  value={formik.values.ifscCode}
+                  value={formik.values.IFSCCode}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -251,10 +263,10 @@ console.log('Details array', details)
                   SWIFT Code.
                 </p>
                 <input
-                  id="swiftCode"
+                  id="SwiftCode"
                   type="text"
                   placeholder=" Enter SWIFT Code"
-                  value={formik.values.swiftCode}
+                  value={formik.values.SwiftCode}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -265,10 +277,10 @@ console.log('Details array', details)
                   Registered Email ID
                 </p>
                 <input
-                  id="registeredEmail"
+                  id="RegisteredEmailId"
                   type="text"
                   placeholder=" Enter Registered Email"
-                  value={formik.values.registeredEmail}
+                  value={formik.values.RegisteredEmailId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -279,10 +291,10 @@ console.log('Details array', details)
                   Registered Contact No.
                 </p>
                 <input
-                  id="registeredContact"
+                  id="RegisteredContactNo"
                   type="number"
                   placeholder=" Enter Registered Contact No."
-                  value={formik.values.registeredContact}
+                  value={formik.values.RegisteredContactNo}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -293,8 +305,8 @@ console.log('Details array', details)
                   Currency Type
                 </p>
                 <select
-                  id="currencyType"
-                  value={formik.values.currencyType}
+                  id="CurrencyType"
+                  value={formik.values.CurrencyType}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -317,10 +329,10 @@ console.log('Details array', details)
                   Bank GST
                 </p>
                 <input
-                  id="bankGst"
+                  id="BankGST"
                   type="text"
                   placeholder=" Enter Bank GST"
-                  value={formik.values.bankGst}
+                  value={formik.values.BankGST}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -331,22 +343,24 @@ console.log('Details array', details)
                   Authorized Person Count
                 </p>
                 <input
-                  id="authPersonCount"
+                  id="AuthorizedPersonCount"
                   type="number"
                   placeholder=" Enter Authorized Person Count."
-                  value={formik.values.authPersonCount}
+                  value={formik.values.AuthorizedPersonCount}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
               </div>
               <div>
-                <p className="capatilize text-left font-semibold  text-[13px]">Remarks</p>
+                <p className="capatilize text-left font-semibold  text-[13px]">
+                  Remarks
+                </p>
                 <input
-                  id="remark"
+                  id="Remark"
                   type="text"
                   placeholder=" Enter Remarks."
-                  value={formik.values.remark}
+                  value={formik.values.Remark}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -357,23 +371,25 @@ console.log('Details array', details)
                   Authorized Person 1
                 </p>
                 <input
-                  id="authPerson1"
+                  id="AuthorizedPerson1"
                   type="text"
-                  value={formik.values.authPerson1}
+                  value={formik.values.AuthorizedPerson1}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
               </div>
               <div>
-                <p className="capitalize text-left text-[13px] font-semibold">Authorized Person 1</p>
+                <p className="capitalize text-left text-[13px] font-semibold">
+                  Authorized Person 1
+                </p>
                 <div className="space-y-2">
                   <label className="flex items-center text-[11px]">
                     <input
                       type="radio"
-                      id="authPerson1Op"
+                      id="AuthorizedPersonRole1"
                       value="View"
-                      checked={formik.values.authPerson1Op === "View"}
+                      checked={formik.values.AuthorizedPersonRole1 === "View"}
                       onChange={formik.handleChange}
                       disabled={!edit}
                       className="mr-2"
@@ -383,9 +399,11 @@ console.log('Details array', details)
                   <label className="flex items-center text-[11px]">
                     <input
                       type="radio"
-                      id="authPerson1Op"
+                      id="AuthorizedPersonRole1"
                       value="Operation"
-                      checked={formik.values.authPerson1Op === "Operation"}
+                      checked={
+                        formik.values.AuthorizedPersonRole1 === "Operation"
+                      }
                       onChange={formik.handleChange}
                       disabled={!edit}
                       className="mr-2"
@@ -399,9 +417,9 @@ console.log('Details array', details)
                   Authorized Person 2
                 </p>
                 <input
-                  id="authPerson2"
+                  id="AuthorizedPerson2"
                   type="text"
-                  value={formik.values.authPerson2}
+                  value={formik.values.AuthorizedPerson2}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -415,9 +433,9 @@ console.log('Details array', details)
                   <label className="flex items-center text-[11px]">
                     <input
                       type="radio"
-                      id="authPerson2Op"
+                      id="AuthorizedPersonRole2"
                       value="View"
-                      checked={formik.values.authPerson2Op === "View"}
+                      checked={formik.values.AuthorizedPersonRole2 === "View"}
                       onChange={formik.handleChange}
                       disabled={!edit}
                       className="mr-2"
@@ -427,9 +445,11 @@ console.log('Details array', details)
                   <label className="flex items-center text-[11px]">
                     <input
                       type="radio"
-                      id="authPerson2Op"
+                      id="AuthorizedPersonRole2"
                       value="Operation"
-                      checked={formik.values.authPerson2Op === "Operation"}
+                      checked={
+                        formik.values.AuthorizedPersonRole2 === "Operation"
+                      }
                       onChange={formik.handleChange}
                       disabled={!edit}
                       className="mr-2"
@@ -443,23 +463,25 @@ console.log('Details array', details)
                   Authorized Person 3
                 </p>
                 <input
-                  id="authPerson3"
+                  id="AuthorizedPerson3"
                   type="text"
-                  value={formik.values.authPerson3}
+                  value={formik.values.AuthorizedPerson3}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
               </div>
               <div>
-                <p className="capitalize text-left text-[13px] font-semibold">Authorized Person 3</p>
+                <p className="capitalize text-left text-[13px] font-semibold">
+                  Authorized Person 3
+                </p>
                 <div className="space-y-2">
                   <label className="flex items-center text-[11px]">
                     <input
                       type="radio"
-                      id="authPerson3Op"
+                      id="AuthorizedPersonRole3"
                       value="View"
-                      checked={formik.values.authPerson3Op === "View"}
+                      checked={formik.values.AuthorizedPersonRole3 === "View"}
                       onChange={formik.handleChange}
                       disabled={!edit}
                       className="mr-2 text-[11px]"
@@ -469,9 +491,11 @@ console.log('Details array', details)
                   <label className="flex items-center text-[11px]">
                     <input
                       type="radio"
-                      id="authPerson3Op"
+                      id="AuthorizedPersonRole3"
                       value="Operation"
-                      checked={formik.values.authPerson3Op === "Operation"}
+                      checked={
+                        formik.values.AuthorizedPersonRole3 === "Operation"
+                      }
                       onChange={formik.handleChange}
                       disabled={!edit}
                       className="mr-2 "
