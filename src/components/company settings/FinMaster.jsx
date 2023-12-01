@@ -7,7 +7,7 @@ import { useAuth } from "../Login";
 
 export const finData = [
   {
-    finId: 1,
+    FYearId: 1,
     Name: "Systech Solutions Pvt. Ltd",
     ShortName: "SYS",
     YearClose: 2021,
@@ -17,7 +17,7 @@ export const finData = [
     Status: "Active",
   },
   {
-    finId: 2,
+    FYearId: 2,
     Name: "TechCorp Inc.",
     ShortName: "TCI",
     YearClose: 2021,
@@ -27,7 +27,7 @@ export const finData = [
     Status: "Active",
   },
   {
-    finId: 3,
+    FYearId: 3,
     Name: "Global Finance Group",
     ShortName: "GFG",
     StartDate: 22 / 1 / 22,
@@ -37,7 +37,7 @@ export const finData = [
     Status: "Active",
   },
   {
-    finId: 4,
+    FYearId: 4,
     Name: "Investment Innovators Ltd.",
     ShortName: "IIL",
     StartDate: 22 / 1 / 22,
@@ -47,7 +47,7 @@ export const finData = [
     Status: "Active",
   },
   {
-    finId: 5,
+    FYearId: 5,
     Name: "Capital Ventures International",
     ShortName: "CVI",
     StartDate: 22 / 1 / 22,
@@ -57,7 +57,7 @@ export const finData = [
     Status: "Active",
   },
   {
-    finId: 6,
+    FYearId: 6,
     Name: "Alpha Financial Services",
     ShortName: "AFS",
     StartDate: 22 / 1 / 22,
@@ -87,10 +87,6 @@ const FinMaster = () => {
     EndDate: true,
     ShortName: true,
     YearClose: true,
-    CreatedBy: true,
-    ModifiedBy: true,
-    CreatedOn: true,
-    ModifiedOn: true,
     Remark: true,
   });
 
@@ -101,12 +97,8 @@ const FinMaster = () => {
     EndDate: "End Date",
     ShortName: "Short Name",
     YearClose: "Year Close",
-    CreatedBy: "Created By",
-    ModifiedBy: "Modified By",
-    CreatedOn: "Created On",
-    ModifiedOn: "Modified On",
     Remark: "Remark",
-  }
+  };
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedColumns, setSelectedColumns] = useState([
@@ -119,7 +111,6 @@ const FinMaster = () => {
       [columnName]: !prevVisibility[columnName],
     }));
   };
-
 
   useEffect(() => {
     console.log("Selected Columns:", selectedColumns);
@@ -165,7 +156,7 @@ const FinMaster = () => {
   //Max Searchbar width
   const getColumnMaxWidth = (columnName) => {
     let maxWidth = 0;
-    const allRows = [...finData, ...filteredData];
+    const allRows = [...Fins, ...filteredData];
 
     allRows.forEach((row) => {
       const cellContent = row[columnName];
@@ -192,7 +183,9 @@ const FinMaster = () => {
 
   const fetchFinData = async () => {
     try {
-      const response = await axios.get("http://localhost:5500/financials/FnShowActiveData");
+      const response = await axios.get(
+        "http://localhost:5500/financials/FnShowActiveData"
+      );
       if (response.status === 200) {
         const data = response.data;
         setFins(data);
@@ -200,8 +193,10 @@ const FinMaster = () => {
         console.error("Failed to fetch data");
       }
     } catch (error) {
-      console.error("Error while fetching financial year data: ", error.message);
-
+      console.error(
+        "Error while fetching financial year data: ",
+        error.message
+      );
     }
   };
   console.log(Fins);
@@ -230,9 +225,7 @@ const FinMaster = () => {
   return (
     <div className="top-25 min-w-[40%]">
       <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
-        <div className="text-[15px]">
-          Company Settings / Financial Master
-        </div>
+        <div className="text-[15px]">Company Settings / Financial Master</div>
         <div className="flex gap-4">
           <button
             onClick={() => setShowDropdown(!showDropdown)}
@@ -241,7 +234,9 @@ const FinMaster = () => {
             Column Visibility
             <Icon
               icon="fe:arrow-down"
-              className={`ml-2 ${showDropdown ? "rotate-180" : ""} cursor-pointer`}
+              className={`ml-2 ${
+                showDropdown ? "rotate-180" : ""
+              } cursor-pointer`}
             />
           </button>
           {showDropdown && (
@@ -274,9 +269,7 @@ const FinMaster = () => {
                   />
                   <span
                     className={
-                      columnVisibility[columnName]
-                        ? "font-semibold"
-                        : ""
+                      columnVisibility[columnName] ? "font-semibold" : ""
                     }
                   >
                     {columnName}
@@ -336,14 +329,12 @@ const FinMaster = () => {
                 <th className="px-1 text-[13px] font-bold text-black border-2 border-gray-400">
                   Actions
                 </th>
-                <th className=" w-auto px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
-                  ID
-                </th>
                 {selectedColumns.map((columnName) => (
                   <th
                     key={columnName}
-                    className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] ${columnVisibility[columnName] ? "" : "hidden"
-                      }`}
+                    className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] ${
+                      columnVisibility[columnName] ? "" : "hidden"
+                    }`}
                   >
                     {columnNames[columnName]}
                   </th>
@@ -351,143 +342,149 @@ const FinMaster = () => {
               </tr>
               <tr>
                 <th className="border-2"></th>
-                <th className="p-2 font-bold text-black border-2 "></th>
-                {selectedColumns.map((columnName) => (
-                  columnVisibility[columnName] ? (
-                    <th key={columnName} className="p-2 font-semibold text-black border-2">
-                      <input
-                        type="text"
-                        placeholder={`Search `}
-                        className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
-                        style={{ maxWidth: getColumnMaxWidth(columnName) + "px" }}
-                        onChange={(e) => handleSearchChange(columnName, e.target.value)}
-                      />
-                    </th>
-                  ) : null
-                ))}
+                {selectedColumns.map(
+                  (columnName) =>
+                    columnVisibility[columnName] && (
+                      <th
+                        key={columnName}
+                        className="p-2 font-bold text-black border-2 "
+                        style={{
+                          maxWidth: getColumnMaxWidth(columnName) + "px",
+                        }} // Set your preferred min-width
+                      >
+                        <input
+                          type="text"
+                          placeholder={`Search `}
+                          className="w-full h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
+                          style={{
+                            maxWidth: getColumnMaxWidth(columnName) + "px",
+                          }}
+                          onChange={(e) =>
+                            handleSearchChange(columnName, e.target.value)
+                          }
+                        />
+                      </th>
+                    )
+                )}
               </tr>
             </thead>
             <tbody className="">
               {filteredData.length > 0
                 ? filteredData.map((result, key) => (
-                  <tr key={key}>
-                    <td className="px-2 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setFin(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setFid(result.finId); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setFin(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setFid(result.finId); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {result.finId}
-                    </td>
-                    {selectedColumns.map((columnName) => (
-                      <td
-                        key={columnName}
-                        className={`px-4 border-2 whitespace-normal text-left text-[11px] ${columnVisibility[columnName] ? "" : "hidden"
+                    <tr key={key}>
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setFin(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setFid(result.FYearId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setFin(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setFid(result.FYearId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                          />
+                        </div>
+                      </td>
+                      {selectedColumns.map((columnName) => (
+                        <td
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-left text-[11px] ${
+                            columnVisibility[columnName] ? "" : "hidden"
                           }`}
-                      >
-                        {columnName === "YearClose"
-                          ? result[columnName]
-                            ? "Active"
-                            : "Inactive"
-                          : columnName === "Status"
+                        >
+                          {columnName === "YearClose"
+                            ? result[columnName]
+                              ? "Active"
+                              : "Inactive"
+                            : columnName === "AcFlag"
                             ? result[columnName]
                               ? "Active"
                               : "Inactive"
                             : result[columnName]}
-                      </td>
-                    ))}
-                  </tr>
-                ))
+                        </td>
+                      ))}
+                    </tr>
+                  ))
                 : Fins.length > 0 &&
-                Fins.map((result, index) => (
-                  <tr key={index}>
-                    <td className="px-2 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setFin(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setFid(result.finId); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setFin(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setFid(result.finId); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {result.finId}
-                    </td>
-                    {selectedColumns.map((columnName) => (
-                      <td
-                        key={columnName}
-                        className={`px-4 border-2 whitespace-normal text-left text-[11px] ${columnVisibility[columnName] ? "" : "hidden"
+                  Fins.map((result, index) => (
+                    <tr key={index}>
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setFin(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setFid(result.FYearId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setFin(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setFid(result.FYearId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                          />
+                        </div>
+                      </td>
+                      {selectedColumns.map((columnName) => (
+                        <td
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-left text-[11px] ${
+                            columnVisibility[columnName] ? "" : "hidden"
                           }`}
-                      >
-                        {columnName === "yearClose"
-                          ? result[columnName]
-                            ? "Active"
-                            : "Inactive"
-                          : columnName === "status"
+                        >
+                          {columnName === "YearClose"
+                            ? result[columnName]
+                              ? "Active"
+                              : "Inactive"
+                            : columnName === "status"
                             ? result[columnName]
                               ? "Active"
                               : "Inactive"
                             : result[columnName]}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
             </tbody>
           </table>
         </div>
