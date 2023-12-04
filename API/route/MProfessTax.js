@@ -103,18 +103,12 @@ const MProfessTax = sequelize.define(
     },
   },
   {
-    tableName: "MProfessTax",
     timestamps: false, // Set this to true if you have createdAt and updatedAt columns
     // Other model options go here
   }
 );
 // Middleware for parsing JSON
 router.use(bodyParser.json());
-
-// Model synchronization
-sequelize.sync().then(() => {
-  console.log("Models synced");
-});
 
 // GET endpoint to retrieve all financial year entires
 router.get("/FnShowAllData", authToken, async (req, res) => {

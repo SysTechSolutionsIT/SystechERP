@@ -57,10 +57,6 @@ const MEmployeeGrade = sequelize.define(
 
   router.use(bodyParser.json())
 
-  sequelize.sync().then(() =>{
-    console.log("Models synced")
-  })
-
   router.get("/FnShowAllData", authToken, async (req, res) =>{
     try {
         const employeeGrade = await MEmployeeGrade.findAll({

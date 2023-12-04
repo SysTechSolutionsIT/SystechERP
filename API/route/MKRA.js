@@ -58,9 +58,6 @@ const MKRA = sequelize.define('MKRA', {
 
   router.use(bodyParser.json())
 
-  sequelize.sync().then(() =>{
-    console.log("Models synced")
-  })
 
   router.get("/FnShowAllData", authToken, async (req, res) =>{
     try {
