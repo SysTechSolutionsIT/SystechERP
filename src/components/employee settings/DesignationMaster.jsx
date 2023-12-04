@@ -83,7 +83,7 @@ const DesignationMaster = () => {
   useEffect(() =>{
     const fetchDesignations = async() =>{
       try{
-        const response = await axios.get("http://localhost:5500/designation-master/get", {
+        const response = await axios.get("http://localhost:5500/designation-master/FnShowActiveData", {
           headers:{
             Authorization: `Bearer ${token}`
           }
@@ -97,13 +97,24 @@ const DesignationMaster = () => {
     fetchDesignations()
   },[token])
 
-  const deleteDesignation = async(id) =>{
-    alert('Are you sure you want to delete this entry?')
+  const deleteDesignation = async(DeleteId) =>{
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this Employee Type?"
+    );
+
+    if (!confirmDelete) {
+      return;
+    }
     try{
-      const response = await axios.delete(`http://localhost:5500/designation-master/delete/${id}`,{
-        headers:{
-          Authorization: `Bearer ${token}`
-        }
+      const response = await axios.post(`http://localhost:5500/designation-master/FnAddUpdateDeleteRecord`,
+        {
+          DesignationId: DeleteId,
+          IUFlag:"D"
+        },
+        {
+          headers:{
+            Authorization: `Bearer ${token}`
+          }
       })
       alert('Designation Deleted')
       window.location.reload()
@@ -126,8 +137,8 @@ const DesignationMaster = () => {
   };
 
   const [columnVisibility, setColumnVisibility] = useState({
-    Name: true,
-    ReportDesignationName: true
+    DesignationName: true,
+    ReportDesignationId: true
   });
 
   const [showDropdown, setShowDropdown] = useState(false);
@@ -346,7 +357,7 @@ const DesignationMaster = () => {
             </thead>
             <tbody>
               {filteredData.length > 0
-                ? filteredData.map((entry, index) => (
+                ? filteredData.map((result, index) => (
                   <tr key={index}>
                     <td className="px-2 border-2">
                       <div className="flex items-center gap-2 text-center justify-center">
@@ -359,7 +370,7 @@ const DesignationMaster = () => {
                           onClick={() => {
                             setVeDesign(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
-                            setid(entry.id); // Pass ID to VEModal
+                            setid(result.DesignationId); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -371,7 +382,7 @@ const DesignationMaster = () => {
                           onClick={() => {
                             setVeDesign(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
-                            setid(entry.id); // Pass ID to VEModal
+                            setid(result.DesignationId); // Pass ID to VEModal
                           }}
                         />
                         {/* <ViewDesignation
@@ -386,12 +397,12 @@ const DesignationMaster = () => {
                           color="#556987"
                           width="20"
                           height="20"
-                          onClick={()=> deleteDesignation(entry.id)}
+                          onClick={()=> deleteDesignation(result.DesignationId)}
                         />
                       </div>
                     </td>
                     <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
-                      {entry.id}
+                      {result.DesignationId}
                     </td>
                     {selectedColumns.map((columnName) => (
                       <td
@@ -399,12 +410,12 @@ const DesignationMaster = () => {
                         className={`px-4 text-[11px] border-2 whitespace-normal text-left${columnVisibility[columnName] ? "" : "hidden"
                           }`}
                       >
-                        {entry[columnName]}
+                        {result[columnName]}
                       </td>
                     ))}
                   </tr>
                 ))
-                : DesignData.map((entry, index) => (
+                : DesignData.map((result, index) => (
                   <tr key={index}>
                     <td className="px-2 text-[11px] border-2">
                       <div className="flex items-center gap-2 text-center justify-center">
@@ -417,7 +428,7 @@ const DesignationMaster = () => {
                           onClick={() => {
                             setVeDesign(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
-                            setid(entry.id); // Pass ID to VEModal
+                            setid(result.DesignationId); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -429,7 +440,7 @@ const DesignationMaster = () => {
                           onClick={() => {
                             setVeDesign(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
-                            setid(entry.id); // Pass ID to VEModal
+                            setid(result.DesignationId); // Pass ID to VEModal
                           }}
                         />
                         {/* <ViewDesignation
@@ -444,12 +455,12 @@ const DesignationMaster = () => {
                           color="#556987"
                           width="20"
                           height="20"
-                          onClick={()=> deleteDesignation(entry.id)}
+                          onClick={()=> deleteDesignation(result.DesignationId)}
                         />
                       </div>
                     </td>
                     <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
-                      {entry.id}
+                      {result.DesignationId}
                     </td>
                     {selectedColumns.map((columnName) => (
                       <td
@@ -457,8 +468,7 @@ const DesignationMaster = () => {
                         className={`px-4 text-[11px] border-2 whitespace-normal ${columnName === "EmployeeFare" && "text-right"
                           } ${columnVisibility[columnName] ? "" : "hidden"}`}
                       >
-                        {columnName === "EmployeeFare" && "₹"}
-                        {entry[columnName]}
+                        {result[columnName]}
                       </td>
                     ))}
                   </tr>

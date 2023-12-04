@@ -4,16 +4,19 @@ import { DesignData } from './DesignationMaster';
 import { Icon } from '@iconify/react';
 import axios from 'axios';
 import { useAuth } from '../Login';
+import { useEffect } from 'react';
 
 const DesignationModal = ({ visible, onClick }) => {
+    const [reportingDesignation, setReportingDesignation] = useState([])
     const { token } = useAuth()
     const formik = useFormik({
         initialValues: {
-            // ID: "",
-            Name: "",
+            DesignationName:"",
             ReportDesignationName: "",
-            Status: "",
-            Remark: ""
+            ShortName:"",
+            DesignationPosition:"",
+            Remark: "",
+            IUFlag:"I"
         },
         onSubmit: (values) => {
             console.log(values);
@@ -23,7 +26,7 @@ const DesignationModal = ({ visible, onClick }) => {
 
     const addDesignation = async(values) =>{
         try{
-            const response = await axios.post("http://localhost:5500/designation-master/add", values, {
+            const response = await axios.post("http://localhost:5500/designation-master/FnAddUpdateDeleteRecord", values, {
                 headers:{
                   Authorization: `Bearer ${token}`
                 }
@@ -33,7 +36,22 @@ const DesignationModal = ({ visible, onClick }) => {
             console.error('Error', error);
         }
     }
-    
+
+    useEffect(() =>{
+        const fetchDesignations = async () => {
+            try{
+                const response = await axios.get("http://localhost:5500/designation-master/FnShowActiveData",{
+                    headers: { Authorization: `Bearer ${token}`}
+                })
+                const data = response.data
+                console.log(data)
+                setReportingDesignation(data)
+            } catch (error){
+                console.error('Error fetching reporting to data', error);
+            }
+        }
+        fetchDesignations()
+    }, [token])
 
     const [isStatusChecked, setStatusChecked] = useState(false)
     const handleCheckboxChange = (fieldName, setChecked, event) => {
@@ -68,7 +86,7 @@ const DesignationModal = ({ visible, onClick }) => {
                                 <p className="text-[13px] font-semibold">Designation ID</p>
                                 <input
                                     type="number"
-                                    placeholder="Enter Designation ID"
+                                    disabled={true}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                 />
@@ -76,10 +94,10 @@ const DesignationModal = ({ visible, onClick }) => {
                             <div>
                                 <p className="text-[13px] font-semibold">Designation Name</p>
                                 <input
-                                    id="Name"
+                                    id="DesignationName"
                                     type="text"
                                     placeholder="Enter Designation Name"
-                                    value={formik.values.Name}
+                                    value={formik.values.DesignationName}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                 />
@@ -87,17 +105,21 @@ const DesignationModal = ({ visible, onClick }) => {
                             <div>
                                 <p className="text-[13px] font-semibold">Report Designation</p>
                                 <select
-                                    id="ReportDesignationName"
-                                    value={formik.values.ReportDesignationName}
-                                    className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                                    onChange={formik.handleChange}
-                                >
-                                    <option value="">Select Report Designation</option>
-                                    <option value="Administrator">Administrator</option>
-                                    <option value="HR">HR</option>
-                                    <option value="User">User</option>
-
-                                </select>
+                                id="ReportDesignationName"
+                                value={formik.values.ReportDesignationName}
+                                className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                                onChange={formik.handleChange}
+                            >
+                                <option value={formik.values.ReportDesignationName}>
+                                    {formik.values.ReportDesignationName}
+                                </option>
+                                <option value="None">None</option>
+                                {reportingDesignation.map((entry) => (
+                                    <option key={entry.DesignationId} value={entry.DesignationName}>
+                                        {entry.DesignationName}
+                                    </option>
+                                ))}
+                            </select>
                             </div>
                             <div>
                                 <p className="text-[13px] font-semibold">Remarks</p>
@@ -110,20 +132,6 @@ const DesignationModal = ({ visible, onClick }) => {
                                     onChange={formik.handleChange}
                                 />
                             </div>
-                            <div>
-                            <p className="capitalize font-semibold text-[13px]">Status</p>
-                            <label className="capitalize font-semibold text-[11px]">
-                            <input
-                                id="Status"
-                                type="checkbox"
-                                checked={formik.values.Status}
-                                value={formik.values.Status}
-                                className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border-2 rounded-lg`}
-                                onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}
-                            />
-                            Active
-                            </label>
-                        </div>
                         </div>
                     </div>
                     <div className="flex gap-10 justify-center">

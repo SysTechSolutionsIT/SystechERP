@@ -187,6 +187,7 @@ function Login() {
               onChange={handleCompanyChange}
               className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-400 text-[13px]"
             >
+              <option value="">Select a branch</option>
               {companies.map((company, index) => (
                 <option key={index} value={company.CompanyId}>
                   {company.CompanyName}

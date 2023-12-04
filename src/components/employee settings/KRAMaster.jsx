@@ -24,7 +24,7 @@ const KRAMaster = () => {
     useEffect(() =>{
         const fetchKRA = async() =>{
             try{
-                const response = await axios.get("http://localhost:5500/KRA-master/get",{
+                const response = await axios.get("http://localhost:5500/KRA-master/FnShowActiveData",{
                     headers:{
                         Authorization: `Bearer ${token}`
                     }
@@ -67,10 +67,9 @@ const KRAMaster = () => {
     };
 
     const [columnVisibility, setColumnVisibility] = useState({
-        Name: true,
+        KRAName: true,
         Duration: true,
         Points: true,
-        Status: true
     });
 
     const [showDropdown, setShowDropdown] = useState(false);
@@ -302,7 +301,7 @@ const KRAMaster = () => {
                                                     onClick={() => {
                                                         setVeKRA(true); // Open VEModal
                                                         setEdit(false); // Disable edit mode for VEModal
-                                                        setid(entry.id); // Pass ID to VEModal
+                                                        setid(entry.KRAId); // Pass ID to VEModal
                                                     }}
                                                 />
                                                 <Icon
@@ -314,7 +313,7 @@ const KRAMaster = () => {
                                                     onClick={() => {
                                                         setVeKRA(true); // Open VEModal
                                                         setEdit(true); // Disable edit mode for VEModal
-                                                        setid(entry.id); // Pass ID to VEModal
+                                                        setid(entry.KRAId); // Pass ID to VEModal
                                                     }}
                                                 />
                                                 <Icon
@@ -323,12 +322,12 @@ const KRAMaster = () => {
                                                     color="#556987"
                                                     width="20"
                                                     height="20"
-                                                    onClick={()=> deleteKRA(entry.id)}
+                                                    onClick={()=> deleteKRA(entry.KRAId)}
                                                 />
                                             </div>
                                         </td>
                                         <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
-                                            {entry.id}
+                                            {entry.KRAId}
                                         </td>
                                         {selectedColumns.map((columnName) => (
                                             <td
@@ -354,7 +353,7 @@ const KRAMaster = () => {
                                                     onClick={() => {
                                                         setVeKRA(true); // Open VEModal
                                                         setEdit(false); // Disable edit mode for VEModal
-                                                        setid(entry.id); // Pass ID to VEModal
+                                                        setid(entry.KRAId); // Pass ID to VEModal
                                                     }}
                                                 />
                                                 <Icon
@@ -366,7 +365,7 @@ const KRAMaster = () => {
                                                     onClick={() => {
                                                         setVeKRA(true); // Open VEModal
                                                         setEdit(true); // Disable edit mode for VEModal
-                                                        setid(entry.id); // Pass ID to VEModal
+                                                        setid(entry.KRAId); // Pass ID to VEModal
                                                     }}
                                                 />
                                                 <Icon
@@ -375,12 +374,12 @@ const KRAMaster = () => {
                                                     color="#556987"
                                                     width="20"
                                                     height="20"
-                                                    onClick={()=> deleteKRA(entry.id)}
+                                                    onClick={()=> deleteKRA(entry.KRAId)}
                                                 />
                                             </div>
                                         </td>
                                         <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
-                                            {entry.id}
+                                            {entry.KRAId}
                                         </td>
                                         {selectedColumns.map((columnName) => (
                                             <td
