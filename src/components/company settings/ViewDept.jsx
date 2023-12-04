@@ -7,70 +7,123 @@ import axios from "axios";
 import { useAuth } from "../Login";
 
 const VEDept = ({ visible, onClick, edit, ID }) => {
-  const {token} = useAuth()
+  const { token } = useAuth();
   const [StatusCheck, setStatusCheck] = useState(true);
   const [details, setDetails] = useState([]);
-  const [parentDept, setParentDept] = useState(details?.parentDept)
+  const [CostCenters, setCostCenters] = useState([]);
+
+  useEffect(() => {
+    const fetchCostCenters = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/cost-center/FnShowActiveData",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const data = response.data;
+        setCostCenters(data);
+        console.log(data);
+      } catch (error) {
+        console.error("Error fetching cost centers", error);
+      }
+    };
+    fetchCostCenters();
+  }, [token]);
 
   const formik = useFormik({
     initialValues: {
-      deptName: "",
-      companyBranchName: "",
-      parentDept: "",
-      deptType: "",
-      deptGroup: "",
-      deptHead: "",
-      deptSubHead: "",
-      costCenter: "",
-      standardStaffStrength: "",
-      standardWorkerStrength: "",
-      remark: "",
-      status: "",
+      DepartmentId: "",
+      ParentDeptId: "",
+      DepartmentType: "",
+      DepartmentName: "",
+      DepartmentGroupId: "",
+      BranchName: "",
+      CostCenterId: "",
+      DepartmentHeadId: "",
+      DepartmentSubHeadId: "",
+      DepartmentStdStaffStrength: "",
+      DepartmentStdWorkerStrength: "",
+      Remark: "",
+      Status: "",
+      AcFlag: "Y",
+      IUFlag: "U",
+      CreatedBy: "",
+      CreatedOn: "",
+      ModifiedBy: "",
+      ModifiedOn: "",
     },
     onSubmit: (values) => {
       console.log(values);
-      updateDept()
+
+      axios
+        .post(
+          `http://localhost:5500/departmentmaster/FnAddUpdateDeleteRecord`,
+          values,
+          {
+            params: { DepartmentId: ID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        )
+        .then((response) => {
+          // Handle success
+          console.log("Data updated successfully", response);
+          // You can also perform additional actions here, like closing the modal or updating the UI.
+          window.location.reload();
+        })
+        .catch((error) => {
+          // Handle error
+          console.error("Error updating data", error);
+        });
     },
   });
 
-  const updateDept = async () =>{
-    try{
-      const response = axios.patch(`http://localhost:5500/departmentmaster/update-dept/${ID}`, formik.values, 
-      {
-        headers:{
-          Authorization: `Bearer ${token}`
-        }
-      })
-      console.log('Patch successful')
-      alert('Data Updated')
-    } catch(error){
-      console.log('Error in patch', error)
-    }
-  }
-
-  
   useEffect(() => {
-    fetchDept()
+    fetchDept();
   }, [ID]);
 
-    const fetchDept = async () => {
-      try {
-        const response = await axios.get(`http://localhost:5500/departmentmaster/get/${ID}`,
+  const fetchDept = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5500/departmentmaster/FnShowParticularData`,
         {
-          headers:{
-            Authorization: `Bearer ${token}`
-          }
-        });
-        // console.log("Response Object", response);
-        const data = response.data;
-        // console.log(data);
-        setDetails(data);
-      } catch (error) {
-        console.log("Error while fetching department data: ", error.message);
-      }
+          params: { DepartmentId: ID },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Response Object", response);
+      const data = response.data;
+      setDetails(data);
+      formik.setValues({
+        DepartmentId: data[0].DepartmentId,
+        ParentDeptId: data[0].ParentDeptId,
+        DepartmentType: data[0].DepartmentType,
+        DepartmentName: data[0].DepartmentName,
+        DepartmentGroupId: data[0].DepartmentGroupId,
+        BranchName: data[0].BranchName,
+        CostCenterId: data[0].CostCenterId,
+        DepartmentHeadId: data[0].DepartmentHeadId,
+        DepartmentSubHeadId: data[0].DepartmentSubHeadId,
+        DepartmentStdStaffStrength: data[0].DepartmentStdStaffStrength,
+        DepartmentStdWorkerStrength: data[0].DepartmentStdWorkerStrength,
+        Remark: data[0].Remark,
+        AcFlag: data[0].AcFlag,
+        CreatedBy: data[0].CreatedBy,
+        CreatedOn: data[0].CreatedOn,
+        ModifiedBy: data[0].ModifiedBy,
+        ModifiedOn: data[0].ModifiedOn,
+      });
+    } catch (error) {
+      console.log("Error while fetching department data: ", error.message);
     }
+  };
 
-console.log('Details array', details)
+  console.log("ID:", ID);
+  console.log("Details array", details);
 
   if (!visible) return null;
   return (
@@ -97,13 +150,13 @@ console.log('Details array', details)
                   Department ID
                 </p>
                 <input
-                  id="deptID"
+                  id="DepartmentId"
                   type="number"
                   placeholder="Enter Department ID"
-                  value={details?.id}
+                  value={details?.DepartmentId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
-                  disabled={!edit}
+                  disabled={true}
                 />
               </div>
               <div>
@@ -111,10 +164,10 @@ console.log('Details array', details)
                   Department Name
                 </p>
                 <input
-                  id="deptName"
+                  id="DepartmentName"
                   type="text"
                   placeholder="Enter Department Name"
-                  value={details?.deptName}
+                  value={formik.values.DepartmentName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -125,14 +178,16 @@ console.log('Details array', details)
                   Company Branch Name
                 </p>
                 <select
-                  id="companyBranchName"
-                  value={details?.companyBranchName}
+                  id="BranchName"
+                  value={formik.values.BranchName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
                   <option value="">Select Company Branch</option>
-                  <option value={`${details?.companyBranchName}`}>{details?.companyBranchName}</option>
+                  <option value={`${formik.values.BranchName}`}>
+                    {formik.values.BranchName}
+                  </option>
                   <option value="Main Office">Main Office</option>
                 </select>
               </div>
@@ -141,14 +196,16 @@ console.log('Details array', details)
                   Parent Department Name
                 </p>
                 <select
-                  id="parentDept"
-                  value={details?.parentDept}
+                  id="ParentDeptId"
+                  value={formik.values.ParentDeptId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
                   <option value="">Select Parent Department Branch</option>
-                  <option value={`${details?.parentDept}`}>{details?.parentDept}</option>
+                  <option value={`${formik.values.ParentDeptId}`}>
+                    {formik.values.ParentDeptId}
+                  </option>
                   <option value="Payroll Department">Payroll Department</option>
                   <option value="Times Keeping Department">
                     Times Keeping Department
@@ -176,47 +233,55 @@ console.log('Details array', details)
                 </select>
               </div>
               <div>
-              <p className="capitalize font-semibold text-[13px]">Department Type</p>
-              <div className="flex items-center gap-4 mt-1 text-[11px]">
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    name="deptType" // Make sure to use the same 'name' for both radio buttons
-                    value="Main"
-                    checked={details?.deptType === "Main"}
-                    onChange={(e) => formik.setFieldValue('deptType', e.target.value)}
-                    className="mr-2 h-5 w-5"
-                    disabled={!edit}
-                  />
-                  Main
-                </label>
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    name="deptType" // Make sure to use the same 'name' for both radio buttons
-                    value="Sub"
-                    checked={details?.deptType === "Sub"}
-                    onChange={(e) => formik.setFieldValue('deptType', e.target.value)}
-                    className="mr-3 h-5 w-5"
-                    disabled={!edit}
-                  />
-                  Sub
-                </label>
+                <p className="capitalize font-semibold text-[13px]">
+                  Department Type
+                </p>
+                <div className="flex items-center gap-4 mt-1 text-[11px]">
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="DepartmentType" // Make sure to use the same 'name' for both radio buttons
+                      value="Main"
+                      checked={formik.values.DepartmentType === "Main"}
+                      onChange={(e) =>
+                        formik.setFieldValue("DepartmentType", e.target.value)
+                      }
+                      className="mr-2 h-5 w-5"
+                      disabled={!edit}
+                    />
+                    Main
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="DepartmentType" // Make sure to use the same 'name' for both radio buttons
+                      value="Sub"
+                      checked={formik.values.DepartmentType === "Sub"}
+                      onChange={(e) =>
+                        formik.setFieldValue("DepartmentType", e.target.value)
+                      }
+                      className="mr-3 h-5 w-5"
+                      disabled={!edit}
+                    />
+                    Sub
+                  </label>
+                </div>
               </div>
-            </div>
               <div>
                 <p className="capatilize font-semibold text-[13px]">
                   Department Group
                 </p>
                 <select
-                  id="deptGroup"
-                  value={details?.deptGroup}
+                  id="DepartmentGroupId"
+                  value={formik.values.DepartmentGroupId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
                   <option value="">Select Department Group</option>
-                  <option value={`${details?.deptGroup}`}>{details?.deptGroup}</option>
+                  <option value={`${formik.values.DepartmentGroupId}`}>
+                    {formik.values.DepartmentGroupId}
+                  </option>
                   <option value="HR">Human Resources</option>
                   <option value="IT">IT</option>
                   <option value="Sales">Sales</option>
@@ -228,61 +293,48 @@ console.log('Details array', details)
                 <p className="capatilize font-semibold text-[13px]">
                   Department Head
                 </p>
-                <select
-                  id="deptHead"
-                  value={details?.deptHead}
+                <input
+                  id="DepartmentHeadId"
+                  type="text"
+                  placeholder="Enter Department Head"
+                  value={formik.values.DepartmentHeadId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
-                  disabled={!edit}
-                >
-                  <option value="">Select Department Head</option>
-                  <option value={`${details?.deptHead}`}>{details?.deptHead}</option>
-                  <option value="John Doe">John Doe</option>
-                  <option value="Alice Johnson">Alice Johnson</option>
-                  <option value="Michael Clark">Michael Clark</option>
-                  <option value="Alex Turner">Alex Turner</option>
-                  <option value="William Brown">William Brown</option>
-                </select>
+                />
               </div>
               <div>
                 <p className="capatilize font-semibold text-[13px]">
                   Department Sub Head
                 </p>
-                <select
-                  id="deptSubHead"
-                  value={details?.deptSubHead}
+                <input
+                  id="DepartmentSubHeadId"
+                  type="text"
+                  placeholder="Enter Department Sub-Head"
+                  value={formik.values.DepartmentSubHeadId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
-                  disabled={!edit}
-                >
-                  <option value="">Select Department Sub Head</option>
-                  <option value={`${details?.deptSubHead}`}>{details?.deptSubHead}</option>
-                  <option value="Jane Smith">Jane Smith</option>
-                  <option value="Bob Brown">Bob Brown</option>
-                  <option value="Emily White">Emily White</option>
-                  <option value="Olivia Green">Olivia Green</option>
-                  <option value="Sophia Martinez">Sophia Martinez</option>
-                </select>
+                />
               </div>
               <div>
                 <p className="capatilize font-semibold text-[13px]">
                   Select Cost Center
                 </p>
                 <select
-                  id="costCenter"
-                  value={details?.costCenter}
+                  id="CostCenterId"
+                  value={formik.values.CostCenterId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
                   <option value="">Select Cost Center</option>
-                  <option value={`${details?.costCenter}`}>{details?.costCenter}</option>
-                  <option value="Floor 1">Floor 1</option>
-                  <option value="Floor 2">Floor 2</option>
-                  <option value="Floor 3">Floor 3</option>
-                  <option value="Floor 4">Floor 4</option>
-                  <option value="Floor 5">Floor 5</option>
-                  <option value="Floor 6">Floor 6</option>
+                  {CostCenters.map((entry) => (
+                    <option
+                      key={entry.CostCenterId}
+                      value={entry.CostCenterName}
+                    >
+                      {entry.CostCenterName}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div>
@@ -290,10 +342,10 @@ console.log('Details array', details)
                   Standard Staff Strength
                 </p>
                 <input
-                  id="standardStaffStrength"
+                  id="DepartmentStdStaffStrength"
                   type="text"
                   placeholder="Enter Standard Staff Strength"
-                  value={details?.standardStaffStrength}
+                  value={formik.values.DepartmentStdStaffStrength}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -304,10 +356,10 @@ console.log('Details array', details)
                   Standard Worker Strength
                 </p>
                 <input
-                  id="standardWorkerStrength"
+                  id="DepartmentStdWorkerStrength"
                   type="text"
                   placeholder="Enter Standard worker Strength"
-                  value={details?.standardWorkerStrength}
+                  value={formik.values.DepartmentStdWorkerStrength}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -316,28 +368,14 @@ console.log('Details array', details)
               <div>
                 <p className="capatilize font-semibold text-[13px]">Remarks</p>
                 <input
-                  id="remark"
+                  id="Remark"
                   type="text"
                   placeholder="Enter Remarks"
-                  value={details?.remark}
+                  value={formik.values.Remark}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
-              </div>
-              <div>
-                <p className="capitalize font-semibold text-[13px]">Status</p>
-                <label className="capitalize font-semibold text-[11px]">
-                  <input
-                    id="status"
-                    type="checkbox"
-                    checked={StatusCheck}
-                    value={details?.status}
-                    className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border-2 rounded-lg`}
-                    onChange={formik.handleChange}
-                  />
-                  Active
-                </label>
               </div>
             </div>
           </div>

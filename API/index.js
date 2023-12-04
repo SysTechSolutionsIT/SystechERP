@@ -8,7 +8,6 @@ app.use(express.json()); // Parse JSON requests
 // const CompMaster = require("./route/CMRoute");
 // const CompConfig = require("./route/CompanyConfigRoute");
 const BankMaster = require("./route/MBankRoutes");
-// const DepartmentMaster = require("./route/DepartmentMasterRoute");
 // const DestinationMaster = require("./route/DestinationMasterRoute");
 // const ThreeFieldMaster = require("./route/ThreeFieldsRoutes");
 // const TwoFieldMaster = require("./route/TwoFieldsRoutes");

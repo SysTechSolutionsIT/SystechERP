@@ -8,76 +8,83 @@ import { useAuth } from "../Login";
 // import { costCenters } from "./CostCenterMaster";
 
 const DepartmentModal = ({ visible, onClick }) => {
-  const {token} = useAuth()
-  const [CostCenters, setCostCenters] = useState([])
+  const { token } = useAuth();
+  const [CostCenters, setCostCenters] = useState([]);
   const formik = useFormik({
     initialValues: {
-      DepartmentId: "",
-        DepartmentId: "",
-        ParentDeptId: "",
-        DepartmentType: "",
-        DepartmentName: "",
-        DepartmentGroupId: "",
-        CostCenterId: "",
-        DepartmentHeadId: "",
-        DepartmentSubHeadId: "",
-        DepartmentStdStaffStrength: "",
-        DepartmentStdWorkerStrength: "",
-        Remark: "",
-        Status:"",
-        AcFlag: "Y",
-        IUFlag :"I",
-        CreatedBy: "",
-        CreatedOn: "",
-        ModifiedBy: "",
-        ModifiedOn: "",
-  },
+      ParentDeptId: "",
+      DepartmentType: "",
+      DepartmentName: "",
+      DepartmentGroupId: "",
+      BranchName: "",
+      CostCenterId: "",
+      DepartmentHeadId: "",
+      DepartmentSubHeadId: "",
+      DepartmentStdStaffStrength: "",
+      DepartmentStdWorkerStrength: "",
+      Remark: "",
+      Status: "",
+      AcFlag: "Y",
+      IUFlag: "I",
+      CreatedBy: "",
+      CreatedOn: "",
+      ModifiedBy: "",
+      ModifiedOn: "",
+    },
     onSubmit: (values) => {
       console.log(values);
-      addDept()
+      addDept();
     },
   });
 
-  const addDept = async () =>{
-    try{
-      const response = await axios.post("http://localhost:5500/departmentmaster/FnAddUpdateDeleteRecord", formik.values,
-      {
-        headers:{
-          Authorization: `Bearer ${token}`
+  const addDept = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5500/departmentmaster/FnAddUpdateDeleteRecord",
+        formik.values,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      })
+      );
       if (response.status === 200) {
         const data = response.data;
         console.log(data);
-        alert('Department added successfully')
+        alert("Department added successfully");
+        onClick();
+        window.location.reload();
         // Handle successful response
       } else {
         console.error(`HTTP error! Status: ${response.status}`);
         // Handle error response
       }
-    }catch (error) {
-      console.error('Error:', error.message);
+    } catch (error) {
+      console.error("Error:", error.message);
       // Handle network error
     }
-  }
+  };
 
-  useEffect(() =>{
-    const fetchCostCenters = async () =>{
+  useEffect(() => {
+    const fetchCostCenters = async () => {
       try {
-        const response = await axios.get('http://localhost:5500/cost-center/', {
-          headers:{
-            Authorization: `Bearer ${token}`
+        const response = await axios.get(
+          "http://localhost:5500/cost-center/FnShowActiveData",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        })
-        const data = response.data.records
-        setCostCenters(data)
-        console.log(data)
+        );
+        const data = response.data;
+        setCostCenters(data);
+        console.log(data);
       } catch (error) {
-        console.error('Error fetching cost centers', error);
+        console.error("Error fetching cost centers", error);
       }
-    }
-    fetchCostCenters()
-  }, [token])
+    };
+    fetchCostCenters();
+  }, [token]);
 
   const [status, setStatus] = useState(false);
 
@@ -85,18 +92,16 @@ const DepartmentModal = ({ visible, onClick }) => {
     setStatus(!status);
   };
 
-  
-  const [isStatusChecked, setStatusChecked] = useState(false)
+  const [isStatusChecked, setStatusChecked] = useState(false);
   const handleCheckboxChange = (fieldName, setChecked, event) => {
     //This is how to use it (event) => handleCheckboxChange('Status', setStatusChecked, event)
-      const checked = event.target.checked;
-      setChecked(checked);
-      formik.setValues({
-        ...formik.values,
-        [fieldName]: checked.toString(),
-      });
-    };
-
+    const checked = event.target.checked;
+    setChecked(checked);
+    formik.setValues({
+      ...formik.values,
+      [fieldName]: checked.toString(),
+    });
+  };
 
   if (!visible) return null;
   return (
@@ -119,19 +124,6 @@ const DepartmentModal = ({ visible, onClick }) => {
           <div className="py-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="capatilize font-semibold text-[13px] ">
-                  Department ID
-                </p>
-                <input
-                  id="DepartmentId"
-                  type="number"
-                  placeholder="Enter Department ID"
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                  disabled={true}
-                />
-              </div>
-              <div>
                 <p className="capatilize font-semibold text-[13px]">
                   Department Name
                 </p>
@@ -149,8 +141,8 @@ const DepartmentModal = ({ visible, onClick }) => {
                   Company Branch Name
                 </p>
                 <select
-                  id="CompanyBranchName"
-                  value={formik.values.CompanyBranchName}
+                  id="BranchName"
+                  value={formik.values.BranchName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 >
@@ -276,8 +268,11 @@ const DepartmentModal = ({ visible, onClick }) => {
                 >
                   <option value="">Select Cost Center</option>
                   {CostCenters.map((entry) => (
-                    <option key={entry.id} value={entry.cName}>
-                      {entry.cName}
+                    <option
+                      key={entry.CostCenterId}
+                      value={entry.CostCenterName}
+                    >
+                      {entry.CostCenterName}
                     </option>
                   ))}
                 </select>
@@ -318,19 +313,6 @@ const DepartmentModal = ({ visible, onClick }) => {
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
-              </div>
-              <div>
-                <p className="capatilize font-semibold text-[13px] ">Status</p>
-                <label className="capitalize font-semibold text-[11px]">
-                  <input
-                    id="Status"
-                    type="checkbox"
-                    checked={formik.values.Status}
-                    className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border-2 rounded-lg`}
-                    onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}
-                  />
-                  Active
-                </label>
               </div>
             </div>
           </div>
