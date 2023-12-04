@@ -51,9 +51,14 @@ const MJobsResponsibility = sequelize.define('MJobsResponsibility', {
 router.use(bodyParser.json());
 
 // Model synchronization
-sequelize.sync().then(() => {
-  console.log("Models synced");
-});  
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Connection has been established successfully.');
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
+  });
 
 // GET endpoint to retrieve all companies
 router.get("/FnShowAllData", authToken, async (req, res) => {

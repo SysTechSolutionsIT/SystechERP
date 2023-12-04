@@ -32,6 +32,15 @@ const sequelize = new Sequelize(
   }
 );
 
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Connection has been established successfully.');
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
+  });
+
 const MEmployeeGrade = sequelize.define(
     'MEmployeeGrade', {
     CompanyId: { type: DataTypes.STRING(5), allowNull: false, defaultValue: '00001' },

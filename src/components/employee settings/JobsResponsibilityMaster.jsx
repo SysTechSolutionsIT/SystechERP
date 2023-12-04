@@ -38,10 +38,21 @@ const JobsResponsibilityMaster = () => {
         fetchJobRes()
     },[token])
 
-    const deleteJobRes = async(id) =>{
-        alert('Are you sure you want to delete this entry?')
+    const deleteJobRes = async(DeleteId) =>{
+        const confirmDelete = window.confirm(
+            "Are you sure you want to delete this Employee Type?"
+          );
+      
+          if (!confirmDelete) {
+            return; // If the user cancels deletion, do nothing
+          }
         try{
-            const response = await axios.delete(`http://localhost:5500/job-responsibility/delete/${id}`, {
+            const response = await axios.post(`http://localhost:5500/job-responsibility/FnAddUpdateDeleteRecord`, 
+            {
+                JobResponsibilityId : DeleteId,
+                IUFlag: "D"
+            },
+            {
                 headers:{
                     Authorization: `Bearer ${token}`
                 }
@@ -67,7 +78,7 @@ const JobsResponsibilityMaster = () => {
     };
 
     const [columnVisibility, setColumnVisibility] = useState({
-        JobsResponsibilityName: true,
+        JobResponsibilityName: true,
         Duration: true,
         Points: true,
     });
@@ -288,7 +299,7 @@ const JobsResponsibilityMaster = () => {
                         </thead>
                         <tbody>
                             {filteredData.length > 0
-                                ? filteredData.map((entry, index) => (
+                                ? filteredData.map((result, index) => (
                                     <tr key={index}>
                                         <td className="px-2 border-2">
                                             <div className="flex items-center gap-2 text-center justify-center">
@@ -301,7 +312,7 @@ const JobsResponsibilityMaster = () => {
                                                     onClick={() => {
                                                         setVeJobs(true); // Open VEModal
                                                         setEdit(false); // Disable edit mode for VEModal
-                                                        setid(entry.JobsResponsibilityId); // Pass ID to VEModal
+                                                        setid(result.JobResponsibilityId); // Pass ID to VEModal
                                                     }}
                                                 />
                                                 <Icon
@@ -313,7 +324,7 @@ const JobsResponsibilityMaster = () => {
                                                     onClick={() => {
                                                         setVeJobs(true); // Open VEModal
                                                         setEdit(true); // Disable edit mode for VEModal
-                                                        setid(entry.JobsResponsibilityId); // Pass ID to VEModal
+                                                        setid(result.JobResponsibilityId); // Pass ID to VEModal
                                                     }}
                                                 />
                                                 <Icon
@@ -322,12 +333,12 @@ const JobsResponsibilityMaster = () => {
                                                     color="#556987"
                                                     width="20"
                                                     height="20"
-                                                    onClick={() => deleteJobRes(entry.JobsResponsibilityId)}
+                                                    onClick={() => deleteJobRes(result.JobResponsibilityId)}
                                                 />
                                             </div>
                                         </td>
                                         <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
-                                            {entry.JobsResponsibilityId}
+                                            {result.JobResponsibilityId}
                                         </td>
                                         {selectedColumns.map((columnName) => (
                                             <td
@@ -335,12 +346,12 @@ const JobsResponsibilityMaster = () => {
                                                 className={`px-4 text-[11px] border-2 whitespace-normal text-left${columnVisibility[columnName] ? "" : "hidden"
                                                     }`}
                                             >
-                                                {entry[columnName]}
+                                                {result[columnName]}
                                             </td>
                                         ))}
                                     </tr>
                                 ))
-                                : jobsRespData.map((entry, index) => (
+                                : jobsRespData.map((result, index) => (
                                     <tr key={index}>
                                         <td className="px-2 text-[11px] border-2">
                                             <div className="flex items-center gap-2 text-center justify-center">
@@ -353,7 +364,7 @@ const JobsResponsibilityMaster = () => {
                                                     onClick={() => {
                                                         setVeJobs(true); // Open VEModal
                                                         setEdit(false); // Disable edit mode for VEModal
-                                                        setid(entry.JobsResponsibilityId); // Pass ID to VEModal
+                                                        setid(result.JobResponsibilityId); // Pass ID to VEModal
                                                     }}
                                                 />
                                                 <Icon
@@ -365,7 +376,7 @@ const JobsResponsibilityMaster = () => {
                                                     onClick={() => {
                                                         setVeJobs(true); // Open VEModal
                                                         setEdit(true); // Disable edit mode for VEModal
-                                                        setid(entry.JobsResponsibilityId); // Pass ID to VEModal
+                                                        setid(result.JobResponsibilityId); // Pass ID to VEModal
                                                     }}
                                                 />
                                                 <Icon
@@ -374,12 +385,12 @@ const JobsResponsibilityMaster = () => {
                                                     color="#556987"
                                                     width="20"
                                                     height="20"
-                                                    onClick={() => deleteJobRes(entry.JobsResponsibilityId)}
+                                                    onClick={() => deleteJobRes(result.JobResponsibilityId)}
                                                 />
                                             </div>
                                         </td>
                                         <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
-                                            {entry.JobsResponsibilityId}
+                                            {result.JobResponsibilityId}
                                         </td>
                                         {selectedColumns.map((columnName) => (
                                             <td
@@ -387,7 +398,7 @@ const JobsResponsibilityMaster = () => {
                                                 className={`px-4 text-[11px] border-2 whitespace-normal ${columnName === "EmployeeFare" && "text-right"
                                                     } ${columnVisibility[columnName] ? "" : "hidden"}`}
                                             >
-                                                {entry[columnName]}
+                                                {result[columnName]}
                                             </td>
                                         ))}
                                     </tr>

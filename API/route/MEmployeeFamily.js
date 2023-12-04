@@ -54,9 +54,14 @@ const MEmployeeFamily = sequelize.define(
 router.use(bodyParser.json());
 
 // Model synchronization
-sequelize.sync().then(() => {
-  console.log("Models synced");
-});
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Connection has been established successfully.');
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
+  });
 
 router.get("/FnShowAllData", authToken, async (req, res) => {
   try {
