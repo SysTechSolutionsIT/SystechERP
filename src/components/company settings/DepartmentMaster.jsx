@@ -9,41 +9,57 @@ import { useAuth } from "../Login";
 const DepartmentMaster = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
-  const [departments, setDepartments] = useState([])
-  const { token } = useAuth()
+  const [departments, setDepartments] = useState([]);
+  const { token } = useAuth();
 
   const deleteDept = async (deptid) => {
-    try {
-      const apiUrl = `http://localhost:5500/departmentmaster/delete-dept/${deptid}`;
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this company?"
+    );
 
-      const response = await axios.delete(apiUrl,
+    if (!confirmDelete) {
+      return; // If the user cancels deletion, do nothing
+    }
+
+    try {
+      const apiUrl = `http://localhost:5500/departmentmaster/FnAddUpdateDeleteRecord`;
+
+      const response = await axios.post(
+        apiUrl,
+        {
+          DepartmentId: deptid,
+          IUFlag: "D",
+        },
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (response.status === 204) {
         console.log(`Department with ID ${deptid} deleted successfully.`);
-        alert('Department Deleted')
-        window.location.reload()
+        alert("Department Deleted");
+        window.location.reload();
       } else {
         console.error(`Failed to delete Department with ID ${deptid}.`);
       }
     } catch (error) {
-      console.error('Error deleting Department:', error);
+      console.error("Error deleting Department:", error);
     }
   };
 
   useEffect(() => {
     const fetchDept = async () => {
       try {
-        const response = await axios.get("http://localhost:5500/departmentmaster/get",
+        const response = await axios.get(
+          "http://localhost:5500/departmentmaster/FnShowActiveData",
           {
             headers: {
-              Authorization: `Bearer ${token}`
-            }
-          });
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         console.log("Response Object", response);
         const data = response.data;
         console.log(data);
@@ -51,9 +67,9 @@ const DepartmentMaster = () => {
       } catch (error) {
         console.log("Error while fetching course data: ", error.message);
       }
-    }
-    fetchDept()
-  }, [token])
+    };
+    fetchDept();
+  }, [token]);
 
   const handleSearchChange = (title, searchWord) => {
     const newFilter = departments.filter((item) => {
@@ -68,34 +84,34 @@ const DepartmentMaster = () => {
     }
   };
   const [columnVisibility, setColumnVisibility] = useState({
-    deptName: true,
-    companyBranchName: true,
-    parentDept: true,
-    deptType: true,
-    deptGroup: true,
-    deptHead: true,
-    deptSubHead: false,
-    costCenter: false,
-    standardStaffStrength: false,
-    standardWorkerStrength: false,
-    remark: false,
+    DepartmentName: true,
+    BranchName: true,
+    ParentDeptId: true,
+    DepartmentType: true,
+    DepartmentGroupId: true,
+    DepartmentHeadId: true,
+    DepartmentSubHeadId: false,
+    CostCenterId: false,
+    DepartmentStdStaffStrength: false,
+    DepartmentStdWorkerStrength: false,
+    Remark: false,
     status: false,
   });
 
   const columnNames = {
-    deptName: "Department Name",
-    companyBranchName: "Company Branch Name",
-    parentDept: "Parent Department",
-    deptType: "Department Type",
-    deptGroup: "Department Group",
-    deptHead: "Department Head",
-    deptSubHead: "Department Sub-Head",
-    costCenter: "Cost Center",
-    standardStaffStrength: "Standard Staff Strength",
-    standardWorkerStrength: "Standard Worker Strength",
-    remark: "Remarks",
-    status: "Status",
-  }
+    DepartmentName: "Department Name",
+    BranchName: "Company Branch Name",
+    ParentDeptId: "Parent Department",
+    DepartmentType: "Department Type",
+    DepartmentGroupId: "Department Group",
+    DepartmentHeadId: "Department Head",
+    DepartmentSubHeadId: "Department Sub-Head",
+    CostCenterId: "Cost Center",
+    DepartmentStdStaffStrength: "Standard Staff Strength",
+    DepartmentStdWorkerStrength: "Standard Worker Strength",
+    Remark: "Remarks",
+    AcFlag: "Status",
+  };
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedColumns, setSelectedColumns] = useState([
@@ -181,9 +197,7 @@ const DepartmentMaster = () => {
   return (
     <div className="top-25 min-w-[40%]">
       <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
-        <div className="text-[15px]">
-          Company Settings / Department Master
-        </div>
+        <div className="text-[15px]">Company Settings / Department Master</div>
         <div className="flex gap-4">
           <button
             onClick={() => setShowDropdown(!showDropdown)}
@@ -192,7 +206,9 @@ const DepartmentMaster = () => {
             Column Visibility
             <Icon
               icon="fe:arrow-down"
-              className={`ml-2 ${showDropdown ? "rotate-180" : ""} cursor-pointer`}
+              className={`ml-2 ${
+                showDropdown ? "rotate-180" : ""
+              } cursor-pointer`}
             />
           </button>
           {showDropdown && (
@@ -225,9 +241,7 @@ const DepartmentMaster = () => {
                   />
                   <span
                     className={
-                      columnVisibility[columnName]
-                        ? "font-semibold"
-                        : ""
+                      columnVisibility[columnName] ? "font-semibold" : ""
                     }
                   >
                     {columnName}
@@ -290,7 +304,7 @@ const DepartmentMaster = () => {
                 <th className="w-auto px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
                   ID
                 </th>
-                {selectedColumns.map((columnName) => (
+                {selectedColumns.map((columnName) =>
                   columnVisibility[columnName] ? (
                     <th
                       key={columnName}
@@ -299,135 +313,142 @@ const DepartmentMaster = () => {
                       {columnNames[columnName]}
                     </th>
                   ) : null
-                ))}
+                )}
               </tr>
               <tr>
                 <th className="border-2" />
                 <th className="p-2 font-bold text-black border-2 whitespace-normal" />
-                {selectedColumns.map((columnName) => (
+                {selectedColumns.map((columnName) =>
                   columnVisibility[columnName] ? (
-                    <th key={columnName} className="p-2 font-semibold text-black border-2">
+                    <th
+                      key={columnName}
+                      className="p-2 font-semibold text-black border-2"
+                    >
                       <input
                         type="text"
                         placeholder={`Search `}
                         className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
-                        style={{ maxWidth: getColumnMaxWidth(columnName) + "px" }}
-                        onChange={(e) => handleSearchChange(columnName, e.target.value)}
+                        style={{
+                          maxWidth: getColumnMaxWidth(columnName) + "px",
+                        }}
+                        onChange={(e) =>
+                          handleSearchChange(columnName, e.target.value)
+                        }
                       />
                     </th>
                   ) : null
-                ))}
+                )}
               </tr>
             </thead>
             <tbody>
               {filteredData.length > 0
                 ? filteredData.map((result, key) => (
-                  <tr key={key}>
-                    <td className="px-2 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setVeDept(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setDid(result.id); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setVeDept(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setDid(result.id); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
-                      {result.id}
-                    </td>
-                    {selectedColumns.map((columnName) => (
-                      columnVisibility[columnName] ? (
-                        <td
-                          key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                        >
-                          {result[columnName]}
-                        </td>
-                      ) : null
-                    ))}
-                  </tr>
-                ))
+                    <tr key={key}>
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setVeDept(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setDid(result.DepartmentId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setVeDept(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setDid(result.DepartmentId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
+                        {result.DepartmentId}
+                      </td>
+                      {selectedColumns.map((columnName) =>
+                        columnVisibility[columnName] ? (
+                          <td
+                            key={columnName}
+                            className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                          >
+                            {result[columnName]}
+                          </td>
+                        ) : null
+                      )}
+                    </tr>
+                  ))
                 : departments.map((result, index) => (
-                  <tr key={index}>
-                    <td className="px-2 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setVeDept(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setDid(result.id); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setVeDept(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setDid(result.id); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => deleteDept(result.id)}
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
-                      {result.id}
-                    </td>
-                    {selectedColumns.map((columnName) => (
-                      columnVisibility[columnName] ? (
-                        <td
-                          key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                        >
-                          {result[columnName]}
-                        </td>
-                      ) : (
-                        <td key={columnName} className="hidden"></td>
-                      )
-                    ))}
-                  </tr>
-                ))}
+                    <tr key={index}>
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setVeDept(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setDid(result.DepartmentId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setVeDept(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setDid(result.DepartmentId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => deleteDept(result.DepartmentId)}
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
+                        {result.DepartmentId}
+                      </td>
+                      {selectedColumns.map((columnName) =>
+                        columnVisibility[columnName] ? (
+                          <td
+                            key={columnName}
+                            className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                          >
+                            {result[columnName]}
+                          </td>
+                        ) : (
+                          <td key={columnName} className="hidden"></td>
+                        )
+                      )}
+                    </tr>
+                  ))}
             </tbody>
           </table>
         </div>
