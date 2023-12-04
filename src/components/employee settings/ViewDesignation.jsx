@@ -22,18 +22,19 @@ const ViewDesignation = ({ visible, onClick, edit, ID }) => {
 
     const formik = useFormik({
         initialValues: {
-            Name: "",
+            DesignationId:"",
+            DesignationName: "",
             ReportDesignationName: "",
-            Status: "",
             Remark: ""
         },
         onSubmit: (values) => {
             console.log(values);
             const updatedData = {
-            Name: values.Name,
+            DesignationId: values.DesignationId,
+            DesignationName: values.DesignationName,
             ReportDesignationName: values.ReportDesignationName,
-            Status: values.Status,
-            Remark: values.Remark
+            Remark: values.Remark,
+            IUFlag: "U"
             }
 
             updateDesignation(updatedData)
@@ -42,10 +43,9 @@ const ViewDesignation = ({ visible, onClick, edit, ID }) => {
 
     const updateDesignation = async (data) =>{
         try{
-            const response = axios.patch(`http://localhost:5500/designation-master/update/${ID}`, data, {
-                headers:{
-                    Authorization: `Bearer ${token}`
-                }
+            const response = axios.post(`http://localhost:5500/designation-master/FnAddUpdateDeleteRecord`, data, {
+                params: {DesignationId: ID},    
+                headers:{Authorization: `Bearer ${token}`}
             })
             alert('Designation Updated')
         } catch (error){
@@ -56,10 +56,9 @@ const ViewDesignation = ({ visible, onClick, edit, ID }) => {
     useEffect(() => {
         const fetchDesignation = async() =>{
             try{
-                const response = await axios.get(`http://localhost:5500/designation-master/get/${ID}`,{
-                    headers:{
-                      Authorization: `Bearer ${token}`
-                    }
+                const response = await axios.get(`http://localhost:5500/designation-master/FnShowParticularData`,{
+                    params: {DesignationId: ID},    
+                    headers:{Authorization: `Bearer ${token}`}
                   })
                 const data = response.data
                 console.log(data)
@@ -76,9 +75,9 @@ const ViewDesignation = ({ visible, onClick, edit, ID }) => {
     useEffect(() =>{
         if (details){
             formik.setValues({
-            Name: details.Name,
+            DesignationId: details.DesignationId,
+            DesignationName: details.DesignationName,
             ReportDesignationName: details.ReportDesignationName,
-            Status: details.Status,
             Remark: details.Remark
             })
         }
@@ -109,19 +108,19 @@ const ViewDesignation = ({ visible, onClick, edit, ID }) => {
                                 <input
                                     type="number"
                                     placeholder="Enter Designation ID"
-                                    value={details?.id}
+                                    value={details?.DesignationId}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
-                                    disabled={!edit}
+                                    disabled={true}
                                 />
                             </div>
                             <div>
                                 <p className="text-[13px] font-semibold">Designation Name</p>
                                 <input
-                                    id="Name"
+                                    id="DesignationName"
                                     type="text"
                                     placeholder="Enter Designation Name"
-                                    value={formik.values.Name}
+                                    value={formik.values.DesignationName}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                     disabled={!edit}
