@@ -9,23 +9,21 @@ const JobsResponsibilityModal = ({ visible, onClick }) => {
     const { token } = useAuth()
     const formik = useFormik({
         initialValues: {
-            // ID: "",
-            Name: "",
+            JobResponsibilityName: "",
             Duration: "",
             Points: "",
-            Status: "",
             Remark: ""
         },
         onSubmit: (values, {resetForm}) => {
             console.log(values);
             addJobRes()
-            resetForm()
+            // resetForm()
         },
     });
 
     const addJobRes = async() =>{
         try{
-            const response = await axios.post("http://localhost:5500/job-responsibility/add", formik.values, {
+            const response = await axios.post("http://localhost:5500/job-responsibility/FnAddUpdateDeleteRecord", formik.values, {
                 headers:{
                     Authorization: `Bearer ${token}`
                 }
@@ -70,7 +68,7 @@ const JobsResponsibilityModal = ({ visible, onClick }) => {
                                 <p className="text-[13px] font-semibold">Jobs Responsibility ID</p>
                                 <input
                                     type="number"
-                                    placeholder="Enter Jobs Responsibility ID"
+                                    disabled={true}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                 />
@@ -78,10 +76,10 @@ const JobsResponsibilityModal = ({ visible, onClick }) => {
                             <div>
                                 <p className="text-[13px] font-semibold">Jobs Responsibility Name</p>
                                 <input
-                                    id="Name"
+                                    id="JobResponsibilityName"
                                     type="text"
                                     placeholder="Enter Jobs Responsibility Name"
-                                    value={formik.values.Name}
+                                    value={formik.values.JobResponsibilityName}
                                     className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                                     onChange={formik.handleChange}
                                 />
@@ -119,20 +117,6 @@ const JobsResponsibilityModal = ({ visible, onClick }) => {
                                     onChange={formik.handleChange}
                                 />
                             </div>
-                            <div>
-                            <p className="capitalize font-semibold text-[13px]">Status</p>
-                            <label className="capitalize font-semibold text-[11px]">
-                            <input
-                                id="Status"
-                                type="checkbox"
-                                checked={formik.values.Status}
-                                value={formik.values.Status}
-                                className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border-2 rounded-lg`}
-                                onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}
-                            />
-                            Active
-                            </label>
-                        </div>
                         </div>
                     </div>
                     <div className="flex gap-10 justify-center">

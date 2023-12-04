@@ -22,14 +22,15 @@ const authToken = (req, res, next) => {
 
 // Configure Sequelize with database connection details
 const sequelize = new Sequelize(
-  "u172510268_systech",
-  "u172510268_devs",
-  "Ggwpfax@9990",
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASSWORD,
   {
-    host: "srv1001.hstgr.io",
+    host: process.env.DB_HOST,
     dialect: "mysql",
-    port: 3306,
-  }
+    port: process.env.DB_PORT,
+  },
+  
 );
 
 const TAdvanceRequest = sequelize.define("TAdvanceRequest", {
@@ -250,6 +251,14 @@ router.get("/FnShowRejectedData", authToken, async (req, res) => {
     console.error("Error retrieving rejected data:", error);
     res.status(500).send("Internal Server Error");
   }
+});
+
+process.on("SIGINT", () => {
+  console.log("Received SIGINT. Closing Sequelize connection...");
+  sequelize.close().then(() => {
+    console.log("Sequelize connection closed. Exiting...");
+    process.exit(0);
+  });
 });
 
 module.exports = router;

@@ -39,10 +39,21 @@ const KRAMaster = () => {
         fetchKRA()
     },[])
 
-    const deleteKRA = async(id) =>{
-        alert('Are you sure you want to delete this entry?')
+    const deleteKRA = async(DeleteId) =>{
+        const confirmDelete = window.confirm(
+            "Are you sure you want to delete this Employee Type?"
+          );
+      
+          if (!confirmDelete) {
+            return; // If the user cancels deletion, do nothing
+          }
         try{
-            const response = await axios.delete(`http://localhost:5500/KRA-master/delete/${id}`, {
+            const response = await axios.post(`http://localhost:5500/KRA-master/FnAddUpdateDeleteRecord`, 
+            {
+                KRAId: DeleteId,
+                IUFlag: "D"
+            },
+            {
                 headers:{
                     Authorization: `Bearer ${token}`
                 }

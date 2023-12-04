@@ -12,7 +12,8 @@ const KRAModal = ({ visible, onClick }) => {
             KRAName: "",
             Duration: "",
             Points: "",
-            Remark: ""
+            Remark: "",
+            IUFlag:"I"
         },
         onSubmit: (values, {resetForm}) => {
             console.log(values);
