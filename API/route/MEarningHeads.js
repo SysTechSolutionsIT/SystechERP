@@ -238,7 +238,6 @@ const generateEarningHeadId = async (req, res, next) => {
   }
 };
 
-
 router.post("/FnAddUpdateDeleteRecord", authToken, generateEarningHeadId, async (req, res) => {
   const earningHead = req.body;
   try {
