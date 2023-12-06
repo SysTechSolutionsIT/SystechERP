@@ -96,7 +96,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
       const data = response.data;
       setDetails(data);
     } catch (error) {
-      console.log("Error while fetching course data: ", error.message);
+      console.log("Error while fetching earning heads data: ", error.message);
     }
   };
 
@@ -414,7 +414,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                 </select>
               </div>
               <div className="col-span-2">
-                <p className="capatilize font-semibold  text-[13px]">Formula</p>
+                <p className="capatilize font-semibold  text-[13px]">Formula (Use P1 for calculations on Gross Salary and P2 for calculations on Basic Salary)  </p>
                 <input
                   id="Formula"
                   type="text"

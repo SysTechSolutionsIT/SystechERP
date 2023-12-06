@@ -97,7 +97,6 @@ const DeductionHeadsMaster = () => {
     SalaryParameter8: false,
     SalaryParameter9: false,
     SalaryParameter10: false,
-    Status: true,
     Remark: false,
   });
 
@@ -118,7 +117,6 @@ const DeductionHeadsMaster = () => {
     SalaryParameter8: "Salary Parameter 8",
     SalaryParameter9: "Salary Parameter 9",
     SalaryParameter10: "Salary Parameter 10",
-    Status: "Status",
     Remark: "Remarks",
   };
 

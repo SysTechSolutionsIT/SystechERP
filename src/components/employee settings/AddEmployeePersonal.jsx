@@ -289,10 +289,10 @@ export default function AddEmployeePersonal() {
                 value={formik.values.EmployeeTypeId}
                 onChange={formik.handleChange}
               >
-                <option value="">Select Type</option>
-                <option value="Permenant">Permenant</option>
-                <option value="Probation">Probation</option>
-                <option value="Contract">Contract</option>
+                    <option value="">Select Type</option>
+                    <option value="001">Contract Staff</option>
+                    <option value="002">Trainee Worker</option>
+                    <option value="003">Trainee Staff</option>
               </select>
             </div>
             <div className="py-1">

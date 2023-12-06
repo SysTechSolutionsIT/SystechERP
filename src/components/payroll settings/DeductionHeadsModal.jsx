@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Icon } from "@iconify/react";
 import axios from "axios";
 import { useAuth } from "../Login";
+import { useEffect } from "react";
 
 const DeductionHeadsModal = ({ visible, onClick }) => {
   const { token } = useAuth();
@@ -70,73 +71,47 @@ const DeductionHeadsModal = ({ visible, onClick }) => {
           },
         }
       );
-      if (response.status === 200) {
-        const data = response.data;
-        console.log(data);
-        alert("Earning Head Added");
-        // Handle successful response
-      } else {
-        console.error(`HTTP error! Status: ${response.status}`);
-        // Handle error response
-      }
+      alert('Deduction Head Added')
     } catch (error) {
       console.log("Error: ", error.message);
       // Handle network error
     }
   };
 
-  const salaryParemeters = [
-    "Income Tax",
-    "Provident Fund (PF)",
-    "Employees State Insurance (ESI)",
-    "Professional Tax",
-    "Gratuity",
-    "Employee Provident Fund (EPF) Contributions",
-    "Public Provident Fund (PPF)",
-    "National Pension System (NPS)",
-    "National Savings Certificate (NSC)",
-    "Tax-Saving Fixed Deposit",
-    "Life Insurance Premium",
-    "Health Insurance Premium",
-    "Employee Stock Options (ESOPs)",
-    "Voluntary Provident Fund (VPF)",
-    "House Rent Allowance (HRA)",
-    "Leave Travel Allowance (LTA)",
-    "Conveyance Allowance",
-    "Child Education Allowance",
-    "Special Allowance",
-    "Bonus",
-    "Gratuity",
-    "Professional Development Fund",
-    "Union Dues",
-    "Cafeteria Plan Deductions",
-    "Employee Stock Purchase Plan (ESPP)",
-    "Medical Reimbursement",
-    "Children Education Allowance",
-    "Transport Allowance",
-    "Uniform Allowance",
-    "Dress Allowance",
-    "Travel Allowances",
-    "Food Coupons",
-    "Employee Provident Fund (EPF) Withdrawal",
-    "Employee State Insurance (ESI) Withdrawal",
-    "Employee Gratuity Withdrawal",
-    "National Pension System (NPS) Withdrawal",
-    "Superannuation Fund",
-    "Housing Loan Interest Deduction",
-    "Standard Deduction",
-    "Tax on Employment",
-  ];
+  const [ heads, setHeads ] = useState([])
+
+  useEffect(() =>{
+    const fetchHeadsData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/earning-heads/FnShowActiveData",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log("Response Object", response);
+        const data = response.data;
+        console.log(data);
+        setHeads(data);
+      } catch (error) {
+        console.log("Error while fetching course data: ", error);
+      }
+    };
+
+    fetchHeadsData()
+  },[token])
 
   function generateSelectWithOptions(optionsArray) {
-    const optionsHTML = optionsArray.map((optionText) => (
-      <option key={optionText} value={optionText}>
-        {optionText}
+    const optionsHTML = optionsArray.map((option) => (
+      <option key={option.EarningHeadId} value={option.EarningHeadId}>
+        {option.EarningHead}
       </option>
     ));
-
+  
     return <>{optionsHTML}</>;
-  }
+  } 
 
   if (!visible) return null;
   return (
@@ -232,7 +207,7 @@ const DeductionHeadsModal = ({ visible, onClick }) => {
                   onChange={formik.handleChange}
                 >
                   <option value="">Select Salary Parameter 1</option>
-                  {generateSelectWithOptions(salaryParemeters)}
+                  {generateSelectWithOptions(heads)}
                 </select>
               </div>
               <div>
@@ -246,7 +221,7 @@ const DeductionHeadsModal = ({ visible, onClick }) => {
                   onChange={formik.handleChange}
                 >
                   <option value="">Select Salary Parameter 2</option>
-                  {generateSelectWithOptions(salaryParemeters)}
+                  {generateSelectWithOptions(heads)}
                 </select>
               </div>
               <div>
@@ -260,7 +235,7 @@ const DeductionHeadsModal = ({ visible, onClick }) => {
                   onChange={formik.handleChange}
                 >
                   <option value="">Select Salary Parameter 3</option>
-                  {generateSelectWithOptions(salaryParemeters)}
+                  {generateSelectWithOptions(heads)}
                 </select>
               </div>
               <div>
@@ -274,7 +249,7 @@ const DeductionHeadsModal = ({ visible, onClick }) => {
                   onChange={formik.handleChange}
                 >
                   <option value="">Select Salary Parameter 4</option>
-                  {generateSelectWithOptions(salaryParemeters)}
+                  {generateSelectWithOptions(heads)}
                 </select>
               </div>
               <div>
@@ -288,7 +263,7 @@ const DeductionHeadsModal = ({ visible, onClick }) => {
                   onChange={formik.handleChange}
                 >
                   <option value="">Select Salary Parameter 5</option>
-                  {generateSelectWithOptions(salaryParemeters)}
+                  {generateSelectWithOptions(heads)}
                 </select>
               </div>
               <div>
@@ -302,7 +277,7 @@ const DeductionHeadsModal = ({ visible, onClick }) => {
                   onChange={formik.handleChange}
                 >
                   <option value="">Select Salary Parameter 6</option>
-                  {generateSelectWithOptions(salaryParemeters)}
+                  {generateSelectWithOptions(heads)}
                 </select>
               </div>
               <div>
@@ -316,7 +291,7 @@ const DeductionHeadsModal = ({ visible, onClick }) => {
                   onChange={formik.handleChange}
                 >
                   <option value="">Select Salary Parameter 7</option>
-                  {generateSelectWithOptions(salaryParemeters)}
+                  {generateSelectWithOptions(heads)}
                 </select>
               </div>
               <div>
@@ -330,7 +305,7 @@ const DeductionHeadsModal = ({ visible, onClick }) => {
                   onChange={formik.handleChange}
                 >
                   <option value="">Select Salary Parameter 8</option>
-                  {generateSelectWithOptions(salaryParemeters)}
+                  {generateSelectWithOptions(heads)}
                 </select>
               </div>
               <div>
@@ -344,7 +319,7 @@ const DeductionHeadsModal = ({ visible, onClick }) => {
                   onChange={formik.handleChange}
                 >
                   <option value="">Select Salary Parameter 9</option>
-                  {generateSelectWithOptions(salaryParemeters)}
+                  {generateSelectWithOptions(heads)}
                 </select>
               </div>
               <div>
@@ -358,11 +333,11 @@ const DeductionHeadsModal = ({ visible, onClick }) => {
                   onChange={formik.handleChange}
                 >
                   <option value="">Select Salary Parameter 10</option>
-                  {generateSelectWithOptions(salaryParemeters)}
+                  {generateSelectWithOptions(heads)}
                 </select>
               </div>
               <div className="col-span-2">
-                <p className="capatilize font-semibold  text-[13px]">Formula</p>
+                <p className="capatilize font-semibold  text-[13px]">Formula  (Use Salary Parameter Gross as 'P1', Basic Salary As 'P2', TotalEarning As 'P3' for Creation of Formula)</p>
                 <input
                   id="Formula"
                   type="text"

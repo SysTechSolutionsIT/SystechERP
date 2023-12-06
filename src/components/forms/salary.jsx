@@ -221,7 +221,7 @@ const SalaryStructure = ({ID, name}) => {
             </select>
           </div>
           <div className="py-1">
-            <p className="mb-1 capitalize font-semibold text-[13px]">Salary</p>
+            <p className="mb-1 capitalize font-semibold text-[13px]">Gross Salary (Per Month)</p>
             <input
               id="GrossSalary"
               type="number"
@@ -438,8 +438,8 @@ const SalaryStructure = ({ID, name}) => {
           </div>
         </div>
         <div className="flex flex-wrap">
-          <EarningHeadsTable />
-          <DeductionHeadsTable />
+          <EarningHeadsTable ID={ID}/>
+          <DeductionHeadsTable ID={ID}/>
         </div>
         <div className="flex mt-5 justify-center gap-4">
           <button
