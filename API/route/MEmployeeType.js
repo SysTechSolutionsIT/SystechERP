@@ -68,7 +68,7 @@ router.get("/FnShowAllData", authToken, async (req, res) => {
   } catch (error) {
     console.error("Error retrieving data:", error);
     res.status(500).send("Internal Server Error");
-  }
+  } 
 });
 
 // GET endpoint to retrieve active companies
@@ -109,7 +109,22 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
   }
 });
 
-router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
+// Middleware for generating EarningHeadId
+const generateEmployeeTypeId = async (req, res, next) => {
+  try {
+    if (req.body.IUFlag === 'I') {
+      const totalRecords = await MEmployeeType.count();
+      const newId = (totalRecords + 1).toString().padStart(3, "0");
+      req.body.EmployeeTypeId = newId;
+    }
+    next();
+  } catch (error) {
+    console.error("Error generating EmployeeTypeId:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+router.post("/FnAddUpdateDeleteRecord", generateEmployeeTypeId, authToken, async (req, res) => {
     const employeeType = req.body;
     const employeeTypeId = employeeType.EmployeeTypeId;  // Access the EmployeeTypeId from the request body
   

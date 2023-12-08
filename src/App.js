@@ -3,6 +3,7 @@ import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import { AuthProvider } from "./components/Login";
 import { DetailsProvider } from "./components/Login";
+import { EmployeeTypeProvider } from "./components/forms/personal";
 import {
   BrowserRouter as Router,
   Routes,
@@ -56,6 +57,7 @@ function App() {
     <Router>
       <AuthProvider>
         <DetailsProvider>
+          <EmployeeTypeProvider>
           <Routes>
             <Route index element={<Login />} />
             <Route
@@ -161,6 +163,7 @@ function App() {
               />
             </Route>
           </Routes>
+          </EmployeeTypeProvider>
         </DetailsProvider>
       </AuthProvider>
     </Router>

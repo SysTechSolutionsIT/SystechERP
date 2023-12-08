@@ -1,15 +1,29 @@
-import React from 'react'
-import { useEffect, useState } from 'react';
-import { useAuth } from '../Login';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { ListGroup } from 'react-bootstrap';
+import { useFormik } from 'formik';
+import { useAuth } from '../Login';
+import { useEmployeeType } from './personal';
 
-const EarningHeadsTable = ({ID}) => {
-  console.log('ID in earning', ID)
-  const { token } = useAuth()
-  const [details, setDetails] = useState([])
-  const [heads, setHeads] = useState([])
-  useEffect(() =>{
+const EarningHeadsTable = ({ ID }) => {
+  const { token } = useAuth();
+  const { employeeTypeId } = useEmployeeType();
+  const [details, setDetails] = useState([]);
+  const [heads, setHeads] = useState([]);
+  const [selectedHeads, setSelectedHeads] = useState([]);
+
+  const formik = useFormik({
+    initialValues: {
+      EmployeeId: ID,
+      EmployeeTypeId: "",
+      EmployeeTypeGroup: "",
+      EmployeeType: "",
+    },
+    onSubmit: (values) => {
+      console.log(values);
+    }
+  });
+
+  useEffect(() => {
     const fetchHeadsData = async () => {
       try {
         const response = await axios.get(
@@ -20,16 +34,14 @@ const EarningHeadsTable = ({ID}) => {
             },
           }
         );
-        console.log("Response Object", response);
         const data = response.data;
-        console.log(data);
         setHeads(data);
       } catch (error) {
         console.log("Error while fetching course data: ", error);
       }
     };
-    fetchHeadsData()
-  }, [token])
+    fetchHeadsData();
+  }, [token]);
 
   useEffect(() => {
     const fetchEmpSalary = async () => {
@@ -42,7 +54,6 @@ const EarningHeadsTable = ({ID}) => {
           }
         );
         const data = response.data;
-        console.log(data)
         setDetails(data);
       } catch (error) {
         console.error("Error", error);
@@ -51,19 +62,92 @@ const EarningHeadsTable = ({ID}) => {
     fetchEmpSalary();
   }, [ID, token]);
 
-  const calculateValue = (formula, salary) => {
-    try {
-      const totalEarning = details.GrossSalary      
-      if (!formula) {
-        return salary;
+  useEffect(() => {
+    const fetchEmployeeTypes = async () => {
+      try {
+        const response = await axios.get('http://localhost:5500/employee-type/FnShowParticularData',
+          {
+            params: { EmployeeTypeId: employeeTypeId },
+            headers: { Authorization: `Bearer ${token}` }
+          })
+        const data = response.data;
+        console.log(data)
+        formik.setValues({
+          EmployeeId: ID,
+          EmployeeTypeId: data.EmployeeTypeId,
+          EmployeeTypeGroup: data.EmployeeTypeGroup,
+          EmployeeType: data.ShortName,
+        })
+      } catch (error) {
+        console.error('Error', error);
       }
-      const modifiedFormula = formula.replace('P1', salary).replace('P2', details.GrossSalary * (50/100)).replace('P3', totalEarning);      // Use eval to evaluate the modified formula
-      return eval(modifiedFormula);
+    }
+    fetchEmployeeTypes()
+  }, [token])
+
+  const calculateValue = (formula, salary, calculationValue) => {
+    try {
+      const totalEarning = salary;
+      if (formula === null) {
+        return calculationValue || 0;
+      } else {
+        const modifiedFormula = formula.replace('P1', salary).replace('P2', totalEarning * (50 / 100)).replace('P3', totalEarning);
+        const result = eval(modifiedFormula);
+        return result;
+      }
     } catch (error) {
       console.error("Error in formula calculation: ", error);
       return "Error";
     }
   };
+
+  const handleCalculationValueChange = (index, newValue) => {
+    const updatedHeads = [...heads];
+    updatedHeads[index].CalculationValue = newValue;
+    setHeads(updatedHeads);
+  };
+
+  const handleFormulaChange = (index, newValue) => {
+    const updatedHeads = [...heads];
+    updatedHeads[index].Formula = newValue;
+    setHeads(updatedHeads);
+  };
+
+  const handleCheckboxChange = (index) => {
+    const updatedHeads = [...heads];
+    updatedHeads[index].Selected = !updatedHeads[index].Selected;
+    setHeads(updatedHeads);
+  };
+
+  useEffect(() => {
+    const selectedHeadsData = heads
+      .filter((item) => item.Selected)
+      .map(({ EarningHeadId, EarningHead, CalculationType, CalculationValue, Formula }) => ({
+        EarningHeadId,
+        EarningHead,
+        CalculationType,
+        CalculationValue,
+        Formula,
+        EmployeeId: ID,
+        EmployeeTypeId: formik.values.EmployeeTypeId,
+        EmployeeTypeGroup: formik.values.EmployeeTypeGroup,
+        EmployeeType: formik.values.EmployeeType,
+        IUFlag: 'U'
+      }));
+    setSelectedHeads(selectedHeadsData);
+    console.log(selectedHeads)
+  }, [heads, formik.values, ID]);
+
+  const addEmployeewiseEarning = async () =>{
+    try {
+      const response = axios.post('http://localhost:5500/employee-wise-earning/FnAddUpdateDeleteRecord',
+      selectedHeads,
+      { headers:{ Authorization: `Bearer ${token}`}})
+      alert('Employee-wise Earning Heads Added')
+    } catch (error) {
+      console.error('Error', error);
+    }
+  }
 
   return (
     <div className="gap-4 justify-between">
@@ -105,6 +189,7 @@ const EarningHeadsTable = ({ID}) => {
                     type="checkbox"
                     className='w-5 h-5 mr-2 mt-2 focus:outline-gray-300 border border-blue-900 rounded-lg'
                     checked={item.Selected}
+                    onChange={() => handleCheckboxChange(index)}
                     />
                 </label>
                 </td>
@@ -118,21 +203,34 @@ const EarningHeadsTable = ({ID}) => {
                 {item.CalculationType}
                 </td>
                 <td className='px-2 border-2 whitespace-normal text-left text-[11px]'>
-                <input 
-                type='text'
+              <input
+                type='number'
                 className='w-16 py-1 rounded-md text-center'
-                value={calculateValue(item.Formula, details.GrossSalary)}/>
-                </td>
-                <td className='px-2 border-2 whitespace-normal text-left text-[11px]'>
-                <input 
+                value={calculateValue(item.Formula, details.GrossSalary, item.CalculationValue)}
+                onChange={(e) => handleCalculationValueChange(index, e.target.value)}
+              />
+            </td>
+            <td className='px-2 border-2 whitespace-normal text-left text-[11px]'>
+              <input
                 type='text'
                 className=' w-20 py-1 rounded-md text-center'
-                value={item.Formula}/>
-                </td>
+                value={item.Formula}
+                onChange={(e) => handleFormulaChange(index, e.target.value)}
+              />
+            </td>
             </tr>
             ))}
             </tbody>
         </table>
+        <div className="flex mt-2 justify-center gap-4">
+          <button
+            type="submit"
+            className="px-2 py-2 bg-blue-900 text-white text-xs rounded-md"
+            onClick={addEmployeewiseEarning}
+          >
+            Save Earning Heads Details
+          </button>
+        </div>
         </div>
         </div>
   )

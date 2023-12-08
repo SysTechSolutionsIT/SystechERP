@@ -6,10 +6,13 @@ import EarningHeadsTable from "./EarningHeadsTable";
 import axios from "axios";
 import { FormFloating } from "react-bootstrap";
 import { useParams } from "react-router-dom";
-// import { useEmployeeData } from "../employee settings/EmployeeMaster";
+import { useEmployeeType } from "./personal";
+
 
 const SalaryStructure = ({ID, name}) => {
   const { token } = useAuth();
+  const { employeeTypeId } = useEmployeeType()
+  console.log(employeeTypeId)
   const [details, setDetails] = useState([]);
   const [isOTFlagChecked, setOTFlagChecked] = useState(false);
   const [isPFFlagChecked, setPFFlagChecked] = useState(false);

@@ -8,6 +8,7 @@ import { useAuth } from "../Login";
 
 export default function AddEmployeePersonal() {
   const { token } = useAuth();
+  const [employeeTypes, setEmployeeTypes] = useState([])
 
   const formik = useFormik({
     initialValues: {
@@ -264,6 +265,22 @@ export default function AddEmployeePersonal() {
     }
   }
 
+  useEffect(() =>{
+    const fetchEmployeeTypes = async() =>{
+      try{
+        const response = await axios.get("http://localhost:5500/employee-type/FnShowActiveData",
+        { headers: { Authorization: `Bearer ${token}`}
+      })
+      const data = response.data
+      setEmployeeTypes(data)
+      console.log(response)
+      } catch (error){
+        console.error('Error', error);
+      }
+    }
+    fetchEmployeeTypes()
+  },[token])
+
   return (
     <form onSubmit={formik.handleSubmit}>
       <div className="p-0 font-[Inter]">
@@ -290,9 +307,11 @@ export default function AddEmployeePersonal() {
                 onChange={formik.handleChange}
               >
                     <option value="">Select Type</option>
-                    <option value="001">Contract Staff</option>
-                    <option value="002">Trainee Worker</option>
-                    <option value="003">Trainee Staff</option>
+                    {employeeTypes.map((entry) => (
+                    <option key={entry.EmployeeTypeId} value={entry.EmployeeTypeId}>
+                      {entry.EmployeeType}
+                    </option>
+                    ))}
               </select>
             </div>
             <div className="py-1">

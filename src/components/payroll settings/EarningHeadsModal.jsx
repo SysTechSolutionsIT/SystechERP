@@ -27,7 +27,7 @@ const EarningHeadsModal = ({ visible, onClick }) => {
       SalaryParameter10: "",
       AcFlag: "Y",
       IUFlag: "I",
-      Formula: "",
+      Formula: null,
       Remark: "",
     },
     onSubmit: (values) => {

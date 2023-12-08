@@ -13,6 +13,7 @@ const EmployeeMaster = () => {
   const [veCost, setVeCost] = useState(false);
   const [edit, setEdit] = useState(false);
   const [CCid, setCCid] = useState();
+  const [employeeTypes, setEmployeeTypes] = useState([])
   const [isModalOpen, setModalOpen] = useState(false)
   const navigate = useNavigate();
 
@@ -137,6 +138,7 @@ const EmployeeMaster = () => {
 
     fetchEmpData()
   }, [token])
+
 
   const [filteredData, setFilteredData] = useState([]);
 
