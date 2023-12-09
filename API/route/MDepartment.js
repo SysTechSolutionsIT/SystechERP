@@ -123,9 +123,14 @@ const MDepartment = sequelize.define("MDepartments", {
 router.use(bodyParser.json());
 
 // Model synchronization
-sequelize.sync().then(() => {
-  console.log("Models synced");
-});
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Connection has been established successfully.');
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
+  });
 
 // GET endpoint to retrieve all cost centers
 router.get("/FnShowAlldata", authToken, async (req, res) => {

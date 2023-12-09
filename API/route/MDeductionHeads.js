@@ -149,9 +149,14 @@ const MDeductionHeads = sequelize.define("MDeductionHeads", {
 router.use(bodyParser.json());
 
 // Model synchronization
-sequelize.sync().then(() => {
-  console.log("Models synced");
-});
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Connection has been established successfully.');
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
+  });
 
 // GET endpoint to retrieve all financial year entires
 router.get("/FnShowAllData", authToken, async (req, res) => {
@@ -208,14 +213,30 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
   }
 });
 
-router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
-  const earningHead = req.body;
+// Middleware for generating deductionHeadId
+const generatedeductionHeadId = async (req, res, next) => {
   try {
-    if (earningHead.IUFlag === "D") {
+    // Check if IUFlag is 'I'
+    if (req.body.IUFlag === 'I') {
+      const totalRecords = await MDeductionHeads.count();
+      const newId = "D" + (totalRecords + 1).toString().padStart(4, "0");
+      req.body.DeductionHeadID= newId;
+    }
+    next();
+  } catch (error) {
+    console.error("Error generating DeductionHeadId:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+router.post("/FnAddUpdateDeleteRecord", authToken, generatedeductionHeadId, async (req, res) => {
+  const deductionHead = req.body;
+  try {
+    if (deductionHead.IUFlag === "D") {
       // "Soft-delete" operation
       const result = await MDeductionHeads.update(
         { AcFlag: "N" },
-        { where: { DeductionHeadID: earningHead.DeductionHeadID } }
+        { where: { DeductionHeadID: deductionHead.DeductionHeadID } }
       );
 
       res.json({
@@ -223,7 +244,7 @@ router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
       });
     } else {
       // Add or update operation
-      const result = await MDeductionHeads.upsert(earningHead, {
+      const result = await MDeductionHeads.upsert(deductionHead, {
         returning: true,
       });
 

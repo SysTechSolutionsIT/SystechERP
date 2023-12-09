@@ -49,6 +49,7 @@ const MEarningHeads = sequelize.define(
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
+      defaultValue: 'E0001'
     },
     EarningHead: {
       type: DataTypes.STRING,
@@ -157,9 +158,14 @@ const MEarningHeads = sequelize.define(
 router.use(bodyParser.json());
 
 // Model synchronization
-sequelize.sync().then(() => {
-  console.log("Models synced");
-});
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Connection has been established successfully.');
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
+  });
 
 // GET endpoint to retrieve all financial year entires
 router.get("/FnShowAllData", authToken, async (req, res) => {
@@ -216,7 +222,23 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
   }
 });
 
-router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
+// Middleware for generating EarningHeadId
+const generateEarningHeadId = async (req, res, next) => {
+  try {
+    // Check if IUFlag is 'I'
+    if (req.body.IUFlag === 'I') {
+      const totalRecords = await MEarningHeads.count();
+      const newId = "E" + (totalRecords + 1).toString().padStart(4, "0");
+      req.body.EarningHeadId = newId;
+    }
+    next();
+  } catch (error) {
+    console.error("Error generating EarningHeadId:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+router.post("/FnAddUpdateDeleteRecord", authToken, generateEarningHeadId, async (req, res) => {
   const earningHead = req.body;
   try {
     if (earningHead.IUFlag === "D") {
@@ -230,7 +252,6 @@ router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
         message: result[0] ? "Record Deleted Successfully" : "Record Not Found",
       });
     } else {
-      // Add or update operation
       const result = await MEarningHeads.upsert(earningHead, {
         returning: true,
       });
@@ -244,5 +265,6 @@ router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
 
 module.exports = router;

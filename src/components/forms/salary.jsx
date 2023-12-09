@@ -6,10 +6,13 @@ import EarningHeadsTable from "./EarningHeadsTable";
 import axios from "axios";
 import { FormFloating } from "react-bootstrap";
 import { useParams } from "react-router-dom";
-// import { useEmployeeData } from "../employee settings/EmployeeMaster";
+import { useEmployeeType } from "./personal";
+
 
 const SalaryStructure = ({ID, name}) => {
   const { token } = useAuth();
+  const { employeeTypeId } = useEmployeeType()
+  console.log(employeeTypeId)
   const [details, setDetails] = useState([]);
   const [isOTFlagChecked, setOTFlagChecked] = useState(false);
   const [isPFFlagChecked, setPFFlagChecked] = useState(false);
@@ -221,7 +224,7 @@ const SalaryStructure = ({ID, name}) => {
             </select>
           </div>
           <div className="py-1">
-            <p className="mb-1 capitalize font-semibold text-[13px]">Salary</p>
+            <p className="mb-1 capitalize font-semibold text-[13px]">Gross Salary (Per Month)</p>
             <input
               id="GrossSalary"
               type="number"
@@ -438,8 +441,8 @@ const SalaryStructure = ({ID, name}) => {
           </div>
         </div>
         <div className="flex flex-wrap">
-          <EarningHeadsTable />
-          <DeductionHeadsTable />
+          <EarningHeadsTable ID={ID}/>
+          <DeductionHeadsTable ID={ID}/>
         </div>
         <div className="flex mt-5 justify-center gap-4">
           <button

@@ -5,11 +5,44 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import axios from "axios";
 import { useAuth } from "../Login";
-// import { useEmployeeData } from "../employee settings/EmployeeMaster";
+import { createContext, useContext } from "react";
+import Cookies from "js-cookie";
+
+export const EmployeeTypeContext = createContext()
+
+export const useEmployeeType = () =>{
+  return useContext(EmployeeTypeContext)
+} 
+
+export const EmployeeTypeProvider = ({children}) => {
+  const [ employeeTypeId, setEmployeeTypeId ] = useState("")
+
+  const handleSetEmployeeId = (newEmployeeTypeId) => {
+    setEmployeeTypeId(newEmployeeTypeId)
+    Cookies.set("employeeTypeId", newEmployeeTypeId)
+  }
+
+  useEffect(() => {
+    const savedEmployeeTypeId = Cookies.get("employeeTypeId")
+    if(savedEmployeeTypeId){
+      setEmployeeTypeId(savedEmployeeTypeId)
+    }
+  }, [])
+  return (
+    <EmployeeTypeContext.Provider value={{employeeTypeId, setEmployeeTypeId: handleSetEmployeeId}}>
+      {children}
+    </EmployeeTypeContext.Provider>
+  )
+
+}
+
+
 
 export default function Personal({ ID }) {
   const { token } = useAuth();
   const [details, setdetails] = useState([]);
+  const { employeeTypeId, setEmployeeTypeId } = useEmployeeType()
+  const [employeeTypes, setEmployeeTypes] = useState([])
   const formik = useFormik({
     initialValues: {
       EmployeeId: "",
@@ -150,6 +183,7 @@ export default function Personal({ ID }) {
       console.log("Response Object", response);
       const data = response.data;
       setdetails(data);
+      console.log('EMP type id in personal', employeeTypeId )
     } catch (error) {
       console.log("Error while fetching course data: ", error.message);
     }
@@ -159,6 +193,22 @@ export default function Personal({ ID }) {
   useEffect(() => {
     fetchPersonalData();
   }, [ID]);
+
+  useEffect(() =>{
+    const fetchEmployeeTypes = async() =>{
+      try{
+        const response = await axios.get("http://localhost:5500/employee-type/FnShowActiveData",
+        { headers: { Authorization: `Bearer ${token}`}
+      })
+      const data = response.data
+      setEmployeeTypes(data)
+      console.log(response)
+      } catch (error){
+        console.error('Error', error);
+      }
+    }
+    fetchEmployeeTypes()
+  },[token])
 
   useEffect(() => {
     if (details) {
@@ -213,6 +263,11 @@ export default function Personal({ ID }) {
     }
   }, [details]);
 
+  useEffect(() =>{
+    setEmployeeTypeId(details.EmployeeTypeId)
+    console.log('Emp Type id in personal', employeeTypeId)
+  }, [details])
+
   const handlePhotoChange = (event) => {
     const file = event.target.files[0];
     formik.setFieldValue("EmployeePhoto", file);
@@ -249,13 +304,12 @@ export default function Personal({ ID }) {
                 value={formik.values.EmployeeTypeId}
                 onChange={formik.handleChange}
               >
-                <option value={formik.values.EmployeeTypeId}>
-                  {formik.values.EmployeeTypeId}
-                </option>
-                <option value="">Select Type</option>
-                <option value="Permenant">Permenant</option>
-                <option value="Probation">Probation</option>
-                <option value="Contract">Contract</option>
+                    <option value="">Select Type</option>
+                    {employeeTypes.map((entry) => (
+                    <option key={entry.EmployeeTypeId} value={entry.EmployeeTypeId}>
+                      {entry.EmployeeType}
+                    </option>
+                    ))}
               </select>
             </div>
             <div className="py-1">

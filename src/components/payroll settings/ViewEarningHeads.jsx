@@ -28,7 +28,6 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
       SalaryParameter9: "",
       SalaryParameter10: "",
       Formula: "",
-      IUFlag: "U",
       Remark: "",
     },
     onSubmit: (values) => {
@@ -73,14 +72,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
           },
         }
       );
-      if (response.data && response.data.success) {
-        alert("Employee details updated successfully");
-      } else {
-        console.error(
-          "Failed to update employee details. Response:",
-          response.data
-        );
-      }
+      alert('Earning Head Updated')
     } catch (error) {
       console.error("Error:", error.message);
     }
@@ -102,46 +94,48 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
         }
       );
       const data = response.data;
-      setDetails(data.EarningHeadByID);
+      setDetails(data);
     } catch (error) {
-      console.log("Error while fetching course data: ", error.message);
+      console.log("Error while fetching earning heads data: ", error.message);
     }
   };
 
   console.log("Details array", details);
 
-  const salaryParemeters = [
-    "Basic Salary",
-    "House Rent Allowance (HRA)",
-    "Special Allowance",
-    "Dearness Allowance (DA)",
-    "Conveyance Allowance",
-    "Medical Allowance",
-    "Leave Travel Allowance (LTA)",
-    "Performance Bonus",
-    "Overtime Pay",
-    "Incentives",
-    "Commission",
-    "Gratuity",
-    "Provident Fund (PF) Contributions",
-    "Employee Stock Options (ESOPs)",
-    "Allowances for Food or Uniform",
-    "Shift Differentials",
-    "Education Allowance",
-    "Child Care Allowance",
-    "Travel Allowances",
-    "Bonus Leave",
-  ];
+  const [ heads, setHeads ] = useState([])
+
+  useEffect(() =>{
+    const fetchHeadsData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/earning-heads/FnShowActiveData",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log("Response Object", response);
+        const data = response.data;
+        console.log(data);
+        setHeads(data);
+      } catch (error) {
+        console.log("Error while fetching course data: ", error);
+      }
+    };
+
+    fetchHeadsData()
+  },[token])
 
   function generateSelectWithOptions(optionsArray) {
-    const optionsHTML = optionsArray.map((optionText) => (
-      <option key={optionText} value={optionText}>
-        {optionText}
+    const optionsHTML = optionsArray.map((option) => (
+      <option key={option.EarningHeadId} value={option.EarningHeadId}>
+        {option.EarningHead}
       </option>
     ));
-
+  
     return <>{optionsHTML}</>;
-  }
+  }  
 
   useEffect(() => {
     if (details) {
@@ -193,12 +187,12 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                   Earning Head ID
                 </p>
                 <input
-                  id="id"
-                  type="number"
+                  id="EarningHeadId"
+                  type="text"
                   value={details?.EarningHeadId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
-                  disabled={!edit}
+                  disabled={true}
                 />
               </div>
               <div>
@@ -281,7 +275,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                   disabled={!edit}
                 >
                   <option value="">Select Salary Parameter 1</option>
-                  {generateSelectWithOptions(salaryParemeters)}
+                  {generateSelectWithOptions(heads)}
                 </select>
               </div>
               <div>
@@ -296,7 +290,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                   disabled={!edit}
                 >
                   <option value="">Select Salary Parameter 2</option>
-                  {generateSelectWithOptions(salaryParemeters)}
+                  {generateSelectWithOptions(heads)}
                 </select>
               </div>
               <div>
@@ -311,7 +305,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                   disabled={!edit}
                 >
                   <option value="">Select Salary Parameter 3</option>
-                  {generateSelectWithOptions(salaryParemeters)}
+                  {generateSelectWithOptions(heads)}
                 </select>
               </div>
               <div>
@@ -326,7 +320,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                   disabled={!edit}
                 >
                   <option value="">Select Salary Parameter 4</option>
-                  {generateSelectWithOptions(salaryParemeters)}
+                  {generateSelectWithOptions(heads)}
                 </select>
               </div>
               <div>
@@ -341,7 +335,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                   disabled={!edit}
                 >
                   <option value="">Select Salary Parameter 5</option>
-                  {generateSelectWithOptions(salaryParemeters)}
+                  {generateSelectWithOptions(heads)}
                 </select>
               </div>
               <div>
@@ -356,7 +350,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                   disabled={!edit}
                 >
                   <option value="">Select Salary Parameter 6</option>
-                  {generateSelectWithOptions(salaryParemeters)}
+                  {generateSelectWithOptions(heads)}
                 </select>
               </div>
               <div>
@@ -371,7 +365,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                   disabled={!edit}
                 >
                   <option value="">Select Salary Parameter 7</option>
-                  {generateSelectWithOptions(salaryParemeters)}
+                  {generateSelectWithOptions(heads)}
                 </select>
               </div>
               <div>
@@ -386,7 +380,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                   disabled={!edit}
                 >
                   <option value="">Select Salary Parameter 8</option>
-                  {generateSelectWithOptions(salaryParemeters)}
+                  {generateSelectWithOptions(heads)}
                 </select>
               </div>
               <div>
@@ -401,7 +395,7 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                   disabled={!edit}
                 >
                   <option value="">Select Salary Parameter 9</option>
-                  {generateSelectWithOptions(salaryParemeters)}
+                  {generateSelectWithOptions(heads)}
                 </select>
               </div>
               <div>
@@ -416,11 +410,11 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                   disabled={!edit}
                 >
                   <option value="">Select Salary Parameter 10</option>
-                  {generateSelectWithOptions(salaryParemeters)}
+                  {generateSelectWithOptions(heads)}
                 </select>
               </div>
               <div className="col-span-2">
-                <p className="capatilize font-semibold  text-[13px]">Formula</p>
+                <p className="capatilize font-semibold  text-[13px]">Formula (Use P1 for calculations on Gross Salary and P2 for calculations on Basic Salary)  </p>
                 <input
                   id="Formula"
                   type="text"
@@ -440,21 +434,6 @@ const ViewEarningHeads = ({ visible, onClick, edit, ID }) => {
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
-              </div>
-              <div>
-                <p className="capitalize font-semibold  text-[13px]">Status</p>
-                <label className="capitalize font-semibold  text-[11px]">
-                  <input
-                    id="Status"
-                    type="checkbox"
-                    checked={formik.values.Status}
-                    className={`w-5 h-5 mr-2 mt-2 focus:outline-gray-300 border-2 rounded-lg`}
-                    onChange={(event) =>
-                      handleCheckboxChange("Status", setStatusChecked, event)
-                    }
-                  />
-                  Active
-                </label>
               </div>
             </div>
           </div>
