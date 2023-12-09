@@ -29,20 +29,19 @@ const sequelize = new Sequelize(
     host: process.env.DB_HOST,
     dialect: "mysql",
     port: process.env.DB_PORT,
-  },
-  
+  }
 );
 
 const TAdvanceRequest = sequelize.define("TAdvanceRequest", {
   CompanyId: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    defaultValue: "00001",
+    defaultValue: 1,
   },
   BranchId: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    defaultValue: "00001",
+    defaultValue: 1,
   },
   AdvanceId: {
     type: DataTypes.INTEGER,
@@ -90,7 +89,7 @@ const TAdvanceRequest = sequelize.define("TAdvanceRequest", {
   },
   ApprovalFlag: {
     type: DataTypes.STRING,
-    defaultValue: "P",
+    defaultValue: "Pending",
   },
   Remark: {
     type: DataTypes.STRING,
@@ -115,6 +114,9 @@ const TAdvanceRequest = sequelize.define("TAdvanceRequest", {
     type: DataTypes.DATE,
     allowNull: false,
   },
+  ApprovedBy: {
+    type: DataTypes.STRING,
+  },
   ApprovedAmount: {
     type: DataTypes.DECIMAL(18, 2),
     defaultValue: 0,
@@ -122,6 +124,12 @@ const TAdvanceRequest = sequelize.define("TAdvanceRequest", {
   ApprovedInstallments: {
     type: DataTypes.INTEGER,
     defaultValue: 1,
+  },
+  RejectedBy: {
+    type: DataTypes.STRING,
+  },
+  RejectReason: {
+    type: DataTypes.STRING,
   },
 });
 // Middleware for parsing JSON
@@ -131,10 +139,10 @@ router.use(bodyParser.json());
 sequelize
   .authenticate()
   .then(() => {
-    console.log('Connection has been established successfully.');
+    console.log("Connection has been established successfully.");
   })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
+  .catch((err) => {
+    console.error("Unable to connect to the database:", err);
   });
 
 // GET endpoint to retrieve all financial year entires
@@ -221,11 +229,11 @@ router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
   }
 });
 
-router.get("/FnShowApprovedData", authToken, async (req, res) => {
+router.get("/FnShowPendingData", authToken, async (req, res) => {
   try {
     const approvedRecords = await TAdvanceRequest.findAll({
       where: {
-        ApprovalFlag: "A",
+        AdvanceStatus: "Pending",
       },
       attributes: {
         exclude: ["IUFlag"],
@@ -240,11 +248,13 @@ router.get("/FnShowApprovedData", authToken, async (req, res) => {
 });
 
 // GET endpoint to retrieve all records where ApprovalFlag is "R"
-router.get("/FnShowRejectedData", authToken, async (req, res) => {
+router.get("/FnShowRepaymentData", authToken, async (req, res) => {
   try {
     const rejectedRecords = await TAdvanceRequest.findAll({
       where: {
-        ApprovalFlag: "R",
+        AdvanceStatus: {
+          [Sequelize.Op.or]: ["Repayment", "Partial Repayment"],
+        },
       },
       attributes: {
         exclude: ["IUFlag"],
@@ -256,14 +266,6 @@ router.get("/FnShowRejectedData", authToken, async (req, res) => {
     console.error("Error retrieving rejected data:", error);
     res.status(500).send("Internal Server Error");
   }
-});
-
-process.on("SIGINT", () => {
-  console.log("Received SIGINT. Closing Sequelize connection...");
-  sequelize.close().then(() => {
-    console.log("Sequelize connection closed. Exiting...");
-    process.exit(0);
-  });
 });
 
 module.exports = router;

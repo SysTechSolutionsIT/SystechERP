@@ -423,8 +423,14 @@ const Sidebar = () => {
                         title="Advance Request"
                         onClick={() => navigate("/advance-request")}
                       />
-                      <SubMenuEntry title="Advance Approval" />
-                      <SubMenuEntry title="Advance Repayment" />
+                      <SubMenuEntry
+                        title="Advance Approval"
+                        onClick={() => navigate("/advance-approval")}
+                      />
+                      <SubMenuEntry
+                        title="Advance Repayment"
+                        onClick={() => navigate("/advance-repayment")}
+                      />
                     </SubMenuGroup>
                   )}
                   <SubMenuMain

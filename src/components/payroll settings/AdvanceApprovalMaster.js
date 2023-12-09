@@ -3,9 +3,10 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { Icon } from "@iconify/react";
 import { useRef } from "react";
-import AdvanceRequestModal from "./AdvanceRequestModal";
+import AdvanceApprovalModal from "./ApprovalModal";
 import { useAuth } from "../Login";
 import axios from "axios";
+import RejectionModal from "./RejectionModal";
 
 export const advanceData = [
   // Item 1
@@ -95,14 +96,16 @@ export const advanceData = [
   },
 ];
 
-const AdvanceRequest = () => {
+const AdvanceApproval = () => {
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isModal2Open, setModal2Open] = useState(false);
+
   const [filteredData, setFilteredData] = useState([]);
   const { token } = useAuth();
 
   // const [PTView, setPTView] = useState(false);
   // const [edit, setEdit] = useState(false);
-  // const [PTId, setPTId] = useState();
+  const [AdvanceId, setAdvanceId] = useState();
 
   // Hamburger Menu
   const [menuOpen, setMenuOpen] = useState(false);
@@ -183,7 +186,7 @@ const AdvanceRequest = () => {
   };
 
   // API
-  const [advanceReq, setAdvanceReq] = useState([]);
+  const [AdvanceAppr, setAdvanceAppr] = useState([]);
 
   useEffect(() => {
     fetchRequestData();
@@ -192,7 +195,7 @@ const AdvanceRequest = () => {
   const fetchRequestData = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5500/advance-request/FnShowActiveData",
+        "http://localhost:5500/advance-request/FnShowPendingData",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -202,15 +205,15 @@ const AdvanceRequest = () => {
       console.log("Response Object", response);
       const data = response.data;
       console.log(data);
-      setAdvanceReq(data);
+      setAdvanceAppr(data);
     } catch (error) {
       console.log("Error while fetching course data: ", error);
     }
   };
-  console.log(advanceReq);
+  console.log("Advance APPR data", AdvanceAppr);
 
   const handleSearchChange = (title, searchWord) => {
-    const searchData = [...advanceReq];
+    const searchData = [...AdvanceAppr];
 
     const newFilter = searchData.filter((item) => {
       // Check if the item matches the search term in any selected columns
@@ -232,7 +235,7 @@ const AdvanceRequest = () => {
     <div className="top-25 min-w-[40%]">
       <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
         <div className="mr-auto text-[15px]">
-          Payroll Settings / Advance Request
+          Payroll Settings / Advance Approval
         </div>
         <div className="flex gap-4">
           <button
@@ -327,10 +330,10 @@ const AdvanceRequest = () => {
           </div>
         </div>
       </div>
-      <AdvanceRequestModal
+      {/* <AdvanceApprovalModal
         visible={isModalOpen}
         onClick={() => setModalOpen(false)}
-      />
+      /> */}
       <div className="grid gap-4  justify-between">
         <div className="my-1 rounded-2xl bg-white p-2 pr-8">
           <table className="min-w-full text-center  rounded-lg justify-center whitespace-normal">
@@ -340,7 +343,7 @@ const AdvanceRequest = () => {
                   Actions
                 </th>
                 <th className=" w-auto px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
-                  Approval Flag
+                  Approval
                 </th>
                 <th className=" w-auto px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
                   ID
@@ -408,7 +411,24 @@ const AdvanceRequest = () => {
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {result.ApprovalFlag}
+                        <button
+                          className="font-semibold px-2 rounded-lg text-white bg-green-500 border border-white"
+                          onClick={() => {
+                            setAdvanceId(result.AdvanceId);
+                            setModalOpen(true);
+                          }}
+                        >
+                          Approve
+                        </button>
+                        <button
+                          className="font-semibold px-2 rounded-lg text-white bg-green-500 border border-white"
+                          onClick={() => {
+                            setAdvanceId(result.AdvanceId);
+                            setModal2Open(true);
+                          }}
+                        >
+                          Reject
+                        </button>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
                         {result.AdvanceId}
@@ -425,8 +445,8 @@ const AdvanceRequest = () => {
                       ))}
                     </tr>
                   ))
-                : advanceReq.length > 0 &&
-                  advanceReq.map((result, index) => (
+                : AdvanceAppr.length > 0 &&
+                  AdvanceAppr.map((result, index) => (
                     <tr key={index}>
                       <td className="px-2 text-[11px] border-2">
                         <div className="flex items-center gap-2 text-center justify-center">
@@ -454,7 +474,24 @@ const AdvanceRequest = () => {
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {result.ApprovalFlag}
+                        <button
+                          className="font-semibold px-2 rounded-lg text-white bg-green-500 border border-white"
+                          onClick={() => {
+                            setAdvanceId(result.AdvanceId);
+                            setModalOpen(true);
+                          }}
+                        >
+                          Approve
+                        </button>
+                        <button
+                          className="font-semibold px-2 rounded-lg text-white bg-green-500 border border-white"
+                          onClick={() => {
+                            setAdvanceId(result.AdvanceId);
+                            setModal2Open(true);
+                          }}
+                        >
+                          Reject
+                        </button>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
                         {result.AdvanceId}
@@ -475,8 +512,18 @@ const AdvanceRequest = () => {
           </table>
         </div>
       </div>
+      <AdvanceApprovalModal
+        visible={isModalOpen}
+        onClick={() => setModalOpen(false)}
+        ID={AdvanceId}
+      />
+      <RejectionModal
+        visible={isModal2Open}
+        onClick={() => setModal2Open(false)}
+        ID={AdvanceId}
+      />
     </div>
   );
 };
 
-export default AdvanceRequest;
+export default AdvanceApproval;

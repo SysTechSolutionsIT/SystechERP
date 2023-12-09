@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { Icon } from "@iconify/react";
 import { useRef } from "react";
-import AdvanceRequestModal from "./AdvanceRequestModal";
 import { useAuth } from "../Login";
 import axios from "axios";
 
@@ -95,7 +94,7 @@ export const advanceData = [
   },
 ];
 
-const AdvanceRequest = () => {
+const AdvanceRepayment = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
   const { token } = useAuth();
@@ -147,13 +146,24 @@ const AdvanceRequest = () => {
   const [columnVisibility, setColumnVisibility] = useState({
     AdvanceDate: true,
     EmployeeName: true,
-    AdvanceType: true,
-    AdvanceStatus: true,
-    ProjectId: true,
-    Amount: true,
-    Installment: true,
+    Purpose: true,
+    ApprovedInstallments: true,
+    ApprovedAmount: true,
+    AMonth: true,
+    AYear: true,
     AcFlag: true,
   });
+
+  const columnNames = {
+    AdvanceDate: "Advance Date",
+    EmployeeName: "Employee Name",
+    Purpose: "Purpose",
+    ApprovedInstallments: "Approved Installments",
+    ApprovedAmount: "Approved Amount",
+    AMonth: "AMonth",
+    AYear: "AYear",
+    AcFlag: "Status",
+  };
   //Toggle
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedColumns, setSelectedColumns] = useState([
@@ -192,7 +202,7 @@ const AdvanceRequest = () => {
   const fetchRequestData = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5500/advance-request/FnShowActiveData",
+        "http://localhost:5500/advance-request/FnShowRepaymentData",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -327,10 +337,10 @@ const AdvanceRequest = () => {
           </div>
         </div>
       </div>
-      <AdvanceRequestModal
+      {/* <AdvanceRepaymentModal
         visible={isModalOpen}
         onClick={() => setModalOpen(false)}
-      />
+      /> */}
       <div className="grid gap-4  justify-between">
         <div className="my-1 rounded-2xl bg-white p-2 pr-8">
           <table className="min-w-full text-center  rounded-lg justify-center whitespace-normal">
@@ -345,16 +355,16 @@ const AdvanceRequest = () => {
                 <th className=" w-auto px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
                   ID
                 </th>
-                {selectedColumns.map((columnName) => (
-                  <th
-                    key={columnName}
-                    className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 ${
-                      columnVisibility[columnName] ? "" : "hidden"
-                    }`}
-                  >
-                    {columnName}
-                  </th>
-                ))}
+                {selectedColumns.map((columnName) =>
+                  columnVisibility[columnName] ? (
+                    <th
+                      key={columnName}
+                      className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal`}
+                    >
+                      {columnNames[columnName]}
+                    </th>
+                  ) : null
+                )}
               </tr>
               <tr>
                 <th className="p-2 font-bold text-black border-2 " />
@@ -479,4 +489,4 @@ const AdvanceRequest = () => {
   );
 };
 
-export default AdvanceRequest;
+export default AdvanceRepayment;
