@@ -1,19 +1,22 @@
 import React from "react";
 import { useFormik } from "formik";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import axios from "axios";
 import { useAuth } from "../Login";
 
-const AdvanceRequestModal = ({ visible, onClick }) => {
+const AdvanceApprovalModal = ({ visible, onClick, ID }) => {
   const { token } = useAuth();
+  const [details, setDetails] = useState([]);
+
+  console.log("ID:", ID);
   const formik = useFormik({
     initialValues: {
-      AdvanceDate: "",
+      AdvanceId: ID,
       EmployeeName: "",
       AdvanceType: "",
       AdvanceStatus: "",
-      ApprovalFlag: "Pending",
+      ApprovalFlag: "",
       ProjectId: "",
       Amount: "",
       Installment: "",
@@ -21,12 +24,35 @@ const AdvanceRequestModal = ({ visible, onClick }) => {
       AYear: "",
       Purpose: "",
       AcFlag: "Y",
-      IUFlag: "I",
-      Remark: "",
+      IUFlag: "U",
+      ApprovedInstallments: "",
+      ApprovedAmount: "",
+      ApprovedBy: "",
     },
     onSubmit: (values) => {
       console.log(values);
-      addReq(values);
+
+      const updatedData = {
+        AdvanceId: ID,
+        EmployeeName: values.EmployeeName,
+        AdvanceType: values.AdvanceType,
+        AdvanceStatus:
+          values.ApprovedInstallments === 1 ? "Repayment" : "Partial Repayment",
+        ApprovalFlag: "Approved",
+        ProjectId: values.ProjectId,
+        Amount: values.Amount,
+        Installment: values.Installment,
+        AMonth: values.AMonth,
+        AYear: values.AYear,
+        Purpose: values.Purpose,
+        AcFlag: "Y",
+        IUFlag: "U",
+        ApprovedInstallments: values.ApprovedInstallments,
+        ApprovedAmount: values.ApprovedAmount,
+        ApprovedBy: values.ApprovedBy,
+      };
+      console.log("Updated Data sent to request", updatedData);
+      addReq(updatedData);
     },
   });
 
@@ -36,6 +62,7 @@ const AdvanceRequestModal = ({ visible, onClick }) => {
         "http://localhost:5500/advance-request/FnAddUpdateDeleteRecord",
         values,
         {
+          params: { AdvanceId: ID },
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -44,7 +71,7 @@ const AdvanceRequestModal = ({ visible, onClick }) => {
       if (response.status === 200) {
         const data = response.data;
         console.log(data);
-        alert("Record added successfully");
+        alert("Record Updated successfully");
         onClick();
         window.location.reload();
       } else {
@@ -56,6 +83,37 @@ const AdvanceRequestModal = ({ visible, onClick }) => {
       // Handle network error
     }
   };
+
+  useEffect(() => {
+    fetchAppData();
+  }, [ID]);
+
+  const fetchAppData = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5500/advance-request/FnShowParticularData`,
+        {
+          params: { AdvanceId: ID },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = response.data;
+      console.log("response object", data);
+      setDetails(data);
+    } catch (error) {
+      console.log("Error while fetching course data: ", error.message);
+    }
+  };
+
+  console.log("Details array", details);
+
+  useEffect(() => {
+    if (details) {
+      formik.setValues(details);
+    }
+  }, [details]);
 
   const [isStatusChecked, setStatusChecked] = useState(false);
   const handleCheckboxChange = (fieldName, setChecked, event) => {
@@ -89,18 +147,6 @@ const AdvanceRequestModal = ({ visible, onClick }) => {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <p className="capatilize font-semibold  text-[13px]">
-                  Advance Date
-                </p>
-                <input
-                  id="AdvanceDate"
-                  type="date"
-                  value={formik.values.AdvanceDate}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                />
-              </div>
-              <div>
-                <p className="capatilize font-semibold  text-[13px]">
                   Employee Name
                 </p>
                 <input
@@ -109,6 +155,7 @@ const AdvanceRequestModal = ({ visible, onClick }) => {
                   value={formik.values.EmployeeName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
+                  disabled={true}
                 />
               </div>
               <div>
@@ -122,6 +169,7 @@ const AdvanceRequestModal = ({ visible, onClick }) => {
                     name="AdvanceType"
                     value="Official"
                     onChange={formik.handleChange}
+                    disabled={true}
                   />
                   <label className="text-[13px]">Official</label>
                 </div>
@@ -133,26 +181,12 @@ const AdvanceRequestModal = ({ visible, onClick }) => {
                     value="Personal"
                     style={{ marginTop: "10px" }}
                     onChange={formik.handleChange}
+                    disabled={true}
                   />
                   <label className="text-[13px]">Personal</label>
                 </div>
               </div>
-              <div>
-                <p className="capitalize font-semibold text-[13px]">
-                  Advance Status
-                </p>
-                <select
-                  id="AdvanceStatus"
-                  className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                  value={formik.values.AdvanceStatus}
-                  onChange={formik.handleChange}
-                >
-                  <option value="">Select Advance Status</option>
-                  <option value="Pending">Pending</option>
-                  <option value="Partial Repayment">Partial Repayment</option>
-                  <option value="Repayment">Repayment</option>
-                </select>
-              </div>
+
               <div>
                 <p className="capitalize font-semibold text-[13px]">Project</p>
                 <select
@@ -160,6 +194,7 @@ const AdvanceRequestModal = ({ visible, onClick }) => {
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
                   value={formik.values.ProjectId}
                   onChange={formik.handleChange}
+                  disabled={true}
                 >
                   <option value="">Select Project</option>
                   <option value="1">Project 1</option>
@@ -187,6 +222,7 @@ const AdvanceRequestModal = ({ visible, onClick }) => {
                   value={formik.values.Installment}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
+                  disabled={true}
                 />
               </div>
               <div>
@@ -198,6 +234,7 @@ const AdvanceRequestModal = ({ visible, onClick }) => {
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
                   value={formik.values.AMonth}
                   onChange={formik.handleChange}
+                  disabled={true}
                 >
                   <option value="">Select Advance Starting Month</option>
                   <option value="January">January</option>
@@ -228,6 +265,7 @@ const AdvanceRequestModal = ({ visible, onClick }) => {
                   <option value="2023">2023</option>
                   <option value="2024">2024</option>
                   <option value="2025">2025</option>
+                  disabled={true}
                 </select>
               </div>
               <div>
@@ -238,6 +276,7 @@ const AdvanceRequestModal = ({ visible, onClick }) => {
                   value={formik.values.Purpose}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
+                  disabled={true}
                 />
               </div>
               <div>
@@ -248,8 +287,46 @@ const AdvanceRequestModal = ({ visible, onClick }) => {
                   value={formik.values.Remark}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
+                  disabled={true}
                 />
               </div>
+              <div>
+                <p className="capatilize font-semibold  text-[13px]">
+                  Approved By
+                </p>
+                <input
+                  id="ApprovedBy"
+                  type="text"
+                  value={formik.values.ApprovedBy}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                  onChange={formik.handleChange}
+                />
+              </div>
+              <div>
+                <p className="capatilize font-semibold  text-[13px]">
+                  Approved Amount
+                </p>
+                <input
+                  id="ApprovedAmount"
+                  type="number"
+                  value={formik.values.ApprovedAmount}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                  onChange={formik.handleChange}
+                />
+              </div>
+              <div>
+                <p className="capatilize font-semibold  text-[13px]">
+                  Approved Installments
+                </p>
+                <input
+                  id="ApprovedInstallments"
+                  type="number"
+                  value={formik.values.Installments}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                  onChange={formik.handleChange}
+                />
+              </div>
+
               {/* <div>
                 <p className="capitalize font-semibold  text-[13px]">Status</p>
                 <label className="capitalize font-semibold  text-[11px]">
@@ -285,4 +362,4 @@ const AdvanceRequestModal = ({ visible, onClick }) => {
     </form>
   );
 };
-export default AdvanceRequestModal;
+export default AdvanceApprovalModal;

@@ -50,6 +50,7 @@ import ManualAttendanceEntry from "./components/attendance management/ManualAtte
 import ManualAttendanceApproval from "./components/attendance management/ManualAttendanceApproval";
 import OutDoorAttendanceEntry from "./components/attendance management/OutDoorAttendanceEntry";
 import OutDoorAttendanceApproval from "./components/attendance management/OutDoorAttendanceApproval";
+import AdvanceApproval from "./components/payroll settings/AdvanceApprovalMaster";
 
 function App() {
   return (
@@ -155,6 +156,7 @@ function App() {
               <Route path="/ED-imports" element={<EDImports />} />
               <Route path="/salary-processing" element={<SalProcessing />} />
               <Route path="registration" element={<Registration />} />
+              <Route path="/advance-approval" element={<AdvanceApproval />} />
               <Route
                 path="/attendance-master/empGatePassEntry"
                 element={<GateEntryMaster />}
