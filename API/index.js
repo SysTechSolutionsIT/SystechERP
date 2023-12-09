@@ -44,6 +44,7 @@ const MEmployeeWorkProfile = require("./route/MEmployeeWorkProfile");
 const MDepartment = require("./route/MDepartment");
 const MEmployeewiseEarning = require("./route/MEmployeewiseEarning")
 
+
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());
 // Use the user routes

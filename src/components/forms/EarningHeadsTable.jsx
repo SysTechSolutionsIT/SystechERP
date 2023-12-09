@@ -116,7 +116,7 @@ const EarningHeadsTable = ({ ID }) => {
         EmployeeTypeId: employeeTypes?.EmployeeTypeId,
         EmployeeTypeGroup: employeeTypes?.EmployeeTypeGroup,
         EmployeeType: employeeTypes?.ShortName,
-        IUFlag: 'U'
+        IUFlag:'U'
       }));
     setSelectedHeads(selectedHeadsData);
     console.log(selectedHeads)
