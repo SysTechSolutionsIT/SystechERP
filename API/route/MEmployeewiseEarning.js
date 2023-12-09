@@ -44,7 +44,7 @@ const MEmployeewiseEarning = sequelize.define('MEmployeewiseEarning', {
       allowNull: false,
     },
     EmployeewiseEarningId: {
-      type: DataTypes.STRING(5),
+      type: DataTypes.STRING(10),
       allowNull: false,
     },
     EmployeewiseEarningDate: {
@@ -167,13 +167,11 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
   const generateEmployeewiseEarningId = async (req, res, next) => {
     try {
         const employeeType = req.body.EmployeeType || 'X';
-        const totalRecords = await MEmployeewiseEarning.count({
-          where: { EmployeeType: employeeType },
-        });
+        const totalRecords = await MEmployeewiseEarnings.count();
   
         const newId = (totalRecords + 1).toString().padStart(4, '0');
   
-        req.body.EmployeewiseEarningId = `S${newId}`;
+        req.body.EmployeewiseEarningId = `${employeeType}${newId}`;
       next();
     } catch (error) {
       console.error("Error generating EmployeeWiseEarningId:", error);
