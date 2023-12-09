@@ -139,10 +139,10 @@ router.use(bodyParser.json());
 sequelize
   .authenticate()
   .then(() => {
-    console.log('Connection has been established successfully.');
+    console.log("Connection has been established successfully.");
   })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
+  .catch((err) => {
+    console.error("Unable to connect to the database:", err);
   });
 
 // GET endpoint to retrieve all financial year entires
@@ -252,7 +252,9 @@ router.get("/FnShowRepaymentData", authToken, async (req, res) => {
   try {
     const rejectedRecords = await TAdvanceRequest.findAll({
       where: {
-        AdvanceStatus: { [Op.or]: ["Repayment", "Partial Repayment"] },
+        AdvanceStatus: {
+          [Sequelize.Op.or]: ["Repayment", "Partial Repayment"],
+        },
       },
       attributes: {
         exclude: ["IUFlag"],
