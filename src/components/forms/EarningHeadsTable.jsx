@@ -1,27 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useFormik } from 'formik';
 import { useAuth } from '../Login';
 import { useEmployeeType } from './personal';
 
 const EarningHeadsTable = ({ ID }) => {
   const { token } = useAuth();
   const { employeeTypeId } = useEmployeeType();
+  console.log('Employee type id', employeeTypeId)
   const [details, setDetails] = useState([]);
   const [heads, setHeads] = useState([]);
   const [selectedHeads, setSelectedHeads] = useState([]);
-
-  const formik = useFormik({
-    initialValues: {
-      EmployeeId: ID,
-      EmployeeTypeId: "",
-      EmployeeTypeGroup: "",
-      EmployeeType: "",
-    },
-    onSubmit: (values) => {
-      console.log(values);
-    }
-  });
+  const [employeeTypes, setEmployeeTypes] = useState([])
 
   useEffect(() => {
     const fetchHeadsData = async () => {
@@ -71,13 +60,8 @@ const EarningHeadsTable = ({ ID }) => {
             headers: { Authorization: `Bearer ${token}` }
           })
         const data = response.data;
-        console.log(data)
-        formik.setValues({
-          EmployeeId: ID,
-          EmployeeTypeId: data.EmployeeTypeId,
-          EmployeeTypeGroup: data.EmployeeTypeGroup,
-          EmployeeType: data.ShortName,
-        })
+        setEmployeeTypes(data)
+        console.log('Employee Type Data', data)
       } catch (error) {
         console.error('Error', error);
       }
@@ -125,18 +109,18 @@ const EarningHeadsTable = ({ ID }) => {
       .map(({ EarningHeadId, EarningHead, CalculationType, CalculationValue, Formula }) => ({
         EarningHeadId,
         EarningHead,
-        CalculationType,
-        CalculationValue,
+        ECalculationType: CalculationType,
+        ECalculationValue: CalculationValue,
         Formula,
         EmployeeId: ID,
-        EmployeeTypeId: formik.values.EmployeeTypeId,
-        EmployeeTypeGroup: formik.values.EmployeeTypeGroup,
-        EmployeeType: formik.values.EmployeeType,
+        EmployeeTypeId: employeeTypes?.EmployeeTypeId,
+        EmployeeTypeGroup: employeeTypes?.EmployeeTypeGroup,
+        EmployeeType: employeeTypes?.ShortName,
         IUFlag: 'U'
       }));
     setSelectedHeads(selectedHeadsData);
     console.log(selectedHeads)
-  }, [heads, formik.values, ID]);
+  }, [heads, employeeTypes, ID]);
 
   const addEmployeewiseEarning = async () =>{
     try {

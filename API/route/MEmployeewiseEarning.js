@@ -163,19 +163,17 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
     }
   });
 
-  const geenrateEmployeewiseEarningId = async (req, res, next) => {
+
+  const generateEmployeewiseEarningId = async (req, res, next) => {
     try {
-      // Check if req.body is defined and IUFlag is 'U'
-      if (req.body && req.body.IUFlag === 'U') {
-        const totalRecords = await MEmployeewiseEarning.count();
-        console.log("Total Records:", totalRecords); // Add this log statement
-        const newId = (totalRecords + 1).toString().padStart(4, "0");
-        console.log("New ID:", newId); // Add this log statement
-        const employeeTypePrefix = req.body.EmployeeType || 'X';
-        console.log("Employee Type Prefix:", employeeTypePrefix); // Add this log statement
-        req.body.EmployeewiseEarningId = `${employeeTypePrefix}${String(newId)}`;
-        console.log("Generated ID:", req.body.EmployeewiseEarningId); // Add this log statement
-      }
+        const employeeType = req.body.EmployeeType || 'X';
+        const totalRecords = await MEmployeewiseEarning.count({
+          where: { EmployeeType: employeeType },
+        });
+  
+        const newId = (totalRecords + 1).toString().padStart(4, '0');
+  
+        req.body.EmployeewiseEarningId = `S${newId}`;
       next();
     } catch (error) {
       console.error("Error generating EmployeeWiseEarningId:", error);
@@ -184,7 +182,7 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
   };
   
   
-  router.post("/FnAddUpdateDeleteRecord", geenrateEmployeewiseEarningId, authToken, async (req, res) => {
+  router.post("/FnAddUpdateDeleteRecord", generateEmployeewiseEarningId, authToken, async (req, res) => {
       const employeewiseEarning = req.body;
       const employeewiseEarningId = employeewiseEarning.EmployeewiseEarningId
 
@@ -202,9 +200,7 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
         } else {
 
           const results = await Promise.all(employeewiseEarning.map(async (employeewiseEarning) => {
-            // Your existing logic for each employeewiseEarning
-      
-            // For example:
+
             const result = await MEmployeewiseEarning.upsert(employeewiseEarning, {
               updateOnDuplicate: true,
             });
@@ -213,7 +209,7 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
           }));
 
           res.json({
-            message: result ? "Operation successful" : "Operation failed",
+            message: results ? "Operation successful" : "Operation failed",
           });
         }
       } catch (error) {
