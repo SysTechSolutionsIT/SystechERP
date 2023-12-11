@@ -46,7 +46,7 @@ const MEmployeewiseEarning = sequelize.define(
       allowNull: false,
     },
     EmployeewiseEarningId: {
-      type: DataTypes.STRING(10),
+      type: DataTypes.STRING(5),
       allowNull: false,
     },
     EmployeewiseEarningDate: {
@@ -128,6 +128,14 @@ sequelize
   })
   .catch((err) => {
     console.error("Unable to connect to the database:", err);
+  });
+
+MEmployeewiseEarning.sync()
+  .then(() => {
+    console.log("MEmployeewiseEarning model synchronized successfully.");
+  })
+  .catch((error) => {
+    console.error("Error synchronizing MEmployeewiseEarning model:", error);
   });
 
 router.get("/FnshowActiveData", authToken, async (req, res) => {
