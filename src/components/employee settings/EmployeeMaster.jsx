@@ -8,104 +8,104 @@ import { useAuth } from "../Login";
 import axios from "axios";
 
 const EmployeeMaster = () => {
-  const { token } = useAuth()
-  const [employeeData, setEmployeeData] = useState([])
+  const { token } = useAuth();
+  const [employeeData, setEmployeeData] = useState([]);
   const [veCost, setVeCost] = useState(false);
   const [edit, setEdit] = useState(false);
   const [CCid, setCCid] = useState();
-  const [employeeTypes, setEmployeeTypes] = useState([])
-  const [isModalOpen, setModalOpen] = useState(false)
+  const [employeeTypes, setEmployeeTypes] = useState([]);
+  const [isModalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
   const [columnVisibility, setColumnVisibility] = useState({
     EmployeeId: true,
-    EmployeeName:true ,
+    EmployeeName: true,
     EmployeeTypeGroupId: true,
-    Salutation:false ,
-    LastName:false ,
-    FirstName:false ,
-    MiddleName:false ,
-    MEmployeeName:false ,
-    AadharCardNo:false ,
-    PANNo:false ,
-    PassportNo:false ,
-    PassportIssueDate:false ,
-    PassportExpireDate:false ,
-    CurrentAddress:false ,
-    CurrentPincode:false ,
-    PermanentAddress:false ,
-    PermanentPincode:false ,
-    DOB:false ,
-    EmailId1:true ,
-    EmailId2: false ,
-    PhoneNo: false ,
-    CellNo1: true ,
-    CellNo2: false ,
-    BankId1: false ,
-    AccountNo1: false ,
-    IFSCCode1: false ,
-    BankId2: false ,
-    AccountNo2: false ,
-    IFSCCode2: false ,
-    MaritalStatus: false ,
-    ReferenceId: false ,
-    DestinationId: false ,
-    ReligionId: false ,
-    CategoryId: false ,
-    CasteId: false ,
-    EmployeePhoto: false ,
-    Gender: false ,
-    BloodGroup: false ,
-    DrivingLicence: false ,
-    FinanceAccountNo: false ,
-    Remark: false ,
+    Salutation: false,
+    LastName: false,
+    FirstName: false,
+    MiddleName: false,
+    MEmployeeName: false,
+    AadharCardNo: false,
+    PANNo: false,
+    PassportNo: false,
+    PassportIssueDate: false,
+    PassportExpireDate: false,
+    CurrentAddress: false,
+    CurrentPincode: false,
+    PermanentAddress: false,
+    PermanentPincode: false,
+    DOB: false,
+    EmailId1: true,
+    EmailId2: false,
+    PhoneNo: false,
+    CellNo1: true,
+    CellNo2: false,
+    BankId1: false,
+    AccountNo1: false,
+    IFSCCode1: false,
+    BankId2: false,
+    AccountNo2: false,
+    IFSCCode2: false,
+    MaritalStatus: false,
+    ReferenceId: false,
+    DestinationId: false,
+    ReligionId: false,
+    CategoryId: false,
+    CasteId: false,
+    EmployeePhoto: false,
+    Gender: false,
+    BloodGroup: false,
+    DrivingLicence: false,
+    FinanceAccountNo: false,
+    Remark: false,
   });
 
   const columnNames = {
     EmployeeId: "ID",
-    EmployeeName:"Employee Name" ,
+    EmployeeName: "Employee Name",
     EmployeeTypeGroupId: "Employee Type",
-    Salutation:"Salutation" ,
-    LastName:"Last Name" ,
-    FirstName:"First Name" ,
-    MiddleName:"Middle Name" ,
-    MEmployeeName:"MEmployee Name" ,
-    AadharCardNo:"Adhar Card No." ,
-    PANNo:"PAN No." ,
-    PassportNo:"Passport No." ,
-    PassportIssueDate:"Passport Issue Date" ,
-    PassportExpireDate:"Passport Expire Date" ,
-    CurrentAddress:"Current Address" ,
-    CurrentPincode:"Current Pincode" ,
-    PermanentAddress:"Permanent Address" ,
-    PermanentPincode:"Permanent Pincode" ,
-    DOB:"DOB" ,
-    EmailId1:"Email ID 1" ,
-    EmailId2: "Email ID 2" ,
-    PhoneNo: "Phone No." ,
-    CellNo1: "Cell No 1" ,
-    CellNo2: "Cell No 2" ,
-    BankId1: "Bank ID 1" ,
-    AccountNo1: "Account No 1" ,
-    IFSCCode1: "IFSC Code 1" ,
-    BankId2: "Bank ID 2" ,
-    AccountNo2: "Account No 2" ,
-    IFSCCode2: "IFSC Code 2" ,
-    MaritalStatus: "Marital Status" ,
-    ReferenceId: "Reference" ,
-    DestinationId: "Destination" ,
-    ReligionId: "Religion" ,
-    CategoryId: "Category" ,
-    CasteId: "Caste" ,
-    EmployeePhoto: "Photo" ,
-    Gender: "Gender" ,
-    BloodGroup: "Blood Group" ,
-    DrivingLicence: "Driving Liscence" ,
-    FinanceAccountNo: "Finance Account No" ,
-    Remark: "Remark" ,
-  }
+    Salutation: "Salutation",
+    LastName: "Last Name",
+    FirstName: "First Name",
+    MiddleName: "Middle Name",
+    MEmployeeName: "MEmployee Name",
+    AadharCardNo: "Adhar Card No.",
+    PANNo: "PAN No.",
+    PassportNo: "Passport No.",
+    PassportIssueDate: "Passport Issue Date",
+    PassportExpireDate: "Passport Expire Date",
+    CurrentAddress: "Current Address",
+    CurrentPincode: "Current Pincode",
+    PermanentAddress: "Permanent Address",
+    PermanentPincode: "Permanent Pincode",
+    DOB: "DOB",
+    EmailId1: "Email ID 1",
+    EmailId2: "Email ID 2",
+    PhoneNo: "Phone No.",
+    CellNo1: "Cell No 1",
+    CellNo2: "Cell No 2",
+    BankId1: "Bank ID 1",
+    AccountNo1: "Account No 1",
+    IFSCCode1: "IFSC Code 1",
+    BankId2: "Bank ID 2",
+    AccountNo2: "Account No 2",
+    IFSCCode2: "IFSC Code 2",
+    MaritalStatus: "Marital Status",
+    ReferenceId: "Reference",
+    DestinationId: "Destination",
+    ReligionId: "Religion",
+    CategoryId: "Category",
+    CasteId: "Caste",
+    EmployeePhoto: "Photo",
+    Gender: "Gender",
+    BloodGroup: "Blood Group",
+    DrivingLicence: "Driving Liscence",
+    FinanceAccountNo: "Finance Account No",
+    Remark: "Remark",
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -124,21 +124,23 @@ const EmployeeMaster = () => {
   useEffect(() => {
     const fetchEmpData = async () => {
       try {
-        const response = await axios.get('http://localhost:5500/employee/personal/FnShowActiveData', {
-          headers: {
-            Authorization: `Bearer ${token}`
+        const response = await axios.get(
+          "http://localhost:5500/employee/personal/FnShowActiveData",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        })
-        const data = response.data
-        setEmployeeData(data)
+        );
+        const data = response.data;
+        setEmployeeData(data);
       } catch (error) {
-        console.error('Error', error);
+        console.error("Error", error);
       }
-    }
+    };
 
-    fetchEmpData()
-  }, [token])
-
+    fetchEmpData();
+  }, [token]);
 
   const [filteredData, setFilteredData] = useState([]);
 
@@ -230,6 +232,136 @@ const EmployeeMaster = () => {
     return context.measureText(text).width;
   };
 
+  //Deletion
+  const deleteEmp = async (DeleteId) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this company?"
+    );
+
+    if (!confirmDelete) {
+      return; // If the user cancels deletion, do nothing
+    }
+
+    delEmpPersonal(DeleteId);
+    delEmpWork(DeleteId);
+    delEmpSal(DeleteId);
+    delEmpPro(DeleteId);
+    delEmpAcademic(DeleteId);
+    delEmpFam(DeleteId);
+  };
+
+  const delEmpPersonal = async (DeleteId) => {
+    try {
+      const personal = await axios.post(
+        "http://localhost:5500/employee/personal/FnAddUpdateDeleteRecord",
+        {
+          EmployeeId: DeleteId,
+          IUFlag: "D",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Error", error);
+    }
+  };
+
+  const delEmpWork = async (DeleteId) => {
+    try {
+      const personal = await axios.post(
+        "http://localhost:5500/employee/work/FnAddUpdateDeleteRecord",
+        {
+          EmployeeId: DeleteId,
+          IUFlag: "D",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Error", error);
+    }
+  };
+  const delEmpSal = async (DeleteId) => {
+    try {
+      const personal = await axios.post(
+        "http://localhost:5500/employee/salary/FnAddUpdateDeleteRecord",
+        {
+          EmployeeId: DeleteId,
+          IUFlag: "D",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Error", error);
+    }
+  };
+
+  const delEmpPro = async (DeleteId) => {
+    try {
+      const personal = await axios.post(
+        "http://localhost:5500/employee/professional/FnAddUpdateDeleteRecord",
+        {
+          EmployeeId: DeleteId,
+          IUFlag: "D",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Error", error);
+    }
+  };
+  const delEmpAcademic = async (DeleteId) => {
+    try {
+      const personal = await axios.post(
+        "http://localhost:5500/employee/academic/FnAddUpdateDeleteRecord",
+        {
+          EmployeeId: DeleteId,
+          IUFlag: "D",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Error", error);
+    }
+  };
+
+  const delEmpFam = async (DeleteId) => {
+    try {
+      const personal = await axios.post(
+        "http://localhost:5500/employee/family/FnAddUpdateDeleteRecord",
+        {
+          EmployeeId: DeleteId,
+          IUFlag: "D",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Error", error);
+    }
+  };
+
   return (
     <div className="top-25 min-w-[40%]">
       <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
@@ -244,7 +376,9 @@ const EmployeeMaster = () => {
             Column Visibility
             <Icon
               icon="fe:arrow-down"
-              className={`ml-2 ${showDropdown ? "rotate-180" : ""} cursor-pointer`}
+              className={`ml-2 ${
+                showDropdown ? "rotate-180" : ""
+              } cursor-pointer`}
             />
           </button>
           {showDropdown && (
@@ -325,9 +459,7 @@ const EmployeeMaster = () => {
           </div>
         </div>
       </div>
-      <AddEmployee
-        visible={isModalOpen}
-        onClick={() => setModalOpen(false)} />
+      <AddEmployee visible={isModalOpen} onClick={() => setModalOpen(false)} />
 
       <div className="grid gap-4 justify-between">
         <div className="my-0 rounded-2xl bg-white p-2">
@@ -376,90 +508,90 @@ const EmployeeMaster = () => {
             <tbody className="">
               {filteredData.length > 0
                 ? filteredData.map((result, key) => (
-                  <tr key={key}>
-                    <td className="px-4 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setVeCost(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setCCid(result.id); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setVeCost(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setCCid(result.id); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {result.EmployeeId}
-                    </td>
-                    {selectedColumns.map((columnName) => (
+                    <tr key={key}>
+                      <td className="px-4 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setVeCost(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setCCid(result.id); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setVeCost(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setCCid(result.id); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                        {result.EmployeeId}
+                      </td>
+                      {selectedColumns.map((columnName) => (
                         <td
                           key={columnName}
                           className={`px-4 border-2 whitespace-normal text-[11px] text-left${
                             columnVisibility[columnName] ? "" : "hidden"
                           }`}
-                        >
-                        </td>
+                        ></td>
                       ))}
-                  </tr>
-                ))
-                : employeeData.length > 0 && employeeData.map((result, index) => (
-                  <tr key={index}>
-                    <td className="px-4 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center cur">
-                        <Icon
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() =>
-                            navigate(`/view-employee/${result.EmployeeId}`)
-                          }
-                        />
-                        <Icon
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            navigate(`/edit-employee/${result.EmployeeId}`);
-                          }}
-                        />
-                        <Icon
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                        />
-                      </div>
-                    </td>
-                    {selectedColumns.map((columnName) =>
+                    </tr>
+                  ))
+                : employeeData.length > 0 &&
+                  employeeData.map((result, index) => (
+                    <tr key={index}>
+                      <td className="px-4 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center cur">
+                          <Icon
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() =>
+                              navigate(`/view-employee/${result.EmployeeId}`)
+                            }
+                          />
+                          <Icon
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              navigate(`/edit-employee/${result.EmployeeId}`);
+                            }}
+                          />
+                          <Icon
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                          />
+                        </div>
+                      </td>
+                      {selectedColumns.map((columnName) =>
                         columnVisibility[columnName] ? (
                           <td
                             key={columnName}

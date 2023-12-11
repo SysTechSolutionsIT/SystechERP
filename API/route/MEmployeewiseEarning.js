@@ -28,16 +28,18 @@ const sequelize = new Sequelize(
   }
 );
 
-const MEmployeewiseEarning = sequelize.define('MEmployeewiseEarning', {
+const MEmployeewiseEarning = sequelize.define(
+  "MEmployeewiseEarning",
+  {
     CompanyId: {
       type: DataTypes.STRING(5),
       allowNull: false,
-      defaultValue: '00001',
+      defaultValue: "00001",
     },
     BranchId: {
       type: DataTypes.STRING(5),
       allowNull: false,
-      defaultValue: '00001',
+      defaultValue: "00001",
     },
     EmployeeId: {
       type: DataTypes.STRING(7),
@@ -99,7 +101,7 @@ const MEmployeewiseEarning = sequelize.define('MEmployeewiseEarning', {
     AcFlag: {
       type: DataTypes.STRING(1),
       allowNull: true,
-      defaultValue: 'Y',
+      defaultValue: "Y",
     },
     CreatedBy: {
       type: DataTypes.STRING(5),
@@ -109,9 +111,11 @@ const MEmployeewiseEarning = sequelize.define('MEmployeewiseEarning', {
       type: DataTypes.DATE,
       allowNull: true,
     },
-  }, {
-    timestamps: false, 
-  });
+  },
+  {
+    timestamps: false,
+  }
+);
 
 // Middleware for parsing JSON
 router.use(bodyParser.json());
@@ -120,109 +124,118 @@ router.use(bodyParser.json());
 sequelize
   .authenticate()
   .then(() => {
-    console.log('Connection has been established successfully.');
+    console.log("Connection has been established successfully.");
   })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
+  .catch((err) => {
+    console.error("Unable to connect to the database:", err);
   });
 
-router.get("/FnshowActiveData", authToken, async (req, res) =>{
-    try{
-        const EmployeewiseEarning = await MEmployeewiseEarning.findAll({
-            where: {
-                AcFlag: "Y"
-            },
-            attributes: {
-                exclude: ["IUFlag"]
-            },
-            order: [["EmployeeId", "ASC"]]
-        })
-        res.json(EmployeewiseEarning)
-    } catch (error) {
-        console.error('Error retrieving data:', error)
-        res.status(500).send('Internal Server Error');    
-    }
-})
+router.get("/FnshowActiveData", authToken, async (req, res) => {
+  try {
+    const EmployeewiseEarning = await MEmployeewiseEarning.findAll({
+      where: {
+        AcFlag: "Y",
+      },
+      attributes: {
+        exclude: ["IUFlag"],
+      },
+      order: [["EmployeeId", "ASC"]],
+    });
+    res.json(EmployeewiseEarning);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 router.get("/FnShowParticularData", authToken, async (req, res) => {
-    const EmployeewiseEarningId = req.query.EmployeewiseEarningId;
-    try {
-      const EmployeewiseEarning = await MEmployeewiseEarning.findOne({
-        where: {
-          EmployeewiseEarningId: EmployeewiseEarningId,
-        },
-        attributes: {
-          exclude: ["IUFlag"],
-        },
-        order: [["EmployeeId", "ASC"]],
-      });
-      res.json(EmployeewiseEarning);
-    } catch (error) {
-      console.error("Error retrieving data:", error);
-      res.status(500).send("Internal Server Error");
-    }
-  });
+  const EmployeewiseEarningId = req.query.EmployeewiseEarningId;
+  try {
+    const EmployeewiseEarning = await MEmployeewiseEarning.findOne({
+      where: {
+        EmployeewiseEarningId: EmployeewiseEarningId,
+      },
+      attributes: {
+        exclude: ["IUFlag"],
+      },
+      order: [["EmployeeId", "ASC"]],
+    });
+    res.json(EmployeewiseEarning);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
+const generateEmployeewiseEarningId = async (req, res, next) => {
+  console.log("Request body:", req.body);
+  try {
+    const employeeType = req.body[0]?.EmployeeType || "X"; // Use the EmployeeType from the first item in the array
+    const totalRecords = await MEmployeewiseEarning.count();
 
-  const generateEmployeewiseEarningId = async (req, res, next) => {
-    try {
-        const employeeType = req.body.EmployeeType || 'X';
-        const totalRecords = await MEmployeewiseEarnings.count();
-  
-        const newId = (totalRecords + 1).toString().padStart(4, '0');
-  
-        req.body.EmployeewiseEarningId = `${employeeType}${newId}`;
-      next();
-    } catch (error) {
-      console.error("Error generating EmployeeWiseEarningId:", error);
-      res.status(500).send("Internal Server Error");
-    }
-  };
-  
-  
-  router.post("/FnAddUpdateDeleteRecord", generateEmployeewiseEarningId, authToken, async (req, res) => {
-      const employeewiseEarning = req.body;
-      const employeewiseEarningId = employeewiseEarning.EmployeewiseEarningId
-
-      try {
-        if (employeewiseEarning.IUFlag === "D") {
-          // "Soft-delete" operation
-          const result = await MEmployeewiseEarning.update(
-            { AcFlag: "N" },
-            { where: { EmployeewiseEarningId: employeewiseEarningId} }
-          );
-    
-          res.json({
-            message: result[0] ? "Record Deleted Successfully" : "Record Not Found",
-          });
-        } else {
-
-          const results = await Promise.all(employeewiseEarning.map(async (employeewiseEarning) => {
-
-            const result = await MEmployeewiseEarning.upsert(employeewiseEarning, {
-              updateOnDuplicate: true,
-            });
-      
-            return result;
-          }));
-
-          res.json({
-            message: results ? "Operation successful" : "Operation failed",
-          });
-        }
-      } catch (error) {
-        console.error("Error performing operation:", error);
-        res.status(500).send("Internal Server Error");
-      }
+    req.body.forEach((item, index) => {
+      const newId = (totalRecords + index + 1).toString().padStart(4, "0");
+      item.EmployeewiseEarningId = `${employeeType}${newId}`;
     });
 
-    process.on("SIGINT", () => {
-        console.log("Received SIGINT. Closing Sequelize connection...");
-        sequelize.close().then(() => {
-          console.log("Sequelize connection closed. Exiting...");
-          process.exit(0);
+    next();
+  } catch (error) {
+    console.error("Error generating EmployeeWiseEarningId:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+router.post(
+  "/FnAddUpdateDeleteRecord",
+  generateEmployeewiseEarningId,
+  authToken,
+  async (req, res) => {
+    const employeewiseEarning = req.body;
+    const employeewiseEarningIds = employeewiseEarning.map(
+      (item) => item.EmployeewiseEarningId
+    );
+
+    try {
+      if (employeewiseEarning.some((item) => item.IUFlag === "D")) {
+        // "Soft-delete" operation
+        const result = await MEmployeewiseEarning.update(
+          { AcFlag: "N" },
+          { where: { EmployeewiseEarningId: employeewiseEarningIds } }
+        );
+
+        res.json({
+          message: result[0]
+            ? "Record(s) Deleted Successfully"
+            : "Record(s) Not Found",
         });
-      });
-      
-    
-    module.exports = router;
+      } else {
+        const results = await Promise.all(
+          employeewiseEarning.map(async (item) => {
+            const result = await MEmployeewiseEarning.upsert(item, {
+              updateOnDuplicate: true,
+            });
+
+            return result;
+          })
+        );
+
+        res.json({
+          message: results ? "Operation successful" : "Operation failed",
+        });
+      }
+    } catch (error) {
+      console.error("Error performing operation:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  }
+);
+
+process.on("SIGINT", () => {
+  console.log("Received SIGINT. Closing Sequelize connection...");
+  sequelize.close().then(() => {
+    console.log("Sequelize connection closed. Exiting...");
+    process.exit(0);
+  });
+});
+
+module.exports = router;
