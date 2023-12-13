@@ -79,25 +79,23 @@ const JobTypeMaster = () => {
   const menuRef = useRef(null);
 
   const [columnVisibility, setColumnVisibility] = useState({
-    jobName: true,
-    jobShortName: true,
-    ratePerDay: true,
-    rateGroup: true,
-    category: false,
-    position: false,
-    remark: false,
-    status: true,
+    JobTypeName: true,
+    ShortName: true,
+    RateGroup: true,
+    RatePerDay: true,
+    Category: true,
+    Position: true,
+    Remark: true,
   });
 
   const columnNames = {
-    jobName: "Job Name",
-    jobShortName: "Job Short Name",
-    ratePerDay: "Rate Per Day",
-    rateGroup: "Rate Group",
-    category: "Category",
-    position: "Position",
-    remark: "Remarks",
-    status: "Status",
+    JobTypeName: "Job Name",
+    ShortName: "Short Name",
+    RateGroup: "Rate Group",
+    RatePerDay: "Rate Per Day",
+    Category: "Category",
+    Position: "Position",
+    Remark: "Remark",
   }
 
   //Toggle
@@ -182,7 +180,7 @@ const JobTypeMaster = () => {
 
   const fetchJobData = async () => {
     try {
-      const response = await axios.get("http://localhost:5500/job-master/get", {
+      const response = await axios.get("http://localhost:5500/job-type/FnShowActiveData", {
         headers: { Authorization: `Bearer ${token}` },
       });
       console.log("Response Object", response);
@@ -395,7 +393,7 @@ const JobTypeMaster = () => {
                           onClick={() => {
                             setJVE(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
-                            setJid(result.jobID); // Pass ID to VEModal
+                            setJid(result.JobTypeId); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -407,7 +405,7 @@ const JobTypeMaster = () => {
                           onClick={() => {
                             setJVE(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
-                            setJid(result.jobID); // Pass ID to VEModal
+                            setJid(result.JobTypeId); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -416,12 +414,12 @@ const JobTypeMaster = () => {
                           width="20"
                           height="20"
                           className="cursor-pointer"
-                          onClick={() => deleteRecord(result.jobID)}
+                          onClick={() => deleteRecord(result.JobTypeId)}
                         />
                       </div>
                     </td>
                     <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {result.jobID}
+                      {result.JobTypeId}
                     </td>
                     {selectedColumns.map((columnName) => (
                       columnVisibility[columnName] ? (
@@ -453,7 +451,7 @@ const JobTypeMaster = () => {
                           onClick={() => {
                             setJVE(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
-                            setJid(result.jobID); // Pass ID to VEModal
+                            setJid(result.JobTypeId); // Pass ID to VEModal
                           }}
                         />
 
@@ -466,7 +464,7 @@ const JobTypeMaster = () => {
                           onClick={() => {
                             setJVE(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
-                            setJid(result.jobID); // Pass ID to VEModal
+                            setJid(result.JobTypeId); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -475,12 +473,12 @@ const JobTypeMaster = () => {
                           width="20"
                           height="20"
                           className="cursor-pointer"
-                          onClick={() => deleteRecord(result.jobID)}
+                          onClick={() => deleteRecord(result.JobTypeId)}
                         />
                       </div>
                     </td>
                     <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {result.jobID}
+                      {result.JobTypeId}
                     </td>
                     {selectedColumns.map((columnName) => (
                       <td

@@ -43,6 +43,7 @@ const MEmployee = require("./route/MEmployee");
 const MEmployeeWorkProfile = require("./route/MEmployeeWorkProfile");
 const MDepartment = require("./route/MDepartment");
 const MEmployeewiseEarning = require("./route/MEmployeewiseEarning")
+const MJobType = require('./route/MJobType')
 
 
 // Apply the cors middleware to allow requests from any origin
@@ -85,6 +86,7 @@ app.use("/advance-request", AdvanceRequest);
 // app.use("/ed-imports", EDImports);
 // app.use("/currency", Currencies);
 app.use("/employee-wise-earning", MEmployeewiseEarning)
+app.use('/job-type', MJobType)
 
 // Start the server
 const port = 5500;
