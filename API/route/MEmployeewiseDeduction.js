@@ -35,25 +35,24 @@ const MEmployeewiseDeduction = sequelize.define(
       type: DataTypes.STRING(5),
       allowNull: false,
       defaultValue: "00001",
+      primaryKey: true,
     },
     BranchId: {
       type: DataTypes.STRING(5),
       allowNull: false,
       defaultValue: "00001",
+      primaryKey: true,
     },
     EmployeeId: {
       type: DataTypes.STRING(7),
       allowNull: false,
+      primaryKey: true,
     },
     EmployeewiseDeductionId: {
       type: DataTypes.STRING(5),
       allowNull: false,
       defaultValue: "00001",
       primaryKey: true,
-    },
-    SrNo: {
-      type: DataTypes.BIGINT,
-      allowNull: true,
     },
     EmployeewiseDeductionDate: {
       type: DataTypes.DATE,
@@ -62,6 +61,7 @@ const MEmployeewiseDeduction = sequelize.define(
     EmployeeTypeId: {
       type: DataTypes.STRING(5),
       allowNull: false,
+      primaryKey: true,
     },
     EmployeeType: {
       type: DataTypes.STRING(50),
@@ -74,6 +74,7 @@ const MEmployeewiseDeduction = sequelize.define(
     DeductionHeadId: {
       type: DataTypes.STRING(5),
       allowNull: false,
+      primaryKey: true,
     },
     DeductionHead: {
       type: DataTypes.STRING(500),
@@ -116,7 +117,6 @@ const MEmployeewiseDeduction = sequelize.define(
     },
   },
   {
-    tableName: "MEmployeewiseDeduction",
     timestamps: false,
   }
 );

@@ -5,27 +5,23 @@ import axios from "axios";
 import { useAuth } from "../Login";
 
 const AddWeek = ({ visible, onClick }) => {
-  const [state, setState] = useState(false);
   const { token } = useAuth();
 
   const formik = useFormik({
     initialValues: {
-      weeklyOffName: "",
-      remarks: "",
-      status: state,
+      WeeklyOffName: "",
+      Remark: "",
     },
     onSubmit: async (values) => {
-      const status = state === true;
-
       const formData = {
-        weeklyOffName: values.weeklyOffName,
-        remarks: values.remarks,
-        status: status,
+        WeeklyOffName: values.WeeklyOffName,
+        Remark: values.Remark,
+        IUFlag:"I"
       };
       console.log(formData);
       try {
         const response = await axios.post(
-          "http://localhost:5500/weekly-off-master/add",
+          "http://localhost:5500/weekly-off/FnAddUpdateDeleteRecord",
           formData,
           {
             headers: {
@@ -33,21 +29,9 @@ const AddWeek = ({ visible, onClick }) => {
             },
           }
         );
-        if (response.status === 201) {
-          const data = response.data;
-          console.log(data);
-          window.location.refresh();
-          alert("Record added successfully");
-          onClick();
-
-          // Handle successful response
-        } else {
-          console.error(`HTTP error! Status: ${response.status}`);
-          // Handle error response
-        }
+       alert('Weekly Off Added')
       } catch (error) {
-        console.error("Error:", error.message);
-        // Handle network error
+        console.error("Error:", error);
       }
     },
   });
@@ -81,10 +65,10 @@ const AddWeek = ({ visible, onClick }) => {
                   Weekly Off Name
                 </p>
                 <input
-                  id="weeklyOffName"
+                  id="WeeklyOffName"
                   type="text"
                   placeholder="Enter Weekly Off Name"
-                  value={formik.values.weeklyOffName}
+                  value={formik.values.WeeklyOffName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -92,28 +76,13 @@ const AddWeek = ({ visible, onClick }) => {
               <div>
                 <p className="text-[13px] font-semibold">Remarks</p>
                 <input
-                  id="remarks"
+                  id="Remark"
                   type="text"
                   placeholder="Enter Remarks"
-                  value={formik.values.remarks}
+                  value={formik.values.Remark}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
-              </div>
-              <div>
-                <p className=" mt-1 capitalize font-semibold text-[13px]">
-                  Status
-                </p>
-                <label className="capitalize font-semibold text-[13px]">
-                  <input
-                    id="status"
-                    type="checkbox"
-                    checked={state}
-                    className={`w-5 h-5 mr-2 mt-2 focus:outline-gray-300 border border-blue-900 rounded-lg`}
-                    onChange={() => setState(!state)}
-                  />
-                  Active
-                </label>
               </div>
             </div>
             <div className="flex mt-5 gap-10 justify-center">

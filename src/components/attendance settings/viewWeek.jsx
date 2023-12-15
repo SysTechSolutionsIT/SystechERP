@@ -10,40 +10,32 @@ const ViewWeek = ({ visible, onClick, edit, ID }) => {
   const [state, setState] = useState(false);
   const formik = useFormik({
     initialValues: {
-      weeklyOffName: "",
-      remark: "",
-      status: state,
+      WeeklyOffId: "",
+      WeeklyOffName: "",
+      Remark: "",
     },
     onSubmit: async (values) => {
-      const status = state === true;
-
       const formData = {
-        weeklyOffName: "",
-        remark: "",
-        status: status,
+        WeeklyOffId: values.WeeklyOffId,
+        WeeklyOffName: values.WeeklyOffName,
+        Remark: values.Remark,
+        IUFlag:"U"
       };
       console.log(formData);
-      axios
-        .patch(
-          `http://localhost:5500/weekly-off-master/update/${ID}`,
+      try {
+        const response = await axios.post(
+          "http://localhost:5500/weekly-off/FnAddUpdateDeleteRecord",
           formData,
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           }
-        )
-        .then((response) => {
-          // Handle success
-          console.log("Data updated successfully", response);
-          // You can also perform additional actions here, like closing the modal or updating the UI.
-          window.location.reload();
-          onClick();
-        })
-        .catch((error) => {
-          // Handle error
-          console.error("Error updating data", error);
-        });
+        );
+       alert('Weekly Off Updated')
+      } catch (error) {
+        console.error("Error:", error);
+      }
     },
   });
 
@@ -51,16 +43,18 @@ const ViewWeek = ({ visible, onClick, edit, ID }) => {
     fetchWeekData();
   }, [ID]);
   console.log(ID);
+
   const fetchWeekData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5500/weekly-off-master/get/${ID}`,
+        `http://localhost:5500/weekly-off/FnShowParticularData`,
         {
+          params: { WeeklyOffId: ID },
           headers: { Authorization: `Bearer ${token}` },
         }
       );
       console.log("Response Object", response);
-      const data = response.data.record;
+      const data = response.data
       setDetails(data);
       console.log(data);
     } catch (error) {
@@ -73,10 +67,9 @@ const ViewWeek = ({ visible, onClick, edit, ID }) => {
   useEffect(() => {
     if (details) {
       formik.setValues({
-        weekID: details.weekID,
-        weeklyOffName: details.weeklyOffName,
-        remarks: details.remarks,
-        status: details.status,
+        WeeklyOffId: details.WeeklyOffId,
+        WeeklyOffName: details.WeeklyOffName,
+        Remark: details.Remark,
       });
     }
   }, [details]);
@@ -105,10 +98,10 @@ const ViewWeek = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Weekly Off ID</p>
                 <input
-                  id="weekID"
+                  id="WeeklyOffId"
                   type="text"
                   placeholder="Enter Weekly Off ID"
-                  value={details?.weekID}
+                  value={details?.WeeklyOffId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={true}
@@ -117,10 +110,10 @@ const ViewWeek = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Weekly Off Name</p>
                 <input
-                  id="weeklyOffName"
+                  id="WeeklyOffName"
                   type="text"
                   placeholder="Enter Weekly Off Name"
-                  value={formik.values.weeklyOffName}
+                  value={formik.values.WeeklyOffName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -129,35 +122,14 @@ const ViewWeek = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Remarks</p>
                 <input
-                  id="remarks"
+                  id="Remark"
                   type="text"
                   placeholder="Enter Remarks"
-                  value={formik.values.remarks}
+                  value={formik.values.Remark}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
-              </div>
-              <div>
-                <p className="text-[13px] font-semibold">Status</p>
-                <div className="flex items-center">
-                  <input
-                    id="status"
-                    type="checkbox"
-                    checked={formik.values.status}
-                    value={state}
-                    className={` relative w-4 h-4 mr-2 peer shrink-0 appearance-none checked:bg-blue-800 border-2 border-blue-900 rounded-sm`}
-                    onChange={() => setState(!state)}
-                  />
-                  <Icon
-                    className="absolute w-4 h-4 hidden peer-checked:block"
-                    icon="gg:check"
-                    color="white"
-                  />
-                  <label for="status" className="text-[11px] font-semibold">
-                    Active
-                  </label>
-                </div>
               </div>
             </div>
           </div>
