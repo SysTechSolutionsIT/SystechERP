@@ -42,8 +42,8 @@ const MFinancialYear = require("./route/MFinancialYear");
 const MEmployee = require("./route/MEmployee");
 const MEmployeeWorkProfile = require("./route/MEmployeeWorkProfile");
 const MDepartment = require("./route/MDepartment");
-const MEmployeewiseEarning = require("./route/MEmployeewiseEarning")
-
+const MEmployeewiseEarning = require("./route/MEmployeewiseEarning");
+const MEmployeewiseDeduction = require("./route/MEmployeewiseDeduction");
 
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());
@@ -84,7 +84,8 @@ app.use("/advance-request", AdvanceRequest);
 // // app.use("/employeeid", EmployeeId);
 // app.use("/ed-imports", EDImports);
 // app.use("/currency", Currencies);
-app.use("/employee-wise-earning", MEmployeewiseEarning)
+app.use("/employee-wise-earning", MEmployeewiseEarning);
+app.use("/employee-wise-deductions", MEmployeewiseDeduction);
 
 // Start the server
 const port = 5500;

@@ -1,97 +1,20 @@
-import React from 'react'
-import { useEffect, useState } from 'react';
-import { useAuth } from '../Login';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import { useAuth } from "../Login";
+import axios from "axios";
+import { useEmployeeType } from "./personal";
 
-export const deductionHeadsData = [
-    {
-      Selected: true,
-      EarningHead: 'Basic Salary',
-      ShortName: 'A',
-      CalculationType: 'Formula',
-      CalculationValue: '',
-      Formula: '0.6 * TotalSalary',
-    },
-    {
-      Selected: false,
-      EarningHead: 'Overtime Pay',
-      ShortName: 'B',
-      CalculationType: 'Amount',
-      CalculationValue: 150,
-      Formula: '',
-    },
-    {
-      Selected: true,
-      EarningHead: 'Bonus',
-      ShortName: 'C',
-      CalculationType: 'Amount',
-      CalculationValue: 500,
-      Formula: '',
-    },
-    {
-      Selected: true,
-      EarningHead: 'Commission',
-      ShortName: 'D',
-      CalculationType: 'Formula',
-      CalculationValue: '',
-      Formula: '0.1 * Sales',
-    },
-    {
-      Selected: true,
-      EarningHead: 'Health Allowance',
-      ShortName: 'AA',
-      CalculationType: 'Amount',
-      CalculationValue: 200,
-      Formula: '',
-    },
-    {
-      Selected: false,
-      EarningHead: 'Travel Reimbursement',
-      ShortName: 'BB',
-      CalculationType: 'Amount',
-      CalculationValue: 300,
-      Formula: '',
-    },
-    {
-      Selected: true,
-      EarningHead: 'Incentives',
-      ShortName: 'CC',
-      CalculationType: 'Formula',
-      CalculationValue: '',
-      Formula: '0.05 * TotalSales',
-    },
-    {
-      Selected: true,
-      EarningHead: 'Allowance',
-      ShortName: 'DD',
-      CalculationType: 'Amount',
-      CalculationValue: 100,
-      Formula: '',
-    },
-    {
-      Selected: true,
-      EarningHead: 'Profit Sharing',
-      ShortName: 'EE',
-      CalculationType: 'Formula',
-      CalculationValue: '',
-      Formula: '0.15 * NetProfit',
-    },
-    {
-      Selected: false,
-      EarningHead: 'Stock Options',
-      ShortName: 'FF',
-      CalculationType: 'Formula',
-      CalculationValue: '',
-      Formula: '0.02 * StockPrice',
-    },
-  ];
+const DeductionHeadsTable = ({ ID }) => {
+  console.log("ID in deduciton", ID);
+  const { token } = useAuth();
+  const { employeeTypeId } = useEmployeeType();
+  console.log("Employee type id", employeeTypeId);
+  const [selectedHeads, setSelectedHeads] = useState([]);
+  const [details, setDetails] = useState([]);
+  const [heads, setHeads] = useState([]);
+  const [checked, setChecked] = useState([]);
+  const [employeeTypes, setEmployeeTypes] = useState([]);
 
-const DeductionHeadsTable = ({ID}) => {
-  console.log('ID in deduciton', ID)
-  const { token } = useAuth()
-  const [details, setDetails] = useState([])
-  const [heads, setHeads] = useState([])
-  useEffect(() =>{
+  useEffect(() => {
     const fetchHeadsData = async () => {
       try {
         const response = await axios.get(
@@ -110,8 +33,31 @@ const DeductionHeadsTable = ({ID}) => {
         console.log("Error while fetching course data: ", error);
       }
     };
-    fetchHeadsData()
-  }, [token])
+    fetchHeadsData();
+  }, [token]);
+
+  useEffect(() => {
+    const GetParticluarHead = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/deduction-heads/FnShowParticularData",
+          {
+            param: { EmployeeId: ID },
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log("Response Object", response);
+        const data = response.data;
+        console.log(data);
+        setChecked(data);
+      } catch (error) {
+        console.log("Error while fetching course data: ", error);
+      }
+    };
+    GetParticluarHead();
+  }, [ID]);
 
   useEffect(() => {
     const fetchEmpSalary = async () => {
@@ -132,97 +78,197 @@ const DeductionHeadsTable = ({ID}) => {
     fetchEmpSalary();
   }, [ID, token]);
 
-  const calculateValue = (formula, salary) => {
-    try {
-      const totalEarning = details.GrossSalary;
-
-      if (!formula) {
-        // If the formula is empty, return the corresponding calculation value from the heads array
-        // Assuming there is a property like CalculationValue in the heads array
-        return heads.find(item => item.CalculationType === "Amount")?.CalculationValue || salary;
+  useEffect(() => {
+    const fetchEmployeeTypes = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/employee-type/FnShowParticularData",
+          {
+            params: { EmployeeTypeId: employeeTypeId },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        setEmployeeTypes(data);
+        console.log("Employee Type Data", data);
+      } catch (error) {
+        console.error("Error", error);
       }
+    };
+    fetchEmployeeTypes();
+  }, [token]);
 
-      const modifiedFormula = formula.replace('P1', salary).replace('P2', details.GrossSalary * (50/100)).replace('P3', totalEarning);
-      // Use eval to evaluate the modified formula
-      return eval(modifiedFormula);
+  const calculateValue = (formula, salary, calculationValue) => {
+    try {
+      const totalEarning = salary;
+      if (formula === null) {
+        return calculationValue || 0;
+      } else {
+        const modifiedFormula = formula
+          .replace("P1", salary)
+          .replace("P2", totalEarning * (50 / 100))
+          .replace("P3", totalEarning);
+        const result = eval(modifiedFormula);
+        return result;
+      }
     } catch (error) {
       console.error("Error in formula calculation: ", error);
       return "Error";
     }
   };
+  const handleCalculationValueChange = (index, newValue) => {
+    const updatedHeads = [...heads];
+    updatedHeads[index].CalculationValue = newValue;
+    setHeads(updatedHeads);
+  };
 
+  const handleFormulaChange = (index, newValue) => {
+    const updatedHeads = [...heads];
+    updatedHeads[index].Formula = newValue;
+    setHeads(updatedHeads);
+  };
+
+  const handleCheckboxChange = (index) => {
+    const updatedHeads = [...heads];
+    updatedHeads[index].Selected = !updatedHeads[index].Selected;
+    setHeads(updatedHeads);
+  };
+
+  useEffect(() => {
+    const selectedHeadsData = heads
+      .filter((item) => item.Selected)
+      .map(
+        ({
+          DeductionHeadID,
+          DeductionHead,
+          CalculationType,
+          CalculationValue,
+          Formula,
+        }) => ({
+          EmployeeType: employeeTypes?.ShortName,
+          DeductionHeadID,
+          DeductionHead,
+          CalculationType: CalculationType,
+          CalculationValue: CalculationValue,
+          Formula,
+          EmployeeId: ID,
+          EmployeeTypeId: employeeTypes?.EmployeeTypeId,
+          EmployeeTypeGroup: employeeTypes?.EmployeeTypeGroup,
+          IUFlag: "U",
+        })
+      );
+    setSelectedHeads(selectedHeadsData);
+    console.log(selectedHeads);
+  }, [heads, employeeTypes, ID]);
+
+  const addEmployeewiseDeduction = async () => {
+    try {
+      const response = axios.post(
+        "http://localhost:5500/employee-wise-deductions/FnAddUpdateDeleteRecord",
+        selectedHeads,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      alert("Employee-wise Deduction Heads Added");
+    } catch (error) {
+      console.error("Error", error);
+    }
+  };
 
   return (
-        <div className="gap-4 justify-between">
-            <div className="my-1 rounded-2xl bg-white p-2 pr-8">
-            <table className="text-center h-auto text-[11px] rounded-lg justify-center whitespace-normal">
-                <thead>
-                    <tr>
-                        <th colSpan='6' className='bg-blue-900 text-white font-semibold border-white border-2'>
-                            Deduction Heads
-                        </th>
-                    </tr>
-                    <tr>
-                        <th className='text-[11px]  font-semibold border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
-                                Select
-                        </th>
-                        <th className='text-[11px]  font-semibold border-r-2 border-white py-1 px-2 bg-blue-900 text-white '>
-                            Deduction <br/> Head
-                        </th>
-                        <th className='text-[11px]  font-semibold border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
-                            Short <br/> Name
-                        </th>
-                        <th className='text-[11px]  font-semibold border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
-                            Calculation <br/> Type
-                        </th>
-                        <th className='text-[11px]  font-semibold border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
-                            Calculation <br/> Value
-                        </th>
-                        <th className='text-[11px]  font-semibold border-r-2 border-white py-1 px-2 bg-blue-900 text-white'>
-                            Formula
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                {heads.map((item, index) => (
-                <tr key={index} className={`${item.Selected ? '' : 'bg-gray-100'} `}>
-                    <td>
-                    <label className="capitalize font-semibold text-[11px]">
-                        <input
-                        type="checkbox"
-                        className='w-5 h-5 mr-2 mt-2 focus:outline-gray-300 border border-blue-900 rounded-lg'
-                        checked={item.Selected}
-                        />
-                    </label>
-                    </td>
-                    <td className='px-4 border-2 whitespace-normal text-left text-[11px]'>
-                    {item.DeductionHead}
-                    </td>
-                    <td className='px-4 border-2 whitespace-normal text-left text-[11px]'>
-                    {item.ShortName}
-                    </td>
-                    <td className='px-4 border-2 whitespace-normal text-left text-[11px]'>
-                    {item.CalculationType}
-                    </td>
-                    <td className='px-2 border-2 whitespace-normal text-left text-[11px]'>
-                    <input 
-                    type='text'
-                    className='w-16 py-1 rounded-md text-center'
-                    value={calculateValue(item.Formula, details.GrossSalary)}/>
-                    </td>
-                    <td className='px-2 border-2 whitespace-normal text-left text-[11px]'>
-                    <input 
-                    type='text'
-                    className=' w-20 py-1 rounded-md text-center'
-                    value={item.Formula}/>
-                    </td>
-                </tr>
-                ))}
-                </tbody>
-            </table>
-            </div>
-            </div>
-  )
-}
-
-export default DeductionHeadsTable
+    <div className="gap-4 justify-between">
+      <div className="my-1 rounded-2xl bg-white p-2 pr-8">
+        <table className="text-center h-auto text-[11px] rounded-lg justify-center whitespace-normal">
+          <thead>
+            <tr>
+              <th
+                colSpan="6"
+                className="bg-blue-900 text-white font-semibold border-white border-2"
+              >
+                Deduction Heads
+              </th>
+            </tr>
+            <tr>
+              <th className="text-[11px]  font-semibold border-r-2 border-white py-1 px-2 bg-blue-900 text-white">
+                Select
+              </th>
+              <th className="text-[11px]  font-semibold border-r-2 border-white py-1 px-2 bg-blue-900 text-white ">
+                Deduction <br /> Head
+              </th>
+              <th className="text-[11px]  font-semibold border-r-2 border-white py-1 px-2 bg-blue-900 text-white">
+                Short <br /> Name
+              </th>
+              <th className="text-[11px]  font-semibold border-r-2 border-white py-1 px-2 bg-blue-900 text-white">
+                Calculation <br /> Type
+              </th>
+              <th className="text-[11px]  font-semibold border-r-2 border-white py-1 px-2 bg-blue-900 text-white">
+                Calculation <br /> Value
+              </th>
+              <th className="text-[11px]  font-semibold border-r-2 border-white py-1 px-2 bg-blue-900 text-white">
+                Formula
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {heads.map((item, index) => (
+              <tr
+                key={index}
+                className={`${item.Selected ? "" : "bg-gray-100"} `}
+              >
+                <td>
+                  <label className="capitalize font-semibold text-[11px]">
+                    <input
+                      type="checkbox"
+                      className="w-5 h-5 mr-2 mt-2 focus:outline-gray-300 border border-blue-900 rounded-lg"
+                      checked={item.Selected}
+                    />
+                  </label>
+                </td>
+                <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                  {item.DeductionHead}
+                </td>
+                <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                  {item.ShortName}
+                </td>
+                <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                  {item.CalculationType}
+                </td>
+                <td className="px-2 border-2 whitespace-normal text-left text-[11px]">
+                  <input
+                    type="number"
+                    className="w-16 py-1 rounded-md text-center"
+                    value={calculateValue(
+                      item.Formula,
+                      details.GrossSalary,
+                      item.CalculationValue
+                    )}
+                    onChange={(e) =>
+                      handleCalculationValueChange(index, e.target.value)
+                    }
+                  />
+                </td>
+                <td className="px-2 border-2 whitespace-normal text-left text-[11px]">
+                  <input
+                    type="text"
+                    className=" w-20 py-1 rounded-md text-center"
+                    value={item.Formula}
+                    onChange={(e) => handleFormulaChange(index, e.target.value)}
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div className="flex mt-2 justify-center gap-4">
+          <button
+            type="submit"
+            className="px-2 py-2 bg-blue-900 text-white text-xs rounded-md"
+            onClick={addEmployeewiseDeduction}
+          >
+            Save Deduction Heads Details
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+export default DeductionHeadsTable;
