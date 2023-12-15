@@ -6,7 +6,7 @@ import { useEmployeeType } from "./personal";
 const EarningHeadsTable = ({ ID }) => {
   const { token } = useAuth();
   const { employeeTypeId } = useEmployeeType();
-  console.log("Employee type id", employeeTypeId);
+  // colsole.log("Employee type id", employeeTypeId);
   const [details, setDetails] = useState([]);
   const [heads, setHeads] = useState([]);
   const [selectedHeads, setSelectedHeads] = useState([]);
@@ -26,7 +26,7 @@ const EarningHeadsTable = ({ ID }) => {
         const data = response.data;
         setHeads(data);
       } catch (error) {
-        console.log("Error while fetching course data: ", error);
+        // colsole.log("Error while fetching course data: ", error);
       }
     };
     fetchHeadsData();
@@ -63,7 +63,7 @@ const EarningHeadsTable = ({ ID }) => {
         );
         const data = response.data;
         setEmployeeTypes(data);
-        console.log("Employee Type Data", data);
+        // colsole.log("Employee Type Data", data);
       } catch (error) {
         console.error("Error", error);
       }
@@ -132,7 +132,7 @@ const EarningHeadsTable = ({ ID }) => {
         })
       );
     setSelectedHeads(selectedHeadsData);
-    console.log(selectedHeads);
+    // colsole.log(selectedHeads);
   }, [heads, employeeTypes, ID]);
 
   const addEmployeewiseEarning = async () => {
