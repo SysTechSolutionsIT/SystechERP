@@ -168,39 +168,37 @@ const ShiftMaster = () => {
   const menuRef = useRef(null);
 
   const [columnVisibility, setColumnVisibility] = useState({
-    eType: true,
-    sName: true,
-    startT: true,
-    endT: true,
-    OTstartT: true,
-    GRstartT: true,
-    GRendT: true,
-    halfDayHour: true,
-    fullDayHours: true,
-    twoDayShift: true,
-    autoRotateFlag: false,
-    graceMin: false,
-    graceMax: false,
-    remarks: false,
-    status: true,
+    EmployeeTypeId: true,
+    ShiftName: true,
+    StartTime: true,
+    EndTime: true,
+    OTStartTime: true,
+    GraceEarlyTime: true,
+    GraceLateTime: true,
+    HalfdayHours: true,
+    FulldayHours: true,
+    AutoRotateFlag: true,
+    TwoDayShift: true,
+    ShiftGraceHoursMin: true,
+    ShiftGraceHoursMax: true,
+    Remark: false,
   });
 
   const columnNames = {
-    eType: "Employee Type",
-    sName: "Shift Name",
-    startT: "Start Time",
-    endT: "End Time",
-    OTstartT: "Overtime Start Time",
-    GRstartT: "Grace Period Start Time",
-    GRendT: "Grace Period End Time",
-    halfDayHour: "Half-Day Hours",
-    fullDayHours: "Full-Day Hours",
-    twoDayShift: "Two-Day Shift",
-    autoRotateFlag: "Auto-Rotate Flag",
-    graceMin: "Grace Period Minimum",
-    graceMax: "Grace Period Maximum",
-    remarks: "Remarks",
-    status: "Status",
+    EmployeeTypeId: "Employee Type",
+    ShiftName: "Shift Name",
+    StartTime: "Start Time",
+    EndTime: "End Time",
+    OTStartTime: "OT Start Time",
+    GraceEarlyTime: "Grace Early Time",
+    GraceLateTime: "Grace Late Time",
+    HalfdayHours: "Half Day Hours",
+    FulldayHours: "Full Day Hours",
+    AutoRotateFlag: "Auto Rotate Flag",
+    TwoDayShift: "Two Day Shift",
+    ShiftGraceHoursMin: "Shift Grace Hours Min",
+    ShiftGraceHoursMax: "Shift Grace Hours Max",
+    Remark: "Remarks",
   };
 
 
@@ -284,11 +282,11 @@ const ShiftMaster = () => {
 
   useEffect(() => {
     fetchShiftData();
-  }, []);
+  }, [token]);
 
   const fetchShiftData = async () => {
     try {
-      const response = await axios.get("http://localhost:5500/shift-master/", {
+      const response = await axios.get("http://localhost:5500/shift-master/FnShowActiveData", {
         headers: {
           authorization: `Bearer ${token}`,
         },
@@ -304,25 +302,26 @@ const ShiftMaster = () => {
   console.log(Shift);
 
   const handleSearchChange = (title, searchWord) => {
-    const searchData = [...Shift];
-
+    const searchData = [...ShiftData, ...Shift]; // Combine hardcoded and API data
+  
     const newFilter = searchData.filter((item) => {
       // Check if the item matches the search term in any of the selected columns
       const matches = selectedColumns.some((columnName) => {
-        const newCol = columnName.charAt(0).toLowerCase() + columnName.slice(1);
-        const value = item[newCol];
+        const formattedColumnName = columnName.charAt(0).toUpperCase() + columnName.slice(1);
+        const value = item[formattedColumnName];
         return (
           value &&
           value.toString().toLowerCase().includes(searchWord.toLowerCase())
         );
       });
-
+  
       return matches;
     });
-
+  
     // Update the filtered data
     setFilteredData(newFilter);
   };
+  
 
   return (
     <div className="top-25 min-w-[40%]">
@@ -478,7 +477,7 @@ const ShiftMaster = () => {
                           onClick={() => {
                             setSVE(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
-                            setShiftId(result.id); // Pass ID to VEModal
+                            setShiftId(result.ShiftId); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -490,7 +489,7 @@ const ShiftMaster = () => {
                           onClick={() => {
                             setSVE(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
-                            setShiftId(result.id); // Pass ID to VEModal
+                            setShiftId(result.ShiftId); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -503,7 +502,7 @@ const ShiftMaster = () => {
                       </div>
                     </td>
                     <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {result.sID}
+                      {result.ShiftId}
                     </td>
                     {selectedColumns.map((columnName) => (
                       columnVisibility[columnName] ? (
@@ -540,7 +539,7 @@ const ShiftMaster = () => {
                           onClick={() => {
                             setSVE(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
-                            setShiftId(result.sID); // Pass ID to VEModal
+                            setShiftId(result.ShiftId); // Pass ID to VEModal
                           }}
                         />
 
@@ -553,7 +552,7 @@ const ShiftMaster = () => {
                           onClick={() => {
                             setSVE(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
-                            setShiftId(result.sID); // Pass ID to VEModal
+                            setShiftId(result.ShiftId); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -566,7 +565,7 @@ const ShiftMaster = () => {
                       </div>
                     </td>
                     <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {result.sID}
+                      {result.ShiftId}
                     </td>
                     {selectedColumns.map((columnName) => (
                       columnVisibility[columnName] ? (
