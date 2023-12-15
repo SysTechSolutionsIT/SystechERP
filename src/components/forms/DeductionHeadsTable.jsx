@@ -25,7 +25,6 @@ const DeductionHeadsTable = ({ ID }) => {
             },
           }
         );
-        console.log("Response Object", response);
         const data = response.data;
         console.log(data);
         setHeads(data);
@@ -35,29 +34,6 @@ const DeductionHeadsTable = ({ ID }) => {
     };
     fetchHeadsData();
   }, [token]);
-
-  useEffect(() => {
-    const GetParticluarHead = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:5500/deduction-heads/FnShowParticularData",
-          {
-            param: { EmployeeId: ID },
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        console.log("Response Object", response);
-        const data = response.data;
-        console.log(data);
-        setChecked(data);
-      } catch (error) {
-        console.log("Error while fetching course data: ", error);
-      }
-    };
-    GetParticluarHead();
-  }, [ID]);
 
   useEffect(() => {
     const fetchEmpSalary = async () => {
@@ -71,6 +47,7 @@ const DeductionHeadsTable = ({ ID }) => {
         );
         const data = response.data;
         setDetails(data);
+        console.log(data)
       } catch (error) {
         console.error("Error", error);
       }
@@ -100,14 +77,14 @@ const DeductionHeadsTable = ({ ID }) => {
 
   const calculateValue = (formula, salary, calculationValue) => {
     try {
-      const totalEarning = salary;
+      const totalDeduction = salary;
       if (formula === null) {
         return calculationValue || 0;
       } else {
         const modifiedFormula = formula
           .replace("P1", salary)
-          .replace("P2", totalEarning * (50 / 100))
-          .replace("P3", totalEarning);
+          .replace("P2", totalDeduction * (50 / 100))
+          .replace("P3", totalDeduction);
         const result = eval(modifiedFormula);
         return result;
       }
@@ -146,10 +123,10 @@ const DeductionHeadsTable = ({ ID }) => {
           Formula,
         }) => ({
           EmployeeType: employeeTypes?.ShortName,
-          DeductionHeadID,
+          DeductionHeadId: DeductionHeadID,
           DeductionHead,
-          CalculationType: CalculationType,
-          CalculationValue: CalculationValue,
+          DCalculationType: CalculationType,
+          DCalculationValue: CalculationValue,
           Formula,
           EmployeeId: ID,
           EmployeeTypeId: employeeTypes?.EmployeeTypeId,
@@ -158,7 +135,7 @@ const DeductionHeadsTable = ({ ID }) => {
         })
       );
     setSelectedHeads(selectedHeadsData);
-    console.log(selectedHeads);
+    console.log('Selected Heads', selectedHeads);
   }, [heads, employeeTypes, ID]);
 
   const addEmployeewiseDeduction = async () => {
@@ -220,6 +197,7 @@ const DeductionHeadsTable = ({ ID }) => {
                       type="checkbox"
                       className="w-5 h-5 mr-2 mt-2 focus:outline-gray-300 border border-blue-900 rounded-lg"
                       checked={item.Selected}
+                      onChange={() => handleCheckboxChange(index)}
                     />
                   </label>
                 </td>

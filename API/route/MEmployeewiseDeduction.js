@@ -125,22 +125,16 @@ const MEmployeewiseDeduction = sequelize.define(
 router.use(bodyParser.json());
 
 // Model synchronization
-sequelize
-  .authenticate()
-  .then(() => {
+(async () => {
+  try {
+    await sequelize.authenticate();
     console.log("Connection has been established successfully.");
-  })
-  .catch((err) => {
-    console.error("Unable to connect to the database:", err);
-  });
-
-MEmployeewiseDeduction.sync()
-  .then(() => {
+    await MEmployeewiseDeduction.sync();
     console.log("MEmployeewiseDeduction model synchronized successfully.");
-  })
-  .catch((error) => {
-    console.error("Error synchronizing MEmployeewiseDeduction model:", error);
-  });
+  } catch (error) {
+    console.error("Unable to connect to the database or synchronize model:", error);
+  }
+})();
 
 router.get("/FnshowActiveData", authToken, async (req, res) => {
   try {
@@ -159,6 +153,7 @@ router.get("/FnshowActiveData", authToken, async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
 router.get("/FnShowParticularData", authToken, async (req, res) => {
   const EmployeeId = req.query.EmployeeId;
   try {
