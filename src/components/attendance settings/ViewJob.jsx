@@ -11,7 +11,7 @@ const ViewJob = ({ visible, onClick, edit, ID }) => {
   const [state, setState] = useState(false);
   const formik = useFormik({
     initialValues: {
-      JobTypeId: "",
+      JobTypeId: ID,
       JobTypeName: "",
       ShortName: "",
       RateGroup: "",
@@ -24,22 +24,26 @@ const ViewJob = ({ visible, onClick, edit, ID }) => {
       console.log(values);
       const stat = state === true;
       const updatedData = {
-      JobTypeId: ID,
-      JobTypeName: values.JobTypeName,
-      ShortName: values.ShortName,
-      RateGroup: values.RateGroup,
-      RatePerDay: values.RatePerDay,
-      Category: values.Category,
-      Position: values.Position,
-      Remark: values.Remark,
+        JobTypeId: ID,
+        JobTypeName: values.JobTypeName,
+        ShortName: values.ShortName,
+        RateGroup: values.RateGroup,
+        RatePerDay: values.RatePerDay,
+        Category: values.Category,
+        Position: values.Position,
+        Remark: values.Remark,
       };
       axios
-        .post(`http://localhost:5500/job-type/FnAddUpdateDeleteRecord`, updatedData, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+        .post(
+          `http://localhost:5500/job-type/FnAddUpdateDeleteRecord`,
+          updatedData,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        )
         .then((response) => {
           // Handle success
-          alert("Job Type Updated Successfully") ;
+          alert("Job Type Updated Successfully");
           window.location.reload();
           onClick();
         })
@@ -77,14 +81,14 @@ const ViewJob = ({ visible, onClick, edit, ID }) => {
   useEffect(() => {
     if (details) {
       formik.setValues({
-      JobTypeId: ID,
-      JobTypeName: details.JobTypeName,
-      ShortName: details.ShortName,
-      RateGroup: details.RateGroup,
-      RatePerDay: details.RatePerDay,
-      Category: details.Category,
-      Position: details.Position,
-      Remark: details.Remark,
+        JobTypeId: ID,
+        JobTypeName: details.JobTypeName,
+        ShortName: details.ShortName,
+        RateGroup: details.RateGroup,
+        RatePerDay: details.RatePerDay,
+        Category: details.Category,
+        Position: details.Position,
+        Remark: details.Remark,
       });
     }
   }, [details]);

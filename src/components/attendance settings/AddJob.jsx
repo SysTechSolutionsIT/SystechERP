@@ -9,7 +9,7 @@ const AddJob = ({ visible, onClick }) => {
   const { token } = useAuth();
 
   const formik = useFormik({
-    initialValues:{
+    initialValues: {
       JobTypeName: "",
       ShortName: "",
       RateGroup: "",
@@ -20,23 +20,38 @@ const AddJob = ({ visible, onClick }) => {
       AcFlag: "Y",
       IUFlag: "I",
     },
-    onSubmit: (values) =>{
-      console.log(values)
-      addJobType(values)
-    }
-  })
+    onSubmit: (values) => {
+      console.log(values);
+      addJobType(values);
+    },
+  });
 
-  const addJobType = async (data) =>{
-   try {
-    const response = await axios.post('http://localhost:5500/job-type/FnAddUpdateDeleteRecord', data,
-    {
-      headers: { Authorization: `Bearer ${token}`}
-    })
-    alert('Job Type Added')
-   } catch (error) {
-      console.error('Error', error);
-   }
-  }
+  const addJobType = async (data) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5500/job-type/FnAddUpdateDeleteRecord",
+        data,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (response.status === 200) {
+        console.log("Entry Added Successfully");
+        alert("Entry Added Successfully");
+        onClick();
+      } else {
+        console.error(
+          "Failed to add Entry. Server returned:",
+          response.status,
+          response.data
+        );
+        alert("Failed to add Entry. Please check the console for details.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("An error occurred. Please check the console for details.");
+    }
+  };
 
   if (!visible) return null;
   return (

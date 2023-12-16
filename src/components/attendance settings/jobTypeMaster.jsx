@@ -96,7 +96,7 @@ const JobTypeMaster = () => {
     Category: "Category",
     Position: "Position",
     Remark: "Remark",
-  }
+  };
 
   //Toggle
   const [showDropdown, setShowDropdown] = useState(false);
@@ -180,9 +180,12 @@ const JobTypeMaster = () => {
 
   const fetchJobData = async () => {
     try {
-      const response = await axios.get("http://localhost:5500/job-type/FnShowActiveData", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+        "http://localhost:5500/job-type/FnShowActiveData",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       console.log("Response Object", response);
       const data = response.data;
       console.log(data);
@@ -217,17 +220,30 @@ const JobTypeMaster = () => {
 
   //Deletion
   const deleteRecord = async (ID) => {
-    alert("Are you sure you want to delete this record?");
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this company?"
+    );
+
+    if (!confirmDelete) {
+      return; // If the user cancels deletion, do nothing
+    }
     try {
-      const apiUrl = `http://localhost:5500/job-master/delete/${ID}`;
+      const apiUrl = `http://localhost:5500/job-type/FnAddUpdateDeleteRecord`;
 
-      const response = await axios.delete(apiUrl, {
-        headers: {
-          authorization: `Bearer ${token}`,
+      const response = await axios.post(
+        apiUrl,
+        {
+          JobTypeId: ID,
+          IUFlag: "D",
         },
-      });
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-      if (response.status === 204) {
+      if (response.data.message === "Record Deleted Successfully") {
         console.log(`Record with ID ${ID} deleted successfully.`);
         alert("Record Deleted");
         window.location.reload();
@@ -242,9 +258,7 @@ const JobTypeMaster = () => {
   return (
     <div className="top-25 min-w-[40%]">
       <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
-        <div className="text-[15px]">
-          Attendance Settings / Job Type Master
-        </div>
+        <div className="text-[15px]">Attendance Settings / Job Type Master</div>
         <div className="flex gap-4">
           <button
             onClick={() => setShowDropdown(!showDropdown)}
@@ -253,7 +267,9 @@ const JobTypeMaster = () => {
             Column Visibility
             <Icon
               icon="fe:arrow-down"
-              className={`ml-2 ${showDropdown ? "rotate-180" : ""} cursor-pointer`}
+              className={`ml-2 ${
+                showDropdown ? "rotate-180" : ""
+              } cursor-pointer`}
             />
           </button>
           {showDropdown && (
@@ -349,7 +365,7 @@ const JobTypeMaster = () => {
                 <th className="w-auto text-[13px] px-1 font-bold text-black border-2 border-gray-400 whitespace-normal">
                   ID
                 </th>
-                {selectedColumns.map((columnName) => (
+                {selectedColumns.map((columnName) =>
                   columnVisibility[columnName] ? (
                     <th
                       key={columnName}
@@ -358,74 +374,141 @@ const JobTypeMaster = () => {
                       {columnNames[columnName]}
                     </th>
                   ) : null
-                ))}
+                )}
               </tr>
               <tr>
                 <th className="border-2"></th>
                 <th className="p-2 font-bold text-black border-2 " />
-                {selectedColumns.map((columnName) => (
+                {selectedColumns.map((columnName) =>
                   columnVisibility[columnName] ? (
-                    <th key={columnName} className="p-2 font-semibold text-black border-2">
+                    <th
+                      key={columnName}
+                      className="p-2 font-semibold text-black border-2"
+                    >
                       <input
                         type="text"
                         placeholder={`Search `}
                         className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
-                        style={{ maxWidth: getColumnMaxWidth(columnName) + "px" }}
-                        onChange={(e) => handleSearchChange(columnName, e.target.value)}
+                        style={{
+                          maxWidth: getColumnMaxWidth(columnName) + "px",
+                        }}
+                        onChange={(e) =>
+                          handleSearchChange(columnName, e.target.value)
+                        }
                       />
                     </th>
                   ) : null
-                ))}
+                )}
               </tr>
             </thead>
             <tbody className="">
               {filteredData.length > 0
                 ? filteredData.map((result, key) => (
-                  <tr key={key}>
-                    <td className="px-2 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setJVE(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setJid(result.JobTypeId); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setJVE(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setJid(result.JobTypeId); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => deleteRecord(result.JobTypeId)}
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {result.JobTypeId}
-                    </td>
-                    {selectedColumns.map((columnName) => (
-                      columnVisibility[columnName] ? (
+                    <tr key={key}>
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setJVE(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setJid(result.JobTypeId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setJVE(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setJid(result.JobTypeId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => deleteRecord(result.JobTypeId)}
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                        {result.JobTypeId}
+                      </td>
+                      {selectedColumns.map((columnName) =>
+                        columnVisibility[columnName] ? (
+                          <td
+                            key={columnName}
+                            className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                          >
+                            {columnName === "status"
+                              ? result[columnName]
+                                ? "Active"
+                                : "Inactive"
+                              : result[columnName]}
+                          </td>
+                        ) : null
+                      )}
+                    </tr>
+                  ))
+                : job.length > 0 &&
+                  job.map((result, index) => (
+                    <tr key={index}>
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setJVE(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setJid(result.JobTypeId); // Pass ID to VEModal
+                            }}
+                          />
+
+                          <Icon
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setJVE(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setJid(result.JobTypeId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => deleteRecord(result.JobTypeId)}
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                        {result.JobTypeId}
+                      </td>
+                      {selectedColumns.map((columnName) => (
                         <td
                           key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                          className={`px-4 border-2 whitespace-normal text-left text-[11px] ${
+                            columnVisibility[columnName] ? "" : "hidden"
+                          }`}
                         >
                           {columnName === "status"
                             ? result[columnName]
@@ -433,68 +516,9 @@ const JobTypeMaster = () => {
                               : "Inactive"
                             : result[columnName]}
                         </td>
-                      ) : null
-                    ))}
-                  </tr>
-                ))
-                : job.length > 0 &&
-                job.map((result, index) => (
-                  <tr key={index}>
-                    <td className="px-2 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setJVE(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setJid(result.JobTypeId); // Pass ID to VEModal
-                          }}
-                        />
-
-                        <Icon
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setJVE(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setJid(result.JobTypeId); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => deleteRecord(result.JobTypeId)}
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {result.JobTypeId}
-                    </td>
-                    {selectedColumns.map((columnName) => (
-                      <td
-                        key={columnName}
-                        className={`px-4 border-2 whitespace-normal text-left text-[11px] ${columnVisibility[columnName] ? "" : "hidden"
-                          }`}
-                      >
-                        {columnName === "status"
-                          ? result[columnName]
-                            ? "Active"
-                            : "Inactive"
-                          : result[columnName]}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
+                      ))}
+                    </tr>
+                  ))}
             </tbody>
           </table>
         </div>
