@@ -71,9 +71,8 @@ const WeeklyOffMaster = () => {
   const menuRef = useRef(null);
 
   const [columnVisibility, setColumnVisibility] = useState({
-    weeklyOffName: true,
-    remarks: false,
-    status: true,
+    WeeklyOffName: true,
+    Remark: true,
   });
 
   //Toggle
@@ -151,7 +150,7 @@ const WeeklyOffMaster = () => {
   const fetchCompData = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5500/weekly-off-master/get",
+        "http://localhost:5500/weekly-off/FnShowActiveData",
         {
           headers: { authorization: `Bearer ${token}` },
         }
@@ -172,8 +171,8 @@ const WeeklyOffMaster = () => {
     const newFilter = searchData.filter((item) => {
       // Check if the item matches the search term in any of the selected columns
       const matches = selectedColumns.some((columnName) => {
-        const newCol = columnName.charAt(0).toLowerCase() + columnName.slice(1);
-        const value = item[newCol];
+        const formattedColumnName = columnName.charAt(0).toUpperCase() + columnName.slice(1);
+        const value = item[formattedColumnName];
         return (
           value &&
           value.toString().toLowerCase().includes(searchWord.toLowerCase())
@@ -382,7 +381,7 @@ const WeeklyOffMaster = () => {
                           onClick={() => {
                             setWVE(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
-                            setweekID(result.weekID); // Pass ID to VEModal
+                            setweekID(result.WeeklyOffId); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -394,7 +393,7 @@ const WeeklyOffMaster = () => {
                           onClick={() => {
                             setWVE(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
-                            setweekID(result.weekID); // Pass ID to VEModal
+                            setweekID(result.WeeklyOffId); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -403,12 +402,12 @@ const WeeklyOffMaster = () => {
                           width="20"
                           height="20"
                           className="cursor-pointer"
-                          onClick={() => deleteRecord(result.weekID)}
+                          onClick={() => deleteRecord(result.WeeklyOffId)}
                         />
                       </div>
                     </td>
                     <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {result.weekID}
+                      {result.WeeklyOffId}
                     </td>
                     {selectedColumns.map(
                       (columnName) =>
@@ -442,7 +441,7 @@ const WeeklyOffMaster = () => {
                           onClick={() => {
                             setWVE(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
-                            setweekID(entry.weekID); // Pass ID to VEModal
+                            setweekID(entry.WeeklyOffId); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -454,7 +453,7 @@ const WeeklyOffMaster = () => {
                           onClick={() => {
                             setWVE(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
-                            setweekID(entry.weekID); // Pass ID to VEModal
+                            setweekID(entry.WeeklyOffId); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -463,12 +462,12 @@ const WeeklyOffMaster = () => {
                           width="20"
                           height="20"
                           className="cursor-pointer"
-                          onClick={() => deleteRecord(entry.weekID)}
+                          onClick={() => deleteRecord(entry.WeeklyOffId)}
                         />
                       </div>
                     </td>
                     <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {entry.weekID}
+                      {entry.WeeklyOffId}
                     </td>
                     {selectedColumns.map(
                       (columnName) =>

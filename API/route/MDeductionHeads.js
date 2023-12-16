@@ -144,6 +144,8 @@ const MDeductionHeads = sequelize.define("MDeductionHeads", {
     type: DataTypes.DATE,
     allowNull: true,
   },
+}, {
+  timestamps:false
 });
 // Middleware for parsing JSON
 router.use(bodyParser.json());

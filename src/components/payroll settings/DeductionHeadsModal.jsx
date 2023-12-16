@@ -25,7 +25,7 @@ const DeductionHeadsModal = ({ visible, onClick }) => {
       SalaryParameter8: "",
       SalaryParameter9: "",
       SalaryParameter10: "",
-      Formula: "",
+      Formula: null,
       AcFlag: "Y",
       IUFlag: "I",
       Remark: "",

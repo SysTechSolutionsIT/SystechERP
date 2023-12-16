@@ -35,25 +35,24 @@ const MEmployeewiseDeduction = sequelize.define(
       type: DataTypes.STRING(5),
       allowNull: false,
       defaultValue: "00001",
+      primaryKey: true,
     },
     BranchId: {
       type: DataTypes.STRING(5),
       allowNull: false,
       defaultValue: "00001",
+      primaryKey: true,
     },
     EmployeeId: {
       type: DataTypes.STRING(7),
       allowNull: false,
+      primaryKey: true,
     },
     EmployeewiseDeductionId: {
       type: DataTypes.STRING(5),
       allowNull: false,
       defaultValue: "00001",
       primaryKey: true,
-    },
-    SrNo: {
-      type: DataTypes.BIGINT,
-      allowNull: true,
     },
     EmployeewiseDeductionDate: {
       type: DataTypes.DATE,
@@ -62,6 +61,7 @@ const MEmployeewiseDeduction = sequelize.define(
     EmployeeTypeId: {
       type: DataTypes.STRING(5),
       allowNull: false,
+      primaryKey: true,
     },
     EmployeeType: {
       type: DataTypes.STRING(50),
@@ -74,6 +74,7 @@ const MEmployeewiseDeduction = sequelize.define(
     DeductionHeadId: {
       type: DataTypes.STRING(5),
       allowNull: false,
+      primaryKey: true,
     },
     DeductionHead: {
       type: DataTypes.STRING(500),
@@ -116,7 +117,6 @@ const MEmployeewiseDeduction = sequelize.define(
     },
   },
   {
-    tableName: "MEmployeewiseDeduction",
     timestamps: false,
   }
 );
@@ -125,22 +125,16 @@ const MEmployeewiseDeduction = sequelize.define(
 router.use(bodyParser.json());
 
 // Model synchronization
-sequelize
-  .authenticate()
-  .then(() => {
+(async () => {
+  try {
+    await sequelize.authenticate();
     console.log("Connection has been established successfully.");
-  })
-  .catch((err) => {
-    console.error("Unable to connect to the database:", err);
-  });
-
-MEmployeewiseDeduction.sync()
-  .then(() => {
+    await MEmployeewiseDeduction.sync();
     console.log("MEmployeewiseDeduction model synchronized successfully.");
-  })
-  .catch((error) => {
-    console.error("Error synchronizing MEmployeewiseDeduction model:", error);
-  });
+  } catch (error) {
+    console.error("Unable to connect to the database or synchronize model:", error);
+  }
+})();
 
 router.get("/FnshowActiveData", authToken, async (req, res) => {
   try {
@@ -159,6 +153,7 @@ router.get("/FnshowActiveData", authToken, async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
 router.get("/FnShowParticularData", authToken, async (req, res) => {
   const EmployeeId = req.query.EmployeeId;
   try {
