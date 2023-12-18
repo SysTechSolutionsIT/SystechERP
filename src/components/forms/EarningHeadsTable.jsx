@@ -8,6 +8,7 @@ const EarningHeadsTable = ({ ID }) => {
   const { employeeTypeId } = useEmployeeType();
   // colsole.log("Employee type id", employeeTypeId);
   const [details, setDetails] = useState([]);
+  const [earningDetails, setEarningDetails] = useState([])
   const [heads, setHeads] = useState([]);
   const [selectedHeads, setSelectedHeads] = useState([]);
   const [employeeTypes, setEmployeeTypes] = useState([]);
@@ -31,6 +32,26 @@ const EarningHeadsTable = ({ ID }) => {
     };
     fetchHeadsData();
   }, [token]);
+
+  useEffect(() => {
+    const fetchEmployeewiseEarnings = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/employee-wise-earning/FnShowParticularData",
+          {
+            params: { EmployeeId: ID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        setEarningDetails(data);
+        console.log("Employee wise earnings", data);
+      } catch (error) {
+        console.error("Error", error);
+      }
+    };
+    fetchEmployeewiseEarnings();
+  }, [token, ID]);
 
   useEffect(() => {
     const fetchEmpSalary = async () => {

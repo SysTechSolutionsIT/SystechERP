@@ -42,7 +42,7 @@ const MEmployeewiseEarning = sequelize.define(
       defaultValue: "00001",
     },
     EmployeeId: {
-      type: DataTypes.STRING(7),
+      type: DataTypes.INTEGER(7),
       allowNull: false,
     },
     EmployeewiseEarningId: {
@@ -147,7 +147,7 @@ router.get("/FnshowActiveData", authToken, async (req, res) => {
       attributes: {
         exclude: ["IUFlag"],
       },
-      order: [["EmployeeId", "ASC"]],
+      order: [["EmployeewiseEarningId", "ASC"]],
     });
     res.json(EmployeewiseEarning);
   } catch (error) {
@@ -157,16 +157,15 @@ router.get("/FnshowActiveData", authToken, async (req, res) => {
 });
 
 router.get("/FnShowParticularData", authToken, async (req, res) => {
-  const EmployeewiseEarningId = req.query.EmployeewiseEarningId;
+  const EmployeeId = req.query.EmployeeId;
   try {
-    const EmployeewiseEarning = await MEmployeewiseEarning.findOne({
+    const EmployeewiseEarning = await MEmployeewiseEarning.findAll({
       where: {
-        EmployeewiseEarningId: EmployeewiseEarningId,
+        EmployeeId: EmployeeId,
       },
       attributes: {
-        exclude: ["IUFlag"],
-      },
-      order: [["EmployeeId", "ASC"]],
+        exclude: ["IUFlag", "id"],
+      }
     });
     res.json(EmployeewiseEarning);
   } catch (error) {

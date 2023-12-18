@@ -410,9 +410,9 @@ const Sidebar = () => {
                         onClick={() => navigate("/deduction-heads-master")}
                       />
                       <SubMenuEntry
-                        title="Employee Type Earning Deduciton"
+                        title="Employee Type Earning Master"
                         onClick={() =>
-                          navigate("/employee-type-earning-deduction")
+                          navigate("/employee-type-earning")
                         }
                       />
                       <SubMenuEntry
