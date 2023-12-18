@@ -28,79 +28,83 @@ const sequelize = new Sequelize(
   }
 );
 
-const MJobType = sequelize.define('MJobType', {
+const MJobType = sequelize.define(
+  "MJobType",
+  {
     CompanyId: {
       type: DataTypes.STRING(5),
       allowNull: false,
-      defaultValue: '00001'
+      defaultValue: "00001",
     },
     BranchId: {
       type: DataTypes.STRING(5),
       allowNull: false,
-      defaultValue: '00001'
+      defaultValue: "00001",
     },
     JobTypeId: {
       type: DataTypes.STRING(5),
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
     },
     JobTypeName: {
       type: DataTypes.STRING(50),
-      allowNull: true
+      allowNull: true,
     },
     ShortName: {
       type: DataTypes.STRING(2),
-      allowNull: true
+      allowNull: true,
     },
     RateGroup: {
       type: DataTypes.STRING(3),
-      allowNull: true
+      allowNull: true,
     },
     RatePerDay: {
       type: DataTypes.DECIMAL(18, 2),
       allowNull: true,
-      defaultValue: 0
+      defaultValue: 0,
     },
     Category: {
       type: DataTypes.STRING(20),
       allowNull: true,
-      defaultValue: 'Standard'
+      defaultValue: "Standard",
     },
     Position: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      defaultValue: 0
+      defaultValue: 0,
     },
     Remark: {
       type: DataTypes.STRING(500),
-      allowNull: true
+      allowNull: true,
     },
     AcFlag: {
       type: DataTypes.STRING(1),
       allowNull: true,
-      defaultValue: 'Y'
+      defaultValue: "Y",
     },
     CreatedBy: {
       type: DataTypes.STRING(500),
-      allowNull: true
+      allowNull: true,
     },
     CreatedOn: {
       type: DataTypes.DATE,
-      allowNull: true
+      allowNull: true,
     },
     ModifiedBy: {
       type: DataTypes.STRING(500),
-      allowNull: true
+      allowNull: true,
     },
     ModifiedOn: {
       type: DataTypes.DATE,
-      allowNull: true
-    }
-  }, {
-    timestamps: false
-  });
+      allowNull: true,
+    },
+  },
+  {
+    timestamps: false,
+  }
+);
 
-  // Middleware for parsing JSON
+// Middleware for parsing JSON
 router.use(bodyParser.json());
 
 // Model synchronization
@@ -120,63 +124,67 @@ MJobType.sync()
   .catch((error) => {
     console.error("Error synchronizing MJobType model:", error);
   });
-  
-  router.get("/FnshowActiveData", authToken, async (req, res) => {
-    try {
-      const JobType = await MJobType.findAll({
-        where: {
-          AcFlag: "Y",
-        },
-        attributes: {
-          exclude: ["IUFlag"],
-        },
-        order: [["JobTypeId", "ASC"]],
-      });
-      res.json(JobType);
-    } catch (error) {
-      console.error("Error retrieving data:", error);
-      res.status(500).send("Internal Server Error");
-    }
-  });
 
-  router.get("/FnShowParticularData", authToken, async (req, res) => {
-    const JobTypeId = req.query.JobTypeId;
-    try {
-      const JobType = await MJobType.findOne({
-        where: {
-          JobTypeId: JobTypeId,
-        },
-        attributes: {
-          exclude: ["IUFlag"],
-        },
-        order: [["JobTypeId", "ASC"]],
-      });
-      res.json(JobType);
-    } catch (error) {
-      console.error("Error retrieving data:", error);
-      res.status(500).send("Internal Server Error");
-    }
-  });
+router.get("/FnshowActiveData", authToken, async (req, res) => {
+  try {
+    const JobType = await MJobType.findAll({
+      where: {
+        AcFlag: "Y",
+      },
+      attributes: {
+        exclude: ["IUFlag"],
+      },
+      order: [["JobTypeId", "ASC"]],
+    });
+    res.json(JobType);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
-  // Middleware for generating Id
+router.get("/FnShowParticularData", authToken, async (req, res) => {
+  const JobTypeId = req.query.JobTypeId;
+  try {
+    const JobType = await MJobType.findOne({
+      where: {
+        JobTypeId: JobTypeId,
+      },
+      attributes: {
+        exclude: ["IUFlag"],
+      },
+      order: [["JobTypeId", "ASC"]],
+    });
+    res.json(JobType);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// Middleware for generating Id
 const generateJobTypeId = async (req, res, next) => {
-    try {
-      if (req.body.IUFlag === 'I') {
-        const totalRecords = await MJobType.count();
-        const newId = (totalRecords + 1).toString().padStart(5, "0");
-        req.body.JobTypeId = newId;
-      }
-      next();
-    } catch (error) {
-      console.error("Error generating JobTypeId:", error);
-      res.status(500).send("Internal Server Error");
+  try {
+    if (req.body.IUFlag === "I") {
+      const totalRecords = await MJobType.count();
+      const newId = (totalRecords + 1).toString().padStart(5, "0");
+      req.body.JobTypeId = newId;
     }
-  };
+    next();
+  } catch (error) {
+    console.error("Error generating JobTypeId:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
 
-  router.post("/FnAddUpdateDeleteRecord", generateJobTypeId, authToken, async (req, res) => {
+router.post(
+  "/FnAddUpdateDeleteRecord",
+  generateJobTypeId,
+  authToken,
+  async (req, res) => {
     const JobType = req.body;
-    const JobTypeId = JobType.JobTypeId;  // Access the JobTypeId from the request body
-  
+    const JobTypeId = JobType.JobTypeId; // Access the JobTypeId from the request body
+
     try {
       if (JobType.IUFlag === "D") {
         // "Soft-delete" operation
@@ -184,17 +192,19 @@ const generateJobTypeId = async (req, res, next) => {
           { AcFlag: "N" },
           { where: { JobTypeId: JobTypeId } }
         );
-  
+
         res.json({
-          message: result[0] ? "Record Deleted Successfully" : "Record Not Found",
+          message: result[0]
+            ? "Record Deleted Successfully"
+            : "Record Not Found",
         });
       } else {
         // Add or update operation
         const result = await MJobType.upsert(JobType, {
-          where: { JobTypeId: JobTypeId },  // Specify the where condition for update
+          where: { JobTypeId: JobTypeId }, // Specify the where condition for update
           returning: true,
         });
-  
+
         res.json({
           message: result ? "Operation successful" : "Operation failed",
         });
@@ -203,15 +213,15 @@ const generateJobTypeId = async (req, res, next) => {
       console.error("Error performing operation:", error);
       res.status(500).send("Internal Server Error");
     }
+  }
+);
+
+process.on("SIGINT", () => {
+  console.log("Received SIGINT. Closing Sequelize connection...");
+  sequelize.close().then(() => {
+    console.log("Sequelize connection closed. Exiting...");
+    process.exit(0);
   });
-  
-  process.on("SIGINT", () => {
-    console.log("Received SIGINT. Closing Sequelize connection...");
-    sequelize.close().then(() => {
-      console.log("Sequelize connection closed. Exiting...");
-      process.exit(0);
-    });
-  });
-  
+});
 
 module.exports = router;

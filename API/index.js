@@ -88,6 +88,7 @@ app.use("/advance-request", AdvanceRequest);
 app.use("/employee-wise-earning", MEmployeewiseEarning);
 app.use("/employee-wise-deductions", MEmployeewiseDeduction);
 app.use("/caderwise-earning", MCaderwiseEarning)
+app.use("/job-type", MJobType);
 
 // Start the server
 const port = 5500;
