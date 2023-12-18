@@ -117,7 +117,6 @@ const EarningHeadsMaster = () => {
     SalaryParameter8: "Salary Parameter 8",
     SalaryParameter9: "Salary Parameter 9",
     SalaryParameter10: "Salary Parameter 10",
-
     Remark: "Remarks",
   };
 
