@@ -94,13 +94,20 @@ const HolidayMaster = () => {
   const menuRef = useRef(null);
 
   const [columnVisibility, setColumnVisibility] = useState({
-    description: true,
-    date: true,
-    type: true,
-    year: true,
-    remark: false,
-    status: true,
+    HolidayDate: true,
+    HolidayType: true,
+    FYear: true,
+    Remark: false,
+    AcFlag: true,
   });
+
+  const columnNames = {
+    HolidayDate: "Holiday Date",
+    HolidayType: "Holiday Type",
+    FYear: "Year",
+    Remark: false,
+    AcFlag: "Status",
+  };
 
   //Toggle
   const [showDropdown, setShowDropdown] = useState(false);
@@ -177,19 +184,21 @@ const HolidayMaster = () => {
   const fetchHolidayData = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5500/holiday-master/get",
+        "http://localhost:5500/holiday-master/FnShowActiveData",
         {
           headers: {
             authorization: `Bearer ${token}`,
           },
         }
       );
-      console.log("Response Object", response);
-      const data = response.data;
-      console.log(data);
-      setHoliday(data);
+      if (response.status === 200) {
+        const data = response.data;
+        setHoliday(data);
+      } else {
+        console.error("Failed to fetch data");
+      }
     } catch (error) {
-      console.log("Error while fetching course data: ", error.message);
+      console.error("Error while fetching company data: ", error.message);
     }
   };
   console.log(Holiday);
@@ -215,12 +224,47 @@ const HolidayMaster = () => {
     setFilteredData(newFilter);
   };
 
+  //Deletion
+  const deleteHoliday = async (DeleteId) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this entry?"
+    );
+
+    if (!confirmDelete) {
+      return; // If the user cancels deletion, do nothing
+    }
+
+    try {
+      const apiUrl = `http://localhost:5500/holiday-master/FnAddUpdateDeleteRecord`;
+
+      const response = await axios.post(
+        apiUrl,
+        {
+          HolidayId: DeleteId,
+          IUFlag: "D",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data.message === "Record Deleted Successfully") {
+        console.log(`Record with ID ${DeleteId} deleted successfully.`);
+        alert("Record Deleted");
+        window.location.reload();
+      } else {
+        console.error(`Failed to delete record with ID ${DeleteId}.`);
+      }
+    } catch (error) {
+      console.error("Error deleting record:", error);
+    }
+  };
   return (
     <div className="top-25 min-w-[40%]">
       <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
-        <div className="text-[15px]">
-          Attendance Settings / Holiday Master
-        </div>
+        <div className="text-[15px]">Attendance Settings / Holiday Master</div>
         <div className="flex gap-4">
           <button
             onClick={() => setShowDropdown(!showDropdown)}
@@ -229,7 +273,9 @@ const HolidayMaster = () => {
             Column Visibility
             <Icon
               icon="fe:arrow-down"
-              className={`ml-2 ${showDropdown ? "rotate-180" : ""} cursor-pointer`}
+              className={`ml-2 ${
+                showDropdown ? "rotate-180" : ""
+              } cursor-pointer`}
             />
           </button>
           {showDropdown && (
@@ -330,10 +376,11 @@ const HolidayMaster = () => {
                     columnVisibility[columnName] && (
                       <th
                         key={columnName}
-                        className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 capitalize ${columnVisibility[columnName] ? "" : "hidden"
-                          }`}
+                        className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 capitalize ${
+                          columnVisibility[columnName] ? "" : "hidden"
+                        }`}
                       >
-                        {columnName}
+                        {columnNames[columnName]}
                       </th>
                     )
                 )}
@@ -367,113 +414,125 @@ const HolidayMaster = () => {
             <tbody className="">
               {filteredData.length > 0
                 ? filteredData.map((result, key) => (
-                  <tr key={key}>
-                    <td className="px-2 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setHVE(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setHid(result.id); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setHVE(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setHid(result.id); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {result.id}
-                    </td>
-                    {selectedColumns.map(
-                      (columnName) =>
-                        columnVisibility[columnName] && (
-                          <td
-                            key={columnName}
-                            className={`px-4 border-2 whitespace-normal text-[11px] text-left${columnVisibility[columnName] ? "" : "hidden"
+                    <tr key={key}>
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setHVE(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setHid(result.HolidayId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setHVE(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setHid(result.HolidayId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => deleteHoliday(result.HolidayId)}
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                        {result.HolidayId}
+                      </td>
+                      {selectedColumns.map(
+                        (columnName) =>
+                          columnVisibility[columnName] && (
+                            <td
+                              key={columnName}
+                              className={`px-4 border-2 whitespace-normal text-[11px] text-left${
+                                columnVisibility[columnName] ? "" : "hidden"
                               }`}
-                          >
-                            {result[columnName]}
-                          </td>
-                        )
-                    )}
-                  </tr>
-                ))
+                            >
+                              {columnName === "AcFlag"
+                                ? result[columnName] === "Y"
+                                  ? "Active"
+                                  : "Inactive"
+                                : result[columnName]}
+                            </td>
+                          )
+                      )}
+                    </tr>
+                  ))
                 : Holiday.length > 0 &&
-                Holiday.map((entry, index) => (
-                  <tr key={index}>
-                    <td className="px-2 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setHVE(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setHid(entry.id); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setHVE(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setHid(entry.id); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {entry.id}
-                    </td>
-                    {selectedColumns.map(
-                      (columnName) =>
-                        columnVisibility[columnName] && (
-                          <td
-                            key={columnName}
-                            className={`px-4 border-2 whitespace-normal text-left text-[11px]${columnVisibility[columnName] ? "" : "hidden"}`}
-                          >
-                            {entry[columnName]}
-                          </td>
-                        )
-                    )}
-                  </tr>
-                ))}
+                  Holiday.map((entry, index) => (
+                    <tr key={index}>
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setHVE(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setHid(entry.HolidayId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setHVE(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setHid(entry.HolidayId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                        {entry.HolidayId}
+                      </td>
+                      {selectedColumns.map(
+                        (columnName) =>
+                          columnVisibility[columnName] && (
+                            <td
+                              key={columnName}
+                              className={`px-4 border-2 whitespace-normal text-left text-[11px]${
+                                columnVisibility[columnName] ? "" : "hidden"
+                              }`}
+                            >
+                              {columnName === "AcFlag"
+                                ? entry[columnName] === "Y"
+                                  ? "Active"
+                                  : "Inactive"
+                                : entry[columnName]}
+                            </td>
+                          )
+                      )}
+                    </tr>
+                  ))}
             </tbody>
           </table>
         </div>
