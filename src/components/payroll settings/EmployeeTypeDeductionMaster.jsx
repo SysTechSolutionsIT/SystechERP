@@ -26,10 +26,10 @@ const [columnVisibility, setColumnVisibility] = useState({
     EmployeeTypeId: true,
     EmployeeType: true,
     EmployeeTypeGroup: true,
-    DeductionHeadId: true,
+    DeductionHeadID: true,
     DeductionHead: true,
-    ECalculationType: true,
-    ECalculationValue: true,
+    DCalculationType: true,
+    DCalculationValue: true,
     Formula: true,
     Remark: false,
   });
@@ -39,10 +39,10 @@ const [columnVisibility, setColumnVisibility] = useState({
     EmployeeTypeId: "Employee Type Id",
     EmployeeType: "Employee Type",
     EmployeeTypeGroup: "Employee Type Group",
-    DeductionHeadId: "Deduction Head Id",
+    DeductionHeadID: "Deduction Head Id",
     DeductionHead: "Deduction Head",
-    ECalculationType: "Calculation Type",
-    ECalculationValue: "Calculation Value",
+    DCalculationType: "Calculation Type",
+    DCalculationValue: "Calculation Value",
     Formula: "Formula",
     Remark: "Remark",
   }
@@ -332,12 +332,12 @@ const [columnVisibility, setColumnVisibility] = useState({
                                 width="20"
                                 height="20"
                                 className="cursor-pointer"
-                                // onClick={() => deleteEmployeeTypeEarning(result.CaderwiseEarningId, result.EarningHeadId)}
+                                // onClick={() => deleteEmployeeTypeDeduction(result.CaderwiseDeductionId, result.DeductionHeadId)}
                               />
                             </div>
                           </td>
                           <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                            {result.CaderwiseEarningId}
+                            {result.CaderwiseDeductionId}
                           </td>
                           {selectedColumns.map((columnName) =>
                             columnVisibility[columnName] ? (
@@ -362,12 +362,12 @@ const [columnVisibility, setColumnVisibility] = useState({
                                 width="20"
                                 height="20"
                                 className="cursor-pointer"
-                                // onClick={() => deleteEmployeeTypeEarning(result.CaderwiseEarningId, result.EarningHeadId)}
+                                // onClick={() => deleteEmployeeTypeDeduction(result.CaderwiseDeductionId, result.DeductionHeadId)}
                               />
                             </div>
                           </td>
                           <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                            {result.CaderwiseEarningId}
+                            {result.CaderwiseDeductionId}
                           </td>
                           {selectedColumns.map((columnName) =>
                             columnVisibility[columnName] ? (
