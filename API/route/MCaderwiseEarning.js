@@ -149,11 +149,11 @@ MCaderwiseEarning.sync()
   });
 
   router.get("/FnShowParticularData", authToken, async (req, res) => {
-    const CaderwiseEarningId = req.query.CaderwiseEarningId;
+    const EmployeeTypeId = req.query.EmployeeTypeId;
     try {
       const CaderwiseEarning = await MCaderwiseEarning.findAll({
         where: {
-          CaderwiseEarningId: CaderwiseEarningId,
+          EmployeeTypeId: EmployeeTypeId,
         },
         attributes: {
           exclude: ["IUFlag", "id"],

@@ -153,11 +153,11 @@ MCaderwiseDeduction.sync()
   });
 
     router.get("/FnShowParticularData", authToken, async (req, res) => {
-    const CaderwiseDeductionId = req.query.CaderwiseDeductionId;
+    const EmployeeTypeId = req.query.EmployeeTypeId;
     try {
       const CaderwiseDeduciton = await MCaderwiseDeduction.findAll({
         where: {
-          CaderwiseDeductionId: CaderwiseDeductionId,
+          EmployeeTypeId: EmployeeTypeId,
         },
         attributes: {
           exclude: ["IUFlag", "id"],
