@@ -44,8 +44,8 @@ const MDepartment = require("./route/MDepartment");
 const MEmployeewiseEarning = require("./route/MEmployeewiseEarning");
 const MEmployeewiseDeduction = require("./route/MEmployeewiseDeduction");
 const MJobType = require("./route/MJobType");
-const MCaderwiseEarning = require("./route/MCaderwiseEearning")
-
+const MCaderwiseEarning = require("./route/MCaderwiseEearning");
+const MDevice = require("./route/MDeviceRoute");
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());
 // Use the user routes
@@ -64,7 +64,7 @@ app.use("/departmentmaster", MDepartment);
 // app.use("/threefieldmaster", ThreeFieldMaster);
 // app.use("/twofieldmaster", TwoFieldMaster);
 app.use("/financials", MFinancialYear);
-app.use("/job-type",MJobType)
+app.use("/job-type", MJobType);
 // app.use("/destinationmaster", DestinationMaster);
 app.use("/cost-center", CCMaster);
 app.use("/employee-type", MEmployeeType);
@@ -87,8 +87,9 @@ app.use("/advance-request", AdvanceRequest);
 // app.use("/currency", Currencies);
 app.use("/employee-wise-earning", MEmployeewiseEarning);
 app.use("/employee-wise-deductions", MEmployeewiseDeduction);
-app.use("/caderwise-earning", MCaderwiseEarning)
+app.use("/caderwise-earning", MCaderwiseEarning);
 app.use("/job-type", MJobType);
+app.use("/device", MDevice);
 
 // Start the server
 const port = 5500;

@@ -89,11 +89,18 @@ const DeviceMaster = () => {
   const [columnVisibility, setColumnVisibility] = useState({
     DeviceName: true,
     IpAddress: true,
-    Port: true,
+    PortNo: true,
     Remark: false,
-    Status: true,
+    AcFlag: true,
   });
 
+  const columnNames = {
+    DeviceName: " Device Name",
+    IpAddress: "IpAddress",
+    PortNo: "Port No",
+    Remark: false,
+    AcFlag: "Status",
+  };
   //Toggle
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedColumns, setSelectedColumns] = useState([
@@ -167,19 +174,21 @@ const DeviceMaster = () => {
   const fetchAttData = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5500/attendance-master/",
+        "http://localhost:5500/device/FnShowActiveData",
         {
           headers: {
             authorization: `Bearer ${token}`,
           },
         }
       );
-      console.log("Response Object", response);
-      const data = response.data.records;
-      console.log(data);
-      setAtt(data);
+      if (response.status === 200) {
+        const data = response.data;
+        setAtt(data);
+      } else {
+        console.error("Failed to fetch data");
+      }
     } catch (error) {
-      console.log("Error while fetching course data: ", error.message);
+      console.error("Error while fetching company data: ", error.message);
     }
   };
   console.log(Att);
@@ -208,15 +217,22 @@ const DeviceMaster = () => {
   const deleteAtt = async (ID) => {
     alert("Are you sure you want to delete this Record?");
     try {
-      const apiUrl = `http://localhost:5500/attendance-master/delete-record/${ID}`;
+      const apiUrl = `http://localhost:5500/device/FnAddUpdateDeleteRecord`;
 
-      const response = await axios.delete(apiUrl, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await axios.post(
+        apiUrl,
+        {
+          DeviceId: ID,
+          IUFlag: "D",
         },
-      });
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-      if (response.status === 204) {
+      if (response.data.message === "Record Deleted Successfully") {
         console.log(`record with ID ${ID} deleted successfully.`);
         alert("record Deleted");
         window.location.reload();
@@ -242,7 +258,9 @@ const DeviceMaster = () => {
             Column Visibility
             <Icon
               icon="fe:arrow-down"
-              className={`ml-2 ${showDropdown ? "rotate-180" : ""} cursor-pointer`}
+              className={`ml-2 ${
+                showDropdown ? "rotate-180" : ""
+              } cursor-pointer`}
             />
           </button>
           {showDropdown && (
@@ -343,17 +361,11 @@ const DeviceMaster = () => {
                     columnVisibility[columnName] && (
                       <th
                         key={columnName}
-                        className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 capitalize whitespace-normal max-w-xs ${columnVisibility[columnName] ? "" : "hidden"
-                          }`}
+                        className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 capitalize whitespace-normal max-w-xs ${
+                          columnVisibility[columnName] ? "" : "hidden"
+                        }`}
                       >
-                        {columnName
-                          .replace(/([a-z])([A-Z])/g, "$1 $2")
-                          .split(" ")
-                          .map((word, index) => (
-                            <div key={index} className="whitespace-nowrap">
-                              {word}
-                            </div>
-                          ))}
+                        {columnNames[columnName]}
                       </th>
                     )
                 )}
@@ -387,117 +399,127 @@ const DeviceMaster = () => {
             <tbody className="">
               {filteredData.length > 0
                 ? filteredData.map((result, key) => (
-                  <tr key={key}>
-                    <td className="px-2 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setDVE(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setDeviceId(result.DeviceId); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setDVE(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setDeviceId(result.DeviceId); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => deleteAtt(result.DeviceId)}
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {result.DeviceId}
-                    </td>
-                    {selectedColumns.map(
-                      (columnName) =>
-                        columnVisibility[columnName] && (
-                          <td
-                            key={columnName}
-                            className={`px-4 border-2 whitespace-normal text-[11px] text-left${columnVisibility[columnName] ? "" : "hidden"
+                    <tr key={key}>
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setDVE(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setDeviceId(result.DeviceId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setDVE(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setDeviceId(result.DeviceId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => deleteAtt(result.DeviceId)}
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                        {result.DeviceId}
+                      </td>
+                      {selectedColumns.map(
+                        (columnName) =>
+                          columnVisibility[columnName] && (
+                            <td
+                              key={columnName}
+                              className={`px-4 border-2 whitespace-normal text-[11px] text-left${
+                                columnVisibility[columnName] ? "" : "hidden"
                               }`}
-                          >
-                            {result[columnName]}
-                          </td>
-                        )
-                    )}
-                  </tr>
-                ))
+                            >
+                              {columnName === "AcFlag"
+                                ? result[columnName] === "Y"
+                                  ? "Active"
+                                  : "Inactive"
+                                : result[columnName]}
+                            </td>
+                          )
+                      )}
+                    </tr>
+                  ))
                 : Att.length > 0 &&
-                Att.map((entry, index) => (
-                  <tr key={index}>
-                    <td className="px-2 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setDVE(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setDeviceId(entry.DeviceId); // Pass ID to VEModal
-                          }}
-                        />
+                  Att.map((entry, index) => (
+                    <tr key={index}>
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setDVE(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setDeviceId(entry.DeviceId); // Pass ID to VEModal
+                            }}
+                          />
 
-                        <Icon
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setDVE(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setDeviceId(entry.DeviceId); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => deleteAtt(entry.DeviceId)}
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {entry.DeviceId}
-                    </td>
-                    {selectedColumns.map(
-                      (columnName) =>
-                        columnVisibility[columnName] && (
-                          <td
-                            key={columnName}
-                            className={`px-4 border-2 whitespace-normal text-left text-[11px]${columnVisibility[columnName] ? "" : "hidden"
+                          <Icon
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setDVE(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setDeviceId(entry.DeviceId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => deleteAtt(entry.DeviceId)}
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                        {entry.DeviceId}
+                      </td>
+                      {selectedColumns.map(
+                        (columnName) =>
+                          columnVisibility[columnName] && (
+                            <td
+                              key={columnName}
+                              className={`px-4 border-2 whitespace-normal text-left text-[11px]${
+                                columnVisibility[columnName] ? "" : "hidden"
                               }`}
-                          >
-                            {entry[columnName]}
-                          </td>
-                        )
-                    )}
-                  </tr>
-                ))}
+                            >
+                              {columnName === "AcFlag"
+                                ? entry[columnName] === "Y"
+                                  ? "Active"
+                                  : "Inactive"
+                                : entry[columnName]}
+                            </td>
+                          )
+                      )}
+                    </tr>
+                  ))}
             </tbody>
           </table>
         </div>

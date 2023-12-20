@@ -94,6 +94,7 @@ const HolidayMaster = () => {
   const menuRef = useRef(null);
 
   const [columnVisibility, setColumnVisibility] = useState({
+    HolidayDescription: true,
     HolidayDate: true,
     HolidayType: true,
     FYear: true,
@@ -102,6 +103,7 @@ const HolidayMaster = () => {
   });
 
   const columnNames = {
+    HolidayDescription: "Name",
     HolidayDate: "Holiday Date",
     HolidayType: "Holiday Type",
     FYear: "Year",
