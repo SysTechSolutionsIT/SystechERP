@@ -54,6 +54,7 @@ import OutDoorAttendanceApproval from "./components/attendance management/OutDoo
 import AdvanceApproval from "./components/payroll settings/AdvanceApprovalMaster";
 import AdvanceRepayment from "./components/payroll settings/AdvanceRepayment";
 import EmployeeTypeEarningMaster from "./components/payroll settings/EmployeeTypeEarningMaster";
+import EmployeeTypeDeductionMaster from "./components/payroll settings/EmployeeTypeDeductionMaster";
 
 function App() {
   return (
@@ -173,6 +174,7 @@ function App() {
                   element={<EmpTypeEarningDeduction />}
                 />
                 <Route path="/employee-type-earning" element={<EmployeeTypeEarningMaster/>}/>
+                <Route path="/employee-type-deduction" element={<EmployeeTypeDeductionMaster/>}/>
                 <Route path="/advance-request" element={<AdvanceRequest />} />
                 <Route path="/leave-application" element={<LeaveApp />} />
                 <Route path="/leave-approval" element={<LeaveApproval />} />

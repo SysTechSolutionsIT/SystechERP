@@ -44,7 +44,8 @@ const MDepartment = require("./route/MDepartment");
 const MEmployeewiseEarning = require("./route/MEmployeewiseEarning");
 const MEmployeewiseDeduction = require("./route/MEmployeewiseDeduction");
 const MJobType = require("./route/MJobType");
-const MCaderwiseEarning = require("./route/MCaderwiseEearning")
+const MCaderwiseEarning = require("./route/MCaderwiseEarning")
+const MCaderwiseDeduction = require("./route/MCaderwiseDeduction")
 
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());
@@ -88,6 +89,7 @@ app.use("/advance-request", AdvanceRequest);
 app.use("/employee-wise-earning", MEmployeewiseEarning);
 app.use("/employee-wise-deductions", MEmployeewiseDeduction);
 app.use("/caderwise-earning", MCaderwiseEarning)
+app.use("/caderwise-deduction", MCaderwiseDeduction)
 app.use("/job-type", MJobType);
 
 // Start the server

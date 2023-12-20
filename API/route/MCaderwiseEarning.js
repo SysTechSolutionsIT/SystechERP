@@ -169,12 +169,19 @@ MCaderwiseEarning.sync()
   const generateCaderwiseEarningId = async (req, res, next) => {
     console.log("Request body:", req.body);
     try {
-        const totalRecords = await MCaderwiseEarning.count();
-        const newId = (totalRecords + 1).toString().padStart(4, "0");
+        if (req.body.IUFlag === "D") {
+            // For single-item delete operation
+            const CaderwiseEarningId = req.body.CaderwiseEarningId;
+            req.body.CaderwiseEarningId = CaderwiseEarningId;
+        } else {
+            // For other operations, generate newId for each item
+            const totalRecords = await MCaderwiseEarning.count();
+            const newId = (totalRecords + 1).toString().padStart(4, "0");
 
-        req.body.forEach((item) => {
-            item.CaderwiseEarningId = newId;
-        });
+            req.body.forEach((item) => {
+                item.CaderwiseEarningId = newId;
+            });
+        }
 
         next();
     } catch (error) {
@@ -182,6 +189,7 @@ MCaderwiseEarning.sync()
         res.status(500).send("Internal Server Error");
     }
 };
+
   
   router.post(
     "/FnAddUpdateDeleteRecord",

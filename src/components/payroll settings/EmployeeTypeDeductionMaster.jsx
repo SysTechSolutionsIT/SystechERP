@@ -4,16 +4,16 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../Login';
 import { useRef } from 'react';
 import { Icon } from '@iconify/react';
-import EmployeeTypeEarningModal from './EmployeeTypeEarningModal';
+import EmployeeTypeDeductionModal from './EmployeeTypeDeductionModal';
 
-const EmployeeTypeEarningMaster = () => {
-const [isModalOpen, setModalOpen] = useState(false);
+const EmployeeTypeDeductionMaster = () => {
+    const [isModalOpen, setModalOpen] = useState(false);
 const [filteredData, setFilteredData] = useState([]);
 const [ caderwiseHeads, setCaderwiseHeads ] = useState([])
 const { token } = useAuth();
 
 // View and Edit
-const [veEarningH, setVeEarningH] = useState(false);
+const [veDeductionH, setVeDeductionH] = useState(false);
 const [edit, setEdit] = useState(false);
 const [EHid, setEHid] = useState();
 
@@ -22,12 +22,12 @@ const [menuOpen, setMenuOpen] = useState(false);
 const menuRef = useRef(null);
 
 const [columnVisibility, setColumnVisibility] = useState({
-    CaderwiseEarningDate: true,
+    CaderwiseDeductionDate: true,
     EmployeeTypeId: true,
     EmployeeType: true,
     EmployeeTypeGroup: true,
-    EarningHeadId: true,
-    EarningHead: true,
+    DeductionHeadId: true,
+    DeductionHead: true,
     ECalculationType: true,
     ECalculationValue: true,
     Formula: true,
@@ -35,12 +35,12 @@ const [columnVisibility, setColumnVisibility] = useState({
   });
 
   const columnNames = {
-    CaderwiseEarningDate: "Date",
+    CaderwiseDeductionDate: "Date",
     EmployeeTypeId: "Employee Type Id",
     EmployeeType: "Employee Type",
     EmployeeTypeGroup: "Employee Type Group",
-    EarningHeadId: "Earning Head Id",
-    EarningHead: "Earning Head",
+    DeductionHeadId: "Deduction Head Id",
+    DeductionHead: "Deduction Head",
     ECalculationType: "Calculation Type",
     ECalculationValue: "Calculation Value",
     Formula: "Formula",
@@ -125,7 +125,7 @@ const [columnVisibility, setColumnVisibility] = useState({
       useEffect(() =>{
         const fetchCaderwiseHeads = async () =>{
             try {
-                const response = await axios.get('http://localhost:5500/caderwise-earning/FnShowActiveData',
+                const response = await axios.get('http://localhost:5500/caderwise-deduction/FnShowActiveData',
                 { headers: { Authorization: `Bearer ${token}`}}
                 )
                 const data = response.data
@@ -137,17 +137,17 @@ const [columnVisibility, setColumnVisibility] = useState({
         fetchCaderwiseHeads()
       },[token])
 
-      const deleteEmployeeTypeEarning = async(CaderwiseId, EarningHeadId) =>{
-        const confirmDelete = window.confirm('Are you sure you want to delete this Earning Head?')
+      const deleteEmployeeTypeDeduction = async(CaderwiseId, DeductionHeadId) =>{
+        const confirmDelete = window.confirm('Are you sure you want to delete this Deduction Head?')
         if(!confirmDelete){ return }
         try {
-          const response = await axios.post('http://localhost:5500/caderwise-earning/FnAddUpdateDeleteRecord',{
-            CaderwiseEarningId: CaderwiseId,
+          const response = await axios.post('http://localhost:5500/caderwise-deduction/FnAddUpdateDeleteRecord',{
+            CaderwiseDeductionId: CaderwiseId,
             IUFlag: 'D'
           },
           { headers:{Authorization: `Bearer ${token}`}}
           )
-          alert('Earning Head Deleted')
+          alert('Deduction Head Deleted')
         } catch (error) {
           console.error('Error', error);
         }
@@ -172,110 +172,110 @@ const [columnVisibility, setColumnVisibility] = useState({
         setFilteredData(newFilter);
       };
 
-      return (
-        <div className="top-25 min-w-[40%]">
-          <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
-            <div className="mr-auto text-[15px]">
-              Payroll Settings / Employee Type Earning Master
-            </div>
-            <div className="flex gap-4">
+  return (
+    <div className="top-25 min-w-[40%]">
+    <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
+      <div className="mr-auto text-[15px]">
+        Payroll Settings / Employee Type Deduction Master
+      </div>
+      <div className="flex gap-4">
+        <button
+          onClick={() => setShowDropdown(!showDropdown)}
+          className="flex text-[13px] bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap"
+        >
+          Column Visibility
+          <Icon
+            icon="fe:arrow-down"
+            className={`mt-1.5 ml-2 ${
+              showDropdown ? "rotate-180" : ""
+            } cursor-pointer`}
+          />
+        </button>
+        {showDropdown && (
+          <div className="absolute top-32 bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50">
+            {/* Dropdown content */}
+            <div className="flex items-center mb-2">
               <button
-                onClick={() => setShowDropdown(!showDropdown)}
-                className="flex text-[13px] bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap"
+                className="text-blue-500 hover:text-blue-700 underline mr-2 text-[13px]"
+                onClick={selectAllColumns}
               >
-                Column Visibility
-                <Icon
-                  icon="fe:arrow-down"
-                  className={`mt-1.5 ml-2 ${
-                    showDropdown ? "rotate-180" : ""
-                  } cursor-pointer`}
+                Select All
+              </button>
+              <button
+                className="text-blue-500 hover:text-blue-700 underline text-[13px]"
+                onClick={deselectAllColumns}
+              >
+                Deselect All
+              </button>
+            </div>
+            {Object.keys(columnVisibility).map((columnName) => (
+              <label
+                key={columnName}
+                className="flex items-center capitalize text-black text-[13px]"
+              >
+                <input
+                  type="checkbox"
+                  className="mr-2"
+                  checked={selectedColumns.includes(columnName)}
+                  onChange={() => toggleColumn(columnName)}
                 />
-              </button>
-              {showDropdown && (
-                <div className="absolute top-32 bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50">
-                  {/* Dropdown content */}
-                  <div className="flex items-center mb-2">
-                    <button
-                      className="text-blue-500 hover:text-blue-700 underline mr-2 text-[13px]"
-                      onClick={selectAllColumns}
-                    >
-                      Select All
-                    </button>
-                    <button
-                      className="text-blue-500 hover:text-blue-700 underline text-[13px]"
-                      onClick={deselectAllColumns}
-                    >
-                      Deselect All
-                    </button>
-                  </div>
-                  {Object.keys(columnVisibility).map((columnName) => (
-                    <label
-                      key={columnName}
-                      className="flex items-center capitalize text-black text-[13px]"
-                    >
-                      <input
-                        type="checkbox"
-                        className="mr-2"
-                        checked={selectedColumns.includes(columnName)}
-                        onChange={() => toggleColumn(columnName)}
-                      />
-                      <span
-                        className={
-                          selectedColumns.includes(columnName)
-                            ? "font-semibold"
-                            : ""
-                        }
-                      >
-                        {columnName}
-                      </span>
-                    </label>
-                  ))}
-                </div>
-              )}
-    
-              <button
-                className="text-white font-semibold px-4 rounded-lg text-[13px] border border-white"
-                onClick={() => setModalOpen(true)}
-              >
-                Add
-              </button>
-              <div className="flex items-center">
-                <button
-                  className=" cursor-pointer"
-                  onClick={() => setMenuOpen(!menuOpen)}
+                <span
+                  className={
+                    selectedColumns.includes(columnName)
+                      ? "font-semibold"
+                      : ""
+                  }
                 >
-                  <Icon icon="carbon:menu" color="white" width="27" height="27" />
-                </button>
-                {menuOpen && (
-                  <div
-                    ref={menuRef}
-                    className="w-24 -ml-10 flex flex-col absolute lg:top-32 bg-white border border-gray-300 shadow-md rounded-lg p-1 items-center"
-                  >
-                    <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2 z-50">
-                      Copy
-                    </button>
-                    <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2 z-50">
-                      CSV
-                    </button>
-                    <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
-                      Excel
-                    </button>
-                    <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
-                      PDF
-                    </button>
-                    <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
-                      Print
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
+                  {columnName}
+                </span>
+              </label>
+            ))}
           </div>
-          <EmployeeTypeEarningModal
+        )}
+
+        <button
+          className="text-white font-semibold px-4 rounded-lg text-[13px] border border-white"
+          onClick={() => setModalOpen(true)}
+        >
+          Add
+        </button>
+        <div className="flex items-center">
+          <button
+            className=" cursor-pointer"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <Icon icon="carbon:menu" color="white" width="27" height="27" />
+          </button>
+          {menuOpen && (
+            <div
+              ref={menuRef}
+              className="w-24 -ml-10 flex flex-col absolute lg:top-32 bg-white border border-gray-300 shadow-md rounded-lg p-1 items-center"
+            >
+              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2 z-50">
+                Copy
+              </button>
+              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2 z-50">
+                CSV
+              </button>
+              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+                Excel
+              </button>
+              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+                PDF
+              </button>
+              <button className="bg-white text-[13px] text-blue-900 border border-blue-900 font-semibold hover:bg-blue-900 hover:text-white ease-in-out duration-200 py-1 px-4 rounded-lg mb-2">
+                Print
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+    <EmployeeTypeDeductionModal
             visible={isModalOpen}
             onClick={() => setModalOpen(false)}
           />
-          <div className="grid gap-4  justify-between">
+              <div className="grid gap-4  justify-between">
             <div className="my-1 rounded-2xl bg-white p-2 pr-8">
               <table className="min-w-full text-center  rounded-lg justify-center whitespace-normal">
                 <thead>
@@ -332,7 +332,7 @@ const [columnVisibility, setColumnVisibility] = useState({
                                 width="20"
                                 height="20"
                                 className="cursor-pointer"
-                                onClick={() => deleteEmployeeTypeEarning(result.CaderwiseEarningId, result.EarningHeadId)}
+                                // onClick={() => deleteEmployeeTypeEarning(result.CaderwiseEarningId, result.EarningHeadId)}
                               />
                             </div>
                           </td>
@@ -362,7 +362,7 @@ const [columnVisibility, setColumnVisibility] = useState({
                                 width="20"
                                 height="20"
                                 className="cursor-pointer"
-                                onClick={() => deleteEmployeeTypeEarning(result.CaderwiseEarningId, result.EarningHeadId)}
+                                // onClick={() => deleteEmployeeTypeEarning(result.CaderwiseEarningId, result.EarningHeadId)}
                               />
                             </div>
                           </td>
@@ -397,15 +397,8 @@ const [columnVisibility, setColumnVisibility] = useState({
               </table>
             </div>
           </div>
-          {/* <ViewEarningHeads
-            visible={veEarningH}
-            onClick={() => setVeEarningH(false)}
-            edit={edit}
-            ID={EHid}
-          /> */}
         </div>
       );
-    
 }
 
-export default EmployeeTypeEarningMaster
+export default EmployeeTypeDeductionMaster
