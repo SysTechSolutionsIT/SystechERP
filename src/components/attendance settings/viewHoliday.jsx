@@ -11,32 +11,40 @@ const ViewHoliday = ({ visible, onClick, edit, ID }) => {
   const { token } = useAuth();
   const formik = useFormik({
     initialValues: {
-      description: "",
-      date: "",
-      type: "",
-      year: "",
-      remark: "",
-      status: "",
+      HolidayDate: "",
+      HolidayType: "",
+      HolidayDescription: "",
+      FYear: "",
+      Remark: "",
+      AcFlag: "Y",
+      IUFlag: "U",
+      AcFlag: "",
     },
     onSubmit: async (values) => {
-      const status = state === true;
-
       const formData = {
-        description: values.description,
-        date: values.date,
-        type: values.type,
-        year: values.year,
-        remark: values.remark,
-        status: status,
+        HolidayId: ID,
+        HolidayDate: values.HolidayDate,
+        HolidayType: values.HolidayType,
+        HolidayDescription: values.HolidayDescription,
+        FYear: values.FYear,
+        AcFlag: "Y",
+        IUFlag: "U",
+        ModifiedOn: new Date(),
+        Remark: values.Remark,
       };
       onClick();
       console.log(formData);
       axios
-        .patch(`http://localhost:5500/holiday-master/update/${ID}`, formData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+        .post(
+          `http://localhost:5500/holiday-master/FnAddUpdateDeleteRecord`,
+          formData,
+          {
+            params: { HolidayId: ID },
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
         .then((response) => {
           // Handle success
           console.log("Data updated successfully", response);
@@ -52,14 +60,15 @@ const ViewHoliday = ({ visible, onClick, edit, ID }) => {
   });
 
   useEffect(() => {
-    fetchShiftData();
+    fetchHolidayData();
   }, [ID]);
   console.log(ID);
-  const fetchShiftData = async () => {
+  const fetchHolidayData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5500/holiday-master/get/${ID}`,
+        `http://localhost:5500/holiday-master/FnShowParticularData`,
         {
+          params: { HolidayId: ID },
           headers: { Authorization: `Bearer ${token}` },
         }
       );
@@ -77,12 +86,11 @@ const ViewHoliday = ({ visible, onClick, edit, ID }) => {
   useEffect(() => {
     if (details) {
       formik.setValues({
-        description: details.description,
-        date: details.date,
-        type: details.type,
-        year: details.year,
-        remark: details.remark,
-        status: details.status,
+        HolidayDate: details.HolidayDate,
+        HolidayType: details.HolidayType,
+        HolidayDescription: details.HolidayDescription,
+        FYear: details.FYear,
+        Remark: details.Remark,
       });
     }
   }, [details]);
@@ -110,10 +118,10 @@ const ViewHoliday = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Holiday ID</p>
                 <input
-                  id="id"
+                  id="HolidayId"
                   type="text"
                   placeholder="Enter Holiday ID"
-                  value={details.id}
+                  value={details?.HolidayId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={true}
@@ -122,10 +130,10 @@ const ViewHoliday = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Holiday Description</p>
                 <input
-                  id="description"
+                  id="HolidayDescription"
                   type="text"
                   placeholder="Enter Holiday Description"
-                  value={formik.values.description}
+                  value={formik.values.HolidayDescription}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -134,10 +142,10 @@ const ViewHoliday = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Holiday Date</p>
                 <input
-                  id="date"
+                  id="HolidayDate"
                   type="date"
                   placeholder="Enter Holiday Date"
-                  value={formik.values.date}
+                  value={formik.values.HolidayDate}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -151,9 +159,9 @@ const ViewHoliday = ({ visible, onClick, edit, ID }) => {
                   <label className="flex items-center">
                     <input
                       type="radio"
-                      id="type"
+                      name="HolidayType"
                       value="Paid"
-                      checked={formik.values.type === "Paid"}
+                      checked={formik.values.HolidayType === "Paid"}
                       onChange={formik.handleChange}
                       className="mr-2"
                       disabled={!edit}
@@ -163,9 +171,9 @@ const ViewHoliday = ({ visible, onClick, edit, ID }) => {
                   <label className="flex items-center">
                     <input
                       type="radio"
-                      id="type"
-                      value="unpaid"
-                      checked={formik.values.type === "Unpaid"}
+                      name="HolidayType"
+                      value="Unpaid"
+                      checked={formik.values.HolidayType === "Unpaid"}
                       onChange={formik.handleChange}
                       className="mr-2"
                       disabled={!edit}
@@ -175,9 +183,9 @@ const ViewHoliday = ({ visible, onClick, edit, ID }) => {
                   <label className="flex items-center">
                     <input
                       type="radio"
-                      id="type"
+                      name="HolidayType"
                       value="weekOff"
-                      checked={formik.values.type === "weekOff"}
+                      checked={formik.values.HolidayType === "weekOff"}
                       onChange={formik.handleChange}
                       className="mr-2"
                       disabled={!edit}
@@ -189,34 +197,14 @@ const ViewHoliday = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Remarks</p>
                 <input
-                  id="remark"
+                  id="Remark"
                   type="text"
                   placeholder="Enter Remarks"
-                  value={formik.values.remark}
+                  value={formik.values.Remark}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
-              </div>
-              <div>
-                <p className="text-[13px] font-semibold">Status</p>
-                <div className="flex items-center">
-                  <input
-                    id="status"
-                    type="checkbox"
-                    checked={details?.status || false}
-                    className={` relative w-4 h-4 mr-2 peer shrink-0 appearance-none checked:bg-blue-800 border-2 border-blue-900 rounded-sm`}
-                    onChange={() => setState(!state)}
-                  />
-                  <Icon
-                    className="absolute w-4 h-4 hidden peer-checked:block"
-                    icon="gg:check"
-                    color="white"
-                  />
-                  <label for="status" className="text-[11px] font-semibold">
-                    Active
-                  </label>
-                </div>
               </div>
             </div>
           </div>

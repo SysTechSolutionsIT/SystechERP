@@ -8,31 +8,34 @@ import { useAuth } from "../Login";
 const ViewAtt = ({ visible, onClick, edit, ID }) => {
   const [details, setDetails] = useState([]);
   const { token } = useAuth();
-  const [state, setState] = useState(false);
-
   const formik = useFormik({
     initialValues: {
       DeviceName: "",
       IpAddress: "",
-      Port: "",
+      PortNo: "",
       Remark: "",
-      Status: state,
+      AcFlag: "Y",
+      IUFlag: "U",
+      modifiedOn: new Date(),
     },
     onSubmit: async (values) => {
-      const status = state === true;
       const formData = {
+        DeviceId: ID,
         DeviceName: values.DeviceName,
         IpAddress: values.IpAddress,
-        Port: values.Port,
+        PortNo: values.PortNo,
         Remark: values.Remark,
-        Status: status,
+        AcFlag: "Y",
+        IUFlag: "U",
+        modifiedOn: new Date(),
       };
       console.log(formData);
       axios
-        .patch(
-          `http://localhost:5500/attendance-master/update-record/${ID}`,
+        .post(
+          `http://localhost:5500/device/FnAddUpdateDeleteRecord`,
           formData,
           {
+            params: { DeviceId: ID },
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -59,13 +62,14 @@ const ViewAtt = ({ visible, onClick, edit, ID }) => {
   const fetchAttData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5500/attendance-master/${ID}`,
+        `http://localhost:5500/device/FnShowParticularData`,
         {
+          params: { DeviceId: ID },
           headers: { Authorization: `Bearer ${token}` },
         }
       );
       console.log("Response Object", response);
-      const data = response.data.record;
+      const data = response.data;
       setDetails(data);
       console.log(data);
     } catch (error) {
@@ -78,9 +82,8 @@ const ViewAtt = ({ visible, onClick, edit, ID }) => {
       formik.setValues({
         DeviceName: details.DeviceName,
         IpAddress: details.IpAddress,
-        Port: details.Port,
+        PortNo: details.PortNo,
         Remark: details.Remark,
-        Status: details.Status,
       });
     }
   }, [details]);
@@ -144,10 +147,10 @@ const ViewAtt = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Port No.</p>
                 <input
-                  id="Port"
+                  id="PortNo"
                   type="text"
                   placeholder="Enter Port No."
-                  value={formik.values.Port}
+                  value={formik.values.PortNo}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
@@ -156,7 +159,7 @@ const ViewAtt = ({ visible, onClick, edit, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Remarks</p>
                 <input
-                  id="remark"
+                  id="Remark"
                   type="text"
                   placeholder="Enter Remarks"
                   value={formik.values.Remark}
@@ -164,27 +167,6 @@ const ViewAtt = ({ visible, onClick, edit, ID }) => {
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
-              </div>
-              <div>
-                <p className="text-[13px] font-semibold">Status</p>
-                <div className="flex items-center">
-                  <input
-                    id="Status"
-                    type="checkbox"
-                    checked={formik.values.Status}
-                    value={state}
-                    className={` relative w-4 h-4 mr-2 peer shrink-0 appearance-none checked:bg-blue-800 border-2 border-blue-900 rounded-sm`}
-                    onChange={() => setState(!state)}
-                  />
-                  <Icon
-                    className="absolute w-4 h-4 hidden peer-checked:block"
-                    icon="gg:check"
-                    color="white"
-                  />
-                  <label for="status" className="text-[11px] font-semibold">
-                    Active
-                  </label>
-                </div>
               </div>
             </div>
           </div>

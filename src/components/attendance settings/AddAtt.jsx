@@ -8,30 +8,32 @@ import { useAuth } from "../Login";
 const AddAtt = ({ visible, onClick }) => {
   const [details, setDetails] = useState([]);
   const { token } = useAuth();
-  const [state, setState] = useState(false);
 
   const formik = useFormik({
     initialValues: {
       DeviceName: "",
       IpAddress: "",
-      Port: "",
+      PortNo: "",
       Remark: "",
-      Status: state,
+      AcFlag: "Y",
+      IUFlag: "I",
+      createdOn: new Date(),
     },
     onSubmit: async (values) => {
-      const status = state === true;
       const formData = {
         DeviceName: values.DeviceName,
         IpAddress: values.IpAddress,
-        Port: values.Port,
+        PortNo: values.PortNo,
         Remark: values.Remark,
-        Status: status,
+        AcFlag: "Y",
+        IUFlag: "I",
+        createdOn: new Date(),
       };
 
       console.log(formData);
       try {
         const response = await axios.post(
-          "http://localhost:5500/attendance-master/add-record",
+          "http://localhost:5500/device/FnAddUpdateDeleteRecord",
           formData,
           {
             headers: {
@@ -39,7 +41,7 @@ const AddAtt = ({ visible, onClick }) => {
             },
           }
         );
-        if (response.status === 201) {
+        if (response.status === 200) {
           const data = response.data;
           console.log(data);
           alert("Record added successfully");
@@ -102,10 +104,10 @@ const AddAtt = ({ visible, onClick }) => {
               <div>
                 <p className="text-[13px] font-semibold">Port No</p>
                 <input
-                  id="Port"
+                  id="PortNo"
                   type="text"
                   placeholder="Enter Port No"
-                  value={formik.values.Port}
+                  value={formik.values.PortNo}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -120,28 +122,6 @@ const AddAtt = ({ visible, onClick }) => {
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
-              </div>
-              <div>
-                <p className="text-[13px] font-semibold">Status</p>
-                <div className="flex items-center">
-                  <input
-                    id="status"
-                    type="checkbox"
-                    checked={state}
-                    className={`w-5 h-5 mr-2 mt-4 focus:outline-gray-300 border border-blue-900 rounded-lg`}
-                    onChange={() => {
-                      setState(!state);
-                    }}
-                  />
-                  <Icon
-                    className="absolute w-4 h-4 hidden peer-checked:block"
-                    icon="gg:check"
-                    color="white"
-                  />
-                  <label for="status" className="text-[11px] font-semibold">
-                    Active
-                  </label>
-                </div>
               </div>
             </div>
           </div>

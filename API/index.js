@@ -27,7 +27,7 @@ const MShift = require("./route/MShift");
 // const LeaveApplication = require("./route/LeaveApplicationRoute");
 const MWeeklyOff = require("./route/MWeeklyOff");
 const EarningHeadsMaster = require("./route/MEarningHeads");
-// const HolidayMaster = require("./route/HolidayMasterRoute");
+const MHoliday = require("./route/MHoliday");
 const DeductionHeadsMaster = require("./route/MDeductionHeads");
 const ProfessionalTaxMaster = require("./route/MProfessTax");
 const AdvanceRequest = require("./route/TAdvanceRequest");
@@ -44,9 +44,9 @@ const MDepartment = require("./route/MDepartment");
 const MEmployeewiseEarning = require("./route/MEmployeewiseEarning");
 const MEmployeewiseDeduction = require("./route/MEmployeewiseDeduction");
 const MJobType = require("./route/MJobType");
-const MCaderwiseEarning = require("./route/MCaderwiseEarning")
+const MCaderwiseEarning = require("./route/MCaderwiseEarning");
 const MCaderwiseDeduction = require("./route/MCaderwiseDeduction")
-
+const MDevice = require("./route/MDeviceRoute");
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());
 // Use the user routes
@@ -65,7 +65,7 @@ app.use("/departmentmaster", MDepartment);
 // app.use("/threefieldmaster", ThreeFieldMaster);
 // app.use("/twofieldmaster", TwoFieldMaster);
 app.use("/financials", MFinancialYear);
-app.use("/job-type",MJobType)
+app.use("/job-type", MJobType);
 // app.use("/destinationmaster", DestinationMaster);
 app.use("/cost-center", CCMaster);
 app.use("/employee-type", MEmployeeType);
@@ -78,7 +78,7 @@ app.use("/shift-master", MShift);
 // app.use("/leave-application", LeaveApplication);
 app.use("/weekly-off", MWeeklyOff);
 app.use("/earning-heads", EarningHeadsMaster);
-// app.use("/holiday-master", HolidayMaster);
+app.use("/holiday-master", MHoliday);
 app.use("/deduction-heads", DeductionHeadsMaster);
 app.use("/professional-tax", ProfessionalTaxMaster);
 app.use("/advance-request", AdvanceRequest);
@@ -88,9 +88,10 @@ app.use("/advance-request", AdvanceRequest);
 // app.use("/currency", Currencies);
 app.use("/employee-wise-earning", MEmployeewiseEarning);
 app.use("/employee-wise-deductions", MEmployeewiseDeduction);
-app.use("/caderwise-earning", MCaderwiseEarning)
+app.use("/caderwise-earning", MCaderwiseEarning);
 app.use("/caderwise-deduction", MCaderwiseDeduction)
 app.use("/job-type", MJobType);
+app.use("/device", MDevice);
 
 // Start the server
 const port = 5500;
