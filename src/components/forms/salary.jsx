@@ -99,6 +99,7 @@ const SalaryStructure = ({ID, name}) => {
     }
   };
 
+
   useEffect(() => {
     const fetchEmpSalary = async () => {
       try {

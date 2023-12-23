@@ -7,7 +7,7 @@ const DeductionHeadsTable = ({ ID }) => {
   console.log("ID in deduciton", ID);
   const { token } = useAuth();
   const { employeeTypeId } = useEmployeeType();
-  console.log("Employee type id", employeeTypeId);
+  const [ caderwiseDeductions, setCaderwiseDeductions ] = useState([])
   const [selectedHeads, setSelectedHeads] = useState([]);
   const [details, setDetails] = useState([]);
   const [heads, setHeads] = useState([]);
@@ -54,6 +54,33 @@ const DeductionHeadsTable = ({ ID }) => {
     };
     fetchEmpSalary();
   }, [ID, token]);
+
+  useEffect(() => {
+    const fetchCaderwiseDeduction = async () =>{
+      try {
+        const response = await axios.get('http://localhost:5500/caderwise-deduction/FnShowParticularData',
+        {
+          params: { EmployeeTypeId: employeeTypeId },
+          headers: { Authorization: `Bearer ${token}`}
+        })
+        const data = response.data
+        console.log('Caderwise Deductions', data)
+        setCaderwiseDeductions(data)
+      } catch (error) {
+        console.error('Error', error);
+      }
+    }
+    fetchCaderwiseDeduction()
+  }, [token])
+
+  useEffect(() => {
+    const updatedHeads = heads.map(head => ({
+      ...head,
+      Selected: caderwiseDeductions.some(deduction => deduction.DeductionHeadID === head.DeductionHeadID)
+    }));
+
+    setHeads(updatedHeads);
+  }, [caderwiseDeductions]);
 
   useEffect(() => {
     const fetchEmployeeTypes = async () => {

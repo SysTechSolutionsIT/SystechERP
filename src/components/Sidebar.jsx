@@ -416,6 +416,11 @@ const Sidebar = () => {
                         }
                       />
                       <SubMenuEntry
+                        title="Employee Type Deduction Master"
+                        onClick={() => 
+                        navigate('/employee-type-deduction')}
+                      />
+                      <SubMenuEntry
                         title="Professional Tax Setting"
                         onClick={() => navigate("/professional-tax-master")}
                       />
