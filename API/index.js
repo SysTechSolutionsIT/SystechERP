@@ -46,6 +46,7 @@ const MEmployeewiseDeduction = require("./route/MEmployeewiseDeduction");
 const MJobType = require("./route/MJobType");
 const MCaderwiseEarning = require("./route/MCaderwiseEearning");
 const MDevice = require("./route/MDeviceRoute");
+const TManualAttendance = require("./route/TManualAttendance");
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());
 // Use the user routes
@@ -90,6 +91,7 @@ app.use("/employee-wise-deductions", MEmployeewiseDeduction);
 app.use("/caderwise-earning", MCaderwiseEarning);
 app.use("/job-type", MJobType);
 app.use("/device", MDevice);
+app.use("/manual-attendance", TManualAttendance);
 
 // Start the server
 const port = 5500;

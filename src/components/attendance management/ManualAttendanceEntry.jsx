@@ -4,151 +4,9 @@ import { useAuth } from "../Login";
 import { useRef } from "react";
 import { Icon } from "@iconify/react";
 import ManualAttendanceEntryModal from "./ManualAttendanceEntryModal";
+import axios from "axios";
 
 const ManualAttendanceEntry = () => {
-  const attData = [
-    {
-      ApprovalFlag: true,
-      AttendanceID: "001",
-      AttendanceDate: "2023-11-01",
-      FYear: "2023",
-      EmployeeType: "Full-time",
-      EmployeeName: "John Doe",
-      Shift: "Morning",
-      InTime: "08:00 AM",
-      OutTime: "05:00 PM",
-      JobType: "Regular",
-      SanctionBy: "Manager A",
-      Status: true,
-    },
-    {
-      ApprovalFlag: false,
-      AttendanceID: "002",
-      AttendanceDate: "2023-11-02",
-      FYear: "2023",
-      EmployeeType: "Part-time",
-      EmployeeName: "Jane Smith",
-      Shift: "Evening",
-      InTime: "03:00 PM",
-      OutTime: "08:00 PM",
-      JobType: "Temporary",
-      SanctionBy: "Manager B",
-      Status: false,
-    },
-    {
-      ApprovalFlag: true,
-      AttendanceID: "003",
-      AttendanceDate: "2023-11-03",
-      FYear: "2023",
-      EmployeeType: "Full-time",
-      EmployeeName: "Alice Johnson",
-      Shift: "Morning",
-      InTime: "09:00 AM",
-      OutTime: "06:00 PM",
-      JobType: "Regular",
-      SanctionBy: "Manager C",
-      Status: true,
-    },
-    {
-      ApprovalFlag: false,
-      AttendanceID: "004",
-      AttendanceDate: "2023-11-04",
-      FYear: "2023",
-      EmployeeType: "Part-time",
-      EmployeeName: "Bob Wilson",
-      Shift: "Evening",
-      InTime: "04:00 PM",
-      OutTime: "09:00 PM",
-      JobType: "Temporary",
-      SanctionBy: "Manager D",
-      Status: false,
-    },
-    {
-      ApprovalFlag: true,
-      AttendanceID: "005",
-      AttendanceDate: "2023-11-05",
-      FYear: "2023",
-      EmployeeType: "Full-time",
-      EmployeeName: "Eva Davis",
-      Shift: "Morning",
-      InTime: "08:30 AM",
-      OutTime: "05:30 PM",
-      JobType: "Regular",
-      SanctionBy: "Manager A",
-      Status: true,
-    },
-    {
-      ApprovalFlag: false,
-      AttendanceID: "006",
-      AttendanceDate: "2023-11-06",
-      FYear: "2023",
-      EmployeeType: "Part-time",
-      EmployeeName: "Mike Brown",
-      Shift: "Evening",
-      InTime: "03:30 PM",
-      OutTime: "08:30 PM",
-      JobType: "Temporary",
-      SanctionBy: "Manager B",
-      Status: false,
-    },
-    {
-      ApprovalFlag: true,
-      AttendanceID: "007",
-      AttendanceDate: "2023-11-07",
-      FYear: "2023",
-      EmployeeType: "Full-time",
-      EmployeeName: "Grace Lee",
-      Shift: "Morning",
-      InTime: "09:15 AM",
-      OutTime: "06:15 PM",
-      JobType: "Regular",
-      SanctionBy: "Manager C",
-      Status: true,
-    },
-    {
-      ApprovalFlag: false,
-      AttendanceID: "008",
-      AttendanceDate: "2023-11-08",
-      FYear: "2023",
-      EmployeeType: "Part-time",
-      EmployeeName: "Tom Clark",
-      Shift: "Evening",
-      InTime: "04:15 PM",
-      OutTime: "09:15 PM",
-      JobType: "Temporary",
-      SanctionBy: "Manager D",
-      Status: false,
-    },
-    {
-      ApprovalFlag: true,
-      AttendanceID: "009",
-      AttendanceDate: "2023-11-09",
-      FYear: "2023",
-      EmployeeType: "Full-time",
-      EmployeeName: "Linda Martinez",
-      Shift: "Morning",
-      InTime: "08:45 AM",
-      OutTime: "05:45 PM",
-      JobType: "Regular",
-      SanctionBy: "Manager A",
-      Status: true,
-    },
-    {
-      ApprovalFlag: false,
-      AttendanceID: "010",
-      AttendanceDate: "2023-11-10",
-      FYear: "2023",
-      EmployeeType: "Part-time",
-      EmployeeName: "Chris Rodriguez",
-      Shift: "Evening",
-      InTime: "03:45 PM",
-      OutTime: "08:45 PM",
-      JobType: "Temporary",
-      SanctionBy: "Manager B",
-      Status: false,
-    },
-  ];
-
   const [filteredData, setFilteredData] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false); //Add Modal
   const [manualAttendanceEntry, setManualAttendanceEntry] = useState([]);
@@ -158,27 +16,114 @@ const ManualAttendanceEntry = () => {
   const [edit, setEdit] = useState(false);
   const [LeaveId, setLeaveId] = useState();
 
+  // React Arrays
+  const [employeeTypeMapping, setEmployeeTypes] = useState([]);
+  const [employeeIdMapping, setDetails] = useState([]);
+  const [shiftMapping, setShift] = useState([]);
+  const [jobTypeMapping, setJobs] = useState([]);
+
+  //Fetching employee names and IDs
   useEffect(() => {
-    setManualAttendanceEntry(attData);
-  }, [attData]);
+    const fetchData = async () => {
+      try {
+        const [
+          detailsResponse,
+          employeeTypesResponse,
+          shiftsResponse,
+          jobsResponse,
+        ] = await Promise.all([
+          axios.get(
+            "http://localhost:5500/employee/personal/FnShowActiveData",
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          ),
+          axios.get("http://localhost:5500/employee-type/FnShowActiveData", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          axios.get("http://localhost:5500/shift-master/FnShowActiveData", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          axios.get("http://localhost:5500/job-type/FnShowActiveData", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
 
-  // useEffect(() => {
-  //   const fetchManualAttendance = async () => {
-  //     try {
-  //       const response = await axios.get('http://localhost:5500/leave-master/get', {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`
-  //         }
-  //       })
-  //       const data = response.data
-  //       setmanualAttendanceEntry(data)
-  //     } catch (error) {
-  //       console.error('Error', error);
-  //     }
-  //   }
+        setDetails(detailsResponse.data);
+        setEmployeeTypes(employeeTypesResponse.data);
+        setShift(shiftsResponse.data);
+        setJobs(jobsResponse.data);
+      } catch (error) {
+        console.error("Error while fetching data: ", error);
+      }
+    };
 
-  //   fetchLeaveType()
-  // }, [token])
+    fetchData();
+  }, [token]);
+
+  const renderColumnValue = (columnName, result) => {
+    switch (columnName) {
+      case "EmployeeTypeId":
+        const employeeTypeValue =
+          employeeTypeMapping.length &&
+          employeeTypeMapping.find(
+            (item) => item.EmployeeTypeId == result[columnName]
+          )?.EmployeeTypeGroup;
+
+        console.log("EmployeeTypeValue:", employeeTypeValue);
+        return employeeTypeValue;
+
+      case "EmployeeId":
+        const employeeIdValue =
+          employeeIdMapping.length &&
+          employeeIdMapping.find(
+            (item) => item.EmployeeId == result[columnName]
+          )?.EmployeeName;
+        return employeeIdValue;
+
+      case "ShiftId":
+        const shiftValue =
+          shiftMapping.length &&
+          shiftMapping.find((item) => item.ShiftId == result[columnName]);
+        return shiftValue?.ShiftName;
+
+      case "JobTypeId":
+        const jobTypeValue = jobTypeMapping.find(
+          (item) => item.JobTypeId == result[columnName]
+        )?.JobTypeName;
+        return jobTypeValue;
+
+      case "AcFlag":
+        const acFlagValue = result[columnName] ? "Active" : "Inactive";
+        return acFlagValue;
+
+      default:
+        return result[columnName];
+    }
+  };
+
+  useEffect(() => {
+    const fetchManualAttendance = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/manual-attendance/FnshowActiveData",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const data = response.data;
+        console.log("Response", response);
+        console.log("data from Manual Attendance:", data);
+        setManualAttendanceEntry(data);
+      } catch (error) {
+        console.error("Error", error);
+      }
+    };
+
+    fetchManualAttendance();
+  }, [token]);
 
   //Hamburger Menu
   const [menuOpen, setMenuOpen] = useState(false);
@@ -186,32 +131,30 @@ const ManualAttendanceEntry = () => {
 
   const [columnVisibility, setColumnVisibility] = useState({
     ApprovalFlag: true,
-    AttendanceID: true,
     AttendanceDate: true,
     FYear: true,
-    EmployeeType: true,
-    EmployeeName: true,
-    Shift: true,
+    EmployeeTypeId: true,
+    EmployeeId: true,
+    ShiftId: true,
     InTime: true,
     OutTime: true,
-    JobType: true,
+    JobTypeId: true,
     SanctionBy: true,
-    Status: true,
+    AcFlag: true,
   });
 
   const columnNames = {
     ApprovalFlag: "Approval Flag",
-    AttendanceID: "Attendance ID",
     AttendanceDate: "Attendance Date",
     FYear: "FYear",
-    EmployeeType: "Employee Type",
-    EmployeeName: "Employee Name",
-    Shift: "Shift",
+    EmployeeTypeId: "Employee Type",
+    EmployeeId: "Employee Name",
+    ShiftId: "Shift",
     InTime: "In Time",
     OutTime: "Out Time",
-    JobType: "Job Type",
+    JobTypeId: "Job Type",
     SanctionBy: "Sanction By",
-    Status: "Status",
+    AcFlag: "Status",
   };
 
   const handleSearchChange = (title, searchWord) => {
@@ -466,7 +409,7 @@ const ManualAttendanceEntry = () => {
                             onClick={() => {
                               setLVE(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setLeaveId(result.id); // Pass ID to VEModal
+                              setLeaveId(result.AttendanceId); // Pass ID to VEModal
                             }}
                           />
                           <Icon
@@ -478,7 +421,7 @@ const ManualAttendanceEntry = () => {
                             onClick={() => {
                               setLVE(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setLeaveId(result.id); // Pass ID to VEModal
+                              setLeaveId(result.AttendanceId); // Pass ID to VEModal
                             }}
                           />
                           <Icon
@@ -491,7 +434,7 @@ const ManualAttendanceEntry = () => {
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {key + 1}
+                        {result.AttendanceId}
                       </td>
                       {selectedColumns.map((columnName) =>
                         columnVisibility[columnName] ? (
@@ -499,7 +442,7 @@ const ManualAttendanceEntry = () => {
                             key={columnName}
                             className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
                           >
-                            {result[columnName]}
+                            {renderColumnValue(columnName, result)}
                           </td>
                         ) : null
                       )}
@@ -518,7 +461,7 @@ const ManualAttendanceEntry = () => {
                             onClick={() => {
                               setLVE(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setLeaveId(result.id); // Pass ID to VEModal
+                              setLeaveId(result.AttendanceId); // Pass ID to VEModal
                             }}
                           />
 
@@ -531,7 +474,7 @@ const ManualAttendanceEntry = () => {
                             onClick={() => {
                               setLVE(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setLeaveId(result.id); // Pass ID to VEModal
+                              setLeaveId(result.AttendanceId); // Pass ID to VEModal
                             }}
                           />
                           <Icon
@@ -544,7 +487,7 @@ const ManualAttendanceEntry = () => {
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {index + 1}
+                        {result.AttendanceId}
                       </td>
                       {selectedColumns.map(
                         (columnName) =>
@@ -555,15 +498,7 @@ const ManualAttendanceEntry = () => {
                                 columnVisibility[columnName] ? "" : "hidden"
                               }`}
                             >
-                              {columnName === "ApprovalFlag"
-                                ? result[columnName]
-                                  ? "Approved"
-                                  : "Unapproved"
-                                : columnName === "Status"
-                                ? result[columnName]
-                                  ? "Active"
-                                  : "Inactive"
-                                : result[columnName]}
+                              {renderColumnValue(columnName, result)}
                             </td>
                           )
                       )}
