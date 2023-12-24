@@ -129,7 +129,7 @@ const AdvanceApproval = () => {
   //Max Searchbar width
   const getColumnMaxWidth = (columnName) => {
     let maxWidth = 0;
-    const allRows = [...advanceData];
+    const allRows = [...AdvanceAppr];
 
     allRows.forEach((row) => {
       const cellContent = row[columnName];
