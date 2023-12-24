@@ -19,6 +19,7 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
   const formik = useFormik({
     initialValues: {
       ApprovalFlag: "P",
+      AttendanceFlag: "",
       AttendanceDate: "",
       FYear: "",
       EmployeeTypeId: "",
@@ -38,6 +39,7 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
       const updatedData = {
         ApprovalFlag: "P",
         FYear: formik.values.FYear,
+        AttendanceDate: formik.values.AttendanceDate,
         EmployeeId: formik.values.EmployeeId,
         EmployeeTypeId: formik.values.EmployeeId,
         EmployeeTypeGroup: formik.values.EmployeeTypeGroup,
@@ -230,7 +232,7 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
                 <p className="text-[13px] font-semibold">Attendance Date</p>
                 <input
                   id="AttendanceDate"
-                  type="date"
+                  type="Date"
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   value={formik.values.AttendanceDate}
                   onChange={formik.handleChange}

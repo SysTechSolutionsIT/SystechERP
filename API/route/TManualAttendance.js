@@ -180,11 +180,11 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
 });
 
 //showing pending entries
-router.get("/FnShowPendingData", authToken, async (req, res) => {
+router.get("/FnShowManualPendingData", authToken, async (req, res) => {
   try {
     const approvedRecords = await TManualAttendance.findAll({
       where: {
-        ApprovalFlag: "Pending",
+        ApprovalFlag: "P",
       },
       attributes: {
         exclude: ["IUFlag"],
