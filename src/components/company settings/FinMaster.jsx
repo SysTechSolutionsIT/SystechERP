@@ -5,68 +5,6 @@ import VEFModal from "./ViewFin";
 import axios from "axios";
 import { useAuth } from "../Login";
 
-export const finData = [
-  {
-    FYearId: 1,
-    Name: "Systech Solutions Pvt. Ltd",
-    ShortName: "SYS",
-    YearClose: 2021,
-    StartDate: 22 / 1 / 22,
-    EndDate: 10 / 8 / 22,
-    Remark: "text",
-    Status: "Active",
-  },
-  {
-    FYearId: 2,
-    Name: "TechCorp Inc.",
-    ShortName: "TCI",
-    YearClose: 2021,
-    StartDate: 22 / 1 / 22,
-    EndDate: 10 / 8 / 22,
-    Remark: "text",
-    Status: "Active",
-  },
-  {
-    FYearId: 3,
-    Name: "Global Finance Group",
-    ShortName: "GFG",
-    StartDate: 22 / 1 / 22,
-    EndDate: 10 / 8 / 22,
-    Remark: "text",
-    YearClose: 2021,
-    Status: "Active",
-  },
-  {
-    FYearId: 4,
-    Name: "Investment Innovators Ltd.",
-    ShortName: "IIL",
-    StartDate: 22 / 1 / 22,
-    EndDate: 10 / 8 / 22,
-    Remark: "text",
-    YearClose: 2021,
-    Status: "Active",
-  },
-  {
-    FYearId: 5,
-    Name: "Capital Ventures International",
-    ShortName: "CVI",
-    StartDate: 22 / 1 / 22,
-    EndDate: 10 / 8 / 22,
-    Remark: "text",
-    YearClose: 2021,
-    Status: "Active",
-  },
-  {
-    FYearId: 6,
-    Name: "Alpha Financial Services",
-    ShortName: "AFS",
-    StartDate: 22 / 1 / 22,
-    EndDate: 10 / 8 / 22,
-    Remark: "text",
-    YearClose: 2021,
-    Status: "Active",
-  },
-];
 
 const FinMaster = () => {
   const [filteredData, setFilteredData] = useState([]);
@@ -87,7 +25,7 @@ const FinMaster = () => {
     EndDate: true,
     ShortName: true,
     YearClose: true,
-    Remark: true,
+    Remark: false,
   });
 
   const columnNames = {
@@ -414,15 +352,9 @@ const FinMaster = () => {
                             columnVisibility[columnName] ? "" : "hidden"
                           }`}
                         >
-                          {columnName === "YearClose"
-                            ? result[columnName]
-                              ? "Active"
-                              : "Inactive"
-                            : columnName === "AcFlag"
-                            ? result[columnName]
-                              ? "Active"
-                              : "Inactive"
-                            : result[columnName]}
+                        {columnName === "YearClose" ? 
+                        (result[columnName] === 'N' ? 'Inactive' : 'Active') 
+                        : result[columnName]}
                         </td>
                       ))}
                     </tr>
@@ -472,15 +404,9 @@ const FinMaster = () => {
                             columnVisibility[columnName] ? "" : "hidden"
                           }`}
                         >
-                          {columnName === "YearClose"
-                            ? result[columnName]
-                              ? "Active"
-                              : "Inactive"
-                            : columnName === "status"
-                            ? result[columnName]
-                              ? "Active"
-                              : "Inactive"
-                            : result[columnName]}
+                        {columnName === "YearClose" ? 
+                        (result[columnName] === 'N' ? 'Inactive' : 'Active') 
+                        : result[columnName]}
                         </td>
                       ))}
                     </tr>

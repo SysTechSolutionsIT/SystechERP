@@ -7,7 +7,6 @@ import { useAuth } from "../Login";
 
 const FinancialModal = ({ visible, onClick }) => {
   const [YearCloseCheck, setYearCloseCheck] = useState(false);
-  const [StatusCheck, setStatusCheck] = useState(false);
   const { token } = useAuth();
 
   const formik = useFormik({
@@ -16,23 +15,19 @@ const FinancialModal = ({ visible, onClick }) => {
       StartDate: "",
       EndDate: "",
       ShortName: "",
-      YearClose: YearCloseCheck,
+      YearClose: "N",
       Remark: "",
-      AcFlag: "Y",
       IUFlag: "I",
     },
     onSubmit: async (values) => {
-      const YearClosed = YearCloseCheck === true;
-      console.log("FOrm Data: ", values);
+      console.log(values)
       try {
         const formData = {
           Name: values.Name,
           StartDate: values.StartDate,
           EndDate: values.EndDate,
           ShortName: values.ShortName,
-          YearClose: YearClosed, //YearCloseCheck was already part of formik.values
-          Remark: values.Remark,
-          AcFlag: "Y",
+          YearClose: YearCloseCheck, 
           IUFlag: "I",
         };
 
@@ -45,16 +40,8 @@ const FinancialModal = ({ visible, onClick }) => {
             },
           }
         );
-
-        if (response.status === 200) {
-          const data = response.data;
-          console.log(data);
           alert("Financial record added successfully");
           onClick();
-        } else {
-          console.error(`HTTP error! Status: ${response.status}`);
-          // Handle error response
-        }
       } catch (error) {
         console.error("Error:", error.message);
         alert(error.message);
@@ -140,9 +127,9 @@ const FinancialModal = ({ visible, onClick }) => {
                     id="YearClose"
                     type="checkbox"
                     checked={YearCloseCheck}
-                    value={formik.values.YearClose}
+                    // Remove the 'value' attribute from the checkbox
                     className={`w-5 h-5 mr-2 mt-5 focus:outline-blue-900 border border-gray-300 rounded-lg`}
-                    onChange={(e) => setYearCloseCheck(!YearCloseCheck)}
+                    onChange={() => setYearCloseCheck(!YearCloseCheck)}
                   />
                   Active
                 </label>
@@ -156,21 +143,6 @@ const FinancialModal = ({ visible, onClick }) => {
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
-              </div>
-
-              <div>
-                <p className="capitalize font-semibold text-[13px]">Status</p>
-                <label className="capitalize font-semibold text-[11px]">
-                  <input
-                    id="AcFlag"
-                    type="checkbox"
-                    checked={StatusCheck}
-                    value={formik.values.AcFlag}
-                    className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border-2 rounded-lg`}
-                    onChange={() => setStatusCheck(!StatusCheck)}
-                  />
-                  Active
-                </label>
               </div>
             </div>
             <div className="flex mt-5 gap-10 justify-center">

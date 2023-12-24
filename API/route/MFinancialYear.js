@@ -32,40 +32,77 @@ const sequelize = new Sequelize(
   }
 );
 
-// Define the MFinancialYear model
-const MFinancialYear = sequelize.define("MFinancialYear", {
-  CompanyId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 1,
+const MFinancialYear = sequelize.define(
+  'MFinancialYear',
+  {
+    CompanyId: {
+      type: DataTypes.STRING(5),
+      allowNull: false,
+      defaultValue: '00001',
+      primaryKey: true
+    },
+    BranchId: {
+      type: DataTypes.STRING(5),
+      allowNull: false,
+      defaultValue: '00001',
+      primaryKey: true
+    },
+    FYearId: {
+      type: DataTypes.STRING(5),
+      allowNull: false,
+      primaryKey: true
+    },
+    Name: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+    },
+    StartDate: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    EndDate: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    ShortName: {
+      type: DataTypes.STRING(100),
+      allowNull: true,
+    },
+    YearClose: {
+      type: DataTypes.CHAR(1),
+      allowNull: false,
+      defaultValue: 'N',
+    },
+    AcFlag: {
+      type: DataTypes.STRING(1),
+      allowNull: true,
+      defaultValue: 'Y',
+    },
+    CreatedBy: {
+      type: DataTypes.STRING(500),
+      allowNull: true,
+    },
+    CreatedOn: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    ModifiedBy: {
+      type: DataTypes.STRING(500),
+      allowNull: true,
+    },
+    ModifiedOn: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    Remark: {
+      type: DataTypes.STRING(500),
+      allowNull: true,
+    },
   },
-  BranchId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 1,
-  },
-  FYearId: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-  },
-  Name: {
-    type: DataTypes.STRING(100),
-    allowNull: false,
-  },
-  StartDate: DataTypes.DATE,
-  EndDate: DataTypes.DATE,
-  ShortName: DataTypes.STRING(100),
-  YearClose: {
-    type: DataTypes.STRING(1),
-    allowNull: false,
-  },
-  AcFlag: {
-    type: DataTypes.STRING(1),
-    defaultValue: "Y",
-  },
-  IUFlag: DataTypes.STRING,
-  Remark: DataTypes.STRING(500),
-});
+  {
+    timestamps:false
+  }
+)
 
 // Middleware for parsing JSON
 router.use(bodyParser.json());
@@ -78,6 +115,14 @@ sequelize
   })
   .catch(err => {
     console.error('Unable to connect to the database:', err);
+  });
+
+  MFinancialYear.sync()
+  .then(() => {
+    console.log("MFinancialYear model synchronized successfully.");
+  })
+  .catch((error) => {
+    console.error("Error synchronizing MFinancialYear model:", error);
   });
 
 // GET endpoint to retrieve all financial year entires
@@ -135,8 +180,23 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
   }
 });
 
+// Middleware for generating EarningHeadId
+const generateFinanciaYearId = async (req, res, next) => {
+  try {
+    if (req.body.IUFlag === 'I') {
+      const totalRecords = await MFinancialYear.count();
+      const newId = (totalRecords + 1).toString().padStart(5, "0");
+      req.body.FYearId = newId;
+    }
+    next();
+  } catch (error) {
+    console.error("Error generating FYearId:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
 // POST endpoint to add, update, or "soft-delete" a financial year entry
-router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
+router.post("/FnAddUpdateDeleteRecord",generateFinanciaYearId, authToken, async (req, res) => {
   const year = req.body;
   try {
     if (year.IUFlag === "D") {

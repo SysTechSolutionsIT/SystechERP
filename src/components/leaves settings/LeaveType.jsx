@@ -93,12 +93,13 @@ const LeaveTypeMaster = () => {
   useEffect(() => {
     const fetchLeaveType = async () => {
       try {
-        const response = await axios.get('http://localhost:5500/leave-master/get', {
+        const response = await axios.get('http://localhost:5500/leave-type/FnShowActiveData', {
           headers: {
             Authorization: `Bearer ${token}`
           }
         })
         const data = response.data
+        console.log(data)
         setLeaveData(data)
       } catch (error) {
         console.error('Error', error);
@@ -115,10 +116,9 @@ const LeaveTypeMaster = () => {
   const [columnVisibility, setColumnVisibility] = useState({
     LeaveType: true,
     ShortName: true,
-    PaidFlag: false,
+    PaidFlag: true,
     CarryForwardFlag: true,
     Remarks: false,
-    Status: true,
   });
 
   const handleSearchChange = (title, searchWord) => {
@@ -369,7 +369,7 @@ const LeaveTypeMaster = () => {
                           onClick={() => {
                             setLVE(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
-                            setLeaveId(result.id); // Pass ID to VEModal
+                            setLeaveId(result.LeaveTypeId); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -381,7 +381,7 @@ const LeaveTypeMaster = () => {
                           onClick={() => {
                             setLVE(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
-                            setLeaveId(result.id); // Pass ID to VEModal
+                            setLeaveId(result.LeaveTypeId); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -394,7 +394,7 @@ const LeaveTypeMaster = () => {
                       </div>
                     </td>
                     <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {result.id}
+                      {result.LeaveTypeId}
                     </td>
                     {selectedColumns.map(
                       (columnName) =>
@@ -423,7 +423,7 @@ const LeaveTypeMaster = () => {
                           onClick={() => {
                             setLVE(true); // Open VEModal
                             setEdit(false); // Disable edit mode for VEModal
-                            setLeaveId(entry.id); // Pass ID to VEModal
+                            setLeaveId(entry.LeaveTypeId); // Pass ID to VEModal
                           }}
                         />
 
@@ -436,7 +436,7 @@ const LeaveTypeMaster = () => {
                           onClick={() => {
                             setLVE(true); // Open VEModal
                             setEdit(true); // Disable edit mode for VEModal
-                            setLeaveId(entry.id); // Pass ID to VEModal
+                            setLeaveId(entry.LeaveTypeId); // Pass ID to VEModal
                           }}
                         />
                         <Icon
@@ -449,7 +449,7 @@ const LeaveTypeMaster = () => {
                       </div>
                     </td>
                     <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {entry.id}
+                      {entry.LeaveTypeId}
                     </td>
                     {selectedColumns.map(
                       (columnName) =>
