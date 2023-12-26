@@ -7,40 +7,55 @@ import { useAuth } from "../Login";
 const LeaveApprovalModal = ({ visible, onClick, ID }) => {
   const [details, setDetails] = useState([]);
   const { token } = useAuth()
+  const [Employees, setEmployees] = useState([])
+  const [employeeTypes, setEmployeeTypes] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const handleInputChange = (event) => {
+    const { value } = event.target;
+    setSearchTerm(value);
+  };
+
+  const filteredEmployees = Employees.filter(
+    (employee) =>
+      employee.EmployeeName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+
 
   const formik = useFormik({
     initialValues: {
       ApprovalFlag: "",
       LeaveApplicationId: "",
       FYear: "",
-      ApplicationDate: "",
+      LeaveApplicationDate: "",
       EmployeeId: "",
       EmployeeName: "",
       LeaveFromDate: "",
       LeaveToDate: "",
-      remarks: "",
+      Remark: "",
       SanctionBy: "",
-      SanctionFrom: "",
-      SanctionTo: "",
-      Status: "",
+      SanctionFromDate: "",
+      SanctionToDate: "",
+      SanctionLeaveDays:""
     },
     onSubmit: (values) => {
       console.log(values);
       const updatedData = {
-      ApprovalFlag: "true",
+      ApprovalFlag: "A",
       LeaveApplicationId: values.LeaveApplicationId,
       FYear: values.FYear,
-      ApplicationDate: values.ApplicationDate,
+      LeaveApplicationDate: values.LeaveApplicationDate,
       EmployeeId: values.EmployeeId,
       EmployeeName: values.EmployeeName,
       LeaveFromDate: values.LeaveFromDate,
       LeaveToDate: values.LeaveToDate,
-      remarks: values.remarks,
+      Remark: values.Remark,
       SanctionBy:values.SanctionBy,
-      SanctionFromDate:values.SanctionFrom,
-      SanctionToDate:values.SanctionTo,
-      SanctionLeaveDay:values.SanctionLeaveDay,
-      Status: values.Status,
+      SanctionFromDate:values.SanctionFromDate,
+      SanctionToDate:values.SanctionToDate,
+      SanctionLeaveDays:values.SanctionLeaveDays,
+      IUFlag:"U"
       }
       updateApproval(updatedData)
     },
@@ -48,16 +63,29 @@ const LeaveApprovalModal = ({ visible, onClick, ID }) => {
 
   const updateApproval = async (values) =>{
     try{
-      const response = axios.patch(`http://localhost:5500/leave-application/update/${ID}`, values, {
-        headers:{
-          Authorization: `Bearer ${token}`
-        }
+      const response = axios.post(`http://localhost:5500/leave-application/FnAddUpdateDeleteRecord`, values, {
+        params: { LeaveApplicationId: ID },
+        headers:{Authorization: `Bearer ${token}`}
       })
       alert('Leave Approved')
     } catch(error){
       console.error('Error', error);
     }
   }
+
+  function calculateLeaveDays(leaveFromDate, leaveToDate) {
+    // Convert the date strings to Date objects
+    const fromDate = new Date(leaveFromDate);
+    const toDate = new Date(leaveToDate);
+  
+    // Calculate the time difference in milliseconds
+    const timeDiff = toDate - fromDate;
+  
+    // Calculate the number of days (milliseconds / milliseconds per day) and add 1
+    const LeaveDays = Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1;
+  
+    return LeaveDays;
+  } 
 
   const [isStatusChecked, setStatusChecked] = useState(false)
 
@@ -71,42 +99,72 @@ const LeaveApprovalModal = ({ visible, onClick, ID }) => {
       });
     };
 
-  useEffect(() =>{
-    const fetchLeave = async () =>{
-      try{
-        const response = await axios.get(`http://localhost:5500/leave-application/get/${ID}`, {
-          headers:{
-            Authorization: `Bearer ${token}`
-          }
-        })
-        const data = response.data
-        console.log(data)
-        setDetails(data)
-      } catch(error){
-        console.error('Error', error);
+    useEffect(() =>{
+      const fetchEmployees = async () =>{
+        try {
+          const response = await axios.get('http://localhost:5500/employee/personal/FnShowActiveData',
+          { headers: { Authorization: `Bearer ${token}`}}
+          )
+          const data = response.data
+          console.log('Employees', data)
+          setEmployees(data)
+        } catch (error) {
+          console.error('Error', error);
+        }
       }
-    }
-    fetchLeave()
-  }, [visible])
+      fetchEmployees()
+    },[token])
 
-  useEffect(() =>{
-    if (details){
-      formik.setValues({
-      LeaveApplicationId: details.LeaveApplicationId,
-      FYear: details.FYear,
-      ApplicationDate: details.ApplicationDate,
-      EmployeeId: details.EmployeeId,
-      EmployeeName: details.EmployeeName,
-      LeaveFromDate: details.LeaveFromDate,
-      LeaveToDate: details.LeaveToDate,
-      remarks: details.remarks,
-      SanctionBy:details.SanctionBy,
-      SanctionFromDate:details.SanctionFrom,
-      SanctionToDate:details.SanctionTo,
-      SanctionLeaveDay:details.SanctionLeaveDay,
-      Status: details.Status,
-      })
+    useEffect(() =>{
+      const fetchLeaveApplication = async() =>{
+          try {
+              const response = await axios.get('http://localhost:5500/leave-application/FnShowParticularData',
+              {
+                  params: { LeaveApplicationId: ID},
+                  headers: { Authorization: `Bearer ${token}`}
+              }
+              )
+              const data = response.data
+              console.log(data)
+              setDetails(data)
+          } catch (error) {
+              console.error('Error', error);
+          }
+      }
+      fetchLeaveApplication()
+    },[token])
+
+    function formatDate(inputDate) {
+      const date = new Date(inputDate);
+      
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+      const year = date.getFullYear();
+  
+      return `${year}-${month}-${day}`;
     }
+
+    useEffect(() => {
+      if (details) {
+          formik.setValues({
+              ApprovalFlag: details.ApprovalFlag,
+              FYear: details.FYear,
+              LeaveApplicationId: details.LeaveApplicationId,
+              LeaveApplicationDate: formatDate(details.LeaveApplicationDate),
+              EmployeeId: details.EmployeeId,
+              EmployeeType: details.EmployeeType,
+              EmployeeTypeGroup: details.EmployeeTypeGroup,
+              LeaveFromDate: formatDate(details.LeaveFromDate),
+              LeaveToDate: formatDate(details.LeaveToDate),
+              Remark: details.Remark,
+              LeaveTypeId: details.LeaveTypeId,
+              LeaveDays: details.LeaveDays,
+              SanctionBy: details.SanctionBy,
+              SanctionFromDate: formatDate(details.SanctionFromDate),
+              SanctionToDate: formatDate(details.SanctionToDate),
+              SanctionLeaveDays: details.SanctionLeaveDays,
+          })
+      }
   }, [details])
 
 
@@ -146,9 +204,10 @@ const LeaveApprovalModal = ({ visible, onClick, ID }) => {
                   id="LeaveApplicationId"
                   type="text"
                   placeholder="Enter Leave Application ID"
-                  value={details?.id}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  value={details?.LeaveApplicationId}
+                  className={`w-full px-4 py-2 font-normal bg-white focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
+                  disabled={true}
                 />
               </div>
               <div>
@@ -156,10 +215,10 @@ const LeaveApprovalModal = ({ visible, onClick, ID }) => {
                   Leave Application Date
                 </p>
                 <input
-                  id="ApplicationDate"
+                  id="LeaveApplicationDate"
                   type="date"
                   placeholder="Enter Device ID"
-                  value={formik.values.ApplicationDate}
+                  value={formik.values.LeaveApplicationDate}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -175,34 +234,18 @@ const LeaveApprovalModal = ({ visible, onClick, ID }) => {
                   onChange={formik.handleChange}
                 />
               </div>
-              <div className="flex items-center">
-                  <select
-                    id="EmployeeName"
-                    name="EmployeeName"
-                    value={formik.values.EmployeeName}
-                    onChange={formik.handleChange}
-                    className="w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
-                  >
-                   <option value="">Select an Employee</option>
-                    <option value="Alice">Alice</option>
-                    <option value="Bob">Bob</option>
-                    <option value="Charlie">Charlie</option>
-                    <option value="David">David</option>
-                    <option value="Eve">Eve</option>
-                    <option value="Frank">Frank</option>
-                    <option value="Grace">Grace</option>
-                    <option value="Henry">Henry</option>
-                    <option value="Isabel">Isabel</option>
-                    <option value="Jack">Jack</option>
-                  </select>
-                  <button
-                    type="button"
-                    // onClick={addEmployee}
-                    className="ml-2 px-3 py-1 text-[11px] bg-blue-500 text-white rounded-md"
-                  >
-                    +
-                  </button>
-                </div>
+              <div>
+                <p className="text-[13px] font-semibold">
+                  Employee ID
+                </p>
+                <input
+                  id="EmployeeId"
+                  type="text"
+                  value={formik.values.EmployeeId}
+                  className={`w-full px-4 py-2 font-normal bg-white focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  onChange={formik.handleChange}
+                />
+              </div>
               <div>
                 <p className="text-[13px] font-semibold">Leave From Date</p>
                 <input
@@ -228,58 +271,71 @@ const LeaveApprovalModal = ({ visible, onClick, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Remarks</p>
                 <input
-                  id="remarks"
+                  id="Remark"
                   type="text"
                   placeholder="Enter Remarks"
-                  value={formik.values.remarks}
+                  value={formik.values.Remark}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
               </div>
               <div>
-                <label
-                  htmlFor="employeeName"
-                  className="text-[13px] font-semibold"
-                >
-                  Sanctioned By
-                </label>
-                <div className="flex items-center">
-                  <select
-                    id="SanctionBy"
-                    name="SanctionBy"
-                    value={formik.values.SanctionBy}
-                    onChange={formik.handleChange}
-                    className="w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+            <label className="text-[13px] font-semibold">Sanctioned By</label>
+            <div className="flex items-center">
+              <div className="relative w-full">
+              <input
+            type="text"
+            id="SanctionBy"
+            name="SanctionBy"
+            value={formik.values.SanctionBy}
+            onChange={(e) => {
+              formik.handleChange(e);
+              handleInputChange(e);
+            }}
+            onFocus={() => setSearchTerm('')}
+            className="w-full px-4 py-2 font-normal bg-white focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+            placeholder={formik.values.EmployeeId ? formik.values.EmployeeName : "Search Employee Name"}
+          />
+
+          {searchTerm && (
+            <div
+              className="absolute z-10 bg-white w-full border border-gray-300 rounded-lg mt-1 overflow-hidden"
+              style={{ maxHeight: '150px', overflowY: 'auto' }}
+            >
+              {filteredEmployees.length > 0 ? (
+                filteredEmployees.map((entry) => (
+                  <div
+                    key={entry.EmployeeId}
+                    onClick={() => {
+                      formik.setValues({
+                        ...formik.values,
+                        SanctionBy: entry.EmployeeId,
+                        EmployeeName: entry.EmployeeName
+                      });
+                      setSearchTerm('');
+                    }}
+                    className="px-4 py-2 cursor-pointer hover:bg-gray-200 font-semibold text-[11px]"
                   >
-                    <option value="">Select a Supervisor</option>
-                    <option value="John">John</option>
-                    <option value="Jane">Jane</option>
-                    <option value="Smith">Smith</option>
-                    <option value="Michael">Michael</option>
-                    <option value="Emily">Emily</option>
-                    <option value="David">David</option>
-                    <option value="Sarah">Sarah</option>
-                    <option value="Robert">Robert</option>
-                    <option value="Jennifer">Jennifer</option>
-                  </select>
-                  <button
-                    type="button"
-                    // onClick={addEmployee}
-                    className="ml-2 px-3 py-1 text-[11px] bg-blue-500 text-white rounded-md"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
+                    {entry.EmployeeName}
+                  </div>
+                ))
+              ) : (
+                <div className="px-4 py-2 text-gray-500">No matching results</div>
+              )}
+            </div>
+          )}
+             </div>
+            </div>
+          </div>
               <div>
                 <p className="text-[13px] font-semibold">
                   Sanctioned From Date
                 </p>
                 <input
-                  id="SanctionFrom"
+                  id="SanctionFromDate"
                   type="date"
                   placeholder="Enter sanction From Date"
-                  value={formik.values.SanctionFrom}
+                  value={formik.values.SanctionFromDate}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -287,27 +343,31 @@ const LeaveApprovalModal = ({ visible, onClick, ID }) => {
               <div>
                 <p className="text-[13px] font-semibold">Sanctioned To Date</p>
                 <input
-                  id="SanctionTo"
+                  id="SanctionToDate"
                   type="date"
                   placeholder="Enter Leave To Date"
-                  value={formik.values.SanctionTo}
+                  value={formik.values.SanctionToDate}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
               </div>
               <div>
-                <p className="capitalize font-semibold text-[13px]">Status</p>
-                <label className="capitalize font-semibold text-[11px]">
+                <p className="text-[13px] font-semibold">Leave Days</p>
                 <input
-                    id="Status"
-                    type="checkbox"
-                    checked={formik.values.Status}
-                    className={`w-5 h-5 mr-2 mt-5 focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px]`}
-                    onChange={(event) => handleCheckboxChange('Status', setStatusChecked, event)}
+                  id="SanctionLeaveDays"
+                  type="number"
+                  placeholder="Enter Leave Days"
+                  value={formik.values.SanctionLeaveDays}  
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  onChange={() => {
+                    const newLeaveDays = calculateLeaveDays(formik.values.SanctionFromDate, formik.values.SanctionToDate );
+                    formik.setValues({
+                      ...formik.values,
+                      SanctionLeaveDays: newLeaveDays,
+                    });
+                  }}
                 />
-                Active
-                </label>
-            </div>
+              </div>
             </div>
             <div className="flex mt-4 justify-start">
               <button

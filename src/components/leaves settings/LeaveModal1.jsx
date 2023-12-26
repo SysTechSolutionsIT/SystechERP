@@ -178,11 +178,11 @@ const LeaveModal1 = ({ visible, onClick }) => {
     // Calculate the time difference in milliseconds
     const timeDiff = toDate - fromDate;
   
-    // Calculate the number of days (milliseconds / milliseconds per day)
-    const LeaveDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    // Calculate the number of days (milliseconds / milliseconds per day) and add 1
+    const LeaveDays = Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1;
   
     return LeaveDays;
-  }
+  }  
 
   if (!visible) return null;
   return (
@@ -397,9 +397,15 @@ const LeaveModal1 = ({ visible, onClick }) => {
                   id="LeaveDays"
                   type="number"
                   placeholder="Enter Leave Days"
-                  value={formik.values.LeaveDays}
+                  value={formik.values.LeaveDays}  
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
+                  onChange={(e) => {
+                    const newLeaveDays = calculateLeaveDays(formik.values.LeaveFromDate, e.target.LeaveToDate);
+                    formik.setValues({
+                      ...formik.values,
+                      LeaveDays: newLeaveDays,
+                    });
+                  }}
                 />
               </div>
             </div>

@@ -30,7 +30,7 @@ const LeaveApp = () => {
       SanctionBy:true,
       SanctionFromDate:false,
       SanctionToDate:false,
-      SanctionLeaveDays:true,
+      SanctionLeaveDays:false,
   });
   
   const columnNames = {
@@ -288,8 +288,17 @@ useEffect(() =>{
               ))}
             </div>
           )}
+              <button
+            className="text-white font-semibold px-4 rounded-lg text-[13px] border border-white"
+            onClick={() => setModalOpen(true)}
+          >
+            Add
+          </button>
       </div>
       </div>
+      <LeaveModal1
+        visible={isModalOpen}
+        onClick={()=> setModalOpen(false)}/>
       <div className="grid gap-4 justify-between">
         <div className="my-1 rounded-2xl bg-white p-2 pr-8">
           <table className="min-w-full text-center rounded-lg  whitespace-normal">

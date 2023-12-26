@@ -49,7 +49,7 @@ const ViewLeaveApplication = ({ visible, onClick, edit, ID }) => {
       const updatedData ={
         ApprovalFlag: "P",
         FYear: values.FYear,
-        LeaveApplicationId: details.LeaveApplicationId,
+        LeaveApplicationId: values.LeaveApplicationId,
         LeaveApplicationDate: values.LeaveApplicationDate,
         EmployeeId: values.EmployeeId,
         EmployeeType: values.EmployeeType,
@@ -159,6 +159,7 @@ const ViewLeaveApplication = ({ visible, onClick, edit, ID }) => {
             }
             )
             const data = response.data
+            console.log(data)
             setDetails(data)
         } catch (error) {
             console.error('Error', error);
@@ -265,7 +266,7 @@ useEffect(() => {
                 <input
                   id="LeaveApplicationId"
                   type="text"
-                  value={formik.values.LeaveApplicationId}
+                  value={details?.LeaveApplicationId}
                   className={`w-full px-4 py-2 font-normal bg-white focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={true}
