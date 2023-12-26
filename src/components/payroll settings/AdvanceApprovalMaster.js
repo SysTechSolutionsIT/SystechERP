@@ -421,7 +421,7 @@ const AdvanceApproval = () => {
                           Approve
                         </button>
                         <button
-                          className="font-semibold px-2 rounded-lg text-white bg-green-500 border border-white"
+                          className="font-semibold px-2 rounded-lg text-white bg-red-500 border border-white"
                           onClick={() => {
                             setAdvanceId(result.AdvanceId);
                             setModal2Open(true);
