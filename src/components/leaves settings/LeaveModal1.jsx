@@ -184,6 +184,20 @@ const LeaveModal1 = ({ visible, onClick }) => {
     return LeaveDays;
   }  
 
+  useEffect(() => {
+    // Calculate leave days whenever LeaveFromDate or LeaveToDate changes
+    const newLeaveDays = calculateLeaveDays(
+      formik.values.LeaveFromDate,
+      formik.values.LeaveToDate
+    );
+
+    // Update the LeaveDays field in formik values
+    formik.setValues({
+      ...formik.values,
+      LeaveDays: newLeaveDays,
+    });
+  }, [formik.values.LeaveFromDate, formik.values.LeaveToDate]);
+
   if (!visible) return null;
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -392,22 +406,15 @@ const LeaveModal1 = ({ visible, onClick }) => {
                 />
               </div>
               <div>
-                <p className="text-[13px] font-semibold">Leave Days</p>
-                <input
-                  id="LeaveDays"
-                  type="number"
-                  placeholder="Enter Leave Days"
-                  value={formik.values.LeaveDays}  
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  onChange={(e) => {
-                    const newLeaveDays = calculateLeaveDays(formik.values.LeaveFromDate, e.target.LeaveToDate);
-                    formik.setValues({
-                      ...formik.values,
-                      LeaveDays: newLeaveDays,
-                    });
-                  }}
-                />
-              </div>
+              <p className="text-[13px] font-semibold">Leave Days</p>
+              <input
+                id="LeaveDays"
+                type="number"
+                placeholder="Enter Leave Days"
+                value={formik.values.LeaveDays}
+                className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+              />
+            </div>
             </div>
             <div className="flex mt-4 justify-start">
               <button

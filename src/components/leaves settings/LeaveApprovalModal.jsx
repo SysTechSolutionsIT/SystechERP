@@ -87,6 +87,20 @@ const LeaveApprovalModal = ({ visible, onClick, ID }) => {
     return LeaveDays;
   } 
 
+  useEffect(() => {
+    // Calculate leave days whenever LeaveFromDate or LeaveToDate changes
+    const newLeaveDays = calculateLeaveDays(
+      formik.values.SanctionFromDate,
+      formik.values.SanctionToDate
+    );
+
+    // Update the SanctionDays field in formik values
+    formik.setValues({
+      ...formik.values,
+      SanctionLeaveDays: newLeaveDays,
+    });
+  }, [formik.values.SanctionFromDate, formik.values.SanctionToDate]);
+
   const [isStatusChecked, setStatusChecked] = useState(false)
 
   const handleCheckboxChange = (fieldName, setChecked, event) => {
@@ -120,7 +134,7 @@ const LeaveApprovalModal = ({ visible, onClick, ID }) => {
           try {
               const response = await axios.get('http://localhost:5500/leave-application/FnShowParticularData',
               {
-                  params: { LeaveApplicationId: ID},
+                  params: { LeaveApplicationId: ID },
                   headers: { Authorization: `Bearer ${token}`}
               }
               )
@@ -132,7 +146,7 @@ const LeaveApprovalModal = ({ visible, onClick, ID }) => {
           }
       }
       fetchLeaveApplication()
-    },[token])
+    },[token, ID])
 
     function formatDate(inputDate) {
       const date = new Date(inputDate);
