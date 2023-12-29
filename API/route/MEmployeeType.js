@@ -166,4 +166,3 @@ router.post("/FnAddUpdateDeleteRecord", generateEmployeeTypeId, authToken, async
   
 
 module.exports = router;
-``

@@ -5,44 +5,6 @@ import EmployeeTypeModal from './EmployeeTypeModal';
 import ViewEmployeeType from './ViewEmployeeType';
 import { useAuth } from '../Login';
 
-export const EmployeeTypeData = [
-  {
-    ID: 1,
-    EmployeeType: "Company Staff",
-    EmployeeTypeGroup: "Staff",
-    ShortName: "S",
-    Status: "Y"
-  },
-  {
-    ID: 2,
-    EmployeeType: "Worker",
-    EmployeeTypeGroup: "Worker",
-    ShortName: "W",
-    Status: "Y"
-  },
-  {
-    ID: 3,
-    EmployeeType: "Trainee Staff",
-    EmployeeTypeGroup: "Staff",
-    ShortName: "T",
-    Status: "Y"
-  },
-  {
-    ID: 4,
-    EmployeeType: "Trainee Worker",
-    EmployeeTypeGroup: "Worker",
-    ShortName: "O",
-    Status: "Y"
-  },
-  {
-    ID: 5,
-    EmployeeType: "Contract Staff",
-    EmployeeTypeGroup: "Staff",
-    ShortName: "Y",
-    Status: "Y"
-  },
-]
-
 const EmployeeTypeMaster = () => {
   const { token } = useAuth()
   const [isModalOpen, setModalOpen] = useState(false);

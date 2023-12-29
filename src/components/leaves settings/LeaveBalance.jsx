@@ -6,14 +6,12 @@ import { Icon } from "@iconify/react";
 const LeaveBalance = () => {
   const formik = useFormik({
     initialValues: {
-      LBID: "",
       Fyear: "",
       month: "",
       year: "",
       LBDate: "",
       EmpType: "",
       Remarks: "",
-      Status: "",
     },
     onSubmit: (values) => {
       console.log(values);
@@ -70,19 +68,6 @@ const LeaveBalance = () => {
           </div>
           <div className="py-4">
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="capatilize font-semibold text-[13px] ">
-                  Leave Balance ID
-                </p>
-                <input
-                  id="LBID"
-                  type="number"
-                  placeholder="Enter Leave Balance ID"
-                  value={formik.values.LBID}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                />
-              </div>
               <div>
                 <p className="capatilize font-semibold text-[13px]">
                   Financial Year
@@ -146,28 +131,7 @@ const LeaveBalance = () => {
                   value={formik.values.Fyear}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
-                />
-              </div>
-              <div>
-                <p className="text-[13px] font-semibold">Status</p>
-                <div className="flex items-center">
-                  <input
-                    id="status"
-                    type="checkbox"
-                    checked={formik.values.Status}
-                    value={formik.values.Status}
-                    className={` relative w-4 h-4 mr-2 peer shrink-0 appearance-none checked:bg-blue-800 border-2 border-blue-900 rounded-sm`}
-                    onChange={handleStatusChange}
-                  />
-                  <Icon
-                    className="absolute w-4 h-4 hidden peer-checked:block"
-                    icon="gg:check"
-                    color="white"
-                  />
-                  <label for="status" className="text-[11px] font-semibold">
-                    Active
-                  </label>
-                </div>
+                /> 
               </div>
               <div className="py-1">
                 <p className="mb-1 font-semibold text-[13px]">Employee Type</p>

@@ -19,7 +19,6 @@ const VEFModal = ({ visible, onClick, edit, ID }) => {
       ShortName: "",
       YearClose: YearCloseCheck,
       Remark: "",
-      AcFlag: "Y",
       IUFlag: "U",
     },
     onSubmit: (values) => {
@@ -33,7 +32,6 @@ const VEFModal = ({ visible, onClick, edit, ID }) => {
         ShortName: values.ShortName,
         YearClose: YearClosed, //YearCloseCheck was already part of formik.values
         Remark: values.Remark,
-        AcFlag: "Y",
         IUFlag: "U",
       };
 
@@ -84,14 +82,14 @@ const VEFModal = ({ visible, onClick, edit, ID }) => {
       formik.setValues({
         Name: details.Name,
         ShortName: details.ShortName,
-        AcFlag: details.AcFlag,
         Remark: details.Remark,
-        StartDate: details.StartDate,
-        EndDate: details.EndDate,
+        StartDate: details.StartDate ? new Date(details.StartDate).toISOString().split('T')[0] : '', // Format the date
+        EndDate: details.EndDate ? new Date(details.EndDate).toISOString().split('T')[0] : '', // Format the date
         YearClose: details.YearClose,
       });
     }
   }, [details]);
+  
 
   console.log("set details", details);
 
@@ -182,16 +180,16 @@ const VEFModal = ({ visible, onClick, edit, ID }) => {
               </div>
               <div>
                 <p className="capitalize font-semibold text-[13px]">
-                  Year Active
+                  Year Close
                 </p>
                 <label className="capitalize font-semibold text-[11px]">
                   <input
                     id="YearClose"
                     type="checkbox"
-                    checked={formik.values.YearClose}
-                    className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border-2 rounded-lg`}
+                    checked={YearCloseCheck}
+                    // Remove the 'value' attribute from the checkbox
+                    className={`w-5 h-5 mr-2 mt-5 focus:outline-blue-900 border border-gray-300 rounded-lg`}
                     onChange={() => setYearCloseCheck(!YearCloseCheck)}
-                    disabled={!edit}
                   />
                   Active
                 </label>
@@ -206,20 +204,6 @@ const VEFModal = ({ visible, onClick, edit, ID }) => {
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
-              </div>
-              <div>
-                <p className="capitalize font-semibold text-[13px]">AcFlag</p>
-                <label className="capitalize font-semibold text-[11px]">
-                  <input
-                    id="AcFlag"
-                    type="checkbox"
-                    checked={formik.values.AcFlag}
-                    className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border-2 rounded-lg`}
-                    onChange={() => setAcFlagCheck(!AcFlagCheck)}
-                    disabled={!edit}
-                  />
-                  Active
-                </label>
               </div>
             </div>
             <div className="flex mt-5 gap-10 justify-center">
