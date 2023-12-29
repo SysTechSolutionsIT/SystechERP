@@ -7,6 +7,7 @@ import axios from "axios";
 
 const LeaveBalance = () => {
   const [LeaveTypes, setLeaveTypes] = useState([])
+  const [LeaveBalance, setLeaveBalance] = useState([])
   const [employeeId, setEmployeeId] = useState('')
   const [employeeTypeId, setEmployeeTypeId] = useState('')
   const [employeeType, setEmployeeType]  = useState('')
@@ -14,10 +15,12 @@ const LeaveBalance = () => {
   const [employeeTypes, setEmployeeTypes] = useState([])
   const [employeeName, setEmployeeName] = useState('')
   const { fYear } = useDetails()
+  const [showTable, setShowTable] = useState(false)
   const [ FinancialYears, setFinancialYears] = useState([])
   const [Employees, setEmployees] = useState([])
   const { token } = useAuth()
   const [searchTerm, setSearchTerm] = useState('');
+  const [updatedArray, setUpdatedArray] = useState(LeaveBalance.map(item => ({ ...item, IUFlag: 'I' })));
 
   const handleInputChange = (event) => {
     const { value } = event.target;
@@ -42,18 +45,101 @@ const LeaveBalance = () => {
 
   const formik = useFormik({
     initialValues: {
-      Fyear: "",
-      month: "",
-      year: "",
-      LBDate: "",
-      EmpType: "",
-      Remarks: "",
+      FYear: "",
+      EmployeeId: "",
+      EmployeeTypeId: "",
+      EmployeeType: "",
+      EmployeeTypeGroup: "",
+      LeaveTypeId: "",
+      LeaveTypeDesc: "",
+      Month: "",
+      Year: "",
+      LeaveBalanceDate: "",
+      EmployeeName: "",
+      OpeningBalance: "",
+      LeaveEarned1: "",
+      LeaveEarned2: "",
+      LeaveEarned3: "",
+      LeaveEarned4: "",
+      LeaveEarned5: "",
+      LeaveEarned6: "",
+      LeaveEarned7: "",
+      LeaveEarned8: "",
+      LeaveEarned9: "",
+      LeaveEarned10: "",
+      LeaveEarned11: "",
+      LeaveEarned12: "",
+      SanctionLeaveDays: "",
+      LeaveBalance: "",
+      Remark: "",
     },
     onSubmit: (values) => {
-      console.log(values);
-      // alert("Added Successfully");
+      console.log(LeaveBalance);
     },
   });
+
+  const fetchLeaveBalance = async () => {
+    try {
+      const response = await axios.get('http://localhost:5500/leave-balance/FnShowParticularEmployeeData', {
+        params: { 
+          EmployeeId: employeeId,
+          FYear: formik.values.FYear,
+         },
+        headers: { Authorization: `Bearer ${token}` }
+      });
+  
+      const data = response.data;
+      setLeaveBalance(data)
+      setShowTable(true)
+      console.log(data);
+    } catch (error) {
+      console.error('Error', error);
+    }
+  };
+
+  const handleOpeningBalanceChange = (index, newValue) => {
+    const updatedValues = [...LeaveBalance];
+    updatedValues[index].OpeningBalance = newValue;
+    setLeaveBalance(updatedValues);
+  };
+  
+  const handleSanctionLeaveDaysChange = (index, newValue) => {
+    const updatedValues = [...LeaveBalance];
+    updatedValues[index].SanctionLeaveDays = newValue;
+    setLeaveBalance(updatedValues);
+  };
+  
+  const handleLeaveBalanceChange = (index, newValue) => {
+    const updatedValues = [...LeaveBalance]
+    updatedValues[index].LeaveBalance = newValue
+    setLeaveBalance(updatedValues)
+    console.log('Leave balance updated')
+  }
+  
+  const calculateLeaveBalance = (openingBalance, sanctionLeaveDays) => {
+    const openingBalanceValue = parseFloat(openingBalance) || 0;
+    const sanctionLeaveDaysValue = parseFloat(sanctionLeaveDays) || 0;
+    const leaveBalance = openingBalanceValue - sanctionLeaveDaysValue;
+    return leaveBalance;
+  };
+
+  const updateLeaveBalance = async () =>{
+    try {
+      console.log('Leave balance in funciton', LeaveBalance)
+      const response = await axios.patch('http://localhost:5500/leave-balance/FnUpdateRecords', LeaveBalance,
+      {
+        params:{
+          EmployeeId: employeeId,
+          FYear: formik.values.FYear
+        },
+        headers: { Authorization: `Bearer ${token}`}
+      })
+      alert('Leave Balance Updated')
+    } catch (error) {
+      console.error('Error', error);
+    }
+
+  }
 
   useEffect(() =>{
     const fetchEmployees = async () =>{
@@ -108,6 +194,7 @@ const LeaveBalance = () => {
   
     const addLeaveBalance = async () => {
       try {
+        const currentYear = new Date().getFullYear();
         const leaveTypePayloads = LeaveTypes.map(({ LeaveTypeId, ShortName }) => ({
           FYear: fYear,
           EmployeeId: employeeId,
@@ -116,8 +203,8 @@ const LeaveBalance = () => {
           EmployeeTypeGroup: employeeTypeGroup,
           LeaveTypeId: LeaveTypeId,
           LeaveTypeDesc: ShortName,
-          Month: "",
-          Year: "",
+          Month: new Date().getMonth() + 1,
+          Year: currentYear,
           LeaveBalanceDate: formattedDate,
           EmployeeName: employeeName,
           OpeningBalance: 0,
@@ -139,9 +226,11 @@ const LeaveBalance = () => {
           IUFlag: "I",
         }));
         console.log(leaveTypePayloads);
+        const confirmAdd = window.confirm('Are you sure you want to generate leaves for this New Employee?')
+        if(!confirmAdd) return
         const response = await axios.post('http://localhost:5500/leave-balance/FnAddUpdateDeleteRecord', leaveTypePayloads,
         {headers: { Authorization: `Bearer ${token}`}});
-        alert('Leave Balance Uploaded')
+        alert('Leave Balance Generated')
       } catch (error) {
         console.error('Error', error);
       }
@@ -189,20 +278,24 @@ const LeaveBalance = () => {
   ];
   const years = [2020, 2021, 2022, 2023, 2024, 2025];
   const columns = [
-    "Approve Flag",
-    "Leave Application Id",
-    "FYear",
-    "Application Date",
-    "Employee Id",
+    "Employee ID",
     "Employee Name",
-    "Leave From Date",
-    "Leave To Date",
     "Leave Type",
-    "Leave Days",
-    "Sanction By",
-    "Sanction From Date",
-    "Sanction To Date",
-    "Sanction Leave Days",
+    "Opening Balance",
+    "Leaves Taken",
+    "Leave Balance",
+    "Leaves Earned 1",
+    "Leaves Earned 2",
+    "Leaves Earned 3",
+    "Leaves Earned 4",
+    "Leaves Earned 5",
+    "Leaves Earned 6",
+    "Leaves Earned 7",
+    "Leaves Earned 8",
+    "Leaves Earned 9",
+    "Leaves Earned 10",
+    "Leaves Earned 11",
+    "Leaves Earned 12",
   ];
 
   return (
@@ -213,7 +306,14 @@ const LeaveBalance = () => {
             <p className="text-white text-[13px] font-semibold text-center">
               Leave Update Balance
             </p>
+            <button 
+            type='button'
+            className="bg-white border-2 border-white text-blue-900 text-[13px] font-semibold py-1 px-4 rounded-lg hover:bg-blue-900 hover:text-white hover:ease-in-out"
+            onClick={addLeaveBalance}>
+              Generate Leaves
+            </button>
           </div>
+          
           <div className="py-4">
             <div className="grid grid-cols-2 gap-4">
             <div>
@@ -247,12 +347,12 @@ const LeaveBalance = () => {
                   Month
                 </label>
                 <select
-                  id="month"
+                  id="Month"
                   className="w-full text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
                   onChange={formik.handleChange}
                 >
                   {months.map((month, index) => (
-                    <option key={index} value={month}>
+                    <option key={index} value={index + 1}>
                       {month}
                     </option>
                   ))}
@@ -266,7 +366,7 @@ const LeaveBalance = () => {
                   Year
                 </label>
                 <select
-                  id="year"
+                  id="Year"
                   className="w-full text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
                   onChange={formik.handleChange}
                 >
@@ -358,44 +458,122 @@ const LeaveBalance = () => {
             </div>
           </div>
           <div className="flex gap-10 justify-center">
-            <button className="bg-blue-900 text-white text-[13px] font-semibold py-2 px-4 rounded-lg w-36">
+            <button 
+            type="button"
+            onClick={fetchLeaveBalance}
+            className="bg-blue-900 text-white text-[13px] font-semibold py-2 px-4 rounded-lg w-36">
               Leave Calculate
             </button>
             <button
-              type="submit"
+              type="button"
               className="bg-blue-900 text-white text-[13px] font-semibold py-2 px-4 rounded-lg w-36"
+              onClick={updateLeaveBalance}
             >
               Save
             </button>
-            <button 
-            type='button'
-            className="bg-blue-900 text-white text-[13px] font-semibold py-2 px-4 rounded-lg w-36"
-            onClick={addLeaveBalance}>
-              Generate Leaves
-            </button>
           </div>
-          <div className="grid gap-2 justify-between mt-2">
-            <div className="my-1 rounded-2xl  p-2 pr-8 ">
-              <table className="min-w-full text-center whitespace-normal z-0">
-                <thead className="border-b-2">
-                  <tr className="">
-                    <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
-                      Add
+          {showTable && (
+        <div className="grid gap-2 justify-between mt-2">
+          <div className="my-1 rounded-2xl p-2 pr-8">
+            <table className="min-w-full text-center whitespace-normal z-0">
+              <thead>
+                <tr>
+                  {columns.map((columnName) => (
+                    <th
+                      key={columnName}
+                      className={`px-1 text-[13px] whitespace-normal font-bold text-white bg-blue-900 rounded-lt-lg rounded-rt-lg border-2 border-white`}
+                    >
+                      {columnName}
                     </th>
-                    {columns.map((columnName) => (
-                      <th
-                        key={columnName}
-                        className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400`}
-                      >
-                        {columnName}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody></tbody>
+                  ))}
+                </tr>
+              </thead>
+                <tbody>
+                  {LeaveBalance.length > 0 && LeaveBalance.map((item, index) => (
+                    <tr key={index}>
+                      <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                        {item.EmployeeId}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                        {item.EmployeeName}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                        {item.LeaveTypeDesc}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                      <input
+                        type="number"
+                        className="whitespace-normal w-[40px]"
+                        value={item.OpeningBalance}
+                        onChange={(e) => {
+                          handleOpeningBalanceChange(index, e.target.value)
+                          handleLeaveBalanceChange(index, e.target.value)
+                        }}
+                      />
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                      <input
+                        type="number"
+                        className="whitespace-normal w-[40px]"
+                        value={item.SanctionLeaveDays}
+                        onChange={(e) => {
+                          handleSanctionLeaveDaysChange(index, e.target.value)
+                          handleLeaveBalanceChange(index, e.target.value)
+                        }
+                        }
+                      />
+                    </td>
+                      <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                        <input
+                        type='number'
+                        className="whitespace-normal w-[40px]"
+                        value={calculateLeaveBalance(item.OpeningBalance, item.SanctionLeaveDays)}
+                        onChange={(e) => handleLeaveBalanceChange(index, e.target.value)}
+                        />
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                        {item.LeaveEarned1}
+                      </td>                      
+                      <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                        {item.LeaveEarned2}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                        {item.LeaveEarned3}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                        {item.LeaveEarned4}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                        {item.LeaveEarned5}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                        {item.LeaveEarned6}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                        {item.LeaveEarned7}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                        {item.LeaveEarned8}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                        {item.LeaveEarned9}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                        {item.LeaveEarned10}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                        {item.LeaveEarned11}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                        {item.LeaveEarned12}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
               </table>
             </div>
           </div>
+          )}
         </div>
       </div>
     </form>
