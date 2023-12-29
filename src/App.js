@@ -45,7 +45,7 @@ import LeaveTypeMaster from "./components/leaves settings/LeaveType";
 import Login from "./components/Login";
 import Registration from "./components/Registration";
 import Dashboard from "./components/Dashboard";
-import GateEntryMaster from "./components/attendance management/empGatePassEntry";
+import GateEntryMaster from "./components/attendance management/EmployeeGatePassEntry";
 import ShiftRoster from "./components/attendance management/ShiftRoster";
 import ManualAttendanceEntry from "./components/attendance management/ManualAttendanceEntry";
 import ManualAttendanceApproval from "./components/attendance management/ManualAttendanceApproval";
@@ -55,6 +55,7 @@ import AdvanceApproval from "./components/payroll settings/AdvanceApprovalMaster
 import AdvanceRepayment from "./components/payroll settings/AdvanceRepayment";
 import EmployeeTypeEarningMaster from "./components/payroll settings/EmployeeTypeEarningMaster";
 import EmployeeTypeDeductionMaster from "./components/payroll settings/EmployeeTypeDeductionMaster";
+import GatePassApproval from "./components/attendance management/GatePassApproval";
 
 function App() {
   return (
@@ -173,8 +174,14 @@ function App() {
                   path="/employee-type-earning-deduction"
                   element={<EmpTypeEarningDeduction />}
                 />
-                <Route path="/employee-type-earning" element={<EmployeeTypeEarningMaster/>}/>
-                <Route path="/employee-type-deduction" element={<EmployeeTypeDeductionMaster/>}/>
+                <Route
+                  path="/employee-type-earning"
+                  element={<EmployeeTypeEarningMaster />}
+                />
+                <Route
+                  path="/employee-type-deduction"
+                  element={<EmployeeTypeDeductionMaster />}
+                />
                 <Route path="/advance-request" element={<AdvanceRequest />} />
                 <Route path="/leave-application" element={<LeaveApp />} />
                 <Route path="/leave-approval" element={<LeaveApproval />} />
@@ -189,6 +196,10 @@ function App() {
                 <Route
                   path="/advance-repayment"
                   element={<AdvanceRepayment />}
+                />
+                <Route
+                  path="/gatepass-approval"
+                  element={<GatePassApproval />}
                 />
               </Route>
             </Routes>

@@ -1,17 +1,20 @@
-import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
-import { Icon } from "@iconify/react";
+import React from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
+import { Icon } from "@iconify/react";
 import { useAuth } from "../Login";
 
-const GatePassModal = ({ visible, onClick }) => {
-  const { token } = useAuth();
-  const [Details, setDetails] = useState([]);
+const GatePassApprovalModal = ({ visible, onClick, ID }) => {
+  const [details, setDetails] = useState([]);
+  const [personal, setPersonal] = useState([]);
   const [employeeTypes, setEmployeeTypes] = useState([]);
 
+  const { token } = useAuth();
   const formik = useFormik({
     initialValues: {
-      ApprovalFlag: "P",
+      GatepassId: ID,
+      ApprovalFlag: "",
       GatepassDate: "",
       FYear: "",
       EmployeeId: "",
@@ -21,50 +24,100 @@ const GatePassModal = ({ visible, onClick }) => {
       OutTime: "",
       GatepassType: "",
       Purpose: "",
+      RejectReason: "",
+      SanctionBy: "",
       Remark: "",
       AcFlag: "Y",
-      IUFlag: "I",
-      CreatedOn: new Date(),
+      IUFlag: "U",
+      updatedOn: new Date(),
     },
     onSubmit: (values) => {
       const updatedData = {
-        ApprovalFlag: "P",
-        FYear: formik.values.FYear,
-        GatepassDate: formik.values.GatepassDate,
-        EmployeeId: formik.values.EmployeeId,
-        EmployeeTypeId: formik.values.EmployeeId,
-        EmployeeTypeGroup: formik.values.EmployeeTypeGroup,
-        InTime: formik.values.InTime,
-        OutTime: formik.values.OutTime,
-        GatepassType: formik.values.GatepassType,
-        Purpose: formik.values.Purpose,
+        GatepassId: ID,
+        ApprovalFlag: values.RejectReason ? "R" : "A",
+        GatepassDate: values.GatepassDate,
+        FYear: values.FYear,
+        EmployeeId: values.EmployeeId,
+        EmployeeType: values.EmployeeType,
+        EmployeeTypeGroup: values.EmployeeTypeGroup,
+        InTime: values.InTime,
+        OutTime: values.OutTime,
+        GatepassType: values.GatepassType,
+        Purpose: values.Purpose,
+        Remark: values.Remark,
         AcFlag: "Y",
-        IUFlag: "I",
-        Remark: formik.values.Remark,
+        IUFlag: "U",
         CreatedOn: new Date(),
       };
-      console.log("Data:", updatedData);
-      addGatePassEntry(updatedData);
+      console.log(updatedData);
+
+      // Send a PUT request to update the data
+      axios
+        .post(
+          `http://localhost:5500/gate-pass/FnAddUpdateDeleteRecord`,
+          updatedData,
+          {
+            params: { GatepassId: ID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        )
+        .then((response) => {
+          // Handle success
+          alert("Data updated successfully", response);
+          onClick();
+          // You can also perform additional actions here, like closing the modal or updating the UI.
+          window.location.reload();
+        })
+        .catch((error) => {
+          // Handle error
+          console.error("Error updating data", error);
+        });
     },
   });
 
-  // Posting data
-  const addGatePassEntry = async (data) => {
+  useEffect(() => {
+    fetchGatepassData();
+  }, [ID]);
+  console.log(ID);
+  const fetchGatepassData = async () => {
     try {
-      const response = await axios.post(
-        "http://localhost:5500/gate-pass/FnAddUpdateDeleteRecord",
-        data,
-        { headers: { Authorization: `Bearer ${token}` } }
+      const response = await axios.get(
+        "http://localhost:5500/gate-pass/FnShowParticularData",
+        {
+          params: { GatepassId: ID },
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
-      console.log(response);
-      alert("Data Added Successfully");
-      onClick();
-      window.location.reload();
+      const data = response.data;
+      setDetails(data);
     } catch (error) {
-      console.error("Error", error);
+      console.error("Error while fetching company data: ", error.message);
     }
   };
-  //Fetching employee names and IDs
+  console.log("ID:", ID);
+  console.log(details);
+
+  useEffect(() => {
+    if (details) {
+      formik.setValues({
+        GatepassId: details.GatepassId,
+        ApprovalFlag: details.ApprovalFlag,
+        GatepassDate: details.GatepassDate,
+        FYear: details.FYear,
+        EmployeeType: details.EmployeeType,
+        EmployeeTypeGroup: details.EmployeeTypeGroup,
+        EmployeeId: details.EmployeeId,
+        InTime: details.InTime,
+        OutTime: details.OutTime,
+        SanctionBy: details.SanctionBy,
+        Purpose: details.Purpose,
+        RejectReason: details.RejectReason,
+        Remark: details.Remark,
+      });
+    }
+  }, [details]);
+
+  // All API Calls
   const fetchPersonalData = async () => {
     try {
       const response = await axios.get(
@@ -75,7 +128,7 @@ const GatePassModal = ({ visible, onClick }) => {
       );
       console.log("Response Object", response);
       const data = response.data;
-      setDetails(data);
+      setPersonal(data);
     } catch (error) {
       console.log("Error while fetching course data: ", error.message);
     }
@@ -103,35 +156,6 @@ const GatePassModal = ({ visible, onClick }) => {
     fetchEmployeeTypes();
   }, [token]);
 
-  // Setting employee Type
-  useEffect(() => {
-    const fetchEmployeeTypeGroup = async () => {
-      try {
-        if (formik.values.EmployeeType) {
-          const response = await axios.get(
-            "http://localhost:5500/employee-type/FnShowParticularData",
-            {
-              params: { EmployeeTypeId: formik.values.EmployeeType }, // Pass EmployeeTypeId as a parameter
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          );
-          const data = response.data;
-          console.log("Employee type group data:", data);
-          if (data && data.length > 0) {
-            console.log("employee type group:", data.EmployeeTypeGroup);
-            formik.setFieldValue("EmployeeTypeGroup", data.EmployeeTypeGroup);
-          }
-        } else {
-          formik.setFieldValue("EmployeeTypeGroup", ""); // Reset the value when no Employee Type is selected
-        }
-      } catch (error) {
-        console.error("Error", error);
-      }
-    };
-
-    fetchEmployeeTypeGroup();
-  }, [formik.values.EmployeeType, token]);
-
   if (!visible) return null;
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -158,11 +182,11 @@ const GatePassModal = ({ visible, onClick }) => {
                 </p>
                 <input
                   id="GatepassDate"
-                  type="date"
+                  type="text"
                   placeholder="Enter Gate Pass Date"
                   value={formik.values.GatepassDate}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
+                  disabled={true}
                 />
               </div>
               <div>
@@ -175,7 +199,7 @@ const GatePassModal = ({ visible, onClick }) => {
                   placeholder="Enter Gate Pass ID"
                   value={formik.values.FYear}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
+                  disabled={true}
                 />
               </div>
               <div>
@@ -185,13 +209,13 @@ const GatePassModal = ({ visible, onClick }) => {
                   name="EmployeeId"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
                   value={formik.values.EmployeeId}
-                  onChange={formik.handleChange}
+                  disabled={true}
                 >
                   <option value="" disabled>
                     Select an employee
                   </option>
-                  {Details.length > 0 &&
-                    Details.map((employee) => (
+                  {personal.length > 0 &&
+                    personal.map((employee) => (
                       <option
                         key={employee.EmployeeId}
                         value={employee.EmployeeId}
@@ -208,7 +232,7 @@ const GatePassModal = ({ visible, onClick }) => {
                   name="EmployeeType"
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
                   value={formik.values.EmployeeType}
-                  onChange={formik.handleChange}
+                  disabled={true}
                 >
                   <option value="">Select Type</option>
                   {employeeTypes.map((entry) => (
@@ -225,20 +249,20 @@ const GatePassModal = ({ visible, onClick }) => {
                 <p className="text-[13px] font-semibold">In Time</p>
                 <input
                   id="InTime"
-                  type="datetime-local" // Change the input type to handle date and time
+                  type="text" // Change the input type to handle date and time
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   value={formik.values.InTime}
-                  onChange={formik.handleChange}
+                  disabled={true}
                 />
               </div>
               <div>
                 <p className="text-[13px] font-semibold">Out Time</p>
                 <input
                   id="OutTime"
-                  type="datetime-local" // Change the input type to handle date and time
+                  type="text" // Change the input type to handle date and time
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   value={formik.values.OutTime}
-                  onChange={formik.handleChange}
+                  disabled={true}
                 />
               </div>
               <div className="flex flex-col p-2 space-x-2">
@@ -250,7 +274,8 @@ const GatePassModal = ({ visible, onClick }) => {
                       name="GatepassType"
                       value="Personal"
                       className="mr-2"
-                      onChange={formik.handleChange}
+                      checked={formik.values.GatepassType === "Personal"}
+                      disabled={true}
                     />
                     Personal
                   </label>
@@ -260,7 +285,8 @@ const GatePassModal = ({ visible, onClick }) => {
                       name="GatepassType"
                       value="Official"
                       className="mr-2 ml-2"
-                      onChange={formik.handleChange}
+                      checked={formik.values.GatepassType === "Official"}
+                      disabled={true}
                     />
                     Official
                   </label>
@@ -274,7 +300,7 @@ const GatePassModal = ({ visible, onClick }) => {
                   placeholder="Enter Purpose"
                   value={formik.values.Purpose}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
+                  disabled={true}
                 />
               </div>
               <div>
@@ -285,24 +311,50 @@ const GatePassModal = ({ visible, onClick }) => {
                   placeholder="Enter Remarks"
                   value={formik.values.Remark}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                  disabled={true}
+                />
+              </div>
+              <div>
+                <p className="capatilize font-semibold  text-[13px]">
+                  Reject Reason
+                </p>
+                <input
+                  id="RejectReason"
+                  type="text"
+                  placeholder="Enter Purpose"
+                  value={formik.values.RejectReason}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                  onChange={formik.handleChange}
+                />
+              </div>
+              <div>
+                <p className="capatilize font-semibold  text-[13px]">
+                  Sanction By
+                </p>
+                <input
+                  id="SanctionBy"
+                  type="text"
+                  placeholder="Enter sanctioner"
+                  value={formik.values.SanctionBy}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
               </div>
             </div>
-          </div>
-          <div className="flex gap-10 justify-center">
-            <button
-              type="submit"
-              className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg w-36"
-            >
-              Save
-            </button>
-            <button
-              className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg w-36"
-              onClick={onClick}
-            >
-              Close
-            </button>
+            <div className="flex mt-5 gap-10 justify-center">
+              <button
+                type="submit"
+                className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg w-36"
+              >
+                Approve
+              </button>
+              <button
+                className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg w-36"
+                onClick={onClick}
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -310,4 +362,4 @@ const GatePassModal = ({ visible, onClick }) => {
   );
 };
 
-export default GatePassModal;
+export default GatePassApprovalModal;
