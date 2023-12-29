@@ -149,19 +149,19 @@ const MLeaves = sequelize.define('MLeaves', {
     },
     CreatedBy: {
       type: DataTypes.STRING(500),
-      allowNull: false,
+      allowNull: true,
     },
     CreatedOn: {
       type: DataTypes.DATE,
-      allowNull: false,
+      allowNull: true,
     },
     ModifiedBy: {
       type: DataTypes.STRING(500),
-      allowNull: false,
+      allowNull: true,
     },
     ModifiedOn: {
       type: DataTypes.DATE,
-      allowNull: false,
+      allowNull: true,
     },
   }, {
     timestamps: false, 
@@ -240,11 +240,15 @@ MLeaves.sync()
   });
 
   router.get("/FnShowParticularEmployeeData", authToken, async (req, res) => {
-    const EmployeeId = req.query.EmployeeId; // Assuming you're using EmployeeId instead of LeaveBalanceId
+    const EmployeeId = req.query.EmployeeId; 
+    const FYear = req.query.FYear
+    const Month = req.query.Month
+    const Year = req.query.Year
     try {
       const Leaves = await MLeaves.findAll({
         where: {
           EmployeeId: EmployeeId, 
+          FYear : FYear,
         },
         attributes: {
           exclude: ["id"],
@@ -274,6 +278,46 @@ const generateLeaveBalanceId = async (req, res, next) => {
     res.status(500).send('Internal Server Error')
   }
 }
+
+router.patch("/FnUpdateRecords", authToken, async (req, res) => {
+  try {
+    const { EmployeeId, FYear } = req.query;
+    const updateDataArray = Array.isArray(req.body) ? req.body : [req.body];
+
+    const updatePromises = updateDataArray.map(async (updateData) => {
+      const { LeaveBalanceId, ...updateFields } = updateData;
+      try {
+        const result = await MLeaves.update(updateFields, {
+          where: {
+            EmployeeId: EmployeeId,
+            FYear: FYear,
+            LeaveBalanceId: LeaveBalanceId,
+          },
+        });
+
+        return result[0]; // Indicates the number of updated records
+      } catch (error) {
+        console.error("Error updating record:", error);
+        return 0; // Indicates failure to update
+      }
+    });
+
+    const updateResults = await Promise.all(updatePromises);
+    const totalUpdatedRecords = updateResults.reduce((sum, count) => sum + count, 0);
+
+    res.json({
+      message: totalUpdatedRecords > 0 ? "Records Updated Successfully" : "No Records Updated",
+      totalUpdatedRecords,
+    });
+  } catch (error) {
+    console.error("Error updating records:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+
+
+
   
   router.post("/FnAddUpdateDeleteRecord", generateLeaveBalanceId, authToken, async (req, res) => {
     const Leaves = req.body;
