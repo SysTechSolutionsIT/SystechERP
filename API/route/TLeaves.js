@@ -207,6 +207,26 @@ TLeaves.sync()
       res.status(500).send("Internal Server Error");
     }
   });
+
+  router.get("/FnShowParticularEmployeeData", authToken, async (req, res) => {
+    const EmployeeId = req.query.EmployeeId; // Assuming you're using EmployeeId instead of LeaveApplicationId
+    try {
+      const Leaves = await TLeaves.findAll({
+        where: {
+          EmployeeId: EmployeeId, 
+        },
+        attributes: {
+          exclude: ["id"],
+        },
+        order: [["LeaveApplicationId", "ASC"]],
+      });
+      res.json(Leaves);
+    } catch (error) {
+      console.error("Error retrieving data:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  });
+  
   
   const generateLeaveApplicationId = async (req, res, next) => {
     try {

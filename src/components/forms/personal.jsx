@@ -4,7 +4,7 @@ import { Icon } from "@iconify/react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import axios from "axios";
-import { useAuth } from "../Login";
+import { useAuth, useDetails } from "../Login";
 import { createContext, useContext } from "react";
 import Cookies from "js-cookie";
 
@@ -42,7 +42,14 @@ export default function Personal({ ID }) {
   const { token } = useAuth();
   const [details, setdetails] = useState([]);
   const { employeeTypeId, setEmployeeTypeId } = useEmployeeType()
+  const [LeaveTypes, setLeaveTypes] = useState([])
+  const [employeeId, setEmployeeId] = useState('')
+  const [employeeType, setEmployeeType] = useState('')
+  const [employeeTypeGroup, setEmployeeTypeGroup] = useState('')
   const [employeeTypes, setEmployeeTypes] = useState([])
+  const [employeeName, setEmployeeName] = useState('')
+  const { fYear } = useDetails()
+
   const formik = useFormik({
     initialValues: {
       EmployeeId: "",
@@ -260,6 +267,9 @@ export default function Personal({ ID }) {
         ModifiedBy: details.ModifiedBy,
         ModifiedOn: details.ModifiedOn,
       });
+      setEmployeeId(details.EmployeeId)
+      setEmployeeType(details.EmployeeType)
+      setEmployeeTypeGroup(details.EmployeeTypeGroupId)
     }
   }, [details]);
 

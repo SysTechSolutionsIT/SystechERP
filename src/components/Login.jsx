@@ -34,6 +34,8 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
+
 export const DetailsContext = createContext();
 
 export function useDetails() {
@@ -42,17 +44,39 @@ export function useDetails() {
 
 export const DetailsProvider = ({ children }) => {
   const [companyId, setCompanyId] = useState("");
+  const [branchId, setBranchId] = useState("");
+  const [fYear, setFYear] = useState("");
+
   const handleSetCompanyId = (newID) => {
     setCompanyId(newID);
-    // Save token to a cookie whenever it changes
-    Cookies.set("companyId", newID, { expires: 7 }); // Set an expiration date if needed
+    Cookies.set("companyId", newID, { expires: 7 });
+  };
+
+  const handleSetBranchId = (newId) => {
+    setBranchId(newId);
+    Cookies.set("branchId", newId, { expires: 7 });
+  };
+
+  const handleSetFYear = (newFYear) => {
+    setFYear(newFYear);
+    Cookies.set("fYear", newFYear, { expires: 7 });
   };
 
   useEffect(() => {
-    // Check if a token exists in cookies and set it in the state
-    const savedToken = Cookies.get("companyId");
-    if (savedToken) {
-      setCompanyId(savedToken);
+    const savedCompanyId = Cookies.get("companyId");
+    const savedBrancId = Cookies.get("branchId");
+    const savedFYear = Cookies.get("fYear");
+
+    if (savedCompanyId) {
+      setCompanyId(savedCompanyId);
+    }
+
+    if (savedBrancId) {
+      setBranchId(savedBrancId);
+    }
+
+    if (savedFYear) {
+      setFYear(savedFYear);
     }
   }, []);
 
@@ -61,6 +85,10 @@ export const DetailsProvider = ({ children }) => {
       value={{
         companyId,
         setCompanyId: handleSetCompanyId,
+        branchId,
+        setBranchId: handleSetBranchId,
+        fYear,
+        setFYear: handleSetFYear,
       }}
     >
       {children}
@@ -68,19 +96,27 @@ export const DetailsProvider = ({ children }) => {
   );
 };
 
+
 function Login() {
   const [username, setUsername] = useState("ggwpfax");
   const [password, setPassword] = useState("udayan@99");
   const [companies, setCompanies] = useState([]);
   const { token, setToken } = useAuth();
-  const { companyId, setCompanyId } = useDetails();
-  const [branchId, setBranchId] = useState("");
+  const { companyId, setCompanyId } = useDetails(); 
+  const { branchId, setBranchId } = useDetails()
+  const { fYear, setFYear } = useDetails()
+  const [finYears, setFinYears] = useState([])
 
   const handleCompanyChange = (e) => {
     const selectedCompanyId = e.target.value;
     console.log(selectedCompanyId);
     setCompanyId(selectedCompanyId);
   };
+
+  const handleFinChange = (e) =>{
+    const selectedFYear = e.target.value
+    setFYear(selectedFYear)
+  }
 
   const handleBranchChange = (e) => {
     const selectedBranchId = e.target.value;
@@ -117,6 +153,8 @@ function Login() {
       if (token) {
         navigate("/dashboard");
         console.log("Company Id", companyId);
+        console.log('Branch Id', branchId)
+        console.log('Fin year', fYear)
       }
     } catch (error) {
       console.log("Error", error);
@@ -141,6 +179,19 @@ function Login() {
     }
   };
 
+  useEffect(() =>{
+    const fetchFinancialYears = async () =>{
+      try {
+        const response = await axios.get('http://localhost:5500/financials/FnShowActiveData')
+        const data = response.data
+        setFinYears(data)
+      } catch (error) {
+        console.error("Error", error);
+      }
+    }
+    fetchFinancialYears()
+  },[])
+
   return (
     <DetailsProvider value={companyId}>
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -162,7 +213,6 @@ function Login() {
               id="company"
               required
               onChange={handleCompanyChange}
-              value={companyId}
               className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-400 text-[13px]"
             >
               <option value="">Select a company</option>
@@ -184,15 +234,12 @@ function Login() {
               type="dropdown"
               id="branch"
               required
-              onChange={handleCompanyChange}
+              onChange={handleBranchChange}
               className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-400 text-[13px]"
             >
               <option value="">Select a branch</option>
-              {companies.map((company, index) => (
-                <option key={index} value={company.CompanyId}>
-                  {company.CompanyName}
-                </option>
-              ))}
+              <option value="00001">Main</option>
+              <option value="00002">Sub</option>
             </select>
           </div>
           <div className="mb-2">
@@ -204,13 +251,15 @@ function Login() {
             </label>
             <select
               type="dropdown"
-              id="company"
+              id="fin"
               required
+              onChange={handleFinChange}
               className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-400 text-[13px]"
             >
-              {companies.map((company, index) => (
-                <option key={index} value={company.name}>
-                  {company.name}
+              <option value="">Select a Financial Year</option>
+              {finYears.map((year, index) => (
+                <option key={index} value={year.ShortName}>
+                  {year.Name}
                 </option>
               ))}
             </select>
