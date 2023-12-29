@@ -411,14 +411,11 @@ const Sidebar = () => {
                       />
                       <SubMenuEntry
                         title="Employee Type Earning Master"
-                        onClick={() =>
-                          navigate("/employee-type-earning")
-                        }
+                        onClick={() => navigate("/employee-type-earning")}
                       />
                       <SubMenuEntry
                         title="Employee Type Deduction Master"
-                        onClick={() => 
-                        navigate('/employee-type-deduction')}
+                        onClick={() => navigate("/employee-type-deduction")}
                       />
                       <SubMenuEntry
                         title="Professional Tax Setting"
@@ -500,7 +497,10 @@ const Sidebar = () => {
                           navigate("/attendance-master/empGatePassEntry")
                         }
                       />
-                      <SubMenuEntry title="Employee Gate Pass Approval" />
+                      <SubMenuEntry
+                        title="Employee Gate Pass Approval"
+                        onClick={() => navigate("/gatepass-approval")}
+                      />
                       <SubMenuEntry title="Job Allocation" />
                       <SubMenuEntry title="Daily Atttendance Processing" />
                       <SubMenuEntry title="Attendance Import" />

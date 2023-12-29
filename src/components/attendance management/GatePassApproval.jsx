@@ -1,91 +1,45 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useAuth } from "../Login";
-import { useRef } from "react";
 import { Icon } from "@iconify/react";
+import axios from "axios";
+import GatePassApprovalModal from "./GatePassApprovalModal";
 
 const GatePassApproval = () => {
-  const dummyData = [
-    {
-      ApprovalFlag: true,
-      GatepassId: "GP123",
-      GatepassDate: "2023-11-06",
-      FYear: 2023,
-      EmployeeId: 1,
-      EmployeeName: "John Doe",
-      EmployeeType: "Full-time",
-      InTime: "08:00 AM",
-      OutTime: "05:00 PM",
-      GatepassType: "Business",
-      Purpose: "Meeting with clients",
-      RejectReason: "",
-      SanctionBy: "Manager",
-      Status: "Approved",
-    },
-    {
-      ApprovalFlag: false,
-      GatepassId: "GP456",
-      GatepassDate: "2023-11-07",
-      FYear: 2023,
-      EmployeeId: 2,
-      EmployeeName: "Jane Smith",
-      EmployeeType: "Part-time",
-      InTime: "10:00 AM",
-      OutTime: "02:00 PM",
-      GatepassType: "Personal",
-      Purpose: "Medical appointment",
-      RejectReason: "Insufficient information",
-      SanctionBy: "Supervisor",
-      Status: "Rejected",
-    },
-    {
-      ApprovalFlag: true,
-      GatepassId: "GP789",
-      GatepassDate: "2023-11-08",
-      FYear: 2023,
-      EmployeeId: 3,
-      EmployeeName: "Robert Johnson",
-      EmployeeType: "Contractor",
-      InTime: "09:30 AM",
-      OutTime: "04:30 PM",
-      GatepassType: "Business",
-      Purpose: "Training session",
-      RejectReason: "",
-      SanctionBy: "Manager",
-      Status: "Approved",
-    },
-  ];
-
   const [filteredData, setFilteredData] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false); //Add Modal
-  const [OutDoorAttendanceEntry, setOutDoorAttendanceEntry] = useState([]);
+
+  const [ApprovalEntry, setApprovalEntry] = useState([]);
   const { token } = useAuth();
   //View and Edit
-  const [LVE, setLVE] = useState(false);
-  const [edit, setEdit] = useState(false);
-  const [LeaveId, setLeaveId] = useState();
+  const [GVE, setGVE] = useState(false);
+  const [GateId, setGateId] = useState();
+
+  const [employeeIdMapping, setDetails] = useState([]);
+  const [personal, setPersonal] = useState([]);
+  const [employeeTypeMapping, setEmployeeTypes] = useState([]);
 
   useEffect(() => {
-    setOutDoorAttendanceEntry(dummyData);
-  }, [dummyData]);
+    fetchRequestData();
+  }, []);
 
-  // useEffect(() => {
-  //   const fetchManualAttendance = async () => {
-  //     try {
-  //       const response = await axios.get('http://localhost:5500/leave-master/get', {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`
-  //         }
-  //       })
-  //       const data = response.data
-  //       setOutDoorAttendanceEntry(data)
-  //     } catch (error) {
-  //       console.error('Error', error);
-  //     }
-  //   }
-
-  //   fetchLeaveType()
-  // }, [token])
+  const fetchRequestData = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5500/gate-pass/FnShowPendingData",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Response Object--Gate pass Pending", response);
+      const data = response.data;
+      console.log(data);
+      setApprovalEntry(data);
+    } catch (error) {
+      console.log("Error while fetching course data: ", error);
+    }
+  };
 
   //Hamburger Menu
   const [menuOpen, setMenuOpen] = useState(false);
@@ -93,36 +47,36 @@ const GatePassApproval = () => {
 
   const [columnVisibility, setColumnVisibility] = useState({
     ApprovalFlag: true,
-    AttendanceID: true,
-    AttendanceDate: true,
+    GatepassDate: true,
     FYear: true,
-    EmployeeType: true,
-    EmployeeName: true,
-    Shift: true,
+    EmployeeId: true,
+    EmployeeTypeGroup: true,
     InTime: true,
     OutTime: true,
-    JobType: true,
+    GatepassType: true,
+    Purpose: true,
+    RejectReason: true,
     SanctionBy: true,
-    Status: true,
+    AcFlag: true,
   });
 
   const columnNames = {
     ApprovalFlag: "Approval Flag",
-    AttendanceID: "Attendance ID",
-    AttendanceDate: "Attendance Date",
+    GatepassDate: "Gatepass Date",
     FYear: "FYear",
-    EmployeeType: "Employee Type",
-    EmployeeName: "Employee Name",
-    Shift: "Shift",
-    InTime: "In Time",
-    OutTime: "Out Time",
-    JobType: "Job Type",
-    SanctionBy: "Sanction By",
-    Status: "Status",
+    EmployeeId: "Employee Name",
+    EmployeeTypeGroup: "Employee Type",
+    InTime: "InTime",
+    OutTime: "OutTime",
+    GatepassType: "GatePass Type",
+    Purpose: "Purpose",
+    RejectReason: "Reject Reason",
+    SanctionBy: "SanctionBy",
+    AcFlag: "Status",
   };
 
   const handleSearchChange = (title, searchWord) => {
-    const newFilter = OutDoorAttendanceEntry.filter((item) => {
+    const newFilter = ApprovalEntry.filter((item) => {
       const value = item[title];
       return value && value.toLowerCase().includes(searchWord.toLowerCase());
     });
@@ -190,7 +144,7 @@ const GatePassApproval = () => {
   //Max Searchbar width
   const getColumnMaxWidth = (columnName) => {
     let maxWidth = 0;
-    const allRows = [...OutDoorAttendanceEntry, ...filteredData];
+    const allRows = [...ApprovalEntry, ...filteredData];
 
     allRows.forEach((row) => {
       const cellContent = row[columnName];
@@ -208,11 +162,81 @@ const GatePassApproval = () => {
     return context.measureText(text).width;
   };
 
+  ///Handling rendering
+
+  const renderColumnValue = (columnName, result) => {
+    switch (columnName) {
+      case "EmployeeTypeId":
+        const employeeTypeValue =
+          employeeTypeMapping.length &&
+          employeeTypeMapping.find(
+            (item) => item.EmployeeTypeId == result[columnName]
+          )?.EmployeeTypeGroup;
+
+        console.log("EmployeeTypeValue:", employeeTypeValue);
+        return employeeTypeValue;
+
+      case "EmployeeId":
+        const employeeIdValue =
+          employeeIdMapping.length &&
+          employeeIdMapping.find(
+            (item) => item.EmployeeId == result[columnName]
+          )?.EmployeeName;
+        return employeeIdValue;
+
+      case "AcFlag":
+        const acFlagValue = result[columnName] ? "Active" : "Inactive";
+        return acFlagValue;
+
+      default:
+        return result[columnName];
+    }
+  };
+
+  //ALl Api Callings
+  const fetchPersonalData = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5500/employee/personal/FnShowActiveData`,
+        {
+          headers: { Authorization: `Bearer ${token}` }, // Moved headers here
+        }
+      );
+      console.log("Response Object", response);
+      const data = response.data;
+      setDetails(data);
+    } catch (error) {
+      console.log("Error while fetching course data: ", error.message);
+    }
+  };
+
+  // Get
+  useEffect(() => {
+    fetchPersonalData();
+  }, [token]);
+
+  // getting Employee Types
+  useEffect(() => {
+    const fetchEmployeeTypes = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/employee-type/FnShowActiveData",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const data = response.data;
+        setEmployeeTypes(data);
+      } catch (error) {
+        console.error("Error", error);
+      }
+    };
+    fetchEmployeeTypes();
+  }, [token]);
+
   return (
     <div className="top-25 min-w-[40%]">
       <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
         <div className="mr-auto text-[15px]">
-          Attendance Management / Manual Attendance Approval
+          Attendance Management / Gate Pass Approval
         </div>
         <div className="flex gap-4">
           <button
@@ -307,10 +331,10 @@ const GatePassApproval = () => {
           </div>
         </div>
       </div>
-      <OutDoorAttendanceEntryModal
+      {/* <OutDoorAttendanceEntryModal
         visible={isModalOpen}
         onClick={() => setModalOpen(false)}
-      />
+      /> */}
       <div className="grid gap-2 justify-between">
         <div className="my-1 rounded-2xl bg-white p-2 pr-8 ">
           <table className="min-w-full text-center whitespace-normal z-0">
@@ -367,29 +391,17 @@ const GatePassApproval = () => {
                           <button
                             type="submit"
                             className="bg-blue-900 text-white font-semibold py-1 px-1 rounded-lg text-[11px]"
-                          >
-                            Approve
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                : OutDoorAttendanceEntry.filter(
-                    (result) => !result.ApprovalFlag
-                  ).map((result, index) => (
-                    <tr key={index}>
-                      <td className="px-2 border-2">
-                        <div className="flex items-center gap-2 text-center justify-center">
-                          <button
-                            type="submit"
-                            className="bg-blue-900 text-white font-semibold py-1 px-1 rounded-lg text-[11px]"
+                            onClick={() => {
+                              setGVE(true); // Open VEModal
+                              setGateId(result.GatepassId); // Pass ID to VEModal
+                            }}
                           >
                             Approve
                           </button>
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {index + 1}
+                        {result.GatepassId}
                       </td>
                       {selectedColumns.map(
                         (columnName) =>
@@ -400,15 +412,42 @@ const GatePassApproval = () => {
                                 columnVisibility[columnName] ? "" : "hidden"
                               }`}
                             >
-                              {columnName === "ApprovalFlag"
-                                ? result[columnName]
-                                  ? "Approved"
-                                  : "Unapproved"
-                                : columnName === "Status"
-                                ? result[columnName]
-                                  ? "Active"
-                                  : "Inactive"
-                                : result[columnName]}
+                              {renderColumnValue(columnName, result)}
+                            </td>
+                          )
+                      )}
+                    </tr>
+                  ))
+                : ApprovalEntry.length > 0 &&
+                  ApprovalEntry.map((result, index) => (
+                    <tr key={index}>
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <button
+                            type="submit"
+                            className="bg-blue-900 text-white font-semibold py-1 px-1 rounded-lg text-[11px]"
+                            onClick={() => {
+                              setGVE(true); // Open VEModal
+                              setGateId(result.GatepassId); // Pass ID to VEModal
+                            }}
+                          >
+                            Approve
+                          </button>
+                        </div>
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                        {result.GatepassId}
+                      </td>
+                      {selectedColumns.map(
+                        (columnName) =>
+                          columnVisibility[columnName] && (
+                            <td
+                              key={columnName}
+                              className={`px-4 border-2 whitespace-normal text-left text-[11px]${
+                                columnVisibility[columnName] ? "" : "hidden"
+                              }`}
+                            >
+                              {renderColumnValue(columnName, result)}
                             </td>
                           )
                       )}
@@ -418,8 +457,13 @@ const GatePassApproval = () => {
           </table>
         </div>
       </div>
+      <GatePassApprovalModal
+        visible={GVE}
+        onClick={() => setGVE(false)}
+        ID={GateId}
+      />
     </div>
   );
 };
 
-export default OutDoorAttendanceApproval;
+export default GatePassApproval;

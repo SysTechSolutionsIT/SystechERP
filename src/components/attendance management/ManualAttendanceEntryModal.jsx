@@ -41,7 +41,7 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
         FYear: formik.values.FYear,
         AttendanceDate: formik.values.AttendanceDate,
         EmployeeId: formik.values.EmployeeId,
-        EmployeeTypeId: formik.values.EmployeeId,
+        EmployeeTypeId: formik.values.EmployeeTypeId,
         EmployeeTypeGroup: formik.values.EmployeeTypeGroup,
         ShiftId: formik.values.ShiftId,
         InTime: formik.values.InTime,
@@ -94,11 +94,6 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
   useEffect(() => {
     fetchPersonalData();
   }, [token]);
-
-  //Setting Employee Details
-  const handleEmployeeChange = (event) => {
-    setSelectedEmployeeId(event.target.value);
-  };
 
   // getting Employee Types
   useEffect(() => {
@@ -232,7 +227,7 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
                 <p className="text-[13px] font-semibold">Attendance Date</p>
                 <input
                   id="AttendanceDate"
-                  type="Date"
+                  type="date"
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   value={formik.values.AttendanceDate}
                   onChange={formik.handleChange}
