@@ -49,6 +49,8 @@ const MCaderwiseDeduction = require("./route/MCaderwiseDeduction");
 const MDevice = require("./route/MDeviceRoute");
 const TManualAttendance = require("./route/TManualAttendance");
 const MGatePass = require("./route/MGatePass");
+const MTwoField = require("./route/MTwoField");
+const MMasterName = require("./route/MMasterName");
 
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());
@@ -66,7 +68,7 @@ app.use("/employee/family", MEmployeeFamily);
 app.use("/bankmaster", BankMaster);
 app.use("/departmentmaster", MDepartment);
 // app.use("/threefieldmaster", ThreeFieldMaster);
-// app.use("/twofieldmaster", TwoFieldMaster);
+app.use("/two-field", MTwoField);
 app.use("/financials", MFinancialYear);
 app.use("/job-type", MJobType);
 // app.use("/destinationmaster", DestinationMaster);
@@ -97,6 +99,7 @@ app.use("/job-type", MJobType);
 app.use("/device", MDevice);
 app.use("/manual-attendance", TManualAttendance);
 app.use("/gate-pass", MGatePass);
+app.use("/master-names", MMasterName);
 
 // Start the server
 const port = 5500;

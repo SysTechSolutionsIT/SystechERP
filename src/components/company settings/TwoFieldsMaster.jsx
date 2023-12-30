@@ -70,11 +70,41 @@ const TwoFieldsMaster = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
+  const [MNames, setMNames] = useState([]);
+  useEffect(() => {
+    fetchMasterNamesData();
+  }, [token]);
+
+  const fetchMasterNamesData = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5500/master-names/FnshowActiveData",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Response Object", response);
+      const data = response.data;
+      const tempMap = {};
+      data.forEach((item) => {
+        tempMap[item.MasterId] = item.MasterName;
+      });
+      console.log("temp map", tempMap);
+      setMNames(tempMap);
+    } catch (error) {
+      console.log("Error while fetching course data: ", error.message);
+    }
+  };
+
   const [columnVisibility, setColumnVisibility] = useState({
-    MasterName: true,
+    MasterNameId: true,
     FieldDetails: true,
-    Status: true,
+    AcFlag: true,
   });
+
+  // Getting Master Names
 
   // Toggle
   const [showDropdown, setShowDropdown] = useState(false);
@@ -145,15 +175,18 @@ const TwoFieldsMaster = () => {
 
   useEffect(() => {
     fetchTwoFieldData();
-  }, []);
+  }, [token]);
 
   const fetchTwoFieldData = async () => {
     try {
-      const response = await axios.get("http://localhost:5500/twofieldmaster/", {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const response = await axios.get(
+        "http://localhost:5500/two-field/FnshowActiveData",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
+      );
       console.log("Response Object", response);
       const data = response.data;
       console.log(data);
@@ -198,8 +231,9 @@ const TwoFieldsMaster = () => {
             Column Visibility
             <Icon
               icon="fe:arrow-down"
-              className={`mt-1.5 ml-2 ${showDropdown ? "rotate-180" : ""
-                } cursor-pointer`}
+              className={`mt-1.5 ml-2 ${
+                showDropdown ? "rotate-180" : ""
+              } cursor-pointer`}
             />
           </button>
           {showDropdown && (
@@ -300,8 +334,9 @@ const TwoFieldsMaster = () => {
                 {selectedColumns.map((columnName) => (
                   <th
                     key={columnName}
-                    className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] capitalize whitespace-normal${columnVisibility[columnName] ? "" : "hidden"
-                      }`}
+                    className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] capitalize whitespace-normal${
+                      columnVisibility[columnName] ? "" : "hidden"
+                    }`}
                   >
                     {columnName}
                   </th>
@@ -331,115 +366,114 @@ const TwoFieldsMaster = () => {
             <tbody>
               {filteredData.length > 0
                 ? filteredData.map((result, index) => (
-                  <tr key={index}>
-                    <td className="px-2 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          className="cursor-pointer"
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          onClick={() => {
-                            setVeTf(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setid(result.id); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          className="cursor-pointer"
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          onClick={() => {
-                            setVeTf(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setid(result.id); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          className="cursor-pointer"
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
-                      {result.id}
-                    </td>
-                    {selectedColumns.map((columnName) => (
-                      <td
-                        key={columnName}
-                        className={`px-4 text-[11px] border-2 whitespace-normal text-left${columnVisibility[columnName] ? "" : "hidden"
+                    <tr key={index}>
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            className="cursor-pointer"
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            onClick={() => {
+                              setVeTf(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setid(result.FieldId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            className="cursor-pointer"
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            onClick={() => {
+                              setVeTf(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setid(result.FieldId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            className="cursor-pointer"
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
+                        {result.FieldId}
+                      </td>
+                      {selectedColumns.map((columnName) => (
+                        <td
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-left text-[11px] ${
+                            columnVisibility[columnName] ? "" : "hidden"
                           }`}
-                      >
-                        {result[
-                          columnName.charAt(0).toLowerCase() +
-                          columnName.slice(1)
-                        ]}
-                      </td>
-                    ))}
-                  </tr>
-                ))
+                        >
+                          {columnName === "MasterNameId"
+                            ? MNames[result[columnName]]
+                            : result[columnName]}
+                        </td>
+                      ))}
+                    </tr>
+                  ))
                 : fields.length > 0 &&
-                fields.map((result, index) => (
-                  <tr key={index}>
-                    <td className="px-2 text-[11px] border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          className="cursor-pointer"
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          onClick={() => {
-                            setVeTf(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setid(result.id); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          className="cursor-pointer"
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          onClick={() => {
-                            setVeTf(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setid(result.id); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          className="cursor-pointer"
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
-                      {result.id}
-                    </td>
-                    {selectedColumns.map((columnName) => (
-                      <td
-                        key={columnName}
-                        className={`px-4 text-[11px] border-2 whitespace-normal ${columnName === "EmployeeFare" && "text-right"
-                          } ${columnVisibility[columnName] ? "" : "hidden"}`}
-                      >
-                        {columnName === "EmployeeFare" && "₹"}
-                        {result[
-                          columnName.charAt(0).toLowerCase() +
-                          columnName.slice(1)
-                        ]}
+                  fields.map((result, index) => (
+                    <tr key={index}>
+                      <td className="px-2 text-[11px] border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            className="cursor-pointer"
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            onClick={() => {
+                              setVeTf(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setid(result.FieldId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            className="cursor-pointer"
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            onClick={() => {
+                              setVeTf(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setid(result.FieldId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            className="cursor-pointer"
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                          />
+                        </div>
                       </td>
-                    ))}
-                  </tr>
-                ))}
+                      <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
+                        {result.FieldId}
+                      </td>
+                      {selectedColumns.map((columnName) => (
+                        <td
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-left text-[11px] ${
+                            columnVisibility[columnName] ? "" : "hidden"
+                          }`}
+                        >
+                          {columnName === "MasterNameId"
+                            ? MNames[result[columnName]]
+                            : result[columnName]}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
             </tbody>
           </table>
         </div>
