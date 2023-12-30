@@ -49,6 +49,9 @@ const MCaderwiseDeduction = require("./route/MCaderwiseDeduction");
 const MDevice = require("./route/MDeviceRoute");
 const TManualAttendance = require("./route/TManualAttendance");
 const MGatePass = require("./route/MGatePass");
+
+const MLeaves = require("./route/MLeaves");
+
 const MTwoField = require("./route/MTwoField");
 const MMasterName = require("./route/MMasterName");
 
@@ -99,6 +102,7 @@ app.use("/job-type", MJobType);
 app.use("/device", MDevice);
 app.use("/manual-attendance", TManualAttendance);
 app.use("/gate-pass", MGatePass);
+app.use("/leave-balance", MLeaves);
 app.use("/master-names", MMasterName);
 
 // Start the server

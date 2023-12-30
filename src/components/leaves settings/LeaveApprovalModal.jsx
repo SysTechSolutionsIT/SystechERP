@@ -8,7 +8,11 @@ const LeaveApprovalModal = ({ visible, onClick, ID }) => {
   const [details, setDetails] = useState([]);
   const { token } = useAuth()
   const [Employees, setEmployees] = useState([])
+  const [LeaveTypes, setLeaveTypes] = useState('')
   const [employeeTypes, setEmployeeTypes] = useState([]);
+  const [ previousLeaves, setPreviousLeaves ] = useState([])
+  const [employeeId, setEmployeeId] = useState('')
+  const [leaveTypeId, setLeaveTypeId] = useState('')
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleInputChange = (event) => {
@@ -178,16 +182,55 @@ const LeaveApprovalModal = ({ visible, onClick, ID }) => {
               SanctionToDate: formatDate(details.SanctionToDate),
               SanctionLeaveDays: details.SanctionLeaveDays,
           })
+          setEmployeeId(details.EmployeeId)
+          setLeaveTypeId(details.LeaveTypeId)
       }
   }, [details])
 
+  useEffect(() =>{
+    const fetchPreviousLeaves = async () =>{
+        try {
+          const response = await axios.get('http://localhost:5500/leave-application/FnShowParticularEmployeeData', 
+          {
+            params: { EmployeeId: employeeId},
+            headers: { Authorization: `Bearer ${token}`}
+          })
+          const data = response.data
+          console.log('Previous Leaves', data)
+          setPreviousLeaves(data)
+        } catch (error) {
+          console.error('Error', error);
+        }
+      }
+    fetchPreviousLeaves()
+  }, [token, details])
+
+  useEffect(() =>{
+    const fetchLeaveType = async() =>{
+      try{
+        const response = await axios.get('http://localhost:5500/leave-type/FnShowActiveData',{
+          headers:{
+            Authorization: `Bearer ${token}`
+          }
+        })
+        const data = response.data
+        console.log(data)
+        setLeaveTypes(data)
+      } catch(error){
+        console.error('Error', error);
+      }
+    }
+  
+    fetchLeaveType()
+  }, [token])
+
+  const leaveType = LeaveTypes.length > 0 && LeaveTypes.find((type) => type.LeaveTypeId == leaveTypeId);
 
   const [status, setStatus] = useState(false);
   const columnHeads = [
-    "Leave Type Description",
-    "Leave Gain",
-    "Leave Taken",
-    "Leave Balance",
+    "Leave Type",
+    "Approval Flag",
+    "FYear",
     "Leave Applied",
     "Sanction Days",
   ];
@@ -256,6 +299,18 @@ const LeaveApprovalModal = ({ visible, onClick, ID }) => {
                   id="EmployeeId"
                   type="text"
                   value={formik.values.EmployeeId}
+                  className={`w-full px-4 py-2 font-normal bg-white focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  onChange={formik.handleChange}
+                />
+              </div>
+              <div>
+                <p className="text-[13px] font-semibold">
+                  Leave Type
+                </p>
+                <input
+                  id="LeaveType"
+                  type="text"
+                  value={leaveType?.LeaveType}
                   className={`w-full px-4 py-2 font-normal bg-white focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -386,7 +441,7 @@ const LeaveApprovalModal = ({ visible, onClick, ID }) => {
             <div className="flex mt-4 justify-start">
               <button
                 type="submit"
-                className="bg-blue-900 text-white text-[13px] font-semibold py-2 px-4 rounded-lg"
+                className="bg-blue-900 text-white text-[11px] font-semibold py-2 px-4 rounded-lg"
               >
                 Show
               </button>
@@ -399,18 +454,34 @@ const LeaveApprovalModal = ({ visible, onClick, ID }) => {
                       {columnHeads.map((columnName) => (
                         <th
                           key={columnName}
-                          className="px-2 py-2 font-bold text-[13px] text-center border-2 bg-blue-900 text-white "
-                          style={{
-                            borderTopLeftRadius: "10px",
-                            borderTopRightRadius: "10px",
-                          }}
+                          className="px-2 py-2 font-bold text-[11px] text-center border-2 bg-blue-900 text-white rounded-tl-lg rounded-tr-lg "
                         >
                           {columnName}
                         </th>
                       ))}
                     </tr>
                   </thead>
-                  <tbody></tbody>
+                  <tbody>
+                    {previousLeaves.map((item) =>(
+                    <tr>
+                      <td className="px-4 border-2 whitespace-normal bg-white rounded-lg text-left text-[11px]">
+                      {item.LeaveTypeId}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal bg-white rounded-lg text-left text-[11px]">
+                      {item.ApprovalFlag}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal bg-white rounded-lg text-left text-[11px]">
+                      {item.FYear}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal bg-white rounded-lg text-left text-[11px]">
+                      {formatDate(item.LeaveApplicationDate)}
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal bg-white rounded-lg text-left text-[11px]">
+                      {item.SanctionLeaveDays}
+                      </td>
+                    </tr>
+                    ))}
+                  </tbody>
                 </table>
               </div>
             </div>

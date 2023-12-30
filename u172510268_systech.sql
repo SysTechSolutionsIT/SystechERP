@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 26, 2023 at 06:39 AM
+-- Generation Time: Dec 30, 2023 at 08:47 AM
 -- Server version: 10.6.15-MariaDB-cll-lve
 -- PHP Version: 7.2.34
 
@@ -1584,6 +1584,95 @@ Start Transaction;
 
 END$$
 
+CREATE DEFINER=`u172510268_devs`@`127.0.0.1` PROCEDURE `UspMLeaves` (`pCompanyId` VARCHAR(5), `pBranchId` VARCHAR(5), `pLeaveBalanceId` VARCHAR(5), `pFYear` VARCHAR(5), `pEmployeeId` VARCHAR(5), `pEmployeeTypeId` VARCHAR(5), `pMonth` VARCHAR(5), `pYear` VARCHAR(5), `pLeaveBalanceDate` DATETIME(3), `pEmployeeName` VARCHAR(500), `pLeaveTypeDesc` VARCHAR(5), `pOpeningBalance` VARCHAR(5), `pLeaveEarned1` DECIMAL(10,2), `pLeaveEarned2` DECIMAL(10,2), `pLeaveEarned3` DECIMAL(10,2), `pLeaveEarned4` DECIMAL(10,2), `pLeaveEarned5` DECIMAL(10,2), `pLeaveEarned6` DECIMAL(10,2), `pLeaveEarned7` DECIMAL(10,2), `pLeaveEarned8` DECIMAL(10,2), `pLeaveEarned9` DECIMAL(10,2), `pLeaveEarned10` DECIMAL(10,2), `pLeaveEarned11` DECIMAL(10,2), `pLeaveEarned12` DECIMAL(10,2), `pSanctionLeaveDays` DECIMAL(10,2), `pLeaveBalance` DECIMAL(10,2), `pRemark` VARCHAR(500), `pAcFlag` VARCHAR(1), `pCreatedBy` VARCHAR(500), `pModifiedBy` VARCHAR(500), `pIUFlag` VARCHAR(1), OUT `pResult` VARCHAR(100))   splbl:
+BEGIN
+Declare
+v_Err int;
+Declare v_Cnt int;
+Declare v_EmployeeType varchar(10);
+Declare v_EmployeeTypeGroup varchar(10);
+Declare v_LeaveTypeId varchar(5);
+
+Start Transaction; 
+	
+  
+	If pIUFlag='I'
+	Then
+
+		   -- SQLINES LICENSE FOR EVALUATION USE ONLY
+   		Select ShortName,EmployeeTypeGroup Into v_EmployeeType, v_EmployeeTypeGroup from MEmployeeType  Where  EmployeeTypeId = pEmployeeTypeId  and CompanyId =pCompanyId and BranchId =pBranchId;
+
+		    -- SQLINES LICENSE FOR EVALUATION USE ONLY
+    		Select LeaveTypeId Into v_LeaveTypeId from MLeaveType  Where  ShortName=pLeaveTypeDesc  and CompanyId =pCompanyId and BranchId =pBranchId;
+
+
+
+	      -- SQLINES LICENSE FOR EVALUATION USE ONLY
+      	Select Count(*) Into v_Cnt from MLeaves Where    LeaveBalanceId= pLeaveBalanceId and BranchId=pBranchId  and CompanyId =pCompanyId; 
+		if v_Cnt > 0 
+		Then
+			--  SQLINES DEMO *** stination Name  Already Exist !!'
+			-- SQLINES LICENSE FOR EVALUATION USE ONLY
+			Set pResult='400';
+			Rollback;
+			leave splbl;
+		End if;
+
+		-- SQLINES LICENSE FOR EVALUATION USE ONLY
+		INSERT INTO MLeaves (CompanyId,BranchId,LeaveBalanceId,FYear,EmployeeId,EmployeeTypeId,EmployeeType,EmployeeTypeGroup,Month,Year,LeaveBalanceDate,EmployeeName,LeaveTypeDesc,LeaveTypeId,OpeningBalance,LeaveEarned1,LeaveEarned2,LeaveEarned3,LeaveEarned4,LeaveEarned5,LeaveEarned6,LeaveEarned7,LeaveEarned8,LeaveEarned9,LeaveEarned10,LeaveEarned11,LeaveEarned12,SanctionLeaveDays,LeaveBalance,Remark,AcFlag,CreatedBy,CreatedOn,ModifiedBy,ModifiedOn)
+		        VALUES (pCompanyId,pBranchId,pLeaveBalanceId,pFYear,pEmployeeId,pEmployeeTypeId,v_EmployeeType,v_EmployeeTypeGroup,pMonth,pYear,pLeaveBalanceDate,pEmployeeName,pLeaveTypeDesc,v_LeaveTypeId,pOpeningBalance,pLeaveEarned1,pLeaveEarned2,pLeaveEarned3,pLeaveEarned4,pLeaveEarned5,pLeaveEarned6,pLeaveEarned7,pLeaveEarned8,pLeaveEarned9,pLeaveEarned10,pLeaveEarned11,pLeaveEarned12,pSanctionLeaveDays,pLeaveBalance,pRemark,pAcFlag,pCreatedBy,str_to_date(now(3),103),pModifiedBy,str_to_date(now(3),103));
+
+				--  SQLINES DEMO *** stination NRecord Inserted Successfully!'
+		  -- SQLINES LICENSE FOR EVALUATION USE ONLY
+  		Set pResult='401';
+		  Commit;
+		 Leave splbl;
+
+ Elseif pIUFlag='U'
+ Then
+  -- SQLINES LICENSE FOR EVALUATION USE ONLY
+  Select Count(*) Into v_Cnt from MLeaves Where  LeaveBalanceId= pLeaveBalanceId and BranchId=pBranchId  and LeaveBalanceId <> pLeaveBalanceId and CompanyId =pCompanyId; 
+	if v_Cnt > 0
+	Then
+	--  SQLINES DEMO *** stination Already Exist !!'
+	-- SQLINES LICENSE FOR EVALUATION USE ONLY
+	Set pResult='400';
+	  Rollback;
+	  leave splbl;
+    End if;
+
+	 UPDATE MLeaves  SET 
+	LeaveBalanceId= pLeaveBalanceId, Remark=pRemark, AcFlag = pAcFlag, ModifiedBy = pModifiedBy, ModifiedOn =str_to_date(now(3),103)
+      Where  LeaveBalanceId=pLeaveBalanceId and CompanyId=pCompanyId  and  BranchId=pBranchId;
+      
+	
+	 -- SQLINES LICENSE FOR EVALUATION USE ONLY
+ 	Set pResult='402';
+		--  SQLINES DEMO *** Destination Record Updated Successfully !!'
+		Commit;
+		leave splbl;		
+
+	Elseif pIUFlag='D'
+	Then
+	Update MLeaves Set
+	  AcFlag='N'
+	  Where LeaveBalanceId = pLeaveBalanceId and CompanyId = pCompanyId  and  BranchId=pBranchId;
+      
+	  -- SQLINES LICENSE FOR EVALUATION USE ONLY
+  	Set pResult='403';
+	  --  SQLINES DEMO *** Destination Record Deleted Successfully !!'
+		Commit;
+		leave splbl;		
+	
+	End if;
+
+
+
+
+
+
+END$$
+
 CREATE DEFINER=`u172510268_devs`@`127.0.0.1` PROCEDURE `UspMLeaveType` (`pCompanyId` VARCHAR(5), `pBranchId` VARCHAR(5), `pLeaveTypeId` VARCHAR(5), `pLeaveType` VARCHAR(500), `pShortName` VARCHAR(2), `pPaidFlag` VARCHAR(10), `pCarryForwardFlag` VARCHAR(10), `pRemark` VARCHAR(500), `pAcFlag` VARCHAR(1), `pCreatedBy` VARCHAR(500), `pModifiedBy` VARCHAR(500), `pIUFlag` VARCHAR(1), OUT `pResult` VARCHAR(100))   splbl:
 BEGIN
 Declare
@@ -1805,6 +1894,78 @@ Start Transaction;
 
 
 
+END$$
+
+CREATE DEFINER=`u172510268_devs`@`127.0.0.1` PROCEDURE `UspMTwoField` (`pCompanyId` VARCHAR(5), `pFieldId` VARCHAR(5), `pBranchId` VARCHAR(5), `pMasterNameId` VARCHAR(5), `pFieldDetails` VARCHAR(500), `pAcFlag` VARCHAR(1), `pCreatedBy` VARCHAR(500), `pModifiedBy` VARCHAR(500), `pRemark` VARCHAR(500), `pIUFlag` VARCHAR(1), OUT `pResult` VARCHAR(100))   splbl:
+begin
+Declare
+v_Err int;
+Declare v_Cnt int;
+
+Start Transaction; 
+	
+  
+	If pIUFlag='I'
+	Then
+		-- SQLINES LICENSE FOR EVALUATION USE ONLY
+		Select Count(*) Into v_Cnt from MTwoField Where  FieldDetails =pFieldDetails  and  MasterNameId =pMasterNameId    and CompanyId =pCompanyId and BranchId=pBranchId;
+		if v_Cnt > 0 
+		Then
+			-- SQLINES LICENSE FOR EVALUATION USE ONLY
+			Set pResult='Record Already Exist !!';
+			Rollback;
+			leave splbl;
+		End if;
+
+		
+	
+		-- SQLINES LICENSE FOR EVALUATION USE ONLY
+		Insert into MTwoField (CompanyId ,FieldId ,BranchId, MasterNameId ,FieldDetails,AcFlag ,Remark,CreatedBy ,CreatedOn ,ModifiedBy,ModifiedOn) values
+				(pCompanyId ,pFieldId ,pBranchId,pMasterNameId ,pFieldDetails,pAcFlag , pRemark ,pCreatedBy ,str_to_date(now(3),103) ,pModifiedBy,str_to_date(now(3),103));  
+		
+		-- SQLINES LICENSE FOR EVALUATION USE ONLY
+		Set pResult='Record Inserted Successfully !!';
+		Commit;
+		leave splbl;		
+	Elseif pIUFlag='U'
+	Then
+		-- SQLINES LICENSE FOR EVALUATION USE ONLY
+		Select Count(*) Into v_Cnt from MTwoField Where FieldId <> pFieldId and FieldDetails =pFieldDetails and  MasterNameId =pMasterNameId    and CompanyId =pCompanyId  and BranchId=pBranchId;
+
+
+		if v_Cnt > 0 
+		Then
+			-- SQLINES LICENSE FOR EVALUATION USE ONLY
+			Set pResult='Record Already Exist !!';
+			Rollback;
+			leave splbl;
+		End if;
+
+
+		Update MTwoField Set 
+		
+		 MasterNameId =pMasterNameId,
+		 FieldDetails=pFieldDetails,AcFlag =pAcFlag , Remark = pRemark, ModifiedBy =pModifiedBy,ModifiedOn =str_to_date(now(3),103)
+		 Where FieldId=pFieldId  and CompanyId =pCompanyId and BranchId=pBranchId;
+
+		-- SQLINES LICENSE FOR EVALUATION USE ONLY
+		Set pResult= 'Record Updated Successfully !!';
+		Commit;
+		leave splbl;		
+	Elseif pIUFlag='D'
+	Then
+	  Update MTwoField Set 
+		
+		
+		AcFlag ='N'
+		 Where FieldId=pFieldId  and CompanyId =pCompanyId and BranchId=pBranchId;
+
+		-- SQLINES LICENSE FOR EVALUATION USE ONLY
+		Set pResult= 'Record Deleted Successfully !!';
+		Commit;
+		leave splbl;		
+	
+	End if;
 END$$
 
 CREATE DEFINER=`u172510268_devs`@`127.0.0.1` PROCEDURE `UspMWeeklyOff` (`pCompanyId` VARCHAR(5), `pBranchId` VARCHAR(5), `pWeeklyOffId` VARCHAR(5), `pWeeklyOffName` VARCHAR(500), `pRemark` VARCHAR(500), `pAcFlag` VARCHAR(1), `pCreatedBy` VARCHAR(500), `pModifiedBy` VARCHAR(500), `pIUFlag` VARCHAR(1), OUT `pResult` VARCHAR(100))   splbl:
@@ -2485,7 +2646,7 @@ INSERT INTO `MCaderwiseEarnings` (`CompanyId`, `BranchId`, `CaderwiseEarningId`,
 --
 
 CREATE TABLE `MCompanies` (
-  `CompanyId` int(255) NOT NULL,
+  `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `CompanySectorId` int(255) DEFAULT NULL,
   `CompanySector` varchar(255) DEFAULT NULL,
   `CompanyName` varchar(255) DEFAULT NULL,
@@ -2513,16 +2674,9 @@ CREATE TABLE `MCompanies` (
 --
 
 INSERT INTO `MCompanies` (`CompanyId`, `CompanySectorId`, `CompanySector`, `CompanyName`, `ShortName`, `NatureOfBusiness`, `Logo`, `AcFlag`, `CreatedBy`, `CreatedByName`, `ModifiedBy`, `ModifiedByName`, `IUFlag`, `Status`, `SingleCompany`, `CreatedOn`, `ModifiedOn`, `FieldId`, `FieldName`, `createdAt`, `updatedAt`) VALUES
-(1, 12, 'Healthcare', 'Healtech', 'HTC', 'B2B', '', 'Y', 'Mukta', '', 'Mukta', NULL, 'U', 'true', 'true', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', 'Field Name', '2023-11-09 04:50:10', '2023-11-30 04:56:20'),
-(2, 10, 'Automation', 'Systech Solutions', 'SYS', 'Updated Nature of Business', '', 'Y', 'Udayan', '', 'Udayan', '', 'U', 'true', 'true', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '', '2023-11-10 13:33:01', '2023-11-11 14:14:21'),
-(3, 5, 'Sector', 'ABC', 'ABC', 'Nature', '', 'N', NULL, '', NULL, '', 'D', 'true', 'Udayan', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '', '2023-11-10 14:11:00', '2023-11-11 01:34:55'),
-(18, 6, 'Sector', 'Test Delete', 'TDS', 'Nature', '', 'N', 'Udayan ', '', NULL, '', 'D', NULL, 'true', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '', '2023-11-11 01:37:00', '2023-11-11 01:42:19'),
-(20, 11, 'Sector', 'Test 1', 'TEST', 'Nature of business', '', 'N', 'Udayan', '', NULL, '', 'I', NULL, 'true', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '', '2023-11-12 05:10:28', '2023-11-12 05:10:35'),
-(21, 13, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-12-01 05:15:16', NULL, NULL, NULL, '2023-12-01 05:15:17', '2023-12-01 05:15:17'),
-(22, 14, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-12-01 05:16:50', NULL, NULL, NULL, '2023-12-01 05:16:51', '2023-12-01 05:16:51'),
-(23, 15, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-12-01 05:17:08', NULL, NULL, NULL, '2023-12-01 05:17:10', '2023-12-01 05:17:10'),
-(24, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-12-01 05:29:43', NULL, NULL, NULL, '2023-12-01 05:29:45', '2023-12-01 05:29:45'),
-(25, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-12-01 05:31:31', NULL, NULL, NULL, '2023-12-01 05:31:33', '2023-12-01 05:31:33');
+('00001', 1, 'Automation', 'SysTech Solutions', 'SYS', 'B2B', '', 'Y', 'Admin', '', NULL, '', 'I', NULL, 'true', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '', '2023-12-28 17:42:18', '2023-12-28 17:42:18'),
+('00002', 2, 'Healthcare', 'HealTech', 'HTC', 'SaaS', '', 'Y', 'Admin', '', NULL, '', 'I', NULL, 'true', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '', '2023-12-28 17:42:51', '2023-12-28 17:42:51'),
+('00003', 3, 'Electrical Automation', '5S Innovations LLP', '5SL', 'B2B', '', 'Y', 'Admin', '', NULL, '', 'I', NULL, '', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '', '2023-12-28 17:43:31', '2023-12-28 17:43:31');
 
 --
 -- Triggers `MCompanies`
@@ -3180,7 +3334,18 @@ INSERT INTO `MEmployeewiseEarnings` (`CompanyId`, `BranchId`, `EmployeeId`, `Emp
 ('00001', '00001', 1, 'S0004', '2023-12-16 04:33:29', '001', 'S', 'Staff', 'E0005', 'Conveyance Allowance', 'Formula', 0.00, '(P2)*2/100', NULL, NULL, NULL, 'Y', NULL, NULL),
 ('00001', '00001', 1, 'S0005', '2023-12-16 04:33:29', '001', 'S', 'Staff', 'E0006', 'Special Allowance', 'Formula', 0.00, '(P2)*13/100', NULL, NULL, NULL, 'Y', NULL, NULL),
 ('00001', '00001', 1, 'S0006', '2023-12-16 04:33:29', '001', 'S', 'Staff', 'E0007', 'Personal Allowance', 'Formula', 0.00, '(P2)*24/100', NULL, NULL, NULL, 'Y', NULL, NULL),
-('00001', '00001', 1, 'S0007', '2023-12-16 04:33:29', '001', 'S', 'Staff', 'E0008', 'Incentive Allowance', 'Amount', 500.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL);
+('00001', '00001', 1, 'S0007', '2023-12-16 04:33:29', '001', 'S', 'Staff', 'E0008', 'Incentive Allowance', 'Amount', 500.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 1, 'S0008', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0002', 'Basic Salary', 'Formula', 0.00, '(P1)*(50/100)', NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 1, 'S0009', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0003', 'Dearness Allowance', 'Formula', 0.00, '(P2)*24/100', NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 1, 'S0010', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0004', 'House Rent Allowance', 'Formula', 0.00, '(P2)*50/100', NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 1, 'S0011', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0005', 'Conveyance Allowance', 'Formula', 0.00, '(P2)*2/100', NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 1, 'S0012', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0006', 'Special Allowance', 'Formula', 0.00, '(P2)*13/100', NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 1, 'S0013', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0007', 'Personal Allowance', 'Formula', 0.00, '(P2)*24/100', NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 1, 'S0014', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0008', 'Incentive Allowance', 'Amount', 500.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 1, 'S0015', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0016', 'Performance Bonus', 'Formula', 0.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 1, 'S0016', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0018', 'LTA', 'Amount', 0.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 1, 'S0017', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0019', 'Gratuity', 'Amount', 0.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 1, 'S0018', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0022', 'C-OFF Allowance', 'Amount', 0.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -3258,7 +3423,7 @@ CREATE TABLE `MFinancialYears` (
 
 INSERT INTO `MFinancialYears` (`CompanyId`, `BranchId`, `FYearId`, `Name`, `StartDate`, `EndDate`, `ShortName`, `YearClose`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`, `Remark`) VALUES
 ('00001', '00001', '00001', '2023-2024', '2024-03-01 00:00:00', '2024-02-29 00:00:00', '2023', 'Y', 'Y', NULL, NULL, NULL, NULL, NULL),
-('00001', '00001', '00002', '2022-2023', '2022-03-01 00:00:00', '2023-02-28 00:00:00', '2022', '0', 'Y', NULL, NULL, NULL, NULL, NULL);
+('00001', '00001', '00002', '2022-2023', '2022-03-01 00:00:00', '2023-02-28 00:00:00', '2022', 'N', 'Y', NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -3409,6 +3574,83 @@ INSERT INTO `MKRAs` (`CompanyId`, `BranchId`, `KRAId`, `KRAName`, `Duration`, `P
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `MLeaves`
+--
+
+CREATE TABLE `MLeaves` (
+  `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
+  `BranchId` varchar(5) NOT NULL DEFAULT '00001',
+  `LeaveBalanceId` varchar(5) NOT NULL,
+  `FYear` varchar(5) NOT NULL,
+  `EmployeeId` varchar(5) NOT NULL,
+  `EmployeeTypeId` varchar(5) DEFAULT NULL,
+  `EmployeeType` varchar(10) DEFAULT NULL,
+  `EmployeeTypeGroup` varchar(10) DEFAULT NULL,
+  `LeaveTypeId` varchar(5) NOT NULL,
+  `Month` varchar(5) DEFAULT NULL,
+  `Year` varchar(5) DEFAULT NULL,
+  `LeaveBalanceDate` datetime DEFAULT NULL,
+  `EmployeeName` varchar(500) DEFAULT NULL,
+  `LeaveTypeDesc` varchar(5) DEFAULT NULL,
+  `OpeningBalance` decimal(10,2) DEFAULT 0.00,
+  `LeaveEarned1` decimal(10,2) DEFAULT 0.00,
+  `LeaveEarned2` decimal(10,2) DEFAULT 0.00,
+  `LeaveEarned3` decimal(10,2) DEFAULT 0.00,
+  `LeaveEarned4` decimal(10,2) DEFAULT 0.00,
+  `LeaveEarned5` decimal(10,2) DEFAULT 0.00,
+  `LeaveEarned6` decimal(10,2) DEFAULT 0.00,
+  `LeaveEarned7` decimal(10,2) DEFAULT 0.00,
+  `LeaveEarned8` decimal(10,2) DEFAULT 0.00,
+  `LeaveEarned9` decimal(10,2) DEFAULT 0.00,
+  `LeaveEarned10` decimal(10,2) DEFAULT 0.00,
+  `LeaveEarned11` decimal(10,2) DEFAULT 0.00,
+  `LeaveEarned12` decimal(10,2) DEFAULT 0.00,
+  `SanctionLeaveDays` decimal(10,2) DEFAULT 0.00,
+  `LeaveBalance` decimal(10,2) DEFAULT 0.00,
+  `Remark` varchar(500) DEFAULT NULL,
+  `AcFlag` varchar(1) NOT NULL DEFAULT 'Y',
+  `CreatedBy` varchar(500) DEFAULT NULL,
+  `CreatedOn` datetime DEFAULT current_timestamp(),
+  `ModifiedBy` varchar(500) DEFAULT NULL,
+  `ModifiedOn` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `MLeaves`
+--
+
+INSERT INTO `MLeaves` (`CompanyId`, `BranchId`, `LeaveBalanceId`, `FYear`, `EmployeeId`, `EmployeeTypeId`, `EmployeeType`, `EmployeeTypeGroup`, `LeaveTypeId`, `Month`, `Year`, `LeaveBalanceDate`, `EmployeeName`, `LeaveTypeDesc`, `OpeningBalance`, `LeaveEarned1`, `LeaveEarned2`, `LeaveEarned3`, `LeaveEarned4`, `LeaveEarned5`, `LeaveEarned6`, `LeaveEarned7`, `LeaveEarned8`, `LeaveEarned9`, `LeaveEarned10`, `LeaveEarned11`, `LeaveEarned12`, `SanctionLeaveDays`, `LeaveBalance`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
+('00001', '00001', '00001', '2023', '1', '001', 'S', 'Staff', '0001', '12', '2023', '2023-12-29 00:00:00', 'Charles Leclerc', 'PL', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00002', '2023', '1', '001', 'S', 'Staff', '0002', '12', '2023', '2023-12-29 00:00:00', 'Charles Leclerc', 'CL', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00003', '2023', '1', '001', 'S', 'Staff', '0003', '12', '2023', '2023-12-29 00:00:00', 'Charles Leclerc', 'SL', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00004', '2023', '1', '001', 'S', 'Staff', '0004', '12', '2023', '2023-12-29 00:00:00', 'Charles Leclerc', 'LW', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00005', '2023', '1', '001', 'S', 'Staff', '0005', '12', '2023', '2023-12-29 00:00:00', 'Charles Leclerc', 'CF', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00006', '2023', '1', '001', 'S', 'Staff', '0006', '12', '2023', '2023-12-29 00:00:00', 'Charles Leclerc', 'HD', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00007', '2023', '1', '001', 'S', 'Staff', '0007', '12', '2023', '2023-12-29 00:00:00', 'Charles Leclerc', 'HD', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00008', '2023', '1', '001', 'S', 'Staff', '0008', '12', '2023', '2023-12-29 00:00:00', 'Charles Leclerc', 'UL', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00009', '2023', '1', '001', 'S', 'Staff', '0009', '12', '2023', '2023-12-29 00:00:00', 'Charles Leclerc', 'WO', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00010', '2023', '2', '004', 'O', 'Worker', '0001', '12', '2023', '2023-12-29 00:00:00', 'Bruce  Wayne', 'PL', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00011', '2023', '2', '004', 'O', 'Worker', '0002', '12', '2023', '2023-12-29 00:00:00', 'Bruce  Wayne', 'CL', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00012', '2023', '2', '004', 'O', 'Worker', '0003', '12', '2023', '2023-12-29 00:00:00', 'Bruce  Wayne', 'SL', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00013', '2023', '2', '004', 'O', 'Worker', '0004', '12', '2023', '2023-12-29 00:00:00', 'Bruce  Wayne', 'LW', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00014', '2023', '2', '004', 'O', 'Worker', '0005', '12', '2023', '2023-12-29 00:00:00', 'Bruce  Wayne', 'CF', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00015', '2023', '2', '004', 'O', 'Worker', '0006', '12', '2023', '2023-12-29 00:00:00', 'Bruce  Wayne', 'HD', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00016', '2023', '2', '004', 'O', 'Worker', '0007', '12', '2023', '2023-12-29 00:00:00', 'Bruce  Wayne', 'HD', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00017', '2023', '2', '004', 'O', 'Worker', '0008', '12', '2023', '2023-12-29 00:00:00', 'Bruce  Wayne', 'UL', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00018', '2023', '2', '004', 'O', 'Worker', '0009', '12', '2023', '2023-12-29 00:00:00', 'Bruce  Wayne', 'WO', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00019', '2023', '4', '001', 'S', 'Staff', '0001', '12', '2023', '2023-12-29 00:00:00', 'Harshvardhan Reddy', 'PL', 13.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 6.00, 6.00, '', 'Y', '', NULL, '', NULL),
+('00001', '00001', '00020', '2023', '4', '001', 'S', 'Staff', '0002', '12', '2023', '2023-12-29 00:00:00', 'Harshvardhan Reddy', 'CL', 6.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 4.00, 4.00, '', 'Y', '', NULL, '', NULL),
+('00001', '00001', '00021', '2023', '4', '001', 'S', 'Staff', '0003', '12', '2023', '2023-12-29 00:00:00', 'Harshvardhan Reddy', 'SL', 7.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 4.00, 4.00, '', 'Y', '', NULL, '', NULL),
+('00001', '00001', '00022', '2023', '4', '001', 'S', 'Staff', '0004', '12', '2023', '2023-12-29 00:00:00', 'Harshvardhan Reddy', 'LW', 11.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 9.00, 9.00, '', 'Y', '', NULL, '', NULL),
+('00001', '00001', '00023', '2023', '4', '001', 'S', 'Staff', '0005', '12', '2023', '2023-12-29 00:00:00', 'Harshvardhan Reddy', 'CF', 5.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 4.00, 4.00, '', 'Y', '', NULL, '', NULL),
+('00001', '00001', '00024', '2023', '4', '001', 'S', 'Staff', '0006', '12', '2023', '2023-12-29 00:00:00', 'Harshvardhan Reddy', 'HD', 8.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 5.00, 5.00, '', 'Y', '', NULL, '', NULL),
+('00001', '00001', '00025', '2023', '4', '001', 'S', 'Staff', '0007', '12', '2023', '2023-12-29 00:00:00', 'Harshvardhan Reddy', 'HD', 8.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 4.00, 4.00, '', 'Y', '', NULL, '', NULL),
+('00001', '00001', '00026', '2023', '4', '001', 'S', 'Staff', '0008', '12', '2023', '2023-12-29 00:00:00', 'Harshvardhan Reddy', 'UL', 6.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 5.00, 5.00, '', 'Y', '', NULL, '', NULL),
+('00001', '00001', '00027', '2023', '4', '001', 'S', 'Staff', '0009', '12', '2023', '2023-12-29 00:00:00', 'Harshvardhan Reddy', 'WO', 7.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 5.00, 5.00, '', 'Y', '', NULL, '', NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `MLeaveTypes`
 --
 
@@ -3442,6 +3684,42 @@ INSERT INTO `MLeaveTypes` (`CompanyId`, `BranchId`, `LeaveTypeId`, `LeaveType`, 
 ('00001', '00001', '0007', 'Half Day Leave', 'HD', 'P', 'Y', ' remark', 'Y', NULL, NULL, NULL, NULL),
 ('00001', '00001', '0008', 'Unpaid Leave', 'UL', 'U', 'Y', ' remark', 'Y', NULL, NULL, NULL, NULL),
 ('00001', '00001', '0009', 'Weekly Off', 'WO', 'U', 'N', ' remark', 'Y', NULL, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `MMasterNames`
+--
+
+CREATE TABLE `MMasterNames` (
+  `MasterId` int(5) NOT NULL,
+  `MasterName` varchar(50) NOT NULL,
+  `AcFlag` varchar(1) DEFAULT NULL,
+  `IUFlag` varchar(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `MMasterNames`
+--
+
+INSERT INTO `MMasterNames` (`MasterId`, `MasterName`, `AcFlag`, `IUFlag`) VALUES
+(1, 'M10', 'Y', NULL),
+(2, 'M9', 'Y', NULL),
+(3, 'M8', 'Y', NULL),
+(4, 'M7', 'Y', NULL),
+(5, 'M6', 'Y', NULL),
+(6, 'CompanySector', 'Y', NULL),
+(7, 'BandType', 'Y', NULL),
+(8, 'Zone', 'Y', NULL),
+(9, 'Currency Type', 'Y', NULL),
+(10, 'BankAccountType', 'Y', NULL),
+(11, 'Category', 'Y', NULL),
+(12, 'Caste', 'Y', NULL),
+(13, 'Religion', 'Y', NULL),
+(14, 'Reference', 'Y', NULL),
+(15, 'DepartmentGroup', 'Y', NULL),
+(16, 'Salutation', 'Y', NULL),
+(17, 'Employee Group Type', 'Y', NULL);
 
 -- --------------------------------------------------------
 
@@ -3554,106 +3832,106 @@ INSERT INTO `MShifts` (`CompanyId`, `BranchId`, `ShiftId`, `EmployeeTypeGroupId`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `MTwoField`
+-- Table structure for table `MTwoFields`
 --
 
-CREATE TABLE `MTwoField` (
+CREATE TABLE `MTwoFields` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
-  `FieldId` varchar(7) NOT NULL,
-  `MasterNameId` varchar(5) NOT NULL DEFAULT '00001',
+  `FieldId` varchar(5) NOT NULL,
+  `MasterName` varchar(5) NOT NULL DEFAULT '00001',
   `FieldDetails` varchar(500) DEFAULT NULL,
   `AcFlag` varchar(1) DEFAULT 'Y',
   `CreatedBy` varchar(500) DEFAULT NULL,
-  `CreatedOn` datetime(3) DEFAULT NULL,
+  `CreatedOn` datetime DEFAULT NULL,
   `ModifiedBy` varchar(500) DEFAULT NULL,
-  `ModifiedOn` datetime(3) DEFAULT NULL,
+  `ModifiedOn` datetime DEFAULT NULL,
   `Remark` varchar(500) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `MTwoField`
+-- Dumping data for table `MTwoFields`
 --
 
-INSERT INTO `MTwoField` (`CompanyId`, `BranchId`, `FieldId`, `MasterNameId`, `FieldDetails`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`, `Remark`) VALUES
-('00001', '00001', '00001', '00001', 'Staff', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00002', '00001', 'Worker', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00013', '00004', 'Mr.', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00014', '00004', 'Ms.', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00015', '00004', 'Mrs.', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00016', '00004', 'Miss', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00017', '00004', 'Dr.', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00018', '00004', 'Prof.', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00019', '00005', 'NA', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00020', '00005', 'Administration', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00021', '00005', 'Production', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00022', '00005', 'Support', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00023', '00005', 'Services', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00024', '00006', 'NA', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00025', '00006', 'Reference1', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00026', '00006', 'Reference2', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00027', '00006', 'Reference3', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00028', '00007', 'NA', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00029', '00007', 'Hindu', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00030', '00007', 'Muslim', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00031', '00007', 'Shikh', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00032', '00007', 'Christians', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00033', '00008', 'NA', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00034', '00008', 'UNSKILLED', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00035', '00008', 'SEMISKILLED', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00036', '00008', 'SKILEED', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00037', '00008', 'Category4', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00038', '00008', 'Category5', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00039', '00009', 'NA', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00040', '00009', 'Caste1', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00041', '00009', 'Caste2', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00042', '00009', 'Caste3', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00043', '00009', 'Caste4', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00044', '00009', 'Caste5', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00045', '00009', 'Caste6', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00046', '00009', 'Caste7', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00047', '00009', 'Caste8', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00048', '00009', 'Caste9', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00049', '00009', 'Caste10', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00050', '00010', 'NA', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00051', '00010', 'Current', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00052', '00010', 'Saving', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00053', '00010', 'Salary', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00054', '00010', 'CashCredit', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00055', '00010', 'OverDue', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00056', '00010', 'Loans', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00057', '00010', 'Fixed Deposit', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00058', '00010', 'Foreign currency non-resident (FCNR) account', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00059', '00011', 'Indian Rupees', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00060', '00011', 'U.S. Dollar (USD)', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00061', '00011', 'European Euro (EUR)', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00062', '00011', 'Japanese Yen (JPY)', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00063', '00011', 'British Pound (GBP)', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00064', '00011', 'Australian/New Zealand Dollar', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00065', '00011', 'South African Rand (ZAR)', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00066', '00011', 'Chinese yuan', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00067', '00011', 'United Arab Emirates dirham', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00068', '00011', 'Currency1', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00069', '00011', 'Currency2', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00070', '00011', 'Currency3', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00071', '00012', 'NA', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00072', '00012', 'Zone1', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00073', '00012', 'Zone2', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00074', '00012', 'Zone3', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00075', '00012', 'Zone4', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00076', '00012', 'Zone5', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00077', '00014', 'NA', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00078', '00014', 'Manufacturing', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00079', '00014', 'Service Industry', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00080', '00014', 'Engineering', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00081', '00014', 'Automation', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00082', '00014', 'Food Processing', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00083', '00014', 'Information Technology', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00084', '00014', 'Pharmaceuticals', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00085', '00014', 'FMCG', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00086', '00013', 'NA', 'Y', '00001', '2021-04-01 00:00:00.000', '00001', '2021-04-01 00:00:00.000', NULL),
-('00001', '00001', '00087', '00019', 'Information Techology', 'Y', 'admin', '2022-05-05 16:13:40.723', 'admin', '2022-05-05 16:13:40.723', 'done'),
-('Compa', 'Branc', 'FieldId', 'Maste', 'FieldDetails', 'A', 'CreatedBy', '0000-00-00 00:00:00.000', 'ModifiedBy', '0000-00-00 00:00:00.000', 'Remark');
+INSERT INTO `MTwoFields` (`CompanyId`, `BranchId`, `FieldId`, `MasterName`, `FieldDetails`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`, `Remark`) VALUES
+('00001', '00001', '00001', '00001', 'Staff', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00002', '00001', 'Worker', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00013', '00004', 'Mr.', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00014', '00004', 'Ms.', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00015', '00004', 'Mrs.', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00016', '00004', 'Miss', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00017', '00004', 'Dr.', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00018', '00004', 'Prof.', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00019', '00005', 'NA', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00020', '00005', 'Administration', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00021', '00005', 'Production', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00022', '00005', 'Support', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00023', '00005', 'Services', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00024', '00006', 'NA', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00025', '00006', 'Reference1', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00026', '00006', 'Reference2', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00027', '00006', 'Reference3', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00028', '00007', 'NA', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00029', '00007', 'Hindu', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00030', '00007', 'Muslim', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00031', '00007', 'Shikh', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00032', '00007', 'Christians', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00033', '00008', 'NA', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00034', '00008', 'UNSKILLED', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00035', '00008', 'SEMISKILLED', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00036', '00008', 'SKILEED', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00037', '00008', 'Category4', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00038', '00008', 'Category5', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00039', '00009', 'NA', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00040', '00009', 'Caste1', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00041', '00009', 'Caste2', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00042', '00009', 'Caste3', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00043', '00009', 'Caste4', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00044', '00009', 'Caste5', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00045', '00009', 'Caste6', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00046', '00009', 'Caste7', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00047', '00009', 'Caste8', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00048', '00009', 'Caste9', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00049', '00009', 'Caste10', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00050', '00010', 'NA', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00051', '00010', 'Current', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00052', '00010', 'Saving', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00053', '00010', 'Salary', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00054', '00010', 'CashCredit', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00055', '00010', 'OverDue', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00056', '00010', 'Loans', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00057', '00010', 'Fixed Deposit', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00058', '00010', 'Foreign currency non-resident (FCNR) account', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00059', '00011', 'Indian Rupees', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00060', '00011', 'U.S. Dollar (USD)', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00061', '00011', 'European Euro (EUR)', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00062', '00011', 'Japanese Yen (JPY)', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00063', '00011', 'British Pound (GBP)', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00064', '00011', 'Australian/New Zealand Dollar', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00065', '00011', 'South African Rand (ZAR)', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00066', '00011', 'Chinese yuan', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00067', '00011', 'United Arab Emirates dirham', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00068', '00011', 'Currency1', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00069', '00011', 'Currency2', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00070', '00011', 'Currency3', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00071', '00012', 'NA', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00072', '00012', 'Zone1', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00073', '00012', 'Zone2', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00074', '00012', 'Zone3', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00075', '00012', 'Zone4', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00076', '00012', 'Zone5', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00077', '00014', 'NA', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00078', '00014', 'Manufacturing', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00079', '00014', 'Service Industry', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00080', '00014', 'Engineering', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00081', '00014', 'Automation', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00082', '00014', 'Food Processing', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00083', '00014', 'Information Technology', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00084', '00014', 'Pharmaceuticals', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00085', '00014', 'FMCG', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00086', '00013', 'NA', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
+('00001', '00001', '00087', '00019', 'Information Techology', 'Y', 'admin', '2022-05-05 16:13:40', 'admin', '2022-05-05 16:13:40', 'done'),
+('Compa', 'Branc', 'Field', 'Maste', 'FieldDetails', 'A', 'CreatedBy', '0000-00-00 00:00:00', 'ModifiedBy', '0000-00-00 00:00:00', 'Remark');
 
 -- --------------------------------------------------------
 
@@ -3742,6 +4020,46 @@ INSERT INTO `TAdvanceRequests` (`CompanyId`, `BranchId`, `AdvanceId`, `AdvanceDa
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `TEmployeeGatepasses`
+--
+
+CREATE TABLE `TEmployeeGatepasses` (
+  `CompanyId` varchar(255) NOT NULL DEFAULT '00001',
+  `BranchId` varchar(255) NOT NULL DEFAULT '00001',
+  `FYear` varchar(255) NOT NULL,
+  `GatepassId` varchar(255) NOT NULL,
+  `GatepassDate` datetime DEFAULT NULL,
+  `EmployeeId` varchar(255) NOT NULL,
+  `EmployeeType` varchar(255) NOT NULL,
+  `EmployeeTypeGroup` varchar(255) NOT NULL,
+  `InTime` datetime DEFAULT NULL,
+  `OutTime` datetime DEFAULT NULL,
+  `GatepassType` varchar(255) DEFAULT 'P',
+  `Purpose` varchar(1000) DEFAULT NULL,
+  `RejectReason` varchar(1000) DEFAULT NULL,
+  `SanctionBy` varchar(255) DEFAULT NULL,
+  `Remark` varchar(1000) DEFAULT NULL,
+  `ApprovalFlag` varchar(255) DEFAULT 'P',
+  `AcFlag` varchar(255) NOT NULL DEFAULT 'Y',
+  `CreatedBy` varchar(500) DEFAULT '',
+  `CreatedOn` datetime NOT NULL,
+  `ModifiedBy` varchar(500) DEFAULT NULL,
+  `ModifiedOn` datetime NOT NULL,
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `TEmployeeGatepasses`
+--
+
+INSERT INTO `TEmployeeGatepasses` (`CompanyId`, `BranchId`, `FYear`, `GatepassId`, `GatepassDate`, `EmployeeId`, `EmployeeType`, `EmployeeTypeGroup`, `InTime`, `OutTime`, `GatepassType`, `Purpose`, `RejectReason`, `SanctionBy`, `Remark`, `ApprovalFlag`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`, `createdAt`, `updatedAt`) VALUES
+('00001', '00001', '2023', '00001', '0000-00-00 00:00:00', '3', '', '', '2023-12-05 08:03:00', '2023-12-13 09:03:00', 'Personal', NULL, NULL, NULL, 'text', 'P', 'Y', '', '2023-12-28 07:04:25', NULL, '0000-00-00 00:00:00', '2023-12-28 07:04:25', '2023-12-28 07:04:25'),
+('00001', '00001', '2023', '00002', '2023-12-04 00:00:00', '3', '', '', '2023-12-10 07:18:00', '2023-12-13 10:30:00', 'Personal', NULL, NULL, NULL, 'text', 'P', 'Y', '', '2023-12-28 07:18:47', NULL, '0000-00-00 00:00:00', '2023-12-28 07:18:47', '2023-12-28 07:18:47');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `TLeaves`
 --
 
@@ -3780,7 +4098,8 @@ INSERT INTO `TLeaves` (`CompanyId`, `BranchId`, `FYear`, `LeaveApplicationId`, `
 ('00001', '00001', '2023', '2023-LA00002', '2023-12-06 00:00:00', '2', 'S', 'Staff', '2023-12-13 00:00:00', '2023-12-16 00:00:00', '0001', 4.00, '1', '2023-01-16 00:00:00', '2023-01-30 00:00:00', 0.00, 'remark', 'A', 'Y', '', '0000-00-00 00:00:00', NULL, '0000-00-00 00:00:00'),
 ('00001', '00001', '2023', '2023-LA00003', '2023-12-06 00:00:00', '4', 'S', 'Staff', '2023-12-13 00:00:00', '2023-12-16 00:00:00', '0001', 4.00, '', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0.00, 'remark', 'P', 'N', '', '0000-00-00 00:00:00', NULL, '0000-00-00 00:00:00'),
 ('00001', '00001', '2023', '2023-LA00004', '2023-12-25 00:00:00', '4', 'S', 'Staff', '2023-12-27 00:00:00', '2023-12-30 00:00:00', '0002', 4.00, '1', '2023-12-27 00:00:00', '2023-12-30 00:00:00', 0.00, '4', 'A', 'Y', '', '0000-00-00 00:00:00', NULL, '0000-00-00 00:00:00'),
-('00001', '00001', '2023', '2023-LA00005', '2023-12-12 00:00:00', '3', 'S', 'Staff', '2023-12-25 00:00:00', '2023-12-29 00:00:00', '0002', 0.00, '', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0.00, 'Remark', 'P', 'Y', '', '0000-00-00 00:00:00', NULL, '0000-00-00 00:00:00');
+('00001', '00001', '2023', '2023-LA00005', '2023-12-12 00:00:00', '3', 'S', 'Staff', '2023-12-25 00:00:00', '2023-12-29 00:00:00', '0002', 0.00, '', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0.00, 'Remark', 'P', 'Y', '', '0000-00-00 00:00:00', NULL, '0000-00-00 00:00:00'),
+('00001', '00001', '2023', '2023-LA00006', '2023-12-28 00:00:00', '4', 'S', 'Staff', '2023-12-29 00:00:00', '2024-01-03 00:00:00', '0002', 6.00, '1', '2023-12-29 00:00:00', '2024-01-03 00:00:00', 6.00, 'Remark', 'A', 'Y', '', '0000-00-00 00:00:00', NULL, '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -3883,9 +4202,7 @@ ALTER TABLE `MCaderwiseEarnings`
 -- Indexes for table `MCompanies`
 --
 ALTER TABLE `MCompanies`
-  ADD PRIMARY KEY (`CompanyId`),
-  ADD UNIQUE KEY `CompanySectorId_2` (`CompanySectorId`),
-  ADD KEY `CompanySectorId` (`CompanySectorId`);
+  ADD PRIMARY KEY (`CompanyId`);
 
 --
 -- Indexes for table `MCostCenter`
@@ -4020,10 +4337,22 @@ ALTER TABLE `MKRAs`
   ADD PRIMARY KEY (`KRAId`,`CompanyId`,`BranchId`) USING BTREE;
 
 --
+-- Indexes for table `MLeaves`
+--
+ALTER TABLE `MLeaves`
+  ADD PRIMARY KEY (`CompanyId`,`BranchId`,`LeaveBalanceId`,`FYear`,`EmployeeId`,`LeaveTypeId`);
+
+--
 -- Indexes for table `MLeaveTypes`
 --
 ALTER TABLE `MLeaveTypes`
   ADD PRIMARY KEY (`CompanyId`,`BranchId`,`LeaveTypeId`);
+
+--
+-- Indexes for table `MMasterNames`
+--
+ALTER TABLE `MMasterNames`
+  ADD PRIMARY KEY (`MasterId`);
 
 --
 -- Indexes for table `MProfessTax`
@@ -4044,10 +4373,10 @@ ALTER TABLE `MShifts`
   ADD PRIMARY KEY (`CompanyId`,`BranchId`,`ShiftId`);
 
 --
--- Indexes for table `MTwoField`
+-- Indexes for table `MTwoFields`
 --
-ALTER TABLE `MTwoField`
-  ADD PRIMARY KEY (`CompanyId`,`BranchId`,`FieldId`);
+ALTER TABLE `MTwoFields`
+  ADD PRIMARY KEY (`FieldId`);
 
 --
 -- Indexes for table `MWeeklyOffs`
@@ -4060,6 +4389,12 @@ ALTER TABLE `MWeeklyOffs`
 --
 ALTER TABLE `TAdvanceRequests`
   ADD PRIMARY KEY (`AdvanceId`);
+
+--
+-- Indexes for table `TEmployeeGatepasses`
+--
+ALTER TABLE `TEmployeeGatepasses`
+  ADD PRIMARY KEY (`GatepassId`);
 
 --
 -- Indexes for table `TLeaves`
@@ -4101,12 +4436,6 @@ ALTER TABLE `EDImports`
 --
 ALTER TABLE `MBanks`
   MODIFY `BankId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT for table `MCompanies`
---
-ALTER TABLE `MCompanies`
-  MODIFY `CompanyId` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `MCostCenter`
@@ -4185,6 +4514,12 @@ ALTER TABLE `MJobTypes`
 --
 ALTER TABLE `MKRAs`
   MODIFY `KRAId` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT for table `MMasterNames`
+--
+ALTER TABLE `MMasterNames`
+  MODIFY `MasterId` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `MProfessTax`

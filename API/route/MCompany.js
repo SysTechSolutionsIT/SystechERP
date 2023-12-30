@@ -125,8 +125,22 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
   }
 });
 
+const generateCompanyId = async (req, res, next) => {
+  try {
+    if (req.body.IUFlag === 'I') {
+      const totalRecords = await MCompany.count();
+      const newId = (totalRecords + 1).toString().padStart(5, "0");
+      req.body.CompanyId = newId;
+    }
+    next();
+  } catch (error) {
+    console.error("Error generating CompanyId:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
 // POST endpoint to add, update, or "soft-delete" a company
-router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
+router.post("/FnAddUpdateDeleteRecord",generateCompanyId, authToken, async (req, res) => {
   const company = req.body;
   try {
     if (company.IUFlag === "D") {

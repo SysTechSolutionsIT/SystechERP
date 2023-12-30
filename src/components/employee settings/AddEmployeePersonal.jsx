@@ -265,6 +265,7 @@ export default function AddEmployeePersonal() {
     }
   }
 
+
   useEffect(() =>{
     const fetchEmployeeTypes = async() =>{
       try{
@@ -280,6 +281,8 @@ export default function AddEmployeePersonal() {
     }
     fetchEmployeeTypes()
   },[token])
+
+
 
   return (
     <form onSubmit={formik.handleSubmit}>

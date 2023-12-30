@@ -149,6 +149,7 @@ const LeaveModal1 = ({ visible, onClick }) => {
     }
   }
 
+
   const [isStatusChecked, setStatusChecked] = useState(false)
 
   const handleCheckboxChange = (fieldName, setChecked, event) => {
@@ -415,37 +416,6 @@ const LeaveModal1 = ({ visible, onClick }) => {
                 className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
               />
             </div>
-            </div>
-            <div className="flex mt-4 justify-start">
-              <button
-                type="submit"
-                className="bg-blue-900 text-white text-[13px] font-semibold py-2 px-4 rounded-lg"
-              >
-                Show
-              </button>
-            </div>
-            <div className="grid gap-4 justify-between mt-2 w-full">
-              <div className="my-1 p-2 pr-8 ">
-                <table className="min-w-full text-center tableX1">
-                  <thead className="bg-gray-700 text-white ">
-                    <tr>
-                      {columnHeads.map((columnName) => (
-                        <th
-                          key={columnName}
-                          className="px-2 py-2 font-bold text-[13px] text-center border-2 bg-blue-900 text-white "
-                          style={{
-                            borderTopLeftRadius: "10px",
-                            borderTopRightRadius: "10px",
-                          }}
-                        >
-                          {columnName}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody></tbody>
-                </table>
-              </div>
             </div>
           </div>
           <div className="flex gap-10 justify-center">
