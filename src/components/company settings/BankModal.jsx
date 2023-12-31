@@ -7,6 +7,64 @@ import { useAuth } from "../Login";
 
 const BankModal = ({ visible, onClick }) => {
   const { token } = useAuth();
+  const [AuthP1, setAuthP1] = useState("");
+  const [AuthP2, setAuthP2] = useState("");
+  const [AuthP3, setAuthP3] = useState("");
+  const [Employees, setEmployees] = useState([]);
+
+  const [searchTerm1, setSearchTerm1] = useState("");
+  const [searchTerm2, setSearchTerm2] = useState("");
+  const [searchTerm3, setSearchTerm3] = useState("");
+
+  //Logic for Searches
+  const handleInputChange = (event, authorizedPerson) => {
+    const { value } = event.target;
+    // Set the search term based on the authorized person
+    switch (authorizedPerson) {
+      case 1:
+        setSearchTerm1(value);
+        break;
+      case 2:
+        setSearchTerm2(value);
+        break;
+      case 3:
+        setSearchTerm3(value);
+        break;
+      default:
+        break;
+    }
+  };
+  // 3 filtering for 3 components
+  const filteredEmployees1 = Employees.filter((employee) =>
+    employee.EmployeeName.toLowerCase().includes(searchTerm1.toLowerCase())
+  );
+
+  const filteredEmployees2 = Employees.filter((employee) =>
+    employee.EmployeeName.toLowerCase().includes(searchTerm2.toLowerCase())
+  );
+
+  const filteredEmployees3 = Employees.filter((employee) =>
+    employee.EmployeeName.toLowerCase().includes(searchTerm3.toLowerCase())
+  );
+
+  //Fetching Employee Names
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/employee/personal/FnShowActiveData",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const data = response.data;
+        console.log("Employees", data);
+        setEmployees(data);
+      } catch (error) {
+        console.error("Error", error);
+      }
+    };
+    fetchEmployees();
+  }, [token]);
+
   const formik = useFormik({
     initialValues: {
       BankName: "",
@@ -24,11 +82,11 @@ const BankModal = ({ visible, onClick }) => {
       Remark: "",
       AcFlag: "Y",
       IUFlag: "I",
-      AuthorizedPerson1: "",
+      AuthorizedPerson1: AuthP1,
       AuthorizedPersonRole1: "",
-      AuthorizedPerson2: "",
+      AuthorizedPerson2: AuthP2,
       AuthorizedPersonRole2: "",
-      AuthorizedPerson3: "",
+      AuthorizedPerson3: AuthP3,
       AuthorizedPersonRole3: "",
     },
     onSubmit: (values) => {
@@ -69,13 +127,16 @@ const BankModal = ({ visible, onClick }) => {
   const [currencies, setCurrencies] = useState([]);
   useEffect(() => {
     const fetchCurrencyData = async () => {
+      const CID = 11;
       try {
-        const response = await axios.get("http://localhost:5500/currency/", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const data = response.data.records;
+        const response = await axios.get(
+          "http://localhost:5500/two-field/FnShowCategoricalData",
+          {
+            params: { MasterNameId: CID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
         console.log("Currency", data);
         setCurrencies(data);
       } catch (error) {
@@ -84,7 +145,7 @@ const BankModal = ({ visible, onClick }) => {
     };
 
     fetchCurrencyData();
-  }, []);
+  }, [token]);
 
   if (!visible) return null;
   return (
@@ -241,14 +302,17 @@ const BankModal = ({ visible, onClick }) => {
                 <select
                   id="CurrencyType"
                   name="currency"
-                  className="text-[13px] w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
+                  className="text-[11px] w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
                   value={formik.values.CurrencyType}
                   onChange={formik.handleChange}
                 >
                   {currencies.length > 0 &&
                     currencies.map((currency) => (
-                      <option key={currency.id} value={currency.abbr}>
-                        {currency.name}
+                      <option
+                        key={currency.FieldId}
+                        value={currency.FieldDetails}
+                      >
+                        {currency.FieldDetails}
                       </option>
                     ))}
                 </select>
@@ -293,16 +357,55 @@ const BankModal = ({ visible, onClick }) => {
                   Authorized Person 1
                 </p>
                 <input
-                  id="AuthorizedPerson1"
                   type="text"
+                  id="AuthorizedPerson1"
                   value={formik.values.AuthorizedPerson1}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
+                  onChange={(e) => {
+                    formik.handleChange(e);
+                    handleInputChange(e, 1); // Pass 1 as the authorized person identifier
+                  }}
+                  onFocus={() => setSearchTerm1("")}
+                  className="w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                  placeholder={
+                    formik.values.EmployeeId
+                      ? formik.values.EmployeeName
+                      : "Search Employee Name"
+                  }
                 />
+                {searchTerm1 && (
+                  <div
+                    className="z-10 bg-white w-full border border-gray-300 rounded-lg mt-1 overflow-hidden"
+                    style={{ maxHeight: "150px", overflowY: "auto" }}
+                  >
+                    {filteredEmployees1.length > 0 ? (
+                      filteredEmployees1.map((entry) => (
+                        <div
+                          key={entry.EmployeeId}
+                          onClick={() => {
+                            setAuthP1(entry.EmployeeId);
+
+                            formik.setValues({
+                              ...formik.values,
+                              AuthorizedPerson1: entry.EmployeeId,
+                            });
+                            setSearchTerm1("");
+                          }}
+                          className="px-4 py-2 cursor-pointer hover:bg-gray-200 font-semibold text-[11px]"
+                        >
+                          {entry.EmployeeName}
+                        </div>
+                      ))
+                    ) : (
+                      <div className="px-4 py-2 text-gray-500">
+                        No matching results
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
               <div>
                 <p className="capitalize font-semibold text-[13px]">
-                  Authorized Person 1
+                  Authorized Person 1 Role
                 </p>
                 <div className="space-y-2 text-[11px]">
                   <label className="flex items-center">
@@ -336,16 +439,55 @@ const BankModal = ({ visible, onClick }) => {
                   Authorized Person 2
                 </p>
                 <input
-                  id="AuthorizedPerson2"
                   type="text"
+                  id="AuthorizedPerson2"
                   value={formik.values.AuthorizedPerson2}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
+                  onChange={(e) => {
+                    formik.handleChange(e);
+                    handleInputChange(e, 2); // Pass 1 as the authorized person identifier
+                  }}
+                  onFocus={() => setSearchTerm2("")}
+                  className="w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                  placeholder={
+                    formik.values.EmployeeId
+                      ? formik.values.EmployeeName
+                      : "Search Employee Name"
+                  }
                 />
+                {searchTerm2 && (
+                  <div
+                    className="z-10 bg-white w-full border border-gray-300 rounded-lg mt-1 overflow-hidden"
+                    style={{ maxHeight: "150px", overflowY: "auto" }}
+                  >
+                    {filteredEmployees2.length > 0 ? (
+                      filteredEmployees2.map((entry) => (
+                        <div
+                          key={entry.EmployeeId}
+                          onClick={() => {
+                            setAuthP2(entry.EmployeeId);
+
+                            formik.setValues({
+                              ...formik.values,
+                              AuthorizedPerson2: entry.EmployeeId,
+                            });
+                            setSearchTerm2("");
+                          }}
+                          className="px-4 py-2 cursor-pointer hover:bg-gray-200 font-semibold text-[11px]"
+                        >
+                          {entry.EmployeeName}
+                        </div>
+                      ))
+                    ) : (
+                      <div className="px-4 py-2 text-gray-500">
+                        No matching results
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
               <div>
                 <p className="capitalize font-semibold text-[13px]">
-                  Authorized Person 2
+                  Authorized Person 2 Role
                 </p>
                 <div className="space-y-2 text-[11px]">
                   <label className="flex items-center">
@@ -379,12 +521,51 @@ const BankModal = ({ visible, onClick }) => {
                   Authorized Person 3
                 </p>
                 <input
-                  id="AuthorizedPerson3"
                   type="text"
+                  id="AuthorizedPerson3"
                   value={formik.values.AuthorizedPerson3}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
+                  onChange={(e) => {
+                    formik.handleChange(e);
+                    handleInputChange(e, 3); // Pass 1 as the authorized person identifier
+                  }}
+                  onFocus={() => setSearchTerm3("")}
+                  className="w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                  placeholder={
+                    formik.values.EmployeeId
+                      ? formik.values.EmployeeName
+                      : "Search Employee Name"
+                  }
                 />
+                {searchTerm3 && (
+                  <div
+                    className="z-10 bg-white w-full border border-gray-300 rounded-lg mt-1 overflow-hidden"
+                    style={{ maxHeight: "150px", overflowY: "auto" }}
+                  >
+                    {filteredEmployees3.length > 0 ? (
+                      filteredEmployees3.map((entry) => (
+                        <div
+                          key={entry.EmployeeId}
+                          onClick={() => {
+                            setAuthP3(entry.EmployeeId);
+
+                            formik.setValues({
+                              ...formik.values,
+                              AuthorizedPerson3: entry.EmployeeId,
+                            });
+                            setSearchTerm3("");
+                          }}
+                          className="px-4 py-2 cursor-pointer hover:bg-gray-200 font-semibold text-[11px]"
+                        >
+                          {entry.EmployeeName}
+                        </div>
+                      ))
+                    ) : (
+                      <div className="px-4 py-2 text-gray-500">
+                        No matching results
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
               <div>
                 <p className="capitalize font-semibold text-[13px]">

@@ -8,53 +8,52 @@ import { useAuth, useDetails } from "../Login";
 import { createContext, useContext } from "react";
 import Cookies from "js-cookie";
 
-export const EmployeeTypeContext = createContext()
+export const EmployeeTypeContext = createContext();
 
-export const useEmployeeType = () =>{
-  return useContext(EmployeeTypeContext)
-} 
+export const useEmployeeType = () => {
+  return useContext(EmployeeTypeContext);
+};
 
-export const EmployeeTypeProvider = ({children}) => {
-  const [ employeeTypeId, setEmployeeTypeId ] = useState("")
+export const EmployeeTypeProvider = ({ children }) => {
+  const [employeeTypeId, setEmployeeTypeId] = useState("");
 
   const handleSetEmployeeId = (newEmployeeTypeId) => {
-    setEmployeeTypeId(newEmployeeTypeId)
-    Cookies.set("employeeTypeId", newEmployeeTypeId)
-  }
+    setEmployeeTypeId(newEmployeeTypeId);
+    Cookies.set("employeeTypeId", newEmployeeTypeId);
+  };
 
   useEffect(() => {
-    const savedEmployeeTypeId = Cookies.get("employeeTypeId")
-    if(savedEmployeeTypeId){
-      setEmployeeTypeId(savedEmployeeTypeId)
+    const savedEmployeeTypeId = Cookies.get("employeeTypeId");
+    if (savedEmployeeTypeId) {
+      setEmployeeTypeId(savedEmployeeTypeId);
     }
-  }, [])
+  }, []);
   return (
-    <EmployeeTypeContext.Provider value={{employeeTypeId, setEmployeeTypeId: handleSetEmployeeId}}>
+    <EmployeeTypeContext.Provider
+      value={{ employeeTypeId, setEmployeeTypeId: handleSetEmployeeId }}
+    >
       {children}
     </EmployeeTypeContext.Provider>
-  )
-
-}
-
-
+  );
+};
 
 export default function Personal({ ID }) {
   const { token } = useAuth();
   const [details, setdetails] = useState([]);
-  const { employeeTypeId, setEmployeeTypeId } = useEmployeeType()
-  const [LeaveTypes, setLeaveTypes] = useState([])
-  const [employeeId, setEmployeeId] = useState('')
-  const [employeeType, setEmployeeType] = useState('')
-  const [employeeTypeGroup, setEmployeeTypeGroup] = useState('')
-  const [employeeTypes, setEmployeeTypes] = useState([])
-  const [employeeName, setEmployeeName] = useState('')
-  const { fYear } = useDetails()
+  const { employeeTypeId, setEmployeeTypeId } = useEmployeeType();
+  const [LeaveTypes, setLeaveTypes] = useState([]);
+  const [employeeId, setEmployeeId] = useState("");
+  const [employeeType, setEmployeeType] = useState("");
+  const [employeeTypeGroup, setEmployeeTypeGroup] = useState("");
+  const [employeeTypes, setEmployeeTypes] = useState([]);
+  const [employeeName, setEmployeeName] = useState("");
+  const { fYear } = useDetails();
 
   const formik = useFormik({
     initialValues: {
       EmployeeId: "",
       EmployeeName: "",
-      EmployeeTypeId:"",
+      EmployeeTypeId: "",
       EmployeeTypeGroupId: "",
       Salutation: "",
       LastName: "",
@@ -150,6 +149,7 @@ export default function Personal({ ID }) {
         ModifiedBy: values.ModifiedBy,
         ModifiedOn: values.ModifiedOn,
       };
+      console.log("Updated data", updatedData);
       updateEmpPersonal(updatedData);
     },
   });
@@ -190,7 +190,7 @@ export default function Personal({ ID }) {
       console.log("Response Object", response);
       const data = response.data;
       setdetails(data);
-      console.log('EMP type id in personal', employeeTypeId )
+      console.log("EMP type id in personal", employeeTypeId);
     } catch (error) {
       console.log("Error while fetching course data: ", error.message);
     }
@@ -201,21 +201,112 @@ export default function Personal({ ID }) {
     fetchPersonalData();
   }, [ID]);
 
-  useEffect(() =>{
-    const fetchEmployeeTypes = async() =>{
-      try{
-        const response = await axios.get("http://localhost:5500/employee-type/FnShowActiveData",
-        { headers: { Authorization: `Bearer ${token}`}
-      })
-      const data = response.data
-      setEmployeeTypes(data)
-      console.log(response)
-      } catch (error){
-        console.error('Error', error);
+  useEffect(() => {
+    const fetchEmployeeTypes = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/employee-type/FnShowActiveData",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const data = response.data;
+        setEmployeeTypes(data);
+        console.log(response);
+      } catch (error) {
+        console.error("Error", error);
       }
-    }
-    fetchEmployeeTypes()
-  },[token])
+    };
+    fetchEmployeeTypes();
+  }, [token]);
+
+  //Fetching category
+
+  const [categories, setCategories] = useState([]);
+  useEffect(() => {
+    const fetchCategoryData = async () => {
+      const CID = 8;
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/two-field/FnShowCategoricalData",
+          {
+            params: { MasterNameId: CID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        console.log("Category", data);
+        setCategories(data);
+      } catch (error) {
+        console.error("Error fetching currencies:", error);
+      }
+    };
+    fetchCategoryData();
+  }, [token]);
+
+  const [Religion, setReligion] = useState([]);
+  useEffect(() => {
+    const fetchReligionData = async () => {
+      const CID = 7;
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/two-field/FnShowCategoricalData",
+          {
+            params: { MasterNameId: CID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        console.log("Religion", data);
+        setReligion(data);
+      } catch (error) {
+        console.error("Error fetching currencies:", error);
+      }
+    };
+    fetchReligionData();
+  }, [token]);
+
+  const [Reference, setReference] = useState([]);
+  useEffect(() => {
+    const fetchReferenceData = async () => {
+      const CID = 6;
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/two-field/FnShowCategoricalData",
+          {
+            params: { MasterNameId: CID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        console.log("Reference", data);
+        setReference(data);
+      } catch (error) {
+        console.error("Error fetching currencies:", error);
+      }
+    };
+    fetchReferenceData();
+  }, [token]);
+
+  const [Caste, setCaste] = useState([]);
+  useEffect(() => {
+    const fetchCasteData = async () => {
+      const CID = 9;
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/two-field/FnShowCategoricalData",
+          {
+            params: { MasterNameId: CID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        console.log("caste", data);
+        setCaste(data);
+      } catch (error) {
+        console.error("Error fetching caste:", error);
+      }
+    };
+    fetchCasteData();
+  }, [token]);
 
   useEffect(() => {
     if (details) {
@@ -267,16 +358,16 @@ export default function Personal({ ID }) {
         ModifiedBy: details.ModifiedBy,
         ModifiedOn: details.ModifiedOn,
       });
-      setEmployeeId(details.EmployeeId)
-      setEmployeeType(details.EmployeeType)
-      setEmployeeTypeGroup(details.EmployeeTypeGroupId)
+      setEmployeeId(details.EmployeeId);
+      setEmployeeType(details.EmployeeType);
+      setEmployeeTypeGroup(details.EmployeeTypeGroupId);
     }
   }, [details]);
 
-  useEffect(() =>{
-    setEmployeeTypeId(details.EmployeeTypeId)
-    console.log('Emp Type id in personal', employeeTypeId)
-  }, [details])
+  useEffect(() => {
+    setEmployeeTypeId(details.EmployeeTypeId);
+    console.log("Emp Type id in personal", employeeTypeId);
+  }, [details]);
 
   const handlePhotoChange = (event) => {
     const file = event.target.files[0];
@@ -314,12 +405,15 @@ export default function Personal({ ID }) {
                 value={formik.values.EmployeeTypeId}
                 onChange={formik.handleChange}
               >
-                    <option value="">Select Type</option>
-                    {employeeTypes.map((entry) => (
-                    <option key={entry.EmployeeTypeId} value={entry.EmployeeTypeId}>
-                      {entry.EmployeeType}
-                    </option>
-                    ))}
+                <option value="">Select Type</option>
+                {employeeTypes.map((entry) => (
+                  <option
+                    key={entry.EmployeeTypeId}
+                    value={entry.EmployeeTypeId}
+                  >
+                    {entry.EmployeeType}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="py-1">
@@ -621,19 +715,15 @@ export default function Personal({ ID }) {
               <select
                 id="CategoryId"
                 name="CategoryId"
-                className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                value={formik.values.CategoryId}
+                className="w-full text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
                 onChange={formik.handleChange}
               >
-                <option value={formik.values.CategoryId}>
-                  {formik.values.CategoryId}
-                </option>
-                <option value="">Select Category</option>
-                <option value="Category 1">Category 1</option>
-                <option value="Category 2">Category 2</option>
-                <option value="Category 3">Category 3</option>
-                <option value="Category 4">Category 4</option>
-                <option value="Category 5">Category 5</option>
+                <option value="">Select Type</option>
+                {categories.map((entry) => (
+                  <option key={entry.FieldId} value={entry.FieldId}>
+                    {entry.FieldDetails}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="py-1">
@@ -656,58 +746,29 @@ export default function Personal({ ID }) {
                 id="ReligionId"
                 name="ReligionId"
                 className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                value={formik.values.ReligionId}
                 onChange={formik.handleChange}
               >
-                <option value={formik.values.ReligionId}>
-                  {formik.values.ReligionId}
-                </option>
-                <option value="">Select Religion</option>
-                <option value="Religion 1">Religion 1</option>
-                <option value="Religion 2">Religion 2</option>
-                <option value="Religion 3">Religion 3</option>
-                <option value="Religion 4">Religion 4</option>
-                <option value="Religion 5">Religion 5</option>
+                <option value="">Select Type</option>
+                {Religion.map((entry) => (
+                  <option key={entry.FieldId} value={entry.FieldId}>
+                    {entry.FieldDetails}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="py-1">
               <p className="mb-1 font-semibold text-[13px]">Reference</p>
               <select
                 id="ReferenceId"
-                name="ReferenceId"
                 className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                value={formik.values.ReferenceId}
                 onChange={formik.handleChange}
               >
-                <option value={formik.values.ReferenceId}>
-                  {formik.values.ReferenceId}
-                </option>
-                <option value="">Select Reference</option>
-                <option value="Professional References">
-                  Professional References
-                </option>
-                <option value="Supervisor/Manager References">
-                  Supervisor/Manager References
-                </option>
-                <option value="Colleague References">
-                  Colleague References
-                </option>
-                <option value="Client/Customer References">
-                  Client/Customer References
-                </option>
-                <option value="Subordinate References">
-                  Subordinate References
-                </option>
-                <option value="Educational References">
-                  Educational References
-                </option>
-                <option value="Personal References">Personal References</option>
-                <option value="Character References">
-                  Character References
-                </option>
-                <option value="Industry Experts or Mentors">
-                  Industry Experts or Mentors
-                </option>
+                <option value="">Select Type</option>
+                {Reference.map((entry, index) => (
+                  <option key={index} value={entry.FieldId}>
+                    {entry.FieldDetails}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="py-1">
@@ -716,18 +777,14 @@ export default function Personal({ ID }) {
                 id="CasteId"
                 name="CasteId"
                 className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                value={formik.values.CasteId}
                 onChange={formik.handleChange}
               >
-                <option value={formik.values.CasteId}>
-                  {formik.values.CasteId}
-                </option>
-                <option value="">Select Caste</option>
-                <option value="Caste 1">Caste 1</option>
-                <option value="Caste 2">Caste 2</option>
-                <option value="Caste 3">Caste 3</option>
-                <option value="Caste 4">Caste 4</option>
-                <option value="Caste 5">Caste 5</option>
+                <option value="">Select Type</option>
+                {Caste.map((entry) => (
+                  <option key={entry.FieldId} value={entry.FieldId}>
+                    {entry.FieldDetails}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="py-1">
