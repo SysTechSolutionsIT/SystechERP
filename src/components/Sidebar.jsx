@@ -134,7 +134,11 @@ const Sidebar = () => {
       >
         <div className="text-white-100 text-xl items-center px-2">
           <div className="p-2.5 mt-1 flex items-center">
-            <img className="w-[40px] h-[40px]" src="/systechlogo.png" alt="icon" />
+            <img
+              className="w-[40px] h-[40px]"
+              src="/systechlogo.png"
+              alt="icon"
+            />
             {open && (
               <h1 className="font-[Inter] font-bold text-white justify-center text-[20px] ml-3 whitespace-nowrap">
                 SysTech ERP
@@ -476,7 +480,7 @@ const Sidebar = () => {
                         onClick={() => navigate("/shift-roster")}
                       />
                       <SubMenuEntry
-                        title="Mnual Attendance Entry"
+                        title="Manual Attendance Entry"
                         onClick={() => navigate("/manual-attendance-entry")}
                       />
                       <SubMenuEntry
