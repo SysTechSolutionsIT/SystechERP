@@ -30,14 +30,14 @@ const CompMaster = () => {
     CompanySector: true,
     NatureOfBusiness: true,
     Logo: false,
-    CreatedBy: true,
+    CreatedBy: false,
     CreatedByName: false,
-    ModifiedBy: true,
+    ModifiedBy: false,
     ModifiedByName: false,
     AcFlag: true,
     SingleCompany: true,
-    createdAt: true,
-    updatedAt: true,
+    createdAt: false,
+    updatedAt: false,
     FieldId: false,
     FieldName: false,
   });
@@ -55,7 +55,7 @@ const CompMaster = () => {
     ModifiedBy: "Modified By",
     ModifiedByName: "Modified By Name",
     AcFlag: "Status",
-    SingleCompany: "Single Company",
+    SingleCompany: "Single Branch",
     createdAt: "Created On",
     updatedAt: "Modified On",
     FieldId: "Field ID",
@@ -160,22 +160,17 @@ const CompMaster = () => {
     }
   };
 
-  const handleSearchChange = (columnName, searchWord) => {
-    const searchData = [...companies];
-
-    const newFilter = searchData.filter((item) => {
-      // Check if the item matches the search term in the selected column
-      const newCol = columnName.charAt(0).toLowerCase() + columnName.slice(1);
-      const value = item[newCol];
-
-      return (
-        value &&
-        value.toString().toLowerCase().includes(searchWord.toLowerCase())
-      );
+  const handleSearchChange = (title, searchWord) => {
+    const newFilter = companies.filter((item) => {
+      const value = item[title];
+      return value && value.toLowerCase().includes(searchWord.toLowerCase());
     });
 
-    // Update the filtered data
-    setFilteredData(newFilter);
+    if (searchWord === "") {
+      setFilteredData([]);
+    } else {
+      setFilteredData(newFilter);
+    }
   };
 
   const deleteComp = async (DeleteId) => {
@@ -226,11 +221,12 @@ const CompMaster = () => {
           >
             Column Visibility
             <Icon
-              icon="fe:arrow-down"
-              className={`ml-2 ${
-                showDropdown ? "rotate-180" : ""
-              } cursor-pointer`}
-            />
+  icon="fe:arrow-down"
+  className={`ml-2 ${
+    showDropdown ? "rotate-180" : ""
+  } cursor-pointer`}
+/>
+
           </button>
           {showDropdown && (
             <div className="absolute top-32 bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50 top-[calc(100% + 10px)]">
