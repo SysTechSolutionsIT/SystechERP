@@ -8,13 +8,10 @@ import axios from "axios";
 const ManualAttendanceEntryModal = ({ visible, onClick }) => {
   const { token } = useAuth();
   const [Details, setDetails] = useState([]);
-  const [selectedEmployeeId, setSelectedEmployeeId] = useState("");
+  const [Fins, setFins] = useState([]);
   const [employeeTypes, setEmployeeTypes] = useState([]);
-  const [selectedShiftId, setSelectedShiftId] = useState(null);
-  const [selectedEmployeeType, setSelectedEmployeeType] = useState(null);
   const [Shifts, setShift] = useState([]);
   const [Jobs, setJobs] = useState([]);
-  const [selectedJobId, setSelectedJobId] = useState(null);
 
   const formik = useFormik({
     initialValues: {
@@ -38,6 +35,7 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
     onSubmit: (values) => {
       const updatedData = {
         ApprovalFlag: "P",
+        AttendanceFlag: values.AttendanceFlag,
         FYear: formik.values.FYear,
         AttendanceDate: formik.values.AttendanceDate,
         EmployeeId: formik.values.EmployeeId,
@@ -149,33 +147,56 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
   }, [token]);
 
   // Setting Employee Type Group
-  useEffect(() => {
-    const fetchEmployeeTypeGroup = async () => {
-      try {
-        if (formik.values.EmployeeTypeId) {
-          const response = await axios.get(
-            "http://localhost:5500/employee-type/FnShowParticularData",
-            {
-              params: { EmployeeTypeId: formik.values.EmployeeTypeId }, // Pass EmployeeTypeId as a parameter
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          );
-          const data = response.data;
-          console.log("Employee type group data:", data);
-          if (data && data.length > 0) {
-            console.log("employee type group:", data.EmployeeTypeGroup);
-            formik.setFieldValue("EmployeeTypeGroup", data.EmployeeTypeGroup);
-          }
-        } else {
-          formik.setFieldValue("EmployeeTypeGroup", ""); // Reset the value when no Employee Type is selected
-        }
-      } catch (error) {
-        console.error("Error", error);
-      }
-    };
+  const handleEmployeeTypeChange = (e) => {
+    const selectedEmployeeTypeId = e.target.value;
+    formik.handleChange(e);
+    // Find the corresponding employee type entry
+    const selectedEmployeeType = employeeTypes.find(
+      (entry) => entry.EmployeeTypeId === selectedEmployeeTypeId
+    );
+    // Update the EmployeeTypeGroup in formik
+    formik.setFieldValue(
+      "EmployeeTypeGroup",
+      selectedEmployeeType?.EmployeeTypeGroup || ""
+    );
+  };
 
-    fetchEmployeeTypeGroup();
-  }, [formik.values.EmployeeTypeId, token]);
+  // Setting FYear
+  useEffect(() => {
+    fetchFinData();
+  }, [token]);
+
+  const fetchFinData = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5500/financials/FnShowActiveData"
+      );
+      if (response.status === 200) {
+        const data = response.data;
+        setFins(data);
+      } else {
+        console.error("Failed to fetch data");
+      }
+    } catch (error) {
+      console.error(
+        "Error while fetching financial year data: ",
+        error.message
+      );
+    }
+  };
+
+  //Employee Searchbar Components
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleInputChange = (event) => {
+    const { value } = event.target;
+    setSearchTerm(value);
+  };
+
+  const filteredEmployees = Details.filter((employee) =>
+    employee.EmployeeName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   if (!visible) return null;
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -235,51 +256,96 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
               </div>
               <div>
                 <p className="text-[13px] font-semibold">FYear</p>
-                <input
-                  id="FYear"
-                  type="number"
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  value={formik.values.FYear}
-                  onChange={formik.handleChange}
-                />
-              </div>
-              <div>
-                <p className="text-[13px] font-semibold">Employee Name</p>
                 <select
-                  id="EmployeeId"
-                  name="EmployeeId"
-                  className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
-                  value={formik.values.EmployeeId}
+                  id="FYear"
+                  name="FYear"
+                  className="w-full px-4 py-2 font-normal text-[11px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
+                  value={formik.values.FYear}
                   onChange={formik.handleChange}
                 >
                   <option value="" disabled>
-                    Select an employee
+                    Select FYear
                   </option>
-                  {Details.length > 0 &&
-                    Details.map((employee) => (
-                      <option
-                        key={employee.EmployeeId}
-                        value={employee.EmployeeId}
-                      >
-                        {employee.EmployeeName}
+                  {Fins.length > 0 &&
+                    Fins.map((year) => (
+                      <option key={year.FYearId} value={year.FYearId}>
+                        {year.Name}
                       </option>
                     ))}
                 </select>
+              </div>
+              <div>
+                <p className="text-[13px] font-semibold">Employee Name</p>
+                <div className="flex items-center">
+                  <div className="relative w-full">
+                    <input
+                      type="text"
+                      id="EmployeeId"
+                      name="EmployeeId"
+                      value={formik.values.EmployeeId}
+                      onChange={(e) => {
+                        formik.handleChange(e);
+                        handleInputChange(e);
+                      }}
+                      onFocus={() => setSearchTerm("")}
+                      className="w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                      placeholder={
+                        formik.values.EmployeeId
+                          ? formik.values.EmployeeName
+                          : "Search Employee Name"
+                      }
+                    />
+                    {searchTerm && (
+                      <div
+                        className="absolute z-10 bg-white w-full border border-gray-300 rounded-lg mt-1 overflow-hidden"
+                        style={{ maxHeight: "150px", overflowY: "auto" }}
+                      >
+                        {filteredEmployees.length > 0 ? (
+                          filteredEmployees.map((entry) => (
+                            <div
+                              key={entry.EmployeeId}
+                              onClick={() => {
+                                formik.setValues({
+                                  ...formik.values,
+                                  EmployeeId: entry.EmployeeId,
+                                });
+                                setSearchTerm("");
+                              }}
+                              className="px-4 py-2 cursor-pointer hover:bg-gray-200 font-semibold text-[11px]"
+                            >
+                              {entry.EmployeeName}
+                            </div>
+                          ))
+                        ) : (
+                          <div className="px-4 py-2 text-gray-500">
+                            No matching results
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
               <div className="py-1">
                 <p className="font-semibold text-[13px]">Employee Type</p>
                 <select
                   id="EmployeeTypeId"
                   name="EmployeeTypeId"
-                  className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
+                  className="w-full px-4 py-2 font-normal text-[11px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
                   value={formik.values.EmployeeTypeId}
-                  onChange={formik.handleChange}
+                  onChange={handleEmployeeTypeChange}
                 >
                   <option value="">Select Type</option>
                   {employeeTypes.map((entry) => (
                     <option
                       key={entry.EmployeeTypeId}
                       value={entry.EmployeeTypeId}
+                      onClick={() => {
+                        formik.setValues({
+                          ...formik.values,
+                          EmployeeTypeGroup: entry.EmployeeTypeGroup,
+                        });
+                      }}
                     >
                       {entry.EmployeeType}
                     </option>
@@ -291,7 +357,7 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
                 <select
                   id="ShiftId"
                   name="ShiftId"
-                  className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
+                  className="w-full px-4 py-2 font-normal text-[11px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
                   value={formik.values.ShiftId}
                   onChange={formik.handleChange}
                 >
@@ -308,7 +374,7 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
                 <select
                   id="JobTypeId"
                   name="JobTypeId"
-                  className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
+                  className="w-full px-4 py-2 font-normal text-[11px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
                   value={formik.values.JobTypeId}
                   onChange={formik.handleChange}
                 >
@@ -337,16 +403,6 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
                   type="datetime-local" // Change the input type to handle date and time
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   value={formik.values.OutTime}
-                  onChange={formik.handleChange}
-                />
-              </div>
-              <div>
-                <p className="text-[13px] font-semibold">Sanction By</p>
-                <input
-                  id="SanctionBy"
-                  type="text"
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  value={formik.values.SanctionBy}
                   onChange={formik.handleChange}
                 />
               </div>

@@ -11,6 +11,7 @@ const MAModal = ({ visible, onClick, ID }) => {
   const [Shifts, setShift] = useState([]);
   const [Jobs, setJobs] = useState([]);
   const [employeeTypes, setEmployeeTypes] = useState([]);
+  const [formattedDate, setFormattedDate] = useState("");
 
   const { token } = useAuth();
   const formik = useFormik({
@@ -190,6 +191,20 @@ const MAModal = ({ visible, onClick, ID }) => {
     fetchJobs();
   }, [token]);
 
+  //Date Formats
+  useEffect(() => {
+    const handleFormatDate = (dateString) => {
+      try {
+        const date = new Date(dateString);
+        const formatted = date.toISOString().split("T")[0];
+        setFormattedDate(formatted);
+      } catch (error) {
+        console.error("Invalid date string:", dateString, error);
+      }
+    };
+    handleFormatDate(details.AttendanceDate);
+  }, [details]); // Run the effect when formikValues changes
+
   if (!visible) return null;
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -252,9 +267,9 @@ const MAModal = ({ visible, onClick, ID }) => {
                 <p className="text-[13px] font-semibold">Attendance Date</p>
                 <input
                   id="AttendanceDate"
-                  type="date"
+                  type="text"
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  value={formik.values.AttendanceDate}
+                  value={formattedDate}
                   onChange={formik.handleChange}
                   disabled={true}
                 />
@@ -263,7 +278,7 @@ const MAModal = ({ visible, onClick, ID }) => {
                 <p className="text-[13px] font-semibold">FYear</p>
                 <input
                   id="FYear"
-                  type="number"
+                  type="text"
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   value={formik.values.FYear}
                   onChange={formik.handleChange}
@@ -278,6 +293,7 @@ const MAModal = ({ visible, onClick, ID }) => {
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
                   value={formik.values.EmployeeId}
                   onChange={formik.handleChange}
+                  disabled={true}
                 >
                   <option value="" disabled>
                     Select an employee
@@ -300,6 +316,7 @@ const MAModal = ({ visible, onClick, ID }) => {
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
                   value={formik.values.EmployeeTypeId}
                   onChange={formik.handleChange}
+                  disabled={true}
                 >
                   <option value="">Select Type</option>
                   {employeeTypes.map((entry) => (
@@ -320,6 +337,7 @@ const MAModal = ({ visible, onClick, ID }) => {
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
                   value={formik.values.ShiftId}
                   onChange={formik.handleChange}
+                  disabled={true}
                 >
                   <option value="">Select Shift</option>
                   {Shifts.map((entry) => (
@@ -354,6 +372,7 @@ const MAModal = ({ visible, onClick, ID }) => {
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   value={formik.values.InTime}
                   onChange={formik.handleChange}
+                  disabled={true}
                 />
               </div>
               <div>
@@ -364,6 +383,7 @@ const MAModal = ({ visible, onClick, ID }) => {
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   value={formik.values.OutTime}
                   onChange={formik.handleChange}
+                  disabled={true}
                 />
               </div>
               <div>
@@ -384,6 +404,7 @@ const MAModal = ({ visible, onClick, ID }) => {
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   value={formik.values.Remark}
                   onChange={formik.handleChange}
+                  disabled={true}
                 />
               </div>
             </div>

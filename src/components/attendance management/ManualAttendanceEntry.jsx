@@ -97,6 +97,9 @@ const ManualAttendanceEntry = () => {
         const acFlagValue = result[columnName] ? "Active" : "Inactive";
         return acFlagValue;
 
+      case "AttendanceDate":
+        return formatDate(result[columnName]);
+
       default:
         return result[columnName];
     }
@@ -242,6 +245,12 @@ const ManualAttendanceEntry = () => {
     const context = canvas.getContext("2d");
     context.font = fontSize + " sans-serif";
     return context.measureText(text).width;
+  };
+
+  //Formatting Dates
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toISOString().split("T")[0]; // Get only the date part
   };
 
   return (
