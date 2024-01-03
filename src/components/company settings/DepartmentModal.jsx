@@ -12,8 +12,7 @@ const DepartmentModal = ({ visible, onClick }) => {
   const [CostCenters, setCostCenters] = useState([]);
   const [Departments, setDepartments] = useState([])
   const [Employees, setEmployees] = useState([]);
-  const [searchTermDeptHead, setSearchTermDeptHead] = useState('')
-  const [searchTermDeptSubHead, setSearchTermDeptSubHead ] = useState('')
+  const [DepartmentGroup, setDepartmentGroup] = useState([])
 
   const formik = useFormik({
     initialValues: {
@@ -54,23 +53,6 @@ const DepartmentModal = ({ visible, onClick }) => {
     },
   });
 
-  const handleInputChangeHead = (event) => {
-    const { value } = event.target;
-    setSearchTermDeptHead(value);
-  };
-
-  const handleInputChangeSubHead = (event) => {
-    const { value } = event.target;
-    setSearchTermDeptSubHead(value);
-  };
-
-  const filteredEmployeesHead = Employees.filter((employee) =>
-    employee.EmployeeName.toLowerCase().includes(searchTermDeptHead.toLowerCase())
-  );
-
-  const filteredEmployeesSubHead = Employees.filter((employee) =>
-    employee.EmployeeName.toLowerCase().includes(searchTermDeptSubHead.toLowerCase())
-  );
 
   const addDept = async (data) => {
     try {
@@ -99,6 +81,24 @@ const DepartmentModal = ({ visible, onClick }) => {
       // Handle network error
     }
   };
+
+  useEffect(() =>{
+    const fetchDepartmentGroup = async () =>{
+      const DGID = 5
+      try {
+        const response = await axios.get('http://localhost:5500/two-field/FnShowCategoricalData',
+        {
+          params: { MasterNameId: DGID },
+          headers: { Authorization: `Bearer ${token}` },
+        }) 
+        const data = response.data
+        setDepartmentGroup(data)
+      } catch (error) {
+        console.error('Error', error);
+      }
+    }
+    fetchDepartmentGroup()
+  },[token])
 
   useEffect(() =>{
     const fetchDepartments = async () =>{
@@ -278,124 +278,54 @@ const DepartmentModal = ({ visible, onClick }) => {
                   onChange={formik.handleChange}
                 >
                   <option value="">Select Department Group</option>
-                  <option value="Services">Services</option>
-                  <option value="Support">Support</option>
-                  <option value="Production">Production</option>
-                  <option value="Administration">Administration</option>
-                  <option value="NA">NA</option>
+                  {DepartmentGroup.map((entry) => (
+                    <option key={entry.FieldId} value={entry.FieldId}>
+                      {entry.FieldDetails}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div>
                 <label className="text-[13px] font-semibold">
                   Department Head
                 </label>
-                <div className="flex items-center">
-                  <div className="relative w-full">
-                    <input
-                      type="text"
-                      id="DepartmentHeadName"
-                      name="DepartmentHeadName"
-                      value={formik.values.DepartmentHeadName}
-                      onChange={(e) => {
-                        formik.handleChange(e);
-                        handleInputChangeHead(e);
-                      }}
-                      onFocus={() => setSearchTermDeptHead("")}
-                      className="w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
-                      placeholder={
-                        formik.values.EmployeeId
-                          ? formik.values.EmployeeName
-                          : "Search Employee Name"
-                      }
-                    />
-
-                    {searchTermDeptHead && (
-                      <div
-                        className="absolute z-10 bg-white w-full border border-gray-300 rounded-lg mt-1 overflow-hidden"
-                        style={{ maxHeight: "150px", overflowY: "auto" }}
-                      >
-                        {filteredEmployeesHead.length > 0 ? (
-                          filteredEmployeesHead.map((entry) => (
-                            <div
-                              key={entry.EmployeeId}
-                              onClick={() => {
-                                formik.setValues({
-                                  ...formik.values,
-                                  DepartmentHeadId : entry.EmployeeId,
-                                  DepartmentHeadName: entry.EmployeeName
-                                });
-                                setSearchTermDeptHead("");
-                              }}
-                              className="px-4 py-2 cursor-pointer hover:bg-gray-200 font-semibold text-[11px]"
-                            >
-                              {entry.EmployeeName}
-                            </div>
-                          ))
-                        ) : (
-                          <div className="px-4 py-2 text-gray-500">
-                            No matching results
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </div>
+                <select
+                  id="DepartmentHeadId"
+                  value={formik.values.DepartmentHeadId}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  onChange={formik.handleChange}
+                >
+                  <option value="">Select Department Head</option>
+                  {Employees.map((entry) => (
+                    <option
+                      key={entry.EmployeeId}
+                      value={entry.EmployeeId}
+                    >
+                      {entry.EmployeeName}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div>
                 <label className="text-[13px] font-semibold">
                   Department Sub-Head
                 </label>
-                <div className="flex items-center">
-                  <div className="relative w-full">
-                    <input
-                      type="text"
-                      id="DepartmentSubHeadName"
-                      name="DepartmentSubHeadName"
-                      value={formik.values.DepartmentSubHeadName}
-                      onChange={(e) => {
-                        formik.handleChange(e);
-                        handleInputChangeSubHead(e);
-                      }}
-                      onFocus={() => setSearchTermDeptSubHead("")}
-                      className="w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
-                      placeholder={
-                        formik.values.EmployeeId
-                          ? formik.values.EmployeeName
-                          : "Search Employee Name"
-                      }
-                    />
-
-                    {searchTermDeptSubHead && (
-                      <div
-                        className="absolute z-10 bg-white w-full border border-gray-300 rounded-lg mt-1 overflow-hidden"
-                        style={{ maxHeight: "150px", overflowY: "auto" }}
-                      >
-                        {filteredEmployeesSubHead.length > 0 ? (
-                          filteredEmployeesSubHead.map((entry) => (
-                            <div
-                              key={entry.EmployeeId}
-                              onClick={() => {
-                                formik.setValues({
-                                  ...formik.values,
-                                  DepartmentSubHeadId : entry.EmployeeId,
-                                  DepartmentSubHeadName: entry.EmployeeName
-                                });
-                                setSearchTermDeptSubHead("");
-                              }}
-                              className="px-4 py-2 cursor-pointer hover:bg-gray-200 font-semibold text-[11px]"
-                            >
-                              {entry.EmployeeName}
-                            </div>
-                          ))
-                        ) : (
-                          <div className="px-4 py-2 text-gray-500">
-                            No matching results
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </div>
+                <select
+                  id="DepartmentSubHeadId"
+                  value={formik.values.DepartmentSubHeadId}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  onChange={formik.handleChange}
+                >
+                  <option value="">Select Department Head</option>
+                  {Employees.map((entry) => (
+                    <option
+                      key={entry.EmployeeId}
+                      value={entry.EmployeeId}
+                    >
+                      {entry.EmployeeName}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div>
                 <p className="capitalize font-semibold text-[13px]">

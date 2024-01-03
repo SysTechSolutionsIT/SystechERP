@@ -1,6 +1,7 @@
 import { useFormik } from "formik";
 import React from "react";
 import { useState, useEffect } from "react";
+// import { departments } from "./DepartmentMaster";
 import { Icon } from "@iconify/react";
 import axios from "axios";
 import { useAuth } from "../Login";
@@ -12,8 +13,7 @@ const VEDept = ({ visible, onClick, edit, ID }) => {
   const [CostCenters, setCostCenters] = useState([]);
   const [Departments, setDepartments] = useState([])
   const [Employees, setEmployees] = useState([]);
-  const [searchTermDeptHead, setSearchTermDeptHead] = useState('')
-  const [searchTermDeptSubHead, setSearchTermDeptSubHead ] = useState('')
+  const [DepartmentGroup, setDepartmentGroup] = useState([])
 
 
   useEffect(() => {
@@ -47,36 +47,25 @@ const VEDept = ({ visible, onClick, edit, ID }) => {
       BranchName: "",
       CostCenterId: "",
       DepartmentHeadId: "",
-      DepartmentHeadName:"",
       DepartmentSubHeadId: "",
-      DepartmentSubHeadName:"",
       DepartmentStdStaffStrength: "",
       DepartmentStdWorkerStrength: "",
       Remark: "",
+      Status: "",
+      AcFlag: "Y",
       IUFlag: "U",
+      CreatedBy: "",
+      CreatedOn: "",
+      ModifiedBy: "",
+      ModifiedOn: "",
     },
     onSubmit: (values) => {
       console.log(values);
-      const updatedData = {
-        DepartmentId: values.DepartmentId,
-        ParentDeptId: values.ParentDeptId,
-        DepartmentType: values.DepartmentType,
-        DepartmentName: values.DepartmentName,
-        DepartmentGroupId: values.DepartmentGroupId,
-        BranchName: values.BranchName,
-        CostCenterId: values.CostCenterId,
-        DepartmentHeadId: values.DepartmentHeadId,
-        DepartmentSubHeadId: values.DepartmentSubHeadId,
-        DepartmentStdStaffStrength: values.DepartmentStdStaffStrength,
-        DepartmentStdWorkerStrength: values.DepartmentStdWorkerStrength,
-        Remark: values.Remark,
-        IUFlag:'U'
-      }
-      
+
       axios
         .post(
           `http://localhost:5500/departmentmaster/FnAddUpdateDeleteRecord`,
-          updatedData,
+          values,
           {
             params: { DepartmentId: ID },
             headers: { Authorization: `Bearer ${token}` },
@@ -99,40 +88,6 @@ const VEDept = ({ visible, onClick, edit, ID }) => {
     fetchDept();
   }, [ID]);
 
-  const fetchDept = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:5500/departmentmaster/FnShowParticularData`,
-        {
-          params: { DepartmentId: ID },
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      console.log("Response Object", response);
-      const data = response.data;
-      setDetails(data);
-    } catch (error) {
-      console.log("Error while fetching department data: ", error.message);
-    }
-  };
-
-  useEffect(() =>{
-    const fetchDepartments = async () =>{
-      try {
-        const response = await axios.get('http://localhost:5500/departmentmaster/FnShowActiveData',
-        { headers: {Authorization: `Bearer ${token}`}}
-      )
-      const data = response.data
-      setDepartments(data)
-      } catch (error) {
-        console.error('Error', error);
-      }
-    }
-    fetchDepartments()
-  },[token])
-
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
@@ -151,42 +106,78 @@ const VEDept = ({ visible, onClick, edit, ID }) => {
   }, [token]);
 
   useEffect(() =>{
-    if(details){
-      formik.setValues({
-        DepartmentId: details[0].DepartmentId,
-        ParentDeptId: details[0].ParentDeptId,
-        DepartmentType: details[0].DepartmentType,
-        DepartmentName: details[0].DepartmentName,
-        DepartmentGroupId: details[0].DepartmentGroupId,
-        BranchName: details[0].BranchName,
-        CostCenterId: details[0].CostCenterId,
-        DepartmentHeadId: details[0].DepartmentHeadId,
-        DepartmentSubHeadId: details[0].DepartmentSubHeadId,
-        DepartmentStdStaffStrength: details[0].DepartmentStdStaffStrength,
-        DepartmentStdWorkerStrength: details[0].DepartmentStdWorkerStrength,
-        Remark: details[0].Remark,
-      });
+    const fetchDepartmentGroup = async () =>{
+      const DGID = 5
+      try {
+        const response = await axios.get('http://localhost:5500/two-field/FnShowCategoricalData',
+        {
+          params: { MasterNameId: DGID },
+          headers: { Authorization: `Bearer ${token}` },
+        }) 
+        const data = response.data
+        setDepartmentGroup(data)
+      } catch (error) {
+        console.error('Error', error);
+      }
     }
-  },[details])
+    fetchDepartmentGroup()
+  },[token])
 
-  
-  const handleInputChangeHead = (event) => {
-    const { value } = event.target;
-    setSearchTermDeptHead(value);
+  useEffect(() =>{
+    const fetchDepartments = async () =>{
+      try {
+        const response = await axios.get('http://localhost:5500/departmentmaster/FnShowActiveData',
+        { headers: {Authorization: `Bearer ${token}`}}
+      )
+      const data = response.data
+      setDepartments(data)
+      } catch (error) {
+        console.error('Error', error);
+      }
+    }
+    fetchDepartments()
+  },[token])
+
+  const fetchDept = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5500/departmentmaster/FnShowParticularData`,
+        {
+          params: { DepartmentId: ID },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Response Object", response);
+      const data = response.data;
+      setDetails(data);
+      formik.setValues({
+        DepartmentId: data[0].DepartmentId,
+        ParentDeptId: data[0].ParentDeptId,
+        DepartmentType: data[0].DepartmentType,
+        DepartmentName: data[0].DepartmentName,
+        DepartmentGroupId: data[0].DepartmentGroupId,
+        BranchName: data[0].BranchName,
+        CostCenterId: data[0].CostCenterId,
+        DepartmentHeadId: data[0].DepartmentHeadId,
+        DepartmentSubHeadId: data[0].DepartmentSubHeadId,
+        DepartmentStdStaffStrength: data[0].DepartmentStdStaffStrength,
+        DepartmentStdWorkerStrength: data[0].DepartmentStdWorkerStrength,
+        Remark: data[0].Remark,
+        AcFlag: data[0].AcFlag,
+        CreatedBy: data[0].CreatedBy,
+        CreatedOn: data[0].CreatedOn,
+        ModifiedBy: data[0].ModifiedBy,
+        ModifiedOn: data[0].ModifiedOn,
+      });
+    } catch (error) {
+      console.log("Error while fetching department data: ", error.message);
+    }
   };
 
-  const handleInputChangeSubHead = (event) => {
-    const { value } = event.target;
-    setSearchTermDeptSubHead(value);
-  };
-
-  const filteredEmployeesHead = Employees.filter((employee) =>
-    employee.EmployeeName.toLowerCase().includes(searchTermDeptHead.toLowerCase())
-  );
-
-  const filteredEmployeesSubHead = Employees.filter((employee) =>
-    employee.EmployeeName.toLowerCase().includes(searchTermDeptSubHead.toLowerCase())
-  );
+  console.log("ID:", ID);
+  console.log("Details array", details);
 
   if (!visible) return null;
   return (
@@ -215,7 +206,8 @@ const VEDept = ({ visible, onClick, edit, ID }) => {
                 <input
                   id="DepartmentId"
                   type="number"
-                  value={formik.values?.DepartmentId}
+                  placeholder="Enter Department ID"
+                  value={formik.values.DepartmentId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={true}
@@ -246,9 +238,6 @@ const VEDept = ({ visible, onClick, edit, ID }) => {
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
-                  {/* <option value={`${formik.values.BranchName}`}>
-                    {formik.values.BranchName}
-                  </option> */}
                   <option value="00001">Main</option>
                   <option value="00002">Sub</option>
                 </select>
@@ -317,131 +306,57 @@ const VEDept = ({ visible, onClick, edit, ID }) => {
                   value={formik.values.DepartmentGroupId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
-                  disabled={!edit}
                 >
                   <option value="">Select Department Group</option>
-                  <option value={`${formik.values.DepartmentGroupId}`}>
-                    {formik.values.DepartmentGroupId}
-                  </option>
-                  <option value="HR">Human Resources</option>
-                  <option value="IT">IT</option>
-                  <option value="Sales">Sales</option>
-                  <option value="Finance">Finance</option>
-                  <option value="Engineering">Engineering</option>
+                  {DepartmentGroup.map((entry) => (
+                    <option key={entry.FieldId} value={entry.FieldId}>
+                      {entry.FieldDetails}
+                    </option>
+                  ))}
                 </select>
               </div>
-              {/* <div>
+              <div>
                 <label className="text-[13px] font-semibold">
                   Department Head
                 </label>
-                <div className="flex items-center">
-                  <div className="relative w-full">
-                    <input
-                      type="text"
-                      id="DepartmentHeadName"
-                      name="DepartmentHeadName"
-                      value={formik.values.DepartmentHeadName}
-                      onChange={(e) => {
-                        formik.handleChange(e);
-                        handleInputChangeHead(e);
-                      }}
-                      onFocus={() => setSearchTermDeptHead("")}
-                      className="w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
-                      placeholder={
-                        formik.values.EmployeeId
-                          ? formik.values.EmployeeName
-                          : "Search Employee Name"
-                      }
-                    />
-
-                    {searchTermDeptHead && (
-                      <div
-                        className="absolute z-10 bg-white w-full border border-gray-300 rounded-lg mt-1 overflow-hidden"
-                        style={{ maxHeight: "150px", overflowY: "auto" }}
-                      >
-                        {filteredEmployeesHead.length > 0 ? (
-                          filteredEmployeesHead.map((entry) => (
-                            <div
-                              key={entry.EmployeeId}
-                              onClick={() => {
-                                formik.setValues({
-                                  ...formik.values,
-                                  DepartmentHeadId : entry.EmployeeId,
-                                  DepartmentHeadName: entry.EmployeeName
-                                });
-                                setSearchTermDeptHead("");
-                              }}
-                              className="px-4 py-2 cursor-pointer hover:bg-gray-200 font-semibold text-[11px]"
-                            >
-                              {entry.EmployeeName}
-                            </div>
-                          ))
-                        ) : (
-                          <div className="px-4 py-2 text-gray-500">
-                            No matching results
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </div>
+                <select
+                  id="DepartmentHeadId"
+                  value={formik.values.DepartmentHeadId}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  onChange={formik.handleChange}
+                >
+                  <option value="">Select Department Head</option>
+                  {Employees.map((entry) => (
+                    <option
+                      key={entry.EmployeeId}
+                      value={entry.EmployeeId}
+                    >
+                      {entry.EmployeeName}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div>
                 <label className="text-[13px] font-semibold">
                   Department Sub-Head
                 </label>
-                <div className="flex items-center">
-                  <div className="relative w-full">
-                    <input
-                      type="text"
-                      id="DepartmentSubHeadName"
-                      name="DepartmentSubHeadName"
-                      value={formik.values.DepartmentSubHeadName}
-                      onChange={(e) => {
-                        formik.handleChange(e);
-                        handleInputChangeSubHead(e);
-                      }}
-                      onFocus={() => setSearchTermDeptSubHead("")}
-                      className="w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
-                      placeholder={
-                        formik.values.EmployeeId
-                          ? formik.values.EmployeeName
-                          : "Search Employee Name"
-                      }
-                    />
-
-                    {searchTermDeptSubHead && (
-                      <div
-                        className="absolute z-10 bg-white w-full border border-gray-300 rounded-lg mt-1 overflow-hidden"
-                        style={{ maxHeight: "150px", overflowY: "auto" }}
-                      >
-                        {filteredEmployeesSubHead.length > 0 ? (
-                          filteredEmployeesSubHead.map((entry) => (
-                            <div
-                              key={entry.EmployeeId}
-                              onClick={() => {
-                                formik.setValues({
-                                  ...formik.values,
-                                  DepartmentSubHeadId : entry.EmployeeId,
-                                  DepartmentSubHeadName: entry.EmployeeName
-                                });
-                                setSearchTermDeptSubHead("");
-                              }}
-                              className="px-4 py-2 cursor-pointer hover:bg-gray-200 font-semibold text-[11px]"
-                            >
-                              {entry.EmployeeName}
-                            </div>
-                          ))
-                        ) : (
-                          <div className="px-4 py-2 text-gray-500">
-                            No matching results
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div> */}
+                <select
+                  id="DepartmentSubHeadId"
+                  value={formik.values.DepartmentSubHeadId}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  onChange={formik.handleChange}
+                >
+                  <option value="">Select Department Head</option>
+                  {Employees.map((entry) => (
+                    <option
+                      key={entry.EmployeeId}
+                      value={entry.EmployeeId}
+                    >
+                      {entry.EmployeeName}
+                    </option>
+                  ))}
+                </select>
+              </div>
               <div>
                 <p className="capatilize font-semibold text-[13px]">
                   Select Cost Center
@@ -453,7 +368,6 @@ const VEDept = ({ visible, onClick, edit, ID }) => {
                   onChange={formik.handleChange}
                   disabled={!edit}
                 >
-                  <option value="">Select Cost Center</option>
                   {CostCenters.map((entry) => (
                     <option
                       key={entry.CostCenterId}
