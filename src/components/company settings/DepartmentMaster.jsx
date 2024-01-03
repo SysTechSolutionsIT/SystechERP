@@ -10,6 +10,7 @@ const DepartmentMaster = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
   const [departments, setDepartments] = useState([]);
+  const [Employees, setEmployees] = useState([])
   const { token } = useAuth();
 
   const deleteDept = async (deptid) => {
@@ -71,6 +72,22 @@ const DepartmentMaster = () => {
     fetchDept();
   }, [token]);
 
+  useEffect(() =>{
+    const fetchEmployees = async () =>{
+      try {
+        const response = await axios.get('http://localhost:5500/employee/personal/FnShowActiveData',
+        { headers: { Authorization: `Bearer ${token}`}}
+        )
+        const data = response.data
+        console.log('Employees', data)
+        setEmployees(data)
+      } catch (error) {
+        console.error('Error', error);
+      }
+    }
+    fetchEmployees()
+  },[token])
+
   const handleSearchChange = (title, searchWord) => {
     const newFilter = departments.filter((item) => {
       const value = item[title];
@@ -86,7 +103,7 @@ const DepartmentMaster = () => {
   
   const [columnVisibility, setColumnVisibility] = useState({
     DepartmentName: true,
-    BranchName: true,
+    BranchName: false,
     ParentDeptId: true,
     DepartmentType: true,
     DepartmentGroupId: true,
@@ -436,18 +453,54 @@ const DepartmentMaster = () => {
                       <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
                         {result.DepartmentId}
                       </td>
-                      {selectedColumns.map((columnName) =>
-                        columnVisibility[columnName] ? (
-                          <td
-                            key={columnName}
-                            className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                          >
-                            {result[columnName]}
-                          </td>
-                        ) : (
-                          <td key={columnName} className="hidden"></td>
-                        )
-                      )}
+                      {selectedColumns.map((columnName) => {
+                    if (columnVisibility[columnName]) {
+                        if (columnName === 'ParentDeptId') {
+                            const parentDept = departments.find((parentDept) => parentDept.DepartmentId == result.DepartmentId);
+                            return (
+                                <td
+                                    key={columnName}
+                                    className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                                >
+                                    {parentDept?.DepartmentName}
+                                </td>
+                            );
+                        } else if (columnName === 'DepartmentHeadId') {
+                            const employee = Employees.find((employee) => employee.EmployeeId == result.DepartmentHeadId);
+                            return (
+                                <td
+                                    key={columnName}
+                                    className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                                >
+                                    {employee?.EmployeeName}
+                                </td>
+                            );
+                        } 
+                        else if (columnName === 'DepartmentSubHeadId') {
+                          const employee = Employees.find((employee) => employee.EmployeeId == result.DepartmentSubHeadId);
+                          return (
+                              <td
+                                  key={columnName}
+                                  className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                              >
+                                  {employee?.EmployeeName}
+                              </td>
+                          );
+                        }
+                        else {
+                            return (
+                                <td
+                                    key={columnName}
+                                    className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                                >
+                                    {result[columnName]}
+                                </td>
+                            );
+                        }
+                    } else {
+                        return <td key={columnName} className="hidden"></td>;
+                    }
+                })}
                     </tr>
                   ))}
             </tbody>
