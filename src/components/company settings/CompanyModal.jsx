@@ -1,6 +1,5 @@
 import { useFormik } from "formik";
-import React from "react";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import axios from "axios";
 import { useAuth } from "../Login";
@@ -16,7 +15,7 @@ const CompanyModal = ({ visible, onClick }) => {
       CompanyName: "",
       ShortName: "",
       NatureOfBusiness: "",
-      Logo: "",
+      Logo: null, // Updated to handle the logo as a file object
       AcFlag: "Y",
       CreatedBy: "",
       CreatedByName: "",
@@ -24,7 +23,7 @@ const CompanyModal = ({ visible, onClick }) => {
       ModifiedByName: "",
       IUFlag: "I",
       Status: "",
-      SingleCompany: "",
+      SingleCompany: false,
       CreatedOn: "",
       ModifiedOn: "",
       FieldId: "",
@@ -32,14 +31,14 @@ const CompanyModal = ({ visible, onClick }) => {
     },
     onSubmit: async (values) => {
       console.log(values);
-      addCompany();
+      addCompany(values);
     },
   });
 
   const [isStatusChecked, setStatusChecked] = useState(0);
   const [isSingleBranchChecked, setSingleBranchChecked] = useState(0);
+
   const handleCheckboxChange = (fieldName, setChecked, event) => {
-    //This is how to use it (event) => handleCheckboxChange('Status', setStatusChecked, event)
     const checked = event.target.checked;
     setChecked(checked);
     formik.setValues({
@@ -48,43 +47,33 @@ const CompanyModal = ({ visible, onClick }) => {
     });
   };
 
-  const addCompany = async () => {
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    formik.setFieldValue("Logo", file);
+  };
+
+  const addCompany = async (data) => {
     try {
       const response = await axios.post(
         "http://localhost:5500/companies/FnAddUpdateDeleteRecord",
-        formik.values,
+        data,
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
           },
         }
       );
-
-      console.log("Response:", response);
-
-      if (response.status === 200) {
-        console.log("Company Added Successfully");
-        alert("Company Added Successfully");
-        onClick();
-      } else {
-        console.error(
-          "Failed to add company. Server returned:",
-          response.status,
-          response.data
-        );
-        alert("Failed to add company. Please check the console for details.");
-      }
+      alert('Company Added')
     } catch (error) {
       console.error("Error:", error);
       alert("An error occurred. Please check the console for details.");
     }
   };
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    formik.setFieldValue("logo", file);
-  };
+  useEffect(() => {
+    // If you want to display the logo, you can fetch it and update the state here
+    // Example: fetchLogo();
+  }, []); // Add dependencies if needed
 
   if (!visible) return null;
   return (
@@ -169,21 +158,6 @@ const CompanyModal = ({ visible, onClick }) => {
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
-              </div>
-              <div>
-                <p className="capitalize font-semibold text-[13px]">Status</p>
-                <label className="capitalize font-semibold text-[13px]">
-                  <input
-                    id="Status"
-                    type="checkbox"
-                    checked={isStatusChecked}
-                    className={`w-5 h-5 mr-2 mt-4 focus:outline-gray-300 border border-blue-900 rounded-lg`}
-                    onChange={(event) =>
-                      handleCheckboxChange("Status", setStatusChecked, event)
-                    }
-                  />
-                  Active
-                </label>
               </div>
               <div>
                 <p className="capatilize font-semibold text-[13px]">Logo</p>

@@ -83,6 +83,7 @@ const DepartmentMaster = () => {
       setFilteredData(newFilter);
     }
   };
+  
   const [columnVisibility, setColumnVisibility] = useState({
     DepartmentName: true,
     BranchName: true,

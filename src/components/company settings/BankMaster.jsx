@@ -79,14 +79,8 @@ const BankMaster = () => {
           },
         }
       );
-
-      if (response.data.message === "Record Deleted Successfully") {
-        console.log(`Record with ID ${DeleteId} deleted successfully.`);
         alert("Record Deleted");
         window.location.reload();
-      } else {
-        console.error(`Failed to delete record with ID ${DeleteId}.`);
-      }
     } catch (error) {
       console.error("Error deleting record:", error);
     }

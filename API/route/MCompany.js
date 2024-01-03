@@ -43,7 +43,7 @@ const MCompany = sequelize.define("MCompany", {
   CompanyName: DataTypes.STRING,
   ShortName: DataTypes.STRING,
   NatureOfBusiness: DataTypes.STRING,
-  Logo: DataTypes.STRING,
+  Logo: DataTypes.BLOB,
   AcFlag: DataTypes.STRING,
   CreatedBy: DataTypes.STRING,
   CreatedByName: DataTypes.STRING,
@@ -125,6 +125,39 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
   }
 });
 
+router.get("/FnGetLogo", authToken, async (req, res) => {
+  const companyId = req.query.CompanyId;
+
+  try {
+    const company = await MCompany.findOne({
+      where: {
+        CompanyId: companyId,
+      },
+      attributes: ["Logo"],
+    });
+
+    if (!company) {
+      return res.status(404).json({ message: "Company not found" });
+    }
+
+    const logoData = company.Logo;
+
+    if (!logoData) {
+      return res.status(404).json({ message: "Logo not found for the company" });
+    }
+
+    res.writeHead(200, {
+      'Content-Type': 'image/png', // Adjust content type based on your image type
+      'Content-Length': logoData.length,
+    });
+    
+    res.end(logoData);
+  } catch (error) {
+    console.error("Error retrieving logo:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 const generateCompanyId = async (req, res, next) => {
   try {
     if (req.body.IUFlag === 'I') {
@@ -140,7 +173,7 @@ const generateCompanyId = async (req, res, next) => {
 };
 
 // POST endpoint to add, update, or "soft-delete" a company
-router.post("/FnAddUpdateDeleteRecord",generateCompanyId, authToken, async (req, res) => {
+router.post("/FnAddUpdateDeleteRecord", generateCompanyId, authToken, async (req, res) => {
   const company = req.body;
   try {
     if (company.IUFlag === "D") {

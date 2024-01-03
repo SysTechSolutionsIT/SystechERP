@@ -6,68 +6,6 @@ import VECost from "./ViewCost";
 import axios from "axios";
 import { useAuth, useDetails } from "../Login";
 
-export const costCenters = [
-  {
-    cID: "0003",
-    costCenterName: "Human Resources",
-    Remarks: "",
-    status: "Y",
-  },
-  {
-    cID: "0004",
-    costCenterName: "IT Department",
-    Remarks: "",
-    status: "Y",
-  },
-  {
-    cID: "0005",
-    costCenterName: "Operations",
-    Remarks: "",
-    status: "N",
-  },
-  {
-    cID: "0006",
-    costCenterName: "Research and Development",
-    Remarks: "",
-    status: "Y",
-  },
-  {
-    cID: "0007",
-    costCenterName: "Customer Service",
-    Remarks: "",
-    status: "Y",
-  },
-  {
-    cID: "0008",
-    costCenterName: "Production",
-    Remarks: "",
-    status: "N",
-  },
-  {
-    cID: "0009",
-    costCenterName: "Quality Assurance",
-    Remarks: "",
-    status: "Y",
-  },
-  {
-    cID: "0010",
-    costCenterName: "Supply Chain",
-    Remarks: "",
-    status: "Y",
-  },
-  {
-    cID: "0011",
-    costCenterName: "Legal",
-    Remarks: "",
-    status: "N",
-  },
-  {
-    cID: "0012",
-    costCenterName: "Public Relations",
-    Remarks: "",
-    status: "Y",
-  },
-];
 
 const CostCenterMaster = () => {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -100,16 +38,17 @@ const CostCenterMaster = () => {
   //Max Searchbar width
   const getColumnMaxWidth = (columnName) => {
     let maxWidth = 0;
-    const allRows = [...costCenters];
-
+    const allRows = [...CC];  // costCenters is not defined
+  
     allRows.forEach((row) => {
       const cellContent = row[columnName];
-      const cellWidth = getTextWidth(cellContent, "11px"); // You can adjust the font size here
+      const cellWidth = getTextWidth(cellContent, "11px");
       maxWidth = Math.max(maxWidth, cellWidth);
     });
-
-    return maxWidth + 10; // Adding some padding to the width
+  
+    return maxWidth + 10;
   };
+  
 
   const getTextWidth = (text, fontSize) => {
     const canvas = document.createElement("canvas");
@@ -262,18 +201,19 @@ const CostCenterMaster = () => {
                 <th className="border-2"></th>
                 <th className="p-2 font-semibold text-black border-2 " />
                 <th className="p-2 font-semibold text-black border-2">
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
-                    style={{
-                      maxWidth: getColumnMaxWidth("costCenterName") + "px",
-                    }}
-                    onChange={(e) =>
-                      handleSearchChange("costCenterName", e.target.value)
-                    }
-                  />
-                </th>
+  <input
+    type="text"
+    placeholder="Search"
+    className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
+    style={{
+      maxWidth: getColumnMaxWidth("CostCenterName") + "px",
+    }}
+    onChange={(e) =>
+      handleSearchChange(e.target.value)
+    }
+  />
+</th>
+
                 <th className="p-2 font-semibold text-black border-2">
                   <input
                     type="text"
@@ -293,28 +233,6 @@ const CostCenterMaster = () => {
                       <tr key={key}>
                         <td className="px-2 border-2">
                           <div className="flex items-center gap-2 text-center justify-center">
-                            <Icon
-                              icon="lucide:eye"
-                              color="#556987"
-                              width="20"
-                              height="20"
-                              onClick={() => {
-                                setVeCost(true); // Open VEModal
-                                setEdit(false); // Disable edit mode for VEModal
-                                setCCid(result.CostCenterId); // Pass ID to VEModal
-                              }}
-                            />
-                            <Icon
-                              icon="mdi:edit"
-                              color="#556987"
-                              width="20"
-                              height="20"
-                              onClick={() => {
-                                setVeCost(true); // Open VEModal
-                                setEdit(false); // Disable edit mode for VEModal
-                                setCCid(result.CostCenterId); // Pass ID to VEModal
-                              }}
-                            />
                             <Icon
                               icon="material-symbols:delete-outline"
                               color="#556987"
@@ -341,28 +259,6 @@ const CostCenterMaster = () => {
                       <tr key={index}>
                         <td className="px-2 border-2">
                           <div className="flex items-center gap-2 text-center justify-center">
-                            <Icon
-                              icon="lucide:eye"
-                              color="#556987"
-                              width="20"
-                              height="20"
-                              onClick={() => {
-                              setVeCost(true); // Open VEModal
-                              setEdit(false); // Disable edit mode for VEModal
-                              setCCid(entry.CostCenterId); // Pass ID to VEModal
-                            }}
-                            />
-                            <Icon
-                              icon="mdi:edit"
-                              color="#556987"
-                              width="20"
-                              height="20"
-                              onClick={() => {
-                              setVeCost(true); // Open VEModal
-                              setEdit(false); // Disable edit mode for VEModal
-                              setCCid(entry.CostCenterId); // Pass ID to VEModal
-                            }}
-                            />
                             <Icon
                               icon="material-symbols:delete-outline"
                               color="#556987"

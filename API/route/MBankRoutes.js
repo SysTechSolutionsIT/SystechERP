@@ -163,11 +163,23 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
 // POST endpoint to add, update, or delete a bank
 router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
   const bank = req.body;
-  try {
+  try {    
+    if (bank.IUFlag === "D") {
+    // "Soft-delete" operation
+    const result = await MBanks.update(
+      { AcFlag: "N" },
+      { where: { BankId: bank.BankId } }
+    );
+
+    res.json({
+      message: result[0] ? "Record Deleted Successfully" : "Record Not Found",
+    });
+  } else {
     const result = await MBanks.upsert(bank, {
       returning: true,
     });
     res.json({ message: result ? "Operation successful" : "Operation failed" });
+  }
   } catch (error) {
     console.error("Error retrieving data:", error);
     res.status(500).send("Internal Server Error");
