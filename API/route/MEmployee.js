@@ -29,12 +29,29 @@ const sequelize = new Sequelize(
 );
 
 const MEmployee = sequelize.define(
-  'MEmployee',
+  "MEmployee",
   {
-    CompanyId: { type: DataTypes.STRING(5), allowNull: false, defaultValue: '00001' },
-    BranchId: { type: DataTypes.STRING(5), allowNull: false, defaultValue: '00001' },
-    EmployeeTypeId: { type: DataTypes.STRING(50), allowNull: false, defaultValue: '001' },
-    EmployeeId: { type: DataTypes.INTEGER, autoIncrement: true, allowNull: false, primaryKey: true },
+    CompanyId: {
+      type: DataTypes.STRING(5),
+      allowNull: false,
+      defaultValue: "00001",
+    },
+    BranchId: {
+      type: DataTypes.STRING(5),
+      allowNull: false,
+      defaultValue: "00001",
+    },
+    EmployeeTypeId: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
+      defaultValue: "001",
+    },
+    EmployeeId: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      allowNull: false,
+      primaryKey: true,
+    },
     EmployeeName: { type: DataTypes.STRING(500), allowNull: true },
     EmployeeTypeGroupId: { type: DataTypes.STRING(50), allowNull: true },
     Salutation: { type: DataTypes.STRING(50), allowNull: true },
@@ -75,7 +92,7 @@ const MEmployee = sequelize.define(
     DrivingLicence: { type: DataTypes.BLOB, allowNull: true },
     FinanceAccountNo: { type: DataTypes.STRING(100), allowNull: true },
     Remark: { type: DataTypes.STRING(255), allowNull: true },
-    AcFlag: { type: DataTypes.STRING(1), allowNull: true, defaultValue: 'Y' },
+    AcFlag: { type: DataTypes.STRING(1), allowNull: true, defaultValue: "Y" },
     CreatedBy: { type: DataTypes.STRING(50), allowNull: true },
     CreatedOn: { type: DataTypes.STRING(50), allowNull: true },
     ModifiedBy: { type: DataTypes.STRING(50), allowNull: true },
@@ -93,10 +110,10 @@ router.use(bodyParser.json());
 sequelize
   .authenticate()
   .then(() => {
-    console.log('Connection has been established successfully.');
+    console.log("Connection has been established successfully.");
   })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
+  .catch((err) => {
+    console.error("Unable to connect to the database:", err);
   });
 
 router.get("/FnShowAllData", authToken, async (req, res) => {
@@ -153,15 +170,14 @@ router.get("/FnShowPerticularData", authToken, async (req, res) => {
 });
 
 router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
-  const employee = req.body;
-  const employeeId = req.query.EmployeeId;  // Access the EmployeeId from query parameters
+  const employee = req.body; // Access the EmployeeId from query parameters
 
   try {
     if (employee.IUFlag === "D") {
       // "Soft-delete" operation
       const result = await MEmployee.update(
         { AcFlag: "N" },
-        { where: { EmployeeId: employeeId } }
+        { where: { EmployeeId: employee.EmployeeId } }
       );
 
       res.json({
@@ -170,7 +186,7 @@ router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
     } else {
       // Add or update operation
       const result = await MEmployee.upsert(employee, {
-        where: { EmployeeId: employeeId },  // Specify the where condition for update
+        where: { EmployeeId: employeeId }, // Specify the where condition for update
         returning: true,
       });
 
@@ -183,6 +199,5 @@ router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-
 
 module.exports = router;

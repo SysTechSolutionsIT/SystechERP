@@ -235,7 +235,7 @@ const EmployeeMaster = () => {
   //Deletion
   const deleteEmp = async (DeleteId) => {
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete this company?"
+      "Are you sure you want to delete this record?"
     );
 
     if (!confirmDelete) {
@@ -252,55 +252,70 @@ const EmployeeMaster = () => {
 
   const delEmpPersonal = async (DeleteId) => {
     try {
-      const personal = await axios.post(
+      const response = await axios.post(
         "http://localhost:5500/employee/personal/FnAddUpdateDeleteRecord",
         {
-          EmployeeId: DeleteId,
           IUFlag: "D",
         },
         {
+          params: { EmployeeId: DeleteId },
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
+      if (response.data.message === "Record Deleted Successfully") {
+        console.log(`personal del successful`);
+      } else {
+        console.error(`personal del not successful.`);
+      }
     } catch (error) {
-      console.error("Error", error);
+      console.error("Error deleting record:", error);
     }
   };
 
   const delEmpWork = async (DeleteId) => {
     try {
-      const personal = await axios.post(
+      const response = await axios.post(
         "http://localhost:5500/employee/work/FnAddUpdateDeleteRecord",
         {
-          EmployeeId: DeleteId,
           IUFlag: "D",
         },
         {
+          params: { EmployeeId: DeleteId },
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
+      if (response.data.message === "Record Deleted Successfully") {
+        console.log(`work del successful`);
+      } else {
+        console.error(`work del unsuccessful`);
+      }
     } catch (error) {
       console.error("Error", error);
     }
   };
   const delEmpSal = async (DeleteId) => {
     try {
-      const personal = await axios.post(
+      const response = await axios.post(
         "http://localhost:5500/employee/salary/FnAddUpdateDeleteRecord",
         {
-          EmployeeId: DeleteId,
           IUFlag: "D",
         },
         {
+          params: { EmployeeId: DeleteId },
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
+      if (response.data.message === "Record Deleted Successfully") {
+        console.log(`sal del successful`);
+      } else {
+        console.error(`sal del unsuccessful`);
+      }
     } catch (error) {
       console.error("Error", error);
     }
@@ -308,36 +323,46 @@ const EmployeeMaster = () => {
 
   const delEmpPro = async (DeleteId) => {
     try {
-      const personal = await axios.post(
+      const response = await axios.post(
         "http://localhost:5500/employee/professional/FnAddUpdateDeleteRecord",
         {
-          EmployeeId: DeleteId,
           IUFlag: "D",
         },
         {
+          params: { EmployeeId: DeleteId },
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
+      if (response.data.message === "Record Deleted Successfully") {
+        console.log(`pro del successful`);
+      } else {
+        console.error(`pro del unsuccessful`);
+      }
     } catch (error) {
       console.error("Error", error);
     }
   };
   const delEmpAcademic = async (DeleteId) => {
     try {
-      const personal = await axios.post(
+      const response = await axios.post(
         "http://localhost:5500/employee/academic/FnAddUpdateDeleteRecord",
         {
-          EmployeeId: DeleteId,
           IUFlag: "D",
         },
         {
+          params: { EmployeeId: DeleteId },
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
+      if (response.data.message === "Record Deleted Successfully") {
+        console.log(`aca del successful`);
+      } else {
+        console.error(`aca del unsuccessful`);
+      }
     } catch (error) {
       console.error("Error", error);
     }
@@ -345,13 +370,13 @@ const EmployeeMaster = () => {
 
   const delEmpFam = async (DeleteId) => {
     try {
-      const personal = await axios.post(
+      const response = await axios.post(
         "http://localhost:5500/employee/family/FnAddUpdateDeleteRecord",
         {
-          EmployeeId: DeleteId,
           IUFlag: "D",
         },
         {
+          params: { EmployeeId: DeleteId },
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -517,11 +542,9 @@ const EmployeeMaster = () => {
                             width="20"
                             height="20"
                             className="cursor-pointer"
-                            onClick={() => {
-                              setVeCost(true); // Open VEModal
-                              setEdit(false); // Disable edit mode for VEModal
-                              setCCid(result.id); // Pass ID to VEModal
-                            }}
+                            onClick={() =>
+                              navigate(`/view-employee/${result.EmployeeId}`)
+                            }
                           />
                           <Icon
                             icon="mdi:edit"
@@ -529,11 +552,9 @@ const EmployeeMaster = () => {
                             width="20"
                             height="20"
                             className="cursor-pointer"
-                            onClick={() => {
-                              setVeCost(true); // Open VEModal
-                              setEdit(true); // Disable edit mode for VEModal
-                              setCCid(result.id); // Pass ID to VEModal
-                            }}
+                            onClick={() =>
+                              navigate(`/view-employee/${result.EmployeeId}`)
+                            }
                           />
                           <Icon
                             icon="material-symbols:delete-outline"
@@ -541,6 +562,7 @@ const EmployeeMaster = () => {
                             width="20"
                             height="20"
                             className="cursor-pointer"
+                            onClick={() => deleteEmp(result.EmployeeId)}
                           />
                         </div>
                       </td>
@@ -588,6 +610,7 @@ const EmployeeMaster = () => {
                             width="20"
                             height="20"
                             className="cursor-pointer"
+                            onClick={() => deleteEmp(result.EmployeeId)}
                           />
                         </div>
                       </td>

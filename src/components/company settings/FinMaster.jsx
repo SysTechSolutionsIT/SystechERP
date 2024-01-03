@@ -5,7 +5,6 @@ import VEFModal from "./ViewFin";
 import axios from "axios";
 import { useAuth } from "../Login";
 
-
 const FinMaster = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
@@ -158,6 +157,50 @@ const FinMaster = () => {
 
     // Update the filtered data
     setFilteredData(newFilter);
+  };
+
+  //Editing Date
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toISOString().split("T")[0]; // Get only the date part
+  };
+
+  //Deletion
+  const deleteRecord = async (DeleteId) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this record?"
+    );
+
+    if (!confirmDelete) {
+      return; // If the user cancels deletion, do nothing
+    }
+
+    try {
+      const apiUrl = `http://localhost:5500/financials/FnAddUpdateDeleteRecord`;
+
+      const response = await axios.post(
+        apiUrl,
+        {
+          FYearId: DeleteId,
+          IUFlag: "D",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data.message === "Record Deleted Successfully") {
+        console.log(`Record with ID ${DeleteId} deleted successfully.`);
+        alert("Record Deleted");
+        window.location.reload();
+      } else {
+        console.error(`Failed to delete record with ID ${DeleteId}.`);
+      }
+    } catch (error) {
+      console.error("Error deleting record:", error);
+    }
   };
 
   return (
@@ -342,6 +385,7 @@ const FinMaster = () => {
                             width="20"
                             height="20"
                             className="cursor-pointer"
+                            onClick={() => deleteRecord(result.FYearId)}
                           />
                         </div>
                       </td>
@@ -352,9 +396,14 @@ const FinMaster = () => {
                             columnVisibility[columnName] ? "" : "hidden"
                           }`}
                         >
-                        {columnName === "YearClose" ? 
-                        (result[columnName] === 'N' ? 'Inactive' : 'Active') 
-                        : result[columnName]}
+                          {columnName === "YearClose"
+                            ? result[columnName] === "N"
+                              ? "Inactive"
+                              : "Active"
+                            : columnName === "StartDate" ||
+                              columnName === "EndDate"
+                            ? formatDate(result[columnName])
+                            : result[columnName]}
                         </td>
                       ))}
                     </tr>
@@ -394,6 +443,7 @@ const FinMaster = () => {
                             width="20"
                             height="20"
                             className="cursor-pointer"
+                            onClick={() => deleteRecord(result.FYearId)}
                           />
                         </div>
                       </td>
@@ -404,9 +454,14 @@ const FinMaster = () => {
                             columnVisibility[columnName] ? "" : "hidden"
                           }`}
                         >
-                        {columnName === "YearClose" ? 
-                        (result[columnName] === 'N' ? 'Inactive' : 'Active') 
-                        : result[columnName]}
+                          {columnName === "YearClose"
+                            ? result[columnName] === "N"
+                              ? "Inactive"
+                              : "Active"
+                            : columnName === "StartDate" ||
+                              columnName === "EndDate"
+                            ? formatDate(result[columnName])
+                            : result[columnName]}
                         </td>
                       ))}
                     </tr>

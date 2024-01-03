@@ -114,7 +114,7 @@ router.get("/FnshowActiveData", authToken, async (req, res) => {
       attributes: {
         exclude: ["IUFlag"],
       },
-      order: [["FieldId", "ASC"]],
+      order: [["MasterNameId", "ASC"]],
     });
     res.json(TField);
   } catch (error) {
@@ -142,6 +142,24 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
   }
 });
 
+router.get("/FnShowCategoricalData", authToken, async (req, res) => {
+  const MasterNameId = req.query.MasterNameId;
+  try {
+    const TField = await MTwoField.findAll({
+      where: {
+        MasterNameId: MasterNameId,
+      },
+      attributes: {
+        exclude: ["IUFlag"],
+      },
+      order: [["FieldId", "ASC"]],
+    });
+    res.json(TField);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 const generateFieldId = async (req, res, next) => {
   try {
     if (req.body.IUFlag === "I") {
