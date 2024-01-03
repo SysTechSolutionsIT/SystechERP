@@ -9,7 +9,7 @@ const TwoFieldsModal = ({ visible, onClick }) => {
   const [MNames, setMNames] = useState([]);
   const formik = useFormik({
     initialValues: {
-      MasterName: "",
+      MasterNameId: "",
       FieldDetails: "",
       AcFlag: "Y",
       IUFlag: "I",
@@ -92,10 +92,10 @@ const TwoFieldsModal = ({ visible, onClick }) => {
               <div>
                 <p className="text-[13px] font-semibold">Master Name</p>
                 <select
-                  id="MasterName"
-                  name="MasterName"
+                  id="MasterNameId"
+                  name="MasterNameId"
                   className="w-full px-4 py-1.5 font-normal text-[11px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                  value={formik.values.MasterName}
+                  value={formik.values.MasterNameId}
                   onChange={formik.handleChange}
                 >
                   <option value="">Select Type</option>
