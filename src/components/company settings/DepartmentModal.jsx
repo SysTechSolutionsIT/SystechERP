@@ -267,7 +267,7 @@ const DepartmentModal = ({ visible, onClick }) => {
                   </label>
                 </div>
               </div>
-              <div>
+              <div>``
                 <p className="capatilize font-semibold text-[13px]">
                   Department Group
                 </p>
