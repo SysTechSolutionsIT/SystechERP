@@ -275,10 +275,10 @@ const Sidebar = () => {
                     title="Department Master"
                     onClick={() => navigate("/department-master")}
                   />
-                  <SubMenuEntry
+                  {/* <SubMenuEntry
                     title="Destination Master"
                     onClick={() => navigate("/destination-master")}
-                  />
+                  /> */}
                   <SubMenuEntry
                     title="Three Field Master"
                     onClick={() => navigate("/three-field-master")}

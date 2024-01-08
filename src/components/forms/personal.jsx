@@ -332,6 +332,7 @@ export default function Personal({ ID }) {
     };
     fetchCasteData();
   }, [token]);
+  
 
   useEffect(() => {
     if (details) {

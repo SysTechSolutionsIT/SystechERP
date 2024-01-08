@@ -128,6 +128,71 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
     }
   }, [details]);
 
+  const [Employees, setEmployees] = useState([])
+
+  //Fetching Employee Names
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/employee/personal/FnShowActiveData",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const data = response.data;
+        console.log("Employees", data);
+        setEmployees(data);
+      } catch (error) {
+        console.error("Error", error);
+      }
+    };
+    fetchEmployees();
+  }, [token]);
+
+  const [AccountType, setAccountType] = useState([])
+  useEffect(() =>{
+    const fetchAccountTypes = async () =>{
+      const ID = 10
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/two-field/FnShowCategoricalData",
+          {
+            params: { MasterNameId: ID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        console.log('Account Types', data)
+        setAccountType(data)
+      } catch (error) {
+        console.error('Error',error);
+      }
+    }
+    fetchAccountTypes()
+  },[token])
+
+  const [currencies, setCurrencies] = useState([]);
+  useEffect(() => {
+    const fetchCurrencyData = async () => {
+      const CID = 11;
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/two-field/FnShowCategoricalData",
+          {
+            params: { MasterNameId: CID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        console.log("Currency", data);
+        setCurrencies(data);
+      } catch (error) {
+        console.error("Error fetching currencies:", error);
+      }
+    };
+
+    fetchCurrencyData();
+  }, [token]);
+
   console.log("Details array", details);
   if (!visible) return null;
   return (
@@ -206,28 +271,21 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                 />
               </div>
               <div>
-                <p className="capatilize text-left font-semibold  text-[13px]">
+                <p className="capatilize font-semibold text-[13px]">
                   Account Type
                 </p>
                 <select
                   id="AccountType"
                   value={formik.values.AccountType}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
-                  disabled={!edit}
                 >
                   <option value="">Select Account Type</option>
-                  <option value="Savings">Savings</option>
-                  <option value="Foriegn currency non-resident (FCNR) account">
-                    Foriegn currency non-resident (FCNR) account
-                  </option>
-                  <option value="Fixed Deposit">Fixed Deposit</option>
-                  <option value="Loans">Loans</option>
-                  <option value="Over Due">Over Due</option>
-                  <option value="Cash Credit">Cash Credit</option>
-                  <option value="Salary">Salary</option>
-                  <option value="Current">Current</option>
-                  <option value="NA">NA</option>
+                  {AccountType.map((entry) => (
+                    <option key={entry.FieldId} value={entry.FieldId}>
+                      {entry.FieldDetails}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div>
@@ -301,27 +359,25 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                 />
               </div>
               <div>
-                <p className="capitalize text-left font-semibold  text-[13px]">
+                <p className="capitalize font-semibold text-[13px]">
                   Currency Type
                 </p>
                 <select
                   id="CurrencyType"
+                  name="currency"
+                  className="text-[11px] w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
                   value={formik.values.CurrencyType}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
-                  disabled={!edit}
                 >
                   <option value="">Select Currency Type</option>
-                  <option value="INR">Indian Rupee (INR)</option>
-                  <option value="USD">United States Dollar (USD)</option>
-                  <option value="EUR">Euro (EUR)</option>
-                  <option value="GBP">British Pound Sterling (GBP)</option>
-                  <option value="JPY">Japanese Yen (JPY)</option>
-                  <option value="AUD">Australian Dollar (AUD)</option>
-                  <option value="CAD">Canadian Dollar (CAD)</option>
-                  <option value="SGD">Singapore Dollar (SGD)</option>
-                  <option value="CHF">Swiss Franc (CHF)</option>
-                  <option value="CNY">Chinese Yuan (CNY)</option>
+                  {currencies.map((currency) => (
+                      <option
+                        key={currency.FieldId}
+                        value={currency.FieldId}
+                      >
+                        {currency.FieldDetails}
+                      </option>
+                    ))}
                 </select>
               </div>
               <div>
@@ -367,36 +423,43 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                 />
               </div>
               <div>
-                <p className="capitalize text-left font-semibold  text-[13px]">
+                <p className="capitalize font-semibold text-[13px]">
                   Authorized Person 1
                 </p>
-                <input
+                <select
                   id="AuthorizedPerson1"
-                  type="text"
                   value={formik.values.AuthorizedPerson1}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
-                  disabled={!edit}
-                />
+                >
+                  <option value="">Select Department Head</option>
+                  {Employees.map((entry) => (
+                    <option
+                      key={entry.EmployeeId}
+                      value={entry.EmployeeId}
+                    >
+                      {entry.EmployeeName}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div>
-                <p className="capitalize text-left text-[13px] font-semibold">
-                  Authorized Person 1
+                <p className="capitalize font-semibold text-[13px]">
+                  Authorized Person 1 Role
                 </p>
-                <div className="space-y-2">
-                  <label className="flex items-center text-[11px]">
+                <div className="space-y-2 text-[11px]">
+                  <label className="flex items-center">
                     <input
                       type="radio"
                       id="AuthorizedPersonRole1"
                       value="View"
                       checked={formik.values.AuthorizedPersonRole1 === "View"}
                       onChange={formik.handleChange}
-                      disabled={!edit}
                       className="mr-2"
                     />
                     View
                   </label>
-                  <label className="flex items-center text-[11px]">
+                  <label className="flex items-center">
                     <input
                       type="radio"
                       id="AuthorizedPersonRole1"
@@ -405,7 +468,6 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                         formik.values.AuthorizedPersonRole1 === "Operation"
                       }
                       onChange={formik.handleChange}
-                      disabled={!edit}
                       className="mr-2"
                     />
                     Operation
@@ -413,36 +475,43 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                 </div>
               </div>
               <div>
-                <p className="capitalize text-left font-semibold text-[13px]">
+                <p className="capitalize font-semibold text-[13px]">
                   Authorized Person 2
                 </p>
-                <input
+                <select
                   id="AuthorizedPerson2"
-                  type="text"
                   value={formik.values.AuthorizedPerson2}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
-                  disabled={!edit}
-                />
+                >
+                  <option value="">Select Department Head</option>
+                  {Employees.map((entry) => (
+                    <option
+                      key={entry.EmployeeId}
+                      value={entry.EmployeeId}
+                    >
+                      {entry.EmployeeName}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div>
-                <p className="capitalize text-left font-semibold text-[13px]">
-                  Authorized Person 2
+                <p className="capitalize font-semibold text-[13px]">
+                  Authorized Person 2 Role
                 </p>
-                <div className="space-y-2">
-                  <label className="flex items-center text-[11px]">
+                <div className="space-y-2 text-[11px]">
+                  <label className="flex items-center">
                     <input
                       type="radio"
                       id="AuthorizedPersonRole2"
                       value="View"
                       checked={formik.values.AuthorizedPersonRole2 === "View"}
                       onChange={formik.handleChange}
-                      disabled={!edit}
                       className="mr-2"
                     />
                     View
                   </label>
-                  <label className="flex items-center text-[11px]">
+                  <label className="flex items-center">
                     <input
                       type="radio"
                       id="AuthorizedPersonRole2"
@@ -451,7 +520,6 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                         formik.values.AuthorizedPersonRole2 === "Operation"
                       }
                       onChange={formik.handleChange}
-                      disabled={!edit}
                       className="mr-2"
                     />
                     Operation
@@ -459,17 +527,25 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                 </div>
               </div>
               <div>
-                <p className="capitalize text-left font-semibold text-[13px]">
+                <p className="capitalize font-semibold text-[13px]">
                   Authorized Person 3
                 </p>
-                <input
+                <select
                   id="AuthorizedPerson3"
-                  type="text"
                   value={formik.values.AuthorizedPerson3}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
-                  disabled={!edit}
-                />
+                >
+                  <option value="">Select Department Head</option>
+                  {Employees.map((entry) => (
+                    <option
+                      key={entry.EmployeeId}
+                      value={entry.EmployeeId}
+                    >
+                      {entry.EmployeeName}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div>
                 <p className="capitalize text-left text-[13px] font-semibold">

@@ -10,6 +10,10 @@ import { useAuth } from "../Login";
 const DepartmentModal = ({ visible, onClick }) => {
   const { token } = useAuth();
   const [CostCenters, setCostCenters] = useState([]);
+  const [Departments, setDepartments] = useState([])
+  const [Employees, setEmployees] = useState([]);
+  const [DepartmentGroup, setDepartmentGroup] = useState([])
+
   const formik = useFormik({
     initialValues: {
       ParentDeptId: "",
@@ -19,29 +23,42 @@ const DepartmentModal = ({ visible, onClick }) => {
       BranchName: "",
       CostCenterId: "",
       DepartmentHeadId: "",
+      DepartmentHeadName:"",
       DepartmentSubHeadId: "",
+      DepartmentSubHeadName:"",
       DepartmentStdStaffStrength: "",
       DepartmentStdWorkerStrength: "",
       Remark: "",
-      Status: "",
-      AcFlag: "Y",
       IUFlag: "I",
-      CreatedBy: "",
-      CreatedOn: "",
-      ModifiedBy: "",
-      ModifiedOn: "",
     },
     onSubmit: (values) => {
       console.log(values);
-      addDept();
+      const updatedData = {
+        ParentDeptId: values.ParentDeptId,
+        DepartmentType: values.DepartmentType,
+        DepartmentName: values.DepartmentName,
+        DepartmentGroupId: values.DepartmentGroupId,
+        BranchName: values.BranchName,
+        CostCenterId: values.CostCenterId,
+        DepartmentHeadId: values.DepartmentHeadId,
+        DepartmentHeadName: values.DepartmentHeadName,
+        DepartmentSubHeadId: values.DepartmentSubHeadId,
+        DepartmentSubHeadName: values.DepartmentSubHeadName,
+        DepartmentStdStaffStrength: values.DepartmentStdStaffStrength,
+        DepartmentStdWorkerStrength: values.DepartmentStdWorkerStrength,
+        Remark: values.Remark,
+        IUFlag: "I",
+      }
+      addDept(updatedData)
     },
   });
 
-  const addDept = async () => {
+
+  const addDept = async (data) => {
     try {
       const response = await axios.post(
         "http://localhost:5500/departmentmaster/FnAddUpdateDeleteRecord",
-        formik.values,
+        data,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -65,6 +82,39 @@ const DepartmentModal = ({ visible, onClick }) => {
     }
   };
 
+  useEffect(() =>{
+    const fetchDepartmentGroup = async () =>{
+      const DGID = 5
+      try {
+        const response = await axios.get('http://localhost:5500/two-field/FnShowCategoricalData',
+        {
+          params: { MasterNameId: DGID },
+          headers: { Authorization: `Bearer ${token}` },
+        }) 
+        const data = response.data
+        setDepartmentGroup(data)
+      } catch (error) {
+        console.error('Error', error);
+      }
+    }
+    fetchDepartmentGroup()
+  },[token])
+
+  useEffect(() =>{
+    const fetchDepartments = async () =>{
+      try {
+        const response = await axios.get('http://localhost:5500/departmentmaster/FnShowActiveData',
+        { headers: {Authorization: `Bearer ${token}`}}
+      )
+      const data = response.data
+      setDepartments(data)
+      } catch (error) {
+        console.error('Error', error);
+      }
+    }
+    fetchDepartments()
+  },[token])
+
   useEffect(() => {
     const fetchCostCenters = async () => {
       try {
@@ -84,6 +134,23 @@ const DepartmentModal = ({ visible, onClick }) => {
       }
     };
     fetchCostCenters();
+  }, [token]);
+
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/employee/personal/FnShowActiveData",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const data = response.data;
+        console.log("Employees", data);
+        setEmployees(data);
+      } catch (error) {
+        console.error("Error", error);
+      }
+    };
+    fetchEmployees();
   }, [token]);
 
   const [status, setStatus] = useState(false);
@@ -147,7 +214,8 @@ const DepartmentModal = ({ visible, onClick }) => {
                   onChange={formik.handleChange}
                 >
                   <option value="">Select Company Branch</option>
-                  <option value="Main Branch">Main Branch</option>
+                  <option value="00001">Main</option>
+                  <option value="00002">Sub</option>
                 </select>
               </div>
               <div>
@@ -161,26 +229,13 @@ const DepartmentModal = ({ visible, onClick }) => {
                   onChange={formik.handleChange}
                 >
                   <option value="">Select Parent Department Branch</option>
-                  <option value="Payroll Department">Payroll Department</option>
-                  <option value="Times Keeping Department">
-                    Times Keeping Department
-                  </option>
-                  <option value="Costing Department">Costing Department</option>
-                  <option value="Accounts Department">
-                    Accounts Department
-                  </option>
-                  <option value="Dispatch Department">
-                    Dispatch Department
-                  </option>
-                  <option value="Packaging Department">
-                    Packaging Department
-                  </option>
-                  <option value="Procurement Department">
-                    Procurement Department
-                  </option>
-                  <option value="Designing Department">
-                    Designing Department
-                  </option>
+                  {Departments.map((entry) => (
+                    <option 
+                    key={entry.DepartmentId}
+                    value={entry.DepartmentId}>
+                      {entry.DepartmentName}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div>
@@ -212,7 +267,7 @@ const DepartmentModal = ({ visible, onClick }) => {
                   </label>
                 </div>
               </div>
-              <div>
+              <div>``
                 <p className="capatilize font-semibold text-[13px]">
                   Department Group
                 </p>
@@ -223,38 +278,54 @@ const DepartmentModal = ({ visible, onClick }) => {
                   onChange={formik.handleChange}
                 >
                   <option value="">Select Department Group</option>
-                  <option value="Services">Services</option>
-                  <option value="Support">Support</option>
-                  <option value="Production">Production</option>
-                  <option value="Administration">Administration</option>
-                  <option value="NA">NA</option>
+                  {DepartmentGroup.map((entry) => (
+                    <option key={entry.FieldId} value={entry.FieldId}>
+                      {entry.FieldDetails}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div>
-                <p className="capatilize font-semibold text-[13px]">
+                <label className="text-[13px] font-semibold">
                   Department Head
-                </p>
-                <input
+                </label>
+                <select
                   id="DepartmentHeadId"
-                  type="text"
-                  placeholder="Enter Department Head"
                   value={formik.values.DepartmentHeadId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
-                />
+                >
+                  <option value="">Select Department Head</option>
+                  {Employees.map((entry) => (
+                    <option
+                      key={entry.EmployeeId}
+                      value={entry.EmployeeId}
+                    >
+                      {entry.EmployeeName}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div>
-                <p className="capatilize font-semibold text-[11px]">
-                  Department Sub Head
-                </p>
-                <input
+                <label className="text-[13px] font-semibold">
+                  Department Sub-Head
+                </label>
+                <select
                   id="DepartmentSubHeadId"
-                  type="text"
-                  placeholder="Enter Department Sub-Head"
                   value={formik.values.DepartmentSubHeadId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
-                />
+                >
+                  <option value="">Select Department Head</option>
+                  {Employees.map((entry) => (
+                    <option
+                      key={entry.EmployeeId}
+                      value={entry.EmployeeId}
+                    >
+                      {entry.EmployeeName}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div>
                 <p className="capitalize font-semibold text-[13px]">
@@ -270,7 +341,7 @@ const DepartmentModal = ({ visible, onClick }) => {
                   {CostCenters.map((entry) => (
                     <option
                       key={entry.CostCenterId}
-                      value={entry.CostCenterName}
+                      value={entry.CostCenterId}
                     >
                       {entry.CostCenterName}
                     </option>

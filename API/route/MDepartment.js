@@ -187,8 +187,22 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
   }
 });
 
+const generateDepartmentId = async (req, res, next) => {
+  try {
+    if (req.body.IUFlag === 'I') {
+      const totalRecords = await MDepartment.count();
+      const newId = (totalRecords + 1).toString().padStart(5, "0");
+      req.body.DepartmentId = newId;
+    }
+    next();
+  } catch (error) {
+    console.error("Error generating EmployeeTypeId:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
 // POST endpoint to add, update, or "soft-delete" a departments
-router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
+router.post("/FnAddUpdateDeleteRecord", generateDepartmentId, authToken, async (req, res) => {
   const departments = req.body;
   try {
     if (departments.IUFlag === "D") {

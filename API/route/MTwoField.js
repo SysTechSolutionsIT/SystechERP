@@ -181,7 +181,7 @@ router.post(
   async (req, res) => {
     const TField = req.body;
     const FieldId = TField.FieldId; // Access the FieldId from the request body
-
+    console.log("Request Payload:", req.body);
     try {
       if (TField.IUFlag === "D") {
         // "Soft-delete" operation
