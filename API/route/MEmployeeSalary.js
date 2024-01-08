@@ -29,39 +29,60 @@ const sequelize = new Sequelize(
 );
 
 const MEmployeeSalary = sequelize.define(
-    'MEmployeeSalary',
-        {
-            CompanyId: { type: DataTypes.STRING(5), allowNull: false, defaultValue: '00001' },
-            BranchId: { type: DataTypes.STRING(5), allowNull: false, defaultValue: '00001' },
-            EmployeeId: { type: DataTypes.INTEGER(5), allowNull: false, autoIncrement: true, primaryKey: true },
-            GradeId: { type: DataTypes.STRING(5), allowNull: false, defaultValue: "00001" },
-            BandId: { type: DataTypes.STRING(5), allowNull: false, defaultValue: "00001" },
-            CTC: { type: DataTypes.DECIMAL(10, 2), defaultValue: 0 },
-            GrossSalary: { type: DataTypes.DECIMAL(10, 2), defaultValue: 0 },
-            OTFlag: { type: DataTypes.STRING(1), defaultValue: "N" },
-            OTAmount: { type: DataTypes.DECIMAL(10, 2), defaultValue: 0 },
-            PFFlag: { type: DataTypes.STRING(1), defaultValue: "N" },
-            PFNo: { type: DataTypes.STRING(50) },
-            PFDate: { type: DataTypes.DATE },
-            ESICFlag: { type: DataTypes.STRING(1), defaultValue: "N" },
-            ESICNo: { type: DataTypes.STRING(50) },
-            ESICDate: { type: DataTypes.DATE },
-            UANNo: { type: DataTypes.STRING(50) },
-            MLWFFlag: { type: DataTypes.STRING(1), defaultValue: "N" },
-            MLWFNo: { type: DataTypes.STRING(50) },
-            GratuityApplicable: { type: DataTypes.STRING(1), defaultValue: "N" },
-            GratuityAmount: { type: DataTypes.DECIMAL(10, 2), defaultValue: 0 },
-            Remark: { type: DataTypes.STRING(1000) },
-            AcFlag: { type: DataTypes.STRING(1), defaultValue: "Y" },
-            CreatedBy: { type: DataTypes.STRING(5) },
-            CreatedOn: { type: DataTypes.DATE },
-            ModifiedBy: { type: DataTypes.STRING(5) },
-            ModifiedOn: { type: DataTypes.DATE },
-          },
-          {
-           timestamps: false
-          }
-)
+  "MEmployeeSalary",
+  {
+    CompanyId: {
+      type: DataTypes.STRING(5),
+      allowNull: false,
+      defaultValue: "00001",
+    },
+    BranchId: {
+      type: DataTypes.STRING(5),
+      allowNull: false,
+      defaultValue: "00001",
+    },
+    EmployeeId: {
+      type: DataTypes.INTEGER(5),
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    GradeId: {
+      type: DataTypes.STRING(5),
+      allowNull: false,
+      defaultValue: "00001",
+    },
+    BandId: {
+      type: DataTypes.STRING(5),
+      allowNull: false,
+      defaultValue: "00001",
+    },
+    CTC: { type: DataTypes.DECIMAL(10, 2), defaultValue: 0 },
+    GrossSalary: { type: DataTypes.DECIMAL(10, 2), defaultValue: 0 },
+    OTFlag: { type: DataTypes.STRING(1), defaultValue: "N" },
+    OTAmount: { type: DataTypes.DECIMAL(10, 2), defaultValue: 0 },
+    PFFlag: { type: DataTypes.STRING(1), defaultValue: "N" },
+    PFNo: { type: DataTypes.STRING(50) },
+    PFDate: { type: DataTypes.DATE },
+    ESICFlag: { type: DataTypes.STRING(1), defaultValue: "N" },
+    ESICNo: { type: DataTypes.STRING(50) },
+    ESICDate: { type: DataTypes.DATE },
+    UANNo: { type: DataTypes.STRING(50) },
+    MLWFFlag: { type: DataTypes.STRING(1), defaultValue: "N" },
+    MLWFNo: { type: DataTypes.STRING(50) },
+    GratuityApplicable: { type: DataTypes.STRING(1), defaultValue: "N" },
+    GratuityAmount: { type: DataTypes.DECIMAL(10, 2), defaultValue: 0 },
+    Remark: { type: DataTypes.STRING(1000) },
+    AcFlag: { type: DataTypes.STRING(1), defaultValue: "Y" },
+    CreatedBy: { type: DataTypes.STRING(5) },
+    CreatedOn: { type: DataTypes.DATE },
+    ModifiedBy: { type: DataTypes.STRING(5) },
+    ModifiedOn: { type: DataTypes.DATE },
+  },
+  {
+    timestamps: false,
+  }
+);
 
 // Middleware for parsing JSON
 router.use(bodyParser.json());
@@ -70,10 +91,10 @@ router.use(bodyParser.json());
 sequelize
   .authenticate()
   .then(() => {
-    console.log('Connection has been established successfully.');
+    console.log("Connection has been established successfully.");
   })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
+  .catch((err) => {
+    console.error("Unable to connect to the database:", err);
   });
 
 router.get("/FnShowAllData", authToken, async (req, res) => {
@@ -111,11 +132,11 @@ router.get("/FnShowActiveData", authToken, async (req, res) => {
 });
 
 router.get("/FnShowParticularData", authToken, async (req, res) => {
-  const employeeId = req.query.EmployeeId;
+  const employee = req.query;
   try {
     const employees = await MEmployeeSalary.findOne({
       where: {
-        EmployeeId: employeeId,
+        EmployeeId: employee.EmployeeId,
       },
       attributes: {
         exclude: ["IUFlag"],

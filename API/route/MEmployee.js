@@ -168,6 +168,28 @@ router.get("/FnShowPerticularData", authToken, async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+router.get("/FnShowImageData", authToken, async (req, res) => {
+  const employeeId = req.query.EmployeeId;
+  try {
+    const employee = await MEmployee.findOne({
+      where: {
+        EmployeeId: employeeId,
+      },
+      attributes: ["EmployeePhoto"], // Include only the EmployeePhoto field
+      order: [["EmployeeId", "ASC"]],
+    });
+
+    if (!employee) {
+      return res.status(404).json({ error: "Employee not found" });
+    }
+    const { EmployeePhoto } = employee.dataValues;
+
+    res.json({ EmployeePhoto });
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
   const employee = req.body; // Access the EmployeeId from query parameters
@@ -186,7 +208,7 @@ router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
     } else {
       // Add or update operation
       const result = await MEmployee.upsert(employee, {
-        where: { EmployeeId: employeeId }, // Specify the where condition for update
+        where: { EmployeeId: employee.EmployeeId }, // Specify the where condition for update
         returning: true,
       });
 

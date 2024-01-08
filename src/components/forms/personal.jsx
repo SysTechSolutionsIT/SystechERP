@@ -47,6 +47,7 @@ export default function Personal({ ID }) {
   const [employeeTypeGroup, setEmployeeTypeGroup] = useState("");
   const [employeeTypes, setEmployeeTypes] = useState([]);
   const [employeeName, setEmployeeName] = useState("");
+  const [employeePhoto, setEmployeePhoto] = useState("");
   const { fYear } = useDetails();
 
   const formik = useFormik({
@@ -193,6 +194,30 @@ export default function Personal({ ID }) {
       console.log("EMP type id in personal", employeeTypeId);
     } catch (error) {
       console.log("Error while fetching course data: ", error.message);
+    }
+  };
+
+  // Get
+  useEffect(() => {
+    fetchPhotoData();
+  }, [ID]);
+  const fetchPhotoData = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5500/employee/personal/FnShowImageData`,
+        {
+          params: { EmployeeId: ID },
+          headers: { Authorization: `Bearer ${token}` },
+          responseType: "arraybuffer",
+        }
+      );
+      const imageBlob = new Blob([response.data], {
+        type: response.headers["content-type"],
+      });
+      const imageUrl = URL.createObjectURL(imageBlob);
+      setEmployeePhoto(imageUrl);
+    } catch (error) {
+      console.log("Error while fetching image data: ", error.message);
     }
   };
 
@@ -367,6 +392,7 @@ export default function Personal({ ID }) {
   useEffect(() => {
     setEmployeeTypeId(details.EmployeeTypeId);
     console.log("Emp Type id in personal", employeeTypeId);
+    console.log("Employee Photo:", details.EmployeePhoto);
   }, [details]);
 
   const handlePhotoChange = (event) => {
@@ -379,12 +405,26 @@ export default function Personal({ ID }) {
     formik.setFieldValue("DrivingLicense", file);
   };
 
+  // Image Operations
+  const blob = new Blob([employeePhoto], { type: "image/jpeg" }); // Assuming a JPEG image
+  const url = URL.createObjectURL(blob);
+
   return (
     <form onSubmit={formik.handleSubmit}>
-      <div className="p-0 font-[Inter]">
+      <div className="p-0 font-[Inter] ">
+        <div className="flex">
+          <div className="ml-auto mr-[13%]">
+            {employeePhoto && (
+              <img
+                src={`data:image/jpeg;base64,${employeePhoto}`}
+                alt="Employee Photo"
+              />
+            )}
+          </div>
+        </div>
         <div className="p-4 bg-white">
           <div className="grid grid-cols-3 gap-x-4">
-            <div className="py-1">
+            <div className="py-1 top-8">
               <p className="mb-1 capitalize font-semibold text-[13px]">
                 Employee ID
               </p>
@@ -417,7 +457,7 @@ export default function Personal({ ID }) {
               </select>
             </div>
             <div className="py-1">
-              <p className="mb-1 capitalize font-semibold text-[13px] ">
+              <p className="mb-1 capitalize font-semibold text-[13px] top-2 ">
                 Employee Photo
               </p>
               <input

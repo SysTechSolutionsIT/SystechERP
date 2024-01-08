@@ -1,10 +1,9 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useAuth } from "../Login";
-import { useRef } from "react";
 import { Icon } from "@iconify/react";
 import ManualAttendanceEntryModal from "./ManualAttendanceEntryModal";
 import axios from "axios";
+import MVEModal from "./ManualAttendanceViewEdit";
 
 const ManualAttendanceEntry = () => {
   const [filteredData, setFilteredData] = useState([]);
@@ -12,9 +11,9 @@ const ManualAttendanceEntry = () => {
   const [manualAttendanceEntry, setManualAttendanceEntry] = useState([]);
   const { token } = useAuth();
   //View and Edit
-  const [LVE, setLVE] = useState(false);
+  const [MVE, setMVE] = useState(false);
   const [edit, setEdit] = useState(false);
-  const [LeaveId, setLeaveId] = useState();
+  const [ManId, setManId] = useState();
 
   // React Arrays
   const [employeeTypeMapping, setEmployeeTypes] = useState([]);
@@ -416,9 +415,9 @@ const ManualAttendanceEntry = () => {
                             height="20"
                             className="cursor-pointer"
                             onClick={() => {
-                              setLVE(true); // Open VEModal
+                              setMVE(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setLeaveId(result.AttendanceId); // Pass ID to VEModal
+                              setManId(result.AttendanceId); // Pass ID to VEModal
                             }}
                           />
                           <Icon
@@ -428,9 +427,9 @@ const ManualAttendanceEntry = () => {
                             height="20"
                             className="cursor-pointer"
                             onClick={() => {
-                              setLVE(true); // Open VEModal
+                              setMVE(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setLeaveId(result.AttendanceId); // Pass ID to VEModal
+                              setManId(result.AttendanceId); // Pass ID to VEModal
                             }}
                           />
                           <Icon
@@ -468,9 +467,9 @@ const ManualAttendanceEntry = () => {
                             height="20"
                             className="cursor-pointer"
                             onClick={() => {
-                              setLVE(true); // Open VEModal
+                              setMVE(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setLeaveId(result.AttendanceId); // Pass ID to VEModal
+                              setManId(result.AttendanceId); // Pass ID to VEModal
                             }}
                           />
 
@@ -481,9 +480,9 @@ const ManualAttendanceEntry = () => {
                             height="20"
                             className="cursor-pointer"
                             onClick={() => {
-                              setLVE(true); // Open VEModal
+                              setMVE(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setLeaveId(result.AttendanceId); // Pass ID to VEModal
+                              setManId(result.AttendanceId); // Pass ID to VEModal
                             }}
                           />
                           <Icon
@@ -517,6 +516,12 @@ const ManualAttendanceEntry = () => {
           </table>
         </div>
       </div>
+      <MVEModal
+        visible={MVE}
+        onClick={() => setMVE(false)}
+        edit={edit}
+        ID={ManId}
+      />
     </div>
   );
 };
