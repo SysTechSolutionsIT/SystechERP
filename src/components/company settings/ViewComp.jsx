@@ -149,7 +149,10 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
     params: {CompanyId: ID},  
     headers: {Authorization: `Bearer ${token}`}
     })
-    .then(res=> console.log(res))
+    .then(res=> {
+      console.log(res)
+      alert('Logo Uploaded')
+    } )
     .catch(err => console.error(err))
   }
 
@@ -202,7 +205,10 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
               icon="maki:cross"
               color="white"
               className="cursor-pointer"
-              onClick={onClick}
+              onClick={() => {
+                setPreviewImage(null)
+                onClick
+              }} 
               width="24"
               height="24"
             />
@@ -357,7 +363,10 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
               )}
               <button
                 className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg w-36"
-                onClick={onClick}
+                onClick={() => {
+                  setPreviewImage(null)
+                  onClick
+                }} 
               >
                 Close
               </button>
