@@ -3,6 +3,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const { Sequelize, DataTypes } = require("sequelize");
+const multer = require("multer");
+const path = require("path");
 
 // Create an Express router
 const router = express.Router();
@@ -43,7 +45,7 @@ const MCompany = sequelize.define("MCompany", {
   CompanyName: DataTypes.STRING,
   ShortName: DataTypes.STRING,
   NatureOfBusiness: DataTypes.STRING,
-  Logo: DataTypes.BLOB,
+  Logo: DataTypes.STRING,
   AcFlag: DataTypes.STRING,
   CreatedBy: DataTypes.STRING,
   CreatedByName: DataTypes.STRING,
@@ -125,39 +127,6 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
   }
 });
 
-router.get("/FnGetLogo", authToken, async (req, res) => {
-  const companyId = req.query.CompanyId;
-
-  try {
-    const company = await MCompany.findOne({
-      where: {
-        CompanyId: companyId,
-      },
-      attributes: ["Logo"],
-    });
-
-    if (!company) {
-      return res.status(404).json({ message: "Company not found" });
-    }
-
-    const logoData = company.Logo;
-
-    if (!logoData) {
-      return res.status(404).json({ message: "Logo not found for the company" });
-    }
-
-    res.writeHead(200, {
-      'Content-Type': 'image/png', // Adjust content type based on your image type
-      'Content-Length': logoData.length,
-    });
-    
-    res.end(logoData);
-  } catch (error) {
-    console.error("Error retrieving logo:", error);
-    res.status(500).send("Internal Server Error");
-  }
-});
-
 const generateCompanyId = async (req, res, next) => {
   try {
     if (req.body.IUFlag === 'I') {
@@ -172,12 +141,53 @@ const generateCompanyId = async (req, res, next) => {
   }
 };
 
-// POST endpoint to add, update, or "soft-delete" a company
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null,'public/company-logo')
+  },
+  filename: (req, file, cb) =>{
+    cb(null, file.fieldname + "_" + Date.now() + path.extname(file.originalname))
+  }
+})
+
+const upload = multer({
+  storage: storage
+})
+
+router.post("/upload", authToken, upload.single('image'), authToken, async (req, res) => {
+  try {
+    const image = req.file.filename;
+    // Update the record in the MCompany table using Sequelize
+    await MCompany.update({ Logo: image }, { where: { CompanyId: req.query.CompanyId } });
+
+    return res.json({ Status: 'Success' });
+  } catch (error) {
+    console.error(error);
+    return res.json({ Message: 'Error' });
+  }
+});
+
+router.get('/get-upload', authToken, async (req, res) => {
+  const companyId = req.query.CompanyId;
+  try {
+    const companies = await MCompany.findOne({
+      where: {
+        CompanyId: companyId,
+      },
+      attributes: ["Logo"],
+      order: [["CompanyId", "ASC"]],
+    });
+    res.json(companies);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+})
+
 router.post("/FnAddUpdateDeleteRecord", generateCompanyId, authToken, async (req, res) => {
   const company = req.body;
   try {
     if (company.IUFlag === "D") {
-      // "Soft-delete" operation
       const result = await MCompany.update(
         { AcFlag: "N" },
         { where: { CompanyId: company.CompanyId } }
@@ -187,7 +197,7 @@ router.post("/FnAddUpdateDeleteRecord", generateCompanyId, authToken, async (req
         message: result[0] ? "Record Deleted Successfully" : "Record Not Found",
       });
     } else {
-      // Add or update operation
+
       const result = await MCompany.upsert(company, {
         returning: true,
       });
@@ -201,6 +211,6 @@ router.post("/FnAddUpdateDeleteRecord", generateCompanyId, authToken, async (req
     res.status(500).send("Internal Server Error");
   }
 });
+;
 
-// Export the router
 module.exports = router;

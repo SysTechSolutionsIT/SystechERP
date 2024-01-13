@@ -5,6 +5,8 @@ import axios from "axios";
 import { useAuth } from "../Login";
 
 const CompanyModal = ({ visible, onClick }) => {
+  const [uploadedImage, setUploadedImage] = useState(null)
+  const [logoName, setLogoName] = useState()
   const { token } = useAuth();
 
   const formik = useFormik({
@@ -15,14 +17,13 @@ const CompanyModal = ({ visible, onClick }) => {
       CompanyName: "",
       ShortName: "",
       NatureOfBusiness: "",
-      Logo: null, // Updated to handle the logo as a file object
+      Logo: logoName, // Updated to handle the logo as a file object
       AcFlag: "Y",
       CreatedBy: "",
       CreatedByName: "",
       ModifiedBy: null,
       ModifiedByName: "",
       IUFlag: "I",
-      Status: "",
       SingleCompany: false,
       CreatedOn: "",
       ModifiedOn: "",
@@ -31,7 +32,7 @@ const CompanyModal = ({ visible, onClick }) => {
     },
     onSubmit: async (values) => {
       console.log(values);
-      addCompany(values);
+      // addCompany(values);
     },
   });
 
@@ -49,8 +50,18 @@ const CompanyModal = ({ visible, onClick }) => {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    formik.setFieldValue("Logo", file);
+    setUploadedImage(file)
   };
+
+  const handleUpload = () =>{
+    const formdata = new FormData()
+    formdata.append('image', uploadedImage)
+    axios.post('http://localhost:5500/companies/upload', formdata, {
+      headers: {Authorization: `Bearer ${token}`}
+    })
+    .then(res=> console.log(res))
+    .catch(err => console.error(err))
+  }
 
   const addCompany = async (data) => {
     try {
@@ -60,6 +71,7 @@ const CompanyModal = ({ visible, onClick }) => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -70,10 +82,25 @@ const CompanyModal = ({ visible, onClick }) => {
     }
   };
 
-  useEffect(() => {
-    // If you want to display the logo, you can fetch it and update the state here
-    // Example: fetchLogo();
-  }, []); // Add dependencies if needed
+  const [previewImage, setPreviewImage] = useState(null);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+  
+    if (file) {
+      const reader = new FileReader();
+  
+      reader.onload = (event) => {
+        setPreviewImage(event.target.result);
+      };
+  
+      reader.readAsDataURL(file);
+  
+      // Set the Logo field in Formik state
+    }
+  };
+  
+
 
   if (!visible) return null;
   return (
@@ -157,17 +184,6 @@ const CompanyModal = ({ visible, onClick }) => {
                   value={formik.values.CreatedBy}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
-                />
-              </div>
-              <div>
-                <p className="capatilize font-semibold text-[13px]">Logo</p>
-                <input
-                  id="Logo"
-                  type="file"
-                  placeholder="Upload File"
-                  // value={formik.values.Logo}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
-                  onChange={handleFileChange}
                 />
               </div>
               <div>

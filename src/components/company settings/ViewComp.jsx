@@ -9,6 +9,8 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
   const [statusCheck, setStatusCheck] = useState(false);
   const [singleBranchCheck, setSingleBranchCheck] = useState(false);
   const [details, setDetails] = useState([]);
+  const [uploadedImage, setUploadedImage] = useState(null)
+  const [logoName, setLogoName] = useState()
   const { token } = useAuth();
   const formik = useFormik({
     initialValues: {
@@ -40,7 +42,7 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
         CompanyName: values.CompanyName,
         ShortName: values.ShortName,
         NatureOfBusiness: values.NatureOfBusiness,
-        // Logo : values.Logo,
+        Logo : values.Logo,
         CreatedBy: values.CreatedBy,
         CreatedByName: values.CreatedByName,
         ModifiedBy: values.ModifiedBy,
@@ -135,6 +137,58 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
     });
   };
 
+    const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setUploadedImage(file)
+  };
+
+  const handleUpload = () =>{
+    const formdata = new FormData()
+    formdata.append('image', uploadedImage)
+    axios.post('http://localhost:5500/companies/upload', formdata, {
+    params: {CompanyId: ID},  
+    headers: {Authorization: `Bearer ${token}`}
+    })
+    .then(res=> console.log(res))
+    .catch(err => console.error(err))
+  }
+
+    const [previewImage, setPreviewImage] = useState(null);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+  
+    if (file) {
+      const reader = new FileReader();
+  
+      reader.onload = (event) => {
+        setPreviewImage(event.target.result);
+      };
+  
+      reader.readAsDataURL(file);
+  
+      // Set the Logo field in Formik state
+    }
+  };
+
+  useEffect(() =>{
+    const fetchLogo = async () =>{
+      try {
+        const response = await axios.get('http://localhost:5500/companies/get-upload',{
+          params: {CompanyId: ID},  
+          headers: {Authorization: `Bearer ${token}`}
+        })
+        const data = response.data.Logo
+        console.log('Image Data', data.Logo)
+        setPreviewImage(`http://localhost:5500/company-logo/${data}`)
+
+      } catch (error) {
+        console.error('Error')
+      }
+    }
+    fetchLogo()
+  },[details])
+
   if (!visible) return null;
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -225,37 +279,35 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                 />
               </div>
               <div>
-                <p className="capitalize font-semibold text-[13px]">Status</p>
-                <label className="capitalize font-semibold text-[11px]">
-                  <input
-                    id="AcFlag"
-                    type="checkbox"
-                    checked={formik.values.AcFlag}
-                    className={`w-5 h-5 mr-2 mt-5 focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px]`}
-                    onChange={(event) =>
-                      handleCheckboxChange("AcFlag", setStatusChecked, event)
-                    }
-                  />
-                  Active
-                </label>
-              </div>
-              <div>
                 <p className="capitalize font-semibold text-[13px]">Logo</p>
-                {edit ? ( // If edit is true, render the input field and logoName
-                  <>
-                    <input
-                      id="logo"
-                      type="file"
-                      placeholder="Upload File"
-                      className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
-                      onChange={formik.handleChange}
+                <input
+                  id="Logo"
+                  type="file"
+                  placeholder="Upload File"
+                  onChange={(e) => {
+                    handleFileChange(e)
+                    handleImageChange(e);
+                  }}
+                  className="w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px]"
+                />
+
+                {previewImage && (
+                  <div className="mt-4">
+                    <p className="font-semibold text-[13px]">Current Logo Preview:</p>
+                    <img
+                      src={previewImage}
+                      alt="Preview"
+                      className="w-32 h-32 object-cover border border-gray-300 rounded-lg mt-2"
                     />
-                    <p className="text-[11px]"></p>
-                  </>
-                ) : (
-                  // If edit is false, just display the logoName
-                  <p className="text-[11px]"></p>
+                  </div>
                 )}
+                <button
+                type="button"
+                onClick={() => handleUpload()}
+                className="bg-blue-900 text-white font-semibold rounded-lg w-24 h-8 mt-2 text-[11px] hover:bg-white hover:text-black hover:ease-linear"
+              >
+                Upload Logo
+              </button>
               </div>
               <div>
                 <p className="capitalize font-semibold text-[13px]">
