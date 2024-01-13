@@ -23,7 +23,7 @@ export default function EMPTabs() {
       empIdPrefix: "",
       cmulti: "",
       att: "",
-      aProcess: "",
+      atProcess: "",
       atap: "",
       shiftFlag: "",
       jobApp: "",
@@ -49,6 +49,7 @@ export default function EMPTabs() {
       message: "",
       smsUrl: "",
       sms: "",
+      IUFlag: "I",
     },
     onSubmit: (values) => {
       console.log(values);
@@ -63,7 +64,7 @@ export default function EMPTabs() {
         empID: values.empID,
         cmulti: values.cmulti,
         att: values.att,
-        aProcess: values.aProcess,
+        atProcess: values.atProcess,
         atap: values.atap,
         shiftFlag: values.shiftFlag,
         jobApp: values.jobApp,
@@ -89,16 +90,41 @@ export default function EMPTabs() {
         message: values.message,
         smsUrl: values.smsUrl,
         sms: values.sms,
+        IUFlag: "U",
       };
-      updateCompanyConfig(updatedData);
       // updateEmpId(values.empIdPrefix)
+      console.log("Updated Data is: ", updatedData);
+      updateCompanyConfig(updatedData);
     },
   });
+  // Fetching CUrrencies
+  const [currencies, setCurrencies] = useState([]);
+  useEffect(() => {
+    const fetchCurrencyData = async () => {
+      const CID = 11;
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/two-field/FnShowCategoricalData",
+          {
+            params: { MasterNameId: CID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        console.log("Currency", data);
+        setCurrencies(data);
+      } catch (error) {
+        console.error("Error fetching currencies:", error);
+      }
+    };
+
+    fetchCurrencyData();
+  }, [token]);
 
   const updateCompanyConfig = async (data) => {
     try {
-      const response = axios.put(
-        `http://localhost:5500/company-config/update/1`,
+      const response = axios.post(
+        `http://localhost:5500/company-config/FnAddUpdateDeleteRecord`,
         data,
         {
           headers: {
@@ -107,48 +133,7 @@ export default function EMPTabs() {
         }
       );
       alert("Company Configuration Updated");
-    } catch (error) {
-      console.error("Error", error);
-    }
-  };
-
-  useEffect(() => {
-    const getEmpIdPrefix = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:5500/employeeid/get",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const data = response.data[0];
-        console.log(data.EmpId);
-        formik.setValues({
-          ...formik.values,
-          ["empIdPrefix"]: data.EmpId,
-        });
-      } catch (error) {
-        console.error("Error", error);
-      }
-    };
-
-    getEmpIdPrefix();
-  }, [token]);
-
-  const updateEmpId = async (empIdprefix) => {
-    try {
-      const response = axios.put(
-        `http://localhost:5500/employeeid/update/1`,
-        empIdprefix,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      alert("Employee ID Prefix Updated");
+      window.location.reload();
     } catch (error) {
       console.error("Error", error);
     }
@@ -158,7 +143,7 @@ export default function EMPTabs() {
     const fetchCompanyConfig = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5500/company-config/get/1`,
+          `http://localhost:5500/company-config/FnShowAllData`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -188,7 +173,7 @@ export default function EMPTabs() {
         empID: details?.empID,
         cmulti: details?.cmulti,
         att: details?.att,
-        aProcess: details?.aProcess,
+        atProcess: details?.atProcess,
         atap: details?.atap,
         shiftFlag: details?.shiftFlag,
         jobApp: details?.jobApp,
@@ -258,27 +243,6 @@ export default function EMPTabs() {
     "November",
     "December",
   ];
-
-  //Currencies - Tab 1
-  const [currencies, setCurrencies] = useState([]);
-  useEffect(() => {
-    const fetchCurrencyData = async () => {
-      try {
-        const response = await axios.get("http://localhost:5500/currency/", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const data = response.data.records;
-        console.log("Currency", data);
-        setCurrencies(data);
-      } catch (error) {
-        console.error("Error fetching currencies:", error);
-      }
-    };
-
-    fetchCurrencyData();
-  }, []);
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -417,17 +381,21 @@ export default function EMPTabs() {
                         Currency
                       </label>
                       <select
-                        id="currency"
+                        id=""
+                        currency
                         name="currency"
-                        className="text-[13px] w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
+                        className="text-[11px] w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
                         value={formik.values.currency}
                         onChange={formik.handleChange}
-                        disabled={!edit}
                       >
+                        <option value="">Select Currency Type</option>
                         {currencies.length > 0 &&
                           currencies.map((currency) => (
-                            <option key={currency.id} value={currency.abbr}>
-                              {currency.name}
+                            <option
+                              key={currency.FieldId}
+                              value={currency.FieldId}
+                            >
+                              {currency.FieldDetails}
                             </option>
                           ))}
                       </select>
@@ -627,7 +595,7 @@ export default function EMPTabs() {
                           <input
                             type="radio"
                             name="att"
-                            value="daily"
+                            value="Daily"
                             className="mr-2 ml-2"
                             checked={formik.values.att === "Daily"}
                             onChange={formik.handleChange}
@@ -639,7 +607,7 @@ export default function EMPTabs() {
                           <input
                             type="radio"
                             name="att"
-                            value="monthly"
+                            value="Monthly"
                             className="mr-2"
                             checked={formik.values.att === "Monthly"}
                             onChange={formik.handleChange}
@@ -659,9 +627,9 @@ export default function EMPTabs() {
                             <input
                               type="radio"
                               name="atProcess"
-                              value="all"
+                              value="All"
                               className="mr-2 ml-2"
-                              checked={formik.values.aProcess === "All"}
+                              checked={formik.values.atProcess === "All"}
                               onChange={formik.handleChange}
                               disabled={!edit}
                             />
@@ -671,9 +639,9 @@ export default function EMPTabs() {
                             <input
                               type="radio"
                               name="atProcess"
-                              value="manual"
+                              value="Manual"
                               className="mr-2"
-                              checked={formik.values.aProcess === "Manual"}
+                              checked={formik.values.atProcess === "Manual"}
                               onChange={formik.handleChange}
                               disabled={!edit}
                             />
@@ -683,10 +651,10 @@ export default function EMPTabs() {
                             <input
                               type="radio"
                               name="atProcess"
-                              value="excel"
+                              value="Excel Import"
                               className="mr-2"
                               checked={
-                                formik.values.aProcess === "Excel Import"
+                                formik.values.atProcess === "Excel Import"
                               }
                               onChange={formik.handleChange}
                               disabled={!edit}
@@ -697,10 +665,10 @@ export default function EMPTabs() {
                             <input
                               type="radio"
                               name="atProcess"
-                              value="autoD"
+                              value="Auto Download"
                               className="mr-2"
                               checked={
-                                formik.values.aProcess === "Auto Download"
+                                formik.values.atProcess === "Auto Download"
                               }
                               onChange={formik.handleChange}
                               disabled={!edit}
@@ -819,7 +787,7 @@ export default function EMPTabs() {
                             <input
                               type="radio"
                               name="holiday"
-                              value="Add1"
+                              value="Add 1 day in Presenty"
                               className="mr-2 ml-2 whitespace-nowrap"
                               checked={
                                 formik.values.holiday ===
@@ -834,7 +802,7 @@ export default function EMPTabs() {
                             <input
                               type="radio"
                               name="holiday"
-                              value="coff"
+                              value="Give C-Off"
                               className="mr-2 whitespace-nowrap"
                               checked={formik.values.holiday === "Give C-Off"}
                               onChange={formik.handleChange}
@@ -973,7 +941,7 @@ export default function EMPTabs() {
                           <input
                             type="radio"
                             name="otCalc"
-                            value="daily"
+                            value="Daily"
                             className="mr-2 ml-2"
                             checked={formik.values.otCalc === "Daily"}
                             onChange={formik.handleChange}
@@ -985,7 +953,7 @@ export default function EMPTabs() {
                           <input
                             type="radio"
                             name="otCalc"
-                            value="monthly"
+                            value="Monthly"
                             className="mr-2"
                             checked={formik.values.otCalc === "Monthly"}
                             onChange={formik.handleChange}
@@ -1001,7 +969,7 @@ export default function EMPTabs() {
                       </p>
                       <input
                         name="esicSal"
-                        type="text"
+                        type="number"
                         value={formik.values.esicSal}
                         className={`px-4 h-10 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mb-6 text-[13px]`}
                         onChange={formik.handleChange}
@@ -1017,7 +985,7 @@ export default function EMPTabs() {
                       <input
                         id="PFSalaryLimit"
                         name="pfSal"
-                        type="text"
+                        type="number"
                         value={formik.values.pfSal}
                         className={` w-full h-10 text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
                         onChange={formik.handleChange}
@@ -1031,7 +999,7 @@ export default function EMPTabs() {
                       <input
                         id="gratuity"
                         name="gratuity"
-                        type="text"
+                        type="number"
                         value={formik.values.gratuity}
                         className={` w-full h-10 text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
                         onChange={formik.handleChange}
@@ -1110,9 +1078,9 @@ export default function EMPTabs() {
                         Salary Minimum Wages
                       </p>
                       <input
-                        id="MinWages"
+                        id="minWages"
                         name="minWages"
-                        type="text"
+                        type="number"
                         value={formik.values.minWages}
                         className={`w-full h-10 text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
                         onChange={formik.handleChange}

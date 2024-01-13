@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 const cors = require("cors"); // Import the cors middleware
 app.use(express.json()); // Parse JSON requests
 // const CompMaster = require("./route/CMRoute");
-// const CompConfig = require("./route/CompanyConfigRoute");
+const CompConfig = require("./route/CompanyConfigRoute");
 const BankMaster = require("./route/MBankRoutes");
 // const DestinationMaster = require("./route/DestinationMasterRoute");
 // const ThreeFieldMaster = require("./route/ThreeFieldsRoutes");
@@ -67,7 +67,7 @@ app.use("/employee/salary", MEmployeeSalary);
 app.use("/employee/professional", MEmployeeProfessional);
 app.use("/employee/academic", MEmployeeAcademic);
 app.use("/employee/family", MEmployeeFamily);
-// app.use("/company-config", CompConfig);
+app.use("/company-config", CompConfig);
 app.use("/bankmaster", BankMaster);
 app.use("/departmentmaster", MDepartment);
 // app.use("/threefieldmaster", ThreeFieldMaster);

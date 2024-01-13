@@ -64,10 +64,10 @@ router.use(bodyParser.json());
 sequelize
   .authenticate()
   .then(() => {
-    console.log('Connection has been established successfully.');
+    console.log("Connection has been established successfully.");
   })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
+  .catch((err) => {
+    console.error("Unable to connect to the database:", err);
   });
 
 // GET endpoint to retrieve all companies
@@ -143,14 +143,16 @@ router.get("/FnGetLogo", authToken, async (req, res) => {
     const logoData = company.Logo;
 
     if (!logoData) {
-      return res.status(404).json({ message: "Logo not found for the company" });
+      return res
+        .status(404)
+        .json({ message: "Logo not found for the company" });
     }
 
     res.writeHead(200, {
-      'Content-Type': 'image/png', // Adjust content type based on your image type
-      'Content-Length': logoData.length,
+      "Content-Type": "image/png", // Adjust content type based on your image type
+      "Content-Length": logoData.length,
     });
-    
+
     res.end(logoData);
   } catch (error) {
     console.error("Error retrieving logo:", error);
@@ -160,7 +162,7 @@ router.get("/FnGetLogo", authToken, async (req, res) => {
 
 const generateCompanyId = async (req, res, next) => {
   try {
-    if (req.body.IUFlag === 'I') {
+    if (req.body.IUFlag === "I") {
       const totalRecords = await MCompany.count();
       const newId = (totalRecords + 1).toString().padStart(5, "0");
       req.body.CompanyId = newId;
@@ -173,34 +175,41 @@ const generateCompanyId = async (req, res, next) => {
 };
 
 // POST endpoint to add, update, or "soft-delete" a company
-router.post("/FnAddUpdateDeleteRecord", generateCompanyId, authToken, async (req, res) => {
-  const company = req.body;
-  try {
-    if (company.IUFlag === "D") {
-      // "Soft-delete" operation
-      const result = await MCompany.update(
-        { AcFlag: "N" },
-        { where: { CompanyId: company.CompanyId } }
-      );
+router.post(
+  "/FnAddUpdateDeleteRecord",
+  generateCompanyId,
+  authToken,
+  async (req, res) => {
+    const company = req.body;
+    try {
+      if (company.IUFlag === "D") {
+        // "Soft-delete" operation
+        const result = await MCompany.update(
+          { AcFlag: "N" },
+          { where: { CompanyId: company.CompanyId } }
+        );
 
-      res.json({
-        message: result[0] ? "Record Deleted Successfully" : "Record Not Found",
-      });
-    } else {
-      // Add or update operation
-      const result = await MCompany.upsert(company, {
-        returning: true,
-      });
+        res.json({
+          message: result[0]
+            ? "Record Deleted Successfully"
+            : "Record Not Found",
+        });
+      } else {
+        // Add or update operation
+        const result = await MCompany.upsert(company, {
+          returning: true,
+        });
 
-      res.json({
-        message: result ? "Operation successful" : "Operation failed",
-      });
+        res.json({
+          message: result ? "Operation successful" : "Operation failed",
+        });
+      }
+    } catch (error) {
+      console.error("Error performing operation:", error);
+      res.status(500).send("Internal Server Error");
     }
-  } catch (error) {
-    console.error("Error performing operation:", error);
-    res.status(500).send("Internal Server Error");
   }
-});
+);
 
 // Export the router
 module.exports = router;
