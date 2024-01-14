@@ -189,7 +189,7 @@ export default function Personal({ ID }) {
           headers: { Authorization: `Bearer ${token}` }, // Moved headers here
         }
       );
-      console.log("Response Object", response);
+      console.log("Personal Data", response);
       const data = response.data;
       setdetails(data);
       console.log("EMP type id in personal", employeeTypeId);
@@ -333,7 +333,6 @@ export default function Personal({ ID }) {
     };
     fetchCasteData();
   }, [token]);
-  
 
   useEffect(() => {
     if (details) {
