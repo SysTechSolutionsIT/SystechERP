@@ -151,7 +151,7 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
         params:{ CompanyId: ID},
         headers:{ Authorization: `Bearer ${token}`}
       })
-      if (response.messagen === 'Success') alert('Logo Uploaded')
+      if (response.message === 'Success') alert('Logo Uploaded')
       else alert('Logo Upload Failed, Please refresh and try again') 
     } catch (error) {
       console.error('Error', error);

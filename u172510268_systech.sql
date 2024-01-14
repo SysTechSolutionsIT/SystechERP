@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jan 13, 2024 at 02:56 PM
+-- Generation Time: Jan 14, 2024 at 07:32 AM
 -- Server version: 10.6.15-MariaDB-cll-lve
 -- PHP Version: 7.2.34
 
@@ -25,6 +25,86 @@ DELIMITER $$
 --
 -- Procedures
 --
+CREATE DEFINER=`u172510268_devs`@`127.0.0.1` PROCEDURE `UspCompanyConfig` (IN `p_IUFlag` CHAR(1), IN `p_currency` VARCHAR(255), IN `p_theme` VARCHAR(255), IN `p_date` DATE, IN `p_sessionTM` VARCHAR(255), IN `p_remarks` VARCHAR(255), IN `p_status` VARCHAR(255), IN `p_empID` VARCHAR(255), IN `p_empIdPrefix` VARCHAR(255), IN `p_cmulti` VARCHAR(255), IN `p_att` VARCHAR(255), IN `p_aProcess` VARCHAR(255), IN `p_atap` VARCHAR(255), IN `p_shiftFlag` VARCHAR(255), IN `p_jobApp` VARCHAR(255), IN `p_holiday` VARCHAR(255), IN `p_odFlag` VARCHAR(255), IN `p_otFlag` VARCHAR(255), IN `p_LAFlag` VARCHAR(255), IN `p_otCalc` VARCHAR(255), IN `p_esicSal` VARCHAR(255), IN `p_pfSal` VARCHAR(255), IN `p_gratuity` VARCHAR(255), IN `p_mlwf1` VARCHAR(255), IN `p_mlwf2` VARCHAR(255), IN `p_salLock` VARCHAR(255), IN `p_minWages` VARCHAR(255), IN `p_remarks1` VARCHAR(255), IN `p_salstat` VARCHAR(255), IN `p_email` VARCHAR(255), IN `p_smtpHost` VARCHAR(255), IN `p_sender` VARCHAR(255), IN `p_username` VARCHAR(255), IN `p_password` VARCHAR(255), IN `p_message` VARCHAR(255), IN `p_smsUrl` VARCHAR(255), IN `p_sms` VARCHAR(255), OUT `p_Result` VARCHAR(10))   BEGIN
+    DECLARE Cnt INT;
+
+    START TRANSACTION;
+
+    IF p_IUFlag = 'I' THEN
+        SELECT COUNT(*) INTO Cnt FROM CompanyConfigs WHERE CompanyId = p_CompanyId AND BranchId = p_BranchId;
+        
+        IF Cnt > 0 THEN
+            SET p_Result = '400'; -- Duplicate record
+            ROLLBACK;
+        ELSE
+            INSERT INTO Employee (
+                currency, theme, date, sessionTM, remarks, status, empID, empIdPrefix,
+                cmulti, att, aProcess, atap, shiftFlag, jobApp, holiday, odFlag, otFlag,
+                LAFlag, otCalc, esicSal, pfSal, gratuity, mlwf1, mlwf2, salLock, minWages,
+                remarks1, salstat, email, smtpHost, sender, username, password, message, smsUrl, sms
+            )
+            VALUES (
+                p_currency, p_theme, p_date, p_sessionTM, p_remarks, p_status, p_empID, p_empIdPrefix,
+                p_cmulti, p_att, p_aProcess, p_atap, p_shiftFlag, p_jobApp, p_holiday, p_odFlag, p_otFlag,
+                p_LAFlag, p_otCalc, p_esicSal, p_pfSal, p_gratuity, p_mlwf1, p_mlwf2, p_salLock, p_minWages,
+                p_remarks1, p_salstat, p_email, p_smtpHost, p_sender, p_username, p_password, p_message, p_smsUrl, p_sms
+            );
+
+            SET p_Result = '401'; -- Insert success
+            COMMIT;
+        END IF;
+    ELSEIF p_IUFlag = 'U' THEN
+        SELECT COUNT(*) INTO Cnt FROM CompanyConfigs WHERE CompanyId = p_CompanyId AND BranchId = p_BranchId;
+        IF Cnt > 0 THEN
+            SET p_Result = '400'; -- Duplicate record
+            ROLLBACK;
+        ELSE
+            UPDATE CompanyConfigs
+            SET
+                currency = p_currency,
+                theme = p_theme,
+                date = p_date,
+                sessionTM = p_sessionTM,
+                remarks = p_remarks,
+                status = p_status,
+                empID = p_empID,
+                empIdPrefix = p_empIdPrefix,
+                cmulti = p_cmulti,
+                att = p_att,
+                aProcess = p_aProcess,
+                atap = p_atap,
+                shiftFlag = p_shiftFlag,
+                jobApp = p_jobApp,
+                holiday = p_holiday,
+                odFlag = p_odFlag,
+                otFlag = p_otFlag,
+                LAFlag = p_LAFlag,
+                otCalc = p_otCalc,
+                esicSal = p_esicSal,
+                pfSal = p_pfSal,
+                gratuity = p_gratuity,
+                mlwf1 = p_mlwf1,
+                mlwf2 = p_mlwf2,
+                salLock = p_salLock,
+                minWages = p_minWages,
+                remarks1 = p_remarks1,
+                salstat = p_salstat,
+                email = p_email,
+                smtpHost = p_smtpHost,
+                sender = p_sender,
+                username = p_username,
+                password = p_password,
+                message = p_message,
+                smsUrl = p_smsUrl,
+                sms = p_sms
+            WHERE CompanyId = p_CompanyId AND BranchId = p_BranchId;
+
+            SET p_Result = '402'; -- Update success
+            COMMIT;
+        END IF;
+    END IF;
+END$$
+
 $$
 
 CREATE DEFINER=`u172510268_devs`@`127.0.0.1` PROCEDURE `UspMCaderwiseDeduction` (`pCompanyId` VARCHAR(5), `pBranchId` VARCHAR(5), `pCaderwiseDeductionId` VARCHAR(5), `pEmployeeTypeId` VARCHAR(5), `pCaderwiseDeductionDate` DATETIME(3), `pDeductionHeadId` VARCHAR(5), `pDeductionHead` VARCHAR(500), `pDCalculationType` VARCHAR(10), `pDCalculationValue` DECIMAL(10,2), `pFormula` VARCHAR(500), `pRemark` VARCHAR(1000), `pAcFlag` VARCHAR(1), `pCreatedBy` VARCHAR(500), `pModifiedBy` VARCHAR(500), `pIUFlag` VARCHAR(1), OUT `pResult` VARCHAR(100))   splbl:
@@ -2436,7 +2516,9 @@ DELIMITER ;
 --
 
 CREATE TABLE `CompanyConfigs` (
-  `id` int(11) NOT NULL,
+  `CompanyId` varchar(255) DEFAULT '00001',
+  `BranchId` varchar(255) DEFAULT '00001',
+  `CCID` int(11) NOT NULL,
   `currency` varchar(255) DEFAULT NULL,
   `theme` varchar(255) DEFAULT NULL,
   `date` varchar(255) DEFAULT NULL,
@@ -2444,6 +2526,7 @@ CREATE TABLE `CompanyConfigs` (
   `remarks` varchar(255) DEFAULT NULL,
   `status` varchar(255) DEFAULT NULL,
   `empID` varchar(255) DEFAULT NULL,
+  `empIdPrefix` varchar(255) DEFAULT NULL,
   `cmulti` varchar(255) DEFAULT NULL,
   `att` varchar(255) DEFAULT NULL,
   `aProcess` varchar(255) DEFAULT NULL,
@@ -2455,13 +2538,13 @@ CREATE TABLE `CompanyConfigs` (
   `otFlag` varchar(255) DEFAULT NULL,
   `LAFlag` varchar(255) DEFAULT NULL,
   `otCalc` varchar(255) DEFAULT NULL,
-  `esicSal` varchar(255) DEFAULT NULL,
-  `pfSal` varchar(255) DEFAULT NULL,
-  `gratuity` varchar(255) DEFAULT NULL,
+  `esicSal` int(11) DEFAULT NULL,
+  `pfSal` int(11) DEFAULT NULL,
+  `gratuity` int(11) DEFAULT NULL,
   `mlwf1` varchar(255) DEFAULT NULL,
   `mlwf2` varchar(255) DEFAULT NULL,
   `salLock` varchar(255) DEFAULT NULL,
-  `minWages` varchar(255) DEFAULT NULL,
+  `minWages` int(11) DEFAULT NULL,
   `remarks1` varchar(255) DEFAULT NULL,
   `salstat` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
@@ -2472,6 +2555,7 @@ CREATE TABLE `CompanyConfigs` (
   `message` varchar(255) DEFAULT NULL,
   `smsUrl` varchar(255) DEFAULT NULL,
   `sms` varchar(255) DEFAULT NULL,
+  `IUFlag` varchar(255) DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2480,8 +2564,9 @@ CREATE TABLE `CompanyConfigs` (
 -- Dumping data for table `CompanyConfigs`
 --
 
-INSERT INTO `CompanyConfigs` (`id`, `currency`, `theme`, `date`, `sessionTM`, `remarks`, `status`, `empID`, `cmulti`, `att`, `aProcess`, `atap`, `shiftFlag`, `jobApp`, `holiday`, `odFlag`, `otFlag`, `LAFlag`, `otCalc`, `esicSal`, `pfSal`, `gratuity`, `mlwf1`, `mlwf2`, `salLock`, `minWages`, `remarks1`, `salstat`, `email`, `smtpHost`, `sender`, `username`, `password`, `message`, `smsUrl`, `sms`, `createdAt`, `updatedAt`) VALUES
-(1, 'INR', 'August', '30/09/23', '125', 'remarks general', 'true', 'Yes', 'No', 'Daily', 'Manual', 'Yes', 'Yes', 'No', 'Give C-Off', 'No', 'Yes', 'Yes', '10', '10000', '15000', '5', 'March', 'June', '10', '15000', 'remarks payroll', 'true', 'Yes', 'host', 'SysTechsolutions@gmail.com', 'SysTech', 'password', 'Greetings', 'sms url', 'sms', '2023-09-30 07:01:18', '2023-10-26 09:15:32');
+INSERT INTO `CompanyConfigs` (`CompanyId`, `BranchId`, `CCID`, `currency`, `theme`, `date`, `sessionTM`, `remarks`, `status`, `empID`, `empIdPrefix`, `cmulti`, `att`, `aProcess`, `atap`, `shiftFlag`, `jobApp`, `holiday`, `odFlag`, `otFlag`, `LAFlag`, `otCalc`, `esicSal`, `pfSal`, `gratuity`, `mlwf1`, `mlwf2`, `salLock`, `minWages`, `remarks1`, `salstat`, `email`, `smtpHost`, `sender`, `username`, `password`, `message`, `smsUrl`, `sms`, `IUFlag`, `createdAt`, `updatedAt`) VALUES
+('00001', '00001', 1, 'European Euro (EUR)', 'March', 'dd/mm/yyyy', '45', 'text', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'U', '2024-01-14 05:08:22', '2024-01-14 05:08:22'),
+('00001', '00001', 2, 'European Euro (EUR)', 'March', 'dd/mm/yyyy', '45', 'text', '', 'No', NULL, 'No', '', NULL, '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', 0, '', '', '', '', '', '', '', '', '', '', 'U', '2024-01-14 06:14:44', '2024-01-14 06:14:44');
 
 -- --------------------------------------------------------
 
@@ -2655,7 +2740,7 @@ CREATE TABLE `MCompanies` (
   `CompanyName` varchar(255) DEFAULT NULL,
   `ShortName` varchar(255) DEFAULT NULL,
   `NatureOfBusiness` varchar(255) DEFAULT NULL,
-  `Logo` blob DEFAULT NULL,
+  `Logo` varchar(255) DEFAULT NULL,
   `AcFlag` varchar(255) DEFAULT NULL,
   `CreatedBy` varchar(255) DEFAULT NULL,
   `CreatedByName` varchar(255) DEFAULT NULL,
@@ -2677,13 +2762,14 @@ CREATE TABLE `MCompanies` (
 --
 
 INSERT INTO `MCompanies` (`CompanyId`, `CompanySectorId`, `CompanySector`, `CompanyName`, `ShortName`, `NatureOfBusiness`, `Logo`, `AcFlag`, `CreatedBy`, `CreatedByName`, `ModifiedBy`, `ModifiedByName`, `IUFlag`, `Status`, `SingleCompany`, `CreatedOn`, `ModifiedOn`, `FieldId`, `FieldName`, `createdAt`, `updatedAt`) VALUES
-('00001', 7, 'Automation', 'SysTech Solutions', 'SYS', 'B2B', '', 'Y', 'Admin', '', NULL, '', 'U', NULL, 'true', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '', '2023-12-28 17:42:18', '2023-12-30 16:54:22'),
-('00002', 2, 'Healthcare', 'HealTech', 'HTC', 'SaaS', '', 'Y', 'Admin', '', NULL, '', 'I', NULL, 'true', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '', '2023-12-28 17:42:51', '2023-12-28 17:42:51'),
-('00003', 3, 'Electrical Automation', '5S Innovations LLP', '5SL', 'B2B', '', 'Y', 'Admin', '', NULL, '', 'I', NULL, 'false', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '', '2023-12-28 17:43:31', '2023-12-28 17:43:31'),
-('00004', 6, 'Sector', 'Test Company update', 'TSCU', 'B2B', '', 'N', 'Admin', '', 'Admin', '', 'U', NULL, 'true', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '', '2023-12-30 09:17:00', '2023-12-30 09:18:55'),
-('00005', 25, 'Business', 'Company', 'CPC', 'B2B', 0x433a5c66616b65706174685c737973746563686c6f676f2e706e67, 'Y', 'Admin', '', NULL, '', 'U', NULL, 'true', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '', '2023-12-30 16:57:05', '2023-12-31 07:08:28'),
+('00001', 58, 'Automation', 'SysTech Solutions', 'SYS', 'B2B', 'image_1705203560859.png', 'Y', 'Admin', '', NULL, '', 'U', NULL, 'true', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '', '2023-12-28 17:42:18', '2024-01-14 03:39:20'),
+('00002', 39, 'Healthcare', 'HealTech', 'HTC', 'SaaS', 'image_1705204807665.png', 'Y', 'Admin', '', NULL, '', 'U', NULL, 'true', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '', '2023-12-28 17:42:51', '2024-01-14 04:00:07'),
+('00003', 38, 'Electrical Automation', '5S Innovations LLP', '5SL', 'B2B', 'image_1705204881185.png', 'Y', 'Admin', '', NULL, '', 'U', NULL, 'false', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '', '2023-12-28 17:43:31', '2024-01-14 04:01:21'),
+('00004', 6, 'Sector', 'Test Company update', 'TSCU', 'B2B', NULL, 'N', 'Admin', '', 'Admin', '', 'U', NULL, 'true', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '', '2023-12-30 09:17:00', '2023-12-30 09:18:55'),
+('00005', 36, 'Business', 'Company', 'CPC', 'B2B', NULL, 'Y', 'Admin', '', NULL, '', 'U', NULL, 'true', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '', '2023-12-30 16:57:05', '2024-01-13 18:35:52'),
 ('00006', 16, 'Sector', 'Test Company', 'TSC', 'Business', NULL, 'N', 'Admin', '', NULL, '', 'I', NULL, '0', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '', '2023-12-31 06:06:20', '2023-12-31 06:06:55'),
-('00007', 17, 'Sector', 'Test', 'TST', 'Business', NULL, 'N', 'Admin', '', NULL, '', 'I', NULL, '0', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '', '2023-12-31 06:07:15', '2023-12-31 06:31:48');
+('00007', 17, 'Sector', 'Test', 'TST', 'Business', NULL, 'N', 'Admin', '', NULL, '', 'I', NULL, '0', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '', '2023-12-31 06:07:15', '2023-12-31 06:31:48'),
+('00008', 26, 'Sector', 'Test Company', 'TSC', 'Business', NULL, 'N', 'Admin', '', NULL, '', 'I', NULL, 'true', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '', '2024-01-13 16:36:13', '2024-01-13 16:39:53');
 
 --
 -- Triggers `MCompanies`
@@ -3167,7 +3253,7 @@ CREATE TABLE `MEmployees` (
   `ReligionId` varchar(50) DEFAULT NULL,
   `CategoryId` varchar(50) DEFAULT NULL,
   `CasteId` varchar(50) DEFAULT NULL,
-  `EmployeePhoto` blob DEFAULT NULL,
+  `EmployeePhoto` varchar(255) DEFAULT NULL,
   `Gender` varchar(10) DEFAULT NULL,
   `BloodGroup` varchar(10) DEFAULT NULL,
   `DrivingLicence` blob DEFAULT NULL,
@@ -3185,10 +3271,10 @@ CREATE TABLE `MEmployees` (
 --
 
 INSERT INTO `MEmployees` (`CompanyId`, `BranchId`, `EmployeeTypeId`, `EmployeeId`, `EmployeeName`, `EmployeeTypeGroupId`, `Salutation`, `LastName`, `FirstName`, `MiddleName`, `MEmployeeName`, `AadharCardNo`, `PANNo`, `PassportNo`, `PassportIssueDate`, `PassportExpireDate`, `CurrentAddress`, `CurrentPincode`, `PermanentAddress`, `PermanentPincode`, `DOB`, `EmailId1`, `EmailId2`, `PhoneNo`, `CellNo1`, `CellNo2`, `BankId1`, `AccountNo1`, `IFSCCode1`, `BankId2`, `AccountNo2`, `IFSCCode2`, `MaritalStatus`, `ReferenceId`, `DestinationId`, `ReligionId`, `CategoryId`, `CasteId`, `EmployeePhoto`, `Gender`, `BloodGroup`, `DrivingLicence`, `FinanceAccountNo`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
-('00001', '00001', '001', 1, 'Charles Leclerc', 'Staff', 'Dear [Mr./Ms./Dr.] [Last Name]', 'Leclerc', 'Charles', 'Perceval ', '', '', '', '', '2023-12-26', '2023-12-25 00:00:00', 'Pune', '463526', 'Monaco', '737472', '1999-09-27', '4984984', '984984984984', '988977894', '98498498', '498498498', '984984', '98498498', '4984984984', '984984984', '984984984', '98498498', 'Unmarried', 'Supervisor/Manager References', 'Destination', 'Religion 1', 'Category 2', 'Caste 1', 0x5b6f626a656374204f626a6563745d, 'Male', 'A-', 0x5b6f626a656374204f626a6563745d, '', '', 'Y', '', '', '', ''),
-('00001', '00001', '004', 2, 'Bruce  Wayne', 'Worker', 'Dear [Mr./Ms./Dr.] [Last Name]', 'Wayne', 'Bruce ', 'Thomas', '', '', '', '', '', NULL, 'Pune', '843747', '', '', '2023-12-04', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0x5b6f626a656374204f626a6563745d, '', '', 0x5b6f626a656374204f626a6563745d, '', '', 'Y', '', '', '', ''),
-('00001', '00001', '005', 3, 'Udayan Gaikwad', 'Worker', 'Sir/Madam', 'Gaikwad', 'Udayan', 'Fathesingh', '', '', '', '', '', NULL, 'Brahma Avenue, Kondhwa, Pune', '843747', 'Pune', '411048', '', 'udayanfg@gmail.com', 'udayanfg@gmail.com', '07219629734', '123123123', '', '', '', '', '', '', '', '', '', '', '', '', '', 0x5b6f626a656374204f626a6563745d, '', '', 0x5b6f626a656374204f626a6563745d, '', '', 'Y', '', '', '', ''),
-('00001', '00001', '001', 4, 'Harshvardhan Reddy', 'Staff', 'Dear [Mr./Ms./Dr.] [Last Name]', 'Reddy', 'Harshvardhan', 'James', '', '', '', '', '', '0000-00-00 00:00:00', '', '', '', '', '1991-06-12', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'N', '', '', '', ''),
+('00001', '00001', '001', 1, 'Charles Leclerc', 'Staff', 'Dear [Mr./Ms./Dr.] [Last Name]', 'Leclerc', 'Charles', 'Perceval ', '', '', '', '', '2023-12-26', '2023-12-25 00:00:00', 'Pune', '463526', 'Monaco', '737472', '1999-09-27', '4984984', '984984984984', '988977894', '98498498', '498498498', '984984', '98498498', '4984984984', '984984984', '984984984', '98498498', 'Unmarried', 'Supervisor/Manager References', 'Destination', 'Religion 1', 'Category 2', 'Caste 1', 'image_1705205736234.png', 'Male', 'A-', 0x5b6f626a656374204f626a6563745d, '', '', 'Y', '', '', '', ''),
+('00001', '00001', '004', 2, 'Bruce  Wayne', 'Worker', 'Dear [Mr./Ms./Dr.] [Last Name]', 'Wayne', 'Bruce ', 'Thomas', '', '', '', '', '', NULL, 'Pune', '843747', '', '', '2023-12-04', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', NULL, '', '', 0x5b6f626a656374204f626a6563745d, '', '', 'Y', '', '', '', ''),
+('00001', '00001', '005', 3, 'Udayan Gaikwad', 'Worker', 'Sir/Madam', 'Gaikwad', 'Udayan', 'Fathesingh', '', '', '', '', '', NULL, 'Brahma Avenue, Kondhwa, Pune', '843747', 'Pune', '411048', '', 'udayanfg@gmail.com', 'udayanfg@gmail.com', '07219629734', '123123123', '', '', '', '', '', '', '', '', '', '', '', '', '', NULL, '', '', 0x5b6f626a656374204f626a6563745d, '', '', 'Y', '', '', '', ''),
+('00001', '00001', '001', 4, 'Harshvardhan Reddy', 'Staff', 'Dear [Mr./Ms./Dr.] [Last Name]', 'Reddy', 'Harshvardhan', 'James', '', '', '', '', '', '0000-00-00 00:00:00', '', '', '', '', '1991-06-12', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', NULL, '', '', '', '', '', 'N', '', '', '', ''),
 ('00001', '00001', '001', 5, 'Max Verstappen', 'Staff', NULL, 'Verstappen', 'Max', 'Jos', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', NULL, NULL, NULL, NULL),
 ('00001', '00001', '001', 6, 'Sergio Perez', 'Staff', NULL, 'Perez', 'Sergio', 'Checo', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', NULL, NULL, NULL, NULL),
 ('00001', '00001', '001', 7, 'Sergio Romero', 'Staff', NULL, 'Romero', 'Sergio', 'Checo', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', NULL, NULL, NULL, NULL);
@@ -4216,7 +4302,7 @@ INSERT INTO `Users` (`id`, `name`, `username`, `password`, `role`, `createdAt`, 
 -- Indexes for table `CompanyConfigs`
 --
 ALTER TABLE `CompanyConfigs`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`CCID`);
 
 --
 -- Indexes for table `EDImports`
@@ -4467,7 +4553,7 @@ ALTER TABLE `Users`
 -- AUTO_INCREMENT for table `CompanyConfigs`
 --
 ALTER TABLE `CompanyConfigs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `CCID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `EDImports`
