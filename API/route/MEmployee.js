@@ -3,6 +3,8 @@ const bodyParser = require("body-parser");
 const { Sequelize, DataTypes } = require("sequelize");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
+const multer = require("multer");
+const path = require("path");
 
 const authToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
@@ -86,7 +88,7 @@ const MEmployee = sequelize.define(
     ReligionId: { type: DataTypes.STRING(50), allowNull: true },
     CategoryId: { type: DataTypes.STRING(50), allowNull: true },
     CasteId: { type: DataTypes.STRING(50), allowNull: true },
-    EmployeePhoto: { type: DataTypes.BLOB, allowNull: true },
+    EmployeePhoto: { type: DataTypes.STRING, allowNull: true },
     Gender: { type: DataTypes.STRING(10), allowNull: true },
     BloodGroup: { type: DataTypes.STRING(10), allowNull: true },
     DrivingLicence: { type: DataTypes.BLOB, allowNull: true },
@@ -190,6 +192,49 @@ router.get("/FnShowImageData", authToken, async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null,'public/employee-photo')
+  },
+  filename: (req, file, cb) =>{
+    cb(null, file.fieldname + "_" + Date.now() + path.extname(file.originalname))
+  }
+})
+
+const upload = multer({
+  storage: storage
+})
+
+router.post("/upload", authToken, upload.single('image'), authToken, async (req, res) => {
+  try {
+    const image = req.file.filename;
+    // Update the record in the MCompany table using Sequelize
+    await MEmployee.update({ EmployeePhoto: image }, { where: { EmployeeId: req.query.EmployeeId } });
+
+    return res.json({ Status: 'Success' });
+  } catch (error) {
+    console.error(error);
+    return res.json({ Message: 'Error' });
+  }
+});
+
+router.get('/get-upload', authToken, async (req, res) => {
+  const employeeId = req.query.EmployeeId;
+  try {
+    const employees = await MEmployee.findOne({
+      where: {
+        EmployeeId: employeeId,
+      },
+      attributes: ["EmployeePhoto"],
+      order: [["EmployeeId", "ASC"]],
+    });
+    res.json(employees);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+})
 
 router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
   const employee = req.body; // Access the EmployeeId from query parameters

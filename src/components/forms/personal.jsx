@@ -39,6 +39,7 @@ export const EmployeeTypeProvider = ({ children }) => {
 
 export default function Personal({ ID }) {
   const { token } = useAuth();
+  const [uploadedImage, setUploadedImage] = useState(null)
   const [details, setdetails] = useState([]);
   const { employeeTypeId, setEmployeeTypeId } = useEmployeeType();
   const [LeaveTypes, setLeaveTypes] = useState([]);
@@ -410,19 +411,64 @@ export default function Personal({ ID }) {
   const blob = new Blob([employeePhoto], { type: "image/jpeg" }); // Assuming a JPEG image
   const url = URL.createObjectURL(blob);
 
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setUploadedImage(file)
+  };
+
+  const handleUpload = () =>{
+    const formdata = new FormData()
+    formdata.append('image', uploadedImage)
+    try {
+      const response = axios.post('http://localhost:5500/employee/personal/upload', formdata,
+      {
+        params:{ EmployeeId: ID},
+        headers:{ Authorization: `Bearer ${token}`}
+      })
+      if (response.status === 200) alert('Logo Uploaded')
+      else alert('Logo Upload Failed, Please refresh and try again') 
+    } catch (error) {
+      console.error('Error', error);
+    }
+  }
+
+    const [previewImage, setPreviewImage] = useState(null);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+  
+    if (file) {
+      const reader = new FileReader();
+  
+      reader.onload = (event) => {
+        setPreviewImage(event.target.result);
+      };
+  
+      reader.readAsDataURL(file);
+    }
+  };
+
+  useEffect(() =>{
+    const fetchLogo = async () =>{
+      try {
+        const response = await axios.get('http://localhost:5500/employee/personal/get-upload',{
+          params: {EmployeeId: ID},  
+          headers: {Authorization: `Bearer ${token}`}
+        })
+        const data = response.data
+        console.log('Image Data', data)
+        setPreviewImage(`http://localhost:5500/employee-photo/${data.EmployeePhoto}`)
+
+      } catch (error) {
+        console.error('Error')
+      }
+    }
+    fetchLogo()
+  },[details, token])
+
   return (
     <form onSubmit={formik.handleSubmit}>
       <div className="p-0 font-[Inter] ">
-        <div className="flex">
-          <div className="ml-auto mr-[13%]">
-            {employeePhoto && (
-              <img
-                src={`data:image/jpeg;base64,${employeePhoto}`}
-                alt="Employee Photo"
-              />
-            )}
-          </div>
-        </div>
         <div className="p-4 bg-white">
           <div className="grid grid-cols-3 gap-x-4">
             <div className="py-1 top-8">
@@ -457,19 +503,37 @@ export default function Personal({ ID }) {
                 ))}
               </select>
             </div>
-            <div className="py-1">
-              <p className="mb-1 capitalize font-semibold text-[13px] top-2 ">
-                Employee Photo
-              </p>
-              <input
-                id="EmployeePhoto"
-                type="file"
-                placeholder="Upload File"
-                className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
-                onChange={handlePhotoChange}
-              />
-            </div>
+            <div>
+                <p className="capitalize font-semibold text-[13px]">Employee Photo</p>
+                <input
+                  id="EmployeePhoto"
+                  type="file"
+                  placeholder="Upload File"
+                  onChange={(e) => {
+                    handleFileChange(e)
+                    handleImageChange(e);
+                  }}
+                  className="w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px]"
+                />
 
+                {previewImage && (
+                  <div className="mt-4">
+                    <p className="font-semibold text-[13px]">Current Employee Photo Preview:</p>
+                    <img
+                      src={previewImage}
+                      alt="Preview"
+                      className="w-32 h-32 object-cover border border-gray-300 rounded-lg mt-2"
+                    />
+                  </div>
+                )}
+                <button
+                type="button"
+                onClick={handleUpload}
+                className="bg-blue-900 text-white font-semibold rounded-lg w-24 h-8 mt-2 text-[11px] hover:bg-white hover:text-black hover:ease-linear"
+              >
+                Upload Employee Photo
+              </button>
+              </div>
             <div className="py-1">
               <p className="mb-1 font-semibold text-[13px]">Salutation</p>
               <select
