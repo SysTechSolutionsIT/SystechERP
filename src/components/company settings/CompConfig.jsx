@@ -143,14 +143,15 @@ export default function EMPTabs() {
     const fetchCompanyConfig = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5500/company-config/FnShowAllData`,
+          `http://localhost:5500/company-config/FnShowParticularData`,
           {
+            params: { CompanyId: "00001" },
             headers: {
               Authorization: `Bearer ${token}`,
             },
           }
         );
-        const data = response.data;
+        const data = response.data[0];
         setDetails(data);
         console.log(data);
       } catch (error) {
@@ -163,44 +164,12 @@ export default function EMPTabs() {
 
   useEffect(() => {
     if (details) {
-      formik.setValues({
-        currency: details?.currency,
-        theme: details?.theme,
-        date: details?.date,
-        sessionTM: details?.sessionTM,
-        remarks: details?.remarks,
-        status: details?.status,
-        empID: details?.empID,
-        cmulti: details?.cmulti,
-        att: details?.att,
-        atProcess: details?.atProcess,
-        atap: details?.atap,
-        shiftFlag: details?.shiftFlag,
-        jobApp: details?.jobApp,
-        holiday: details?.holiday,
-        odFlag: details?.odFlag,
-        otFlag: details?.otFlag,
-        LAFlag: details?.LAFlag,
-        otCalc: details?.otCalc,
-        esicSal: details?.esicSal,
-        pfSal: details?.pfSal,
-        gratuity: details?.gratuity,
-        mlwf1: details?.mlwf1,
-        mlwf2: details?.mlwf2,
-        salLock: details?.salLock,
-        minWages: details?.minWages,
-        remarks1: details?.remarks1,
-        salstat: details?.salstat,
-        email: details?.email,
-        smtpHost: details?.smtpHost,
-        sender: details?.sender,
-        username: details?.username,
-        password: details?.password,
-        message: details?.message,
-        smsUrl: details?.smsUrl,
-        sms: details?.sms,
-      });
+      const sanitizedDetails = Object.fromEntries(
+        Object.entries(details).map(([key, value]) => [key, value || ""])
+      );
+      formik.setValues(sanitizedDetails);
     }
+    console.log("formik.values:", formik.values);
   }, [details]);
 
   console.log("Details", details);
@@ -381,9 +350,8 @@ export default function EMPTabs() {
                         Currency
                       </label>
                       <select
-                        id=""
-                        currency
                         name="currency"
+                        disabled={!edit}
                         className="text-[11px] w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
                         value={formik.values.currency}
                         onChange={formik.handleChange}
@@ -393,7 +361,7 @@ export default function EMPTabs() {
                           currencies.map((currency) => (
                             <option
                               key={currency.FieldId}
-                              value={currency.FieldId}
+                              value={currency.FieldDetails}
                             >
                               {currency.FieldDetails}
                             </option>
@@ -446,9 +414,8 @@ export default function EMPTabs() {
                         Session Timeout
                       </p>
                       <input
-                        id="sessioinTM"
                         type="number"
-                        name="sessionTM"
+                        id="sessionTM"
                         value={formik.values.sessionTM}
                         className={`w-full text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
                         onChange={formik.handleChange}
@@ -463,40 +430,12 @@ export default function EMPTabs() {
                       </p>
                       <input
                         id="remarks"
-                        name="remarks"
                         type="text"
                         value={formik.values.remarks}
                         className={`text-[13px] w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg`}
                         onChange={formik.handleChange}
                         disabled={!edit}
                       />
-                    </div>
-                    <div className="w-1/2">
-                      <p className="mb-3 capitalize font-semibold text-[13px]">
-                        Status
-                      </p>
-                      <div className="flex items-center text-[13px]">
-                        <input
-                          type="checkbox"
-                          id="status"
-                          name="status"
-                          className="form-checkbox h-5 w-5 text-blue-600"
-                          checked={formik.values.status}
-                          onChange={(event) =>
-                            handleCheckboxChange(
-                              "status",
-                              setStatusChecked,
-                              event
-                            )
-                          }
-                        />
-                        <label
-                          htmlFor="activeCheckbox"
-                          className="ml-2 text-gray-700 text-[13px]"
-                        >
-                          Active
-                        </label>
-                      </div>
                     </div>
                   </div>
                 </div>

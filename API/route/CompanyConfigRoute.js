@@ -48,7 +48,7 @@ const CompanyConfig = sequelize.define("CompanyConfig", {
   },
   currency: { type: DataTypes.STRING, allowNull: true },
   theme: { type: DataTypes.STRING, allowNull: true },
-  date: { type: DataTypes.DATEONLY, allowNull: true },
+  date: { type: DataTypes.STRING, allowNull: true },
   sessionTM: { type: DataTypes.STRING, allowNull: true },
   remarks: { type: DataTypes.STRING, allowNull: true },
   status: { type: DataTypes.STRING, allowNull: true },
@@ -136,11 +136,11 @@ router.get("/FnShowAllData", authToken, async (req, res) => {
 
 // GET endpoint to retrieve a particular cost center by ID
 router.get("/FnShowParticularData", authToken, async (req, res) => {
-  const CCID = req.query.CCID;
+  const CompanyId = req.query.CompanyId;
   try {
     const Records = await CompanyConfig.findAll({
       where: {
-        CCID: CCID,
+        CompanyId: CompanyId,
       },
       attributes: {
         exclude: ["IUFlag"],
