@@ -145,15 +145,17 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
   const handleUpload = () =>{
     const formdata = new FormData()
     formdata.append('image', uploadedImage)
-    axios.post('http://localhost:5500/companies/upload', formdata, {
-    params: {CompanyId: ID},  
-    headers: {Authorization: `Bearer ${token}`}
-    })
-    .then(res=> {
-      console.log(res)
-      alert('Logo Uploaded')
-    } )
-    .catch(err => console.error(err))
+    try {
+      const response = axios.post('http://localhost:5500/companies/upload', formdata,
+      {
+        params:{ CompanyId: ID},
+        headers:{ Authorization: `Bearer ${token}`}
+      })
+      if (response.messagen === 'Success') alert('Logo Uploaded')
+      else alert('Logo Upload Failed, Please refresh and try again') 
+    } catch (error) {
+      console.error('Error', error);
+    }
   }
 
     const [previewImage, setPreviewImage] = useState(null);
@@ -181,16 +183,16 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
           params: {CompanyId: ID},  
           headers: {Authorization: `Bearer ${token}`}
         })
-        const data = response.data.Logo
-        console.log('Image Data', data.Logo)
-        setPreviewImage(`http://localhost:5500/company-logo/${data}`)
+        const data = response.data
+        console.log('Image Data', data)
+        setPreviewImage(`http://localhost:5500/company-logo/${data.Logo}`)
 
       } catch (error) {
         console.error('Error')
       }
     }
     fetchLogo()
-  },[details])
+  },[details, token])
 
   if (!visible) return null;
   return (
@@ -206,8 +208,8 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
               color="white"
               className="cursor-pointer"
               onClick={() => {
+                onClick()
                 setPreviewImage(null)
-                onClick
               }} 
               width="24"
               height="24"
@@ -309,7 +311,7 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                 )}
                 <button
                 type="button"
-                onClick={() => handleUpload()}
+                onClick={handleUpload}
                 className="bg-blue-900 text-white font-semibold rounded-lg w-24 h-8 mt-2 text-[11px] hover:bg-white hover:text-black hover:ease-linear"
               >
                 Upload Logo
@@ -364,8 +366,8 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
               <button
                 className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg w-36"
                 onClick={() => {
+                  onClick()
                   setPreviewImage(null)
-                  onClick
                 }} 
               >
                 Close

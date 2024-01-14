@@ -32,7 +32,7 @@ const CompanyModal = ({ visible, onClick }) => {
     },
     onSubmit: async (values) => {
       console.log(values);
-      // addCompany(values);
+      addCompany(values);
     },
   });
 
