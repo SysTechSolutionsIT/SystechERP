@@ -158,16 +158,25 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
 router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
   const Record = req.body;
   try {
-    // Add or update operation
-    const result = await CompanyConfig.upsert(Record, {
-      returning: true,
-    });
-
-    res.json({
-      message: result ? "Operation successful" : "Operation failed",
-    });
+    if (Record.IUFlag === "D") {
+      // "Soft-delete" operation
+      const result = await CompanyConfig.update(
+        { AcFlag: "N" },
+        { where: { CCID: Record.CCID } }
+      );
+      res.json({
+        message: result[0] ? "Record Deleted Successfully" : "Record Not Found",
+      });
+    } else {
+      const result = await CompanyConfig.upsert(Record, {
+        returning: true,
+      });
+      res.json({
+        message: result ? "Operation successful" : "Operation failed",
+      });
+    }
   } catch (error) {
-    console.error("Error performing operation:", error);
+    console.error("Error retrieving data:", error);
     res.status(500).send("Internal Server Error");
   }
 });

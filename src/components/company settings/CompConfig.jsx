@@ -7,6 +7,7 @@ export default function EMPTabs() {
   const [openTab, setOpenTab] = React.useState(1);
   const [details, setDetails] = useState([]);
   const [edit, setEdit] = useState(false);
+  const [ccid, setCCID] = useState();
   const [detailsId, setDetailsId] = useState("");
   const { token } = useAuth();
 
@@ -49,12 +50,15 @@ export default function EMPTabs() {
       message: "",
       smsUrl: "",
       sms: "",
-      IUFlag: "I",
+      IUFlag: "U",
     },
     onSubmit: (values) => {
       console.log(values);
 
       const updatedData = {
+        CompanyId: "00001",
+        BranchId: "00001",
+        CCID: ccid,
         currency: values.currency,
         theme: values.theme,
         date: values.date,
@@ -153,6 +157,7 @@ export default function EMPTabs() {
         );
         const data = response.data[0];
         setDetails(data);
+        setCCID(details.CCID);
         console.log(data);
       } catch (error) {
         console.log("Error in fetching Company Configurations", error);
@@ -161,6 +166,7 @@ export default function EMPTabs() {
 
     fetchCompanyConfig();
   }, [token]);
+  console.log("CCID: ", ccid);
 
   useEffect(() => {
     if (details) {
