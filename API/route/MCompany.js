@@ -3,6 +3,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const { Sequelize, DataTypes } = require("sequelize");
+const multer = require("multer");
+const path = require("path");
 
 // Create an Express router
 const router = express.Router();
@@ -43,7 +45,7 @@ const MCompany = sequelize.define("MCompany", {
   CompanyName: DataTypes.STRING,
   ShortName: DataTypes.STRING,
   NatureOfBusiness: DataTypes.STRING,
-  Logo: DataTypes.BLOB,
+  Logo: DataTypes.STRING,
   AcFlag: DataTypes.STRING,
   CreatedBy: DataTypes.STRING,
   CreatedByName: DataTypes.STRING,
@@ -174,7 +176,61 @@ const generateCompanyId = async (req, res, next) => {
   }
 };
 
-// POST endpoint to add, update, or "soft-delete" a company
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "public/company-logo");
+  },
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      file.fieldname + "_" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
+
+const upload = multer({
+  storage: storage,
+});
+
+router.post(
+  "/upload",
+  authToken,
+  upload.single("image"),
+  authToken,
+  async (req, res) => {
+    try {
+      const image = req.file.filename;
+      // Update the record in the MCompany table using Sequelize
+      await MCompany.update(
+        { Logo: image },
+        { where: { CompanyId: req.query.CompanyId } }
+      );
+
+      return res.json({ Status: "Success" });
+    } catch (error) {
+      console.error(error);
+      return res.json({ Message: "Error" });
+    }
+  }
+);
+
+router.get("/get-upload", authToken, async (req, res) => {
+  const companyId = req.query.CompanyId;
+  try {
+    const companies = await MCompany.findOne({
+      where: {
+        CompanyId: companyId,
+      },
+      attributes: ["Logo"],
+      order: [["CompanyId", "ASC"]],
+    });
+    res.json(companies);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 router.post(
   "/FnAddUpdateDeleteRecord",
   generateCompanyId,
@@ -183,7 +239,6 @@ router.post(
     const company = req.body;
     try {
       if (company.IUFlag === "D") {
-        // "Soft-delete" operation
         const result = await MCompany.update(
           { AcFlag: "N" },
           { where: { CompanyId: company.CompanyId } }
@@ -195,7 +250,6 @@ router.post(
             : "Record Not Found",
         });
       } else {
-        // Add or update operation
         const result = await MCompany.upsert(company, {
           returning: true,
         });
@@ -210,6 +264,4 @@ router.post(
     }
   }
 );
-
-// Export the router
 module.exports = router;
