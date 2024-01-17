@@ -29,7 +29,7 @@ const AddEmployee = ({ visible, onClick }) => {
           <li className="flex items-center -mb-px mr-2 ml-2 cursor-pointer">
             <p
               className={
-                "inline-block p-0 py-1 px-1.5 text-s font-bold text-blue-900 bg-white rounded-lg active"
+                "inline-block p-0 py-2 px-2 text-s font-bold text-white bg-blue-900 rounded-lg active"
               }
               onClick={(e) => {
                 e.preventDefault();
