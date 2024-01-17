@@ -8,6 +8,7 @@ import SalaryStructure from "../forms/salary";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../Login";
+import Documents from "../forms/docs";
 // import { useEmployeeData } from "./EmployeeMaster";
 
 export default function EMPTabs() {
@@ -211,7 +212,9 @@ export default function EMPTabs() {
                 </div>
 
                 {/* Documents Tab */}
-                <div className={openTab === 7 ? "block" : "hidden"}>Docs</div>
+                <div className={openTab === 7 ? "block" : "hidden"}>
+                  <Documents ID={employeeId} name={name} />
+                </div>
               </div>
             </div>
           </div>

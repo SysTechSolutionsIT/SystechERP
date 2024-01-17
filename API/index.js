@@ -49,14 +49,15 @@ const MCaderwiseDeduction = require("./route/MCaderwiseDeduction");
 const MDevice = require("./route/MDeviceRoute");
 const TManualAttendance = require("./route/TManualAttendance");
 const MGatePass = require("./route/MGatePass");
-const HandleImage = require('./route/HandleImage')
+const HandleImage = require("./route/HandleImage");
 const MLeaves = require("./route/MLeaves");
 const MTwoField = require("./route/MTwoField");
 const MMasterName = require("./route/MMasterName");
+const EmpDocs = require("./route/MEmployeeDocs");
 
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());
-app.use(express.static('public'))
+app.use(express.static("public"));
 // Use the user routes
 app.use("/users", userRoutes);
 app.use("/companies", MCompany);
@@ -67,6 +68,7 @@ app.use("/employee/salary", MEmployeeSalary);
 app.use("/employee/professional", MEmployeeProfessional);
 app.use("/employee/academic", MEmployeeAcademic);
 app.use("/employee/family", MEmployeeFamily);
+app.use("/employee/documents", EmpDocs);
 app.use("/company-config", CompConfig);
 app.use("/bankmaster", BankMaster);
 app.use("/departmentmaster", MDepartment);
