@@ -296,12 +296,13 @@ export default function AddEmployeePersonal() {
               <input
                 id="EmployeeId"
                 type="text"
+                placeholder="Auto Generated"
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg `}
                 disabled={true}
               />
             </div>
             <div className="py-1">
-              <p className="mb-1 font-semibold text-[13px]">Employee Type</p>
+              <p className="mb-1 font-semibold text-[13px]">Employee Type *</p>
               <select
                 id="EmployeeTypeId"
                 name="EmployeeTypeId"
@@ -330,7 +331,7 @@ export default function AddEmployeePersonal() {
             </div>
 
             <div className="py-1">
-              <p className="mb-1 font-semibold text-[13px]">Salutation</p>
+              <p className="mb-1 font-semibold text-[13px]">Salutation *</p>
               <select
                 id="Salutation"
                 name="Salutation"
@@ -360,7 +361,7 @@ export default function AddEmployeePersonal() {
 
             <div className="py-1">
               <p className="mb-1 font-semibold text-[13px]">
-                Employee Type Group
+                Employee Type Group *
               </p>
               <select
                 id="EmployeeTypeGroupId"
@@ -376,7 +377,7 @@ export default function AddEmployeePersonal() {
             </div>
             <div className="py-1">
               <p className="mb-1 capitalize  font-semibold text-[13px]">
-                Date of Birth
+                Date of Birth *
               </p>
               <input
                 id="DOB"
@@ -388,7 +389,7 @@ export default function AddEmployeePersonal() {
             </div>
             <div className="py-1">
               <p className="mb-1 capitalize font-semibold text-[13px]">
-                First Name
+                First Name *
               </p>
               <input
                 id="FirstName"
@@ -400,7 +401,7 @@ export default function AddEmployeePersonal() {
             </div>
             <div className="py-1">
               <p className="mb-1 capitalize font-semibold text-[13px]">
-                Middle Name
+                Middle Name *
               </p>
               <input
                 id="MiddleName"
@@ -412,7 +413,7 @@ export default function AddEmployeePersonal() {
             </div>
             <div className="py-1">
               <p className="mb-1 capitalize font-semibold text-[13px]">
-                Last Name
+                Last Name *
               </p>
               <input
                 id="LastName"

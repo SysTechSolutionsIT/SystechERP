@@ -10,6 +10,7 @@ import axios from "axios";
 import { useAuth } from "../Login";
 import { useFormik } from "formik";
 import AddEmployeePersonal from "./AddEmployeePersonal";
+import { Icon } from "@iconify/react";
 
 const AddEmployee = ({ visible, onClick }) => {
   const [openTab, setOpenTab] = React.useState(1);
@@ -22,133 +23,37 @@ const AddEmployee = ({ visible, onClick }) => {
        <div className="fixed overflow-y-scroll inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center w-full h-full">
         <div className="bg-none h-full p-2 rounded-lg">
 
-      <div className="flex font-[Inter] justify-center relative top-[0px]">
+      <div className="flex font-[Inter] justify-center relative top-[20px]">
         <div>
           <ul className="flex mb-0 list-none flex-wrap pt-0 pb-4 flex-row border-b-2 border-blue-900">
-            <li className="-mb-px mr-2 ml-2 cursor-pointer">
-              <p
-                className={
-                  "inline-block p-0 py-1 px-1.5 text-white " +
-                  (openTab === 1
-                    ? "text-s font-bold  text-white bg-blue-900 rounded-lg active"
-                    : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg font-semibold")
-                }
-                onClick={(e) => {
-                  e.preventDefault();
-                  setOpenTab(1);
-                }}
-              >
-                Personal Profile
-              </p>
-            </li>
-            <li className="-mb-px mr-2 ml-2 cursor-pointer">
-              <p
-                className={
-                  "inline-block p-0 py-1 px-1.5 rounded-lg text-white " +
-                  (openTab === 2
-                    ? "text-s font-bold  text-white bg-blue-900 rounded-lg active"
-                    : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg font-semibold")
-                }
-                onClick={(e) => {
-                  e.preventDefault();
-                  setOpenTab(2);
-                }}
-              >
-                Work Profile
-              </p>
-            </li>
-            <li className="-mb-px mr-2 cursor-pointer">
-              <p
-                className={
-                  "inline-block p-0 py-1 px-1.5 rounded-lg text-white " +
-                  (openTab === 3
-                    ? "text-s font-bold  text-white bg-blue-900 rounded-lg active"
-                    : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg font-semibold")
-                }
-                onClick={(e) => {
-                  e.preventDefault();
-                  setOpenTab(3);
-                }}
-              >
-                Salary Structure
-              </p>
-            </li>
-            <li className="-mb-px mr-2 cursor-pointer">
-              <p
-                className={
-                  "inline-block p-0 py-1 px-1.5 rounded-lg text-white " +
-                  (openTab === 4
-                    ? "text-s font-bold  text-white bg-blue-900 rounded-lg active"
-                    : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg font-semibold")
-                }
-                onClick={(e) => {
-                  e.preventDefault();
-                  setOpenTab(4);
-                }}
-              >
-                Professional Profile
-              </p>
-            </li>
-            <li className="-mb-px mr-2 cursor-pointer">
-              <p
-                className={
-                  "inline-block p-0 py-1 px-1.5 rounded-lg text-white " +
-                  (openTab === 5
-                    ? "text-s font-bold  text-white bg-blue-900 rounded-lg active"
-                    : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg font-semibold")
-                }
-                onClick={(e) => {
-                  e.preventDefault();
-                  setOpenTab(5);
-                }}
-              >
-                Academic Profile
-              </p>
-            </li>
-            <li className="-mb-px mr-2 cursor-pointer">
-              <p
-                className={
-                  "inline-block p-0 py-1 px-1.5 rounded-lg text-white " +
-                  (openTab === 6
-                    ? "text-s font-bold uppercase text-white bg-blue-900 rounded-lg active"
-                    : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg font-semibold")
-                }
-                onClick={(e) => {
-                  e.preventDefault();
-                  setOpenTab(6);
-                }}
-              >
-                Family Profile
-              </p>
-            </li>
-            <li className="-mb-px mr-2 cursor-pointer">
-              <p
-                className={
-                  "inline-block p-0 py-1 px-1.5 rounded-lg text-white " +
-                  (openTab === 7
-                    ? "text-s font-bold uppercase text-white bg-blue-900 rounded-lg active"
-                    : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg font-semibold")
-                }
-                onClick={(e) => {
-                  e.preventDefault();
-                  setOpenTab(7);
-                }}
-              >
-                Documents
-              </p>
-            </li>
+          <li className="flex items-center -mb-px mr-2 ml-2 cursor-pointer">
+            <p
+              className={
+                "inline-block p-0 py-1 px-1.5 text-s font-bold text-blue-900 bg-white rounded-lg active"
+              }
+              onClick={(e) => {
+                e.preventDefault();
+                setOpenTab(1);
+              }}
+            >
+              Add a New Employee (Please fill the fields marked with * )
+            </p>
+          </li>
             <li>
-            <div className="flex gap-4">
-          <button
-            className="flex text-[15px] py-1 bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap"
-            onClick={onClick}
-          >
-            Close
-          </button>
-        </div>
+            <div className="flex gap-4 absolute top-0 right-0">
+              <button
+                className="flex text-[15px] py-3 bg-red-600 text-blue-900  hover:bg-red-900 hover:text-white duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap"
+                onClick={onClick}
+              >
+                <Icon
+                  icon="maki:cross"
+                  className="cursor-pointer text-white hover:text-white duration-200"
+                  width="15" height="15"
+                  />
+              </button>
+            </div>
             </li>
           </ul>
-          
           <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded-xl">
             <div className="px-4 py-5 flex-auto">
               <div className="tab-content tab-space">
