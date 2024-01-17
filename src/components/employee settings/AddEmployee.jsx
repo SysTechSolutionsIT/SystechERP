@@ -21,12 +21,11 @@ const AddEmployee = ({ visible, onClick }) => {
   if (!visible) return null;
   return (
        <div className="fixed overflow-y-scroll inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center w-full h-full">
-        <div className="bg-none h-full p-2 rounded-lg">
-
+        <div className="bg-white h-full  rounded-lg">
       <div className="flex font-[Inter] justify-center relative top-[20px]">
         <div>
           <ul className="flex mb-0 list-none flex-wrap pt-0 pb-4 flex-row border-b-2 border-blue-900">
-          <li className="flex items-center -mb-px mr-2 ml-2 cursor-pointer">
+          <li className="flex items-center pl-6 cursor-pointer">
             <p
               className={
                 "inline-block p-0 py-2 px-2 text-s font-bold text-white bg-blue-900 rounded-lg active"
@@ -40,7 +39,7 @@ const AddEmployee = ({ visible, onClick }) => {
             </p>
           </li>
             <li>
-            <div className="flex gap-4 absolute top-0 right-0">
+            <div className="flex gap-4 absolute top-0 right-6">
               <button
                 className="flex text-[15px] py-3 bg-red-600 text-blue-900  hover:bg-red-900 hover:text-white duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap"
                 onClick={onClick}
