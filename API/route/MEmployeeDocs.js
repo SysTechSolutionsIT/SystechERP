@@ -35,34 +35,36 @@ const sequelize = new Sequelize(
 );
 
 // Define the MEmpDocs model
-const MEmpDocs = sequelize.define("MEmpDocs", {
-  CompanyId: {
-    type: DataTypes.STRING(5),
-    allowNull: false,
-    defaultValue: "00001",
+const MEmpDocs = sequelize.define(
+  "MEmpDocs",
+  {
+    CompanyId: {
+      type: DataTypes.STRING(5),
+      allowNull: false,
+      defaultValue: "00001",
+    },
+    BranchId: {
+      type: DataTypes.STRING(5),
+      allowNull: false,
+      defaultValue: "00001",
+    },
+    EmployeeId: {
+      type: DataTypes.INTEGER(5),
+      allowNull: false,
+    },
+    DocId: {
+      type: DataTypes.INTEGER(5),
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    Document: DataTypes.STRING,
+    DocumentName: DataTypes.STRING,
+    Remarks: DataTypes.STRING,
+    CreatedOn: DataTypes.DATE,
   },
-  BranchId: {
-    type: DataTypes.STRING(5),
-    allowNull: false,
-    defaultValue: "00001",
-  },
-  EmployeeId: {
-    type: DataTypes.INTEGER(5),
-    allowNull: false,
-  },
-  DocId: {
-    type: DataTypes.INTEGER(5),
-    allowNull: false,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  Document: DataTypes.STRING,
-  DocumentName: DataTypes.STRING,
-  IUFlag: DataTypes.STRING,
-  Remarks: DataTypes.STRING,
-  CreatedOn: DataTypes.DATE,
-  ModifiedOn: DataTypes.DATE,
-});
+  { timestamps: false }
+);
 
 // Middleware for parsing JSON
 router.use(bodyParser.json());
@@ -117,14 +119,11 @@ router.get("/FnShowAllData", authToken, async (req, res) => {
 router.get("/GetEmployeeDocs", authToken, async (req, res) => {
   const EmployeeId = req.query.EmployeeId;
   try {
-    const companies = await MEmpDocs.findOne({
+    const companies = await MEmpDocs.findAll({
       where: {
         EmployeeId: EmployeeId,
       },
-      attributes: {
-        exclude: ["IUFlag"],
-      },
-      order: [["EmployeeId", "ASC"]],
+      order: [["DocId", "ASC"]],
     });
     res.json(companies);
   } catch (error) {
@@ -133,9 +132,9 @@ router.get("/GetEmployeeDocs", authToken, async (req, res) => {
   }
 });
 
-router.get("/FnGetADoc", authToken, async (req, res) => {
-  const { EmployeeId, DocId } = req.body;
-
+router.get("/FnViewDocs", authToken, async (req, res) => {
+  const EmployeeId = req.query.EmployeeId;
+  const DocId = req.query.DocId;
   try {
     const record = await MEmpDocs.findOne({
       where: {
@@ -193,25 +192,19 @@ router.post(
   authToken,
   upload.single("file"), // Using 'single' as each request handles a single file
   async (req, res) => {
+    console.log("EID", req.query.EmployeeId);
     try {
-      const file = req.file.filename;
-      const EmployeeId = req.query.EmployeeId;
-
-      // Find existing documents for the specified EmployeeId
-      const existingDocuments = await MEmpDocs.findOne({
-        where: { EmployeeId: EmployeeId },
-        attributes: ["Document"],
-      });
-
-      let documentsArray = existingDocuments ? existingDocuments.Document : [];
-
-      // Add the new file to the array of documents
-      documentsArray.push(file);
+      const docs = req.file.filename;
 
       // Update the record in the MEmpDocs table using Sequelize
       await MEmpDocs.update(
-        { Document: documentsArray },
-        { where: { EmployeeId } }
+        { Document: docs },
+        {
+          where: {
+            EmployeeId: req.query.EmployeeId,
+            DocumentName: req.query.DocumentName,
+          },
+        }
       );
 
       return res.json({ Status: "Success" });
@@ -224,17 +217,19 @@ router.post(
 
 router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
   const record = req.body;
+  const { Flag } = req.query; // Extract Flag parameter from query
   try {
-    if (record.IUFlag === "D") {
-      const result = await MEmpDocs.update(
-        { AcFlag: "N" },
-        { where: { EmployeeId: record.EmployeeId, DocID: record.DocId } }
-      );
+    if (Flag === "D") {
+      // If Flag is 'D', perform delete operation
+      const result = await MEmpDocs.destroy({
+        where: { DocID: record.DocId },
+      });
 
       res.json({
-        message: result[0] ? "Record Deleted Successfully" : "Record Not Found",
+        message: result ? "Record Deleted Successfully" : "Record Not Found",
       });
     } else {
+      // If Flag is not 'D', perform add operation
       const result = await MEmpDocs.upsert(record, {
         returning: true,
       });
@@ -248,4 +243,20 @@ router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
+router.post("/FnDeleteRecord", authToken, async (req, res) => {
+  try {
+    const result = await MEmpDocs.destroy({
+      where: { DocId: req.body.DocId },
+    });
+
+    res.json({
+      message: result ? "Record Deleted Successfully" : "Record Not Found",
+    });
+  } catch (error) {
+    console.error("Error deleting record:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 module.exports = router;

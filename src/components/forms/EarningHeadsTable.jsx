@@ -8,8 +8,8 @@ const EarningHeadsTable = ({ ID }) => {
   const { employeeTypeId } = useEmployeeType();
   // colsole.log("Employee type id", employeeTypeId);
   const [details, setDetails] = useState([]);
-  const [ caderwiseEarnings, setCaderwiseEarnings ] = useState([])
-  const [earningDetails, setEarningDetails] = useState([])
+  const [caderwiseEarnings, setCaderwiseEarnings] = useState([]);
+  const [earningDetails, setEarningDetails] = useState([]);
   const [heads, setHeads] = useState([]);
   const [selectedHeads, setSelectedHeads] = useState([]);
   const [employeeTypes, setEmployeeTypes] = useState([]);
@@ -33,53 +33,40 @@ const EarningHeadsTable = ({ ID }) => {
     };
     fetchHeadsData();
   }, [token]);
-
   useEffect(() => {
-    const fetchCaderwiseEarning = async () =>{
-      try {
-        const response = await axios.get('http://localhost:5500/caderwise-earning/FnShowParticularData',
-        {
-          params: { EmployeeTypeId: employeeTypeId },
-          headers: { Authorization: `Bearer ${token}`}
-        })
-        const data = response.data
-        console.log('Caderwise Earnings', data)
-        setCaderwiseEarnings(data)
-      } catch (error) {
-        console.error('Error', error);
-      }
-    }
-    fetchCaderwiseEarning()
-  }, [token])
-
-  useEffect(() => {
-    const updatedHeads = heads.map(head => ({
-      ...head,
-      Selected: caderwiseEarnings.some(earning => earning.EarningHeadId === head.EarningHeadId)
-    }));
-
-    setHeads(updatedHeads);
-  }, [caderwiseEarnings]);
-
-  useEffect(() => {
-    const fetchEmployeewiseEarnings = async () => {
+    const fetchCaderwiseEarning = async () => {
       try {
         const response = await axios.get(
+          "http://localhost:5500/caderwise-earning/FnShowParticularData",
+          {
+            params: { EmployeeTypeId: employeeTypeId },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const caderwiseData = response.data;
+        console.log("Caderwise Earnings", caderwiseData);
+
+        // Check if employee-wise entry exists
+        const employeeWiseResponse = await axios.get(
           "http://localhost:5500/employee-wise-earning/FnShowParticularData",
           {
             params: { EmployeeId: ID },
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        const data = response.data;
-        setEarningDetails(data);
-        console.log("Employee wise earnings", data);
+        const employeeWiseData = employeeWiseResponse.data;
+
+        // Set caderwiseEarnings based on existence of employee-wise entry
+        setCaderwiseEarnings(
+          employeeWiseData.length > 0 ? employeeWiseData : caderwiseData
+        );
       } catch (error) {
         console.error("Error", error);
       }
     };
-    fetchEmployeewiseEarnings();
-  }, [token, ID]);
+
+    fetchCaderwiseEarning();
+  }, [token, ID, employeeTypeId]);
 
   useEffect(() => {
     const fetchEmpSalary = async () => {
