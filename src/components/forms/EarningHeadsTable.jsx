@@ -6,7 +6,7 @@ import { useEmployeeType } from "./personal";
 const EarningHeadsTable = ({ ID }) => {
   const { token } = useAuth();
   const { employeeTypeId } = useEmployeeType();
-  // colsole.log("Employee type id", employeeTypeId);
+  console.log("Employee type id", employeeTypeId);
   const [details, setDetails] = useState([]);
   const [caderwiseEarnings, setCaderwiseEarnings] = useState([]);
   const [earningDetails, setEarningDetails] = useState([]);
@@ -33,6 +33,7 @@ const EarningHeadsTable = ({ ID }) => {
     };
     fetchHeadsData();
   }, [token]);
+
   useEffect(() => {
     const fetchCaderwiseEarning = async () => {
       try {
@@ -44,7 +45,7 @@ const EarningHeadsTable = ({ ID }) => {
           }
         );
         const caderwiseData = response.data;
-        console.log("Caderwise Earnings", caderwiseData);
+        console.log('Caderwise data', caderwiseData)
 
         // Check if employee-wise entry exists
         const employeeWiseResponse = await axios.get(
@@ -55,11 +56,16 @@ const EarningHeadsTable = ({ ID }) => {
           }
         );
         const employeeWiseData = employeeWiseResponse.data;
+        console.log('Employee wise data', employeeWiseData)
 
-        // Set caderwiseEarnings based on existence of employee-wise entry
-        setCaderwiseEarnings(
-          employeeWiseData.length > 0 ? employeeWiseData : caderwiseData
-        );
+        if(employeeWiseData.length > 0){
+          console.log('Earning heads have already been defined')
+          setCaderwiseEarnings(employeeWiseData)
+        } else {
+          console.log('Mapping from Caderwise earnings')
+          setCaderwiseEarnings(caderwiseData)
+        }
+        console.log('Earning for the employee', caderwiseEarnings)
       } catch (error) {
         console.error("Error", error);
       }
@@ -67,6 +73,14 @@ const EarningHeadsTable = ({ ID }) => {
 
     fetchCaderwiseEarning();
   }, [token, ID, employeeTypeId]);
+
+  useEffect(() => {
+    const updatedHeads = heads.map(head => ({
+      ...head,
+      Selected: caderwiseEarnings.some(earnings => earnings.EarningHeadId === head.EarningHeadId)
+    }));
+    setHeads(updatedHeads);
+  }, [caderwiseEarnings]);
 
   useEffect(() => {
     const fetchEmpSalary = async () => {

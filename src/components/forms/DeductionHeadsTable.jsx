@@ -56,22 +56,44 @@ const DeductionHeadsTable = ({ ID }) => {
   }, [ID, token]);
 
   useEffect(() => {
-    const fetchCaderwiseDeduction = async () =>{
+    const fetchCaderwiseDeduction = async () => {
       try {
-        const response = await axios.get('http://localhost:5500/caderwise-deduction/FnShowParticularData',
-        {
-          params: { EmployeeTypeId: employeeTypeId },
-          headers: { Authorization: `Bearer ${token}`}
-        })
-        const data = response.data
-        console.log('Caderwise Deductions', data)
-        setCaderwiseDeductions(data)
+        const response = await axios.get(
+          "http://localhost:5500/caderwise-deduction/FnShowParticularData",
+          {
+            params: { EmployeeTypeId: employeeTypeId },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const caderwiseData = response.data;
+        console.log('Caderwise data', caderwiseData)
+
+        // Check if employee-wise entry exists
+        const employeeWiseResponse = await axios.get(
+          "http://localhost:5500/employee-wise-deductions/FnShowParticularData",
+          {
+            params: { EmployeeId: ID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const employeeWiseData = employeeWiseResponse.data;
+        console.log('Employee wise data', employeeWiseData)
+
+        if(employeeWiseData.length > 0){
+          console.log('Deduction heads have already been defined')
+          setCaderwiseDeductions(employeeWiseData)
+        } else {
+          console.log('Mapping from Caderwise deductions')
+          setCaderwiseDeductions(caderwiseData)
+        }
+        console.log('Deduction for the employee', caderwiseDeductions)
       } catch (error) {
-        console.error('Error', error);
+        console.error("Error", error);
       }
-    }
-    fetchCaderwiseDeduction()
-  }, [token])
+    };
+
+    fetchCaderwiseDeduction();
+  }, [token, ID, employeeTypeId]);
 
   useEffect(() => {
     const updatedHeads = heads.map(head => ({

@@ -64,6 +64,7 @@ const Documents = ({ ID, name }) => {
           }
         );
         alert("Documents Deleted Permanently");
+        fetchDocData()
       } catch (error) {
         console.error("Error", error);
       }
@@ -75,7 +76,11 @@ const Documents = ({ ID, name }) => {
 
   useEffect(() => {
     fetchDocData();
-  }, [ID, token, handleDeleteEntry]);
+  }, [ID, token]);
+
+  // useEffect(() => {
+  //   fetchDocData();
+  // }, [handleDeleteEntry]);
 
   const fetchDocData = async () => {
     try {
@@ -124,6 +129,7 @@ const Documents = ({ ID, name }) => {
         );
         alert("Documents Added");
         handleUpload();
+        fetchDocData()
       } catch (error) {
         console.error("Error", error);
       }
@@ -144,8 +150,6 @@ const Documents = ({ ID, name }) => {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        if (response.message === "Success") alert("Logo Uploaded");
-        else alert("Logo Upload Failed, Please refresh and try again");
       } catch (error) {
         console.error("Error", error);
       }
