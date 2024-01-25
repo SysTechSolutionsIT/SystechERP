@@ -47,6 +47,8 @@ const ApproveAll = ({ visible, onClick }) => {
   }, [token]);
 
   const approveAll = async (data) => {
+    const confirmApprove = window.confirm('Are you sure you want to approve all attendance for the day?')
+    if(!confirmApprove) return
     try {
       const response = await axios.post(
         "http://localhost:5500/manual-attendance/FnApproveAll",

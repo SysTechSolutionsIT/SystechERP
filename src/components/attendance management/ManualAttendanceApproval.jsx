@@ -300,6 +300,7 @@ const ManualAttendanceApproval = () => {
             className="flex text-[13px] bg-green-500 text-white  hover:bg-white hover:text-green-500 duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap"
             onClick={() => setModalOpen(true)}
           >
+          <Icon icon="material-symbols:order-approve-outline" height='24' width='24' className="mr-1 mt-0.5" />
             Approve All
           </button>
           <button
