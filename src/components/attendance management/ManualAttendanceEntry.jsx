@@ -9,6 +9,7 @@ const ManualAttendanceEntry = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false); //Add Modal
   const [manualAttendanceEntry, setManualAttendanceEntry] = useState([]);
+  const [entriesToShow, setEntriesToShow] = useState(30);
   const { token } = useAuth();
   //View and Edit
   const [MVE, setMVE] = useState(false);
@@ -92,12 +93,20 @@ const ManualAttendanceEntry = () => {
         )?.JobTypeName;
         return jobTypeValue;
 
-      case "AcFlag":
-        const acFlagValue = result[columnName] ? "Active" : "Inactive";
-        return acFlagValue;
-
       case "AttendanceDate":
         return formatDate(result[columnName]);
+
+      case "InTime":
+          return extractTimeFromDate(result[columnName])
+      case "OutTime":
+          return extractTimeFromDate(result[columnName])
+      case "SanctionBy":
+        const SanctionIdValue =
+        employeeIdMapping.length &&
+        employeeIdMapping.find(
+          (item) => item.EmployeeId == result[columnName]
+        )?.EmployeeName;
+      return SanctionIdValue;
 
       default:
         return result[columnName];
@@ -142,7 +151,6 @@ const ManualAttendanceEntry = () => {
     OutTime: true,
     JobTypeId: true,
     SanctionBy: true,
-    AcFlag: true,
   });
 
   const columnNames = {
@@ -156,7 +164,6 @@ const ManualAttendanceEntry = () => {
     OutTime: "Out Time",
     JobTypeId: "Job Type",
     SanctionBy: "Sanction By",
-    AcFlag: "Status",
   };
 
   const handleSearchChange = (title, searchWord) => {
@@ -251,6 +258,15 @@ const ManualAttendanceEntry = () => {
     const date = new Date(dateString);
     return date.toISOString().split("T")[0]; // Get only the date part
   };
+
+  function extractTimeFromDate(dateString) {
+    const date = new Date(dateString);
+    const hours = date.getUTCHours().toString().padStart(2, '0');
+    const minutes = date.getUTCMinutes().toString().padStart(2, '0');
+    const seconds = date.getUTCSeconds().toString().padStart(2, '0');
+  
+    return `${hours}:${minutes}:${seconds}`;
+  }
 
   return (
     <div className="top-25 min-w-[40%]">
@@ -378,28 +394,21 @@ const ManualAttendanceEntry = () => {
                 )}
               </tr>
               <tr>
-                <th className="border-2"></th>
-                <th className="p-2 font-bold text-black border-2 " />
-                {selectedColumns.map((columnName) =>
-                  columnVisibility[columnName] ? (
-                    <th
-                      key={columnName}
-                      className="p-2 font-semibold text-black border-2"
-                    >
-                      <input
-                        type="text"
-                        placeholder={`Search `}
-                        className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
-                        style={{
-                          maxWidth: getColumnMaxWidth(columnName) + "px",
-                        }}
-                        onChange={(e) =>
-                          handleSearchChange(columnName, e.target.value)
-                        }
-                      />
-                    </th>
-                  ) : null
-                )}
+              <th className="border-2" />
+                <th className="p-2 font-bold text-black border-2 whitespace-normal" />
+                {selectedColumns.map((columnName) => (
+                columnVisibility[columnName] ? (
+                  <th key={columnName} className="p-2 font-semibold text-black border-2">
+                    <input
+                      type="text"
+                      placeholder={`Search `}
+                      className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
+                      style={{ maxWidth: getColumnMaxWidth(columnName) + "px" }}
+                      onChange={(e) => handleSearchChange(columnName, e.target.value)}
+                    />
+                  </th>
+                ) : null
+              ))}
               </tr>
             </thead>
             <tbody className="">
@@ -456,7 +465,7 @@ const ManualAttendanceEntry = () => {
                       )}
                     </tr>
                   ))
-                : manualAttendanceEntry.map((result, index) => (
+                : manualAttendanceEntry.slice(0, entriesToShow).map((result, index) => (
                     <tr key={index}>
                       <td className="px-2 border-2">
                         <div className="flex items-center gap-2 text-center justify-center">
@@ -515,6 +524,15 @@ const ManualAttendanceEntry = () => {
             </tbody>
           </table>
         </div>
+        <div className="flex mb-5 justify-center">
+            <button
+              type="button"
+              onClick={() => setEntriesToShow(entriesToShow + 30)}
+              className="bg-blue-900 text-white text-[13px] font-semibold py-2 px-4 rounded-lg w-36"
+            >
+              Load More
+            </button>
+          </div>
       </div>
       <MVEModal
         visible={MVE}

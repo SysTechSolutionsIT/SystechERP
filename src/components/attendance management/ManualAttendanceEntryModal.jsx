@@ -276,55 +276,23 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
               </div>
               <div>
                 <p className="text-[13px] font-semibold">Employee Name</p>
-                <div className="flex items-center">
-                  <div className="relative w-full">
-                    <input
-                      type="text"
-                      id="EmployeeId"
-                      name="EmployeeId"
-                      value={formik.values.EmployeeId}
-                      onChange={(e) => {
-                        formik.handleChange(e);
-                        handleInputChange(e);
-                      }}
-                      onFocus={() => setSearchTerm("")}
-                      className="w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
-                      placeholder={
-                        formik.values.EmployeeId
-                          ? formik.values.EmployeeName
-                          : "Search Employee Name"
-                      }
-                    />
-                    {searchTerm && (
-                      <div
-                        className="absolute z-10 bg-white w-full border border-gray-300 rounded-lg mt-1 overflow-hidden"
-                        style={{ maxHeight: "150px", overflowY: "auto" }}
-                      >
-                        {filteredEmployees.length > 0 ? (
-                          filteredEmployees.map((entry) => (
-                            <div
-                              key={entry.EmployeeId}
-                              onClick={() => {
-                                formik.setValues({
-                                  ...formik.values,
-                                  EmployeeId: entry.EmployeeId,
-                                });
-                                setSearchTerm("");
-                              }}
-                              className="px-4 py-2 cursor-pointer hover:bg-gray-200 font-semibold text-[11px]"
-                            >
-                              {entry.EmployeeName}
-                            </div>
-                          ))
-                        ) : (
-                          <div className="px-4 py-2 text-gray-500">
-                            No matching results
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </div>
+                <select
+                  id="EmployeeId"
+                  name="EmployeeId"
+                  className="w-full px-4 py-2 font-normal text-[11px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
+                  value={formik.values.EmployeeId}
+                  onChange={formik.handleChange}
+                >
+                  <option value="">
+                    Select Employee
+                  </option>
+                  {Details.length > 0 &&
+                    Details.map((entry) => (
+                      <option key={entry.EmployeeId} value={entry.EmployeeId}>
+                        {entry.EmployeeName}
+                      </option>
+                    ))}
+                </select>
               </div>
               <div className="py-1">
                 <p className="font-semibold text-[13px]">Employee Type</p>

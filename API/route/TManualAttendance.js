@@ -198,6 +198,35 @@ router.get("/FnShowManualPendingData", authToken, async (req, res) => {
   }
 });
 
+router.post('/FnApproveAll', authToken, async (req, res) => {
+  try {
+    console.log("Request Body:", req.body);
+
+    const date = new Date(req.body.AttendanceDate);
+    const sanctionBy = req.body.EmployeeName;
+
+    const approvals = await TManualAttendance.update(
+      {
+        ApprovalFlag: "A",
+        SanctionBy: sanctionBy,
+      },
+      {
+        where: {
+          AttendanceDate: date,
+        },
+      }
+    );
+
+    res.json({
+      message: approvals[0] ? 'Operation Successful' : 'Unsuccessful',
+    });
+  } catch (error) {
+    console.error("Error Adding Data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+
 // Middleware for generating Id
 const generateAttendanceId = async (req, res, next) => {
   try {

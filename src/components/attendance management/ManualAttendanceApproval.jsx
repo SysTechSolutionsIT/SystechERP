@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { Icon } from "@iconify/react";
 import axios from "axios";
 import MAModal from "./ManualApprovalModal";
+import ApproveAll from "./ApproveAll";
 
 const ManualAttendanceApproval = () => {
   const [filteredData, setFilteredData] = useState([]);
@@ -112,9 +113,17 @@ const ManualAttendanceApproval = () => {
         const acFlagValue = result[columnName] ? "Active" : "Inactive";
         return acFlagValue;
 
+      case "AttendanceDate":
+        return formatDate(result[columnName]);
+
       default:
         return result[columnName];
     }
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toISOString().split("T")[0]; // Get only the date part
   };
 
   //ALl Api Callings
@@ -287,6 +296,13 @@ const ManualAttendanceApproval = () => {
         </div>
         <div className="flex gap-4">
           <button
+            type="button"
+            className="flex text-[13px] bg-green-500 text-white  hover:bg-white hover:text-green-500 duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap"
+            onClick={() => setModalOpen(true)}
+          >
+            Approve All
+          </button>
+          <button
             onClick={() => setShowDropdown(!showDropdown)}
             className="flex text-[13px] bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap"
           >
@@ -339,13 +355,6 @@ const ManualAttendanceApproval = () => {
               ))}
             </div>
           )}
-
-          <button
-            className="text-white font-semibold px-4 rounded-lg text-[13px] border border-white"
-            onClick={() => setModalOpen(true)}
-          >
-            Add
-          </button>
           <div className="flex items-center">
             <button
               className=" cursor-pointer"
@@ -378,6 +387,7 @@ const ManualAttendanceApproval = () => {
           </div>
         </div>
       </div>
+      <ApproveAll visible={isModalOpen} onClick={() => setModalOpen(false)} />
       <div className="grid gap-2 justify-between">
         <div className="my-1 rounded-2xl bg-white p-2 pr-8 ">
           <table className="min-w-full text-center whitespace-normal z-0">
@@ -401,8 +411,8 @@ const ManualAttendanceApproval = () => {
                 )}
               </tr>
               <tr>
-                <th className="border-2"></th>
-                <th className="p-2 font-bold text-black border-2 " />
+                <th className="border-2" />
+                <th className="p-2 font-bold text-black border-2 whitespace-normal" />
                 {selectedColumns.map((columnName) =>
                   columnVisibility[columnName] ? (
                     <th
