@@ -5,6 +5,7 @@ import CompanyModal from "./CompanyModal";
 import VEModal from "./ViewComp";
 import axios from "axios";
 import { useAuth } from "../Login";
+import LoadingSpinner from "../LoadingSpinner";
 
 const CompMaster = () => {
   const [companies, setCompanies] = useState([]);
@@ -17,6 +18,8 @@ const CompMaster = () => {
   const [VE, setVE] = useState(false);
   const [edit, setEdit] = useState(false);
   const [Cid, setCid] = useState();
+
+  const [loading, setLoading] = useState(true);
 
   //Hamburger Menu
   const [menuOpen, setMenuOpen] = useState(false);
@@ -152,6 +155,7 @@ const CompMaster = () => {
       if (response.status === 200) {
         const data = response.data;
         setCompanies(data);
+        setLoading(false)
       } else {
         console.error("Failed to fetch data");
       }
@@ -308,8 +312,13 @@ const CompMaster = () => {
       </div>
       <CompanyModal visible={isModalOpen} onClick={() => setModalOpen(false)} />
 
-      <div className="grid gap-2 justify-between">
         <div className="my-1 rounded-2xl bg-white p-2 pr-8 ">
+        {loading ? (
+          <div className="absolute inset-0 bg-black opacity-50 flex items-center justify-center h-screen">
+        <LoadingSpinner />
+        </div>
+      ) : (
+        <div className="grid gap-2 justify-between">
           <table className="min-w-full text-center whitespace-normal z-0">
             <thead className="border-b-2">
               <tr className="">
@@ -481,8 +490,9 @@ const CompMaster = () => {
                     </tr>
                   ))}
             </tbody>
-          </table>
+          </table> 
         </div>
+          )}
       </div>
       <VEModal visible={VE} onClick={() => setVE(false)} edit={edit} ID={Cid} />
     </div>
