@@ -98,8 +98,8 @@ export const DetailsProvider = ({ children }) => {
 
 
 function Login() {
-  const [username, setUsername] = useState("ggwpfax");
-  const [password, setPassword] = useState("udayan@99");
+  const [email, setEmail] = useState("ggwpfax@gmail.com");
+  const [password, setPassword] = useState("Udayan@99");
   const [companies, setCompanies] = useState([]);
   const { token, setToken } = useAuth();
   const { companyId, setCompanyId } = useDetails(); 
@@ -124,6 +124,10 @@ function Login() {
   };
   const navigate = useNavigate();
 
+  const handleNewUser = () => {
+    navigate("registration");
+  };
+
   const userLogin = async () => {
     console.log("login clicked");
 
@@ -131,7 +135,7 @@ function Login() {
       const response = await axios.post(
         "http://localhost:5500/users/login",
         {
-          username: username,
+          email: email,
           password: password,
         },
         {
@@ -266,16 +270,16 @@ function Login() {
           </div>
           <div className="mb-2">
             <label
-              htmlFor="username"
+              htmlFor="email"
               className="block text-gray-700 text-[13px]"
             >
-              Username:
+              Email:
             </label>
             <input
               type="text"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
               className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-400 text-[13px]"
             />
@@ -299,9 +303,16 @@ function Login() {
           <button
             type="submit"
             onClick={userLogin}
-            className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-300 text-[13px]"
+            className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-800 transition duration-300 text-[13px] font-bold"
           >
             Login
+          </button>
+          <button
+            type="button"
+            onClick={handleNewUser}
+            className=" mt-2 w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-800 transition duration-300 text-[13px] font-bold"
+          >
+            Register
           </button>
           {/* </form> */}
         </div>

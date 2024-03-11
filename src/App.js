@@ -65,6 +65,7 @@ function App() {
           <EmployeeTypeProvider>
             <Routes>
               <Route index element={<Login />} />
+      <Route path="registration" element={<Registration />} />
               <Route
                 element={
                   <div className="flex min-h-screen">
@@ -187,7 +188,6 @@ function App() {
                 <Route path="/leave-approval" element={<LeaveApproval />} />
                 <Route path="/ED-imports" element={<EDImports />} />
                 <Route path="/salary-processing" element={<SalProcessing />} />
-                <Route path="registration" element={<Registration />} />
                 <Route path="/advance-approval" element={<AdvanceApproval />} />
                 <Route
                   path="/attendance-master/empGatePassEntry"

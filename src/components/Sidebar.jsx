@@ -35,9 +35,9 @@ const Sidebar = () => {
     navigate("/");
   };
 
-  const handleNewUser = () => {
-    navigate("registration");
-  };
+  // const handleNewUser = () => {
+  //   navigate("registration");
+  // };
 
   const SubMenuMain = ({ title, isOpen = false, onClick }) => (
     <span
@@ -648,7 +648,7 @@ const Sidebar = () => {
               </div>
             </div>
           )}
-          <div
+          {/* <div
             className="mt-1 flex items-center rounded-md px-4 duration-300
             cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white"
             onClick={handleNewUser}
@@ -664,7 +664,7 @@ const Sidebar = () => {
                 Register New
               </span>
             )}
-          </div>
+          </div> */}
           <div
             className="mt-1 flex items-center rounded-md px-4 duration-300
             cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white"

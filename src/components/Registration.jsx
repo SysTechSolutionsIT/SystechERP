@@ -1,37 +1,72 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Icon } from "@iconify/react";
 
 function Registration() {
   const [name, setName] = useState("");
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [isValidEmail, setIsValidEmail] = useState(true);
+  const [empid, setEmpid] = useState('')
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [role, setRole] = useState("");
+  const [passwordMatchError, setPasswordMatchError] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
 
   const navigate = useNavigate();
 
   const userRegistration = async () => {
-    console.log('register clicked');
-  
+    if (password !== confirmPassword) {
+      setPasswordMatchError(true);
+      return;
+    }
+    const data = {
+      name: name,
+      email: email,
+      password: password,
+      empid: empid,
+      role: role
+    }
+    console.log('Data that goes to the API', data)
     try {
       const response = await axios.post(
-        'http://localhost:5500/users/register',
-        {
-          name: name,
-          username: username,
-          password: password,
-          role: role
-        },
+        'http://localhost:5500/users/register', data,
         {
           headers: {
             'Content-Type': 'application/json',
           },
         }
       );
-      alert("New User Added")
+      if (response.data.error) {
+        // Email already registered
+        alert(response.data.error);
+      } else {
+        alert("New user added, please login")
+        navigate('/')
+      }
     } catch (error) {
       console.log('Error', error);
+      alert('Email is already registered, please contact Admin.')
     }
+  };
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  // Function to validate email on input change
+  const handleEmailChange = (e) => {
+    const enteredEmail = e.target.value;
+    setEmail(enteredEmail);
+    setIsValidEmail(emailRegex.test(enteredEmail));
   };
 
   const navDash = () => {
@@ -63,37 +98,90 @@ function Registration() {
             />
           </div>
           <div className="mb-4">
-            <label
-              htmlFor="username"
-              className="block text-gray-700 text-[13px]"
-            >
-              Username:
+            <label htmlFor="name" className="block text-gray-700 text-[13px]">
+              Employee Id
             </label>
             <input
               type="text"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              id="empid"
+              value={empid}
+              onChange={(e) => setEmpid(e.target.value)}
               required
               className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-400 text-[11px]"
             />
           </div>
           <div className="mb-4">
-            <label
-              htmlFor="password"
-              className="block text-gray-700 text-[13px]"
-            >
-              Password:
-            </label>
+          <label htmlFor="email" className="block text-gray-700 text-[13px]">
+            Email
+          </label>
+          <input
+            type="text"
+            id="email"
+            value={email}
+            onChange={handleEmailChange}
+            required
+            className={`w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-400 text-[11px] ${
+              isValidEmail ? "" : "border-red-500"
+            }`}
+          />
+          {!isValidEmail && (
+            <p className="text-red-500 text-sm mt-1">Enter a valid email</p>
+          )}
+        </div>
+        <div className="mb-4">
+          <label htmlFor="password" className="block text-gray-700 text-[13px]">
+            Password
+          </label>
+          <div className="relative">
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-400 text-[11px]"
             />
+            <button
+              className="absolute top-2 right-2 text-sm"
+              onClick={togglePasswordVisibility}
+            >
+          {showPassword ? (
+            <Icon icon="fluent:eye-off-24-filled" width="24" height="24" style={{ color: "#462a68" }} />
+          ) : (
+            <Icon icon="iconoir:eye-solid" width="24" height="24" style={{ color: "#462a68" }} />
+          )}
+            </button>
           </div>
+        </div>
+          <div className="mb-4">
+          <label
+            htmlFor="confirmPassword"
+            className="block text-gray-700 text-[13px]"
+          >
+            Confirm Password
+          </label>
+          <input
+            type="password"
+            id="confirmPassword"
+            value={confirmPassword}
+            onChange={(e) => {
+              setConfirmPassword(e.target.value);
+              setPasswordMatchError(password !== e.target.value);
+            }}
+            required
+            className={`w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-400 text-[11px] ${
+              passwordMatchError ? "border-red-500" : ""
+            }`}
+          />
+          {passwordMatchError && confirmPassword !== "" && (
+            <p className="text-red-500 text-sm mt-1">
+              Passwords do not match.
+            </p>
+          )}
+          {!passwordMatchError && confirmPassword !== "" && (
+            <p className="text-green-500 text-sm mt-1">Passwords match.</p>
+          )}
+        </div>
           <div className="mb-4">
             <label htmlFor="role" className="block text-gray-700 text-[13px]">
               Role
@@ -118,11 +206,12 @@ function Registration() {
               onClick={userRegistration}
               className="bg-blue-900 text-white text-[13px] font-semibold py-2 px-4 rounded-lg w-36"
             >
-              Add
+              Register
             </button>
             <button
+              type='button'
               className="bg-blue-900 text-white text-[13px] font-semibold py-2 px-4 rounded-lg w-36"
-              onClick={navDash}
+              onClick={() => navigate('/')}
             >
               Cancel
             </button>
