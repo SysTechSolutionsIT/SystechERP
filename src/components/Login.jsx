@@ -46,6 +46,9 @@ export const DetailsProvider = ({ children }) => {
   const [companyId, setCompanyId] = useState("");
   const [branchId, setBranchId] = useState("");
   const [fYear, setFYear] = useState("");
+  const [name, setName] = useState('')
+  const [role, setRole] = useState('')
+  const [empid, setEmpid] = useState('')
 
   const handleSetCompanyId = (newID) => {
     setCompanyId(newID);
@@ -62,10 +65,28 @@ export const DetailsProvider = ({ children }) => {
     Cookies.set("fYear", newFYear, { expires: 7 });
   };
 
+  const handleName = (newName) => {
+    setName(newName)
+    Cookies.set('name', newName, {expires: 7})
+  }
+
+  const handleRole = (newRole) => {
+    setRole(newRole)
+    Cookies.set('role', newRole, {expires: 7})
+  }
+
+  const handleEmpid = (newEmpid) => {
+    setEmpid(newEmpid)
+    Cookies.set('empid', newEmpid, {expires: 7})
+  }
+
   useEffect(() => {
     const savedCompanyId = Cookies.get("companyId");
     const savedBrancId = Cookies.get("branchId");
     const savedFYear = Cookies.get("fYear");
+    const savedName = Cookies.get('name')
+    const savedRole = Cookies.get('role')
+    const savedempid = Cookies.get('empid')
 
     if (savedCompanyId) {
       setCompanyId(savedCompanyId);
@@ -78,6 +99,18 @@ export const DetailsProvider = ({ children }) => {
     if (savedFYear) {
       setFYear(savedFYear);
     }
+
+    if(savedName){
+      setName(savedName)
+    }
+
+    if(savedRole){
+      setRole(savedRole)
+    }
+
+    if(savedempid){
+      setEmpid(savedempid)
+    }
   }, []);
 
   return (
@@ -89,6 +122,12 @@ export const DetailsProvider = ({ children }) => {
         setBranchId: handleSetBranchId,
         fYear,
         setFYear: handleSetFYear,
+        name,
+        setName: handleName,
+        role,
+        setRole: handleRole,
+        empid,
+        setEmpid: handleEmpid
       }}
     >
       {children}
@@ -105,6 +144,9 @@ function Login() {
   const { companyId, setCompanyId } = useDetails(); 
   const { branchId, setBranchId } = useDetails()
   const { fYear, setFYear } = useDetails()
+  const { name, setName } = useDetails()
+  const { role, setRole } = useDetails()
+  const { empid, setEmpid} = useDetails()
   const [finYears, setFinYears] = useState([])
 
   const handleCompanyChange = (e) => {
@@ -145,10 +187,15 @@ function Login() {
         }
       );
 
+      console.log(response.data)
       const token = await response.data.token;
       setToken(response.data.token);
-
-      console.log("Token is", token);
+      const name = await response.data.name
+      setName(name)
+      const role = await response.data.role
+      setRole(role)
+      const empid = await response.data.empid
+      setEmpid(empid)
 
       // Set token in the AuthContext
       // setToken(token);

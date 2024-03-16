@@ -236,7 +236,22 @@ router.get('/get-upload', authToken, async (req, res) => {
   }
 })
 
-router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
+// Middleware for generating EarningHeadId
+const generateEmployeeId = async (req, res, next) => {
+  try {
+    if (req.body.IUFlag === 'I') {
+      const totalRecords = await MEmployee.count();
+      const newId = (totalRecords + 1).toString().padStart(3, "0");
+      req.body.EmployeeTypeId = newId;
+    }
+    next();
+  } catch (error) {
+    console.error("Error generating EmployeeId:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+router.post("/FnAddUpdateDeleteRecord", generateEmployeeId, authToken, async (req, res) => {
   const employee = req.body; // Access the EmployeeId from query parameters
 
   try {
