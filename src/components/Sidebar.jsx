@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import { useNavigate } from "react-router-dom";
 import { menuItems } from "./menuItems";
+import { components } from "./Components";
+import { useDetails } from "./Login";
 
 const Sidebar = () => {
   const [isSubMenuOpen, setSubMenuOpen] = useState(false);
@@ -14,6 +16,8 @@ const Sidebar = () => {
   const [isSalarySubmenuOpen, setSalarySubmenuOpen] = useState(false);
   const [isRegisterSubmenuOpen, setRegisterSubmenuOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
+  const { rights } = useDetails()
+  console.log('Access rights in sidebar', rights) 
 
   const [open, setOpen] = useState(true);
   const navigate = useNavigate();
@@ -30,6 +34,72 @@ const Sidebar = () => {
     setRegisterSubmenuOpen(false);
     setOpen((prev) => !prev);
   };
+
+  const menuItems = [
+    { "927": "Dashboard" },
+    { "135": "User Settings" },
+    { "864": "Company Settings" },
+    { "549": "Company Configuration" },
+    { "703": "Company Master" },
+    { "872": "Financial Year Master" },
+    { "287": "Bank Master" },
+    { "610": "Cost Center Master" },
+    { "954": "Department Master" },
+    { "736": "Three Field Master" },
+    { "624": "Two Field Master" },
+    { "368": "HRM" },
+    { "431": "Employee Settings" },
+    { "217": "Employee Master" },
+    { "820": "Employee Type Master" },
+    { "598": "Employee Grade Master" },
+    { "143": "Designation Master" },
+    { "502": "KRA Master" },
+    { "395": "Job Responsibility Master" },
+    { "786": "Employee Band Master" },
+    { "619": "Attendance Settings" },
+    { "875": "Job Type Master" },
+    { "752": "Shift Master" },
+    { "201": "Weekly Off Master" },
+    { "409": "Holiday Master" },
+    { "148": "Attendance Device Master" },
+    { "924": "Payroll Management" },
+    { "269": "Earning Heads Master" },
+    { "370": "Deduction Heads Master" },
+    { "548": "Employee Type Earning Master" },
+    { "753": "Employee Type Deduction Master" },
+    { "654": "Professional Tax Setting" },
+    { "531": "Advance Request" },
+    { "317": "Advance Approval" },
+    { "497": "Advance Repayment" },
+    { "803": "Leaves Management" },
+    { "460": "Leave Type Master" },
+    { "706": "Leave Balance Upload" },
+    { "153": "Leave Application" },
+    { "418": "Leave Approvals" },
+    { "849": "Attendance Management" },
+    { "273": "Shift Roster" },
+    { "159": "Manual Attendance Entry" },
+    { "523": "Manual Attendance Approval" },
+    { "926": "Out Door Duty Attendance Entry" },
+    { "832": "Out Door Duty Attendance Approval" },
+    { "871": "Employee Gate Pass Entry" },
+    { "619": "Employee Gate Pass Approval" },
+    { "625": "Job Allocation" },
+    { "758": "Daily Attendance Processing" },
+    { "690": "Attendance Import" },
+    { "907": "Monthly Attendance Processing" }
+  ];
+
+  const [filteredMenuItems, setFilteredMenuItems] = useState([]);
+
+  useEffect(() => {
+    // Filter menu items based on access rights
+    const filteredItems = menuItems.filter(item => {
+      const itemId = Object.keys(item)[0];
+      return rights.includes(parseInt(itemId));
+    });
+    setFilteredMenuItems(filteredItems);
+  }, [rights]);
 
   const handleLogOut = () => {
     navigate("/");
@@ -200,7 +270,7 @@ const Sidebar = () => {
               </div>
               {/* <hr className="text-gray-200 text-opacity-25" /> */}
 
-              <div className="mt-1 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white">
+              {/* <div className="mt-1 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white">
                 <Icon
                   icon="akar-icons:person-add"
                   color="white"
@@ -215,80 +285,98 @@ const Sidebar = () => {
                     </span>
                   </div>
                 )}
-              </div>
-
-              <div
-                className="mt-1 flex items-center rounded-md px-4 duration-300
-            cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white whitespace-nowrap"
-              >
-                <Icon icon="ci:settings" color="white" width="24" height="24" />
-                {open && (
+              </div> */}
+                {rights.includes(549) || rights.includes(703) || rights.includes(864) || rights.includes(287) || rights.includes(610) || rights.includes(954) || rights.includes(736) || rights.includes(624) ? (
                   <div
-                    className="flex justify-between w-full items-center"
-                    onClick={() =>
-                      setCompanySubmenuOpen((prevState) => !prevState)
-                    }
+                    className="mt-1 flex items-center rounded-md px-4 duration-300
+                  cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white whitespace-nowrap"
                   >
-                    <span className="font-[Inter] font-semibold text-[15px] ml-4 text-white-200">
-                      Company Settings
-                    </span>
-                    <span
-                      className={`text-sm ${
-                        isCompanySubmenuOpen ? "" : "rotate-180"
-                      } ease-linear duration-200`}
-                      id="arrow"
-                    >
-                      <Icon
-                        icon="iconamoon:arrow-up-2"
-                        color="white"
-                        width="30"
-                        height="30"
-                        className=""
-                      />
-                    </span>
+                    <Icon icon="ci:settings" color="white" width="24" height="24" />
+                    {open && (
+                      <div
+                        className="flex justify-between w-full items-center"
+                        onClick={() =>
+                          setCompanySubmenuOpen((prevState) => !prevState)
+                        }
+                      >
+                        <span className="font-[Inter] font-semibold text-[15px] ml-4 text-white-200">
+                          Company Settings
+                        </span>
+                        <span
+                          className={`text-sm ${
+                            isCompanySubmenuOpen ? "" : "rotate-180"
+                          } ease-linear duration-200`}
+                          id="arrow"
+                        >
+                          <Icon
+                            icon="iconamoon:arrow-up-2"
+                            color="white"
+                            width="30"
+                            height="30"
+                            className=""
+                          />
+                        </span>
+                      </div>
+                    )}
                   </div>
+                ) : null}
+                {isCompanySubmenuOpen && (
+                  <SubMenuGroup>
+                    {rights.includes(549) && (
+                      <SubMenuEntry
+                        title="Company Configuration"
+                        onClick={() => navigate("/company-configurations")}
+                      />
+                    )}
+                    {rights.includes(703) && (
+                      <SubMenuEntry
+                        title="Company Master"
+                        onClick={() => navigate("/company-masters")}
+                      />
+                    )}
+                    {rights.includes(864) && (
+                      <SubMenuEntry
+                        title="Financial Year Master"
+                        onClick={() => navigate("/financial-masters")}
+                      />
+                    )}
+                    {rights.includes(287) && (
+                      <SubMenuEntry
+                        title="Bank Master"
+                        onClick={() => navigate("/bank-master")}
+                      />
+                    )}
+                    {rights.includes(610) && (
+                      <SubMenuEntry
+                        title="Cost Center Master"
+                        onClick={() => navigate("/costcenter-master")}
+                      />
+                    )}
+                    {rights.includes(954) && (
+                      <SubMenuEntry
+                        title="Department Master"
+                        onClick={() => navigate("/department-master")}
+                      />
+                    )}
+                    {/* <SubMenuEntry
+                      title="Destination Master"
+                      onClick={() => navigate("/destination-master")}
+                    /> */}
+                    {rights.includes(736) && (
+                      <SubMenuEntry
+                        title="Three Field Master"
+                        onClick={() => navigate("/three-field-master")}
+                      />
+                    )}
+                    {rights.includes(624) && (
+                      <SubMenuEntry
+                        title="Two Field Master"
+                        onClick={() => navigate("/two-field-master")}
+                      />
+                    )}
+                  </SubMenuGroup>
                 )}
-              </div>
-              {isCompanySubmenuOpen && (
-                <SubMenuGroup>
-                  <SubMenuEntry
-                    title="Company Configuration"
-                    onClick={() => navigate("/company-configurations")}
-                  />
-                  <SubMenuEntry
-                    title="Company Master"
-                    onClick={() => navigate("/company-masters")}
-                  />
-                  <SubMenuEntry
-                    title="Financial Year Master"
-                    onClick={() => navigate("/financial-masters")}
-                  />
-                  <SubMenuEntry
-                    title="Bank Master"
-                    onClick={() => navigate("/bank-master")}
-                  />
-                  <SubMenuEntry
-                    title="Cost Center Master"
-                    onClick={() => navigate("/costcenter-master")}
-                  />
-                  <SubMenuEntry
-                    title="Department Master"
-                    onClick={() => navigate("/department-master")}
-                  />
-                  {/* <SubMenuEntry
-                    title="Destination Master"
-                    onClick={() => navigate("/destination-master")}
-                  /> */}
-                  <SubMenuEntry
-                    title="Three Field Master"
-                    onClick={() => navigate("/three-field-master")}
-                  />
-                  <SubMenuEntry
-                    title="Two Field Master"
-                    onClick={() => navigate("/two-field-master")}
-                  />
-                </SubMenuGroup>
-              )}
+
 
               <div
                 className="mt-1 flex items-center rounded-md px-4 duration-300
