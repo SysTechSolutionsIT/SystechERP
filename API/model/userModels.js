@@ -1,4 +1,4 @@
-const { Sequelize, DataTypes } = require('sequelize');
+const { Sequelize, DataTypes, STRING } = require('sequelize');
 const bcrypt = require('bcrypt');
 
 // Initialize Sequelize with your MySQL database connection
@@ -27,6 +27,9 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING, // You can adjust the data type for the role as needed
     allowNull: true,
   },
+  accessrights:{
+    type: DataTypes.STRING,
+  }
 });
 
 // Hash the password before saving it to the database

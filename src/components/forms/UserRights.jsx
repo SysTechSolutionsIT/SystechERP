@@ -1,7 +1,10 @@
+import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../Login';
 
 const UserRights = ({ID}) => {
   const [checkedLabels, setCheckedLabels] = useState([])
+  const { token } = useAuth()
 
   const handleItemChange = (itemName, isChecked) => {
     setCheckedLabels(prevItems => {
@@ -97,6 +100,23 @@ const UserRights = ({ID}) => {
       </div>
     );
   };
+
+  const addAccessRights = async () => {
+    try {
+      const response = await axios.post(
+        'http://localhost:5500/users/accessrights',
+        checkedLabels,
+        {
+          params: { EmployeeId: ID },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.error('Error', error);
+    }
+  };
+  
 
   const Menu1 = [
     {
@@ -238,6 +258,7 @@ return (
     <div className="flex justify-center gap-4 mt-5">
       <button
         type="submit"
+        onClick={addAccessRights}
         className="px-6 py-2 bg-blue-900 text-white text-lg rounded-md hover:bg-green-600 duration-500 "
       >
         Save User Rights
