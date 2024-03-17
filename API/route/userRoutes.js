@@ -99,7 +99,7 @@ sequelize
 // Registration
 router.post("/register", async (req, res) => {
   try {
-    const { email, empid, password, name, role } = req.body;
+    const { email, empid, password, name, role, accessrights } = req.body;
 
     // Check if the user already exists
     const existingUser = await User.findOne({ where: { email } });

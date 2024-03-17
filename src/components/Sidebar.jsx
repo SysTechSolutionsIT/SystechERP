@@ -413,46 +413,61 @@ const Sidebar = () => {
                 )}
               </div>
               {isSubMenuOpen && (
-                <div
-                  className="leading-7 text-left text-sm font-thin mt-2 px-2 w-full ease-in-out duration-200 whitespace-nowrap"
-                  id="submenu"
-                >
+              <div
+                className="leading-7 text-left text-sm font-thin mt-2 px-2 w-full ease-in-out duration-200 whitespace-nowrap"
+                id="submenu"
+              >
+                { (rights.includes(217) || rights.includes(820) || rights.includes(598) || rights.includes(143) || rights.includes(502) || rights.includes(395) || rights.includes(786)) &&
                   <SubMenuMain
                     title="Employee Settings"
                     isOpen={isEmployeeSubmenuOpen}
-                    onClick={() =>
-                      setEmployeeSubmenuOpen((prevState) => !prevState)
-                    }
+                    onClick={() => setEmployeeSubmenuOpen((prevState) => !prevState)}
                   />
-                  {isEmployeeSubmenuOpen && (
-                    <SubMenuGroup>
+                }
+                {isEmployeeSubmenuOpen && (
+                  <SubMenuGroup>
+                    {rights.includes(217) && (
                       <SubMenuEntry
                         title="Employee Master"
                         onClick={() => navigate("/employee-master")}
                       />
+                    )}
+                    {rights.includes(820) && (
                       <SubMenuEntry
                         title="Employee Type Master"
                         onClick={() => navigate("/employee-type-master")}
                       />
+                    )}
+                    {rights.includes(598) && (
                       <SubMenuEntry
                         title="Employee Grade Master"
                         onClick={() => navigate("/employee-grade-master")}
                       />
+                    )}
+                    {rights.includes(143) && (
                       <SubMenuEntry
                         title="Designation Master"
                         onClick={() => navigate("/designation-master")}
                       />
+                    )}
+                    {rights.includes(502) && (
                       <SubMenuEntry
                         title="KRA Master"
                         onClick={() => navigate("/kra-master")}
                       />
+                    )}
+                    {rights.includes(395) && (
                       <SubMenuEntry
                         title="Job Responsibility Master"
                         onClick={() => navigate("/jobs-responsibility-master")}
                       />
+                    )}
+                    {rights.includes(786) && (
                       <SubMenuEntry title="Employee Band Master" />
-                    </SubMenuGroup>
-                  )}
+                    )}
+                  </SubMenuGroup>
+                )}
+                { (rights.includes(875) || rights.includes(752) || rights.includes(201) || rights.includes(409) || rights.includes(148)) &&
                   <SubMenuMain
                     title="Attendance Settings"
                     isOpen={isAttendanceSubmenuOpen}
@@ -460,170 +475,239 @@ const Sidebar = () => {
                       setAttendanceSubmenuOpen((prevState) => !prevState)
                     }
                   />
+                }
                   {isAttendanceSubmenuOpen && (
                     <SubMenuGroup>
+                      {rights.includes(875) && (
                       <SubMenuEntry
                         title="Job Type Master"
                         onClick={() => navigate("/job-type-master")}
-                      />
+                      />)}
+                      {rights.includes(752) && (
                       <SubMenuEntry
                         title="Shift Master"
                         onClick={() => navigate("/shift-master")}
-                      />
+                      />)}
+                      {rights.includes(201) && (
                       <SubMenuEntry
                         title="Weekly Off Master"
                         onClick={() => navigate("/weeklyoff-master")}
-                      />
+                      />)}
+                      {rights.includes(409) && (
                       <SubMenuEntry
                         title="Holiday Master"
                         onClick={() => navigate("/holiday-master")}
-                      />
+                      />)}
+                      {rights.includes(148) && (
                       <SubMenuEntry
                         title="Atten. Device Master"
                         onClick={() => navigate("/attDevice-master")}
-                      />
+                      />)}
                     </SubMenuGroup>
                   )}
-                  <SubMenuMain
-                    title="Payroll Management"
-                    isOpen={isPayrollSubmenuOpen}
-                    onClick={() =>
-                      setPayrollSubmenuOpen((prevState) => !prevState)
-                    }
-                  />
+                  { (rights.includes(269) || rights.includes(370) || rights.includes(548) || rights.includes(753) || rights.includes(654) || rights.includes(531) || rights.includes(317) || rights.includes(497)) &&
+                      <SubMenuMain
+                          title="Payroll Management"
+                          isOpen={isPayrollSubmenuOpen}
+                          onClick={() => setPayrollSubmenuOpen(prevState => !prevState)}
+                      />
+                  }
                   {isPayrollSubmenuOpen && (
-                    <SubMenuGroup>
-                      <SubMenuEntry
-                        title="Earning Heads Master"
-                        onClick={() => navigate("/earning-heads-master")}
-                      />
-                      <SubMenuEntry
-                        title="Deduction Heads Master"
-                        onClick={() => navigate("/deduction-heads-master")}
-                      />
-                      <SubMenuEntry
-                        title="Employee Type Earning Master"
-                        onClick={() => navigate("/employee-type-earning")}
-                      />
-                      <SubMenuEntry
-                        title="Employee Type Deduction Master"
-                        onClick={() => navigate("/employee-type-deduction")}
-                      />
-                      <SubMenuEntry
-                        title="Professional Tax Setting"
-                        onClick={() => navigate("/professional-tax-master")}
-                      />
-                      <SubMenuEntry
-                        title="Advance Request"
-                        onClick={() => navigate("/advance-request")}
-                      />
-                      <SubMenuEntry
-                        title="Advance Approval"
-                        onClick={() => navigate("/advance-approval")}
-                      />
-                      <SubMenuEntry
-                        title="Advance Repayment"
-                        onClick={() => navigate("/advance-repayment")}
-                      />
-                    </SubMenuGroup>
+                      <SubMenuGroup>
+                          {rights.includes(269) && (
+                              <SubMenuEntry
+                                  title="Earning Heads Master"
+                                  onClick={() => navigate("/earning-heads-master")}
+                              />
+                          )}
+                          {rights.includes(370) && (
+                              <SubMenuEntry
+                                  title="Deduction Heads Master"
+                                  onClick={() => navigate("/deduction-heads-master")}
+                              />
+                          )}
+                          {rights.includes(548) && (
+                              <SubMenuEntry
+                                  title="Employee Type Earning Master"
+                                  onClick={() => navigate("/employee-type-earning")}
+                              />
+                          )}
+                          {rights.includes(753) && (
+                              <SubMenuEntry
+                                  title="Employee Type Deduction Master"
+                                  onClick={() => navigate("/employee-type-deduction")}
+                              />
+                          )}
+                          {rights.includes(654) && (
+                              <SubMenuEntry
+                                  title="Professional Tax Setting"
+                                  onClick={() => navigate("/professional-tax-master")}
+                              />
+                          )}
+                          {rights.includes(531) && (
+                              <SubMenuEntry
+                                  title="Advance Request"
+                                  onClick={() => navigate("/advance-request")}
+                              />
+                          )}
+                          {rights.includes(317) && (
+                              <SubMenuEntry
+                                  title="Advance Approval"
+                                  onClick={() => navigate("/advance-approval")}
+                              />
+                          )}
+                          {rights.includes(497) && (
+                              <SubMenuEntry
+                                  title="Advance Repayment"
+                                  onClick={() => navigate("/advance-repayment")}
+                              />
+                          )}
+                      </SubMenuGroup>
                   )}
-                  <SubMenuMain
-                    title="Leaves Management"
-                    isOpen={isLeaveSubmenuOpen}
-                    onClick={() =>
-                      setLeaveSubmenuOpen((prevState) => !prevState)
-                    }
-                  />
+
+                  { (rights.includes(460) || rights.includes(706) || rights.includes(418)) &&
+                      <SubMenuMain
+                          title="Leaves Management"
+                          isOpen={isLeaveSubmenuOpen}
+                          onClick={() => setLeaveSubmenuOpen(prevState => !prevState)}
+                      />
+                  }
                   {isLeaveSubmenuOpen && (
-                    <SubMenuGroup>
-                      <SubMenuEntry
-                        title="Leave Type Master"
-                        onClick={() => navigate("/leave-type-master")}
-                      />
-                      <SubMenuEntry
-                        title="Leave Balance Upload"
-                        onClick={() => navigate("/leave-balance-master")}
-                      />
-                      <SubMenuEntry
-                        title="Leave Application"
-                        onClick={() => navigate("/leave-application")}
-                      />
-                      <SubMenuEntry
-                        title="Leave Approvals"
-                        onClick={() => navigate("/leave-approval")}
-                      />
-                    </SubMenuGroup>
+                      <SubMenuGroup>
+                          {rights.includes(460) && (
+                              <SubMenuEntry
+                                  title="Leave Type Master"
+                                  onClick={() => navigate("/leave-type-master")}
+                              />
+                          )}
+                          {rights.includes(706) && (
+                              <SubMenuEntry
+                                  title="Leave Balance Upload"
+                                  onClick={() => navigate("/leave-balance-master")}
+                              />
+                          )}
+                          {rights.includes(706) && (
+                              <SubMenuEntry
+                                  title="Leave Application"
+                                  onClick={() => navigate("/leave-application")}
+                              />
+                          )}
+                          {rights.includes(418) && (
+                              <SubMenuEntry
+                                  title="Leave Approvals"
+                                  onClick={() => navigate("/leave-approval")}
+                              />
+                          )}
+                      </SubMenuGroup>
                   )}
-                  <SubMenuMain
-                    title="Attendance Management"
-                    isOpen={isAttMgtSubmenuOpen}
-                    onClick={() =>
-                      setAttMgtSubmenuOpen((prevState) => !prevState)
-                    }
-                  />
+
+                  { ( rights.includes(273) || rights.includes(159) || rights.includes(523) || rights.includes(926) || rights.includes(832) || rights.includes(871) || rights.includes(619) || rights.includes(625) || rights.includes(758) || rights.includes(690) || rights.includes(907)) &&
+                      <SubMenuMain
+                          title="Attendance Management"
+                          isOpen={isAttMgtSubmenuOpen}
+                          onClick={() => setAttMgtSubmenuOpen(prevState => !prevState)}
+                      />
+                  }
                   {isAttMgtSubmenuOpen && (
-                    <SubMenuGroup>
-                      <SubMenuEntry
-                        title="Shift roster"
-                        onClick={() => navigate("/shift-roster")}
-                      />
-                      <SubMenuEntry
-                        title="Manual Attendance Entry"
-                        onClick={() => navigate("/manual-attendance-entry")}
-                      />
-                      <SubMenuEntry
-                        title="Manual Attendance Approval"
-                        onClick={() => navigate("/manual-attendance-approval")}
-                      />
-                      <SubMenuEntry
-                        title="Out Door Duty Attendance Entry"
-                        onClick={() => navigate("/outdoor-attendance-entry")}
-                      />
-                      <SubMenuEntry
-                        title="Out Door Duty Attendance Approval"
-                        onClick={() => navigate("/outdoor-attendance-approval")}
-                      />
-                      <SubMenuEntry
-                        title="Employee Gate Pass Entry"
-                        onClick={() =>
-                          navigate("/attendance-master/empGatePassEntry")
-                        }
-                      />
-                      <SubMenuEntry
-                        title="Employee Gate Pass Approval"
-                        onClick={() => navigate("/gatepass-approval")}
-                      />
-                      <SubMenuEntry title="Job Allocation" />
-                      <SubMenuEntry title="Daily Atttendance Processing" />
-                      <SubMenuEntry title="Attendance Import" />
-                      <SubMenuEntry title="Monthly Attendance Provessing" />
-                    </SubMenuGroup>
+                      <SubMenuGroup>
+                          {rights.includes(273) && (
+                              <SubMenuEntry
+                                  title="Shift Roster"
+                                  onClick={() => navigate("/shift-roster")}
+                              />
+                          )}
+                          {rights.includes(159) && (
+                              <SubMenuEntry
+                                  title="Manual Attendance Entry"
+                                  onClick={() => navigate("/manual-attendance-entry")}
+                              />
+                          )}
+                          {rights.includes(523) && (
+                              <SubMenuEntry
+                                  title="Manual Attendance Approval"
+                                  onClick={() => navigate("/manual-attendance-approval")}
+                              />
+                          )}
+                          {rights.includes(926) && (
+                              <SubMenuEntry
+                                  title="Out Door Duty Attendance Entry"
+                                  onClick={() => navigate("/outdoor-attendance-entry")}
+                              />
+                          )}
+                          {rights.includes(832) && (
+                              <SubMenuEntry
+                                  title="Out Door Duty Attendance Approval"
+                                  onClick={() => navigate("/outdoor-attendance-approval")}
+                              />
+                          )}
+                          {rights.includes(871) && (
+                              <SubMenuEntry
+                                  title="Employee Gate Pass Entry"
+                                  onClick={() => navigate("/attendance-master/empGatePassEntry")}
+                              />
+                          )}
+                          {rights.includes(619) && (
+                              <SubMenuEntry
+                                  title="Employee Gate Pass Approval"
+                                  onClick={() => navigate("/gatepass-approval")}
+                              />
+                          )}
+                          {rights.includes(625) && (
+                          <SubMenuEntry title="Job Allocation" />
+                          )}
+                          {rights.includes(758) && (
+                          <SubMenuEntry title="Daily Attendance Processing" />
+                          )}
+                          {rights.includes(690) && (
+                          <SubMenuEntry title="Attendance Import" />
+                          )}
+                          {rights.includes(907) && (
+                          <SubMenuEntry title="Monthly Attendance 
+                          Processing" />
+                          )}
+                      </SubMenuGroup>
                   )}
-                  <SubMenuMain
-                    title="Salary Management"
-                    isOpen={isSalarySubmenuOpen}
-                    onClick={() =>
-                      setSalarySubmenuOpen((prevState) => !prevState)
-                    }
-                  />
+
+                  { ( rights.includes(879) || rights.includes(182) || rights.includes(305) || rights.includes(724) || rights.includes(407) || rights.includes(603) || rights.includes(141)) &&
+                      <SubMenuMain
+                          title="Salary Management"
+                          isOpen={isSalarySubmenuOpen}
+                          onClick={() => setSalarySubmenuOpen(prevState => !prevState)}
+                      />
+                  }
                   {isSalarySubmenuOpen && (
-                    <SubMenuGroup>
-                      <SubMenuEntry title="Daily Overtime Processing" />
-                      <SubMenuEntry title="Monthly Overtime Processing" />
-                      <SubMenuEntry title="Overtime Approvals" />
-                      <SubMenuEntry title="Advance Management " />
-                      <SubMenuEntry
-                        title="Earning-Deduction Imports"
-                        onClick={() => navigate("/ED-imports")}
-                      />
-                      <SubMenuEntry
-                        title="Salary Processing"
-                        onClick={() => navigate("/salary-processing")}
-                      />
-                      <SubMenuEntry title="Salary Corrections" />
-                    </SubMenuGroup>
+                      <SubMenuGroup>
+                        {rights.includes(879) && (
+                          <SubMenuEntry title="Daily Overtime Processing" />
+                        )}
+                        {rights.includes(182) && (
+                          <SubMenuEntry title="Monthly Overtime Processing" />
+                        )}
+                        {rights.includes(305) && (
+                          <SubMenuEntry title="Overtime Approvals" />
+                        )}
+                        {rights.includes(724) && (
+                          <SubMenuEntry title="Advance Management " />
+                        )}
+                          {rights.includes(407) && (
+                              <SubMenuEntry
+                                  title="Earning-Deduction Imports"
+                                  onClick={() => navigate("/ED-imports")}
+                              />
+                          )}
+                          {rights.includes(603) && (
+                              <SubMenuEntry
+                                  title="Salary Processing"
+                                  onClick={() => navigate("/salary-processing")}
+                              />
+                          )}
+                          {rights.includes(141) && (
+                          <SubMenuEntry title="Salary Corrections" />
+                          )}
+                      </SubMenuGroup>
                   )}
-                  <SubMenuMain
+
+                  {/* <SubMenuMain
                     title="Registers"
                     isOpen={isRegisterSubmenuOpen}
                     onClick={() =>
@@ -634,7 +718,7 @@ const Sidebar = () => {
                     <SubMenuGroup>
                       <SubMenuEntry title="Master Register" />
                     </SubMenuGroup>
-                  )}
+                  )} */}
                 </div>
               )}
 
