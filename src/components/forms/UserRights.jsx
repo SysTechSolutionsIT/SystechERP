@@ -111,8 +111,10 @@ const UserRights = ({ID}) => {
           headers: { Authorization: `Bearer ${token}` }
         }
       );
+      alert('Access rights updated successfully')
       console.log(response.data);
     } catch (error) {
+      alert('User not registered')
       console.error('Error', error);
     }
   };

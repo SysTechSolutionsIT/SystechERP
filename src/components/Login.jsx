@@ -49,6 +49,7 @@ export const DetailsProvider = ({ children }) => {
   const [name, setName] = useState('')
   const [role, setRole] = useState('')
   const [empid, setEmpid] = useState('')
+  const [rights, setRights] = useState('')
 
   const handleSetCompanyId = (newID) => {
     setCompanyId(newID);
@@ -80,6 +81,11 @@ export const DetailsProvider = ({ children }) => {
     Cookies.set('empid', newEmpid, {expires: 7})
   }
 
+  const handleRights = (newRights) => {
+    setRights(newRights)
+    Cookies.set('rights', newRights, {expires: 7})
+  }
+
   useEffect(() => {
     const savedCompanyId = Cookies.get("companyId");
     const savedBrancId = Cookies.get("branchId");
@@ -87,6 +93,7 @@ export const DetailsProvider = ({ children }) => {
     const savedName = Cookies.get('name')
     const savedRole = Cookies.get('role')
     const savedempid = Cookies.get('empid')
+    const savedRights = Cookies.get('rights')
 
     if (savedCompanyId) {
       setCompanyId(savedCompanyId);
@@ -111,6 +118,10 @@ export const DetailsProvider = ({ children }) => {
     if(savedempid){
       setEmpid(savedempid)
     }
+
+    if(savedRights){
+      setRights(savedRights)
+    }
   }, []);
 
   return (
@@ -127,7 +138,9 @@ export const DetailsProvider = ({ children }) => {
         role,
         setRole: handleRole,
         empid,
-        setEmpid: handleEmpid
+        setEmpid: handleEmpid,
+        rights,
+        setRights: handleRights
       }}
     >
       {children}
@@ -147,6 +160,7 @@ function Login() {
   const { name, setName } = useDetails()
   const { role, setRole } = useDetails()
   const { empid, setEmpid} = useDetails()
+  const { rights, setRights } = useDetails()
   const [finYears, setFinYears] = useState([])
 
   const handleCompanyChange = (e) => {
@@ -196,7 +210,8 @@ function Login() {
       setRole(role)
       const empid = await response.data.empid
       setEmpid(empid)
-
+      const rights = await response.data.rights
+      setRights(rights)
       // Set token in the AuthContext
       // setToken(token);
 
