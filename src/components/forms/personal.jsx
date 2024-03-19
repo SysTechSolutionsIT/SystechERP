@@ -424,8 +424,7 @@ export default function Personal({ ID }) {
         params:{ EmployeeId: ID},
         headers:{ Authorization: `Bearer ${token}`}
       })
-      if (response.status === 200) alert('Logo Uploaded')
-      else alert('Logo Upload Failed, Please refresh and try again') 
+      alert('Photo Updated')
     } catch (error) {
       console.error('Error', error);
     }
@@ -1086,7 +1085,7 @@ export default function Personal({ ID }) {
       <div className="flex justify-center gap-4">
         <button
           type="submit"
-          className="px-8 py-2 bg-blue-900 text-white text-lg rounded-md"
+          className="px-8 py-2 bg-blue-900 text-white text-lg rounded-md hover:bg-green-600 duration-500"
         >
           Save details
         </button>

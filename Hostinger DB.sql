@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Mar 11, 2024 at 05:54 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- Host: 127.0.0.1:3306
+-- Generation Time: Mar 11, 2024 at 04:26 PM
+-- Server version: 10.6.15-MariaDB-cll-lve
+-- PHP Version: 7.2.34
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -104,6 +104,8 @@ CREATE DEFINER=`u172510268_devs`@`127.0.0.1` PROCEDURE `UspCompanyConfig` (IN `p
         END IF;
     END IF;
 END$$
+
+$$
 
 CREATE DEFINER=`u172510268_devs`@`127.0.0.1` PROCEDURE `UspMCaderwiseDeduction` (`pCompanyId` VARCHAR(5), `pBranchId` VARCHAR(5), `pCaderwiseDeductionId` VARCHAR(5), `pEmployeeTypeId` VARCHAR(5), `pCaderwiseDeductionDate` DATETIME(3), `pDeductionHeadId` VARCHAR(5), `pDeductionHead` VARCHAR(500), `pDCalculationType` VARCHAR(10), `pDCalculationValue` DECIMAL(10,2), `pFormula` VARCHAR(500), `pRemark` VARCHAR(1000), `pAcFlag` VARCHAR(1), `pCreatedBy` VARCHAR(500), `pModifiedBy` VARCHAR(500), `pIUFlag` VARCHAR(1), OUT `pResult` VARCHAR(100))   splbl:
 BEGIN
@@ -402,6 +404,10 @@ CREATE DEFINER=`u172510268_devs`@`127.0.0.1` PROCEDURE `UspMCostCenter` (IN `p_C
     END IF;
 END$$
 
+$$
+
+$$
+
 CREATE DEFINER=`u172510268_devs`@`127.0.0.1` PROCEDURE `UspMDesignation` (`pCompanyId` VARCHAR(5), `pBranchId` VARCHAR(5), `pDesignationId` VARCHAR(5), `pDesignationName` VARCHAR(50), `pReportDesignationId` VARCHAR(5), `pShortName` VARCHAR(3), `pDesignationsPosition` INT, `pAcFlag` VARCHAR(1), `pRemark` VARCHAR(500), `pCreatedBy` VARCHAR(500), `pModifiedBy` VARCHAR(500), `pIUFlag` VARCHAR(1), OUT `pResult` VARCHAR(100))   splbl:
 BEGIN
 Declare
@@ -567,6 +573,8 @@ Start Transaction;
 	
 	End if;
 END$$
+
+$$
 
 CREATE DEFINER=`u172510268_devs`@`127.0.0.1` PROCEDURE `UspMEmployee` (`pCompanyId` VARCHAR(5), `pBranchId` VARCHAR(5), `pEmployeeId` VARCHAR(5), `pEmployeeTypeId` VARCHAR(5), `pEmployeeTypeGroupId` VARCHAR(5), `pEmployeeName` VARCHAR(500), `pSalutation` VARCHAR(5), `pLastName` VARCHAR(500), `pFirstName` VARCHAR(500), `pMiddleName` VARCHAR(500), `pMEmployeeName` VARCHAR(500), `pAadharCardNo` VARCHAR(100), `pPANNo` VARCHAR(100), `pPassportNo` VARCHAR(100), `pPassportIssueDate` DATETIME(3), `pPassportExpireDate` DATETIME(3), `pCurrentAddress` VARCHAR(1000), `pCurrentPincode` VARCHAR(10), `pPermanantAddress` VARCHAR(1000), `pPermanantPincode` VARCHAR(10), `pDOB` DATETIME(3), `pEmailId1` VARCHAR(100), `pEmailId2` VARCHAR(100), `pPhoneNo` VARCHAR(15), `pCellNo1` VARCHAR(15), `pCellNo2` VARCHAR(15), `pBankId1` VARCHAR(5), `pAccountNo1` VARCHAR(100), `pIFSCCode1` VARCHAR(50), `pBankId2` VARCHAR(5), `pAccountNo2` VARCHAR(100), `pIFSCCode2` VARCHAR(50), `pMaritalStatus` VARCHAR(15), `pReferenceId` VARCHAR(5), `pDestinationId` VARCHAR(5), `pReligionId` VARCHAR(5), `pCategoryId` VARCHAR(5), `pCasteId` VARCHAR(5), `pEmployeePhoto` VARCHAR(1000), `pGender` VARCHAR(10), `pBloodGroup` VARCHAR(10), `pDrivingLicence` VARCHAR(500), `pFinanceAccountNo` VARCHAR(100), `pRemark` VARCHAR(500), `pAcFlag` VARCHAR(1), `pCreatedBy` VARCHAR(5), `pModifiedBy` VARCHAR(5), `pIUFlag` VARCHAR(1), OUT `pResult` VARCHAR(100))   splbl:
 BEGIN
@@ -1330,6 +1338,8 @@ BEGIN
 
 END$$
 
+$$
+
 CREATE DEFINER=`u172510268_devs`@`127.0.0.1` PROCEDURE `UspMHoliday` (`pCompanyId` VARCHAR(5), `pBranchId` VARCHAR(5), `pFYear` VARCHAR(5), `pHolidayId` VARCHAR(5), `pHolidayDate` DATETIME(3), `pHolidayDescription` VARCHAR(500), `pHolidayType` VARCHAR(3), `pAcFlag` VARCHAR(1), `pCreatedBy` VARCHAR(500), `pModifiedBy` VARCHAR(500), `pRemark` VARCHAR(500), `pIUFlag` VARCHAR(1), OUT `pResult` VARCHAR(100))   splbl:
 BEGIN
 Declare
@@ -1830,6 +1840,8 @@ Start Transaction;
 
 
 END$$
+
+$$
 
 CREATE DEFINER=`u172510268_devs`@`127.0.0.1` PROCEDURE `UspMShift` (`pCompanyId` VARCHAR(5), `pBranchId` VARCHAR(5), `pShiftId` VARCHAR(5), `pEmployeeTypeId` VARCHAR(5), `pShiftName` VARCHAR(100), `pStartTime` DATETIME(3), `pEndTime` DATETIME(3), `pOTStartTime` DATETIME(3), `pGraceEarlyTime` INT, `pGraceLateTime` INT, `pHalfdayHours` DECIMAL(10,2), `pFulldayHours` DECIMAL(10,2), `pAutoRotateFlag` VARCHAR(1), `pTwoDayShift` VARCHAR(1), `pShiftGraceHoursMin` INT, `pShiftGraceHoursMax` INT, `pRemark` VARCHAR(500), `pAcFlag` VARCHAR(1), `pCreatedBy` VARCHAR(500), `pModifiedBy` VARCHAR(500), `pIUFlag` VARCHAR(1), OUT `pResult` VARCHAR(100))   splbl:
 BEGIN
@@ -2500,10 +2512,10 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `companyconfigs`
+-- Table structure for table `CompanyConfigs`
 --
 
-CREATE TABLE `companyconfigs` (
+CREATE TABLE `CompanyConfigs` (
   `CompanyId` varchar(255) DEFAULT '00001',
   `BranchId` varchar(255) DEFAULT '00001',
   `CCID` int(11) NOT NULL,
@@ -2548,23 +2560,13 @@ CREATE TABLE `companyconfigs` (
   `updatedAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `companyconfigs`
---
-
-INSERT INTO `companyconfigs` (`CompanyId`, `BranchId`, `CCID`, `currency`, `theme`, `date`, `sessionTM`, `remarks`, `status`, `empID`, `empIdPrefix`, `cmulti`, `att`, `aProcess`, `atap`, `shiftFlag`, `jobApp`, `holiday`, `odFlag`, `otFlag`, `LAFlag`, `otCalc`, `esicSal`, `pfSal`, `gratuity`, `mlwf1`, `mlwf2`, `salLock`, `minWages`, `remarks1`, `salstat`, `email`, `smtpHost`, `sender`, `username`, `password`, `message`, `smsUrl`, `sms`, `IUFlag`, `createdAt`, `updatedAt`) VALUES
-('00001', '00001', 1, 'European Euro (EUR)', 'March', 'dd/mm/yyyy', '45', 'text', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'U', '2024-01-14 05:08:22', '2024-01-14 05:08:22'),
-('00001', '00001', 2, 'European Euro (EUR)', 'March', 'dd/mm/yyyy', '45', 'text', '', 'No', NULL, 'No', '', NULL, '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', 0, '', '', '', '', '', '', '', '', '', '', 'U', '2024-01-14 06:14:44', '2024-01-14 06:14:44'),
-('00001', '00001', 3, 'European Euro (EUR)', 'March', 'dd/mm/yyyy', '45', 'text', '', 'No', NULL, 'Yes', '', NULL, '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', 0, '', '', '', '', '', '', '', '', '', '', 'U', '2024-02-22 09:52:42', '2024-02-22 09:52:42'),
-('00001', '00001', 4, 'Indian Rupees', 'March', 'dd/mm/yyyy', '45', 'text', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', 0, '', '', '', '', '', '', '', '', '', '', 'U', '2024-03-01 08:18:34', '2024-03-01 08:18:34');
-
 -- --------------------------------------------------------
 
 --
--- Table structure for table `edimports`
+-- Table structure for table `EDImports`
 --
 
-CREATE TABLE `edimports` (
+CREATE TABLE `EDImports` (
   `id` int(11) NOT NULL,
   `Month` varchar(255) DEFAULT NULL,
   `Year` varchar(255) DEFAULT NULL,
@@ -2577,10 +2579,10 @@ CREATE TABLE `edimports` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mbanks`
+-- Table structure for table `MBanks`
 --
 
-CREATE TABLE `mbanks` (
+CREATE TABLE `MBanks` (
   `CompanyId` int(11) NOT NULL DEFAULT 1,
   `BranchId` int(11) NOT NULL DEFAULT 1,
   `BankId` int(11) NOT NULL,
@@ -2609,10 +2611,10 @@ CREATE TABLE `mbanks` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `mbanks`
+-- Dumping data for table `MBanks`
 --
 
-INSERT INTO `mbanks` (`CompanyId`, `BranchId`, `BankId`, `AccountType`, `BankName`, `BranchName`, `BranchAddress`, `RegisteredEmailId`, `RegisteredContactNo`, `Remark`, `AccountNo`, `CurrencyType`, `AuthorizedPersonCount`, `AuthorizedPerson1`, `AuthorizedPerson2`, `AuthorizedPerson3`, `AuthorizedPersonRole1`, `AuthorizedPersonRole2`, `AuthorizedPersonRole3`, `IFSCCode`, `SwiftCode`, `BankGST`, `AcFlag`, `createdAt`, `updatedAt`) VALUES
+INSERT INTO `MBanks` (`CompanyId`, `BranchId`, `BankId`, `AccountType`, `BankName`, `BranchName`, `BranchAddress`, `RegisteredEmailId`, `RegisteredContactNo`, `Remark`, `AccountNo`, `CurrencyType`, `AuthorizedPersonCount`, `AuthorizedPerson1`, `AuthorizedPerson2`, `AuthorizedPerson3`, `AuthorizedPersonRole1`, `AuthorizedPersonRole2`, `AuthorizedPersonRole3`, `IFSCCode`, `SwiftCode`, `BankGST`, `AcFlag`, `createdAt`, `updatedAt`) VALUES
 (1, 1, 1, 'Savings', 'Bank of Mahrashtra', 'Andheri', 'Mumbai', '123@qwe', 98198371, 'text', '123123123', '', 3, 'matt', 'd', 'df', 'View', 'View', 'Operation', '123123', '123132', '2133123', 'Y', '2023-12-01 04:42:04', '2023-12-01 05:32:58'),
 (1, 1, 2, 'Cash Credit', 'SBI', 'pune', 'pune', 'snflwnd', 97655675, 'text', '9090909', '', 2, 'abcd', 'rfe', 'reweq', 'View', 'Operation', 'View', '878787', 'lndfnd', '88888', 'Y', '2023-12-01 04:45:53', '2023-12-01 04:45:53'),
 (1, 1, 3, 'Foriegn currency non-resident (FCNR) account', 'Test Bank', 'Test Branch', 'Test Add', 'abc@bank.gov.in', 48374738, '', '2837472828387', 'INR', 3, 'A', 'B', 'C', 'Operation', 'Operation', 'Operation', 'IFSC8388', 'SWIFT38474', '987', 'N', '2023-12-30 09:22:42', '2023-12-30 09:28:01'),
@@ -2622,10 +2624,10 @@ INSERT INTO `mbanks` (`CompanyId`, `BranchId`, `BankId`, `AccountType`, `BankNam
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mcaderwisedeductions`
+-- Table structure for table `MCaderwiseDeductions`
 --
 
-CREATE TABLE `mcaderwisedeductions` (
+CREATE TABLE `MCaderwiseDeductions` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `CaderwiseDeductionId` varchar(5) NOT NULL,
@@ -2647,10 +2649,10 @@ CREATE TABLE `mcaderwisedeductions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `mcaderwisedeductions`
+-- Dumping data for table `MCaderwiseDeductions`
 --
 
-INSERT INTO `mcaderwisedeductions` (`CompanyId`, `BranchId`, `CaderwiseDeductionId`, `CaderwiseDeductionDate`, `EmployeeTypeId`, `EmployeeType`, `EmployeeTypeGroup`, `DeductionHeadID`, `DeductionHead`, `DCalculationType`, `DCalculationValue`, `Formula`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
+INSERT INTO `MCaderwiseDeductions` (`CompanyId`, `BranchId`, `CaderwiseDeductionId`, `CaderwiseDeductionDate`, `EmployeeTypeId`, `EmployeeType`, `EmployeeTypeGroup`, `DeductionHeadID`, `DeductionHead`, `DCalculationType`, `DCalculationValue`, `Formula`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
 ('00001', '00001', '0001', '2023-12-14 00:00:00', '001', 'S', 'Staff', 'D0001', 'PF', 'Formula', 0.00, '(P2)*12/100', 'remark', 'Y', NULL, NULL, NULL, NULL),
 ('00001', '00001', '0001', '2023-12-14 00:00:00', '001', 'S', 'Staff', 'D0002', 'ESIC', 'Formula', 0.00, '(P3)*0.75/100', 'remark', 'Y', NULL, NULL, NULL, NULL),
 ('00001', '00001', '0001', '2023-12-14 00:00:00', '001', 'S', 'Staff', 'D0003', 'Professional Tax ', 'Amount', 200.00, '0', 'remark', 'Y', NULL, NULL, NULL, NULL),
@@ -2659,15 +2661,24 @@ INSERT INTO `mcaderwisedeductions` (`CompanyId`, `BranchId`, `CaderwiseDeduction
 ('00001', '00001', '0001', '2023-12-14 00:00:00', '001', 'S', 'Staff', 'D0006', 'Arrear Deduct', 'Amount', 0.00, NULL, 'remark', 'Y', NULL, NULL, NULL, NULL),
 ('00001', '00001', '0007', '2023-12-14 00:00:00', '002', 'T', 'Staff', 'D0001', 'PF', 'Formula', 0.00, '(P2)*12/100', 'remark', 'Y', NULL, NULL, NULL, NULL),
 ('00001', '00001', '0007', '2023-12-14 00:00:00', '002', 'T', 'Staff', 'D0002', 'ESIC', 'Formula', 0.00, '(P3)*0.75/100', 'remark', 'Y', NULL, NULL, NULL, NULL),
-('00001', '00001', '0007', '2023-12-14 00:00:00', '002', 'T', 'Staff', 'D0005', 'TDS', 'Amount', 200.00, NULL, 'remark', 'Y', NULL, NULL, NULL, NULL);
+('00001', '00001', '0007', '2023-12-14 00:00:00', '002', 'T', 'Staff', 'D0005', 'TDS', 'Amount', 200.00, NULL, 'remark', 'Y', NULL, NULL, NULL, NULL),
+('00001', '00001', '0010', '2024-01-23 00:00:00', '004', 'O', 'Worker', 'D0001', 'PF', 'Formula', 0.00, '(P2)*12/100', 'Remark', 'Y', NULL, NULL, NULL, NULL),
+('00001', '00001', '0010', '2024-01-23 00:00:00', '004', 'O', 'Worker', 'D0002', 'ESIC', 'Formula', 0.00, '(P3)*0.75/100', 'Remark', 'Y', NULL, NULL, NULL, NULL),
+('00001', '00001', '0010', '2024-01-23 00:00:00', '004', 'O', 'Worker', 'D0004', 'MLWF', 'Amount', 0.00, NULL, 'Remark', 'Y', NULL, NULL, NULL, NULL),
+('00001', '00001', '0010', '2024-01-23 00:00:00', '004', 'O', 'Worker', 'D0005', 'TDS', 'Amount', 200.00, NULL, 'Remark', 'Y', NULL, NULL, NULL, NULL),
+('00001', '00001', '0010', '2024-01-23 00:00:00', '004', 'O', 'Worker', 'D0008', 'Fine', 'Amount', 0.00, NULL, 'Remark', 'Y', NULL, NULL, NULL, NULL),
+('00001', '00001', '0010', '2024-01-23 00:00:00', '004', 'O', 'Worker', 'D0009', 'Insurance', 'Amount', 0.00, NULL, 'Remark', 'Y', NULL, NULL, NULL, NULL),
+('00001', '00001', '0010', '2024-01-23 00:00:00', '004', 'O', 'Worker', 'D0010', 'E-PF1', 'Formula', 0.00, '(P2)*8.33/100', 'Remark', 'Y', NULL, NULL, NULL, NULL),
+('00001', '00001', '0010', '2024-01-23 00:00:00', '004', 'O', 'Worker', 'D0012', 'E-PF3', 'Formula', 0.00, NULL, 'Remark', 'Y', NULL, NULL, NULL, NULL),
+('00001', '00001', '0010', '2024-01-23 00:00:00', '004', 'O', 'Worker', 'D0013', 'Income Tax', 'Formula', 0.00, NULL, 'Remark', 'Y', NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mcaderwiseearnings`
+-- Table structure for table `MCaderwiseEarnings`
 --
 
-CREATE TABLE `mcaderwiseearnings` (
+CREATE TABLE `MCaderwiseEarnings` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `CaderwiseEarningId` varchar(5) NOT NULL,
@@ -2689,10 +2700,10 @@ CREATE TABLE `mcaderwiseearnings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `mcaderwiseearnings`
+-- Dumping data for table `MCaderwiseEarnings`
 --
 
-INSERT INTO `mcaderwiseearnings` (`CompanyId`, `BranchId`, `CaderwiseEarningId`, `CaderwiseEarningDate`, `EmployeeTypeId`, `EmployeeType`, `EmployeeTypeGroup`, `EarningHeadId`, `EarningHead`, `ECalculationType`, `ECalculationValue`, `Formula`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
+INSERT INTO `MCaderwiseEarnings` (`CompanyId`, `BranchId`, `CaderwiseEarningId`, `CaderwiseEarningDate`, `EmployeeTypeId`, `EmployeeType`, `EmployeeTypeGroup`, `EarningHeadId`, `EarningHead`, `ECalculationType`, `ECalculationValue`, `Formula`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
 ('00001', '00001', '0001', '2023-12-01 00:00:00', '001', 'S', 'Staff', 'E0002', 'Basic Salary', 'Formula', 0.00, '(P1)*(50/100)', 'remark', 'Y', NULL, NULL, NULL, NULL),
 ('00001', '00001', '0001', '2023-12-01 00:00:00', '001', 'S', 'Staff', 'E0003', 'Dearness Allowance', 'Formula', 0.00, '(P2)*24/100', 'remark', 'Y', NULL, NULL, NULL, NULL),
 ('00001', '00001', '0001', '2023-12-01 00:00:00', '001', 'S', 'Staff', 'E0004', 'House Rent Allowance', 'Formula', 0.00, '(P2)*50/100', 'remark', 'Y', NULL, NULL, NULL, NULL),
@@ -2715,15 +2726,28 @@ INSERT INTO `mcaderwiseearnings` (`CompanyId`, `BranchId`, `CaderwiseEarningId`,
 ('00001', '00001', '0020', '2023-12-01 00:00:00', '005', 'Y', 'Staff', 'E0002', 'Basic Salary', 'Formula', 0.00, '(P1)*(50/100)', 'remark', 'Y', NULL, NULL, NULL, NULL),
 ('00001', '00001', '0020', '2023-12-01 00:00:00', '005', 'Y', 'Staff', 'E0003', 'Dearness Allowance', 'Formula', 0.00, '(P2)*24/100', 'remark', 'Y', NULL, NULL, NULL, NULL),
 ('00001', '00001', '0020', '2023-12-01 00:00:00', '005', 'Y', 'Staff', 'E0004', 'House Rent Allowance', 'Formula', 0.00, '(P2)*50/100', 'remark', 'Y', NULL, NULL, NULL, NULL),
-('00001', '00001', '0020', '2023-12-01 00:00:00', '005', 'Y', 'Staff', 'E0005', 'Conveyance Allowance', 'Formula', 0.00, '(P2)*2/100', 'remark', 'Y', NULL, NULL, NULL, NULL);
+('00001', '00001', '0020', '2023-12-01 00:00:00', '005', 'Y', 'Staff', 'E0005', 'Conveyance Allowance', 'Formula', 0.00, '(P2)*2/100', 'remark', 'Y', NULL, NULL, NULL, NULL),
+('00001', '00001', '0024', '2024-01-23 00:00:00', '004', 'O', 'Worker', 'E0002', 'Basic Salary', 'Formula', 0.00, '(P1)*(50/100)', 'Remark', 'Y', NULL, NULL, NULL, NULL),
+('00001', '00001', '0024', '2024-01-23 00:00:00', '004', 'O', 'Worker', 'E0003', 'Dearness Allowance', 'Formula', 0.00, '(P2)*24/100', 'Remark', 'Y', NULL, NULL, NULL, NULL),
+('00001', '00001', '0024', '2024-01-23 00:00:00', '004', 'O', 'Worker', 'E0004', 'House Rent Allowance', 'Formula', 0.00, '(P2)*50/100', 'Remark', 'Y', NULL, NULL, NULL, NULL),
+('00001', '00001', '0024', '2024-01-23 00:00:00', '004', 'O', 'Worker', 'E0005', 'Conveyance Allowance', 'Formula', 0.00, '(P2)*2/100', 'Remark', 'Y', NULL, NULL, NULL, NULL),
+('00001', '00001', '0024', '2024-01-23 00:00:00', '004', 'O', 'Worker', 'E0006', 'Special Allowance', 'Formula', 0.00, '(P2)*13/100', 'Remark', 'Y', NULL, NULL, NULL, NULL),
+('00001', '00001', '0024', '2024-01-23 00:00:00', '004', 'O', 'Worker', 'E0007', 'Personal Allowance', 'Formula', 0.00, '(P2)*24/100', 'Remark', 'Y', NULL, NULL, NULL, NULL),
+('00001', '00001', '0024', '2024-01-23 00:00:00', '004', 'O', 'Worker', 'E0008', 'Incentive Allowance', 'Amount', 500.00, NULL, 'Remark', 'Y', NULL, NULL, NULL, NULL),
+('00001', '00001', '0024', '2024-01-23 00:00:00', '004', 'O', 'Worker', 'E0009', 'Arrear Paid', 'Amount', 0.00, NULL, 'Remark', 'Y', NULL, NULL, NULL, NULL),
+('00001', '00001', '0024', '2024-01-23 00:00:00', '004', 'O', 'Worker', 'E0010', 'Attendance Allowance', 'Amount', 0.00, NULL, 'Remark', 'Y', NULL, NULL, NULL, NULL),
+('00001', '00001', '0024', '2024-01-23 00:00:00', '004', 'O', 'Worker', 'E0015', 'Education Allowance', 'Amount', 0.00, NULL, 'Remark', 'Y', NULL, NULL, NULL, NULL),
+('00001', '00001', '0024', '2024-01-23 00:00:00', '004', 'O', 'Worker', 'E0016', 'Performance Bonus', 'Formula', 0.00, NULL, 'Remark', 'Y', NULL, NULL, NULL, NULL),
+('00001', '00001', '0024', '2024-01-23 00:00:00', '004', 'O', 'Worker', 'E0017', 'Referral  Allowance', 'Amount', 0.00, NULL, 'Remark', 'Y', NULL, NULL, NULL, NULL),
+('00001', '00001', '0024', '2024-01-23 00:00:00', '004', 'O', 'Worker', 'E0019', 'Gratuity', 'Amount', 0.00, NULL, 'Remark', 'Y', NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mcompanies`
+-- Table structure for table `MCompanies`
 --
 
-CREATE TABLE `mcompanies` (
+CREATE TABLE `MCompanies` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `CompanySectorId` int(255) DEFAULT NULL,
   `CompanySector` varchar(255) DEFAULT NULL,
@@ -2748,10 +2772,10 @@ CREATE TABLE `mcompanies` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `mcompanies`
+-- Dumping data for table `MCompanies`
 --
 
-INSERT INTO `mcompanies` (`CompanyId`, `CompanySectorId`, `CompanySector`, `CompanyName`, `ShortName`, `NatureOfBusiness`, `Logo`, `AcFlag`, `CreatedBy`, `CreatedByName`, `ModifiedBy`, `ModifiedByName`, `IUFlag`, `Status`, `SingleCompany`, `CreatedOn`, `ModifiedOn`, `FieldId`, `FieldName`, `createdAt`, `updatedAt`) VALUES
+INSERT INTO `MCompanies` (`CompanyId`, `CompanySectorId`, `CompanySector`, `CompanyName`, `ShortName`, `NatureOfBusiness`, `Logo`, `AcFlag`, `CreatedBy`, `CreatedByName`, `ModifiedBy`, `ModifiedByName`, `IUFlag`, `Status`, `SingleCompany`, `CreatedOn`, `ModifiedOn`, `FieldId`, `FieldName`, `createdAt`, `updatedAt`) VALUES
 ('00001', 58, 'Automation', 'SysTech Solutions', 'SYS', 'B2B', 'image_1705203560859.png', 'Y', 'Admin', '', NULL, '', 'U', NULL, 'true', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '', '2023-12-28 17:42:18', '2024-01-14 03:39:20'),
 ('00002', 39, 'Healthcare', 'HealTech', 'HTC', 'SaaS', 'image_1705204807665.png', 'Y', 'Admin', '', NULL, '', 'U', NULL, 'true', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '', '2023-12-28 17:42:51', '2024-01-14 04:00:07'),
 ('00003', 38, 'Electrical Automation', '5S Innovations LLP', '5SL', 'B2B', 'image_1705204881185.png', 'Y', 'Admin', '', NULL, '', 'U', NULL, 'false', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '', '2023-12-28 17:43:31', '2024-01-14 04:01:21'),
@@ -2762,10 +2786,10 @@ INSERT INTO `mcompanies` (`CompanyId`, `CompanySectorId`, `CompanySector`, `Comp
 ('00008', 26, 'Sector', 'Test Company', 'TSC', 'Business', NULL, 'N', 'Admin', '', NULL, '', 'I', NULL, 'true', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '', '2024-01-13 16:36:13', '2024-01-13 16:39:53');
 
 --
--- Triggers `mcompanies`
+-- Triggers `MCompanies`
 --
 DELIMITER $$
-CREATE TRIGGER `before_insert_MCompanies` BEFORE INSERT ON `mcompanies` FOR EACH ROW BEGIN
+CREATE TRIGGER `before_insert_MCompanies` BEFORE INSERT ON `MCompanies` FOR EACH ROW BEGIN
     SET NEW.CompanySectorId = (SELECT IFNULL(MAX(CompanySectorId), 0) + 1 FROM MCompanies);
 END
 $$
@@ -2774,10 +2798,10 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mcostcenter`
+-- Table structure for table `MCostCenter`
 --
 
-CREATE TABLE `mcostcenter` (
+CREATE TABLE `MCostCenter` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `CostCenterId` int(11) NOT NULL,
@@ -2788,10 +2812,10 @@ CREATE TABLE `mcostcenter` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `mcostcenter`
+-- Dumping data for table `MCostCenter`
 --
 
-INSERT INTO `mcostcenter` (`CompanyId`, `BranchId`, `CostCenterId`, `CostCenterName`, `AcFlag`, `Remark`, `Status`) VALUES
+INSERT INTO `MCostCenter` (`CompanyId`, `BranchId`, `CostCenterId`, `CostCenterName`, `AcFlag`, `Remark`, `Status`) VALUES
 ('2', '00001', 1, 'Marketing', 'Y', 'text', '1'),
 ('2', '00001', 2, 'Sales', 'Y', 'Remark', '1'),
 ('2', '00001', 3, 'Human Resources', 'Y', 'Remark', '1'),
@@ -2803,10 +2827,10 @@ INSERT INTO `mcostcenter` (`CompanyId`, `BranchId`, `CostCenterId`, `CostCenterN
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mdeductionheads`
+-- Table structure for table `MDeductionHeads`
 --
 
-CREATE TABLE `mdeductionheads` (
+CREATE TABLE `MDeductionHeads` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `DeductionHeadID` varchar(5) NOT NULL,
@@ -2836,10 +2860,10 @@ CREATE TABLE `mdeductionheads` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `mdeductionheads`
+-- Dumping data for table `MDeductionHeads`
 --
 
-INSERT INTO `mdeductionheads` (`CompanyId`, `BranchId`, `DeductionHeadID`, `DeductionHead`, `DeductionType`, `ShortName`, `HeadPosition`, `CalculationType`, `CalculationValue`, `SalaryParameter1`, `SalaryParameter2`, `SalaryParameter3`, `SalaryParameter4`, `SalaryParameter5`, `SalaryParameter6`, `SalaryParameter7`, `SalaryParameter8`, `SalaryParameter9`, `SalaryParameter10`, `Formula`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
+INSERT INTO `MDeductionHeads` (`CompanyId`, `BranchId`, `DeductionHeadID`, `DeductionHead`, `DeductionType`, `ShortName`, `HeadPosition`, `CalculationType`, `CalculationValue`, `SalaryParameter1`, `SalaryParameter2`, `SalaryParameter3`, `SalaryParameter4`, `SalaryParameter5`, `SalaryParameter6`, `SalaryParameter7`, `SalaryParameter8`, `SalaryParameter9`, `SalaryParameter10`, `Formula`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
 ('00001', '00001', 'D0001', 'PF', 'Salary', 'PF', 1, 'Formula', 0.00, 'E0002', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '(P2)*12/100', 'pfpfpfpfpfpf', 'Y', NULL, NULL, 'admin', '2022-05-11 12:05:17'),
 ('00001', '00001', 'D0002', 'ESIC', 'Salary', 'ESI', 2, 'Formula', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '(P3)*0.75/100', NULL, 'Y', NULL, NULL, 'admin', '2022-04-21 11:00:51'),
 ('00001', '00001', 'D0003', 'Professional Tax ', 'Salary', 'PT', 3, 'Amount', 200.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, 'Y', NULL, NULL, 'admin', '2022-04-25 11:24:45'),
@@ -2861,10 +2885,10 @@ INSERT INTO `mdeductionheads` (`CompanyId`, `BranchId`, `DeductionHeadID`, `Dedu
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mdepartments`
+-- Table structure for table `MDepartments`
 --
 
-CREATE TABLE `mdepartments` (
+CREATE TABLE `MDepartments` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `DepartmentId` varchar(5) NOT NULL,
@@ -2890,10 +2914,10 @@ CREATE TABLE `mdepartments` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `mdepartments`
+-- Dumping data for table `MDepartments`
 --
 
-INSERT INTO `mdepartments` (`CompanyId`, `BranchId`, `DepartmentId`, `ParentDeptId`, `DepartmentType`, `DepartmentName`, `DepartmentGroupId`, `CostCenterId`, `BranchName`, `DepartmentHeadId`, `DepartmentSubHeadId`, `DepartmentStdStaffStrength`, `DepartmentStdWorkerStrength`, `Remark`, `AcFlag`, `IUFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`, `createdAt`, `updatedAt`) VALUES
+INSERT INTO `MDepartments` (`CompanyId`, `BranchId`, `DepartmentId`, `ParentDeptId`, `DepartmentType`, `DepartmentName`, `DepartmentGroupId`, `CostCenterId`, `BranchName`, `DepartmentHeadId`, `DepartmentSubHeadId`, `DepartmentStdStaffStrength`, `DepartmentStdWorkerStrength`, `Remark`, `AcFlag`, `IUFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`, `createdAt`, `updatedAt`) VALUES
 ('1', '1', '00001', '00001', 'Main', 'NA', '00019', '00001', NULL, 1, 1, 1, 1, 'Remark', 'Y', NULL, 'admin', '2021-12-17 03:41:12', 'admin', '2021-12-17 03:49:57', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 ('1', '1', '00002', '00002', 'Main', 'Marketing & Proposals Department', '00020', '00002', NULL, 1, 1, 1, 1, 'Remark', 'Y', NULL, 'admin', '2021-12-23 16:23:32', 'admin', '2022-01-04 15:41:46', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 ('1', '1', '00003', '00003', 'Main', 'Purchase Department', '00020', '00002', NULL, 1, 1, 1, 1, 'Remark', 'Y', NULL, 'admin', '2021-12-23 17:25:00', 'admin', '2021-12-23 18:57:32', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
@@ -2923,10 +2947,10 @@ INSERT INTO `mdepartments` (`CompanyId`, `BranchId`, `DepartmentId`, `ParentDept
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mdesignations`
+-- Table structure for table `MDesignations`
 --
 
-CREATE TABLE `mdesignations` (
+CREATE TABLE `MDesignations` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `DesignationId` int(5) NOT NULL,
@@ -2943,10 +2967,10 @@ CREATE TABLE `mdesignations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `mdesignations`
+-- Dumping data for table `MDesignations`
 --
 
-INSERT INTO `mdesignations` (`CompanyId`, `BranchId`, `DesignationId`, `DesignationName`, `ReportDesignationId`, `ShortName`, `DesignationsPosition`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
+INSERT INTO `MDesignations` (`CompanyId`, `BranchId`, `DesignationId`, `DesignationName`, `ReportDesignationId`, `ShortName`, `DesignationsPosition`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
 ('00001', '00001', 1, 'Administrator', '00001', '', 1, 'Remark', 'Y', NULL, NULL, NULL, NULL),
 ('00001', '00001', 2, 'Project Manager', '00001', '', 1, 'Remark', 'Y', NULL, NULL, NULL, NULL),
 ('00001', '00001', 3, 'Senior Engineer', '00001', '', 1, 'Remark', 'Y', NULL, NULL, NULL, NULL),
@@ -2961,10 +2985,10 @@ INSERT INTO `mdesignations` (`CompanyId`, `BranchId`, `DesignationId`, `Designat
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mdevices`
+-- Table structure for table `MDevices`
 --
 
-CREATE TABLE `mdevices` (
+CREATE TABLE `MDevices` (
   `CompanyId` varchar(5) NOT NULL,
   `BranchId` varchar(5) NOT NULL,
   `DeviceId` varchar(5) NOT NULL,
@@ -2980,19 +3004,19 @@ CREATE TABLE `mdevices` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `mdevices`
+-- Dumping data for table `MDevices`
 --
 
-INSERT INTO `mdevices` (`CompanyId`, `BranchId`, `DeviceId`, `DeviceName`, `IpAddress`, `PortNo`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
+INSERT INTO `MDevices` (`CompanyId`, `BranchId`, `DeviceId`, `DeviceName`, `IpAddress`, `PortNo`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
 ('', '', '00001', 'Mukta\'s PC', '132', '3', 'text', 'Y', NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mearningheads`
+-- Table structure for table `MEarningHeads`
 --
 
-CREATE TABLE `mearningheads` (
+CREATE TABLE `MEarningHeads` (
   `CompanyId` varchar(255) NOT NULL DEFAULT '00001',
   `BranchId` varchar(255) NOT NULL DEFAULT '00001',
   `EarningHeadId` varchar(5) NOT NULL,
@@ -3022,10 +3046,10 @@ CREATE TABLE `mearningheads` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `mearningheads`
+-- Dumping data for table `MEarningHeads`
 --
 
-INSERT INTO `mearningheads` (`CompanyId`, `BranchId`, `EarningHeadId`, `EarningHead`, `EarningType`, `ShortName`, `HeadPosition`, `CalculationType`, `CalculationValue`, `SalaryParameter1`, `SalaryParameter2`, `SalaryParameter3`, `SalaryParameter4`, `SalaryParameter5`, `SalaryParameter6`, `SalaryParameter7`, `SalaryParameter8`, `SalaryParameter9`, `SalaryParameter10`, `Formula`, `Remark`, `AcFlag`, `CreatedBy`, `ModifiedBy`, `FieldId`, `FieldName`) VALUES
+INSERT INTO `MEarningHeads` (`CompanyId`, `BranchId`, `EarningHeadId`, `EarningHead`, `EarningType`, `ShortName`, `HeadPosition`, `CalculationType`, `CalculationValue`, `SalaryParameter1`, `SalaryParameter2`, `SalaryParameter3`, `SalaryParameter4`, `SalaryParameter5`, `SalaryParameter6`, `SalaryParameter7`, `SalaryParameter8`, `SalaryParameter9`, `SalaryParameter10`, `Formula`, `Remark`, `AcFlag`, `CreatedBy`, `ModifiedBy`, `FieldId`, `FieldName`) VALUES
 ('00001', '00001', 'E0001', 'Gross', 'Salary', 'GRS', 0, 'Formula', 0.00, 'E0001', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'P1', 'KKR', 'N', 'admin', '2022-01-15 10:32:08.647', 'admin', '2022-05-12 11:25:38.467'),
 ('00001', '00001', 'E0002', 'Basic Salary', 'Salary', 'BSC', 1, 'Formula', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '(P1)*(50/100)', 'bsc sal', 'Y', 'admin', '2022-01-15 10:32:08.647', 'admin', '2022-05-11 10:43:46.157'),
 ('00001', '00001', 'E0003', 'Dearness Allowance', 'Salary', 'DA', 2, 'Formula', 0.00, 'E0001', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '(P2)*24/100', NULL, 'Y', 'admin', '2022-01-15 10:32:08.647', 'admin', '2022-04-21 18:42:47.650'),
@@ -3054,10 +3078,10 @@ INSERT INTO `mearningheads` (`CompanyId`, `BranchId`, `EarningHeadId`, `EarningH
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mempdocs`
+-- Table structure for table `MEmpDocs`
 --
 
-CREATE TABLE `mempdocs` (
+CREATE TABLE `MEmpDocs` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `EmployeeId` int(5) NOT NULL,
@@ -3066,23 +3090,24 @@ CREATE TABLE `mempdocs` (
   `DocumentName` varchar(255) DEFAULT NULL,
   `Remarks` varchar(255) DEFAULT NULL,
   `CreatedOn` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `mempdocs`
+-- Dumping data for table `MEmpDocs`
 --
 
-INSERT INTO `mempdocs` (`CompanyId`, `BranchId`, `EmployeeId`, `DocId`, `Document`, `DocumentName`, `Remarks`, `CreatedOn`) VALUES
-('00001', '00001', 7, 1, 'file_1709112662534.docx', 'Passport', 'remark', NULL),
-('00001', '00001', 1, 2, 'file_1709617914281.pdf', 'Passport', 'remark', NULL);
+INSERT INTO `MEmpDocs` (`CompanyId`, `BranchId`, `EmployeeId`, `DocId`, `Document`, `DocumentName`, `Remarks`, `CreatedOn`) VALUES
+('00001', '00001', 6, 3, 'file_1705650142733.pdf', 'Passport', 'New', NULL),
+('00001', '00001', 2, 4, 'file_1706012839492.pdf', 'Passport', 'remark', NULL),
+('00001', '00001', 2, 6, 'file_1706013004749.txt', 'Aadhar Card', 'remark', NULL);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `memployeeacademics`
+-- Table structure for table `MEmployeeAcademics`
 --
 
-CREATE TABLE `memployeeacademics` (
+CREATE TABLE `MEmployeeAcademics` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `EmployeeId` int(5) NOT NULL,
@@ -3100,10 +3125,10 @@ CREATE TABLE `memployeeacademics` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `memployeeacademics`
+-- Dumping data for table `MEmployeeAcademics`
 --
 
-INSERT INTO `memployeeacademics` (`CompanyId`, `BranchId`, `EmployeeId`, `Qualification`, `Institute`, `Specialization`, `Grades`, `PassingYear`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
+INSERT INTO `MEmployeeAcademics` (`CompanyId`, `BranchId`, `EmployeeId`, `Qualification`, `Institute`, `Specialization`, `Grades`, `PassingYear`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
 ('00001', '00001', 1, 'B.tech,Diploma', 'VIT,MSBTE', 'CS,CS', '8.5,98', '2024,2021', '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
 ('00001', '00001', 2, '', '', '', NULL, '', '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
 ('00001', '00001', 3, '', '', '', NULL, '', '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
@@ -3115,10 +3140,10 @@ INSERT INTO `memployeeacademics` (`CompanyId`, `BranchId`, `EmployeeId`, `Qualif
 -- --------------------------------------------------------
 
 --
--- Table structure for table `memployeefamilies`
+-- Table structure for table `MEmployeeFamilies`
 --
 
-CREATE TABLE `memployeefamilies` (
+CREATE TABLE `MEmployeeFamilies` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `EmployeeId` int(5) NOT NULL,
@@ -3141,10 +3166,10 @@ CREATE TABLE `memployeefamilies` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `memployeefamilies`
+-- Dumping data for table `MEmployeeFamilies`
 --
 
-INSERT INTO `memployeefamilies` (`CompanyId`, `BranchId`, `EmployeeId`, `PersonName`, `Relation`, `Education`, `Occupation`, `Address`, `CellNo`, `EmailId`, `Nominee`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`, `createdAt`, `updatedAt`) VALUES
+INSERT INTO `MEmployeeFamilies` (`CompanyId`, `BranchId`, `EmployeeId`, `PersonName`, `Relation`, `Education`, `Occupation`, `Address`, `CellNo`, `EmailId`, `Nominee`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`, `createdAt`, `updatedAt`) VALUES
 ('00001', '00001', 1, 'Pedro Pascal,Anne Hatahway', 'Father,Mother', 'MSC,MSC', 'Actor,Actor', 'California,California', '5738573838,8484384838', 'email1,email2', 'Yes,Yes', '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00', '2023-11-25 16:35:23', '2023-11-30 04:15:45'),
 ('00001', '00001', 2, '', '', '', '', '', '', '', '', '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00', '2023-12-06 17:51:17', '2023-12-06 17:51:17'),
 ('00001', '00001', 3, '', '', '', '', '', '', '', '', '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00', '2023-12-08 07:44:46', '2023-12-08 07:44:46'),
@@ -3156,10 +3181,10 @@ INSERT INTO `memployeefamilies` (`CompanyId`, `BranchId`, `EmployeeId`, `PersonN
 -- --------------------------------------------------------
 
 --
--- Table structure for table `memployeegrades`
+-- Table structure for table `MEmployeeGrades`
 --
 
-CREATE TABLE `memployeegrades` (
+CREATE TABLE `MEmployeeGrades` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `EmployeeGradeId` int(3) NOT NULL,
@@ -3173,10 +3198,10 @@ CREATE TABLE `memployeegrades` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `memployeegrades`
+-- Dumping data for table `MEmployeeGrades`
 --
 
-INSERT INTO `memployeegrades` (`CompanyId`, `BranchId`, `EmployeeGradeId`, `EmployeeGradeName`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`, `Remark`) VALUES
+INSERT INTO `MEmployeeGrades` (`CompanyId`, `BranchId`, `EmployeeGradeId`, `EmployeeGradeName`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`, `Remark`) VALUES
 ('00001', '00001', 1, 'Grade 1', 'Y', NULL, NULL, NULL, NULL, 'Remark'),
 ('00001', '00001', 2, 'Grade 2', 'Y', NULL, NULL, NULL, NULL, 'Remark'),
 ('00001', '00001', 3, 'Grade 3', 'Y', NULL, NULL, NULL, NULL, 'Remark'),
@@ -3186,10 +3211,10 @@ INSERT INTO `memployeegrades` (`CompanyId`, `BranchId`, `EmployeeGradeId`, `Empl
 -- --------------------------------------------------------
 
 --
--- Table structure for table `memployeeprofessionals`
+-- Table structure for table `MEmployeeProfessionals`
 --
 
-CREATE TABLE `memployeeprofessionals` (
+CREATE TABLE `MEmployeeProfessionals` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `EmployeeId` int(5) NOT NULL,
@@ -3209,10 +3234,10 @@ CREATE TABLE `memployeeprofessionals` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `memployeeprofessionals`
+-- Dumping data for table `MEmployeeProfessionals`
 --
 
-INSERT INTO `memployeeprofessionals` (`CompanyId`, `BranchId`, `EmployeeId`, `Employer`, `Experience`, `Designation`, `JobResponsibility`, `Salary`, `CVFile`, `SalarySlipFile`, `AcFlag`, `Remark`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
+INSERT INTO `MEmployeeProfessionals` (`CompanyId`, `BranchId`, `EmployeeId`, `Employer`, `Experience`, `Designation`, `JobResponsibility`, `Salary`, `CVFile`, `SalarySlipFile`, `AcFlag`, `Remark`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
 ('00001', '00001', 1, 'ABC,DEF', '2 years,3 years', 'SDE,SDE', 'SDE,SDE', '500000,500000', '', '', 'Y', '', '', '', '', ''),
 ('00001', '00001', 2, 'HNS,MGK,INS', '2 years,2 years,4 years', 'SDE,SDE,PM', 'SDE,SDE,PM', '400000,500000,800000', NULL, NULL, 'Y', NULL, '', NULL, '', NULL),
 ('00001', '00001', 3, 'ABC', '2 years', 'SDE', 'SDE', '500000', NULL, NULL, 'Y', NULL, '', NULL, '', NULL),
@@ -3226,10 +3251,10 @@ INSERT INTO `memployeeprofessionals` (`CompanyId`, `BranchId`, `EmployeeId`, `Em
 -- --------------------------------------------------------
 
 --
--- Table structure for table `memployees`
+-- Table structure for table `MEmployees`
 --
 
-CREATE TABLE `memployees` (
+CREATE TABLE `MEmployees` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `EmployeeTypeId` varchar(50) NOT NULL DEFAULT '001',
@@ -3282,12 +3307,12 @@ CREATE TABLE `memployees` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `memployees`
+-- Dumping data for table `MEmployees`
 --
 
-INSERT INTO `memployees` (`CompanyId`, `BranchId`, `EmployeeTypeId`, `EmployeeId`, `EmployeeName`, `EmployeeTypeGroupId`, `Salutation`, `LastName`, `FirstName`, `MiddleName`, `MEmployeeName`, `AadharCardNo`, `PANNo`, `PassportNo`, `PassportIssueDate`, `PassportExpireDate`, `CurrentAddress`, `CurrentPincode`, `PermanentAddress`, `PermanentPincode`, `DOB`, `EmailId1`, `EmailId2`, `PhoneNo`, `CellNo1`, `CellNo2`, `BankId1`, `AccountNo1`, `IFSCCode1`, `BankId2`, `AccountNo2`, `IFSCCode2`, `MaritalStatus`, `ReferenceId`, `DestinationId`, `ReligionId`, `CategoryId`, `CasteId`, `EmployeePhoto`, `Gender`, `BloodGroup`, `DrivingLicence`, `FinanceAccountNo`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
+INSERT INTO `MEmployees` (`CompanyId`, `BranchId`, `EmployeeTypeId`, `EmployeeId`, `EmployeeName`, `EmployeeTypeGroupId`, `Salutation`, `LastName`, `FirstName`, `MiddleName`, `MEmployeeName`, `AadharCardNo`, `PANNo`, `PassportNo`, `PassportIssueDate`, `PassportExpireDate`, `CurrentAddress`, `CurrentPincode`, `PermanentAddress`, `PermanentPincode`, `DOB`, `EmailId1`, `EmailId2`, `PhoneNo`, `CellNo1`, `CellNo2`, `BankId1`, `AccountNo1`, `IFSCCode1`, `BankId2`, `AccountNo2`, `IFSCCode2`, `MaritalStatus`, `ReferenceId`, `DestinationId`, `ReligionId`, `CategoryId`, `CasteId`, `EmployeePhoto`, `Gender`, `BloodGroup`, `DrivingLicence`, `FinanceAccountNo`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
 ('00001', '00001', '001', 1, 'Charles Leclerc', 'Staff', 'Dear [Mr./Ms./Dr.] [Last Name]', 'Leclerc', 'Charles', 'Perceval ', '', '', '', '', '2023-12-26', '2023-12-25 00:00:00', 'Pune', '463526', 'Monaco', '737472', '1999-09-27', '4984984', '984984984984', '988977894', '98498498', '498498498', '984984', '98498498', '4984984984', '984984984', '984984984', '98498498', 'Unmarried', 'Supervisor/Manager References', 'Destination', 'Religion 1', 'Category 2', 'Caste 1', 'image_1705205736234.png', 'Male', 'A-', 0x5b6f626a656374204f626a6563745d, '', '', 'Y', '', '', '', ''),
-('00001', '00001', '004', 2, 'Bruce  Wayne', 'Worker', 'Dear [Mr./Ms./Dr.] [Last Name]', 'Wayne', 'Bruce ', 'Thomas', '', '', '', '', '', NULL, 'Pune', '843747', '', '', '2023-12-04', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', NULL, '', '', 0x5b6f626a656374204f626a6563745d, '', '', 'Y', '', '', '', ''),
+('00001', '00001', '004', 2, 'Bruce  Wayne', 'Worker', 'Dear [Mr./Ms./Dr.] [Last Name]', 'Wayne', 'Bruce ', 'Thomas', '', '', '', '', '', NULL, 'Pune', '843747', '', '', '2023-12-04', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'image_1706011984145.png', '', '', 0x5b6f626a656374204f626a6563745d, '', '', 'Y', '', '', '', ''),
 ('00001', '00001', '005', 3, 'Udayan Gaikwad', 'Worker', 'Sir/Madam', 'Gaikwad', 'Udayan', 'Fathesingh', '', '', '', '', '', NULL, 'Brahma Avenue, Kondhwa, Pune', '843747', 'Pune', '411048', '', 'udayanfg@gmail.com', 'udayanfg@gmail.com', '07219629734', '123123123', '', '', '', '', '', '', '', '', '', '', '', '', '', NULL, '', '', 0x5b6f626a656374204f626a6563745d, '', '', 'Y', '', '', '', ''),
 ('00001', '00001', '001', 4, 'Harshvardhan Reddy', 'Staff', 'Dear [Mr./Ms./Dr.] [Last Name]', 'Reddy', 'Harshvardhan', 'James', '', '', '', '', '', '0000-00-00 00:00:00', '', '', '', '', '1991-06-12', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', NULL, '', '', '', '', '', 'N', '', '', '', ''),
 ('00001', '00001', '001', 5, 'Max Verstappen', 'Staff', NULL, 'Verstappen', 'Max', 'Jos', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', NULL, NULL, NULL, NULL),
@@ -3297,10 +3322,10 @@ INSERT INTO `memployees` (`CompanyId`, `BranchId`, `EmployeeTypeId`, `EmployeeId
 -- --------------------------------------------------------
 
 --
--- Table structure for table `memployeesalaries`
+-- Table structure for table `MEmployeeSalaries`
 --
 
-CREATE TABLE `memployeesalaries` (
+CREATE TABLE `MEmployeeSalaries` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `EmployeeId` int(5) NOT NULL,
@@ -3330,10 +3355,10 @@ CREATE TABLE `memployeesalaries` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `memployeesalaries`
+-- Dumping data for table `MEmployeeSalaries`
 --
 
-INSERT INTO `memployeesalaries` (`CompanyId`, `BranchId`, `EmployeeId`, `GradeId`, `BandId`, `CTC`, `GrossSalary`, `OTFlag`, `OTAmount`, `PFFlag`, `PFNo`, `PFDate`, `ESICFlag`, `ESICNo`, `ESICDate`, `UANNo`, `MLWFFlag`, `MLWFNo`, `GratuityApplicable`, `GratuityAmount`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
+INSERT INTO `MEmployeeSalaries` (`CompanyId`, `BranchId`, `EmployeeId`, `GradeId`, `BandId`, `CTC`, `GrossSalary`, `OTFlag`, `OTAmount`, `PFFlag`, `PFNo`, `PFDate`, `ESICFlag`, `ESICNo`, `ESICDate`, `UANNo`, `MLWFFlag`, `MLWFNo`, `GratuityApplicable`, `GratuityAmount`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
 ('00001', '00001', 1, 'Grade', 'Band ', 1200000.00, 43069.00, 'f', 0.00, 't', '39391', '2023-12-16 00:00:00', 't', '49329', '2023-12-21 00:00:00', '26', 't', '939234', 't', 92394.00, 'remark', 'Y', '', NULL, '', NULL),
 ('00001', '00001', 2, '', '', 0.00, 76939.00, '', 0.00, '', '', NULL, '', '', NULL, '', '', '', '', 0.00, '', 'Y', '', NULL, '', NULL),
 ('00001', '00001', 3, '', '', 0.00, 0.00, '', 0.00, '', '', NULL, '', '', NULL, '', '', '', '', 0.00, '', 'Y', '', NULL, '', NULL),
@@ -3345,10 +3370,10 @@ INSERT INTO `memployeesalaries` (`CompanyId`, `BranchId`, `EmployeeId`, `GradeId
 -- --------------------------------------------------------
 
 --
--- Table structure for table `memployeetypes`
+-- Table structure for table `MEmployeeTypes`
 --
 
-CREATE TABLE `memployeetypes` (
+CREATE TABLE `MEmployeeTypes` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `EmployeeTypeId` varchar(3) NOT NULL,
@@ -3364,10 +3389,10 @@ CREATE TABLE `memployeetypes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `memployeetypes`
+-- Dumping data for table `MEmployeeTypes`
 --
 
-INSERT INTO `memployeetypes` (`CompanyId`, `BranchId`, `EmployeeTypeId`, `EmployeeType`, `EmployeeTypeGroup`, `ShortName`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
+INSERT INTO `MEmployeeTypes` (`CompanyId`, `BranchId`, `EmployeeTypeId`, `EmployeeType`, `EmployeeTypeGroup`, `ShortName`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
 ('00001', '00001', '001', 'Company Staff', 'Staff', 'S', 'remark', 'Y', NULL, NULL, NULL, NULL),
 ('00001', '00001', '002', 'Trainee Staff', 'Staff', 'T', 'remark', 'Y', NULL, NULL, NULL, NULL),
 ('00001', '00001', '003', 'Worker', 'Worker', 'W', 'remark', 'Y', NULL, NULL, NULL, NULL),
@@ -3377,10 +3402,10 @@ INSERT INTO `memployeetypes` (`CompanyId`, `BranchId`, `EmployeeTypeId`, `Employ
 -- --------------------------------------------------------
 
 --
--- Table structure for table `memployeewisededuction`
+-- Table structure for table `MEmployeewiseDeduction`
 --
 
-CREATE TABLE `memployeewisededuction` (
+CREATE TABLE `MEmployeewiseDeduction` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `EmployeeId` varchar(7) NOT NULL,
@@ -3406,10 +3431,10 @@ CREATE TABLE `memployeewisededuction` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `memployeewisedeductions`
+-- Table structure for table `MEmployeewiseDeductions`
 --
 
-CREATE TABLE `memployeewisedeductions` (
+CREATE TABLE `MEmployeewiseDeductions` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `EmployeeId` varchar(7) NOT NULL,
@@ -3432,10 +3457,10 @@ CREATE TABLE `memployeewisedeductions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `memployeewisedeductions`
+-- Dumping data for table `MEmployeewiseDeductions`
 --
 
-INSERT INTO `memployeewisedeductions` (`CompanyId`, `BranchId`, `EmployeeId`, `EmployeewiseDeductionId`, `EmployeewiseDeductionDate`, `EmployeeTypeId`, `EmployeeType`, `EmployeeTypeGroup`, `DeductionHeadId`, `DeductionHead`, `DCalculationType`, `DCalculationValue`, `Formula`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
+INSERT INTO `MEmployeewiseDeductions` (`CompanyId`, `BranchId`, `EmployeeId`, `EmployeewiseDeductionId`, `EmployeewiseDeductionDate`, `EmployeeTypeId`, `EmployeeType`, `EmployeeTypeGroup`, `DeductionHeadId`, `DeductionHead`, `DCalculationType`, `DCalculationValue`, `Formula`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
 ('00001', '00001', '1', 'S0001', '2023-12-15 15:45:52', '001', 'S', 'Staff', 'D0001', 'PF', 'Formula', 0.00, 'P2*(12/100)', NULL, 'Y', NULL, NULL, NULL, NULL),
 ('00001', '00001', '1', 'S0002', '2023-12-15 15:45:52', '001', 'S', 'Staff', 'D0002', 'ESIC', 'Formula', 0.00, 'P3*(0.75/100)', NULL, 'Y', NULL, NULL, NULL, NULL),
 ('00001', '00001', '1', 'S0003', '2023-12-15 15:45:52', '001', 'S', 'Staff', 'D0003', 'Professional Tax', 'Amount', 900.00, NULL, NULL, 'Y', NULL, NULL, NULL, NULL),
@@ -3445,10 +3470,10 @@ INSERT INTO `memployeewisedeductions` (`CompanyId`, `BranchId`, `EmployeeId`, `E
 -- --------------------------------------------------------
 
 --
--- Table structure for table `memployeewiseearnings`
+-- Table structure for table `MEmployeewiseEarnings`
 --
 
-CREATE TABLE `memployeewiseearnings` (
+CREATE TABLE `MEmployeewiseEarnings` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `EmployeeId` int(7) NOT NULL,
@@ -3471,10 +3496,10 @@ CREATE TABLE `memployeewiseearnings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `memployeewiseearnings`
+-- Dumping data for table `MEmployeewiseEarnings`
 --
 
-INSERT INTO `memployeewiseearnings` (`CompanyId`, `BranchId`, `EmployeeId`, `EmployeewiseEarningId`, `EmployeewiseEarningDate`, `EmployeeTypeId`, `EmployeeType`, `EmployeeTypeGroup`, `EarningHeadId`, `EarningHead`, `ECalculationType`, `ECalculationValue`, `Formula`, `ModifiedBy`, `ModifiedOn`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`) VALUES
+INSERT INTO `MEmployeewiseEarnings` (`CompanyId`, `BranchId`, `EmployeeId`, `EmployeewiseEarningId`, `EmployeewiseEarningDate`, `EmployeeTypeId`, `EmployeeType`, `EmployeeTypeGroup`, `EarningHeadId`, `EarningHead`, `ECalculationType`, `ECalculationValue`, `Formula`, `ModifiedBy`, `ModifiedOn`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`) VALUES
 ('00001', '00001', 1, 'S0001', '2023-12-16 04:33:29', '001', 'S', 'Staff', 'E0002', 'Basic Salary', 'Formula', 0.00, '(P1)*(50/100)', NULL, NULL, NULL, 'Y', NULL, NULL),
 ('00001', '00001', 1, 'S0002', '2023-12-16 04:33:29', '001', 'S', 'Staff', 'E0003', 'Dearness Allowance', 'Formula', 0.00, '(P2)*24/100', NULL, NULL, NULL, 'Y', NULL, NULL),
 ('00001', '00001', 1, 'S0003', '2023-12-16 04:33:29', '001', 'S', 'Staff', 'E0004', 'House Rent Allowance', 'Formula', 0.00, '(P2)*50/100', NULL, NULL, NULL, 'Y', NULL, NULL),
@@ -3492,15 +3517,38 @@ INSERT INTO `memployeewiseearnings` (`CompanyId`, `BranchId`, `EmployeeId`, `Emp
 ('00001', '00001', 1, 'S0015', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0016', 'Performance Bonus', 'Formula', 0.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
 ('00001', '00001', 1, 'S0016', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0018', 'LTA', 'Amount', 0.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
 ('00001', '00001', 1, 'S0017', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0019', 'Gratuity', 'Amount', 0.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
-('00001', '00001', 1, 'S0018', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0022', 'C-OFF Allowance', 'Amount', 0.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL);
+('00001', '00001', 1, 'S0018', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0022', 'C-OFF Allowance', 'Amount', 0.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 2, 'O0019', '2024-01-23 12:26:09', '004', 'O', 'Worker', 'E0002', 'Basic Salary', 'Formula', 0.00, '(P1)*(50/100)', NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 2, 'O0020', '2024-01-23 12:26:09', '004', 'O', 'Worker', 'E0003', 'Dearness Allowance', 'Formula', 0.00, '(P2)*24/100', NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 2, 'O0021', '2024-01-23 12:26:09', '004', 'O', 'Worker', 'E0004', 'House Rent Allowance', 'Formula', 0.00, '(P2)*50/100', NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 2, 'O0022', '2024-01-23 12:26:09', '004', 'O', 'Worker', 'E0005', 'Conveyance Allowance', 'Formula', 0.00, '(P2)*2/100', NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 2, 'O0023', '2024-01-23 12:26:09', '004', 'O', 'Worker', 'E0006', 'Special Allowance', 'Formula', 0.00, '(P2)*13/100', NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 2, 'O0024', '2024-01-23 12:26:09', '004', 'O', 'Worker', 'E0007', 'Personal Allowance', 'Formula', 0.00, '(P2)*24/100', NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 2, 'O0025', '2024-01-23 12:26:09', '004', 'O', 'Worker', 'E0008', 'Incentive Allowance', 'Amount', 500.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 2, 'O0026', '2024-01-23 12:26:09', '004', 'O', 'Worker', 'E0009', 'Arrear Paid', 'Amount', 0.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 2, 'O0027', '2024-01-23 12:26:09', '004', 'O', 'Worker', 'E0010', 'Attendance Allowance', 'Amount', 0.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 2, 'O0028', '2024-01-23 12:26:09', '004', 'O', 'Worker', 'E0011', 'Night Allowance', 'Formula', 0.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 2, 'O0029', '2024-01-23 12:26:09', '004', 'O', 'Worker', 'E0012', 'Travelling Allowance', 'Amount', 0.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 2, 'O0030', '2024-01-23 12:26:09', '004', 'O', 'Worker', 'E0013', 'Medical Allowance', 'Formula', 0.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 2, 'O0031', '2024-01-23 12:26:09', '004', 'O', 'Worker', 'E0014', 'Communication Allowance', 'Amount', 0.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 2, 'O0032', '2024-01-23 12:26:09', '004', 'O', 'Worker', 'E0015', 'Education Allowance', 'Amount', 0.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 2, 'O0033', '2024-01-23 12:26:09', '004', 'O', 'Worker', 'E0016', 'Performance Bonus', 'Formula', 0.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 2, 'O0034', '2024-01-23 12:26:09', '004', 'O', 'Worker', 'E0017', 'Referral  Allowance', 'Amount', 0.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 2, 'O0035', '2024-01-23 12:26:09', '004', 'O', 'Worker', 'E0018', 'LTA', 'Amount', 0.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 2, 'O0036', '2024-01-23 12:26:09', '004', 'O', 'Worker', 'E0019', 'Gratuity', 'Amount', 0.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 2, 'O0037', '2024-01-23 12:26:09', '004', 'O', 'Worker', 'E0020', 'Bonus', 'Formula', 0.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 2, 'O0038', '2024-01-23 12:26:09', '004', 'O', 'Worker', 'E0021', 'Over Time', 'Formula', 0.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 2, 'O0039', '2024-01-23 12:26:09', '004', 'O', 'Worker', 'E0022', 'C-OFF Allowance', 'Amount', 0.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 2, 'O0040', '2024-01-23 12:26:09', '004', 'O', 'Worker', 'E0026', 'MLWF', 'Amount', 1.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', 2, 'O0041', '2024-01-23 12:26:09', '004', 'O', 'Worker', 'E0027', 'Fine', 'Amount', 0.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `memployeeworkprofiles`
+-- Table structure for table `MEmployeeWorkProfiles`
 --
 
-CREATE TABLE `memployeeworkprofiles` (
+CREATE TABLE `MEmployeeWorkProfiles` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `EmployeeId` int(5) NOT NULL,
@@ -3532,10 +3580,10 @@ CREATE TABLE `memployeeworkprofiles` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `memployeeworkprofiles`
+-- Dumping data for table `MEmployeeWorkProfiles`
 --
 
-INSERT INTO `memployeeworkprofiles` (`CompanyId`, `BranchId`, `EmployeeId`, `DOJ`, `DOL`, `ContractorId`, `ContractorStartDate`, `ContractorEndDate`, `DeptGroupId`, `DeptId`, `SubDeptId`, `DesgId`, `ReportingTo`, `WeeklyOff`, `ShiftId`, `BandId`, `ZoneId`, `GradeId`, `CostCenterId`, `BondApplicable`, `BondAttachment`, `CurrentJob`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
+INSERT INTO `MEmployeeWorkProfiles` (`CompanyId`, `BranchId`, `EmployeeId`, `DOJ`, `DOL`, `ContractorId`, `ContractorStartDate`, `ContractorEndDate`, `DeptGroupId`, `DeptId`, `SubDeptId`, `DesgId`, `ReportingTo`, `WeeklyOff`, `ShiftId`, `BandId`, `ZoneId`, `GradeId`, `CostCenterId`, `BondApplicable`, `BondAttachment`, `CurrentJob`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
 ('00001', '00001', 1, '2010-09-27', '2023-10-29', 'Example 2', '2012-06-25', '2023-11-29', '00020', '00004', '00021', '3', '5', '00008', '00008', 'Example 1', 'Example 3', '2', '0005', 't', '', '', 'remark', 'Y', '', '', '', ''),
 ('00001', '00001', 2, '', '', '', NULL, NULL, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'Y', '', '', '', ''),
 ('00001', '00001', 3, '', '', '', NULL, NULL, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'Y', '', '', '', ''),
@@ -3547,10 +3595,10 @@ INSERT INTO `memployeeworkprofiles` (`CompanyId`, `BranchId`, `EmployeeId`, `DOJ
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mfinancialyears`
+-- Table structure for table `MFinancialYears`
 --
 
-CREATE TABLE `mfinancialyears` (
+CREATE TABLE `MFinancialYears` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `FYearId` varchar(5) NOT NULL,
@@ -3568,10 +3616,10 @@ CREATE TABLE `mfinancialyears` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `mfinancialyears`
+-- Dumping data for table `MFinancialYears`
 --
 
-INSERT INTO `mfinancialyears` (`CompanyId`, `BranchId`, `FYearId`, `Name`, `StartDate`, `EndDate`, `ShortName`, `YearClose`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`, `Remark`) VALUES
+INSERT INTO `MFinancialYears` (`CompanyId`, `BranchId`, `FYearId`, `Name`, `StartDate`, `EndDate`, `ShortName`, `YearClose`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`, `Remark`) VALUES
 ('00001', '00001', '00001', '2023-2024', '2024-03-01 00:00:00', '2024-02-29 00:00:00', '2023', 'Y', 'Y', NULL, NULL, NULL, NULL, NULL),
 ('00001', '00001', '00002', '2022-2023', '2022-03-01 00:00:00', '2023-02-28 00:00:00', '2022', 'N', 'Y', NULL, NULL, NULL, NULL, NULL),
 ('00001', '00001', '00003', '2021-2022', '2021-03-01 00:00:00', '2022-02-28 00:00:00', '2021', '0', 'N', NULL, NULL, NULL, NULL, NULL);
@@ -3579,10 +3627,10 @@ INSERT INTO `mfinancialyears` (`CompanyId`, `BranchId`, `FYearId`, `Name`, `Star
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mholidays`
+-- Table structure for table `MHolidays`
 --
 
-CREATE TABLE `mholidays` (
+CREATE TABLE `MHolidays` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `FYear` varchar(5) NOT NULL,
@@ -3600,19 +3648,19 @@ CREATE TABLE `mholidays` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `mholidays`
+-- Dumping data for table `MHolidays`
 --
 
-INSERT INTO `mholidays` (`CompanyId`, `BranchId`, `FYear`, `HolidayId`, `HolidayDate`, `IUFlag`, `HolidayDescription`, `HolidayType`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`, `Remark`) VALUES
+INSERT INTO `MHolidays` (`CompanyId`, `BranchId`, `FYear`, `HolidayId`, `HolidayDate`, `IUFlag`, `HolidayDescription`, `HolidayType`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`, `Remark`) VALUES
 ('00001', '00001', '2021', '00001', '2023-12-05', 'I', 'Holi', 'Unpaid', 'Y', '', '2023-12-19 17:59:43', NULL, NULL, 'remark');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mjobsresponsibilities`
+-- Table structure for table `MJobsResponsibilities`
 --
 
-CREATE TABLE `mjobsresponsibilities` (
+CREATE TABLE `MJobsResponsibilities` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `JobResponsibilityId` int(7) NOT NULL,
@@ -3628,10 +3676,10 @@ CREATE TABLE `mjobsresponsibilities` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `mjobsresponsibilities`
+-- Dumping data for table `MJobsResponsibilities`
 --
 
-INSERT INTO `mjobsresponsibilities` (`CompanyId`, `BranchId`, `JobResponsibilityId`, `JobResponsibilityName`, `Duration`, `Points`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
+INSERT INTO `MJobsResponsibilities` (`CompanyId`, `BranchId`, `JobResponsibilityId`, `JobResponsibilityName`, `Duration`, `Points`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
 ('00001', '00001', 1, 'Testing', 3, 12, 'remark', 'Y', NULL, NULL, NULL, NULL),
 ('00001', '00001', 3, 'Maintainence', 3, 12, 'remark', 'Y', NULL, NULL, NULL, NULL),
 ('00001', '00001', 5, 'Technician', 4, 46, 'remark', 'Y', NULL, NULL, NULL, NULL),
@@ -3642,13 +3690,13 @@ INSERT INTO `mjobsresponsibilities` (`CompanyId`, `BranchId`, `JobResponsibility
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mjobtypes`
+-- Table structure for table `MJobTypes`
 --
 
-CREATE TABLE `mjobtypes` (
+CREATE TABLE `MJobTypes` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
-  `JobTypeId` int(11) NOT NULL,
+  `JobTypeId` varchar(5) NOT NULL,
   `JobTypeName` varchar(50) DEFAULT NULL,
   `ShortName` varchar(2) DEFAULT NULL,
   `RateGroup` varchar(3) DEFAULT NULL,
@@ -3664,33 +3712,33 @@ CREATE TABLE `mjobtypes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `mjobtypes`
+-- Dumping data for table `MJobTypes`
 --
 
-INSERT INTO `mjobtypes` (`CompanyId`, `BranchId`, `JobTypeId`, `JobTypeName`, `ShortName`, `RateGroup`, `RatePerDay`, `Category`, `Position`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
-('00001', '00001', 1, 'Present', 'P', '0', 0.00, 'Standard', 0, 'Remark', 'Y', 'admin', '2022-01-27 13:29:29', 'admin', '2022-01-27 13:29:29'),
-('00001', '00001', 2, 'Absent', 'AB', '0', 0.00, 'Standard', 0, 'Remark', 'Y', 'admin', '2022-01-27 13:34:00', 'admin', '2022-01-27 13:34:00'),
-('00001', '00001', 3, 'Half Day', 'HF', '0', 0.00, 'Standard', 0, 'Remark', 'Y', 'admin', '2022-01-27 14:16:18', 'admin', '2022-01-27 14:16:18'),
-('00001', '00001', 4, 'Out Door Duty', 'OD', '0', 0.00, 'Standard', 0, 'Remark', 'Y', 'admin', '2022-01-27 18:42:15', 'admin', '2022-01-29 10:36:15'),
-('00001', '00001', 5, 'WeeklyOff', 'WO', '0', 0.00, 'Standard', 0, 'Remark', 'Y', 'admin', '2022-01-27 18:44:24', 'admin', '2022-01-27 18:44:37'),
-('00001', '00001', 6, 'Leaves', 'L', '0', 0.00, 'Standard', 0, 'Remark', 'Y', 'admin', '2022-01-27 19:23:44', 'admin', '2022-01-27 19:23:44'),
-('00001', '00001', 7, 'Holiday', 'HD', '0', 0.00, 'Standard', 0, 'Remark', 'Y', 'admin', '2022-01-29 10:35:37', 'admin', '2022-01-29 10:35:37'),
-('00001', '00001', 8, 'C-OFF', 'CF', '0', 0.00, 'Standard', 0, 'Remark', 'Y', 'admin', '2022-01-29 10:35:37', 'admin', '2022-01-29 10:35:37'),
-('00001', '00001', 9, 'Holiday Present', 'PH', '0', 0.00, 'Standard', 0, 'Remark', 'Y', 'admin', '2022-01-29 10:35:37', 'admin', '2022-01-29 10:35:37'),
-('00001', '00001', 10, 'TRAVEL', 'T', '0', 0.00, 'Position', 0, 'Remark', 'Y', 'admin', '2022-01-29 10:35:37', 'admin', '2022-05-11 17:51:13'),
-('00001', '00001', 11, 'halfday', 'hd', '0', 0.00, 'Standard', 0, 'hdd', 'N', 'admin', '2022-05-10 12:10:25', 'admin', '2022-05-10 12:19:19'),
-('00001', '00001', 12, 'Half Day Present', 'HD', '0', 0.00, 'Standard', 1, 'hdp', 'N', 'admin', '2022-05-10 16:49:35', 'admin', '2022-05-10 16:50:51'),
-('00001', '00001', 13, 'Half Day leave mon', 'hd', '0', 0.00, 'Standard', 0, 'hdl', 'N', 'admin', '2022-05-10 17:48:11', 'admin', '2022-05-10 17:48:30'),
-('00001', '00001', 14, 'Gross', 'gs', '0', 0.00, 'Position', 1, 'dsfdf', 'Y', 'admin', '2022-05-11 17:51:50', 'admin', '2022-05-12 10:47:08'),
-('00001', '00001', 15, 'HALF DAY LEAVE', 'HD', '2', 2.00, 'Position', 3, '2222', 'N', 'admin', '2022-05-12 10:47:56', 'admin', '2022-05-12 10:48:15');
+INSERT INTO `MJobTypes` (`CompanyId`, `BranchId`, `JobTypeId`, `JobTypeName`, `ShortName`, `RateGroup`, `RatePerDay`, `Category`, `Position`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
+('00001', '00001', '00001', 'Present', 'P', '0', 0.00, 'Standard', 0, 'Remark', 'Y', 'admin', '2022-01-27 13:29:29', 'admin', '2022-01-27 13:29:29'),
+('00001', '00001', '00002', 'Absent', 'AB', '0', 0.00, 'Standard', 0, 'Remark', 'Y', 'admin', '2022-01-27 13:34:00', 'admin', '2022-01-27 13:34:00'),
+('00001', '00001', '00003', 'Half Day', 'HF', '0', 0.00, 'Standard', 0, 'Remark', 'Y', 'admin', '2022-01-27 14:16:18', 'admin', '2022-01-27 14:16:18'),
+('00001', '00001', '00004', 'Out Door Duty', 'OD', '0', 0.00, 'Standard', 0, 'Remark', 'Y', 'admin', '2022-01-27 18:42:15', 'admin', '2022-01-29 10:36:15'),
+('00001', '00001', '00005', 'WeeklyOff', 'WO', '0', 0.00, 'Standard', 0, 'Remark', 'Y', 'admin', '2022-01-27 18:44:24', 'admin', '2022-01-27 18:44:37'),
+('00001', '00001', '00006', 'Leaves', 'L', '0', 0.00, 'Standard', 0, 'Remark', 'Y', 'admin', '2022-01-27 19:23:44', 'admin', '2022-01-27 19:23:44'),
+('00001', '00001', '00007', 'Holiday', 'HD', '0', 0.00, 'Standard', 0, 'Remark', 'Y', 'admin', '2022-01-29 10:35:37', 'admin', '2022-01-29 10:35:37'),
+('00001', '00001', '00008', 'C-OFF', 'CF', '0', 0.00, 'Standard', 0, 'Remark', 'Y', 'admin', '2022-01-29 10:35:37', 'admin', '2022-01-29 10:35:37'),
+('00001', '00001', '00009', 'Holiday Present', 'PH', '0', 0.00, 'Standard', 0, 'Remark', 'Y', 'admin', '2022-01-29 10:35:37', 'admin', '2022-01-29 10:35:37'),
+('00001', '00001', '00010', 'TRAVEL', 'T', '0', 0.00, 'Position', 0, 'Remark', 'Y', 'admin', '2022-01-29 10:35:37', 'admin', '2022-05-11 17:51:13'),
+('00001', '00001', '00011', 'halfday', 'hd', '0', 0.00, 'Standard', 0, 'hdd', 'N', 'admin', '2022-05-10 12:10:25', 'admin', '2022-05-10 12:19:19'),
+('00001', '00001', '00012', 'Half Day Present', 'HD', '0', 0.00, 'Standard', 1, 'hdp', 'N', 'admin', '2022-05-10 16:49:35', 'admin', '2022-05-10 16:50:51'),
+('00001', '00001', '00013', 'Half Day leave mon', 'hd', '0', 0.00, 'Standard', 0, 'hdl', 'N', 'admin', '2022-05-10 17:48:11', 'admin', '2022-05-10 17:48:30'),
+('00001', '00001', '00014', 'Gross', 'gs', '0', 0.00, 'Position', 1, 'dsfdf', 'Y', 'admin', '2022-05-11 17:51:50', 'admin', '2022-05-12 10:47:08'),
+('00001', '00001', '00015', 'HALF DAY LEAVE', 'HD', '2', 2.00, 'Position', 3, '2222', 'N', 'admin', '2022-05-12 10:47:56', 'admin', '2022-05-12 10:48:15');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mkras`
+-- Table structure for table `MKRAs`
 --
 
-CREATE TABLE `mkras` (
+CREATE TABLE `MKRAs` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `KRAId` int(5) NOT NULL,
@@ -3706,10 +3754,10 @@ CREATE TABLE `mkras` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `mkras`
+-- Dumping data for table `MKRAs`
 --
 
-INSERT INTO `mkras` (`CompanyId`, `BranchId`, `KRAId`, `KRAName`, `Duration`, `Points`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
+INSERT INTO `MKRAs` (`CompanyId`, `BranchId`, `KRAId`, `KRAName`, `Duration`, `Points`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
 ('00001', '00001', 1, 'KRA 1', 12, 54, 'remarks', 'Y', NULL, NULL, NULL, NULL),
 ('00001', '00001', 2, 'KRA 2', 12, 54, 'remarks', 'Y', NULL, NULL, NULL, NULL),
 ('00001', '00001', 3, 'KRA 3', 12, 54, 'remarks', 'Y', NULL, NULL, NULL, NULL),
@@ -3725,10 +3773,10 @@ INSERT INTO `mkras` (`CompanyId`, `BranchId`, `KRAId`, `KRAName`, `Duration`, `P
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mleaves`
+-- Table structure for table `MLeaves`
 --
 
-CREATE TABLE `mleaves` (
+CREATE TABLE `MLeaves` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `LeaveBalanceId` varchar(5) NOT NULL,
@@ -3767,10 +3815,10 @@ CREATE TABLE `mleaves` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `mleaves`
+-- Dumping data for table `MLeaves`
 --
 
-INSERT INTO `mleaves` (`CompanyId`, `BranchId`, `LeaveBalanceId`, `FYear`, `EmployeeId`, `EmployeeTypeId`, `EmployeeType`, `EmployeeTypeGroup`, `LeaveTypeId`, `Month`, `Year`, `LeaveBalanceDate`, `EmployeeName`, `LeaveTypeDesc`, `OpeningBalance`, `LeaveEarned1`, `LeaveEarned2`, `LeaveEarned3`, `LeaveEarned4`, `LeaveEarned5`, `LeaveEarned6`, `LeaveEarned7`, `LeaveEarned8`, `LeaveEarned9`, `LeaveEarned10`, `LeaveEarned11`, `LeaveEarned12`, `SanctionLeaveDays`, `LeaveBalance`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
+INSERT INTO `MLeaves` (`CompanyId`, `BranchId`, `LeaveBalanceId`, `FYear`, `EmployeeId`, `EmployeeTypeId`, `EmployeeType`, `EmployeeTypeGroup`, `LeaveTypeId`, `Month`, `Year`, `LeaveBalanceDate`, `EmployeeName`, `LeaveTypeDesc`, `OpeningBalance`, `LeaveEarned1`, `LeaveEarned2`, `LeaveEarned3`, `LeaveEarned4`, `LeaveEarned5`, `LeaveEarned6`, `LeaveEarned7`, `LeaveEarned8`, `LeaveEarned9`, `LeaveEarned10`, `LeaveEarned11`, `LeaveEarned12`, `SanctionLeaveDays`, `LeaveBalance`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
 ('00001', '00001', '00001', '2023', '1', '001', 'S', 'Staff', '0001', '12', '2023', '2023-12-29 00:00:00', 'Charles Leclerc', 'PL', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
 ('00001', '00001', '00002', '2023', '1', '001', 'S', 'Staff', '0002', '12', '2023', '2023-12-29 00:00:00', 'Charles Leclerc', 'CL', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
 ('00001', '00001', '00003', '2023', '1', '001', 'S', 'Staff', '0003', '12', '2023', '2023-12-29 00:00:00', 'Charles Leclerc', 'SL', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
@@ -3797,15 +3845,24 @@ INSERT INTO `mleaves` (`CompanyId`, `BranchId`, `LeaveBalanceId`, `FYear`, `Empl
 ('00001', '00001', '00024', '2023', '4', '001', 'S', 'Staff', '0006', '12', '2023', '2023-12-29 00:00:00', 'Harshvardhan Reddy', 'HD', 8.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 5.00, 5.00, '', 'Y', '', NULL, '', NULL),
 ('00001', '00001', '00025', '2023', '4', '001', 'S', 'Staff', '0007', '12', '2023', '2023-12-29 00:00:00', 'Harshvardhan Reddy', 'HD', 8.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 4.00, 4.00, '', 'Y', '', NULL, '', NULL),
 ('00001', '00001', '00026', '2023', '4', '001', 'S', 'Staff', '0008', '12', '2023', '2023-12-29 00:00:00', 'Harshvardhan Reddy', 'UL', 6.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 5.00, 5.00, '', 'Y', '', NULL, '', NULL),
-('00001', '00001', '00027', '2023', '4', '001', 'S', 'Staff', '0009', '12', '2023', '2023-12-29 00:00:00', 'Harshvardhan Reddy', 'WO', 7.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 5.00, 5.00, '', 'Y', '', NULL, '', NULL);
+('00001', '00001', '00027', '2023', '4', '001', 'S', 'Staff', '0009', '12', '2023', '2023-12-29 00:00:00', 'Harshvardhan Reddy', 'WO', 7.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 5.00, 5.00, '', 'Y', '', NULL, '', NULL),
+('00001', '00001', '00028', '2023', '3', '005', 'Y', 'Worker', '0001', '1', '2024', '2024-01-25 00:00:00', 'Udayan Gaikwad', 'PL', 5.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 2.00, 2.00, '', 'Y', NULL, '2024-01-25 11:34:42', NULL, '2024-01-25 11:34:42'),
+('00001', '00001', '00029', '2023', '3', '005', 'Y', 'Worker', '0002', '1', '2024', '2024-01-25 00:00:00', 'Udayan Gaikwad', 'CL', 5.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 1.00, '', 'Y', NULL, '2024-01-25 11:34:42', NULL, '2024-01-25 11:34:42'),
+('00001', '00001', '00030', '2023', '3', '005', 'Y', 'Worker', '0003', '1', '2024', '2024-01-25 00:00:00', 'Udayan Gaikwad', 'SL', 4.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 1.00, '', 'Y', NULL, '2024-01-25 11:34:42', NULL, '2024-01-25 11:34:42'),
+('00001', '00001', '00031', '2023', '3', '005', 'Y', 'Worker', '0004', '1', '2024', '2024-01-25 00:00:00', 'Udayan Gaikwad', 'LW', 4.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 1.00, '', 'Y', NULL, '2024-01-25 11:34:42', NULL, '2024-01-25 11:34:42'),
+('00001', '00001', '00032', '2023', '3', '005', 'Y', 'Worker', '0005', '1', '2024', '2024-01-25 00:00:00', 'Udayan Gaikwad', 'CF', 5.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 1.00, '', 'Y', NULL, '2024-01-25 11:34:42', NULL, '2024-01-25 11:34:42'),
+('00001', '00001', '00033', '2023', '3', '005', 'Y', 'Worker', '0006', '1', '2024', '2024-01-25 00:00:00', 'Udayan Gaikwad', 'HD', 4.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 2.00, 2.00, '', 'Y', NULL, '2024-01-25 11:34:42', NULL, '2024-01-25 11:34:42'),
+('00001', '00001', '00034', '2023', '3', '005', 'Y', 'Worker', '0007', '1', '2024', '2024-01-25 00:00:00', 'Udayan Gaikwad', 'HD', 4.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 1.00, '', 'Y', NULL, '2024-01-25 11:34:42', NULL, '2024-01-25 11:34:42'),
+('00001', '00001', '00035', '2023', '3', '005', 'Y', 'Worker', '0008', '1', '2024', '2024-01-25 00:00:00', 'Udayan Gaikwad', 'UL', 4.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 1.00, '', 'Y', NULL, '2024-01-25 11:34:42', NULL, '2024-01-25 11:34:42'),
+('00001', '00001', '00036', '2023', '3', '005', 'Y', 'Worker', '0009', '1', '2024', '2024-01-25 00:00:00', 'Udayan Gaikwad', 'WO', 15.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 3.00, 3.00, '', 'Y', NULL, '2024-01-25 11:34:42', NULL, '2024-01-25 11:34:42');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mleavetypes`
+-- Table structure for table `MLeaveTypes`
 --
 
-CREATE TABLE `mleavetypes` (
+CREATE TABLE `MLeaveTypes` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `LeaveTypeId` varchar(5) NOT NULL,
@@ -3822,10 +3879,10 @@ CREATE TABLE `mleavetypes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `mleavetypes`
+-- Dumping data for table `MLeaveTypes`
 --
 
-INSERT INTO `mleavetypes` (`CompanyId`, `BranchId`, `LeaveTypeId`, `LeaveType`, `ShortName`, `PaidFlag`, `CarryForwardFlag`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
+INSERT INTO `MLeaveTypes` (`CompanyId`, `BranchId`, `LeaveTypeId`, `LeaveType`, `ShortName`, `PaidFlag`, `CarryForwardFlag`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
 ('00001', '00001', '0001', 'Paid Leave', 'PL', 'U', 'Y', ' remark', 'Y', NULL, NULL, NULL, NULL),
 ('00001', '00001', '0002', 'Casual Leave', 'CL', 'P', 'Y', ' remark', 'Y', NULL, NULL, NULL, NULL),
 ('00001', '00001', '0003', 'Sick Leave', 'SL', 'P', 'Y', ' remark', 'Y', NULL, NULL, NULL, NULL),
@@ -3839,10 +3896,10 @@ INSERT INTO `mleavetypes` (`CompanyId`, `BranchId`, `LeaveTypeId`, `LeaveType`, 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mmasternames`
+-- Table structure for table `MMasterNames`
 --
 
-CREATE TABLE `mmasternames` (
+CREATE TABLE `MMasterNames` (
   `MasterId` int(5) NOT NULL,
   `MasterName` varchar(50) NOT NULL,
   `AcFlag` varchar(1) DEFAULT NULL,
@@ -3850,10 +3907,10 @@ CREATE TABLE `mmasternames` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `mmasternames`
+-- Dumping data for table `MMasterNames`
 --
 
-INSERT INTO `mmasternames` (`MasterId`, `MasterName`, `AcFlag`, `IUFlag`) VALUES
+INSERT INTO `MMasterNames` (`MasterId`, `MasterName`, `AcFlag`, `IUFlag`) VALUES
 (1, 'EmployeeGroupType', 'Y', NULL),
 (4, 'Salutation', 'Y', NULL),
 (5, 'DepartmentGroup', 'Y', NULL),
@@ -3870,10 +3927,10 @@ INSERT INTO `mmasternames` (`MasterId`, `MasterName`, `AcFlag`, `IUFlag`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mprofesstax`
+-- Table structure for table `MProfessTax`
 --
 
-CREATE TABLE `mprofesstax` (
+CREATE TABLE `MProfessTax` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `PTId` int(3) NOT NULL,
@@ -3891,20 +3948,20 @@ CREATE TABLE `mprofesstax` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `mprofesstax`
+-- Dumping data for table `MProfessTax`
 --
 
-INSERT INTO `mprofesstax` (`CompanyId`, `BranchId`, `PTId`, `Gender`, `UpperLimit`, `LowerLimit`, `PTAmount`, `PTAmountFeb`, `AcFlag`, `Remark`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
+INSERT INTO `MProfessTax` (`CompanyId`, `BranchId`, `PTId`, `Gender`, `UpperLimit`, `LowerLimit`, `PTAmount`, `PTAmountFeb`, `AcFlag`, `Remark`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
 ('00001', '00001', 1, 'Female', 250000.00, 15000.00, 1231.00, 123.00, 'Y', 'text', NULL, '0000-00-00 00:00:00', NULL, '0000-00-00 00:00:00'),
 ('00001', '00001', 2, 'Female', 250000.00, 15000.00, 1231.00, 123.00, 'Y', 'text', NULL, '0000-00-00 00:00:00', NULL, '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mprofesstaxes`
+-- Table structure for table `MProfessTaxes`
 --
 
-CREATE TABLE `mprofesstaxes` (
+CREATE TABLE `MProfessTaxes` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `PTId` int(3) NOT NULL,
@@ -3924,10 +3981,10 @@ CREATE TABLE `mprofesstaxes` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mshifts`
+-- Table structure for table `MShifts`
 --
 
-CREATE TABLE `mshifts` (
+CREATE TABLE `MShifts` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `ShiftId` varchar(5) NOT NULL,
@@ -3954,10 +4011,10 @@ CREATE TABLE `mshifts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `mshifts`
+-- Dumping data for table `MShifts`
 --
 
-INSERT INTO `mshifts` (`CompanyId`, `BranchId`, `ShiftId`, `EmployeeTypeGroupId`, `EmployeeTypeId`, `ShiftName`, `StartTime`, `EndTime`, `OTStartTime`, `GraceEarlyTime`, `GraceLateTime`, `HalfdayHours`, `FulldayHours`, `AutoRotateFlag`, `TwoDayShift`, `ShiftGraceHoursMin`, `ShiftGraceHoursMax`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
+INSERT INTO `MShifts` (`CompanyId`, `BranchId`, `ShiftId`, `EmployeeTypeGroupId`, `EmployeeTypeId`, `ShiftName`, `StartTime`, `EndTime`, `OTStartTime`, `GraceEarlyTime`, `GraceLateTime`, `HalfdayHours`, `FulldayHours`, `AutoRotateFlag`, `TwoDayShift`, `ShiftGraceHoursMin`, `ShiftGraceHoursMax`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
 ('00001', '00001', '00001', '00001', '001', 'S-I', '08:00:00', '16:00:00', '17:15:00', 10, 10, 4.50, 6.50, 'N', 'N', -2, 2, 'Remark', 'Y', 'admin', '2021-12-31 10:52:03', 'admin', '2022-01-07 13:05:28'),
 ('00001', '00001', '00002', '00001', '001', 'S-II', '16:00:00', '23:59:00', '18:15:00', 10, 10, 4.50, 6.50, 'N', 'N', -2, 2, 'Remark', 'Y', 'admin', '2021-12-31 14:20:19', 'admin', '2022-01-18 14:15:45'),
 ('00001', '00001', '00003', '00002', '002', 'W-I', '08:00:00', '16:00:00', '16:15:00', 15, 15, 5.00, 7.00, 'Y', 'N', -2, 2, 'Remark', 'Y', 'admin', '2021-12-31 14:34:48', 'admin', '2022-01-12 10:17:08'),
@@ -3978,10 +4035,10 @@ INSERT INTO `mshifts` (`CompanyId`, `BranchId`, `ShiftId`, `EmployeeTypeGroupId`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mtwofields`
+-- Table structure for table `MTwoFields`
 --
 
-CREATE TABLE `mtwofields` (
+CREATE TABLE `MTwoFields` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `FieldId` varchar(5) NOT NULL,
@@ -3996,10 +4053,10 @@ CREATE TABLE `mtwofields` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `mtwofields`
+-- Dumping data for table `MTwoFields`
 --
 
-INSERT INTO `mtwofields` (`CompanyId`, `BranchId`, `FieldId`, `MasterNameId`, `FieldDetails`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`, `Remark`) VALUES
+INSERT INTO `MTwoFields` (`CompanyId`, `BranchId`, `FieldId`, `MasterNameId`, `FieldDetails`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`, `Remark`) VALUES
 ('00001', '00001', '00001', 1, 'Staff', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
 ('00001', '00001', '00002', 1, 'Worker', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
 ('00001', '00001', '00013', 4, 'Mr.', 'Y', '00001', '2021-04-01 00:00:00', '00001', '2021-04-01 00:00:00', NULL),
@@ -4082,10 +4139,10 @@ INSERT INTO `mtwofields` (`CompanyId`, `BranchId`, `FieldId`, `MasterNameId`, `F
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mweeklyoffs`
+-- Table structure for table `MWeeklyOffs`
 --
 
-CREATE TABLE `mweeklyoffs` (
+CREATE TABLE `MWeeklyOffs` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `WeeklyOffId` varchar(5) NOT NULL,
@@ -4099,10 +4156,10 @@ CREATE TABLE `mweeklyoffs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `mweeklyoffs`
+-- Dumping data for table `MWeeklyOffs`
 --
 
-INSERT INTO `mweeklyoffs` (`CompanyId`, `BranchId`, `WeeklyOffId`, `WeeklyOffName`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
+INSERT INTO `MWeeklyOffs` (`CompanyId`, `BranchId`, `WeeklyOffId`, `WeeklyOffName`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
 ('00001', '00001', '00001', 'Sunday', NULL, 'Y', NULL, NULL, NULL, NULL),
 ('00001', '00001', '00002', 'Monday', NULL, 'N', NULL, NULL, NULL, NULL),
 ('00001', '00001', '00003', 'Tuesday', NULL, 'Y', NULL, NULL, NULL, NULL),
@@ -4115,16 +4172,15 @@ INSERT INTO `mweeklyoffs` (`CompanyId`, `BranchId`, `WeeklyOffId`, `WeeklyOffNam
 ('00001', '00001', '00010', 'Second -Forth Saturday ', NULL, 'N', NULL, NULL, 'admin', '2022-05-10 12:28:10'),
 ('00001', '00001', '00011', 'Monday and Friday', 'MandFriday', 'N', 'admin', '2022-05-10 16:36:17', 'admin', '2022-05-10 16:37:12'),
 ('00001', '00001', '00012', 'Monday and Thursday', 'MandT', 'Y', 'admin', '2022-05-10 16:47:39', 'admin', '2022-05-10 16:47:39'),
-('00001', '00001', '00013', 'FRIADAY AND SA', 'FANDS', 'N', 'admin', '2022-05-12 10:53:10', 'admin', '2022-05-12 10:53:50'),
-('00001', '00001', '00014', 'Thursday, Saturday, Sunday', '', 'Y', NULL, NULL, NULL, NULL);
+('00001', '00001', '00013', 'FRIADAY AND SA', 'FANDS', 'N', 'admin', '2022-05-12 10:53:10', 'admin', '2022-05-12 10:53:50');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tadvancerequests`
+-- Table structure for table `TAdvanceRequests`
 --
 
-CREATE TABLE `tadvancerequests` (
+CREATE TABLE `TAdvanceRequests` (
   `CompanyId` int(11) NOT NULL DEFAULT 1,
   `BranchId` int(11) NOT NULL DEFAULT 1,
   `AdvanceId` int(11) NOT NULL,
@@ -4156,10 +4212,10 @@ CREATE TABLE `tadvancerequests` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `tadvancerequests`
+-- Dumping data for table `TAdvanceRequests`
 --
 
-INSERT INTO `tadvancerequests` (`CompanyId`, `BranchId`, `AdvanceId`, `AdvanceDate`, `EmployeeName`, `FYear`, `AdvanceType`, `Amount`, `Installment`, `Purpose`, `ProjectId`, `AdvanceStatus`, `AMonth`, `AYear`, `ApprovalFlag`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`, `ApprovedBy`, `ApprovedAmount`, `ApprovedInstallments`, `RejectedBy`, `RejectReason`, `createdAt`, `updatedAt`) VALUES
+INSERT INTO `TAdvanceRequests` (`CompanyId`, `BranchId`, `AdvanceId`, `AdvanceDate`, `EmployeeName`, `FYear`, `AdvanceType`, `Amount`, `Installment`, `Purpose`, `ProjectId`, `AdvanceStatus`, `AMonth`, `AYear`, `ApprovalFlag`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`, `ApprovedBy`, `ApprovedAmount`, `ApprovedInstallments`, `RejectedBy`, `RejectReason`, `createdAt`, `updatedAt`) VALUES
 (1, 1, 1, '2023-12-05 00:00:00', 'Jesus', '', 'Official', 2500.00, 3, 'Medical', 2, 'Repayment', 'April', 2024, 'Approved', 'text', 'Y', '', '0000-00-00 00:00:00', NULL, '0000-00-00 00:00:00', 'User1', 2000.00, 1, NULL, NULL, '2023-12-08 16:55:50', '2023-12-08 17:32:30'),
 (1, 1, 2, '2023-12-18 00:00:00', 'Bruce Wayne', '', 'Personal', 2000.00, 2, 'reason', 3, 'Complete', 'June', 2024, 'Rejected', 'demon slayer', 'Y', '', '0000-00-00 00:00:00', NULL, '0000-00-00 00:00:00', NULL, 0.00, 1, 'Nightingale', '123', '2023-12-08 16:56:33', '2023-12-08 17:31:45'),
 (1, 1, 3, '2023-12-26 00:00:00', 'Harshvardhan Reddy', '', 'Official', 7000.00, 3, 'Vacation', 3, 'Pending', 'January', 2024, 'Pending', 'Remark', 'Y', '', '0000-00-00 00:00:00', NULL, '0000-00-00 00:00:00', NULL, 0.00, 1, NULL, NULL, '2023-12-26 06:02:14', '2023-12-26 06:02:14');
@@ -4167,10 +4223,10 @@ INSERT INTO `tadvancerequests` (`CompanyId`, `BranchId`, `AdvanceId`, `AdvanceDa
 -- --------------------------------------------------------
 
 --
--- Table structure for table `temployeegatepasses`
+-- Table structure for table `TEmployeeGatepasses`
 --
 
-CREATE TABLE `temployeegatepasses` (
+CREATE TABLE `TEmployeeGatepasses` (
   `CompanyId` varchar(255) NOT NULL DEFAULT '00001',
   `BranchId` varchar(255) NOT NULL DEFAULT '00001',
   `FYear` varchar(255) NOT NULL,
@@ -4197,20 +4253,20 @@ CREATE TABLE `temployeegatepasses` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `temployeegatepasses`
+-- Dumping data for table `TEmployeeGatepasses`
 --
 
-INSERT INTO `temployeegatepasses` (`CompanyId`, `BranchId`, `FYear`, `GatepassId`, `GatepassDate`, `EmployeeId`, `EmployeeType`, `EmployeeTypeGroup`, `InTime`, `OutTime`, `GatepassType`, `Purpose`, `RejectReason`, `SanctionBy`, `Remark`, `ApprovalFlag`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`, `createdAt`, `updatedAt`) VALUES
+INSERT INTO `TEmployeeGatepasses` (`CompanyId`, `BranchId`, `FYear`, `GatepassId`, `GatepassDate`, `EmployeeId`, `EmployeeType`, `EmployeeTypeGroup`, `InTime`, `OutTime`, `GatepassType`, `Purpose`, `RejectReason`, `SanctionBy`, `Remark`, `ApprovalFlag`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`, `createdAt`, `updatedAt`) VALUES
 ('00001', '00001', '2023', '00001', '0000-00-00 00:00:00', '3', '', '', '2023-12-05 08:03:00', '2023-12-13 09:03:00', 'Personal', NULL, NULL, NULL, 'text', 'P', 'Y', '', '2023-12-28 07:04:25', NULL, '0000-00-00 00:00:00', '2023-12-28 07:04:25', '2023-12-28 07:04:25'),
 ('00001', '00001', '2023', '00002', '2023-12-04 00:00:00', '3', '', '', '2023-12-10 07:18:00', '2023-12-13 10:30:00', 'Personal', NULL, NULL, NULL, 'text', 'P', 'Y', '', '2023-12-28 07:18:47', NULL, '0000-00-00 00:00:00', '2023-12-28 07:18:47', '2023-12-28 07:18:47');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tleaves`
+-- Table structure for table `TLeaves`
 --
 
-CREATE TABLE `tleaves` (
+CREATE TABLE `TLeaves` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `FYear` varchar(5) NOT NULL,
@@ -4237,10 +4293,10 @@ CREATE TABLE `tleaves` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `tleaves`
+-- Dumping data for table `TLeaves`
 --
 
-INSERT INTO `tleaves` (`CompanyId`, `BranchId`, `FYear`, `LeaveApplicationId`, `LeaveApplicationDate`, `EmployeeId`, `EmployeeType`, `EmployeeTypeGroup`, `LeaveFromDate`, `LeaveToDate`, `LeaveTypeId`, `LeaveDays`, `SanctionBy`, `SanctionFromDate`, `SanctionToDate`, `SanctionLeaveDays`, `Remark`, `ApprovalFlag`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
+INSERT INTO `TLeaves` (`CompanyId`, `BranchId`, `FYear`, `LeaveApplicationId`, `LeaveApplicationDate`, `EmployeeId`, `EmployeeType`, `EmployeeTypeGroup`, `LeaveFromDate`, `LeaveToDate`, `LeaveTypeId`, `LeaveDays`, `SanctionBy`, `SanctionFromDate`, `SanctionToDate`, `SanctionLeaveDays`, `Remark`, `ApprovalFlag`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
 ('00001', '00001', '2023', '2023-LA00001', '2023-12-06 00:00:00', '1', 'S', 'Staff', '2023-12-13 00:00:00', '2023-12-16 00:00:00', '0001', 4.00, '3', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0.00, 'remark', 'A', 'Y', '', '0000-00-00 00:00:00', NULL, '0000-00-00 00:00:00'),
 ('00001', '00001', '2023', '2023-LA00002', '2023-12-06 00:00:00', '2', 'S', 'Staff', '2023-12-13 00:00:00', '2023-12-16 00:00:00', '0001', 4.00, '1', '2023-01-16 00:00:00', '2023-01-30 00:00:00', 0.00, 'remark', 'A', 'Y', '', '0000-00-00 00:00:00', NULL, '0000-00-00 00:00:00'),
 ('00001', '00001', '2023', '2023-LA00003', '2023-12-06 00:00:00', '4', 'S', 'Staff', '2023-12-13 00:00:00', '2023-12-16 00:00:00', '0001', 4.00, '', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0.00, 'remark', 'P', 'N', '', '0000-00-00 00:00:00', NULL, '0000-00-00 00:00:00'),
@@ -4251,10 +4307,10 @@ INSERT INTO `tleaves` (`CompanyId`, `BranchId`, `FYear`, `LeaveApplicationId`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tmanualattendances`
+-- Table structure for table `TManualAttendances`
 --
 
-CREATE TABLE `tmanualattendances` (
+CREATE TABLE `TManualAttendances` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `AttendanceId` varchar(5) NOT NULL,
@@ -4279,423 +4335,420 @@ CREATE TABLE `tmanualattendances` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `tmanualattendances`
+-- Dumping data for table `TManualAttendances`
 --
 
-INSERT INTO `tmanualattendances` (`CompanyId`, `BranchId`, `AttendanceId`, `FYear`, `EmployeeTypeId`, `JobTypeId`, `ShiftId`, `EmployeeId`, `EmployeeTypeGroup`, `AttendanceDate`, `InTime`, `OutTime`, `AttendanceFlag`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`, `ApprovalFlag`, `SanctionBy`) VALUES
-('00001', '00001', '00001', '00001', '002', '6', '00003', '2', 'Staff', '2023-01-23 00:00:00', '2023-11-30 04:45:00', '2024-11-30 11:45:00', 'E', 'text', 'Y', NULL, '2024-01-02 04:45:59', NULL, NULL, 'P', ''),
-('00001', '00001', '00002', '00002', '005', '4', '00003', '2', 'Staff', '2024-01-08 00:00:00', '2024-01-29 05:06:00', '2024-01-28 23:06:00', 'M', 'text', 'Y', NULL, '2024-01-03 05:12:14', NULL, NULL, 'P', '');
+INSERT INTO `TManualAttendances` (`CompanyId`, `BranchId`, `AttendanceId`, `FYear`, `EmployeeTypeId`, `JobTypeId`, `ShiftId`, `EmployeeId`, `EmployeeTypeGroup`, `AttendanceDate`, `InTime`, `OutTime`, `AttendanceFlag`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`, `ApprovalFlag`, `SanctionBy`) VALUES
+('00001', '00001', '00001', '00001', '001', '00001', '00008', '1', 'Staff', '2024-01-25 00:00:00', '2024-01-25 17:27:00', '2024-01-25 18:28:00', 'M', '', 'Y', NULL, '2024-01-25 14:24:32', NULL, NULL, 'A', '2'),
+('00001', '00001', '00002', '00001', '001', '00001', '00008', '2', 'Staff', '2024-01-25 00:00:00', '2024-01-25 02:26:00', '2024-01-25 12:27:00', 'M', '', 'Y', NULL, '2024-01-25 14:25:11', NULL, NULL, 'A', '2'),
+('00001', '00001', '00003', '00001', '001', '00001', '00008', '3', 'Staff', '2024-01-25 00:00:00', '2024-01-25 14:25:00', '2024-01-25 17:28:00', 'M', '', 'Y', NULL, '2024-01-25 14:25:35', NULL, NULL, 'A', '2'),
+('00001', '00001', '00004', '00001', '001', '00001', '00008', '5', 'Staff', '2024-01-25 00:00:00', '2024-01-25 14:25:00', '2024-01-25 17:28:00', 'M', '', 'Y', NULL, '2024-01-25 14:25:56', NULL, NULL, 'A', '2'),
+('00001', '00001', '00005', '00001', '001', '00001', '00008', '6', 'Staff', '2024-01-25 00:00:00', '2024-01-25 14:26:00', '2024-01-25 17:29:00', 'M', '', 'Y', NULL, '2024-01-25 14:26:19', NULL, NULL, 'A', '2');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Table structure for table `Users`
 --
 
-CREATE TABLE `users` (
+CREATE TABLE `Users` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `empid` varchar(30) NOT NULL,
-  `email` varchar(255) NOT NULL,
+  `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `role` varchar(255) NOT NULL,
-  `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
-  `updatedAt` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `users`
+-- Dumping data for table `Users`
 --
 
-INSERT INTO `users` (`id`, `name`, `empid`, `email`, `password`, `role`, `createdAt`, `updatedAt`) VALUES
-(1, 'Udayan Gaikwad', '0004', 'ggwpfax@gmail.com', 'Udayan@99', 'Admin', '2024-03-11 19:06:40', '2024-03-11 19:06:40'),
-(2, 'Max Verstappen', '001', 'max@gmail.com', 'ggwpfax', 'Admin', '2024-03-11 16:00:58', '2024-03-11 16:00:58');
+INSERT INTO `Users` (`id`, `name`, `username`, `password`, `role`, `createdAt`, `updatedAt`) VALUES
+(9, 'Udayan Gaikwad ', 'ggwpfax', '$2b$10$sXrNMfhF2OqpGRIqXgr9jurInLaT4LSMlVd5iLdUAQ8U98APwChTu', 'Admin', '2023-09-14 05:56:21', '2023-09-14 05:56:21'),
+(10, 'Willy Wonka', 'willywonka123', '$2b$10$80pAnmhxbd6Tn0fuAOh10OeBTqJ7Ws3AkH7Tlr8JgGkoGAxhs9jCa', 'Employee', '2023-09-14 05:57:29', '2023-09-14 05:57:29');
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `companyconfigs`
+-- Indexes for table `CompanyConfigs`
 --
-ALTER TABLE `companyconfigs`
+ALTER TABLE `CompanyConfigs`
   ADD PRIMARY KEY (`CCID`);
 
 --
--- Indexes for table `edimports`
+-- Indexes for table `EDImports`
 --
-ALTER TABLE `edimports`
+ALTER TABLE `EDImports`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `mbanks`
+-- Indexes for table `MBanks`
 --
-ALTER TABLE `mbanks`
+ALTER TABLE `MBanks`
   ADD PRIMARY KEY (`BankId`);
 
 --
--- Indexes for table `mcaderwisedeductions`
+-- Indexes for table `MCaderwiseDeductions`
 --
-ALTER TABLE `mcaderwisedeductions`
+ALTER TABLE `MCaderwiseDeductions`
   ADD PRIMARY KEY (`CaderwiseDeductionId`,`CompanyId`,`BranchId`,`DeductionHeadID`,`EmployeeType`) USING BTREE;
 
 --
--- Indexes for table `mcaderwiseearnings`
+-- Indexes for table `MCaderwiseEarnings`
 --
-ALTER TABLE `mcaderwiseearnings`
+ALTER TABLE `MCaderwiseEarnings`
   ADD PRIMARY KEY (`CompanyId`,`BranchId`,`CaderwiseEarningId`,`EmployeeTypeId`,`EarningHeadId`);
 
 --
--- Indexes for table `mcompanies`
+-- Indexes for table `MCompanies`
 --
-ALTER TABLE `mcompanies`
+ALTER TABLE `MCompanies`
   ADD PRIMARY KEY (`CompanyId`);
 
 --
--- Indexes for table `mcostcenter`
+-- Indexes for table `MCostCenter`
 --
-ALTER TABLE `mcostcenter`
+ALTER TABLE `MCostCenter`
   ADD PRIMARY KEY (`CostCenterId`);
 
 --
--- Indexes for table `mdeductionheads`
+-- Indexes for table `MDeductionHeads`
 --
-ALTER TABLE `mdeductionheads`
+ALTER TABLE `MDeductionHeads`
   ADD PRIMARY KEY (`DeductionHeadID`,`CompanyId`,`BranchId`) USING BTREE;
 
 --
--- Indexes for table `mdepartments`
+-- Indexes for table `MDepartments`
 --
-ALTER TABLE `mdepartments`
+ALTER TABLE `MDepartments`
   ADD PRIMARY KEY (`DepartmentId`,`CompanyId`,`BranchId`) USING BTREE;
 
 --
--- Indexes for table `mdesignations`
+-- Indexes for table `MDesignations`
 --
-ALTER TABLE `mdesignations`
+ALTER TABLE `MDesignations`
   ADD PRIMARY KEY (`DesignationId`,`CompanyId`,`BranchId`) USING BTREE;
 
 --
--- Indexes for table `mdevices`
+-- Indexes for table `MDevices`
 --
-ALTER TABLE `mdevices`
+ALTER TABLE `MDevices`
   ADD PRIMARY KEY (`DeviceId`);
 
 --
--- Indexes for table `mearningheads`
+-- Indexes for table `MEarningHeads`
 --
-ALTER TABLE `mearningheads`
+ALTER TABLE `MEarningHeads`
   ADD PRIMARY KEY (`EarningHeadId`,`CompanyId`,`BranchId`) USING BTREE;
 
 --
--- Indexes for table `mempdocs`
+-- Indexes for table `MEmpDocs`
 --
-ALTER TABLE `mempdocs`
+ALTER TABLE `MEmpDocs`
   ADD PRIMARY KEY (`DocId`);
 
 --
--- Indexes for table `memployeeacademics`
+-- Indexes for table `MEmployeeAcademics`
 --
-ALTER TABLE `memployeeacademics`
+ALTER TABLE `MEmployeeAcademics`
   ADD PRIMARY KEY (`EmployeeId`);
 
 --
--- Indexes for table `memployeefamilies`
+-- Indexes for table `MEmployeeFamilies`
 --
-ALTER TABLE `memployeefamilies`
+ALTER TABLE `MEmployeeFamilies`
   ADD PRIMARY KEY (`EmployeeId`);
 
 --
--- Indexes for table `memployeegrades`
+-- Indexes for table `MEmployeeGrades`
 --
-ALTER TABLE `memployeegrades`
+ALTER TABLE `MEmployeeGrades`
   ADD PRIMARY KEY (`EmployeeGradeId`,`CompanyId`,`BranchId`) USING BTREE;
 
 --
--- Indexes for table `memployeeprofessionals`
+-- Indexes for table `MEmployeeProfessionals`
 --
-ALTER TABLE `memployeeprofessionals`
+ALTER TABLE `MEmployeeProfessionals`
   ADD PRIMARY KEY (`EmployeeId`,`CompanyId`,`BranchId`) USING BTREE;
 
 --
--- Indexes for table `memployees`
+-- Indexes for table `MEmployees`
 --
-ALTER TABLE `memployees`
+ALTER TABLE `MEmployees`
   ADD PRIMARY KEY (`EmployeeId`,`CompanyId`,`BranchId`,`EmployeeTypeId`) USING BTREE;
 
 --
--- Indexes for table `memployeesalaries`
+-- Indexes for table `MEmployeeSalaries`
 --
-ALTER TABLE `memployeesalaries`
+ALTER TABLE `MEmployeeSalaries`
   ADD PRIMARY KEY (`EmployeeId`,`CompanyId`,`BranchId`) USING BTREE;
 
 --
--- Indexes for table `memployeetypes`
+-- Indexes for table `MEmployeeTypes`
 --
-ALTER TABLE `memployeetypes`
+ALTER TABLE `MEmployeeTypes`
   ADD PRIMARY KEY (`EmployeeTypeId`,`CompanyId`,`BranchId`) USING BTREE;
 
 --
--- Indexes for table `memployeewisededuction`
+-- Indexes for table `MEmployeewiseDeduction`
 --
-ALTER TABLE `memployeewisededuction`
+ALTER TABLE `MEmployeewiseDeduction`
   ADD PRIMARY KEY (`EmployeewiseDeductionId`);
 
 --
--- Indexes for table `memployeewisedeductions`
+-- Indexes for table `MEmployeewiseDeductions`
 --
-ALTER TABLE `memployeewisedeductions`
+ALTER TABLE `MEmployeewiseDeductions`
   ADD PRIMARY KEY (`CompanyId`,`BranchId`,`EmployeeId`,`EmployeewiseDeductionId`,`EmployeeTypeId`,`DeductionHeadId`);
 
 --
--- Indexes for table `memployeewiseearnings`
+-- Indexes for table `MEmployeewiseEarnings`
 --
-ALTER TABLE `memployeewiseearnings`
+ALTER TABLE `MEmployeewiseEarnings`
   ADD PRIMARY KEY (`CompanyId`,`BranchId`,`EmployeeId`,`EmployeewiseEarningId`,`EmployeeTypeId`,`EarningHeadId`);
 
 --
--- Indexes for table `memployeeworkprofiles`
+-- Indexes for table `MEmployeeWorkProfiles`
 --
-ALTER TABLE `memployeeworkprofiles`
+ALTER TABLE `MEmployeeWorkProfiles`
   ADD PRIMARY KEY (`EmployeeId`);
 
 --
--- Indexes for table `mfinancialyears`
+-- Indexes for table `MFinancialYears`
 --
-ALTER TABLE `mfinancialyears`
+ALTER TABLE `MFinancialYears`
   ADD PRIMARY KEY (`CompanyId`,`BranchId`,`FYearId`);
 
 --
--- Indexes for table `mholidays`
+-- Indexes for table `MHolidays`
 --
-ALTER TABLE `mholidays`
+ALTER TABLE `MHolidays`
   ADD PRIMARY KEY (`HolidayId`);
 
 --
--- Indexes for table `mjobsresponsibilities`
+-- Indexes for table `MJobsResponsibilities`
 --
-ALTER TABLE `mjobsresponsibilities`
+ALTER TABLE `MJobsResponsibilities`
   ADD PRIMARY KEY (`JobResponsibilityId`,`CompanyId`,`BranchId`) USING BTREE;
 
 --
--- Indexes for table `mjobtypes`
+-- Indexes for table `MJobTypes`
 --
-ALTER TABLE `mjobtypes`
-  ADD PRIMARY KEY (`JobTypeId`);
+ALTER TABLE `MJobTypes`
+  ADD PRIMARY KEY (`JobTypeId`,`CompanyId`,`BranchId`) USING BTREE;
 
 --
--- Indexes for table `mkras`
+-- Indexes for table `MKRAs`
 --
-ALTER TABLE `mkras`
+ALTER TABLE `MKRAs`
   ADD PRIMARY KEY (`KRAId`,`CompanyId`,`BranchId`) USING BTREE;
 
 --
--- Indexes for table `mleaves`
+-- Indexes for table `MLeaves`
 --
-ALTER TABLE `mleaves`
+ALTER TABLE `MLeaves`
   ADD PRIMARY KEY (`CompanyId`,`BranchId`,`LeaveBalanceId`,`FYear`,`EmployeeId`,`LeaveTypeId`);
 
 --
--- Indexes for table `mleavetypes`
+-- Indexes for table `MLeaveTypes`
 --
-ALTER TABLE `mleavetypes`
+ALTER TABLE `MLeaveTypes`
   ADD PRIMARY KEY (`CompanyId`,`BranchId`,`LeaveTypeId`);
 
 --
--- Indexes for table `mmasternames`
+-- Indexes for table `MMasterNames`
 --
-ALTER TABLE `mmasternames`
+ALTER TABLE `MMasterNames`
   ADD PRIMARY KEY (`MasterId`);
 
 --
--- Indexes for table `mprofesstax`
+-- Indexes for table `MProfessTax`
 --
-ALTER TABLE `mprofesstax`
+ALTER TABLE `MProfessTax`
   ADD PRIMARY KEY (`PTId`);
 
 --
--- Indexes for table `mprofesstaxes`
+-- Indexes for table `MProfessTaxes`
 --
-ALTER TABLE `mprofesstaxes`
+ALTER TABLE `MProfessTaxes`
   ADD PRIMARY KEY (`PTId`);
 
 --
--- Indexes for table `mshifts`
+-- Indexes for table `MShifts`
 --
-ALTER TABLE `mshifts`
+ALTER TABLE `MShifts`
   ADD PRIMARY KEY (`CompanyId`,`BranchId`,`ShiftId`);
 
 --
--- Indexes for table `mtwofields`
+-- Indexes for table `MTwoFields`
 --
-ALTER TABLE `mtwofields`
+ALTER TABLE `MTwoFields`
   ADD PRIMARY KEY (`FieldId`,`CompanyId`,`BranchId`) USING BTREE;
 
 --
--- Indexes for table `mweeklyoffs`
+-- Indexes for table `MWeeklyOffs`
 --
-ALTER TABLE `mweeklyoffs`
+ALTER TABLE `MWeeklyOffs`
   ADD PRIMARY KEY (`CompanyId`,`BranchId`,`WeeklyOffId`);
 
 --
--- Indexes for table `tadvancerequests`
+-- Indexes for table `TAdvanceRequests`
 --
-ALTER TABLE `tadvancerequests`
+ALTER TABLE `TAdvanceRequests`
   ADD PRIMARY KEY (`AdvanceId`);
 
 --
--- Indexes for table `temployeegatepasses`
+-- Indexes for table `TEmployeeGatepasses`
 --
-ALTER TABLE `temployeegatepasses`
+ALTER TABLE `TEmployeeGatepasses`
   ADD PRIMARY KEY (`GatepassId`);
 
 --
--- Indexes for table `tleaves`
+-- Indexes for table `TLeaves`
 --
-ALTER TABLE `tleaves`
+ALTER TABLE `TLeaves`
   ADD PRIMARY KEY (`CompanyId`,`BranchId`,`FYear`,`LeaveApplicationId`);
 
 --
--- Indexes for table `tmanualattendances`
+-- Indexes for table `TManualAttendances`
 --
-ALTER TABLE `tmanualattendances`
+ALTER TABLE `TManualAttendances`
   ADD PRIMARY KEY (`AttendanceId`);
 
 --
--- Indexes for table `users`
+-- Indexes for table `Users`
 --
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`,`empid`,`email`) USING BTREE;
+ALTER TABLE `Users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `username` (`username`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `companyconfigs`
+-- AUTO_INCREMENT for table `CompanyConfigs`
 --
-ALTER TABLE `companyconfigs`
-  MODIFY `CCID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+ALTER TABLE `CompanyConfigs`
+  MODIFY `CCID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `edimports`
+-- AUTO_INCREMENT for table `EDImports`
 --
-ALTER TABLE `edimports`
+ALTER TABLE `EDImports`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `mbanks`
+-- AUTO_INCREMENT for table `MBanks`
 --
-ALTER TABLE `mbanks`
+ALTER TABLE `MBanks`
   MODIFY `BankId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `mcostcenter`
+-- AUTO_INCREMENT for table `MCostCenter`
 --
-ALTER TABLE `mcostcenter`
+ALTER TABLE `MCostCenter`
   MODIFY `CostCenterId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT for table `mdesignations`
+-- AUTO_INCREMENT for table `MDesignations`
 --
-ALTER TABLE `mdesignations`
+ALTER TABLE `MDesignations`
   MODIFY `DesignationId` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
--- AUTO_INCREMENT for table `mempdocs`
+-- AUTO_INCREMENT for table `MEmpDocs`
 --
-ALTER TABLE `mempdocs`
-  MODIFY `DocId` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+ALTER TABLE `MEmpDocs`
+  MODIFY `DocId` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT for table `memployeeacademics`
+-- AUTO_INCREMENT for table `MEmployeeAcademics`
 --
-ALTER TABLE `memployeeacademics`
+ALTER TABLE `MEmployeeAcademics`
   MODIFY `EmployeeId` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT for table `memployeefamilies`
+-- AUTO_INCREMENT for table `MEmployeeFamilies`
 --
-ALTER TABLE `memployeefamilies`
+ALTER TABLE `MEmployeeFamilies`
   MODIFY `EmployeeId` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT for table `memployeegrades`
+-- AUTO_INCREMENT for table `MEmployeeGrades`
 --
-ALTER TABLE `memployeegrades`
+ALTER TABLE `MEmployeeGrades`
   MODIFY `EmployeeGradeId` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `memployeeprofessionals`
+-- AUTO_INCREMENT for table `MEmployeeProfessionals`
 --
-ALTER TABLE `memployeeprofessionals`
+ALTER TABLE `MEmployeeProfessionals`
   MODIFY `EmployeeId` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
--- AUTO_INCREMENT for table `memployees`
+-- AUTO_INCREMENT for table `MEmployees`
 --
-ALTER TABLE `memployees`
+ALTER TABLE `MEmployees`
   MODIFY `EmployeeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT for table `memployeesalaries`
+-- AUTO_INCREMENT for table `MEmployeeSalaries`
 --
-ALTER TABLE `memployeesalaries`
+ALTER TABLE `MEmployeeSalaries`
   MODIFY `EmployeeId` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT for table `memployeeworkprofiles`
+-- AUTO_INCREMENT for table `MEmployeeWorkProfiles`
 --
-ALTER TABLE `memployeeworkprofiles`
+ALTER TABLE `MEmployeeWorkProfiles`
   MODIFY `EmployeeId` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT for table `mjobsresponsibilities`
+-- AUTO_INCREMENT for table `MJobsResponsibilities`
 --
-ALTER TABLE `mjobsresponsibilities`
+ALTER TABLE `MJobsResponsibilities`
   MODIFY `JobResponsibilityId` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT for table `mjobtypes`
+-- AUTO_INCREMENT for table `MKRAs`
 --
-ALTER TABLE `mjobtypes`
-  MODIFY `JobTypeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
-
---
--- AUTO_INCREMENT for table `mkras`
---
-ALTER TABLE `mkras`
+ALTER TABLE `MKRAs`
   MODIFY `KRAId` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- AUTO_INCREMENT for table `mmasternames`
+-- AUTO_INCREMENT for table `MMasterNames`
 --
-ALTER TABLE `mmasternames`
+ALTER TABLE `MMasterNames`
   MODIFY `MasterId` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
--- AUTO_INCREMENT for table `mprofesstax`
+-- AUTO_INCREMENT for table `MProfessTax`
 --
-ALTER TABLE `mprofesstax`
+ALTER TABLE `MProfessTax`
   MODIFY `PTId` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `mprofesstaxes`
+-- AUTO_INCREMENT for table `MProfessTaxes`
 --
-ALTER TABLE `mprofesstaxes`
+ALTER TABLE `MProfessTaxes`
   MODIFY `PTId` int(3) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `tadvancerequests`
+-- AUTO_INCREMENT for table `TAdvanceRequests`
 --
-ALTER TABLE `tadvancerequests`
+ALTER TABLE `TAdvanceRequests`
   MODIFY `AdvanceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT for table `Users`
 --
-ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+ALTER TABLE `Users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

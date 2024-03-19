@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 11, 2024 at 05:54 PM
+-- Generation Time: Mar 18, 2024 at 12:10 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -778,6 +778,7 @@ BEGIN
             ModifiedBy = pModifiedBy,
             ModifiedOn = pModifiedOn
         WHERE
+
             EmployeeId = pEmployeeId AND
             CompanyId = pCompanyId AND
             BranchId = pBranchId;
@@ -3060,7 +3061,7 @@ INSERT INTO `mearningheads` (`CompanyId`, `BranchId`, `EarningHeadId`, `EarningH
 CREATE TABLE `mempdocs` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
-  `EmployeeId` int(5) NOT NULL,
+  `EmployeeId` varchar(255) DEFAULT NULL,
   `DocId` int(5) NOT NULL,
   `Document` varchar(255) DEFAULT NULL,
   `DocumentName` varchar(255) DEFAULT NULL,
@@ -3073,8 +3074,8 @@ CREATE TABLE `mempdocs` (
 --
 
 INSERT INTO `mempdocs` (`CompanyId`, `BranchId`, `EmployeeId`, `DocId`, `Document`, `DocumentName`, `Remarks`, `CreatedOn`) VALUES
-('00001', '00001', 7, 1, 'file_1709112662534.docx', 'Passport', 'remark', NULL),
-('00001', '00001', 1, 2, 'file_1709617914281.pdf', 'Passport', 'remark', NULL);
+('00001', '00001', '0007', 1, 'file_1709112662534.docx', 'Passport', 'remark', NULL),
+('00001', '00001', '0001', 2, 'file_1709617914281.pdf', 'Passport', 'remark', NULL);
 
 -- --------------------------------------------------------
 
@@ -3085,7 +3086,7 @@ INSERT INTO `mempdocs` (`CompanyId`, `BranchId`, `EmployeeId`, `DocId`, `Documen
 CREATE TABLE `memployeeacademics` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
-  `EmployeeId` int(5) NOT NULL,
+  `EmployeeId` varchar(255) DEFAULT NULL,
   `Qualification` varchar(350) NOT NULL,
   `Institute` varchar(500) DEFAULT NULL,
   `Specialization` varchar(500) DEFAULT NULL,
@@ -3104,13 +3105,13 @@ CREATE TABLE `memployeeacademics` (
 --
 
 INSERT INTO `memployeeacademics` (`CompanyId`, `BranchId`, `EmployeeId`, `Qualification`, `Institute`, `Specialization`, `Grades`, `PassingYear`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
-('00001', '00001', 1, 'B.tech,Diploma', 'VIT,MSBTE', 'CS,CS', '8.5,98', '2024,2021', '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
-('00001', '00001', 2, '', '', '', NULL, '', '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
-('00001', '00001', 3, '', '', '', NULL, '', '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
-('00001', '00001', 4, '', '', '', NULL, '', '', 'N', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
-('00001', '00001', 5, '', '', '', NULL, '', '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
-('00001', '00001', 6, '', '', '', NULL, '', '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
-('00001', '00001', 7, '', '', '', NULL, '', '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00');
+('00001', '00001', '0001', 'B.tech,Diploma', 'VIT,MSBTE', 'CS,CS', '8.5,98', '2024,2021', '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '0002', '', '', '', NULL, '', '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '0003', '', '', '', NULL, '', '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '0004', '', '', '', NULL, '', '', 'N', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '0005', '', '', '', NULL, '', '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '0006', '', '', '', NULL, '', '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '0007', '', '', '', NULL, '', '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -3121,7 +3122,7 @@ INSERT INTO `memployeeacademics` (`CompanyId`, `BranchId`, `EmployeeId`, `Qualif
 CREATE TABLE `memployeefamilies` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
-  `EmployeeId` int(5) NOT NULL,
+  `EmployeeId` varchar(255) DEFAULT NULL,
   `PersonName` varchar(350) NOT NULL,
   `Relation` varchar(500) DEFAULT NULL,
   `Education` varchar(500) DEFAULT NULL,
@@ -3145,13 +3146,13 @@ CREATE TABLE `memployeefamilies` (
 --
 
 INSERT INTO `memployeefamilies` (`CompanyId`, `BranchId`, `EmployeeId`, `PersonName`, `Relation`, `Education`, `Occupation`, `Address`, `CellNo`, `EmailId`, `Nominee`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`, `createdAt`, `updatedAt`) VALUES
-('00001', '00001', 1, 'Pedro Pascal,Anne Hatahway', 'Father,Mother', 'MSC,MSC', 'Actor,Actor', 'California,California', '5738573838,8484384838', 'email1,email2', 'Yes,Yes', '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00', '2023-11-25 16:35:23', '2023-11-30 04:15:45'),
-('00001', '00001', 2, '', '', '', '', '', '', '', '', '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00', '2023-12-06 17:51:17', '2023-12-06 17:51:17'),
-('00001', '00001', 3, '', '', '', '', '', '', '', '', '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00', '2023-12-08 07:44:46', '2023-12-08 07:44:46'),
-('00001', '00001', 4, '', '', '', '', '', '', '', '', '', 'N', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00', '2023-12-23 14:43:41', '2024-01-02 03:42:33'),
-('00001', '00001', 5, '', '', '', '', '', '', '', '', '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00', '2024-01-03 17:45:57', '2024-01-03 17:45:57'),
-('00001', '00001', 6, '', '', '', '', '', '', '', '', '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00', '2024-01-03 17:47:01', '2024-01-03 17:47:01'),
-('00001', '00001', 7, '', '', '', '', '', '', '', '', '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00', '2024-01-03 17:53:05', '2024-01-03 17:53:05');
+('00001', '00001', '0001', 'Pedro Pascal,Anne Hatahway', 'Father,Mother', 'MSC,MSC', 'Actor,Actor', 'California,California', '5738573838,8484384838', 'email1,email2', 'Yes,Yes', '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00', '2023-11-25 16:35:23', '2023-11-30 04:15:45'),
+('00001', '00001', '0002', '', '', '', '', '', '', '', '', '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00', '2023-12-06 17:51:17', '2023-12-06 17:51:17'),
+('00001', '00001', '0003', '', '', '', '', '', '', '', '', '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00', '2023-12-08 07:44:46', '2023-12-08 07:44:46'),
+('00001', '00001', '0004', '', '', '', '', '', '', '', '', '', 'N', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00', '2023-12-23 14:43:41', '2024-01-02 03:42:33'),
+('00001', '00001', '0005', '', '', '', '', '', '', '', '', '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00', '2024-01-03 17:45:57', '2024-01-03 17:45:57'),
+('00001', '00001', '0006', '', '', '', '', '', '', '', '', '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00', '2024-01-03 17:47:01', '2024-01-03 17:47:01'),
+('00001', '00001', '0007', '', '', '', '', '', '', '', '', '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00', '2024-01-03 17:53:05', '2024-01-03 17:53:05');
 
 -- --------------------------------------------------------
 
@@ -3192,7 +3193,7 @@ INSERT INTO `memployeegrades` (`CompanyId`, `BranchId`, `EmployeeGradeId`, `Empl
 CREATE TABLE `memployeeprofessionals` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
-  `EmployeeId` int(5) NOT NULL,
+  `EmployeeId` varchar(255) DEFAULT NULL,
   `Employer` varchar(350) NOT NULL,
   `Experience` varchar(500) DEFAULT NULL,
   `Designation` varchar(500) DEFAULT NULL,
@@ -3213,15 +3214,15 @@ CREATE TABLE `memployeeprofessionals` (
 --
 
 INSERT INTO `memployeeprofessionals` (`CompanyId`, `BranchId`, `EmployeeId`, `Employer`, `Experience`, `Designation`, `JobResponsibility`, `Salary`, `CVFile`, `SalarySlipFile`, `AcFlag`, `Remark`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
-('00001', '00001', 1, 'ABC,DEF', '2 years,3 years', 'SDE,SDE', 'SDE,SDE', '500000,500000', '', '', 'Y', '', '', '', '', ''),
-('00001', '00001', 2, 'HNS,MGK,INS', '2 years,2 years,4 years', 'SDE,SDE,PM', 'SDE,SDE,PM', '400000,500000,800000', NULL, NULL, 'Y', NULL, '', NULL, '', NULL),
-('00001', '00001', 3, 'ABC', '2 years', 'SDE', 'SDE', '500000', NULL, NULL, 'Y', NULL, '', NULL, '', NULL),
-('00001', '00001', 4, '', '', '', '', '', '', '', 'N', '', '', '', '', ''),
-('00001', '00001', 5, '', '', '', '', '', '', '', 'Y', '', '', '', '', ''),
-('00001', '00001', 6, '', '', '', '', '', '', '', 'Y', '', '', '', '', ''),
-('00001', '00001', 7, '', '', '', '', '', '', '', 'Y', '', '', '', '', ''),
-('00001', '00001', 8, '', '', '', '', '', '', '', 'Y', '', '', '', '', ''),
-('00001', '00001', 9, '', '', '', '', '', '', '', 'Y', '', '', '', '', '');
+('00001', '00001', '0001', 'ABC,DEF', '2 years,3 years', 'SDE,SDE', 'SDE,SDE', '500000,500000', '', '', 'Y', '', '', '', '', ''),
+('00001', '00001', '0002', 'HNS,MGK,INS', '2 years,2 years,4 years', 'SDE,SDE,PM', 'SDE,SDE,PM', '400000,500000,800000', NULL, NULL, 'Y', NULL, '', NULL, '', NULL),
+('00001', '00001', '0003', 'ABC', '2 years', 'SDE', 'SDE', '500000', NULL, NULL, 'Y', NULL, '', NULL, '', NULL),
+('00001', '00001', '0004', '', '', '', '', '', '', '', 'N', '', '', '', '', ''),
+('00001', '00001', '0005', '', '', '', '', '', '', '', 'Y', '', '', '', '', ''),
+('00001', '00001', '0006', '', '', '', '', '', '', '', 'Y', '', '', '', '', ''),
+('00001', '00001', '0007', '', '', '', '', '', '', '', 'Y', '', '', '', '', ''),
+('00001', '00001', '0008', '', '', '', '', '', '', '', 'Y', '', '', '', '', ''),
+('00001', '00001', '0009', '', '', '', '', '', '', '', 'Y', '', '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -3233,7 +3234,7 @@ CREATE TABLE `memployees` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `EmployeeTypeId` varchar(50) NOT NULL DEFAULT '001',
-  `EmployeeId` int(11) NOT NULL,
+  `EmployeeId` varchar(255) DEFAULT NULL,
   `EmployeeName` varchar(500) DEFAULT NULL,
   `EmployeeTypeGroupId` varchar(50) DEFAULT NULL,
   `Salutation` varchar(50) DEFAULT NULL,
@@ -3286,13 +3287,13 @@ CREATE TABLE `memployees` (
 --
 
 INSERT INTO `memployees` (`CompanyId`, `BranchId`, `EmployeeTypeId`, `EmployeeId`, `EmployeeName`, `EmployeeTypeGroupId`, `Salutation`, `LastName`, `FirstName`, `MiddleName`, `MEmployeeName`, `AadharCardNo`, `PANNo`, `PassportNo`, `PassportIssueDate`, `PassportExpireDate`, `CurrentAddress`, `CurrentPincode`, `PermanentAddress`, `PermanentPincode`, `DOB`, `EmailId1`, `EmailId2`, `PhoneNo`, `CellNo1`, `CellNo2`, `BankId1`, `AccountNo1`, `IFSCCode1`, `BankId2`, `AccountNo2`, `IFSCCode2`, `MaritalStatus`, `ReferenceId`, `DestinationId`, `ReligionId`, `CategoryId`, `CasteId`, `EmployeePhoto`, `Gender`, `BloodGroup`, `DrivingLicence`, `FinanceAccountNo`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
-('00001', '00001', '001', 1, 'Charles Leclerc', 'Staff', 'Dear [Mr./Ms./Dr.] [Last Name]', 'Leclerc', 'Charles', 'Perceval ', '', '', '', '', '2023-12-26', '2023-12-25 00:00:00', 'Pune', '463526', 'Monaco', '737472', '1999-09-27', '4984984', '984984984984', '988977894', '98498498', '498498498', '984984', '98498498', '4984984984', '984984984', '984984984', '98498498', 'Unmarried', 'Supervisor/Manager References', 'Destination', 'Religion 1', 'Category 2', 'Caste 1', 'image_1705205736234.png', 'Male', 'A-', 0x5b6f626a656374204f626a6563745d, '', '', 'Y', '', '', '', ''),
-('00001', '00001', '004', 2, 'Bruce  Wayne', 'Worker', 'Dear [Mr./Ms./Dr.] [Last Name]', 'Wayne', 'Bruce ', 'Thomas', '', '', '', '', '', NULL, 'Pune', '843747', '', '', '2023-12-04', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', NULL, '', '', 0x5b6f626a656374204f626a6563745d, '', '', 'Y', '', '', '', ''),
-('00001', '00001', '005', 3, 'Udayan Gaikwad', 'Worker', 'Sir/Madam', 'Gaikwad', 'Udayan', 'Fathesingh', '', '', '', '', '', NULL, 'Brahma Avenue, Kondhwa, Pune', '843747', 'Pune', '411048', '', 'udayanfg@gmail.com', 'udayanfg@gmail.com', '07219629734', '123123123', '', '', '', '', '', '', '', '', '', '', '', '', '', NULL, '', '', 0x5b6f626a656374204f626a6563745d, '', '', 'Y', '', '', '', ''),
-('00001', '00001', '001', 4, 'Harshvardhan Reddy', 'Staff', 'Dear [Mr./Ms./Dr.] [Last Name]', 'Reddy', 'Harshvardhan', 'James', '', '', '', '', '', '0000-00-00 00:00:00', '', '', '', '', '1991-06-12', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', NULL, '', '', '', '', '', 'N', '', '', '', ''),
-('00001', '00001', '001', 5, 'Max Verstappen', 'Staff', NULL, 'Verstappen', 'Max', 'Jos', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', NULL, NULL, NULL, NULL),
-('00001', '00001', '001', 6, 'Sergio Perez', 'Staff', NULL, 'Perez', 'Sergio', 'Checo', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', NULL, NULL, NULL, NULL),
-('00001', '00001', '001', 7, 'Sergio Romero', 'Staff', NULL, 'Romero', 'Sergio', 'Checo', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', NULL, NULL, NULL, NULL);
+('00001', '00001', '001', '0001', 'Charles Leclerc', 'Staff', 'Dear [Mr./Ms./Dr.] [Last Name]', 'Leclerc', 'Charles', 'Perceval ', '', '', '', '', '2023-12-26', '2023-12-25 00:00:00', 'Pune', '463526', 'Monaco', '737472', '1999-09-27', '4984984', '984984984984', '988977894', '98498498', '498498498', '984984', '98498498', '4984984984', '984984984', '984984984', '98498498', 'Unmarried', 'Supervisor/Manager References', 'Destination', 'Religion 1', 'Category 2', 'Caste 1', 'image_1705205736234.png', 'Male', 'A-', 0x5b6f626a656374204f626a6563745d, '', '', 'Y', '', '', '', ''),
+('00001', '00001', '004', '0002', 'Bruce  Wayne', 'Worker', 'Dear [Mr./Ms./Dr.] [Last Name]', 'Wayne', 'Bruce ', 'Thomas', '', '', '', '', '', NULL, 'Pune', '843747', '', '', '2023-12-04', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', NULL, '', '', 0x5b6f626a656374204f626a6563745d, '', '', 'Y', '', '', '', ''),
+('00001', '00001', '005', '0003', 'Udayan Gaikwad', 'Worker', 'Sir/Madam', 'Gaikwad', 'Udayan', 'Fathesingh', '', '', '', '', '', NULL, 'Brahma Avenue, Kondhwa, Pune', '843747', 'Pune', '411048', '', 'udayanfg@gmail.com', 'udayanfg@gmail.com', '07219629734', '123123123', '', '', '', '', '', '', '', '', '', '', '', '', '', 'image_1710596572497.jpg', '', '', 0x5b6f626a656374204f626a6563745d, '', '', 'Y', '', '', '', ''),
+('00001', '00001', '001', '0004', 'Harshvardhan Reddy', 'Staff', 'Dear [Mr./Ms./Dr.] [Last Name]', 'Reddy', 'Harshvardhan', 'James', '', '', '', '', '', '0000-00-00 00:00:00', '', '', '', '', '1991-06-12', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', NULL, '', '', '', '', '', 'N', '', '', '', ''),
+('00001', '00001', '001', '0005', 'Max Verstappen', 'Staff', NULL, 'Verstappen', 'Max', 'Jos', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', NULL, NULL, NULL, NULL),
+('00001', '00001', '001', '0006', 'Sergio Perez', 'Staff', NULL, 'Perez', 'Sergio', 'Checo', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', NULL, NULL, NULL, NULL),
+('00001', '00001', '001', '0007', 'Sergio Romero', 'Staff', NULL, 'Romero', 'Sergio', 'Checo', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -3303,7 +3304,7 @@ INSERT INTO `memployees` (`CompanyId`, `BranchId`, `EmployeeTypeId`, `EmployeeId
 CREATE TABLE `memployeesalaries` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
-  `EmployeeId` int(5) NOT NULL,
+  `EmployeeId` varchar(255) DEFAULT NULL,
   `GradeId` varchar(5) NOT NULL DEFAULT '00001',
   `BandId` varchar(5) NOT NULL DEFAULT '00001',
   `CTC` decimal(10,2) DEFAULT 0.00,
@@ -3334,13 +3335,13 @@ CREATE TABLE `memployeesalaries` (
 --
 
 INSERT INTO `memployeesalaries` (`CompanyId`, `BranchId`, `EmployeeId`, `GradeId`, `BandId`, `CTC`, `GrossSalary`, `OTFlag`, `OTAmount`, `PFFlag`, `PFNo`, `PFDate`, `ESICFlag`, `ESICNo`, `ESICDate`, `UANNo`, `MLWFFlag`, `MLWFNo`, `GratuityApplicable`, `GratuityAmount`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
-('00001', '00001', 1, 'Grade', 'Band ', 1200000.00, 43069.00, 'f', 0.00, 't', '39391', '2023-12-16 00:00:00', 't', '49329', '2023-12-21 00:00:00', '26', 't', '939234', 't', 92394.00, 'remark', 'Y', '', NULL, '', NULL),
-('00001', '00001', 2, '', '', 0.00, 76939.00, '', 0.00, '', '', NULL, '', '', NULL, '', '', '', '', 0.00, '', 'Y', '', NULL, '', NULL),
-('00001', '00001', 3, '', '', 0.00, 0.00, '', 0.00, '', '', NULL, '', '', NULL, '', '', '', '', 0.00, '', 'Y', '', NULL, '', NULL),
-('00001', '00001', 4, '', '', 0.00, 0.00, '', 0.00, '', '', '0000-00-00 00:00:00', '', '', '0000-00-00 00:00:00', '', '', '', '', 0.00, '', 'N', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
-('00001', '00001', 5, '', '', 0.00, 0.00, '', 0.00, '', '', '0000-00-00 00:00:00', '', '', '0000-00-00 00:00:00', '', '', '', '', 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
-('00001', '00001', 6, '', '', 0.00, 0.00, '', 0.00, '', '', '0000-00-00 00:00:00', '', '', '0000-00-00 00:00:00', '', '', '', '', 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
-('00001', '00001', 7, '', '', 0.00, 0.00, '', 0.00, '', '', '0000-00-00 00:00:00', '', '', '0000-00-00 00:00:00', '', '', '', '', 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00');
+('00001', '00001', '0001', 'Grade', 'Band ', 1200000.00, 43069.00, 'f', 0.00, 't', '39391', '2023-12-16 00:00:00', 't', '49329', '2023-12-21 00:00:00', '26', 't', '939234', 't', 92394.00, 'remark', 'Y', '', NULL, '', NULL),
+('00001', '00001', '0002', '', '', 0.00, 76939.00, '', 0.00, '', '', NULL, '', '', NULL, '', '', '', '', 0.00, '', 'Y', '', NULL, '', NULL),
+('00001', '00001', '0003', '', '', 0.00, 0.00, '', 0.00, '', '', NULL, '', '', NULL, '', '', '', '', 0.00, '', 'Y', '', NULL, '', NULL),
+('00001', '00001', '0004', '', '', 0.00, 0.00, '', 0.00, '', '', '0000-00-00 00:00:00', '', '', '0000-00-00 00:00:00', '', '', '', '', 0.00, '', 'N', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '0005', '', '', 0.00, 0.00, '', 0.00, '', '', '0000-00-00 00:00:00', '', '', '0000-00-00 00:00:00', '', '', '', '', 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '0006', '', '', 0.00, 0.00, '', 0.00, '', '', '0000-00-00 00:00:00', '', '', '0000-00-00 00:00:00', '', '', '', '', 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '0007', '', '', 0.00, 0.00, '', 0.00, '', '', '0000-00-00 00:00:00', '', '', '0000-00-00 00:00:00', '', '', '', '', 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -3412,7 +3413,7 @@ CREATE TABLE `memployeewisededuction` (
 CREATE TABLE `memployeewisedeductions` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
-  `EmployeeId` varchar(7) NOT NULL,
+  `EmployeeId` varchar(255) DEFAULT NULL,
   `EmployeewiseDeductionId` varchar(5) NOT NULL DEFAULT '00001',
   `EmployeewiseDeductionDate` datetime DEFAULT current_timestamp(),
   `EmployeeTypeId` varchar(5) NOT NULL,
@@ -3436,11 +3437,11 @@ CREATE TABLE `memployeewisedeductions` (
 --
 
 INSERT INTO `memployeewisedeductions` (`CompanyId`, `BranchId`, `EmployeeId`, `EmployeewiseDeductionId`, `EmployeewiseDeductionDate`, `EmployeeTypeId`, `EmployeeType`, `EmployeeTypeGroup`, `DeductionHeadId`, `DeductionHead`, `DCalculationType`, `DCalculationValue`, `Formula`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
-('00001', '00001', '1', 'S0001', '2023-12-15 15:45:52', '001', 'S', 'Staff', 'D0001', 'PF', 'Formula', 0.00, 'P2*(12/100)', NULL, 'Y', NULL, NULL, NULL, NULL),
-('00001', '00001', '1', 'S0002', '2023-12-15 15:45:52', '001', 'S', 'Staff', 'D0002', 'ESIC', 'Formula', 0.00, 'P3*(0.75/100)', NULL, 'Y', NULL, NULL, NULL, NULL),
-('00001', '00001', '1', 'S0003', '2023-12-15 15:45:52', '001', 'S', 'Staff', 'D0003', 'Professional Tax', 'Amount', 900.00, NULL, NULL, 'Y', NULL, NULL, NULL, NULL),
-('00001', '00001', '1', 'S0004', '2023-12-15 15:45:52', '001', 'S', 'Staff', 'D0004', 'MLWF', 'Amount', 340.00, NULL, NULL, 'Y', NULL, NULL, NULL, NULL),
-('00001', '00001', '1', 'S0005', '2023-12-15 15:45:52', '001', 'S', 'Staff', 'D0005', 'TDS', 'Amount', 1200.00, NULL, NULL, 'Y', NULL, NULL, NULL, NULL);
+('00001', '00001', '0001', 'S0001', '2023-12-15 15:45:52', '001', 'S', 'Staff', 'D0001', 'PF', 'Formula', 0.00, 'P2*(12/100)', NULL, 'Y', NULL, NULL, NULL, NULL),
+('00001', '00001', '0001', 'S0002', '2023-12-15 15:45:52', '001', 'S', 'Staff', 'D0002', 'ESIC', 'Formula', 0.00, 'P3*(0.75/100)', NULL, 'Y', NULL, NULL, NULL, NULL),
+('00001', '00001', '0001', 'S0003', '2023-12-15 15:45:52', '001', 'S', 'Staff', 'D0003', 'Professional Tax', 'Amount', 900.00, NULL, NULL, 'Y', NULL, NULL, NULL, NULL),
+('00001', '00001', '0001', 'S0004', '2023-12-15 15:45:52', '001', 'S', 'Staff', 'D0004', 'MLWF', 'Amount', 340.00, NULL, NULL, 'Y', NULL, NULL, NULL, NULL),
+('00001', '00001', '0001', 'S0005', '2023-12-15 15:45:52', '001', 'S', 'Staff', 'D0005', 'TDS', 'Amount', 1200.00, NULL, NULL, 'Y', NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -3451,7 +3452,7 @@ INSERT INTO `memployeewisedeductions` (`CompanyId`, `BranchId`, `EmployeeId`, `E
 CREATE TABLE `memployeewiseearnings` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
-  `EmployeeId` int(7) NOT NULL,
+  `EmployeeId` varchar(255) DEFAULT NULL,
   `EmployeewiseEarningId` varchar(5) NOT NULL,
   `EmployeewiseEarningDate` datetime DEFAULT current_timestamp(),
   `EmployeeTypeId` varchar(5) NOT NULL,
@@ -3475,24 +3476,24 @@ CREATE TABLE `memployeewiseearnings` (
 --
 
 INSERT INTO `memployeewiseearnings` (`CompanyId`, `BranchId`, `EmployeeId`, `EmployeewiseEarningId`, `EmployeewiseEarningDate`, `EmployeeTypeId`, `EmployeeType`, `EmployeeTypeGroup`, `EarningHeadId`, `EarningHead`, `ECalculationType`, `ECalculationValue`, `Formula`, `ModifiedBy`, `ModifiedOn`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`) VALUES
-('00001', '00001', 1, 'S0001', '2023-12-16 04:33:29', '001', 'S', 'Staff', 'E0002', 'Basic Salary', 'Formula', 0.00, '(P1)*(50/100)', NULL, NULL, NULL, 'Y', NULL, NULL),
-('00001', '00001', 1, 'S0002', '2023-12-16 04:33:29', '001', 'S', 'Staff', 'E0003', 'Dearness Allowance', 'Formula', 0.00, '(P2)*24/100', NULL, NULL, NULL, 'Y', NULL, NULL),
-('00001', '00001', 1, 'S0003', '2023-12-16 04:33:29', '001', 'S', 'Staff', 'E0004', 'House Rent Allowance', 'Formula', 0.00, '(P2)*50/100', NULL, NULL, NULL, 'Y', NULL, NULL),
-('00001', '00001', 1, 'S0004', '2023-12-16 04:33:29', '001', 'S', 'Staff', 'E0005', 'Conveyance Allowance', 'Formula', 0.00, '(P2)*2/100', NULL, NULL, NULL, 'Y', NULL, NULL),
-('00001', '00001', 1, 'S0005', '2023-12-16 04:33:29', '001', 'S', 'Staff', 'E0006', 'Special Allowance', 'Formula', 0.00, '(P2)*13/100', NULL, NULL, NULL, 'Y', NULL, NULL),
-('00001', '00001', 1, 'S0006', '2023-12-16 04:33:29', '001', 'S', 'Staff', 'E0007', 'Personal Allowance', 'Formula', 0.00, '(P2)*24/100', NULL, NULL, NULL, 'Y', NULL, NULL),
-('00001', '00001', 1, 'S0007', '2023-12-16 04:33:29', '001', 'S', 'Staff', 'E0008', 'Incentive Allowance', 'Amount', 500.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
-('00001', '00001', 1, 'S0008', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0002', 'Basic Salary', 'Formula', 0.00, '(P1)*(50/100)', NULL, NULL, NULL, 'Y', NULL, NULL),
-('00001', '00001', 1, 'S0009', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0003', 'Dearness Allowance', 'Formula', 0.00, '(P2)*24/100', NULL, NULL, NULL, 'Y', NULL, NULL),
-('00001', '00001', 1, 'S0010', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0004', 'House Rent Allowance', 'Formula', 0.00, '(P2)*50/100', NULL, NULL, NULL, 'Y', NULL, NULL),
-('00001', '00001', 1, 'S0011', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0005', 'Conveyance Allowance', 'Formula', 0.00, '(P2)*2/100', NULL, NULL, NULL, 'Y', NULL, NULL),
-('00001', '00001', 1, 'S0012', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0006', 'Special Allowance', 'Formula', 0.00, '(P2)*13/100', NULL, NULL, NULL, 'Y', NULL, NULL),
-('00001', '00001', 1, 'S0013', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0007', 'Personal Allowance', 'Formula', 0.00, '(P2)*24/100', NULL, NULL, NULL, 'Y', NULL, NULL),
-('00001', '00001', 1, 'S0014', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0008', 'Incentive Allowance', 'Amount', 500.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
-('00001', '00001', 1, 'S0015', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0016', 'Performance Bonus', 'Formula', 0.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
-('00001', '00001', 1, 'S0016', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0018', 'LTA', 'Amount', 0.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
-('00001', '00001', 1, 'S0017', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0019', 'Gratuity', 'Amount', 0.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
-('00001', '00001', 1, 'S0018', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0022', 'C-OFF Allowance', 'Amount', 0.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL);
+('00001', '00001', '0001', 'S0001', '2023-12-16 04:33:29', '001', 'S', 'Staff', 'E0002', 'Basic Salary', 'Formula', 0.00, '(P1)*(50/100)', NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', '0001', 'S0002', '2023-12-16 04:33:29', '001', 'S', 'Staff', 'E0003', 'Dearness Allowance', 'Formula', 0.00, '(P2)*24/100', NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', '0001', 'S0003', '2023-12-16 04:33:29', '001', 'S', 'Staff', 'E0004', 'House Rent Allowance', 'Formula', 0.00, '(P2)*50/100', NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', '0001', 'S0004', '2023-12-16 04:33:29', '001', 'S', 'Staff', 'E0005', 'Conveyance Allowance', 'Formula', 0.00, '(P2)*2/100', NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', '0001', 'S0005', '2023-12-16 04:33:29', '001', 'S', 'Staff', 'E0006', 'Special Allowance', 'Formula', 0.00, '(P2)*13/100', NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', '0001', 'S0006', '2023-12-16 04:33:29', '001', 'S', 'Staff', 'E0007', 'Personal Allowance', 'Formula', 0.00, '(P2)*24/100', NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', '0001', 'S0007', '2023-12-16 04:33:29', '001', 'S', 'Staff', 'E0008', 'Incentive Allowance', 'Amount', 500.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', '0001', 'S0008', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0002', 'Basic Salary', 'Formula', 0.00, '(P1)*(50/100)', NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', '0001', 'S0009', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0003', 'Dearness Allowance', 'Formula', 0.00, '(P2)*24/100', NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', '0001', 'S0010', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0004', 'House Rent Allowance', 'Formula', 0.00, '(P2)*50/100', NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', '0001', 'S0011', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0005', 'Conveyance Allowance', 'Formula', 0.00, '(P2)*2/100', NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', '0001', 'S0012', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0006', 'Special Allowance', 'Formula', 0.00, '(P2)*13/100', NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', '0001', 'S0013', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0007', 'Personal Allowance', 'Formula', 0.00, '(P2)*24/100', NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', '0001', 'S0014', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0008', 'Incentive Allowance', 'Amount', 500.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', '0001', 'S0015', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0016', 'Performance Bonus', 'Formula', 0.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', '0001', 'S0016', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0018', 'LTA', 'Amount', 0.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', '0001', 'S0017', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0019', 'Gratuity', 'Amount', 0.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL),
+('00001', '00001', '0001', 'S0018', '2023-12-26 07:25:13', '001', 'S', 'Staff', 'E0022', 'C-OFF Allowance', 'Amount', 0.00, NULL, NULL, NULL, NULL, 'Y', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -3503,7 +3504,7 @@ INSERT INTO `memployeewiseearnings` (`CompanyId`, `BranchId`, `EmployeeId`, `Emp
 CREATE TABLE `memployeeworkprofiles` (
   `CompanyId` varchar(5) NOT NULL DEFAULT '00001',
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
-  `EmployeeId` int(5) NOT NULL,
+  `EmployeeId` varchar(255) DEFAULT NULL,
   `DOJ` varchar(50) DEFAULT NULL,
   `DOL` varchar(50) DEFAULT NULL,
   `ContractorId` varchar(50) DEFAULT NULL,
@@ -3536,13 +3537,13 @@ CREATE TABLE `memployeeworkprofiles` (
 --
 
 INSERT INTO `memployeeworkprofiles` (`CompanyId`, `BranchId`, `EmployeeId`, `DOJ`, `DOL`, `ContractorId`, `ContractorStartDate`, `ContractorEndDate`, `DeptGroupId`, `DeptId`, `SubDeptId`, `DesgId`, `ReportingTo`, `WeeklyOff`, `ShiftId`, `BandId`, `ZoneId`, `GradeId`, `CostCenterId`, `BondApplicable`, `BondAttachment`, `CurrentJob`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
-('00001', '00001', 1, '2010-09-27', '2023-10-29', 'Example 2', '2012-06-25', '2023-11-29', '00020', '00004', '00021', '3', '5', '00008', '00008', 'Example 1', 'Example 3', '2', '0005', 't', '', '', 'remark', 'Y', '', '', '', ''),
-('00001', '00001', 2, '', '', '', NULL, NULL, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'Y', '', '', '', ''),
-('00001', '00001', 3, '', '', '', NULL, NULL, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'Y', '', '', '', ''),
-('00001', '00001', 4, '', '', '', NULL, NULL, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'N', '', '', '', ''),
-('00001', '00001', 5, '', '', '', NULL, NULL, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'Y', '', '', '', ''),
-('00001', '00001', 6, '', '', '', NULL, NULL, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'Y', '', '', '', ''),
-('00001', '00001', 7, '', '', '', NULL, NULL, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'Y', '', '', '', '');
+('00001', '00001', '0001', '2010-09-27', '2023-10-29', 'Example 2', '2012-06-25', '2023-11-29', '00020', '00004', '00021', '3', '5', '00008', '00008', 'Example 1', 'Example 3', '2', '0005', 't', '', '', 'remark', 'Y', '', '', '', ''),
+('00001', '00001', '0002', '', '', '', NULL, NULL, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'Y', '', '', '', ''),
+('00001', '00001', '0003', '', '', '', NULL, NULL, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'Y', '', '', '', ''),
+('00001', '00001', '0004', '', '', '', NULL, NULL, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'N', '', '', '', ''),
+('00001', '00001', '0005', '', '', '', NULL, NULL, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'Y', '', '', '', ''),
+('00001', '00001', '0006', '', '', '', NULL, NULL, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'Y', '', '', '', ''),
+('00001', '00001', '0007', '', '', '', NULL, NULL, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'Y', '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -3733,7 +3734,7 @@ CREATE TABLE `mleaves` (
   `BranchId` varchar(5) NOT NULL DEFAULT '00001',
   `LeaveBalanceId` varchar(5) NOT NULL,
   `FYear` varchar(5) NOT NULL,
-  `EmployeeId` varchar(5) NOT NULL,
+  `EmployeeId` varchar(255) DEFAULT NULL,
   `EmployeeTypeId` varchar(5) DEFAULT NULL,
   `EmployeeType` varchar(10) DEFAULT NULL,
   `EmployeeTypeGroup` varchar(10) DEFAULT NULL,
@@ -3771,33 +3772,33 @@ CREATE TABLE `mleaves` (
 --
 
 INSERT INTO `mleaves` (`CompanyId`, `BranchId`, `LeaveBalanceId`, `FYear`, `EmployeeId`, `EmployeeTypeId`, `EmployeeType`, `EmployeeTypeGroup`, `LeaveTypeId`, `Month`, `Year`, `LeaveBalanceDate`, `EmployeeName`, `LeaveTypeDesc`, `OpeningBalance`, `LeaveEarned1`, `LeaveEarned2`, `LeaveEarned3`, `LeaveEarned4`, `LeaveEarned5`, `LeaveEarned6`, `LeaveEarned7`, `LeaveEarned8`, `LeaveEarned9`, `LeaveEarned10`, `LeaveEarned11`, `LeaveEarned12`, `SanctionLeaveDays`, `LeaveBalance`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
-('00001', '00001', '00001', '2023', '1', '001', 'S', 'Staff', '0001', '12', '2023', '2023-12-29 00:00:00', 'Charles Leclerc', 'PL', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
-('00001', '00001', '00002', '2023', '1', '001', 'S', 'Staff', '0002', '12', '2023', '2023-12-29 00:00:00', 'Charles Leclerc', 'CL', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
-('00001', '00001', '00003', '2023', '1', '001', 'S', 'Staff', '0003', '12', '2023', '2023-12-29 00:00:00', 'Charles Leclerc', 'SL', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
-('00001', '00001', '00004', '2023', '1', '001', 'S', 'Staff', '0004', '12', '2023', '2023-12-29 00:00:00', 'Charles Leclerc', 'LW', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
-('00001', '00001', '00005', '2023', '1', '001', 'S', 'Staff', '0005', '12', '2023', '2023-12-29 00:00:00', 'Charles Leclerc', 'CF', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
-('00001', '00001', '00006', '2023', '1', '001', 'S', 'Staff', '0006', '12', '2023', '2023-12-29 00:00:00', 'Charles Leclerc', 'HD', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
-('00001', '00001', '00007', '2023', '1', '001', 'S', 'Staff', '0007', '12', '2023', '2023-12-29 00:00:00', 'Charles Leclerc', 'HD', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
-('00001', '00001', '00008', '2023', '1', '001', 'S', 'Staff', '0008', '12', '2023', '2023-12-29 00:00:00', 'Charles Leclerc', 'UL', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
-('00001', '00001', '00009', '2023', '1', '001', 'S', 'Staff', '0009', '12', '2023', '2023-12-29 00:00:00', 'Charles Leclerc', 'WO', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
-('00001', '00001', '00010', '2023', '2', '004', 'O', 'Worker', '0001', '12', '2023', '2023-12-29 00:00:00', 'Bruce  Wayne', 'PL', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
-('00001', '00001', '00011', '2023', '2', '004', 'O', 'Worker', '0002', '12', '2023', '2023-12-29 00:00:00', 'Bruce  Wayne', 'CL', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
-('00001', '00001', '00012', '2023', '2', '004', 'O', 'Worker', '0003', '12', '2023', '2023-12-29 00:00:00', 'Bruce  Wayne', 'SL', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
-('00001', '00001', '00013', '2023', '2', '004', 'O', 'Worker', '0004', '12', '2023', '2023-12-29 00:00:00', 'Bruce  Wayne', 'LW', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
-('00001', '00001', '00014', '2023', '2', '004', 'O', 'Worker', '0005', '12', '2023', '2023-12-29 00:00:00', 'Bruce  Wayne', 'CF', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
-('00001', '00001', '00015', '2023', '2', '004', 'O', 'Worker', '0006', '12', '2023', '2023-12-29 00:00:00', 'Bruce  Wayne', 'HD', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
-('00001', '00001', '00016', '2023', '2', '004', 'O', 'Worker', '0007', '12', '2023', '2023-12-29 00:00:00', 'Bruce  Wayne', 'HD', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
-('00001', '00001', '00017', '2023', '2', '004', 'O', 'Worker', '0008', '12', '2023', '2023-12-29 00:00:00', 'Bruce  Wayne', 'UL', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
-('00001', '00001', '00018', '2023', '2', '004', 'O', 'Worker', '0009', '12', '2023', '2023-12-29 00:00:00', 'Bruce  Wayne', 'WO', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
-('00001', '00001', '00019', '2023', '4', '001', 'S', 'Staff', '0001', '12', '2023', '2023-12-29 00:00:00', 'Harshvardhan Reddy', 'PL', 13.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 6.00, 6.00, '', 'Y', '', NULL, '', NULL),
-('00001', '00001', '00020', '2023', '4', '001', 'S', 'Staff', '0002', '12', '2023', '2023-12-29 00:00:00', 'Harshvardhan Reddy', 'CL', 6.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 4.00, 4.00, '', 'Y', '', NULL, '', NULL),
-('00001', '00001', '00021', '2023', '4', '001', 'S', 'Staff', '0003', '12', '2023', '2023-12-29 00:00:00', 'Harshvardhan Reddy', 'SL', 7.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 4.00, 4.00, '', 'Y', '', NULL, '', NULL),
-('00001', '00001', '00022', '2023', '4', '001', 'S', 'Staff', '0004', '12', '2023', '2023-12-29 00:00:00', 'Harshvardhan Reddy', 'LW', 11.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 9.00, 9.00, '', 'Y', '', NULL, '', NULL),
-('00001', '00001', '00023', '2023', '4', '001', 'S', 'Staff', '0005', '12', '2023', '2023-12-29 00:00:00', 'Harshvardhan Reddy', 'CF', 5.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 4.00, 4.00, '', 'Y', '', NULL, '', NULL),
-('00001', '00001', '00024', '2023', '4', '001', 'S', 'Staff', '0006', '12', '2023', '2023-12-29 00:00:00', 'Harshvardhan Reddy', 'HD', 8.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 5.00, 5.00, '', 'Y', '', NULL, '', NULL),
-('00001', '00001', '00025', '2023', '4', '001', 'S', 'Staff', '0007', '12', '2023', '2023-12-29 00:00:00', 'Harshvardhan Reddy', 'HD', 8.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 4.00, 4.00, '', 'Y', '', NULL, '', NULL),
-('00001', '00001', '00026', '2023', '4', '001', 'S', 'Staff', '0008', '12', '2023', '2023-12-29 00:00:00', 'Harshvardhan Reddy', 'UL', 6.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 5.00, 5.00, '', 'Y', '', NULL, '', NULL),
-('00001', '00001', '00027', '2023', '4', '001', 'S', 'Staff', '0009', '12', '2023', '2023-12-29 00:00:00', 'Harshvardhan Reddy', 'WO', 7.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 5.00, 5.00, '', 'Y', '', NULL, '', NULL);
+('00001', '00001', '00001', '2023', '0001', '001', 'S', 'Staff', '0001', '12', '2023', '2023-12-29 00:00:00', 'Charles Leclerc', 'PL', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00002', '2023', '0001', '001', 'S', 'Staff', '0002', '12', '2023', '2023-12-29 00:00:00', 'Charles Leclerc', 'CL', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00003', '2023', '0001', '001', 'S', 'Staff', '0003', '12', '2023', '2023-12-29 00:00:00', 'Charles Leclerc', 'SL', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00004', '2023', '0001', '001', 'S', 'Staff', '0004', '12', '2023', '2023-12-29 00:00:00', 'Charles Leclerc', 'LW', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00005', '2023', '0001', '001', 'S', 'Staff', '0005', '12', '2023', '2023-12-29 00:00:00', 'Charles Leclerc', 'CF', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00006', '2023', '0001', '001', 'S', 'Staff', '0006', '12', '2023', '2023-12-29 00:00:00', 'Charles Leclerc', 'HD', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00007', '2023', '0001', '001', 'S', 'Staff', '0007', '12', '2023', '2023-12-29 00:00:00', 'Charles Leclerc', 'HD', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00008', '2023', '0001', '001', 'S', 'Staff', '0008', '12', '2023', '2023-12-29 00:00:00', 'Charles Leclerc', 'UL', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00009', '2023', '0001', '001', 'S', 'Staff', '0009', '12', '2023', '2023-12-29 00:00:00', 'Charles Leclerc', 'WO', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00010', '2023', '0002', '004', 'O', 'Worker', '0001', '12', '2023', '2023-12-29 00:00:00', 'Bruce  Wayne', 'PL', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00011', '2023', '0002', '004', 'O', 'Worker', '0002', '12', '2023', '2023-12-29 00:00:00', 'Bruce  Wayne', 'CL', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00012', '2023', '0002', '004', 'O', 'Worker', '0003', '12', '2023', '2023-12-29 00:00:00', 'Bruce  Wayne', 'SL', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00013', '2023', '0002', '004', 'O', 'Worker', '0004', '12', '2023', '2023-12-29 00:00:00', 'Bruce  Wayne', 'LW', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00014', '2023', '0002', '004', 'O', 'Worker', '0005', '12', '2023', '2023-12-29 00:00:00', 'Bruce  Wayne', 'CF', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00015', '2023', '0002', '004', 'O', 'Worker', '0006', '12', '2023', '2023-12-29 00:00:00', 'Bruce  Wayne', 'HD', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00016', '2023', '0002', '004', 'O', 'Worker', '0007', '12', '2023', '2023-12-29 00:00:00', 'Bruce  Wayne', 'HD', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00017', '2023', '0002', '004', 'O', 'Worker', '0008', '12', '2023', '2023-12-29 00:00:00', 'Bruce  Wayne', 'UL', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00018', '2023', '0002', '004', 'O', 'Worker', '0009', '12', '2023', '2023-12-29 00:00:00', 'Bruce  Wayne', 'WO', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 'Y', '', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+('00001', '00001', '00019', '2023', '0004', '001', 'S', 'Staff', '0001', '12', '2023', '2023-12-29 00:00:00', 'Harshvardhan Reddy', 'PL', 13.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 6.00, 6.00, '', 'Y', '', NULL, '', NULL),
+('00001', '00001', '00020', '2023', '0004', '001', 'S', 'Staff', '0002', '12', '2023', '2023-12-29 00:00:00', 'Harshvardhan Reddy', 'CL', 6.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 4.00, 4.00, '', 'Y', '', NULL, '', NULL),
+('00001', '00001', '00021', '2023', '0004', '001', 'S', 'Staff', '0003', '12', '2023', '2023-12-29 00:00:00', 'Harshvardhan Reddy', 'SL', 7.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 4.00, 4.00, '', 'Y', '', NULL, '', NULL),
+('00001', '00001', '00022', '2023', '0004', '001', 'S', 'Staff', '0004', '12', '2023', '2023-12-29 00:00:00', 'Harshvardhan Reddy', 'LW', 11.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 9.00, 9.00, '', 'Y', '', NULL, '', NULL),
+('00001', '00001', '00023', '2023', '0004', '001', 'S', 'Staff', '0005', '12', '2023', '2023-12-29 00:00:00', 'Harshvardhan Reddy', 'CF', 5.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 4.00, 4.00, '', 'Y', '', NULL, '', NULL),
+('00001', '00001', '00024', '2023', '0004', '001', 'S', 'Staff', '0006', '12', '2023', '2023-12-29 00:00:00', 'Harshvardhan Reddy', 'HD', 8.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 5.00, 5.00, '', 'Y', '', NULL, '', NULL),
+('00001', '00001', '00025', '2023', '0004', '001', 'S', 'Staff', '0007', '12', '2023', '2023-12-29 00:00:00', 'Harshvardhan Reddy', 'HD', 8.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 4.00, 4.00, '', 'Y', '', NULL, '', NULL),
+('00001', '00001', '00026', '2023', '0004', '001', 'S', 'Staff', '0008', '12', '2023', '2023-12-29 00:00:00', 'Harshvardhan Reddy', 'UL', 6.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 5.00, 5.00, '', 'Y', '', NULL, '', NULL),
+('00001', '00001', '00027', '2023', '0004', '001', 'S', 'Staff', '0009', '12', '2023', '2023-12-29 00:00:00', 'Harshvardhan Reddy', 'WO', 7.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 5.00, 5.00, '', 'Y', '', NULL, '', NULL);
 
 -- --------------------------------------------------------
 
@@ -4176,7 +4177,7 @@ CREATE TABLE `temployeegatepasses` (
   `FYear` varchar(255) NOT NULL,
   `GatepassId` varchar(255) NOT NULL,
   `GatepassDate` datetime DEFAULT NULL,
-  `EmployeeId` varchar(255) NOT NULL,
+  `EmployeeId` varchar(255) DEFAULT NULL,
   `EmployeeType` varchar(255) NOT NULL,
   `EmployeeTypeGroup` varchar(255) NOT NULL,
   `InTime` datetime DEFAULT NULL,
@@ -4201,8 +4202,8 @@ CREATE TABLE `temployeegatepasses` (
 --
 
 INSERT INTO `temployeegatepasses` (`CompanyId`, `BranchId`, `FYear`, `GatepassId`, `GatepassDate`, `EmployeeId`, `EmployeeType`, `EmployeeTypeGroup`, `InTime`, `OutTime`, `GatepassType`, `Purpose`, `RejectReason`, `SanctionBy`, `Remark`, `ApprovalFlag`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`, `createdAt`, `updatedAt`) VALUES
-('00001', '00001', '2023', '00001', '0000-00-00 00:00:00', '3', '', '', '2023-12-05 08:03:00', '2023-12-13 09:03:00', 'Personal', NULL, NULL, NULL, 'text', 'P', 'Y', '', '2023-12-28 07:04:25', NULL, '0000-00-00 00:00:00', '2023-12-28 07:04:25', '2023-12-28 07:04:25'),
-('00001', '00001', '2023', '00002', '2023-12-04 00:00:00', '3', '', '', '2023-12-10 07:18:00', '2023-12-13 10:30:00', 'Personal', NULL, NULL, NULL, 'text', 'P', 'Y', '', '2023-12-28 07:18:47', NULL, '0000-00-00 00:00:00', '2023-12-28 07:18:47', '2023-12-28 07:18:47');
+('00001', '00001', '2023', '00001', '0000-00-00 00:00:00', '0003', '', '', '2023-12-05 08:03:00', '2023-12-13 09:03:00', 'Personal', NULL, NULL, NULL, 'text', 'P', 'Y', '', '2023-12-28 07:04:25', NULL, '0000-00-00 00:00:00', '2023-12-28 07:04:25', '2023-12-28 07:04:25'),
+('00001', '00001', '2023', '00002', '2023-12-04 00:00:00', '0003', '', '', '2023-12-10 07:18:00', '2023-12-13 10:30:00', 'Personal', NULL, NULL, NULL, 'text', 'P', 'Y', '', '2023-12-28 07:18:47', NULL, '0000-00-00 00:00:00', '2023-12-28 07:18:47', '2023-12-28 07:18:47');
 
 -- --------------------------------------------------------
 
@@ -4216,7 +4217,7 @@ CREATE TABLE `tleaves` (
   `FYear` varchar(5) NOT NULL,
   `LeaveApplicationId` varchar(20) NOT NULL,
   `LeaveApplicationDate` datetime NOT NULL,
-  `EmployeeId` varchar(5) NOT NULL,
+  `EmployeeId` varchar(255) DEFAULT NULL,
   `EmployeeType` varchar(10) NOT NULL,
   `EmployeeTypeGroup` varchar(5) NOT NULL,
   `LeaveFromDate` datetime NOT NULL,
@@ -4241,12 +4242,12 @@ CREATE TABLE `tleaves` (
 --
 
 INSERT INTO `tleaves` (`CompanyId`, `BranchId`, `FYear`, `LeaveApplicationId`, `LeaveApplicationDate`, `EmployeeId`, `EmployeeType`, `EmployeeTypeGroup`, `LeaveFromDate`, `LeaveToDate`, `LeaveTypeId`, `LeaveDays`, `SanctionBy`, `SanctionFromDate`, `SanctionToDate`, `SanctionLeaveDays`, `Remark`, `ApprovalFlag`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`) VALUES
-('00001', '00001', '2023', '2023-LA00001', '2023-12-06 00:00:00', '1', 'S', 'Staff', '2023-12-13 00:00:00', '2023-12-16 00:00:00', '0001', 4.00, '3', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0.00, 'remark', 'A', 'Y', '', '0000-00-00 00:00:00', NULL, '0000-00-00 00:00:00'),
-('00001', '00001', '2023', '2023-LA00002', '2023-12-06 00:00:00', '2', 'S', 'Staff', '2023-12-13 00:00:00', '2023-12-16 00:00:00', '0001', 4.00, '1', '2023-01-16 00:00:00', '2023-01-30 00:00:00', 0.00, 'remark', 'A', 'Y', '', '0000-00-00 00:00:00', NULL, '0000-00-00 00:00:00'),
-('00001', '00001', '2023', '2023-LA00003', '2023-12-06 00:00:00', '4', 'S', 'Staff', '2023-12-13 00:00:00', '2023-12-16 00:00:00', '0001', 4.00, '', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0.00, 'remark', 'P', 'N', '', '0000-00-00 00:00:00', NULL, '0000-00-00 00:00:00'),
-('00001', '00001', '2023', '2023-LA00004', '2023-12-25 00:00:00', '4', 'S', 'Staff', '2023-12-27 00:00:00', '2023-12-30 00:00:00', '0002', 4.00, '1', '2023-12-27 00:00:00', '2023-12-30 00:00:00', 0.00, '4', 'A', 'Y', '', '0000-00-00 00:00:00', NULL, '0000-00-00 00:00:00'),
-('00001', '00001', '2023', '2023-LA00005', '2023-12-12 00:00:00', '3', 'S', 'Staff', '2023-12-25 00:00:00', '2023-12-29 00:00:00', '0002', 0.00, '', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0.00, 'Remark', 'P', 'Y', '', '0000-00-00 00:00:00', NULL, '0000-00-00 00:00:00'),
-('00001', '00001', '2023', '2023-LA00006', '2023-12-28 00:00:00', '4', 'S', 'Staff', '2023-12-29 00:00:00', '2024-01-03 00:00:00', '0002', 6.00, '1', '2023-12-29 00:00:00', '2024-01-03 00:00:00', 6.00, 'Remark', 'A', 'Y', '', '0000-00-00 00:00:00', NULL, '0000-00-00 00:00:00');
+('00001', '00001', '2023', '2023-LA00001', '2023-12-06 00:00:00', '0001', 'S', 'Staff', '2023-12-13 00:00:00', '2023-12-16 00:00:00', '0001', 4.00, '3', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0.00, 'remark', 'A', 'Y', '', '0000-00-00 00:00:00', NULL, '0000-00-00 00:00:00'),
+('00001', '00001', '2023', '2023-LA00002', '2023-12-06 00:00:00', '0002', 'S', 'Staff', '2023-12-13 00:00:00', '2023-12-16 00:00:00', '0001', 4.00, '1', '2023-01-16 00:00:00', '2023-01-30 00:00:00', 0.00, 'remark', 'A', 'Y', '', '0000-00-00 00:00:00', NULL, '0000-00-00 00:00:00'),
+('00001', '00001', '2023', '2023-LA00003', '2023-12-06 00:00:00', '0004', 'S', 'Staff', '2023-12-13 00:00:00', '2023-12-16 00:00:00', '0001', 4.00, '', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0.00, 'remark', 'P', 'N', '', '0000-00-00 00:00:00', NULL, '0000-00-00 00:00:00'),
+('00001', '00001', '2023', '2023-LA00004', '2023-12-25 00:00:00', '0004', 'S', 'Staff', '2023-12-27 00:00:00', '2023-12-30 00:00:00', '0002', 4.00, '1', '2023-12-27 00:00:00', '2023-12-30 00:00:00', 0.00, '4', 'A', 'Y', '', '0000-00-00 00:00:00', NULL, '0000-00-00 00:00:00'),
+('00001', '00001', '2023', '2023-LA00005', '2023-12-12 00:00:00', '0003', 'S', 'Staff', '2023-12-25 00:00:00', '2023-12-29 00:00:00', '0002', 0.00, '', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0.00, 'Remark', 'P', 'Y', '', '0000-00-00 00:00:00', NULL, '0000-00-00 00:00:00'),
+('00001', '00001', '2023', '2023-LA00006', '2023-12-28 00:00:00', '0004', 'S', 'Staff', '2023-12-29 00:00:00', '2024-01-03 00:00:00', '0002', 6.00, '1', '2023-12-29 00:00:00', '2024-01-03 00:00:00', 6.00, 'Remark', 'A', 'Y', '', '0000-00-00 00:00:00', NULL, '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -4262,7 +4263,7 @@ CREATE TABLE `tmanualattendances` (
   `EmployeeTypeId` varchar(5) NOT NULL,
   `JobTypeId` varchar(5) NOT NULL DEFAULT '00001',
   `ShiftId` varchar(5) NOT NULL,
-  `EmployeeId` varchar(5) NOT NULL,
+  `EmployeeId` varchar(255) DEFAULT NULL,
   `EmployeeTypeGroup` varchar(10) DEFAULT NULL,
   `AttendanceDate` datetime DEFAULT NULL,
   `InTime` datetime DEFAULT NULL,
@@ -4283,8 +4284,8 @@ CREATE TABLE `tmanualattendances` (
 --
 
 INSERT INTO `tmanualattendances` (`CompanyId`, `BranchId`, `AttendanceId`, `FYear`, `EmployeeTypeId`, `JobTypeId`, `ShiftId`, `EmployeeId`, `EmployeeTypeGroup`, `AttendanceDate`, `InTime`, `OutTime`, `AttendanceFlag`, `Remark`, `AcFlag`, `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn`, `ApprovalFlag`, `SanctionBy`) VALUES
-('00001', '00001', '00001', '00001', '002', '6', '00003', '2', 'Staff', '2023-01-23 00:00:00', '2023-11-30 04:45:00', '2024-11-30 11:45:00', 'E', 'text', 'Y', NULL, '2024-01-02 04:45:59', NULL, NULL, 'P', ''),
-('00001', '00001', '00002', '00002', '005', '4', '00003', '2', 'Staff', '2024-01-08 00:00:00', '2024-01-29 05:06:00', '2024-01-28 23:06:00', 'M', 'text', 'Y', NULL, '2024-01-03 05:12:14', NULL, NULL, 'P', '');
+('00001', '00001', '00001', '00001', '002', '6', '00003', '0002', 'Staff', '2023-01-23 00:00:00', '2023-11-30 04:45:00', '2024-11-30 11:45:00', 'E', 'text', 'Y', NULL, '2024-01-02 04:45:59', NULL, NULL, 'P', ''),
+('00001', '00001', '00002', '00002', '005', '4', '00003', '0002', 'Staff', '2024-01-08 00:00:00', '2024-01-29 05:06:00', '2024-01-28 23:06:00', 'M', 'text', 'Y', NULL, '2024-01-03 05:12:14', NULL, NULL, 'P', '');
 
 -- --------------------------------------------------------
 
@@ -4295,10 +4296,11 @@ INSERT INTO `tmanualattendances` (`CompanyId`, `BranchId`, `AttendanceId`, `FYea
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `empid` varchar(30) NOT NULL,
+  `empid` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `role` varchar(255) NOT NULL,
+  `accessrights` varchar(255) DEFAULT 'NA',
   `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
   `updatedAt` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -4307,395 +4309,31 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `empid`, `email`, `password`, `role`, `createdAt`, `updatedAt`) VALUES
-(1, 'Udayan Gaikwad', '0004', 'ggwpfax@gmail.com', 'Udayan@99', 'Admin', '2024-03-11 19:06:40', '2024-03-11 19:06:40'),
-(2, 'Max Verstappen', '001', 'max@gmail.com', 'ggwpfax', 'Admin', '2024-03-11 16:00:58', '2024-03-11 16:00:58');
+INSERT INTO `users` (`id`, `name`, `empid`, `email`, `password`, `role`, `accessrights`, `createdAt`, `updatedAt`) VALUES
+(1, 'Udayan Gaikwad', '0003', 'ggwpfax@gmail.com', 'Udayan@99', 'Admin', '287,549,610,624,703,736,872,954,143,217,395,431,502,598,786,820,148,201,409,752,875,269,317,370,497,531,548,654,753,153,418,460,706,141,182,305,407,603,724,879,159,273,523,619,625,690,758,832,871,907,926', '2024-03-11 19:06:40', '2024-03-17 04:52:16'),
+(2, 'Max Verstappen', '0005', 'max@gmail.com', 'ggwpfax', 'Admin', '287,549,610,624,703,736,872,954,143,217,395,431,502,598,786,820,148,201,409,752,875,269,317,370,497,531,548,654,753', '2024-03-11 16:00:58', '2024-03-17 04:24:22'),
+(3, 'Charles Leclerc', '0001', 'charles.leclerc@gmail.com', 'Leclerc14', 'Employee', '153,159,926,871,531,497,141', '2024-03-17 01:38:10', '2024-03-17 12:55:41'),
+(7, 'Bruce Wayne', '0002', 'bruce.wayne@gmail.com', 'iambatman', 'Employee', '153,159,926,871,141,531,497', '2024-03-17 13:20:53', '2024-03-17 13:20:53');
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `companyconfigs`
---
-ALTER TABLE `companyconfigs`
-  ADD PRIMARY KEY (`CCID`);
-
---
--- Indexes for table `edimports`
---
-ALTER TABLE `edimports`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `mbanks`
---
-ALTER TABLE `mbanks`
-  ADD PRIMARY KEY (`BankId`);
-
---
--- Indexes for table `mcaderwisedeductions`
---
-ALTER TABLE `mcaderwisedeductions`
-  ADD PRIMARY KEY (`CaderwiseDeductionId`,`CompanyId`,`BranchId`,`DeductionHeadID`,`EmployeeType`) USING BTREE;
-
---
--- Indexes for table `mcaderwiseearnings`
---
-ALTER TABLE `mcaderwiseearnings`
-  ADD PRIMARY KEY (`CompanyId`,`BranchId`,`CaderwiseEarningId`,`EmployeeTypeId`,`EarningHeadId`);
-
---
--- Indexes for table `mcompanies`
---
-ALTER TABLE `mcompanies`
-  ADD PRIMARY KEY (`CompanyId`);
-
---
--- Indexes for table `mcostcenter`
---
-ALTER TABLE `mcostcenter`
-  ADD PRIMARY KEY (`CostCenterId`);
-
---
--- Indexes for table `mdeductionheads`
---
-ALTER TABLE `mdeductionheads`
-  ADD PRIMARY KEY (`DeductionHeadID`,`CompanyId`,`BranchId`) USING BTREE;
-
---
--- Indexes for table `mdepartments`
---
-ALTER TABLE `mdepartments`
-  ADD PRIMARY KEY (`DepartmentId`,`CompanyId`,`BranchId`) USING BTREE;
-
---
--- Indexes for table `mdesignations`
---
-ALTER TABLE `mdesignations`
-  ADD PRIMARY KEY (`DesignationId`,`CompanyId`,`BranchId`) USING BTREE;
-
---
--- Indexes for table `mdevices`
---
-ALTER TABLE `mdevices`
-  ADD PRIMARY KEY (`DeviceId`);
-
---
--- Indexes for table `mearningheads`
---
-ALTER TABLE `mearningheads`
-  ADD PRIMARY KEY (`EarningHeadId`,`CompanyId`,`BranchId`) USING BTREE;
-
---
--- Indexes for table `mempdocs`
---
-ALTER TABLE `mempdocs`
-  ADD PRIMARY KEY (`DocId`);
-
---
--- Indexes for table `memployeeacademics`
---
-ALTER TABLE `memployeeacademics`
-  ADD PRIMARY KEY (`EmployeeId`);
-
---
--- Indexes for table `memployeefamilies`
---
-ALTER TABLE `memployeefamilies`
-  ADD PRIMARY KEY (`EmployeeId`);
-
---
--- Indexes for table `memployeegrades`
---
-ALTER TABLE `memployeegrades`
-  ADD PRIMARY KEY (`EmployeeGradeId`,`CompanyId`,`BranchId`) USING BTREE;
-
---
--- Indexes for table `memployeeprofessionals`
---
-ALTER TABLE `memployeeprofessionals`
-  ADD PRIMARY KEY (`EmployeeId`,`CompanyId`,`BranchId`) USING BTREE;
-
---
--- Indexes for table `memployees`
---
-ALTER TABLE `memployees`
-  ADD PRIMARY KEY (`EmployeeId`,`CompanyId`,`BranchId`,`EmployeeTypeId`) USING BTREE;
-
---
--- Indexes for table `memployeesalaries`
---
-ALTER TABLE `memployeesalaries`
-  ADD PRIMARY KEY (`EmployeeId`,`CompanyId`,`BranchId`) USING BTREE;
-
---
--- Indexes for table `memployeetypes`
---
-ALTER TABLE `memployeetypes`
-  ADD PRIMARY KEY (`EmployeeTypeId`,`CompanyId`,`BranchId`) USING BTREE;
-
---
--- Indexes for table `memployeewisededuction`
---
-ALTER TABLE `memployeewisededuction`
-  ADD PRIMARY KEY (`EmployeewiseDeductionId`);
-
---
--- Indexes for table `memployeewisedeductions`
---
-ALTER TABLE `memployeewisedeductions`
-  ADD PRIMARY KEY (`CompanyId`,`BranchId`,`EmployeeId`,`EmployeewiseDeductionId`,`EmployeeTypeId`,`DeductionHeadId`);
-
---
--- Indexes for table `memployeewiseearnings`
---
-ALTER TABLE `memployeewiseearnings`
-  ADD PRIMARY KEY (`CompanyId`,`BranchId`,`EmployeeId`,`EmployeewiseEarningId`,`EmployeeTypeId`,`EarningHeadId`);
-
---
--- Indexes for table `memployeeworkprofiles`
---
-ALTER TABLE `memployeeworkprofiles`
-  ADD PRIMARY KEY (`EmployeeId`);
-
---
--- Indexes for table `mfinancialyears`
---
-ALTER TABLE `mfinancialyears`
-  ADD PRIMARY KEY (`CompanyId`,`BranchId`,`FYearId`);
-
---
--- Indexes for table `mholidays`
---
-ALTER TABLE `mholidays`
-  ADD PRIMARY KEY (`HolidayId`);
-
---
--- Indexes for table `mjobsresponsibilities`
---
-ALTER TABLE `mjobsresponsibilities`
-  ADD PRIMARY KEY (`JobResponsibilityId`,`CompanyId`,`BranchId`) USING BTREE;
-
---
--- Indexes for table `mjobtypes`
---
-ALTER TABLE `mjobtypes`
-  ADD PRIMARY KEY (`JobTypeId`);
-
---
--- Indexes for table `mkras`
---
-ALTER TABLE `mkras`
-  ADD PRIMARY KEY (`KRAId`,`CompanyId`,`BranchId`) USING BTREE;
-
---
--- Indexes for table `mleaves`
---
-ALTER TABLE `mleaves`
-  ADD PRIMARY KEY (`CompanyId`,`BranchId`,`LeaveBalanceId`,`FYear`,`EmployeeId`,`LeaveTypeId`);
-
---
--- Indexes for table `mleavetypes`
---
-ALTER TABLE `mleavetypes`
-  ADD PRIMARY KEY (`CompanyId`,`BranchId`,`LeaveTypeId`);
-
---
--- Indexes for table `mmasternames`
---
-ALTER TABLE `mmasternames`
-  ADD PRIMARY KEY (`MasterId`);
-
---
--- Indexes for table `mprofesstax`
---
-ALTER TABLE `mprofesstax`
-  ADD PRIMARY KEY (`PTId`);
-
---
--- Indexes for table `mprofesstaxes`
---
-ALTER TABLE `mprofesstaxes`
-  ADD PRIMARY KEY (`PTId`);
-
---
--- Indexes for table `mshifts`
---
-ALTER TABLE `mshifts`
-  ADD PRIMARY KEY (`CompanyId`,`BranchId`,`ShiftId`);
-
---
--- Indexes for table `mtwofields`
---
-ALTER TABLE `mtwofields`
-  ADD PRIMARY KEY (`FieldId`,`CompanyId`,`BranchId`) USING BTREE;
-
---
--- Indexes for table `mweeklyoffs`
---
-ALTER TABLE `mweeklyoffs`
-  ADD PRIMARY KEY (`CompanyId`,`BranchId`,`WeeklyOffId`);
-
---
--- Indexes for table `tadvancerequests`
---
-ALTER TABLE `tadvancerequests`
-  ADD PRIMARY KEY (`AdvanceId`);
-
---
--- Indexes for table `temployeegatepasses`
---
-ALTER TABLE `temployeegatepasses`
-  ADD PRIMARY KEY (`GatepassId`);
-
---
--- Indexes for table `tleaves`
---
-ALTER TABLE `tleaves`
-  ADD PRIMARY KEY (`CompanyId`,`BranchId`,`FYear`,`LeaveApplicationId`);
-
---
--- Indexes for table `tmanualattendances`
---
-ALTER TABLE `tmanualattendances`
-  ADD PRIMARY KEY (`AttendanceId`);
-
---
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`,`empid`,`email`) USING BTREE;
+  ADD PRIMARY KEY (`id`,`empid`,`role`) USING BTREE;
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `companyconfigs`
---
-ALTER TABLE `companyconfigs`
-  MODIFY `CCID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT for table `edimports`
---
-ALTER TABLE `edimports`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `mbanks`
---
-ALTER TABLE `mbanks`
-  MODIFY `BankId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `mcostcenter`
---
-ALTER TABLE `mcostcenter`
-  MODIFY `CostCenterId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
-
---
--- AUTO_INCREMENT for table `mdesignations`
---
-ALTER TABLE `mdesignations`
-  MODIFY `DesignationId` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
-
---
--- AUTO_INCREMENT for table `mempdocs`
---
-ALTER TABLE `mempdocs`
-  MODIFY `DocId` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT for table `memployeeacademics`
---
-ALTER TABLE `memployeeacademics`
-  MODIFY `EmployeeId` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
-
---
--- AUTO_INCREMENT for table `memployeefamilies`
---
-ALTER TABLE `memployeefamilies`
-  MODIFY `EmployeeId` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
-
---
--- AUTO_INCREMENT for table `memployeegrades`
---
-ALTER TABLE `memployeegrades`
-  MODIFY `EmployeeGradeId` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `memployeeprofessionals`
---
-ALTER TABLE `memployeeprofessionals`
-  MODIFY `EmployeeId` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
-
---
--- AUTO_INCREMENT for table `memployees`
---
-ALTER TABLE `memployees`
-  MODIFY `EmployeeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
-
---
--- AUTO_INCREMENT for table `memployeesalaries`
---
-ALTER TABLE `memployeesalaries`
-  MODIFY `EmployeeId` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
-
---
--- AUTO_INCREMENT for table `memployeeworkprofiles`
---
-ALTER TABLE `memployeeworkprofiles`
-  MODIFY `EmployeeId` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
-
---
--- AUTO_INCREMENT for table `mjobsresponsibilities`
---
-ALTER TABLE `mjobsresponsibilities`
-  MODIFY `JobResponsibilityId` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-
---
--- AUTO_INCREMENT for table `mjobtypes`
---
-ALTER TABLE `mjobtypes`
-  MODIFY `JobTypeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
-
---
--- AUTO_INCREMENT for table `mkras`
---
-ALTER TABLE `mkras`
-  MODIFY `KRAId` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
-
---
--- AUTO_INCREMENT for table `mmasternames`
---
-ALTER TABLE `mmasternames`
-  MODIFY `MasterId` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
-
---
--- AUTO_INCREMENT for table `mprofesstax`
---
-ALTER TABLE `mprofesstax`
-  MODIFY `PTId` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT for table `mprofesstaxes`
---
-ALTER TABLE `mprofesstaxes`
-  MODIFY `PTId` int(3) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `tadvancerequests`
---
-ALTER TABLE `tadvancerequests`
-  MODIFY `AdvanceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react";
+import { useEffect } from "react";
 
 function Registration() {
   const [name, setName] = useState("");
@@ -25,6 +26,17 @@ function Registration() {
 
   const navigate = useNavigate();
 
+  const roleBasedAccess = {
+    Admin: [287,549,610,624,703,736,872,954,143,217,395,431,502,598,786,820,148,201,409,752,875,269,317,370,497,531,548,654,753,153,418,460,706,159,273,523,619,625,690,758,832,871,907,926,141,182,305,407,603,724,879],
+    Employee: [153, 159, 926, 871, 141, 531, 497]
+    };
+  
+  const [accessRights, setAccessRights] = useState('')
+  useEffect(() =>{
+    if (role === 'Admin') setAccessRights(roleBasedAccess.Admin.join(','))
+    if (role === 'Employee') setAccessRights(roleBasedAccess.Employee.join(','))
+  }, [role])  
+
   const userRegistration = async () => {
     if (password !== confirmPassword) {
       setPasswordMatchError(true);
@@ -35,7 +47,8 @@ function Registration() {
       email: email,
       password: password,
       empid: empid,
-      role: role
+      role: role,
+      accessrights: accessRights
     }
     console.log('Data that goes to the API', data)
     try {
@@ -195,9 +208,6 @@ function Registration() {
               <option value="">Select Role</option>
               <option value="Admin">Admin</option>
               <option value="Employee">Employee</option>
-              <option value="HR">HR</option>
-              <option value="Project Manager">Project Manager</option>
-              <option value="Customer">Customer</option>
             </select>
           </div>
           <div className="flex gap-10 justify-center">
