@@ -1,58 +1,48 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useAuth } from "../Login";
 import { Icon } from "@iconify/react";
-import ManualAttendanceEntryModal from "./ManualAttendanceEntryModal";
 import axios from "axios";
-import MVEModal from "./ManualAttendanceViewEdit";
 
-const ManualAttendanceEntry = () => {
+const MonthlyAttendance = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false); //Add Modal
-  const [manualAttendanceEntry, setManualAttendanceEntry] = useState([]);
+  const [MonthlyAttendance, setMonthlyAttendance] = useState([]);
   const [entriesToShow, setEntriesToShow] = useState(30);
   const { token } = useAuth();
-  //View and Edit
-  const [MVE, setMVE] = useState(false);
-  const [edit, setEdit] = useState(false);
-  const [ManId, setManId] = useState();
 
   // React Arrays
-  const [employeeTypeMapping, setEmployeeTypes] = useState([]);
-  const [employeeIdMapping, setDetails] = useState([]);
-  const [shiftMapping, setShift] = useState([]);
-  const [jobTypeMapping, setJobs] = useState([]);
+  const [ManAttData, setManAttData] = useState([]); //Approved Manual Attendance Records
+  const [ALeaves, setALeaves] = useState([]); // Approved Leaves Record
+  const [Holidays, setHolidays] = useState(0); //Holidays of the given month
+  const [WeeklyOff, setWeeklyOffs] = useState([]); //Weekly offs of particular employee
 
   //Fetching employee names and IDs
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [
-          detailsResponse,
-          employeeTypesResponse,
-          shiftsResponse,
-          jobsResponse,
-        ] = await Promise.all([
-          axios.get(
-            "http://localhost:5500/employee/personal/FnShowActiveData",
-            {
+        const [ManAttResponse, LeavesResponse, getHolidays] = await Promise.all(
+          [
+            axios.get(
+              "http://localhost:5500/manual-attendance/MAttendance/count",
+              {
+                headers: { Authorization: `Bearer ${token}` },
+              }
+            ),
+            axios.get("http://localhost:5500/leave-application/MLeaves/count", {
               headers: { Authorization: `Bearer ${token}` },
-            }
-          ),
-          axios.get("http://localhost:5500/employee-type/FnShowActiveData", {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          axios.get("http://localhost:5500/shift-master/FnShowActiveData", {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          axios.get("http://localhost:5500/job-type/FnShowActiveData", {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-        ]);
+            }),
+            axios.get(
+              "http://localhost:5500/holiday-master/Mholidays/calc-holidays",
+              {
+                headers: { Authorization: `Bearer ${token}` },
+              }
+            ),
+          ]
+        );
 
-        setDetails(detailsResponse.data);
-        setEmployeeTypes(employeeTypesResponse.data);
-        setShift(shiftsResponse.data);
-        setJobs(jobsResponse.data);
+        setManAttData(ManAttResponse.data);
+        setALeaves(LeavesResponse.data);
+        setHolidays(getHolidays.data);
       } catch (error) {
         console.error("Error while fetching data: ", error);
       }
@@ -61,63 +51,95 @@ const ManualAttendanceEntry = () => {
     fetchData();
   }, [token]);
 
-  const renderColumnValue = (columnName, result) => {
-    switch (columnName) {
-      case "EmployeeTypeId":
-        const employeeTypeValue =
-          employeeTypeMapping.length &&
-          employeeTypeMapping.find(
-            (item) => item.EmployeeTypeId == result[columnName]
-          )?.EmployeeTypeGroup;
-
-        console.log("EmployeeTypeValue:", employeeTypeValue);
-        return employeeTypeValue;
-
-      case "EmployeeId":
-        const employeeIdValue =
-          employeeIdMapping.length &&
-          employeeIdMapping.find(
-            (item) => item.EmployeeId == result[columnName]
-          )?.EmployeeName;
-        return employeeIdValue;
-
-      case "ShiftId":
-        const shiftValue =
-          shiftMapping.length &&
-          shiftMapping.find((item) => item.ShiftId == result[columnName]);
-        return shiftValue?.ShiftName;
-
-      case "JobTypeId":
-        const jobTypeValue = jobTypeMapping.find(
-          (item) => item.JobTypeId == result[columnName]
-        )?.JobTypeName;
-        return jobTypeValue;
-
-      case "AttendanceDate":
-        return formatDate(result[columnName]);
-
-      case "InTime":
-        return extractTimeFromDate(result[columnName]);
-      case "OutTime":
-        return extractTimeFromDate(result[columnName]);
-      case "SanctionBy":
-        const SanctionIdValue =
-          employeeIdMapping.length &&
-          employeeIdMapping.find(
-            (item) => item.EmployeeId == result[columnName]
-          )?.EmployeeName;
-        return SanctionIdValue;
-
-      default:
-        return result[columnName];
+  useEffect(() => {
+    if (ManAttData.length > 0 && ALeaves.length > 0 && WeeklyOff.length > 0) {
+      setMonthlyAttendance(mergeCounts(ManAttData, ALeaves, WeeklyOff));
     }
-  };
+  }, [ManAttData, ALeaves, WeeklyOff]);
+
+  function mergeCounts(attendanceCounts, leaveCounts, weeklyOffs) {
+    const combinedCounts = {};
+
+    // Initialize combinedCounts with EmployeeId as keys and Mcount and Lcount as values
+    attendanceCounts.forEach((attendanceCount) => {
+      combinedCounts[attendanceCount.EmployeeId] = {
+        EmployeeId: attendanceCount.EmployeeId,
+        Mcount: attendanceCount.Mcount,
+        Lcount: 0, // Initialize to 0 as default value
+      };
+    });
+
+    // Update Lcount for existing EmployeeIds and add new EmployeeIds with Lcount
+    leaveCounts.forEach((leaveCount) => {
+      if (combinedCounts[leaveCount.EmployeeId]) {
+        combinedCounts[leaveCount.EmployeeId].Lcount = leaveCount.Lcount;
+      } else {
+        combinedCounts[leaveCount.EmployeeId] = {
+          EmployeeId: leaveCount.EmployeeId,
+          Mcount: 0, // Initialize to 0 as default value
+          Lcount: leaveCount.Lcount,
+        };
+      }
+    });
+
+    // Append Wcount for each employee from weeklyOffs
+    for (const employeeId in combinedCounts) {
+      if (Object.prototype.hasOwnProperty.call(combinedCounts, employeeId)) {
+        const weeklyOffData = weeklyOffs.find(
+          (employee) => employee.EmployeeId === employeeId
+        );
+        if (weeklyOffData) {
+          combinedCounts[employeeId].Wcount = weeklyOffData.Wcount;
+        }
+      }
+    }
+
+    // Convert the object into an array of values
+    const combinedCountsArray = Object.values(combinedCounts);
+    console.log("Combined Records are: ", combinedCountsArray);
+    return combinedCountsArray;
+  }
+
+  // Fetching Weekly Offs
+  //2. Append the array with number
+  //Append the number to mergeCOunts on the basis of emp id
+
+  function countWeeklyOffOccurrences(weeklyOffString) {
+    const currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() - 1);
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth() + 1;
+
+    // Split the WeeklyOff string into an array of days
+    const weeklyOffDays = weeklyOffString.split(",");
+
+    // Initialize an object to store the count of each day
+    const dayCounts = {};
+    weeklyOffDays.forEach((day) => {
+      dayCounts[day] = 0; // Initialize count for each day to 0
+    });
+
+    // Count occurrences of each day in the current month
+    for (
+      let i = 1;
+      i <= new Date(currentYear, currentMonth, 0).getDate();
+      i++
+    ) {
+      const date = new Date(currentYear, currentMonth - 1, i);
+      const dayOfWeek = date.toLocaleString("en-us", { weekday: "long" });
+      if (weeklyOffDays.includes(dayOfWeek)) {
+        dayCounts[dayOfWeek]++; // Increment count for the current day of the week
+      }
+    }
+
+    return dayCounts;
+  }
 
   useEffect(() => {
-    const fetchManualAttendance = async () => {
+    const fetchWeeklyOff = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5500/manual-attendance/FnshowActiveData",
+          "http://localhost:5500/employee/work/GetWeeklyOff",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -125,154 +147,56 @@ const ManualAttendanceEntry = () => {
           }
         );
         const data = response.data;
-        console.log("Response", response);
-        console.log("data from Manual Attendance:", data);
-        setManualAttendanceEntry(data);
+        const newData = data.map((employee) => {
+          const counts = countWeeklyOffOccurrences(employee.WeeklyOff);
+          return { ...employee, Wcount: counts };
+        });
+
+        console.log("Processed data:", newData);
+        setWeeklyOffs(newData);
       } catch (error) {
         console.error("Error", error);
       }
     };
 
-    fetchManualAttendance();
+    fetchWeeklyOff();
   }, [token]);
 
-  //Hamburger Menu
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef(null);
-
-  const [columnVisibility, setColumnVisibility] = useState({
-    ApprovalFlag: true,
-    AttendanceDate: true,
-    FYear: true,
-    EmployeeTypeId: true,
-    EmployeeId: true,
-    ShiftId: true,
-    InTime: true,
-    OutTime: true,
-    JobTypeId: true,
-    SanctionBy: true,
-  });
-
-  const columnNames = {
-    ApprovalFlag: "Approval Flag",
-    AttendanceDate: "Attendance Date",
-    FYear: "FYear",
-    EmployeeTypeId: "Employee Type",
-    EmployeeId: "Employee Name",
-    ShiftId: "Shift",
-    InTime: "In Time",
-    OutTime: "Out Time",
-    JobTypeId: "Job Type",
-    SanctionBy: "Sanction By",
-  };
-
-  const handleSearchChange = (title, searchWord) => {
-    const newFilter = manualAttendanceEntry.filter((item) => {
-      const value = item[title];
-      return value && value.toLowerCase().includes(searchWord.toLowerCase());
-    });
-
-    if (searchWord === "") {
-      setFilteredData([]);
-    } else {
-      setFilteredData(newFilter);
-    }
-  };
-
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [selectedColumns, setSelectedColumns] = useState([
-    ...Object.keys(columnVisibility),
-  ]);
-
-  const toggleColumn = (columnName) => {
-    setColumnVisibility((prevVisibility) => ({
-      ...prevVisibility,
-      [columnName]: !prevVisibility[columnName],
-    }));
-  };
+  // Calculating Total Days of the week and appending that to Monthly Attendance Array
 
   useEffect(() => {
-    console.log("Selected Columns:", selectedColumns);
-  }, [selectedColumns]);
+    const AppendTotalDays = () => {
+      const currentDate = new Date();
+      currentDate.setDate(currentDate.getDate() - 1);
+      const currentYear = currentDate.getFullYear();
+      const currentMonth = currentDate.getMonth() + 1; // Months are zero-based, so add 1 to get the current month
 
-  const selectAllColumns = () => {
-    setSelectedColumns([...Object.keys(columnVisibility)]);
-    setColumnVisibility((prevVisibility) => {
-      const updatedVisibility = { ...prevVisibility };
-      Object.keys(updatedVisibility).forEach((columnName) => {
-        updatedVisibility[columnName] = true;
-      });
-      return updatedVisibility;
-    });
-  };
+      // Get the total days in the current month
+      const totalDaysInMonth = new Date(currentYear, currentMonth, 0).getDate();
 
-  const deselectAllColumns = () => {
-    setSelectedColumns([]);
-    setColumnVisibility((prevVisibility) => {
-      const updatedVisibility = { ...prevVisibility };
-      Object.keys(updatedVisibility).forEach((columnName) => {
-        updatedVisibility[columnName] = false;
-      });
-      return updatedVisibility;
-    });
-  };
+      const updatedMonthlyAttendance = MonthlyAttendance.map((attendance) => ({
+        ...attendance,
+        TotalDaysInMonth: totalDaysInMonth,
+      }));
 
-  //Menu
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setMenuOpen(false);
-      }
+      // Update the state with the modified array
+      setMonthlyAttendance(updatedMonthlyAttendance);
     };
+    AppendTotalDays();
+  }, [token]);
 
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  //Max Searchbar width
-  const getColumnMaxWidth = (columnName) => {
-    let maxWidth = 0;
-    const allRows = [...manualAttendanceEntry, ...filteredData];
-
-    allRows.forEach((row) => {
-      const cellContent = row[columnName];
-      const cellWidth = getTextWidth(cellContent, "11px"); // You can adjust the font size here
-      maxWidth = Math.max(maxWidth, cellWidth);
+  //Now main module of Present days calculations
+  if (MonthlyAttendance.length > 0) {
+    MonthlyAttendance.map((record) => {
+      const Presenty = record.MCount + Holidays + record.Wcount;
     });
-
-    return maxWidth + 10; // Adding some padding to the width
-  };
-
-  const getTextWidth = (text, fontSize) => {
-    const canvas = document.createElement("canvas");
-    const context = canvas.getContext("2d");
-    context.font = fontSize + " sans-serif";
-    return context.measureText(text).width;
-  };
-
-  //Formatting Dates
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toISOString().split("T")[0]; // Get only the date part
-  };
-
-  function extractTimeFromDate(dateString) {
-    const date = new Date(dateString);
-    const hours = date.getUTCHours().toString().padStart(2, "0");
-    const minutes = date.getUTCMinutes().toString().padStart(2, "0");
-    const seconds = date.getUTCSeconds().toString().padStart(2, "0");
-
-    return `${hours}:${minutes}:${seconds}`;
   }
 
   return (
     <div className="top-25 min-w-[40%]">
       <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
         <div className="mr-auto text-[15px]">
-          Attendance Management / Manual Attendance Entry
+          Attendance Management / Monthly Attendances
         </div>
         <div className="flex gap-4">
           <button
@@ -367,7 +291,7 @@ const ManualAttendanceEntry = () => {
           </div>
         </div>
       </div>
-      <ManualAttendanceEntryModal
+      <MonthlyAttendanceModal
         visible={isModalOpen}
         onClick={() => setModalOpen(false)}
       />
@@ -484,9 +408,8 @@ const ManualAttendanceEntry = () => {
                       )}
                     </tr>
                   ))
-                : manualAttendanceEntry
-                    .slice(0, entriesToShow)
-                    .map((result, index) => (
+                : MonthlyAttendance.slice(0, entriesToShow).map(
+                    (result, index) => (
                       <tr key={index}>
                         <td className="px-2 border-2">
                           <div className="flex items-center gap-2 text-center justify-center">
@@ -554,7 +477,8 @@ const ManualAttendanceEntry = () => {
                             )
                         )}
                       </tr>
-                    ))}
+                    )
+                  )}
             </tbody>
           </table>
         </div>
@@ -568,14 +492,14 @@ const ManualAttendanceEntry = () => {
           </button>
         </div>
       </div>
-      <MVEModal
+      {/* <MVEModal
         visible={MVE}
         onClick={() => setMVE(false)}
         edit={edit}
         ID={ManId}
-      />
+      /> */}
     </div>
   );
 };
 
-export default ManualAttendanceEntry;
+export default MonthlyAttendance;

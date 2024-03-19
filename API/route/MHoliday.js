@@ -217,6 +217,38 @@ router.post(
   }
 );
 
+// For monthly attendance
+router.get("/Mholidays/calc-holidays", async (req, res) => {
+  try {
+    const currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() - 1);
+    const currentMonth = currentDate.getMonth() + 1; // Months are zero-based, so add 1 to get the current month
+
+    // Find holidays in the current month using Sequelize query
+    const holidays = await MHoliday.findAll({
+      where: {
+        HolidayDate: {
+          [Op.and]: [
+            {
+              [Op.gte]: new Date(
+                currentDate.getFullYear(),
+                currentMonth - 1,
+                1
+              ),
+            }, // Start of current month
+            { [Op.lte]: new Date(currentDate.getFullYear(), currentMonth, 0) }, // End of current month
+          ],
+        },
+      },
+    });
+
+    res.json(holidays);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 process.on("SIGINT", () => {
   console.log("Received SIGINT. Closing Sequelize connection...");
   sequelize.close().then(() => {

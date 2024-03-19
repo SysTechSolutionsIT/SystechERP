@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../Login";
 import axios from "axios";
 
-const ManualAttendanceEntryModal = ({ visible, onClick }) => {
+const ApprovedAdd = ({ visible, onClick }) => {
   const { token } = useAuth();
   const [Details, setDetails] = useState([]);
   const [Fins, setFins] = useState([]);
@@ -15,7 +15,7 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
 
   const formik = useFormik({
     initialValues: {
-      ApprovalFlag: "P",
+      ApprovalFlag: "A",
       AttendanceFlag: "",
       AttendanceDate: "",
       FYear: "",
@@ -34,7 +34,7 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
     },
     onSubmit: (values) => {
       const updatedData = {
-        ApprovalFlag: "P",
+        ApprovalFlag: "A",
         AttendanceFlag: values.AttendanceFlag,
         FYear: formik.values.FYear,
         AttendanceDate: formik.values.AttendanceDate,
@@ -42,7 +42,7 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
         EmployeeTypeId: formik.values.EmployeeTypeId,
         EmployeeTypeGroup: formik.values.EmployeeTypeGroup,
         ShiftId: formik.values.ShiftId,
-        InTime: new Date(),
+        InTime: formik.values.InTime,
         OutTime: formik.values.OutTime,
         JobTypeId: formik.values.JobTypeId,
         SanctionBy: formik.values.SanctionBy,
@@ -292,6 +292,26 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
                     ))}
                 </select>
               </div>
+              <div>
+                <p className="text-[13px] font-semibold">In Time</p>
+                <input
+                  id="InTime"
+                  type="Datetime" // Change the input type to handle date and time
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  value={formik.values.InTime}
+                  onChange={formik.handleChange}
+                />
+              </div>
+              <div>
+                <p className="text-[13px] font-semibold">Out Time</p>
+                <input
+                  id="OutTime"
+                  type="Datetime" // Change the input type to handle date and time
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  value={formik.values.OutTime}
+                  onChange={formik.handleChange}
+                />
+              </div>
               <div className="py-1">
                 <p className="font-semibold text-[13px]">Employee Type</p>
                 <select
@@ -353,6 +373,16 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
                 </select>
               </div>
               <div>
+                <p className="text-[13px] font-semibold">Sanction By</p>
+                <input
+                  id="SanctionBy"
+                  type="text"
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  value={formik.values.SanctionBy}
+                  onChange={formik.handleChange}
+                />
+              </div>
+              <div>
                 <p className="text-[13px] font-semibold">Remark</p>
                 <input
                   id="Remark"
@@ -369,7 +399,7 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
               type="submit"
               className="bg-blue-900 text-white text-[13px] font-semibold py-2 px-4 rounded-lg w-36"
             >
-              Save In-Time
+              Save Record
             </button>
             <button
               className="bg-blue-900 text-white text-[13px] font-semibold py-2 px-4 rounded-lg w-36"
@@ -384,4 +414,4 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
   );
 };
 
-export default ManualAttendanceEntryModal;
+export default ApprovedAdd;

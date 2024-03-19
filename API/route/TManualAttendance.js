@@ -198,7 +198,7 @@ router.get("/FnShowManualPendingData", authToken, async (req, res) => {
   }
 });
 
-router.post('/FnApproveAll', authToken, async (req, res) => {
+router.post("/FnApproveAll", authToken, async (req, res) => {
   try {
     console.log("Request Body:", req.body);
 
@@ -218,14 +218,13 @@ router.post('/FnApproveAll', authToken, async (req, res) => {
     );
 
     res.json({
-      message: approvals[0] ? 'Operation Successful' : 'Unsuccessful',
+      message: approvals[0] ? "Operation Successful" : "Unsuccessful",
     });
   } catch (error) {
     console.error("Error Adding Data:", error);
     res.status(500).send("Internal Server Error");
   }
 });
-
 
 // Middleware for generating Id
 const generateAttendanceId = async (req, res, next) => {
@@ -280,6 +279,29 @@ router.post(
     }
   }
 );
+
+//For Monthly Attendances
+
+router.get("/MAttendance/count", async (req, res) => {
+  try {
+    // Use Sequelize's aggregation functions to count instances and group them by EmployeeId
+    const counts = await TManualAttendance.findAll({
+      attributes: [
+        "EmployeeId",
+        [sequelize.fn("COUNT", sequelize.col("AttendanceId")), "Mcount"],
+      ],
+      where: {
+        ApprovalFlag: "A",
+      },
+      group: ["EmployeeId"],
+    });
+
+    res.json(counts);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
 
 process.on("SIGINT", () => {
   console.log("Received SIGINT. Closing Sequelize connection...");

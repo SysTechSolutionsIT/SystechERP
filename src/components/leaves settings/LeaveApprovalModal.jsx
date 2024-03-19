@@ -6,26 +6,26 @@ import { useAuth } from "../Login";
 
 const LeaveApprovalModal = ({ visible, onClick, ID }) => {
   const [details, setDetails] = useState([]);
-  const { token } = useAuth()
-  const [Employees, setEmployees] = useState([])
-  const [LeaveTypes, setLeaveTypes] = useState('')
+  const { token } = useAuth();
+  const [Employees, setEmployees] = useState([]);
+  const [LeaveTypes, setLeaveTypes] = useState("");
   const [employeeTypes, setEmployeeTypes] = useState([]);
-  const [ previousLeaves, setPreviousLeaves ] = useState([])
-  const [employeeId, setEmployeeId] = useState('')
-  const [leaveTypeId, setLeaveTypeId] = useState('')
-  const [searchTerm, setSearchTerm] = useState('');
+  const [previousLeaves, setPreviousLeaves] = useState([]);
+  const [employeeId, setEmployeeId] = useState("");
+  const [leaveTypeId, setLeaveTypeId] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [LeaveBalance, setLeaveBalance] = useState([]);
+  const [Data, setData] = useState([]);
+  const [LeaveTaken, setLeaveTaken] = useState([]);
 
   const handleInputChange = (event) => {
     const { value } = event.target;
     setSearchTerm(value);
   };
 
-  const filteredEmployees = Employees.filter(
-    (employee) =>
-      employee.EmployeeName.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredEmployees = Employees.filter((employee) =>
+    employee.EmployeeName.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-
 
   const formik = useFormik({
     initialValues: {
@@ -41,55 +41,86 @@ const LeaveApprovalModal = ({ visible, onClick, ID }) => {
       SanctionBy: "",
       SanctionFromDate: "",
       SanctionToDate: "",
-      SanctionLeaveDays:""
+      SanctionLeaveDays: "",
     },
     onSubmit: (values) => {
       console.log(values);
       const updatedData = {
-      ApprovalFlag: "A",
-      LeaveApplicationId: values.LeaveApplicationId,
-      FYear: values.FYear,
-      LeaveApplicationDate: values.LeaveApplicationDate,
-      EmployeeId: values.EmployeeId,
-      EmployeeName: values.EmployeeName,
-      LeaveFromDate: values.LeaveFromDate,
-      LeaveToDate: values.LeaveToDate,
-      Remark: values.Remark,
-      SanctionBy:values.SanctionBy,
-      SanctionFromDate:values.SanctionFromDate,
-      SanctionToDate:values.SanctionToDate,
-      SanctionLeaveDays:values.SanctionLeaveDays,
-      IUFlag:"U"
-      }
-      updateApproval(updatedData)
+        ApprovalFlag: "A",
+        LeaveApplicationId: values.LeaveApplicationId,
+        FYear: values.FYear,
+        LeaveApplicationDate: values.LeaveApplicationDate,
+        EmployeeId: values.EmployeeId,
+        EmployeeName: values.EmployeeName,
+        LeaveFromDate: values.LeaveFromDate,
+        LeaveToDate: values.LeaveToDate,
+        Remark: values.Remark,
+        SanctionBy: values.SanctionBy,
+        SanctionFromDate: values.SanctionFromDate,
+        SanctionToDate: values.SanctionToDate,
+        SanctionLeaveDays: values.SanctionLeaveDays,
+        IUFlag: "U",
+      };
+      updateApproval(updatedData);
     },
   });
 
-  const updateApproval = async (values) =>{
-    try{
-      const response = axios.post(`http://localhost:5500/leave-application/FnAddUpdateDeleteRecord`, values, {
-        params: { LeaveApplicationId: ID },
-        headers:{Authorization: `Bearer ${token}`}
-      })
-      alert('Leave Approved')
-    } catch(error){
-      console.error('Error', error);
+  const updateApproval = async (values) => {
+    try {
+      const response = axios.post(
+        `http://localhost:5500/leave-application/FnAddUpdateDeleteRecord`,
+        values,
+        {
+          params: { LeaveApplicationId: ID },
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      alert("Leave Approved");
+      // FetchLeaveBalanceData()
+    } catch (error) {
+      console.error("Error", error);
     }
-  }
+  };
+  const fetchLeaveBalanceData = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5500/leave-balance/FnShowParticularEmployeeData",
+        {
+          params: {
+            EmployeeId: employeeId,
+            FYear: formik.values.FYear,
+          },
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      const data = response.data;
+      setLeaveBalance(data.LeaveBalance);
+      setData(data);
+      console.log(data);
+      //UpdateLeaveBalance()
+    } catch (error) {
+      console.error("Error", error);
+    }
+  };
+
+  const UpdateLeaveBalane = () => {
+    setLeaveBalance(LeaveBalance - 1);
+  };
 
   function calculateLeaveDays(leaveFromDate, leaveToDate) {
     // Convert the date strings to Date objects
     const fromDate = new Date(leaveFromDate);
     const toDate = new Date(leaveToDate);
-  
+
     // Calculate the time difference in milliseconds
     const timeDiff = toDate - fromDate;
-  
+
     // Calculate the number of days (milliseconds / milliseconds per day) and add 1
     const LeaveDays = Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1;
-  
+
     return LeaveDays;
-  } 
+  }
 
   useEffect(() => {
     // Calculate leave days whenever LeaveFromDate or LeaveToDate changes
@@ -105,126 +136,135 @@ const LeaveApprovalModal = ({ visible, onClick, ID }) => {
     });
   }, [formik.values.SanctionFromDate, formik.values.SanctionToDate]);
 
-  const [isStatusChecked, setStatusChecked] = useState(false)
+  const [isStatusChecked, setStatusChecked] = useState(false);
 
   const handleCheckboxChange = (fieldName, setChecked, event) => {
     //This is how to use it (event) => handleCheckboxChange('Status', setStatusChecked, event)
-      const checked = event.target.checked;
-      setChecked(checked);
+    const checked = event.target.checked;
+    setChecked(checked);
+    formik.setValues({
+      ...formik.values,
+      [fieldName]: checked.toString(),
+    });
+  };
+
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/employee/personal/FnShowActiveData",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const data = response.data;
+        console.log("Employees", data);
+        setEmployees(data);
+      } catch (error) {
+        console.error("Error", error);
+      }
+    };
+    fetchEmployees();
+  }, [token]);
+
+  useEffect(() => {
+    const fetchLeaveApplication = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/leave-application/FnShowParticularData",
+          {
+            params: { LeaveApplicationId: ID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        console.log(data);
+        setDetails(data);
+      } catch (error) {
+        console.error("Error", error);
+      }
+    };
+    fetchLeaveApplication();
+  }, [token, ID]);
+
+  function formatDate(inputDate) {
+    const date = new Date(inputDate);
+
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-based
+    const year = date.getFullYear();
+
+    return `${year}-${month}-${day}`;
+  }
+
+  useEffect(() => {
+    if (details) {
       formik.setValues({
-        ...formik.values,
-        [fieldName]: checked.toString(),
+        ApprovalFlag: details.ApprovalFlag,
+        FYear: details.FYear,
+        LeaveApplicationId: details.LeaveApplicationId,
+        LeaveApplicationDate: formatDate(details.LeaveApplicationDate),
+        EmployeeId: details.EmployeeId,
+        EmployeeType: details.EmployeeType,
+        EmployeeTypeGroup: details.EmployeeTypeGroup,
+        LeaveFromDate: formatDate(details.LeaveFromDate),
+        LeaveToDate: formatDate(details.LeaveToDate),
+        Remark: details.Remark,
+        LeaveTypeId: details.LeaveTypeId,
+        LeaveDays: details.LeaveDays,
+        SanctionBy: details.SanctionBy,
+        SanctionFromDate: formatDate(details.SanctionFromDate),
+        SanctionToDate: formatDate(details.SanctionToDate),
+        SanctionLeaveDays: details.SanctionLeaveDays,
       });
+      setEmployeeId(details.EmployeeId);
+      setLeaveTypeId(details.LeaveTypeId);
+    }
+  }, [details]);
+
+  useEffect(() => {
+    const fetchPreviousLeaves = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/leave-application/FnShowParticularEmployeeData",
+          {
+            params: { EmployeeId: employeeId },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        console.log("Previous Leaves", data);
+        setPreviousLeaves(data);
+      } catch (error) {
+        console.error("Error", error);
+      }
+    };
+    fetchPreviousLeaves();
+  }, [token, details]);
+
+  useEffect(() => {
+    const fetchLeaveType = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/leave-type/FnShowActiveData",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const data = response.data;
+        console.log(data);
+        setLeaveTypes(data);
+      } catch (error) {
+        console.error("Error", error);
+      }
     };
 
-    useEffect(() =>{
-      const fetchEmployees = async () =>{
-        try {
-          const response = await axios.get('http://localhost:5500/employee/personal/FnShowActiveData',
-          { headers: { Authorization: `Bearer ${token}`}}
-          )
-          const data = response.data
-          console.log('Employees', data)
-          setEmployees(data)
-        } catch (error) {
-          console.error('Error', error);
-        }
-      }
-      fetchEmployees()
-    },[token])
+    fetchLeaveType();
+  }, [token]);
 
-    useEffect(() =>{
-      const fetchLeaveApplication = async() =>{
-          try {
-              const response = await axios.get('http://localhost:5500/leave-application/FnShowParticularData',
-              {
-                  params: { LeaveApplicationId: ID },
-                  headers: { Authorization: `Bearer ${token}`}
-              }
-              )
-              const data = response.data
-              console.log(data)
-              setDetails(data)
-          } catch (error) {
-              console.error('Error', error);
-          }
-      }
-      fetchLeaveApplication()
-    },[token, ID])
-
-    function formatDate(inputDate) {
-      const date = new Date(inputDate);
-      
-      const day = date.getDate().toString().padStart(2, '0');
-      const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
-      const year = date.getFullYear();
-  
-      return `${year}-${month}-${day}`;
-    }
-
-    useEffect(() => {
-      if (details) {
-          formik.setValues({
-              ApprovalFlag: details.ApprovalFlag,
-              FYear: details.FYear,
-              LeaveApplicationId: details.LeaveApplicationId,
-              LeaveApplicationDate: formatDate(details.LeaveApplicationDate),
-              EmployeeId: details.EmployeeId,
-              EmployeeType: details.EmployeeType,
-              EmployeeTypeGroup: details.EmployeeTypeGroup,
-              LeaveFromDate: formatDate(details.LeaveFromDate),
-              LeaveToDate: formatDate(details.LeaveToDate),
-              Remark: details.Remark,
-              LeaveTypeId: details.LeaveTypeId,
-              LeaveDays: details.LeaveDays,
-              SanctionBy: details.SanctionBy,
-              SanctionFromDate: formatDate(details.SanctionFromDate),
-              SanctionToDate: formatDate(details.SanctionToDate),
-              SanctionLeaveDays: details.SanctionLeaveDays,
-          })
-          setEmployeeId(details.EmployeeId)
-          setLeaveTypeId(details.LeaveTypeId)
-      }
-  }, [details])
-
-  useEffect(() =>{
-    const fetchPreviousLeaves = async () =>{
-        try {
-          const response = await axios.get('http://localhost:5500/leave-application/FnShowParticularEmployeeData', 
-          {
-            params: { EmployeeId: employeeId},
-            headers: { Authorization: `Bearer ${token}`}
-          })
-          const data = response.data
-          console.log('Previous Leaves', data)
-          setPreviousLeaves(data)
-        } catch (error) {
-          console.error('Error', error);
-        }
-      }
-    fetchPreviousLeaves()
-  }, [token, details])
-
-  useEffect(() =>{
-    const fetchLeaveType = async() =>{
-      try{
-        const response = await axios.get('http://localhost:5500/leave-type/FnShowActiveData',{
-          headers:{
-            Authorization: `Bearer ${token}`
-          }
-        })
-        const data = response.data
-        console.log(data)
-        setLeaveTypes(data)
-      } catch(error){
-        console.error('Error', error);
-      }
-    }
-  
-    fetchLeaveType()
-  }, [token])
-
-  const leaveType = LeaveTypes.length > 0 && LeaveTypes.find((type) => type.LeaveTypeId == leaveTypeId);
+  const leaveType =
+    LeaveTypes.length > 0 &&
+    LeaveTypes.find((type) => type.LeaveTypeId == leaveTypeId);
 
   const [status, setStatus] = useState(false);
   const columnHeads = [
@@ -292,9 +332,7 @@ const LeaveApprovalModal = ({ visible, onClick, ID }) => {
                 />
               </div>
               <div>
-                <p className="text-[13px] font-semibold">
-                  Employee ID
-                </p>
+                <p className="text-[13px] font-semibold">Employee ID</p>
                 <input
                   id="EmployeeId"
                   type="text"
@@ -304,9 +342,7 @@ const LeaveApprovalModal = ({ visible, onClick, ID }) => {
                 />
               </div>
               <div>
-                <p className="text-[13px] font-semibold">
-                  Leave Type
-                </p>
+                <p className="text-[13px] font-semibold">Leave Type</p>
                 <input
                   id="LeaveType"
                   type="text"
@@ -349,53 +385,61 @@ const LeaveApprovalModal = ({ visible, onClick, ID }) => {
                 />
               </div>
               <div>
-            <label className="text-[13px] font-semibold">Sanctioned By</label>
-            <div className="flex items-center">
-              <div className="relative w-full">
-              <input
-            type="text"
-            id="SanctionBy"
-            name="SanctionBy"
-            value={formik.values.SanctionBy}
-            onChange={(e) => {
-              formik.handleChange(e);
-              handleInputChange(e);
-            }}
-            onFocus={() => setSearchTerm('')}
-            className="w-full px-4 py-2 font-normal bg-white focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
-            placeholder={formik.values.EmployeeId ? formik.values.EmployeeName : "Search Employee Name"}
-          />
+                <label className="text-[13px] font-semibold">
+                  Sanctioned By
+                </label>
+                <div className="flex items-center">
+                  <div className="relative w-full">
+                    <input
+                      type="text"
+                      id="SanctionBy"
+                      name="SanctionBy"
+                      value={formik.values.SanctionBy}
+                      onChange={(e) => {
+                        formik.handleChange(e);
+                        handleInputChange(e);
+                      }}
+                      onFocus={() => setSearchTerm("")}
+                      className="w-full px-4 py-2 font-normal bg-white focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                      placeholder={
+                        formik.values.EmployeeId
+                          ? formik.values.EmployeeName
+                          : "Search Employee Name"
+                      }
+                    />
 
-          {searchTerm && (
-            <div
-              className="absolute z-10 bg-white w-full border border-gray-300 rounded-lg mt-1 overflow-hidden"
-              style={{ maxHeight: '150px', overflowY: 'auto' }}
-            >
-              {filteredEmployees.length > 0 ? (
-                filteredEmployees.map((entry) => (
-                  <div
-                    key={entry.EmployeeId}
-                    onClick={() => {
-                      formik.setValues({
-                        ...formik.values,
-                        SanctionBy: entry.EmployeeId,
-                        EmployeeName: entry.EmployeeName
-                      });
-                      setSearchTerm('');
-                    }}
-                    className="px-4 py-2 cursor-pointer hover:bg-gray-200 font-semibold text-[11px]"
-                  >
-                    {entry.EmployeeName}
+                    {searchTerm && (
+                      <div
+                        className="absolute z-10 bg-white w-full border border-gray-300 rounded-lg mt-1 overflow-hidden"
+                        style={{ maxHeight: "150px", overflowY: "auto" }}
+                      >
+                        {filteredEmployees.length > 0 ? (
+                          filteredEmployees.map((entry) => (
+                            <div
+                              key={entry.EmployeeId}
+                              onClick={() => {
+                                formik.setValues({
+                                  ...formik.values,
+                                  SanctionBy: entry.EmployeeId,
+                                  EmployeeName: entry.EmployeeName,
+                                });
+                                setSearchTerm("");
+                              }}
+                              className="px-4 py-2 cursor-pointer hover:bg-gray-200 font-semibold text-[11px]"
+                            >
+                              {entry.EmployeeName}
+                            </div>
+                          ))
+                        ) : (
+                          <div className="px-4 py-2 text-gray-500">
+                            No matching results
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
-                ))
-              ) : (
-                <div className="px-4 py-2 text-gray-500">No matching results</div>
-              )}
-            </div>
-          )}
-             </div>
-            </div>
-          </div>
+                </div>
+              </div>
               <div>
                 <p className="text-[13px] font-semibold">
                   Sanctioned From Date
@@ -426,10 +470,13 @@ const LeaveApprovalModal = ({ visible, onClick, ID }) => {
                   id="SanctionLeaveDays"
                   type="number"
                   placeholder="Enter Leave Days"
-                  value={formik.values.SanctionLeaveDays}  
+                  value={formik.values.SanctionLeaveDays}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={() => {
-                    const newLeaveDays = calculateLeaveDays(formik.values.SanctionFromDate, formik.values.SanctionToDate );
+                    const newLeaveDays = calculateLeaveDays(
+                      formik.values.SanctionFromDate,
+                      formik.values.SanctionToDate
+                    );
                     formik.setValues({
                       ...formik.values,
                       SanctionLeaveDays: newLeaveDays,
@@ -462,24 +509,24 @@ const LeaveApprovalModal = ({ visible, onClick, ID }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {previousLeaves.map((item) =>(
-                    <tr>
-                      <td className="px-4 border-2 whitespace-normal bg-white rounded-lg text-left text-[11px]">
-                      {item.LeaveTypeId}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal bg-white rounded-lg text-left text-[11px]">
-                      {item.ApprovalFlag}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal bg-white rounded-lg text-left text-[11px]">
-                      {item.FYear}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal bg-white rounded-lg text-left text-[11px]">
-                      {formatDate(item.LeaveApplicationDate)}
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal bg-white rounded-lg text-left text-[11px]">
-                      {item.SanctionLeaveDays}
-                      </td>
-                    </tr>
+                    {previousLeaves.map((item) => (
+                      <tr>
+                        <td className="px-4 border-2 whitespace-normal bg-white rounded-lg text-left text-[11px]">
+                          {item.LeaveTypeId}
+                        </td>
+                        <td className="px-4 border-2 whitespace-normal bg-white rounded-lg text-left text-[11px]">
+                          {item.ApprovalFlag}
+                        </td>
+                        <td className="px-4 border-2 whitespace-normal bg-white rounded-lg text-left text-[11px]">
+                          {item.FYear}
+                        </td>
+                        <td className="px-4 border-2 whitespace-normal bg-white rounded-lg text-left text-[11px]">
+                          {formatDate(item.LeaveApplicationDate)}
+                        </td>
+                        <td className="px-4 border-2 whitespace-normal bg-white rounded-lg text-left text-[11px]">
+                          {item.SanctionLeaveDays}
+                        </td>
+                      </tr>
                     ))}
                   </tbody>
                 </table>

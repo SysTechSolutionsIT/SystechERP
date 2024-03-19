@@ -6,10 +6,12 @@ import { Icon } from "@iconify/react";
 import axios from "axios";
 import MAModal from "./ManualApprovalModal";
 import ApproveAll from "./ApproveAll";
+import ApprovedAdd from "./ApprovedAdd";
 
 const ManualAttendanceApproval = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false); //Add Modal
+  const [isAddOpen, setAddOpen] = useState(false); //Add Modal
   const [manualAttendanceEntry, setManualAttendanceEntry] = useState([]);
   const { token } = useAuth();
   //View and Edit
@@ -300,8 +302,19 @@ const ManualAttendanceApproval = () => {
             className="flex text-[13px] bg-green-500 text-white  hover:bg-white hover:text-green-500 duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap"
             onClick={() => setModalOpen(true)}
           >
-          <Icon icon="material-symbols:order-approve-outline" height='24' width='24' className="mr-1 mt-0.5" />
+            <Icon
+              icon="material-symbols:order-approve-outline"
+              height="24"
+              width="24"
+              className="mr-1 mt-0.5"
+            />
             Approve All
+          </button>
+          <button
+            className="text-white font-semibold px-4 rounded-lg text-[13px] border border-white"
+            onClick={() => setAddOpen(true)}
+          >
+            Add
           </button>
           <button
             onClick={() => setShowDropdown(!showDropdown)}
@@ -389,6 +402,7 @@ const ManualAttendanceApproval = () => {
         </div>
       </div>
       <ApproveAll visible={isModalOpen} onClick={() => setModalOpen(false)} />
+      <ApprovedAdd visible={isAddOpen} onClick={() => setModalOpen(false)} />
       <div className="grid gap-2 justify-between">
         <div className="my-1 rounded-2xl bg-white p-2 pr-8 ">
           <table className="min-w-full text-center whitespace-normal z-0">

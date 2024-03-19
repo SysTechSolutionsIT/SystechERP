@@ -17,6 +17,7 @@ const MVEModal = ({ visible, onClick, edit, ID }) => {
   const formik = useFormik({
     initialValues: {
       AttendanceId: ID,
+      ApprovalFlag: "P",
       AttendanceDate: "",
       FYear: "",
       EmployeeTypeId: "",
@@ -36,16 +37,16 @@ const MVEModal = ({ visible, onClick, edit, ID }) => {
       // compData.push(values);
       const updatedData = {
         AttendanceId: ID,
-        ApprovalFlag: "A",
+        ApprovalFlag: "P",
+        AttendanceFlag: values.AttendanceFlag,
         AttendanceDate: values.AttendanceDate,
         FYear: values.FYear,
         EmployeeTypeId: values.EmployeeTypeId,
         EmployeeId: values.EmployeeId,
         ShiftId: values.ShiftId,
         InTime: values.InTime,
-        OutTime: values.OutTime,
+        OutTime: new Date(),
         JobTypeId: values.JobTypeId,
-        SanctionBy: values.SanctionBy,
         Remark: values.Remark,
         AcFlag: "Y",
         IUFlag: "U",
@@ -234,7 +235,7 @@ const MVEModal = ({ visible, onClick, edit, ID }) => {
                     type="radio"
                     name="AttendanceFlag"
                     className="mr-2"
-                    checked={formik.values.AttendanceFlag === "M"}
+                    checked={formik.values.AttendanceFlag == "M"}
                     onChange={formik.handleChange}
                   />
                   Manual Attendance
@@ -244,7 +245,7 @@ const MVEModal = ({ visible, onClick, edit, ID }) => {
                     type="radio"
                     name="AttendanceFlag"
                     className="mr-2 ml-2"
-                    checked={formik.values.AttendanceFlag === "O"}
+                    checked={formik.values.AttendanceFlag == "O"}
                     onChange={formik.handleChange}
                   />
                   OutDoor Duty
@@ -375,28 +376,7 @@ const MVEModal = ({ visible, onClick, edit, ID }) => {
                   disabled={!edit}
                 />
               </div>
-              <div>
-                <p className="text-[13px] font-semibold">Out Time</p>
-                <input
-                  id="OutTime"
-                  type="Datetime" // Change the input type to handle date and time
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  value={formik.values.OutTime}
-                  onChange={formik.handleChange}
-                  disabled={!edit}
-                />
-              </div>
-              <div>
-                <p className="text-[13px] font-semibold">Sanction By</p>
-                <input
-                  id="SanctionBy"
-                  type="text"
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  value={formik.values.SanctionBy}
-                  onChange={formik.handleChange}
-                  disabled={true}
-                />
-              </div>
+
               <div>
                 <p className="text-[13px] font-semibold">Remark</p>
                 <input
@@ -412,12 +392,12 @@ const MVEModal = ({ visible, onClick, edit, ID }) => {
             <div className="flex mt-5 gap-10 justify-center">
               <button
                 type="submit"
-                className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg w-36"
+                className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg w-36 text-[13px]"
               >
-                Approve
+                Record OutTime
               </button>
               <button
-                className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg w-36"
+                className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg w-36 text-[13px]"
                 onClick={onClick}
               >
                 Close

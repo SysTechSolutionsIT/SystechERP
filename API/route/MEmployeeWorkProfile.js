@@ -82,7 +82,7 @@ const MEmployeeWorkProfile = sequelize.define(
       defaultValue: null,
     },
     WeeklyOff: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: true,
       defaultValue: null,
     },
@@ -213,6 +213,29 @@ router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
     }
   } catch (error) {
     console.error("Error performing operation:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+//For monthly attendances
+router.get("/GetWeeklyOff", authToken, async (req, res) => {
+  try {
+    const employees = await MEmployeeWorkProfile.findAll({
+      attributes: ["EmployeeId", "WeeklyOff"],
+    });
+
+    if (!employees) {
+      return res.status(404).json({ message: "No employees found" });
+    }
+
+    const weeklyOffs = {};
+    employees.forEach((employee) => {
+      weeklyOffs[employee.EmployeeId] = employee.WeeklyOff;
+    });
+
+    res.json(weeklyOffs);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
     res.status(500).send("Internal Server Error");
   }
 });

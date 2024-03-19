@@ -29,111 +29,111 @@ const sequelize = new Sequelize(
 );
 
 const TLeaves = sequelize.define(
-    'TLeaves',
-    {
-      CompanyId: {
-        type: DataTypes.STRING(5),
-        allowNull: false,
-        defaultValue: '00001',
-      },
-      BranchId: {
-        type: DataTypes.STRING(5),
-        allowNull: false,
-        defaultValue: '00001',
-      },
-      FYear: {
-        type: DataTypes.STRING(5),
-        allowNull: false,
-      },
-      LeaveApplicationId: {
-        type: DataTypes.STRING(20),
-        allowNull: false,
-      },
-      LeaveApplicationDate: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
-      EmployeeId: {
-        type: DataTypes.STRING(5),
-        allowNull: false,
-      },
-      EmployeeType: {
-        type: DataTypes.STRING(10),
-        allowNull: false,
-      },
-      EmployeeTypeGroup: {
-        type: DataTypes.STRING(5),
-        allowNull: false,
-      },
-      LeaveFromDate: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
-      LeaveToDate: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
-      LeaveTypeId: {
-        type: DataTypes.STRING(5),
-        allowNull: false,
-      },
-      LeaveDays: {
-        type: DataTypes.DECIMAL(10, 2),
-        allowNull: false,
-        defaultValue: 0,
-      },
-      SanctionBy: {
-        type: DataTypes.STRING(5),
-        allowNull: true,
-      },
-      SanctionFromDate: {
-        type: DataTypes.DATE,
-        allowNull: true,
-      },
-      SanctionToDate: {
-        type: DataTypes.DATE,
-        allowNull: true,
-      },
-      SanctionLeaveDays: {
-        type: DataTypes.DECIMAL(10, 2),
-        allowNull: true,
-        defaultValue: 0,
-      },
-      Remark: {
-        type: DataTypes.STRING(1000),
-        allowNull: true,
-      },
-      ApprovalFlag: {
-        type: DataTypes.STRING(1),
-        allowNull: true,
-        defaultValue: 'P',
-      },
-      AcFlag: {
-        type: DataTypes.STRING(1),
-        allowNull: false,
-        defaultValue: 'Y',
-      },
-      CreatedBy: {
-        type: DataTypes.STRING(500),
-        allowNull: true,
-        defaultValue: '',
-      },
-      CreatedOn: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
-      ModifiedBy: {
-        type: DataTypes.STRING(500),
-        allowNull: true,
-      },
-      ModifiedOn: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
+  "TLeaves",
+  {
+    CompanyId: {
+      type: DataTypes.STRING(5),
+      allowNull: false,
+      defaultValue: "00001",
     },
-    {
-      timestamps: false,
-    }
+    BranchId: {
+      type: DataTypes.STRING(5),
+      allowNull: false,
+      defaultValue: "00001",
+    },
+    FYear: {
+      type: DataTypes.STRING(5),
+      allowNull: false,
+    },
+    LeaveApplicationId: {
+      type: DataTypes.STRING(20),
+      allowNull: false,
+    },
+    LeaveApplicationDate: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    EmployeeId: {
+      type: DataTypes.STRING(5),
+      allowNull: false,
+    },
+    EmployeeType: {
+      type: DataTypes.STRING(10),
+      allowNull: false,
+    },
+    EmployeeTypeGroup: {
+      type: DataTypes.STRING(5),
+      allowNull: false,
+    },
+    LeaveFromDate: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    LeaveToDate: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    LeaveTypeId: {
+      type: DataTypes.STRING(5),
+      allowNull: false,
+    },
+    LeaveDays: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+      defaultValue: 0,
+    },
+    SanctionBy: {
+      type: DataTypes.STRING(5),
+      allowNull: true,
+    },
+    SanctionFromDate: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    SanctionToDate: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    SanctionLeaveDays: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      defaultValue: 0,
+    },
+    Remark: {
+      type: DataTypes.STRING(1000),
+      allowNull: true,
+    },
+    ApprovalFlag: {
+      type: DataTypes.STRING(1),
+      allowNull: true,
+      defaultValue: "P",
+    },
+    AcFlag: {
+      type: DataTypes.STRING(1),
+      allowNull: false,
+      defaultValue: "Y",
+    },
+    CreatedBy: {
+      type: DataTypes.STRING(500),
+      allowNull: true,
+      defaultValue: "",
+    },
+    CreatedOn: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    ModifiedBy: {
+      type: DataTypes.STRING(500),
+      allowNull: true,
+    },
+    ModifiedOn: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+  },
+  {
+    timestamps: false,
+  }
 );
 
 router.use(bodyParser.json());
@@ -155,106 +155,109 @@ TLeaves.sync()
     console.error("Error synchronizing MLeaveTyepe model:", error);
   });
 
-  router.get("/FnShowAllData", authToken, async (req, res) => {
-    try {
-      const Leaves = await TLeaves.findAll({
-        attributes: {
-          exclude: ['id']
-        },
-        order: [["LeaveApplicationId", "ASC"]],
-      });
-      res.json(Leaves);
-    } catch (error) {
-      console.error("Error retrieving data:", error);
-      res.status(500).send("Internal Server Error");
-    } 
-  });
-  
-  // GET endpoint to retrieve active companies
-  router.get("/FnShowActiveData", authToken, async (req, res) => {
-    try {
-      const Leaves = await TLeaves.findAll({
-        where: {
-          AcFlag: "Y",
-        },
-        attributes: {
-          exclude: ["id"],
-        },
-        order: [["LeaveApplicationId", "ASC"]],
-      });
-      res.json(Leaves);
-    } catch (error) {
-      console.error("Error retrieving data:", error);
-      res.status(500).send("Internal Server Error");
-    }
-  });
-  
-  router.get("/FnShowParticularData", authToken, async (req, res) => {
-    const LeaveApplicationId = req.query.LeaveApplicationId;
-    try {
-      const Leaves = await TLeaves.findOne({
-        where: {
-          LeaveApplicationId: LeaveApplicationId,
-        },
-        attributes: {
-          exclude: ["id"],
-        },
-        order: [["LeaveApplicationId", "ASC"]],
-      });
-      res.json(Leaves);
-    } catch (error) {
-      console.error("Error retrieving data:", error);
-      res.status(500).send("Internal Server Error");
-    }
-  });
+router.get("/FnShowAllData", authToken, async (req, res) => {
+  try {
+    const Leaves = await TLeaves.findAll({
+      attributes: {
+        exclude: ["id"],
+      },
+      order: [["LeaveApplicationId", "ASC"]],
+    });
+    res.json(Leaves);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
-  router.get("/FnShowParticularEmployeeData", authToken, async (req, res) => {
-    const EmployeeId = req.query.EmployeeId; // Assuming you're using EmployeeId instead of LeaveApplicationId
-    try {
-      const Leaves = await TLeaves.findAll({
+// GET endpoint to retrieve active companies
+router.get("/FnShowActiveData", authToken, async (req, res) => {
+  try {
+    const Leaves = await TLeaves.findAll({
+      where: {
+        AcFlag: "Y",
+      },
+      attributes: {
+        exclude: ["id"],
+      },
+      order: [["LeaveApplicationId", "ASC"]],
+    });
+    res.json(Leaves);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+router.get("/FnShowParticularData", authToken, async (req, res) => {
+  const LeaveApplicationId = req.query.LeaveApplicationId;
+  try {
+    const Leaves = await TLeaves.findOne({
+      where: {
+        LeaveApplicationId: LeaveApplicationId,
+      },
+      attributes: {
+        exclude: ["id"],
+      },
+      order: [["LeaveApplicationId", "ASC"]],
+    });
+    res.json(Leaves);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+router.get("/FnShowParticularEmployeeData", authToken, async (req, res) => {
+  const EmployeeId = req.query.EmployeeId; // Assuming you're using EmployeeId instead of LeaveApplicationId
+  try {
+    const Leaves = await TLeaves.findAll({
+      where: {
+        EmployeeId: EmployeeId,
+      },
+      attributes: {
+        exclude: ["id"],
+      },
+      order: [["LeaveApplicationId", "ASC"]],
+    });
+    res.json(Leaves);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+const generateLeaveApplicationId = async (req, res, next) => {
+  try {
+    if (req.body.IUFlag === "I") {
+      const currentYear = req.body.FYear;
+      const totalRecords = await TLeaves.count({
         where: {
-          EmployeeId: EmployeeId, 
+          FYear: currentYear,
         },
-        attributes: {
-          exclude: ["id"],
-        },
-        order: [["LeaveApplicationId", "ASC"]],
       });
-      res.json(Leaves);
-    } catch (error) {
-      console.error("Error retrieving data:", error);
-      res.status(500).send("Internal Server Error");
+
+      const newId = `${currentYear}-LA${(totalRecords + 1)
+        .toString()
+        .padStart(5, "0")}`;
+      req.body.LeaveApplicationId = newId;
+      console.log(req.body.LeaveApplicationId);
     }
-  });
-  
-  
-  const generateLeaveApplicationId = async (req, res, next) => {
-    try {
-      if (req.body.IUFlag === 'I') {
-        const currentYear = req.body.FYear
-        const totalRecords = await TLeaves.count({ 
-          where: { 
-            FYear: currentYear 
-          } 
-        });
-   
-        const newId = `${currentYear}-LA${(totalRecords + 1).toString().padStart(5, "0")}`;
-        req.body.LeaveApplicationId = newId;
-        console.log(req.body.LeaveApplicationId)
-      }
-      next();
-    } catch (error) {
-      console.error("Error generating LeaveApplicationId:", error);
-      res.status(500).send("Internal Server Error");
-    }
-  };
-  
-  
-  
-  router.post("/FnAddUpdateDeleteRecord", generateLeaveApplicationId, authToken, async (req, res) => {
+    next();
+  } catch (error) {
+    console.error("Error generating LeaveApplicationId:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+router.post(
+  "/FnAddUpdateDeleteRecord",
+  generateLeaveApplicationId,
+  authToken,
+  async (req, res) => {
     const Leaves = req.body;
-    const LeaveApplicationId = Leaves.LeaveApplicationId;  // Access the LeaveApplicationId from the request body
-  
+    const LeaveApplicationId = Leaves.LeaveApplicationId; // Access the LeaveApplicationId from the request body
+
     try {
       if (Leaves.IUFlag == "D") {
         // "Soft-delete" operation
@@ -262,17 +265,19 @@ TLeaves.sync()
           { AcFlag: "N" },
           { where: { LeaveApplicationId: LeaveApplicationId } }
         );
-  
+
         res.json({
-          message: result[0] ? "Record Deleted Successfully" : "Record Not Found",
+          message: result[0]
+            ? "Record Deleted Successfully"
+            : "Record Not Found",
         });
       } else {
         // Add or update operation
         const result = await TLeaves.upsert(Leaves, {
-          where: { LeaveApplicationId: LeaveApplicationId },  // Specify the where condition for update
+          where: { LeaveApplicationId: LeaveApplicationId }, // Specify the where condition for update
           returning: true,
         });
-  
+
         res.json({
           message: result ? "Operation successful" : "Operation failed",
         });
@@ -281,15 +286,37 @@ TLeaves.sync()
       console.error("Error performing operation:", error);
       res.status(500).send("Internal Server Error");
     }
-  });
-  
-  process.on("SIGINT", () => {
-    console.log("Received SIGINT. Closing Sequelize connection...");
-    sequelize.close().then(() => {
-      console.log("Sequelize connection closed. Exiting...");
-      process.exit(0);
+  }
+);
+
+//For monthly attendance
+router.get("/MLeaves/count", async (req, res) => {
+  try {
+    // Use Sequelize's aggregation functions to sum SanctionLeaveDays and group them by EmployeeId
+    const totals = await TLeaves.findAll({
+      attributes: [
+        "EmployeeId",
+        [sequelize.fn("SUM", sequelize.col("SanctionLeaveDays")), "LCount"],
+      ],
+      where: {
+        ApprovalFlag: "A",
+      },
+      group: ["EmployeeId"],
     });
+
+    res.json(totals);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+process.on("SIGINT", () => {
+  console.log("Received SIGINT. Closing Sequelize connection...");
+  sequelize.close().then(() => {
+    console.log("Sequelize connection closed. Exiting...");
+    process.exit(0);
   });
-  
+});
 
 module.exports = router;
