@@ -90,24 +90,53 @@ const LeaveTypeMaster = () => {
   const [edit, setEdit] = useState(false);
   const [LeaveId, setLeaveId] = useState();
 
-  useEffect(() => {
-    const fetchLeaveType = async () => {
-      try {
-        const response = await axios.get('http://localhost:5500/leave-type/FnShowActiveData', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
-        const data = response.data
-        console.log(data)
-        setLeaveData(data)
-      } catch (error) {
-        console.error('Error', error);
-      }
-    }
+  const deleteLeaveType = async (DeleteId) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this Leave Type?"
+    );
 
+    if (!confirmDelete) {
+      return; // If the user cancels deletion, do nothing
+    }
+    try {
+      const response = await axios.post('http://localhost:5500/leave-type/FnAddUpdateDeleteRecord',
+      {
+        LeaveTypeId: DeleteId,
+        IUFlag:'D'
+      },
+      {
+        headers:{
+          Authorization: `Bearer ${token}`
+        }
+      }
+      )
+      alert('Leave Type Deleted')
+      fetchLeaveType()
+    } catch (error) {
+      console.error('Error', error);
+    }
+  }
+
+
+  const fetchLeaveType = async () => {
+    try {
+      const response = await axios.get('http://localhost:5500/leave-type/FnShowActiveData', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      const data = response.data
+      console.log(data)
+      setLeaveData(data)
+    } catch (error) {
+      console.error('Error', error);
+    }
+  }
+
+  useEffect(() => {
     fetchLeaveType()
-  }, [token])
+  }, [token, isModalOpen])
+
 
   //Hamburger Menu
   const [menuOpen, setMenuOpen] = useState(false);
@@ -445,6 +474,7 @@ const LeaveTypeMaster = () => {
                           width="20"
                           height="20"
                           className="cursor-pointer"
+                          onClick={() => deleteLeaveType(entry.LeaveTypeId)}
                         />
                       </div>
                     </td>

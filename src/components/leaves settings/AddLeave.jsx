@@ -18,9 +18,10 @@ const AddLeave = ({ visible, onClick }) => {
       Remark: "",
       IUFlag:"I"
     },
-    onSubmit: (values) => {
-      console.log(values)
+    onSubmit: (values, {resetForm}) => {
       addLeave(values)
+      resetForm()
+      onClick()
     },
   })
 

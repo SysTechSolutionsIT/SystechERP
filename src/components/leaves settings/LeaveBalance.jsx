@@ -5,7 +5,7 @@ import { Icon } from "@iconify/react";
 import { useAuth, useDetails } from "../Login";
 import axios from "axios";
 
-const LeaveBalance = () => {
+const LeaveBalance = ({ID, name}) => {
   const [LeaveTypes, setLeaveTypes] = useState([]);
   const [LeaveBalance, setLeaveBalance] = useState([]);
   const [employeeId, setEmployeeId] = useState("");
@@ -84,7 +84,7 @@ const LeaveBalance = () => {
         "http://localhost:5500/leave-balance/FnShowParticularEmployeeData",
         {
           params: {
-            EmployeeId: employeeId,
+            EmployeeId: ID,
             FYear: formik.values.FYear,
           },
           headers: { Authorization: `Bearer ${token}` },
@@ -206,7 +206,7 @@ const LeaveBalance = () => {
       const leaveTypePayloads = LeaveTypes.map(
         ({ LeaveTypeId, ShortName }) => ({
           FYear: fYear,
-          EmployeeId: employeeId,
+          EmployeeId: ID,
           EmployeeTypeId: employeeTypeId,
           EmployeeType: employeeType,
           EmployeeTypeGroup: employeeTypeGroup,
@@ -356,7 +356,7 @@ const LeaveBalance = () => {
                   </select>
                 </div>
               </div>
-              <div>
+              {/* <div>
                 <label
                   htmlFor="month"
                   className="mb-1 font-semibold text-[13px]"
@@ -374,39 +374,23 @@ const LeaveBalance = () => {
                     </option>
                   ))}
                 </select>
-              </div>
+              </div> */}
               <div>
-                <label
-                  htmlFor="year"
-                  className="mb-1 font-semibold text-[13px]"
-                >
-                  Year
+                <label className="text-[13px] font-semibold">
+                  Employee ID
                 </label>
-                <select
-                  id="Year"
-                  className="w-full text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
-                  onChange={formik.handleChange}
-                >
-                  {years.map((year, index) => (
-                    <option key={index} value={year}>
-                      {year}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <p className="capatilize font-semibold text-[13px]">
-                  Leave Balance Date
-                </p>
-                <input
-                  type="date"
-                  id="LBDate"
-                  placeholder="Enter Financial Year"
-                  value={formik.values.Fyear}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                />
+                <div className="flex items-center">
+                  <div className="relative w-full">
+                    <input
+                      type="text"
+                      id="EmployeeId"
+                      name="EmployeeId"
+                      className={`w-full bg-white px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                      value={ID}
+                      disabled='true'
+                    />
+                  </div>
+                </div>
               </div>
               <div>
                 <label className="text-[13px] font-semibold">
@@ -418,54 +402,10 @@ const LeaveBalance = () => {
                       type="text"
                       id="EmployeeName"
                       name="EmployeeName"
-                      value={formik.values.EmployeeName}
-                      onChange={(e) => {
-                        formik.handleChange(e);
-                        handleInputChange(e);
-                      }}
-                      onFocus={() => setSearchTerm("")}
-                      className="w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
-                      placeholder={
-                        formik.values.EmployeeId
-                          ? formik.values.EmployeeName
-                          : "Search Employee Name"
-                      }
+                      className={`w-full bg-white px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                      value={name}
+                      disabled='true'
                     />
-
-                    {searchTerm && (
-                      <div
-                        className="absolute z-10 bg-white w-full border border-gray-300 rounded-lg mt-1 overflow-hidden"
-                        style={{ maxHeight: "150px", overflowY: "auto" }}
-                      >
-                        {filteredEmployees.length > 0 ? (
-                          filteredEmployees.map((entry) => (
-                            <div
-                              key={entry.EmployeeId}
-                              onClick={() => {
-                                setEmployeeId(entry.EmployeeId);
-                                setEmployeeTypeId(entry.EmployeeTypeId);
-                                setEmployeeTypeGroup(entry.EmployeeTypeGroupId);
-                                setEmployeeName(entry.EmployeeName);
-
-                                formik.setValues({
-                                  ...formik.values,
-                                  EmployeeId: entry.EmployeeId,
-                                  EmployeeName: entry.EmployeeName,
-                                });
-                                setSearchTerm("");
-                              }}
-                              className="px-4 py-2 cursor-pointer hover:bg-gray-200 font-semibold text-[11px]"
-                            >
-                              {entry.EmployeeName}
-                            </div>
-                          ))
-                        ) : (
-                          <div className="px-4 py-2 text-gray-500">
-                            No matching results
-                          </div>
-                        )}
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>
@@ -519,10 +459,10 @@ const LeaveBalance = () => {
                       LeaveBalance.map((item, index) => (
                         <tr key={index}>
                           <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
-                            {item.EmployeeId}
+                            {ID}
                           </td>
                           <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
-                            {item.EmployeeName}
+                            {name}
                           </td>
                           <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
                             {item.LeaveTypeDesc}
