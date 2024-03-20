@@ -4,7 +4,7 @@ import { Icon } from "@iconify/react";
 import axios from "axios";
 import { useAuth } from "../Login";
 
-const TwoFieldsModal = ({ visible, onClick }) => {
+const TwoFieldsModal = ({ visible, onClick, MasterID }) => {
   const { token } = useAuth();
   const [MNames, setMNames] = useState([]);
   const formik = useFormik({
@@ -95,7 +95,7 @@ const TwoFieldsModal = ({ visible, onClick }) => {
                   id="MasterNameId"
                   name="MasterNameId"
                   className="w-full px-4 py-1.5 font-normal text-[11px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                  value={formik.values.MasterNameId}
+                  value={formik.values.MasterNameId || MasterID || ""}
                   onChange={formik.handleChange}
                 >
                   <option value="">Select Type</option>
