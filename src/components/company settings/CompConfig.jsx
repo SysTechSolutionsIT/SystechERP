@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
+import { Icon } from "@iconify/react";
 import { useFormik } from "formik";
 import axios from "axios";
 import { useAuth } from "../Login";
+import TwoFieldsModal from "./TwoFieldsModal";
 
 export default function EMPTabs() {
   const [openTab, setOpenTab] = React.useState(1);
   const [details, setDetails] = useState([]);
   const [edit, setEdit] = useState(false);
   const [ccid, setCCID] = useState();
+  const [MMId, setMMId] = useState();
   const [detailsId, setDetailsId] = useState("");
   const { token } = useAuth();
+  const [isModalOpen, setModalOpen] = useState(false); //Add Modal
 
   // //Formik for Form Submission
   const formik = useFormik({
@@ -348,56 +352,84 @@ export default function EMPTabs() {
                 {/*General */}
                 <div className={openTab === 1 ? "block" : "hidden"}>
                   <div className="flex gap-7 ">
-                    <div className="flex flex-col py-2 w-1/2">
+                    <div className="flex flex-col py-2 w-1/2 relative">
                       <label
                         htmlFor="currency"
                         className="mb-1 font-semibold text-[13px]"
                       >
                         Currency
                       </label>
-                      <select
-                        name="currency"
-                        disabled={!edit}
-                        className="text-[11px] w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
-                        value={formik.values.currency}
-                        onChange={formik.handleChange}
-                      >
-                        <option value="">Select Currency Type</option>
-                        {currencies.length > 0 &&
-                          currencies.map((currency) => (
-                            <option
-                              key={currency.FieldId}
-                              value={currency.FieldDetails}
-                            >
-                              {currency.FieldDetails}
-                            </option>
-                          ))}
-                      </select>
+                      <div className="flex">
+                        <select
+                          name="currency"
+                          disabled={!edit}
+                          className="text-[11px] w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mr-1"
+                          value={formik.values.currency}
+                          onChange={formik.handleChange}
+                        >
+                          <option value="">Select Currency Type</option>
+                          {currencies.length > 0 &&
+                            currencies.map((currency) => (
+                              <option
+                                key={currency.FieldId}
+                                value={currency.FieldDetails}
+                              >
+                                {currency.FieldDetails}
+                              </option>
+                            ))}
+                        </select>
+                        <Icon
+                          icon="flat-color-icons:plus"
+                          width="24"
+                          height="24"
+                          className="ml-1 cursor-pointer"
+                          onClick={() => {
+                            setModalOpen(true);
+                            setMMId(11);
+                          }}
+                        />
+                      </div>
                     </div>
-                    <div className="flex flex-col py-2 w-1/2">
+                    <div className="flex flex-col py-2 w-1/2 relative">
                       <label
                         htmlFor="dropdown2"
                         className="mb-1 font-semibold text-[13px]"
                       >
                         Themes
                       </label>
-                      <select
-                        id="theme"
-                        name="theme"
-                        value={formik.values.theme}
-                        className="w-full text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
-                        onChange={formik.handleChange}
-                        disabled={!edit}
-                      >
-                        <option value={formik.values.theme}>
-                          {formik.values.theme}
-                        </option>
-                        {months.map((month, index) => (
-                          <option key={index} value={month}>
-                            {month}
+                      <div className="flex">
+                        <select
+                          id="theme"
+                          name="theme"
+                          value={formik.values.theme}
+                          className="w-full text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
+                          onChange={formik.handleChange}
+                          disabled={!edit}
+                        >
+                          <option value={formik.values.theme}>
+                            {formik.values.theme}
                           </option>
-                        ))}
-                      </select>
+                          {months.map((month, index) => (
+                            <option key={index} value={month}>
+                              {month}
+                            </option>
+                          ))}
+                        </select>
+                        <Icon
+                          icon="flat-color-icons:plus"
+                          width="24"
+                          height="24"
+                          className="ml-1 cursor-pointer"
+                          onClick={() => {
+                            setModalOpen(true);
+                          }}
+                        />
+                        <TwoFieldsModal
+                          visible={isModalOpen}
+                          onClick={() => setModalOpen(false)}
+                          MasterID={MMId}
+                        />
+                      </div>
                     </div>
                   </div>
                   <div className="flex mb-6">

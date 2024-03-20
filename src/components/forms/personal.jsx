@@ -7,6 +7,7 @@ import axios from "axios";
 import { useAuth, useDetails } from "../Login";
 import { createContext, useContext } from "react";
 import Cookies from "js-cookie";
+import TwoFieldsModal from "../company settings/TwoFieldsModal";
 
 export const EmployeeTypeContext = createContext();
 
@@ -39,16 +40,18 @@ export const EmployeeTypeProvider = ({ children }) => {
 
 export default function Personal({ ID }) {
   const { token } = useAuth();
-  const [uploadedImage, setUploadedImage] = useState(null)
+  const [uploadedImage, setUploadedImage] = useState(null);
   const [details, setdetails] = useState([]);
   const { employeeTypeId, setEmployeeTypeId } = useEmployeeType();
   const [LeaveTypes, setLeaveTypes] = useState([]);
   const [employeeId, setEmployeeId] = useState("");
   const [employeeType, setEmployeeType] = useState("");
-  const [employeeTypeGroup, setEmployeeTypeGroup] = useState("");
   const [employeeTypes, setEmployeeTypes] = useState([]);
   const [employeeName, setEmployeeName] = useState("");
   const [employeePhoto, setEmployeePhoto] = useState("");
+  const [isModalOpen, setModalOpen] = useState(false); //Add Modal
+  const [MMId, setMMId] = useState();
+
   const { fYear } = useDetails();
 
   const formik = useFormik({
@@ -268,6 +271,50 @@ export default function Personal({ ID }) {
     fetchCategoryData();
   }, [token]);
 
+  const [sals, setSalutation] = useState([]);
+  useEffect(() => {
+    const fetchSalutationsData = async () => {
+      const CID = 4;
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/two-field/FnShowCategoricalData",
+          {
+            params: { MasterNameId: CID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        console.log("Salutations", data);
+        setSalutation(data);
+      } catch (error) {
+        console.error("Error fetching sals:", error);
+      }
+    };
+    fetchSalutationsData();
+  }, [token]);
+
+  const [employeeTypeGroup, setEmployeeTypeGroup] = useState([]);
+  useEffect(() => {
+    const fetchEmpTypeData = async () => {
+      const CID = 1;
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/two-field/FnShowCategoricalData",
+          {
+            params: { MasterNameId: CID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        console.log("empTypeData", data);
+        setEmployeeTypeGroup(data);
+      } catch (error) {
+        console.error("Error fetching emptype:", error);
+      }
+    };
+    fetchEmpTypeData();
+  }, [token]);
+
   const [Religion, setReligion] = useState([]);
   useEffect(() => {
     const fetchReligionData = async () => {
@@ -412,57 +459,64 @@ export default function Personal({ ID }) {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    setUploadedImage(file)
+    setUploadedImage(file);
   };
 
-  const handleUpload = () =>{
-    const formdata = new FormData()
-    formdata.append('image', uploadedImage)
+  const handleUpload = () => {
+    const formdata = new FormData();
+    formdata.append("image", uploadedImage);
     try {
-      const response = axios.post('http://localhost:5500/employee/personal/upload', formdata,
-      {
-        params:{ EmployeeId: ID},
-        headers:{ Authorization: `Bearer ${token}`}
-      })
-      alert('Photo Updated')
+      const response = axios.post(
+        "http://localhost:5500/employee/personal/upload",
+        formdata,
+        {
+          params: { EmployeeId: ID },
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      alert("Photo Updated");
     } catch (error) {
-      console.error('Error', error);
+      console.error("Error", error);
     }
-  }
+  };
 
-    const [previewImage, setPreviewImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-  
+
     if (file) {
       const reader = new FileReader();
-  
+
       reader.onload = (event) => {
         setPreviewImage(event.target.result);
       };
-  
+
       reader.readAsDataURL(file);
     }
   };
 
-  useEffect(() =>{
-    const fetchLogo = async () =>{
+  useEffect(() => {
+    const fetchLogo = async () => {
       try {
-        const response = await axios.get('http://localhost:5500/employee/personal/get-upload',{
-          params: {EmployeeId: ID},  
-          headers: {Authorization: `Bearer ${token}`}
-        })
-        const data = response.data
-        console.log('Image Data', data)
-        setPreviewImage(`http://localhost:5500/employee-photo/${data.EmployeePhoto}`)
-
+        const response = await axios.get(
+          "http://localhost:5500/employee/personal/get-upload",
+          {
+            params: { EmployeeId: ID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        console.log("Image Data", data);
+        setPreviewImage(
+          `http://localhost:5500/employee-photo/${data.EmployeePhoto}`
+        );
       } catch (error) {
-        console.error('Error')
+        console.error("Error");
       }
-    }
-    fetchLogo()
-  },[details, token])
+    };
+    fetchLogo();
+  }, [details, token]);
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -502,86 +556,107 @@ export default function Personal({ ID }) {
               </select>
             </div>
             <div>
-                <p className="capitalize font-semibold text-[13px]">Employee Photo</p>
-                <input
-                  id="EmployeePhoto"
-                  type="file"
-                  placeholder="Upload File"
-                  onChange={(e) => {
-                    handleFileChange(e)
-                    handleImageChange(e);
-                  }}
-                  className="w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px]"
-                />
+              <p className="capitalize font-semibold text-[13px]">
+                Employee Photo
+              </p>
+              <input
+                id="EmployeePhoto"
+                type="file"
+                placeholder="Upload File"
+                onChange={(e) => {
+                  handleFileChange(e);
+                  handleImageChange(e);
+                }}
+                className="w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px]"
+              />
 
-                {previewImage && (
-                  <div className="mt-4">
-                    <p className="font-semibold text-[13px]">Current Employee Photo Preview:</p>
-                    <img
-                      src={previewImage}
-                      alt="Preview"
-                      className="w-32 h-32 object-cover border border-gray-300 rounded-lg mt-2"
-                    />
-                  </div>
-                )}
-                <button
+              {previewImage && (
+                <div className="mt-4">
+                  <p className="font-semibold text-[13px]">
+                    Current Employee Photo Preview:
+                  </p>
+                  <img
+                    src={previewImage}
+                    alt="Preview"
+                    className="w-32 h-32 object-cover border border-gray-300 rounded-lg mt-2"
+                  />
+                </div>
+              )}
+              <button
                 type="button"
                 onClick={handleUpload}
                 className="bg-blue-900 text-white font-semibold rounded-lg w-24 h-8 mt-2 text-[11px] hover:bg-white hover:text-black hover:ease-linear"
               >
                 Upload Employee Photo
               </button>
-              </div>
-            <div className="py-1">
-              <p className="mb-1 font-semibold text-[13px]">Salutation</p>
-              <select
-                id="Salutation"
-                name="Salutation"
-                className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                value={formik.values.Salutation}
-                onChange={formik.handleChange}
-              >
-                <option value={formik.values.Salutation}>
-                  {formik.values.Salutation}
-                </option>
-                <option value="">Select Salutation</option>
-                <option value="Sir/Madam">Sir/Madam</option>
-                <option value="Dear [Mr./Ms./Dr.] [Last Name]">
-                  Dear [Mr./Ms./Dr.] [Last Name]
-                </option>
-                <option value="[Department] [Last Name]">
-                  [Department] [Last Name]
-                </option>
-                <option value="[Job Title] [Last Name]">
-                  [Job Title] [Last Name]
-                </option>
-                <option value="To Whom It May Concern">
-                  To Whom It May Concern
-                </option>
-                <option value="Greetings [Mr./Ms./Dr.] [Last Name]">
-                  Greetings [Mr./Ms./Dr.] [Last Name]
-                </option>
-              </select>
             </div>
-
-            <div className="py-1">
-              <p className="mb-1 font-semibold text-[13px]">
+            <div className="flex flex-col">
+              <p className="capatilize font-semibold text-[13px] mb-1">
+                Salutations
+              </p>
+              <div className="flex items-center">
+                <select
+                  id="Salutation"
+                  name="Salutation"
+                  className={
+                    "flex-1 px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                  }
+                  onChange={formik.handleChange}
+                  // Add name attribute to ensure Formik tracks changes
+                >
+                  <option value="">Select Salutations</option>
+                  {sals.length > 0 &&
+                    sals.map((entry) => (
+                      <option key={entry.FieldId} value={entry.FieldId}>
+                        {entry.FieldDetails}
+                      </option>
+                    ))}
+                </select>
+                <Icon
+                  icon="flat-color-icons:plus"
+                  width="24"
+                  height="24"
+                  className="ml-1 cursor-pointer"
+                  onClick={() => {
+                    setModalOpen(true);
+                    setMMId(4);
+                  }}
+                />
+              </div>
+            </div>
+            <div className="flex flex-col">
+              <p className="capatilize font-semibold text-[13px] mb-1">
                 Employee Type Group
               </p>
-              <select
-                id="EmployeeTypeGroupId"
-                name="EmployeeTypeGroupId"
-                className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                value={formik.values.EmployeeTypeGroupId}
-                onChange={formik.handleChange}
-              >
-                <option value={formik.values.EmployeeTypeGroupId}>
-                  {formik.values.EmployeeTypeGroupId}
-                </option>
-                <option value="">Select Group Type</option>
-                <option value="Worker">Worker</option>
-                <option value="Staff">Staff</option>
-              </select>
+              {/* <div className="flex items-center">
+                <select
+                  id="EmployeeTypeGroupId"
+                  name="EmployeeTypeGroupId"
+                  className={
+                    "flex-1 px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                  }
+                  onChange={formik.handleChange}
+                  // Add name attribute to ensure Formik tracks changes
+                >
+                  <option value="">Select Group Type</option>
+                  {employeeTypeGroup.length > 0 &&
+                    employeeTypeGroup.map((entry) => (
+                      <option key={entry.FieldId} value={entry.FieldId}>
+                        {entry.FieldDetails}
+                      </option>
+                    ))}
+                </select>
+                <Icon
+                  icon="flat-color-icons:plus"
+                  width="24"
+                  height="24"
+                  className="ml-1 cursor-pointer"
+                  onClick={() => {
+                    setModalOpen(true);
+                    setMMId(1);
+                  }}
+                />
+              </div> */}
             </div>
             <div className="py-1">
               <p className="mb-1 capitalize  font-semibold text-[13px]">
@@ -811,23 +886,38 @@ export default function Personal({ ID }) {
                 onChange={formik.handleChange}
               />
             </div>
-            <div className="py-1">
-              <p className="mb-1 capitalize  font-semibold text-[13px]">
+            <div className="flex flex-col">
+              <p className="capatilize font-semibold text-[13px] mb-1">
                 Category
               </p>
-              <select
-                id="CategoryId"
-                name="CategoryId"
-                className="w-full text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
-                onChange={formik.handleChange}
-              >
-                <option value="">Select Type</option>
-                {categories.map((entry) => (
-                  <option key={entry.FieldId} value={entry.FieldId}>
-                    {entry.FieldDetails}
-                  </option>
-                ))}
-              </select>
+              <div className="flex items-center">
+                <select
+                  id="CategoryId"
+                  name="CategoryId"
+                  className={
+                    "flex-1 px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                  }
+                  onChange={formik.handleChange}
+                  // Add name attribute to ensure Formik tracks changes
+                >
+                  <option value="">Select Type</option>
+                  {categories.map((entry) => (
+                    <option key={entry.FieldId} value={entry.FieldId}>
+                      {entry.FieldDetails}
+                    </option>
+                  ))}
+                </select>
+                <Icon
+                  icon="flat-color-icons:plus"
+                  width="24"
+                  height="24"
+                  className="ml-1 cursor-pointer"
+                  onClick={() => {
+                    setModalOpen(true);
+                    setMMId(8);
+                  }}
+                />
+              </div>
             </div>
             <div className="py-1">
               <p className="mb-1 capitalize  font-semibold text-[13px]">
@@ -841,54 +931,102 @@ export default function Personal({ ID }) {
                 onChange={formik.handleChange}
               />
             </div>
-            <div className="py-1">
-              <p className="mb-1 capitalize  font-semibold text-[13px]">
+            <div className="flex flex-col">
+              <p className="capatilize font-semibold text-[13px] mb-1">
                 Religion
               </p>
-              <select
-                id="ReligionId"
-                name="ReligionId"
-                className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                onChange={formik.handleChange}
-              >
-                <option value="">Select Type</option>
-                {Religion.map((entry) => (
-                  <option key={entry.FieldId} value={entry.FieldId}>
-                    {entry.FieldDetails}
-                  </option>
-                ))}
-              </select>
+              <div className="flex items-center">
+                <select
+                  id="ReligionId"
+                  name="ReligionId"
+                  className={
+                    "flex-1 px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                  }
+                  onChange={formik.handleChange}
+                  // Add name attribute to ensure Formik tracks changes
+                >
+                  <option value="">Select Type</option>
+                  {Religion.map((entry) => (
+                    <option key={entry.FieldId} value={entry.FieldId}>
+                      {entry.FieldDetails}
+                    </option>
+                  ))}
+                </select>
+                <Icon
+                  icon="flat-color-icons:plus"
+                  width="24"
+                  height="24"
+                  className="ml-1 cursor-pointer"
+                  onClick={() => {
+                    setModalOpen(true);
+                    setMMId(7);
+                  }}
+                />
+              </div>
             </div>
-            <div className="py-1">
-              <p className="mb-1 font-semibold text-[13px]">Reference</p>
-              <select
-                id="ReferenceId"
-                className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                onChange={formik.handleChange}
-              >
-                <option value="">Select Type</option>
-                {Reference.map((entry, index) => (
-                  <option key={index} value={entry.FieldId}>
-                    {entry.FieldDetails}
-                  </option>
-                ))}
-              </select>
+            <div className="flex flex-col">
+              <p className="capatilize font-semibold text-[13px] mb-1">
+                Reference
+              </p>
+              <div className="flex items-center">
+                <select
+                  id="ReferenceId"
+                  name="ReferenceId"
+                  className={
+                    "flex-1 px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                  }
+                  onChange={formik.handleChange}
+                  // Add name attribute to ensure Formik tracks changes
+                >
+                  <option value="">Select Type</option>
+                  {Reference.map((entry) => (
+                    <option key={entry.FieldId} value={entry.FieldId}>
+                      {entry.FieldDetails}
+                    </option>
+                  ))}
+                </select>
+                <Icon
+                  icon="flat-color-icons:plus"
+                  width="24"
+                  height="24"
+                  className="ml-1 cursor-pointer"
+                  onClick={() => {
+                    setModalOpen(true);
+                    setMMId(6);
+                  }}
+                />
+              </div>
             </div>
-            <div className="py-1">
-              <p className="mb-1 font-semibold text-[13px]">Caste</p>
-              <select
-                id="CasteId"
-                name="CasteId"
-                className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                onChange={formik.handleChange}
-              >
-                <option value="">Select Type</option>
-                {Caste.map((entry) => (
-                  <option key={entry.FieldId} value={entry.FieldId}>
-                    {entry.FieldDetails}
-                  </option>
-                ))}
-              </select>
+            <div className="flex flex-col">
+              <p className="capatilize font-semibold text-[13px] mb-1">Caste</p>
+              <div className="flex items-center">
+                <select
+                  id="CasteId"
+                  name="CasteId"
+                  className={
+                    "flex-1 px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                  }
+                  onChange={formik.handleChange}
+                  // Add name attribute to ensure Formik tracks changes
+                >
+                  <option value="">Select Type</option>
+                  {Caste.map((entry) => (
+                    <option key={entry.FieldId} value={entry.FieldId}>
+                      {entry.FieldDetails}
+                    </option>
+                  ))}
+                </select>
+                <Icon
+                  icon="flat-color-icons:plus"
+                  width="24"
+                  height="24"
+                  className="ml-1 cursor-pointer"
+                  onClick={() => {
+                    setModalOpen(true);
+                    setMMId(9);
+                  }}
+                />
+              </div>
             </div>
             <div className="py-1">
               <p className="mb-1 text-[13px] font-semibold">Blood Group</p>
@@ -1079,6 +1217,11 @@ export default function Personal({ ID }) {
                 onChange={formik.handleChange}
               />
             </div>
+            <TwoFieldsModal
+              visible={isModalOpen}
+              onClick={() => setModalOpen(false)}
+              MasterID={MMId}
+            />
           </div>
         </div>
       </div>
