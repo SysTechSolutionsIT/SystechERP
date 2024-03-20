@@ -580,12 +580,12 @@ const Sidebar = () => {
                                   onClick={() => navigate("/leave-type-master")}
                               />
                           )}
-                          {rights.includes(706) && (
+                          {/* {rights.includes(706) && (
                               <SubMenuEntry
                                   title="Leave Balance Upload"
                                   onClick={() => navigate("/leave-balance-master")}
                               />
-                          )}
+                          )} */}
                           {rights.includes(706) && (
                               <SubMenuEntry
                                   title="Leave Application"

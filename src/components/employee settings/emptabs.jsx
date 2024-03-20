@@ -10,6 +10,7 @@ import axios from "axios";
 import { useAuth } from "../Login";
 import Documents from "../forms/docs";
 import UserRights from "../forms/UserRights";
+import LeaveBalance from "../leaves settings/LeaveBalance";
 // import { useEmployeeData } from "./EmployeeMaster";
 
 export default function EMPTabs() {
@@ -97,6 +98,22 @@ export default function EMPTabs() {
                 }}
               >
                 Work Profile
+              </p>
+            </li>
+            <li className="-mb-px mr-2 cursor-pointer">
+              <p
+                className={
+                  "inline-block p-0 py-1 px-1.5 rounded-lg " +
+                  (openTab === 9
+                    ? "text-s font-bold  text-white bg-blue-900 rounded-lg active"
+                    : "hover:bg-gray-200 hover:text-blue-900 hover:font-bold hover:rounded-lg font-semibold")
+                }
+                onClick={(e) => {
+                  e.preventDefault();
+                  setOpenTab(9);
+                }}
+              >
+                Leaves
               </p>
             </li>
             <li className="-mb-px mr-2 cursor-pointer">
@@ -235,6 +252,9 @@ export default function EMPTabs() {
                 {/* User Access Rights */}
                 <div className={openTab === 8 ? "block" : "hidden"}>
                   <UserRights ID={employeeId} name={name}/>
+                </div>
+                <div className={openTab === 9 ? "block" : "hidden"}>
+                  <LeaveBalance ID={employeeId} name={name}/>
                 </div>
               </div>
             </div>

@@ -32,12 +32,12 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
       FieldId: "",
       FieldName: "",
     },
-    onSubmit: (values) => {
+    onSubmit: (values, {resetForm}) => {
       console.log(values);
       // compData.push(values);
       const updatedData = {
         CompanyId: ID,
-        CompanySectorId: "",
+        CompanySectorId: values.CompanySectorId,
         CompanySector: values.CompanySector,
         CompanyName: values.CompanyName,
         ShortName: values.ShortName,
@@ -69,8 +69,11 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
         .then((response) => {
           // Handle success
           console.log("Data updated successfully", response);
+          alert('Company updated successfully')
+          resetForm()
+          onClick()
           // You can also perform additional actions here, like closing the modal or updating the UI.
-          window.location.reload();
+          
         })
         .catch((error) => {
           // Handle error
@@ -183,16 +186,16 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
           params: {CompanyId: ID},  
           headers: {Authorization: `Bearer ${token}`}
         })
-        const data = response.data
+        const data = response.data.Logo
         console.log('Image Data', data)
-        setPreviewImage(`http://localhost:5500/company-logo/${data.Logo}`)
+        setPreviewImage(`http://localhost:5500/company-logo/${data}`)
 
       } catch (error) {
         console.error('Error')
       }
     }
     fetchLogo()
-  },[details, token])
+  },[visible, token])
 
   if (!visible) return null;
   return (

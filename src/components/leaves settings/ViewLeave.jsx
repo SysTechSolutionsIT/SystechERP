@@ -4,26 +4,33 @@ import { Icon } from "@iconify/react";
 import { leaveData } from "./LeaveType";
 import axios from "axios";
 import { useAuth } from "../Login";
+import { GiCardKingClubs } from "react-icons/gi";
 
 const ViewLeave = ({ visible, onClick, edit, ID }) => {
   const [details, setDetails] = useState([]);
   const {token} = useAuth()
   const formik = useFormik({
     initialValues: {
+      LeaveTypeId:"",
       LeaveType: "",
       ShortName: "",
+      ShortName: "",
+      DefaultBalance: "",
       PaidFlag: "",
       CarryForwardFlag: "",
       Remark: "",
     },
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: (values, {resetForm}) => {
       const updatedData = {
+      LeaveTypeId: values.LeaveTypeId,
       LeaveType: values.LeaveType,
       ShortName: values.ShortName,
+      ShortName: details.ShortName,
+      DefaultBalance: details.DefaultBalance,
       PaidFlag: values.PaidFlag,
       CarryForwardFlag: values.CarryForwardFlag,
       Remark: values.Remark,
+      IUFlag: "U"
       }
 
       updateLeave(updatedData)
@@ -32,32 +39,34 @@ const ViewLeave = ({ visible, onClick, edit, ID }) => {
 
   const updateLeave = async (data) =>{
     try {
-      const response = axios.patch(`http://localhost:5500/leave-type/update/${ID}`, data, {
+      const response = axios.post(`http://localhost:5500/leave-type/FnAddUpdateDeleteRecord`, data, 
+      {
+        params:{LeaveTypeId : ID},
         headers:{
           Authorization: `Bearer ${token}`
         }
       })
       alert('Leave Data Updated')
-      window.location.reload()
+      onClick()
     } catch (error) {
       console.error('Error', error);
     }
   }
 
+  const fetchLeave = async () =>{
+    try{
+      const response = await axios.get(`http://localhost:5500/leave-type/FnShowParticularData`, {
+        params: { LeaveTypeId: ID },
+        headers:{ Authorization: `Bearer ${token}`}
+      })
+      const data = response.data
+      console.log(details)
+      setDetails(data)
+    }catch (error){
+      console.error('Error', error);
+  } 
+  }
   useEffect(() => {
-    const fetchLeave = async () =>{
-      try{
-        const response = await axios.get(`http://localhost:5500/leave-type/FnShowParticularData`, {
-          params: { LeaveTypeId: ID },
-          headers:{ Authorization: `Bearer ${token}`}
-        })
-        const data = response.data
-        console.log(details)
-        setDetails(data)
-      }catch (error){
-        console.error('Error', error);
-    } 
-    }
 
     fetchLeave()
   }, [ID]);
@@ -65,8 +74,11 @@ const ViewLeave = ({ visible, onClick, edit, ID }) => {
   useEffect(() =>{
     if (details){
         formik.setValues({
+          LeaveTypeId: details.LeaveTypeId,
           LeaveType: details.LeaveType,
           ShortName: details.ShortName,
+          DefaultBalance: details.DefaultBalance,
+          MaxPerMonth: details.MaxPerMonth,
           PaidFlag: details.PaidFlag,
           CarryForwardFlag: details.CarryForwardFlag,
           Remark: details.Remark,
@@ -127,6 +139,26 @@ const ViewLeave = ({ visible, onClick, edit, ID }) => {
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
+                />
+              </div>
+              <div>
+                <p className="text-[13px] font-semibold">Default Balance</p>
+                <input
+                  id="DefaultBalance"
+                  type="number"
+                  value={formik.values.DefaultBalance}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  onChange={formik.handleChange}
+                />
+              </div>
+              <div>
+                <p className="text-[13px] font-semibold">Max Per Month</p>
+                <input
+                  id="MaxPerMonth"
+                  type="number"
+                  value={formik.values.MaxPerMonth}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  onChange={formik.handleChange}
                 />
               </div>
               <div>

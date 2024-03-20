@@ -42,6 +42,7 @@ const MLeaves = sequelize.define('MLeaves', {
     LeaveBalanceId: {
       type: DataTypes.STRING(5),
       allowNull: false,
+      primaryKey: true
     },
     FYear: {
       type: DataTypes.STRING(5),
@@ -317,6 +318,43 @@ router.patch("/FnUpdateRecords", authToken, async (req, res) => {
 
 
 
+router.patch('/FnLeaveApproved', authToken, async (req, res) => {
+  const EmployeeId = req.query.EmployeeId;
+  const LeaveTypeId = req.query.LeaveTypeId;
+  const FYear = req.query.FYear
+  const LeaveDetails = req.body;
+
+  try {
+    // Update the SanctionLeaveDays column
+    await MLeaves.update(
+      { SanctionLeaveDays: LeaveDetails.SanctionLeaveDays },
+      { where: { EmployeeId: EmployeeId, LeaveTypeId: LeaveTypeId, FYear: FYear } }
+    );
+
+    // Retrieve the OpeningBalance from the database
+    const leaveRecord = await MLeaves.findOne({
+      where: { EmployeeId: EmployeeId, LeaveTypeId: LeaveTypeId, FYear: FYear }
+    });
+
+    if (leaveRecord) {
+      // Calculate the remaining leave balance
+      const remainingLeaves = leaveRecord.OpeningBalance - LeaveDetails.SanctionLeaveDays;
+      console.log(remainingLeaves)
+      // Update the LeavesTaken column
+      await MLeaves.update(
+        { LeaveBalance: remainingLeaves },
+        { where: { EmployeeId: EmployeeId, LeaveTypeId: LeaveTypeId, FYear: FYear} }
+      );
+
+      res.status(200).send("Leave details updated successfully.");
+    } else {
+      res.status(404).send("Leave record not found.");
+    }
+  } catch (error) {
+    console.error("Error updating leave details:", error);
+    res.status(500).send("Internal server error.");
+  }
+});
 
   
   router.post("/FnAddUpdateDeleteRecord", generateLeaveBalanceId, authToken, async (req, res) => {

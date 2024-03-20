@@ -29,7 +29,7 @@ const LeaveModal1 = ({ visible, onClick }) => {
     initialValues: {
       ApprovalFlag: "P",
       FYear: "",
-      LeaveApplicationDate: "",
+      LeaveApplicationDate: new Date().toISOString().split('T')[0],
       EmployeeId: "",
       EmployeeName:"",
       EmployeeType:"",
@@ -39,13 +39,9 @@ const LeaveModal1 = ({ visible, onClick }) => {
       Remark: "",
       LeaveTypeId:"",
       LeaveDays: "",
-      SanctionBy:"",
-      SanctionFromDate:"",
-      SanctionToDate:"",
-      SanctionLeaveDays:"",
       IUFlag:"I"
     },
-    onSubmit: (values) => {
+    onSubmit: (values, {resetForm}) => {
       const updatedData ={
         ApprovalFlag: "P",
         FYear: values.FYear,
@@ -58,13 +54,11 @@ const LeaveModal1 = ({ visible, onClick }) => {
         Remark: values.Remark,
         LeaveTypeId: values.LeaveTypeId,
         LeaveDays: values.LeaveDays,
-        SanctionBy: values.SanctionBy,
-        SanctionFromDate: values.SanctionFromDate,
-        SanctionToDate: values.SanctionToDate,
-        SanctionLeaveDays: values.SanctionLeaveDays,
         IUFlag:"I"
       }
-      addLeaveApplication()
+      addLeaveApplication(updatedData)
+      resetForm()
+      onClick()
     },
   });
 
@@ -136,9 +130,9 @@ const LeaveModal1 = ({ visible, onClick }) => {
   },[token])
 
 
-  const addLeaveApplication = async () =>{
+  const addLeaveApplication = async (data) =>{
     try{
-      const response = await axios.post('http://localhost:5500/leave-application/FnAddUpdateDeleteRecord', formik.values, {
+      const response = await axios.post('http://localhost:5500/leave-application/FnAddUpdateDeleteRecord', data, {
         headers:{
           Authorization: `Bearer ${token}`
         }
@@ -219,19 +213,16 @@ const LeaveModal1 = ({ visible, onClick }) => {
           </div>
           <div className="py-4">
             <div className="grid grid-cols-3 gap-4">
-              <div>
-                <p className="text-[13px] font-semibold">
-                  Leave Application Date
-                </p>
-                <input
-                  id="LeaveApplicationDate"
-                  type="date"
-                  placeholder="Enter Device ID"
-                  value={formik.values.LeaveApplicationDate}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                />
-              </div>
+            <div>
+              <p className="text-[13px] font-semibold">Leave Application Date</p>
+              <input
+                id="LeaveApplicationDate"
+                type="date"
+                value={formik.values.LeaveApplicationDate} // Set value to current date
+                readOnly // Make the input field read-only
+                className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]`}
+              />
+            </div>
             <div>
                 <label
                   className="text-[13px] font-semibold"

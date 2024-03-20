@@ -3,11 +3,14 @@ import React, { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import axios from "axios";
 import { useAuth } from "../Login";
+import TwoFieldsModal from "./TwoFieldsModal";
 
 const CompanyModal = ({ visible, onClick }) => {
   const [uploadedImage, setUploadedImage] = useState(null)
   const [logoName, setLogoName] = useState()
+  const [companySector, setCompanySector] = useState([])
   const { token } = useAuth();
+  const [isTwoFieldOpen, setIsTwoFieldOpen] = useState(false)
 
   const formik = useFormik({
     initialValues: {
@@ -30,9 +33,10 @@ const CompanyModal = ({ visible, onClick }) => {
       FieldId: "",
       FieldName: "",
     },
-    onSubmit: async (values) => {
+    onSubmit: async (values, {resetForm}) => {
       console.log(values);
       addCompany(values);
+      resetForm()
     },
   });
 
@@ -53,6 +57,25 @@ const CompanyModal = ({ visible, onClick }) => {
     setUploadedImage(file)
   };
 
+  useEffect(() =>{
+    const fetchCompanySectors = async () =>{
+      const CSID = 14
+      try {
+        const response = await axios.get('http://localhost:5500/two-field/FnShowCategoricalData',
+        {
+          params: { MasterNameId: CSID },
+          headers: { Authorization: `Bearer ${token}` },
+        }) 
+        const data = response.data
+        console.log('Company Sector', data)
+        setCompanySector(data)
+      } catch (error) {
+        console.error('Error', error);
+      }
+    }
+    fetchCompanySectors()
+  },[token])
+
   const handleUpload = () =>{
     const formdata = new FormData()
     formdata.append('image', uploadedImage)
@@ -71,7 +94,7 @@ const CompanyModal = ({ visible, onClick }) => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
+            // "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -99,6 +122,19 @@ const CompanyModal = ({ visible, onClick }) => {
       // Set the Logo field in Formik state
     }
   };
+  const handleCompanySectorChange = (event) => {
+    const selectedValue = event.target.value;
+    const selectedOption = companySector.find(entry => entry.FieldId === selectedValue);
+    if (selectedOption) {
+      formik.setFieldValue('CompanySectorId', selectedOption.FieldId);
+      formik.setFieldValue('CompanySector', selectedOption.FieldDetails);
+    } else {
+      // Handle case when selected option is not found
+      formik.setFieldValue('CompanySectorId', ''); // Clear the value
+      formik.setFieldValue('CompanySector', ''); // Clear the value
+    }
+  };
+  
   
 
 
@@ -148,18 +184,28 @@ const CompanyModal = ({ visible, onClick }) => {
                   onChange={formik.handleChange}
                 />
               </div>
-              <div>
-                <p className="capatilize font-semibold text-[13px]">
+              <div className="flex flex-col">
+                <p className="capatilize font-semibold text-[13px] mb-1">
                   Company Sector
                 </p>
-                <input
-                  id="CompanySector"
-                  type="text"
-                  placeholder="Enter Company Sector"
-                  value={formik.values.CompanySector}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                />
+                <div className="flex items-center">
+                  <select
+                    id="CompanySectorId"
+                    value={formik.values.CompanySectorId}
+                    className={`flex-1 px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]`}
+                    onChange={handleCompanySectorChange}
+                    name="CompanySectorId" // Add name attribute to ensure Formik tracks changes
+                  >
+                    <option value="">Select Company Sector</option>
+                    {companySector.map((entry) => (
+                      <option key={entry.FieldId} value={entry.FieldId}>
+                        {entry.FieldDetails}
+                      </option>
+                    ))}
+                  </select>
+                  <Icon icon="flat-color-icons:plus" width="24" height="24" className="ml-1 cursor-pointer" onClick={() => setIsTwoFieldOpen(true)}/> 
+              <TwoFieldsModal visible={isTwoFieldOpen} onClick={() => setIsTwoFieldOpen(false)}/>
+              </div>
               </div>
               <div>
                 <p className="capatilize font-semibold text-[13px]">
@@ -225,6 +271,7 @@ const CompanyModal = ({ visible, onClick }) => {
           </div>
         </div>
       </div>
+      <TwoFieldsModal visible={isTwoFieldOpen} onClick={() => setIsTwoFieldOpen(false)}/>
     </form>
   );
 };

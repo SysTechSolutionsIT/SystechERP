@@ -3,111 +3,76 @@ import React, { useState, useEffect, useRef } from "react";
 import ViewLeave from "./ViewLeave";
 import AddLeave from "./AddLeave";
 import axios from "axios";
-import { useAuth } from "../Login";
-
-export const leaveData = [
-  {
-    LeaveId: 1,
-    LeaveType: "Vacation",
-    ShortName: "VL",
-    PaidFlag: "Paid",
-    CarryForwardFlag: "Yes",
-    Remarks: "Annual vacation leave",
-    Status: "Active",
-  },
-  {
-    LeaveId: 2,
-    LeaveType: "Sick Leave",
-    ShortName: "SL",
-    PaidFlag: "Paid",
-    CarryForwardFlag: "Yes",
-    Remarks: "For illness-related absences",
-    Status: "Active",
-  },
-  {
-    LeaveId: 3,
-    LeaveType: "Maternity Leave",
-    ShortName: "ML",
-    PaidFlag: "Paid",
-    CarryForwardFlag: "No",
-    Remarks: "For expecting mothers",
-    Status: "Active",
-  },
-  {
-    LeaveId: 4,
-    LeaveType: "Paternity Leave",
-    ShortName: "PL",
-    PaidFlag: "Paid",
-    CarryForwardFlag: "No",
-    Remarks: "For new fathers",
-    Status: "Active",
-  },
-  {
-    LeaveId: 5,
-    LeaveType: "Unpaid Leave",
-    ShortName: "UL",
-    PaidFlag: "Unpaid",
-    CarryForwardFlag: "No",
-    Remarks: "No salary during this leave",
-    Status: "Inactive",
-  },
-  {
-    LeaveId: 6,
-    LeaveType: "Study Leave",
-    ShortName: "SL",
-    PaidFlag: "Unpaid",
-    CarryForwardFlag: "Yes",
-    Remarks: "For educational purposes",
-    Status: "Active",
-  },
-  {
-    LeaveId: 7,
-    LeaveType: "Public Holiday",
-    ShortName: "PH",
-    PaidFlag: "Paid",
-    CarryForwardFlag: "No",
-    Remarks: "Official holidays",
-    Status: "Active",
-  },
-  {
-    LeaveId: 8,
-    LeaveType: "Compensatory Off",
-    ShortName: "CO",
-    PaidFlag: "Paid",
-    CarryForwardFlag: "No",
-    Remarks: "Given for extra work hours",
-    Status: "Active",
-  },
-];
+import { useAuth, useDetails } from "../Login";
 
 const LeaveTypeMaster = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false); //Add Modal
   const [leaveData, setLeaveData] = useState([])
   const { token } = useAuth()
+  const { fYear } = useDetails()
+  const [Employees, setEmployees] = useState([])
+  const [LeaveTypes, setLeaveTypes] = useState([])
+  const [FinancialYears, setFinancialYears] = useState([])
+  const [employeeId, setEmployeeId] = useState("");
+  const [employeeTypeId, setEmployeeTypeId] = useState("");
+  const [employeeType, setEmployeeType] = useState("");
+  const [employeeTypeGroup, setEmployeeTypeGroup] = useState("");
+  const [employeeTypes, setEmployeeTypes] = useState([]);
+  const [employeeName, setEmployeeName] = useState("");
+
   //View and Edit
   const [LVE, setLVE] = useState(false);
   const [edit, setEdit] = useState(false);
   const [LeaveId, setLeaveId] = useState();
 
-  useEffect(() => {
-    const fetchLeaveType = async () => {
-      try {
-        const response = await axios.get('http://localhost:5500/leave-type/FnShowActiveData', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
-        const data = response.data
-        console.log(data)
-        setLeaveData(data)
-      } catch (error) {
-        console.error('Error', error);
-      }
-    }
+  const deleteLeaveType = async (DeleteId) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this Leave Type?"
+    );
 
+    if (!confirmDelete) {
+      return; // If the user cancels deletion, do nothing
+    }
+    try {
+      const response = await axios.post('http://localhost:5500/leave-type/FnAddUpdateDeleteRecord',
+      {
+        LeaveTypeId: DeleteId,
+        IUFlag:'D'
+      },
+      {
+        headers:{
+          Authorization: `Bearer ${token}`
+        }
+      }
+      )
+      alert('Leave Type Deleted')
+      fetchLeaveType()
+    } catch (error) {
+      console.error('Error', error);
+    }
+  }
+
+
+  const fetchLeaveType = async () => {
+    try {
+      const response = await axios.get('http://localhost:5500/leave-type/FnShowActiveData', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      const data = response.data
+      console.log(data)
+      setLeaveData(data)
+    } catch (error) {
+      console.error('Error', error);
+    }
+  }
+
+  useEffect(() => {
     fetchLeaveType()
-  }, [token])
+  }, [token, isModalOpen])
+
 
   //Hamburger Menu
   const [menuOpen, setMenuOpen] = useState(false);
@@ -116,6 +81,8 @@ const LeaveTypeMaster = () => {
   const [columnVisibility, setColumnVisibility] = useState({
     LeaveType: true,
     ShortName: true,
+    DefaultBalance: true,
+    MaxPerMonth: true,
     PaidFlag: true,
     CarryForwardFlag: true,
     Remarks: false,
@@ -197,6 +164,157 @@ const LeaveTypeMaster = () => {
     return context.measureText(text).width;
   };
 
+  useEffect(() => {
+    const selectedEmployeeType = employeeTypes.find(
+      (type) => type.EmployeeTypeId === employeeTypeId
+    );
+
+    if (selectedEmployeeType) {
+      setEmployeeType(selectedEmployeeType.ShortName);
+    }
+  }, [employeeTypeId, employeeTypes]);
+
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/employee/personal/FnShowActiveData",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const data = response.data;
+        console.log("Employees", data);
+        setEmployees(data);
+      } catch (error) {
+        console.error("Error", error);
+      }
+    };
+    fetchEmployees();
+  }, [token]);
+
+  useEffect(() => {
+    const fetchLeaveType = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/leave-type/FnShowActiveData",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const data = response.data;
+        console.log(data);
+        setLeaveTypes(data);
+      } catch (error) {
+        console.error("Error", error);
+      }
+    };
+
+    fetchLeaveType();
+  }, [token]);
+
+  useEffect(() => {
+    const fetchEmployeeTypes = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/employee-type/FnShowActiveData",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const data = response.data;
+        setEmployeeTypes(data);
+        console.log(response);
+      } catch (error) {
+        console.error("Error", error);
+      }
+    };
+    fetchEmployeeTypes();
+  }, [token]);
+
+  useEffect(() => {
+    const fetchFinancialYears = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/financials/FnShowActiveData",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const data = response.data;
+        console.log("Financial Years", data);
+        setFinancialYears(data);
+      } catch (error) {
+        console.error("Error", error);
+      }
+    };
+    fetchFinancialYears();
+  }, [token]);
+
+  const today = new Date();
+const formattedDate = today.toISOString().split("T")[0];
+
+const addLeaveBalancesForAllEmployees = async (employeesData) => {
+  try {
+    const currentYear = new Date().getFullYear();
+    
+    const leaveBalancesPayload = employeesData.map((employee) => {
+      const { EmployeeId, EmployeeTypeId, EmployeeTypeGroupId, EmployeeName } = employee;
+      const selectedEmployeeType = employeeTypes.find(
+        (type) => type.EmployeeTypeId === EmployeeTypeId
+      );
+
+      const employeeType = selectedEmployeeType ? selectedEmployeeType.ShortName : '';
+      
+      return LeaveTypes.map(({ LeaveTypeId, ShortName, DefaultBalance }) => ({
+        FYear: fYear,
+        EmployeeId: EmployeeId,
+        EmployeeTypeId: EmployeeTypeId,
+        EmployeeType: employeeType,
+        EmployeeTypeGroup: EmployeeTypeGroupId,
+        LeaveTypeId: LeaveTypeId,
+        LeaveTypeDesc: ShortName,
+        Month: new Date().getMonth() + 1,
+        Year: currentYear,
+        LeaveBalanceDate: formattedDate,
+        EmployeeName: EmployeeName,
+        OpeningBalance: DefaultBalance,
+        LeaveEarned1: 0,
+        LeaveEarned2: 0,
+        LeaveEarned3: 0,
+        LeaveEarned4: 0,
+        LeaveEarned5: 0,
+        LeaveEarned6: 0,
+        LeaveEarned7: 0,
+        LeaveEarned8: 0,
+        LeaveEarned9: 0,
+        LeaveEarned10: 0,
+        LeaveEarned11: 0,
+        LeaveEarned12: 0,
+        SanctionLeaveDays: 0,
+        LeaveBalance: 0,
+        Remark: "",
+        IUFlag: "I",
+      }));
+    }).flat();
+
+    console.log(leaveBalancesPayload);
+
+    const confirmAdd = window.confirm(
+      "Are you sure you want to generate leaves for all employees?"
+    );
+
+    if (!confirmAdd) return;
+
+    const response = await axios.post(
+      "http://localhost:5500/leave-balance/FnAddUpdateDeleteRecord",
+      leaveBalancesPayload,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    alert("Leave Balances Generated");
+  } catch (error) {
+    console.error("Error", error);
+  }
+};
+
+
   return (
     <div className="top-25 min-w-[40%]">
       <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
@@ -204,6 +322,13 @@ const LeaveTypeMaster = () => {
           Leaves Management / Leave Type Master
         </div>
         <div className="flex gap-4">
+          <button
+            type="button"
+            className="bg-white border-2 border-white text-blue-900 text-[13px] font-semibold py-0 px-4 rounded-lg hover:bg-blue-900 hover:text-white hover:ease-in-out duration-300"
+            onClick={() => addLeaveBalancesForAllEmployees(Employees)}
+          >
+            Generate Leaves
+          </button>
           <button
             onClick={() => setShowDropdown(!showDropdown)}
             className="flex text-[13px] bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap"
@@ -341,7 +466,7 @@ const LeaveTypeMaster = () => {
                         <input
                           type="text"
                           placeholder={`Search `}
-                          className="w-auto text-[11px] h-6 border-2 border-slate-500 rounded-lg justify-center text-center whitespace-normal"
+                          className="w-auto text-[11px] h-6 border-2  border-slate-500 rounded-lg justify-center text-center whitespace-normal"
                           style={{
                             maxWidth: getColumnMaxWidth(columnName) + "px",
                           }}
@@ -445,6 +570,7 @@ const LeaveTypeMaster = () => {
                           width="20"
                           height="20"
                           className="cursor-pointer"
+                          onClick={() => deleteLeaveType(entry.LeaveTypeId)}
                         />
                       </div>
                     </td>

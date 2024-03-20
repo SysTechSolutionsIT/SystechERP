@@ -28,8 +28,8 @@ const sequelize = new Sequelize(
   }
 );
 
-const MLeaveType = sequelize.define(
-    'MLeaveType',
+const mleavetype = sequelize.define(
+    'mleavetype',
     {
       CompanyId: {
         type: DataTypes.STRING(5),
@@ -51,6 +51,14 @@ const MLeaveType = sequelize.define(
       },
       ShortName: {
         type: DataTypes.STRING(2),
+        allowNull: true,
+      },
+      DefaultBalance: {
+        type: DataTypes.INTEGER(20),
+        allowNull: true,
+      },
+      MaxPerMonth: {
+        type: DataTypes.INTEGER(20),
         allowNull: true,
       },
       PaidFlag: {
@@ -106,17 +114,17 @@ sequelize
     console.error("Unable to connect to the database:", err);
   });
 
-MLeaveType.sync()
+mleavetype.sync()
   .then(() => {
-    console.log("MLeaveTyepe model synchronized successfully.");
+    console.log("mleavetype model synchronized successfully.");
   })
   .catch((error) => {
-    console.error("Error synchronizing MLeaveTyepe model:", error);
+    console.error("Error synchronizing mleaveTyepe model:", error);
   });
 
   router.get("/FnShowAllData", authToken, async (req, res) => {
     try {
-      const LeaveType = await MLeaveType.findAll({
+      const LeaveType = await mleavetype.findAll({
         attributes: {
           exclude: ['id']
         },
@@ -132,7 +140,7 @@ MLeaveType.sync()
   // GET endpoint to retrieve active companies
   router.get("/FnShowActiveData", authToken, async (req, res) => {
     try {
-      const LeaveType = await MLeaveType.findAll({
+      const LeaveType = await mleavetype.findAll({
         where: {
           AcFlag: "Y",
         },
@@ -151,7 +159,7 @@ MLeaveType.sync()
   router.get("/FnShowParticularData", authToken, async (req, res) => {
     const LeaveTypeId = req.query.LeaveTypeId;
     try {
-      const LeaveType = await MLeaveType.findOne({
+      const LeaveType = await mleavetype.findOne({
         where: {
           LeaveTypeId: LeaveTypeId,
         },
@@ -170,7 +178,7 @@ MLeaveType.sync()
   const generateLeaveTypeId = async (req, res, next) => {
     try {
       if (req.body.IUFlag === 'I') {
-        const totalRecords = await MLeaveType.count();
+        const totalRecords = await mleavetype.count();
         const newId = (totalRecords + 1).toString().padStart(4, "0");
         req.body.LeaveTypeId = newId;
       }
@@ -189,7 +197,7 @@ MLeaveType.sync()
       try {
         if (LeaveType.IUFlag === "D") {
           // "Soft-delete" operation
-          const result = await MLeaveType.update(
+          const result = await mleavetype.update(
             { AcFlag: "N" },
             { where: { LeaveTypeId: LeaveTypeId } }
           );
@@ -199,7 +207,7 @@ MLeaveType.sync()
           });
         } else {
           // Add or update operation
-          const result = await MLeaveType.upsert(LeaveType, {
+          const result = await mleavetype.upsert(LeaveType, {
             where: { LeaveTypeId: LeaveTypeId },  // Specify the where condition for update
             returning: true,
           });

@@ -72,6 +72,14 @@ sequelize
     console.error("Unable to connect to the database:", err);
   });
 
+  MCompany.sync()
+  .then(() => {
+    console.log("MCaderwiseEarning model synchronized successfully.");
+  })
+  .catch((error) => {
+    console.error("Error synchronizing MCaderwiseEarning model:", error);
+  });
+
 // GET endpoint to retrieve all companies
 router.get("/FnShowAllData", authToken, async (req, res) => {
   try {
