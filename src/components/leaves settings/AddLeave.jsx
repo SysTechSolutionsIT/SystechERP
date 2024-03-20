@@ -13,6 +13,8 @@ const AddLeave = ({ visible, onClick }) => {
     initialValues: {
       LeaveType: "",
       ShortName: "",
+      DefaultBalance:"",
+      MaxPerMonth:"",
       PaidFlag: "",
       CarryForwardFlag: "",
       Remark: "",
@@ -82,12 +84,32 @@ const AddLeave = ({ visible, onClick }) => {
                 />
               </div>
               <div>
-                <p className="text-[13px] font-semibold">ShortName</p>
+                <p className="text-[13px] font-semibold">Short Name</p>
                 <input
                   id="ShortName"
                   type="text"
                   placeholder="Enter Short Name"
                   value={formik.values.ShortName}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  onChange={formik.handleChange}
+                />
+              </div>
+              <div>
+                <p className="text-[13px] font-semibold">Default Balance</p>
+                <input
+                  id="DefaultBalance"
+                  type="number"
+                  value={formik.values.DefaultBalance}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  onChange={formik.handleChange}
+                />
+              </div>
+              <div>
+                <p className="text-[13px] font-semibold">Max Per Month</p>
+                <input
+                  id="MaxPerMonth"
+                  type="number"
+                  value={formik.values.MaxPerMonth}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />

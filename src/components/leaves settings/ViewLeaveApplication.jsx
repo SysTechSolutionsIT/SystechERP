@@ -280,6 +280,7 @@ useEffect(() => {
                   disabled={!edit}
                   id="LeaveApplicationDate"
                   type="date"
+                  readOnly
                   value={formik.values.LeaveApplicationDate}
                   className={`w-full bg-white px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
@@ -480,7 +481,7 @@ useEffect(() => {
                 />
               </div>
             </div>
-            <div className="flex mt-4 justify-start">
+            {/* <div className="flex mt-4 justify-start">
               <button
                 type="submit"
                 className="bg-blue-900 text-white text-[13px] font-semibold py-2 px-4 rounded-lg"
@@ -510,7 +511,7 @@ useEffect(() => {
                   <tbody></tbody>
                 </table>
               </div>
-            </div>
+            </div> */}
           </div>
           <div className="flex gap-10 justify-center">
             <button

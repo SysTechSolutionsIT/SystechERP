@@ -147,22 +147,23 @@ const LeaveApp = () => {
     };
 
 
-useEffect(() =>{
-  const fetchLeaveApps = async () =>{
-    try {
-      const response = await axios.get('http://localhost:5500/leave-application/FnShowActiveData', {
-        headers:{
-          Authorization: `Bearer ${token}`
-        }
-      })
-      const data = response.data
-      setLeaveApps(data)
-    } catch (error) {
-      console.error('Error', error);
+    const fetchLeaveApps = async () =>{
+      try {
+        const response = await axios.get('http://localhost:5500/leave-application/FnShowActiveData', {
+          headers:{
+            Authorization: `Bearer ${token}`
+          }
+        })
+        const data = response.data
+        data.sort((a, b) => new Date(b.LeaveApplicationDate) - new Date(a.LeaveApplicationDate));
+        setLeaveApps(data)
+      } catch (error) {
+        console.error('Error', error);
+      }
     }
-  }
+    useEffect(() =>{
   fetchLeaveApps()
-}, [token])
+}, [token, isModalOpen])
 
   useEffect(() =>{
     const fetchEmployees = async () =>{
@@ -213,7 +214,7 @@ useEffect(() =>{
         }
       )
       alert("Leave Application Deleted")
-      window.location.reload()
+      fetchLeaveApps()
     } catch (error) {
       console.error('Error', error);
     }
@@ -501,7 +502,33 @@ useEffect(() =>{
                                     {formatDate(result[columnName])}
                                 </td>
                             );
-                        } else {
+                        } 
+                        else if (columnName === 'ApprovalFlag') {
+                          let bgColorClass;
+                          switch (result[columnName]) {
+                            case 'P':
+                              bgColorClass = 'bg-yellow-500';
+                              break;
+                            case 'R':
+                              bgColorClass = 'bg-red-500';
+                              break;
+                            case 'A':
+                              bgColorClass = 'bg-green-600';
+                              break;
+                            default:
+                              bgColorClass = ''; // You can set a default background color here if needed
+                          }
+                        
+                          return (
+                            <td
+                              key={columnName}
+                              className={`px-4 border-2 whitespace-normal font-bold text-[15px] text-center capitalize ${bgColorClass}`}
+                            >
+                              {result[columnName]}
+                            </td>
+                          );
+                        }
+                        else {
                             return (
                                 <td
                                     key={columnName}

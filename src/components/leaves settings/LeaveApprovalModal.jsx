@@ -4,7 +4,7 @@ import { Icon } from "@iconify/react";
 import axios from "axios";
 import { useAuth } from "../Login";
 
-const LeaveApprovalModal = ({ visible, onClick, ID }) => {
+const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
   const [details, setDetails] = useState([]);
   const { token } = useAuth();
   const [Employees, setEmployees] = useState([]);
@@ -35,6 +35,9 @@ const LeaveApprovalModal = ({ visible, onClick, ID }) => {
       LeaveApplicationDate: "",
       EmployeeId: "",
       EmployeeName: "",
+      EmployeeType: "",
+      EmployeeTypeGroup: "",
+      LeaveTypeId: "",
       LeaveFromDate: "",
       LeaveToDate: "",
       Remark: "",
@@ -46,13 +49,16 @@ const LeaveApprovalModal = ({ visible, onClick, ID }) => {
     onSubmit: (values) => {
       console.log(values);
       const updatedData = {
-        ApprovalFlag: "A",
+        ApprovalFlag: ApprovalFlag,
         LeaveApplicationId: values.LeaveApplicationId,
         FYear: values.FYear,
         LeaveApplicationDate: values.LeaveApplicationDate,
         EmployeeId: values.EmployeeId,
         EmployeeName: values.EmployeeName,
         LeaveFromDate: values.LeaveFromDate,
+        EmployeeType: values.EmployeeType,
+        LeaveTypeId: values.LeaveTypeId,
+        EmployeeTypeGroup: values.EmployeeTypeGroup,
         LeaveToDate: values.LeaveToDate,
         Remark: values.Remark,
         SanctionBy: values.SanctionBy,
@@ -61,10 +67,11 @@ const LeaveApprovalModal = ({ visible, onClick, ID }) => {
         SanctionLeaveDays: values.SanctionLeaveDays,
         IUFlag: "U",
       };
-      updateApproval(updatedData);
+
+      updateApproval(updatedData)
     },
   });
-
+  
   const updateApproval = async (values) => {
     try {
       const response = axios.post(
@@ -75,12 +82,15 @@ const LeaveApprovalModal = ({ visible, onClick, ID }) => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      alert("Leave Approved");
+      if(ApprovalFlag === 'A') alert('Leave Approved')
+      else if (ApprovalFlag === 'R') alert('Leave Rejected')
       // FetchLeaveBalanceData()
     } catch (error) {
       console.error("Error", error);
     }
   };
+  
+
   const fetchLeaveBalanceData = async () => {
     try {
       const response = await axios.post(
@@ -238,7 +248,7 @@ const LeaveApprovalModal = ({ visible, onClick, ID }) => {
       }
     };
     fetchPreviousLeaves();
-  }, [token, details]);
+  }, [token, visible, details]);
 
   useEffect(() => {
     const fetchLeaveType = async () => {
@@ -447,8 +457,6 @@ const LeaveApprovalModal = ({ visible, onClick, ID }) => {
                 <input
                   id="SanctionFromDate"
                   type="date"
-                  placeholder="Enter sanction From Date"
-                  value={formik.values.SanctionFromDate}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -458,8 +466,6 @@ const LeaveApprovalModal = ({ visible, onClick, ID }) => {
                 <input
                   id="SanctionToDate"
                   type="date"
-                  placeholder="Enter Leave To Date"
-                  value={formik.values.SanctionToDate}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -485,14 +491,6 @@ const LeaveApprovalModal = ({ visible, onClick, ID }) => {
                 />
               </div>
             </div>
-            <div className="flex mt-4 justify-start">
-              <button
-                type="submit"
-                className="bg-blue-900 text-white text-[11px] font-semibold py-2 px-4 rounded-lg"
-              >
-                Show
-              </button>
-            </div>
             <div className="grid gap-4 justify-between mt-2 w-full">
               <div className="my-1 p-2 pr-8 border ">
                 <table className="min-w-full text-center">
@@ -514,9 +512,10 @@ const LeaveApprovalModal = ({ visible, onClick, ID }) => {
                         <td className="px-4 border-2 whitespace-normal bg-white rounded-lg text-left text-[11px]">
                           {item.LeaveTypeId}
                         </td>
-                        <td className="px-4 border-2 whitespace-normal bg-white rounded-lg text-left text-[11px]">
-                          {item.ApprovalFlag}
-                        </td>
+                        <td className={`px-4 border-2 whitespace-normal rounded-lg text-left text-[11px] ${item.ApprovalFlag === 'A' ? 'bg-green-600' : (item.ApprovalFlag === 'R' ? 'bg-red-500' : 'bg-yellow-500')}`}>
+  {item.ApprovalFlag}
+</td>
+
                         <td className="px-4 border-2 whitespace-normal bg-white rounded-lg text-left text-[11px]">
                           {item.FYear}
                         </td>

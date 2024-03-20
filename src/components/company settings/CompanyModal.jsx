@@ -3,12 +3,14 @@ import React, { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import axios from "axios";
 import { useAuth } from "../Login";
+import TwoFieldsModal from "./TwoFieldsModal";
 
 const CompanyModal = ({ visible, onClick }) => {
   const [uploadedImage, setUploadedImage] = useState(null)
   const [logoName, setLogoName] = useState()
   const [companySector, setCompanySector] = useState([])
   const { token } = useAuth();
+  const [isTwoFieldOpen, setIsTwoFieldOpen] = useState(false)
 
   const formik = useFormik({
     initialValues: {
@@ -182,24 +184,28 @@ const CompanyModal = ({ visible, onClick }) => {
                   onChange={formik.handleChange}
                 />
               </div>
-              <div>
-                <p className="capatilize font-semibold text-[13px]">
+              <div className="flex flex-col">
+                <p className="capatilize font-semibold text-[13px] mb-1">
                   Company Sector
                 </p>
-                <select
-                  id="CompanySectorId"
-                  value={formik.values.CompanySectorId}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  onChange={handleCompanySectorChange}
-                  name="CompanySectorId" // Add name attribute to ensure Formik tracks changes
-                >
-                  <option value="">Select Company Sector</option>
-                  {companySector.map((entry) => (
-                    <option key={entry.FieldId} value={entry.FieldId}>
-                      {entry.FieldDetails}
-                    </option>
-                  ))}
-                </select>
+                <div className="flex items-center">
+                  <select
+                    id="CompanySectorId"
+                    value={formik.values.CompanySectorId}
+                    className={`flex-1 px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]`}
+                    onChange={handleCompanySectorChange}
+                    name="CompanySectorId" // Add name attribute to ensure Formik tracks changes
+                  >
+                    <option value="">Select Company Sector</option>
+                    {companySector.map((entry) => (
+                      <option key={entry.FieldId} value={entry.FieldId}>
+                        {entry.FieldDetails}
+                      </option>
+                    ))}
+                  </select>
+                  <Icon icon="flat-color-icons:plus" width="24" height="24" className="ml-1 cursor-pointer" onClick={() => setIsTwoFieldOpen(true)}/> 
+              <TwoFieldsModal visible={isTwoFieldOpen} onClick={() => setIsTwoFieldOpen(false)}/>
+              </div>
               </div>
               <div>
                 <p className="capatilize font-semibold text-[13px]">
@@ -265,6 +271,7 @@ const CompanyModal = ({ visible, onClick }) => {
           </div>
         </div>
       </div>
+      <TwoFieldsModal visible={isTwoFieldOpen} onClick={() => setIsTwoFieldOpen(false)}/>
     </form>
   );
 };

@@ -53,6 +53,14 @@ const mleavetype = sequelize.define(
         type: DataTypes.STRING(2),
         allowNull: true,
       },
+      DefaultBalance: {
+        type: DataTypes.INTEGER(20),
+        allowNull: true,
+      },
+      MaxPerMonth: {
+        type: DataTypes.INTEGER(20),
+        allowNull: true,
+      },
       PaidFlag: {
         type: DataTypes.STRING(10),
         allowNull: true,

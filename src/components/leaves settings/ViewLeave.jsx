@@ -14,6 +14,8 @@ const ViewLeave = ({ visible, onClick, edit, ID }) => {
       LeaveTypeId:"",
       LeaveType: "",
       ShortName: "",
+      ShortName: "",
+      DefaultBalance: "",
       PaidFlag: "",
       CarryForwardFlag: "",
       Remark: "",
@@ -23,6 +25,8 @@ const ViewLeave = ({ visible, onClick, edit, ID }) => {
       LeaveTypeId: values.LeaveTypeId,
       LeaveType: values.LeaveType,
       ShortName: values.ShortName,
+      ShortName: details.ShortName,
+      DefaultBalance: details.DefaultBalance,
       PaidFlag: values.PaidFlag,
       CarryForwardFlag: values.CarryForwardFlag,
       Remark: values.Remark,
@@ -73,6 +77,8 @@ const ViewLeave = ({ visible, onClick, edit, ID }) => {
           LeaveTypeId: details.LeaveTypeId,
           LeaveType: details.LeaveType,
           ShortName: details.ShortName,
+          DefaultBalance: details.DefaultBalance,
+          MaxPerMonth: details.MaxPerMonth,
           PaidFlag: details.PaidFlag,
           CarryForwardFlag: details.CarryForwardFlag,
           Remark: details.Remark,
@@ -133,6 +139,26 @@ const ViewLeave = ({ visible, onClick, edit, ID }) => {
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={!edit}
+                />
+              </div>
+              <div>
+                <p className="text-[13px] font-semibold">Default Balance</p>
+                <input
+                  id="DefaultBalance"
+                  type="number"
+                  value={formik.values.DefaultBalance}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  onChange={formik.handleChange}
+                />
+              </div>
+              <div>
+                <p className="text-[13px] font-semibold">Max Per Month</p>
+                <input
+                  id="MaxPerMonth"
+                  type="number"
+                  value={formik.values.MaxPerMonth}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  onChange={formik.handleChange}
                 />
               </div>
               <div>

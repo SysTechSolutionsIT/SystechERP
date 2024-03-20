@@ -14,6 +14,7 @@ const LeaveApproval = () => {
   const [LeaveTypes, setLeaveTypes] = useState('')
   const [Employees, setEmployees] = useState([])
   const [unapprovedLeaves, setUnapprovedLeaves] = useState([])
+  const [ApprovalFlag, setApprovalFlag] = useState('')
 
 
   const [columnVisibility, setColumnVisibility] = useState({
@@ -158,6 +159,7 @@ const fetchLeaveApps = async () =>{
       }
     })
     const data = response.data
+    data.sort((a, b) => new Date(b.LeaveApplicationDate) - new Date(a.LeaveApplicationDate));
     setLeaveApps(data)
   } catch (error) {
     console.error('Error', error);
@@ -294,7 +296,7 @@ return (
     </div>
     <div className="grid gap-4 justify-between">
       <div className="my-1 rounded-2xl bg-white p-2 pr-8">
-        <table className="min-w-full text-center rounded-lg  whitespace-normal">
+        <table className="min-w-full text-center rounded-lg whitespace-normal">
           <thead>
             <tr>
               <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
@@ -338,17 +340,31 @@ return (
                 <tr key={index}>
                   <td className="px-2 border-2">
                     <div className="flex items-center gap-2 text-center justify-center">
-                      <button
-                        type="submit"
-                        className="bg-blue-900 text-white font-semibold py-1 px-1 rounded-lg text-[11px]"
+                    <button
+                        type="button"
+                        className="bg-green-600 text-white font-semibold py-1 px-2 rounded-lg text-[11px] hover:bg-white hover:border-green-500 hover:border-2 border-2 duration-300 hover:text-green-500"
                         onClick={
                           () => {
                             setModalOpen(true)
                             setid(result.LeaveApplicationId)
+                            setApprovalFlag('A')
                           }
                         }
                       >
                         Approve
+                      </button>
+                      <button
+                        type="button"
+                        className="bg-red-500 text-white font-semibold py-1 hover:bg-white hover:border-red-500 hover:border-2 border-2 duration-300 hover:text-red-500  px-3 rounded-lg text-[11px]"
+                        onClick={
+                          () => {
+                            setModalOpen(true)
+                            setid(result.LeaveApplicationId)
+                            setApprovalFlag('R')
+                          }
+                        }
+                      >
+                        Reject
                       </button>
                     </div>
                   </td>
@@ -409,16 +425,30 @@ return (
                   <td className="px-2 border-2">
                     <div className="flex items-center gap-2 text-center justify-center">
                       <button
-                        type="submit"
-                        className="bg-blue-900 text-white font-semibold py-1 px-1 rounded-lg text-[11px]"
+                        type="button"
+                        className="bg-green-600 text-white font-semibold py-1 px-2 rounded-lg text-[11px] hover:bg-white hover:border-green-500 hover:border-2 border-2 duration-300 hover:text-green-500"
                         onClick={
                           () => {
                             setModalOpen(true)
                             setid(result.LeaveApplicationId)
+                            setApprovalFlag('A')
                           }
                         }
                       >
                         Approve
+                      </button>
+                      <button
+                        type="button"
+                        className="bg-red-500 text-white font-semibold py-1 hover:bg-white hover:border-red-500 hover:border-2 border-2 duration-300 hover:text-red-500  px-3 rounded-lg text-[11px]"
+                        onClick={
+                          () => {
+                            setModalOpen(true)
+                            setid(result.LeaveApplicationId)
+                            setApprovalFlag('R')
+                          }
+                        }
+                      >
+                        Reject
                       </button>
                     </div>
                   </td>
@@ -480,6 +510,7 @@ return (
             visible={isModalOpen}
             onClick={() => setModalOpen(false)}
             ID = {id}
+            ApprovalFlag = {ApprovalFlag}
             />
     </div>
 );
