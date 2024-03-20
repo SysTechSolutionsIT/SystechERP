@@ -166,7 +166,7 @@ const fetchLeaveApps = async () =>{
   }
 }
 fetchLeaveApps()
-}, [token])
+}, [token, isModalOpen])
 
 useEffect(() =>{
   const fetchEmployees = async () =>{
@@ -237,7 +237,7 @@ return (
   <div className="top-25 min-w-[40%]">
     <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-x-clip">
       <div className="text-center text-[15px] whitespace-normal min-w-fit items-center">
-        Leave Application
+        Leave Approvals
       </div>
       <div className="flex gap-4">
         <button

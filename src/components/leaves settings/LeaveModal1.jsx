@@ -41,7 +41,7 @@ const LeaveModal1 = ({ visible, onClick }) => {
       LeaveDays: "",
       IUFlag:"I"
     },
-    onSubmit: (values) => {
+    onSubmit: (values, {resetForm}) => {
       const updatedData ={
         ApprovalFlag: "P",
         FYear: values.FYear,
@@ -56,7 +56,9 @@ const LeaveModal1 = ({ visible, onClick }) => {
         LeaveDays: values.LeaveDays,
         IUFlag:"I"
       }
-      addLeaveApplication()
+      addLeaveApplication(updatedData)
+      resetForm()
+      onClick()
     },
   });
 
@@ -128,9 +130,9 @@ const LeaveModal1 = ({ visible, onClick }) => {
   },[token])
 
 
-  const addLeaveApplication = async () =>{
+  const addLeaveApplication = async (data) =>{
     try{
-      const response = await axios.post('http://localhost:5500/leave-application/FnAddUpdateDeleteRecord', formik.values, {
+      const response = await axios.post('http://localhost:5500/leave-application/FnAddUpdateDeleteRecord', data, {
         headers:{
           Authorization: `Bearer ${token}`
         }

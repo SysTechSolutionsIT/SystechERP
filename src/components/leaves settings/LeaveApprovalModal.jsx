@@ -69,6 +69,8 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
       };
 
       updateApproval(updatedData)
+      updateLeaveBalance(updatedData)
+      onClick()
     },
   });
   
@@ -89,6 +91,23 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
       console.error("Error", error);
     }
   };
+
+  const updateLeaveBalance = async (values) => {
+    try {
+      const response = await axios.patch('http://localhost:5500/leave-balance/FnLeaveApproved', values,
+      {
+        params: { 
+          EmployeeId: details.EmployeeId,
+          LeaveTypeId: details.LeaveTypeId,
+          FYear: details.FYear
+        },
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      alert('Leave Balance Updated')
+    } catch (error) {
+      console.error("Error updating Leave balance", error);
+    }
+  }
   
 
   const fetchLeaveBalanceData = async () => {
@@ -175,15 +194,14 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
     fetchEmployees();
   }, [token]);
 
-  useEffect(() => {
-    const fetchLeaveApplication = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:5500/leave-application/FnShowParticularData",
-          {
-            params: { LeaveApplicationId: ID },
-            headers: { Authorization: `Bearer ${token}` },
-          }
+  const fetchLeaveApplication = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5500/leave-application/FnShowParticularData",
+        {
+          params: { LeaveApplicationId: ID },
+          headers: { Authorization: `Bearer ${token}` },
+        }
         );
         const data = response.data;
         console.log(data);
@@ -192,6 +210,7 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
         console.error("Error", error);
       }
     };
+    useEffect(() => {
     fetchLeaveApplication();
   }, [token, ID]);
 
@@ -221,8 +240,8 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
         LeaveTypeId: details.LeaveTypeId,
         LeaveDays: details.LeaveDays,
         SanctionBy: details.SanctionBy,
-        SanctionFromDate: formatDate(details.SanctionFromDate),
-        SanctionToDate: formatDate(details.SanctionToDate),
+        SanctionFromDate: formatDate(details.LeaveFromDate),
+        SanctionToDate: formatDate(details.LeaveToDate),
         SanctionLeaveDays: details.SanctionLeaveDays,
       });
       setEmployeeId(details.EmployeeId);
@@ -236,7 +255,7 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
         const response = await axios.get(
           "http://localhost:5500/leave-application/FnShowParticularEmployeeData",
           {
-            params: { EmployeeId: employeeId },
+            params: { EmployeeId: details.EmployeeId },
             headers: { Authorization: `Bearer ${token}` },
           }
         );
@@ -362,6 +381,17 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
                 />
               </div>
               <div>
+                <p className="text-[13px] font-semibold">Remarks</p>
+                <input
+                  id="Remark"
+                  type="text"
+                  placeholder="Enter Remarks"
+                  value={formik.values.Remark}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  onChange={formik.handleChange}
+                />
+              </div>
+              <div>
                 <p className="text-[13px] font-semibold">Leave From Date</p>
                 <input
                   id="LeaveFromDate"
@@ -379,17 +409,6 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
                   type="date"
                   placeholder="Enter Leave To Date"
                   value={formik.values.LeaveToDate}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                />
-              </div>
-              <div>
-                <p className="text-[13px] font-semibold">Remarks</p>
-                <input
-                  id="Remark"
-                  type="text"
-                  placeholder="Enter Remarks"
-                  value={formik.values.Remark}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
