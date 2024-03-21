@@ -54,12 +54,14 @@ const MLeaves = require("./route/MLeaves");
 const MTwoField = require("./route/MTwoField");
 const MMasterName = require("./route/MMasterName");
 const EmpDocs = require("./route/MEmployeeDocs");
+const NodeMailer = require('./route/NodeMailer')
 
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());
 app.use(express.static("public"));
 // Use the user routes
 app.use("/users", userRoutes);
+app.use('/nodemail', NodeMailer)
 app.use("/companies", MCompany);
 app.use("/financials", MFinancialYear);
 app.use("/employee/personal", MEmployee);

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axios from "axios"; // Import axios
 import { useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import { useEffect } from "react";
@@ -8,7 +8,7 @@ function Registration() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [isValidEmail, setIsValidEmail] = useState(true);
-  const [empid, setEmpid] = useState('')
+  const [empid, setEmpid] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [role, setRole] = useState("");
@@ -27,15 +27,21 @@ function Registration() {
   const navigate = useNavigate();
 
   const roleBasedAccess = {
-    Admin: [287,549,610,624,703,736,872,954,143,217,395,431,502,598,786,820,148,201,409,752,875,269,317,370,497,531,548,654,753,153,418,460,706,159,273,523,619,625,690,758,832,871,907,926,141,182,305,407,603,724,879],
-    Employee: [153, 159, 926, 871, 141, 531, 497]
-    };
-  
-  const [accessRights, setAccessRights] = useState('')
-  useEffect(() =>{
-    if (role === 'Admin') setAccessRights(roleBasedAccess.Admin.join(','))
-    if (role === 'Employee') setAccessRights(roleBasedAccess.Employee.join(','))
-  }, [role])  
+    Admin: [
+      287, 549, 610, 624, 703, 736, 872, 954, 143, 217, 395, 431, 502, 598,
+      786, 820, 148, 201, 409, 752, 875, 269, 317, 370, 497, 531, 548, 654,
+      753, 153, 418, 460, 706, 159, 273, 523, 619, 625, 690, 758, 832, 871,
+      907, 926, 141, 182, 305, 407, 603, 724, 879,
+    ],
+    Employee: [153, 159, 926, 871, 141, 531, 497],
+  };
+
+  const [accessRights, setAccessRights] = useState("");
+  useEffect(() => {
+    if (role === "Admin") setAccessRights(roleBasedAccess.Admin.join(","));
+    if (role === "Employee")
+      setAccessRights(roleBasedAccess.Employee.join(","));
+  }, [role]);
 
   const userRegistration = async () => {
     if (password !== confirmPassword) {
@@ -48,28 +54,35 @@ function Registration() {
       password: password,
       empid: empid,
       role: role,
-      accessrights: accessRights
-    }
-    console.log('Data that goes to the API', data)
+      accessrights: accessRights,
+    };
+    console.log("Data that goes to the API", data);
     try {
       const response = await axios.post(
-        'http://localhost:5500/users/register', data,
+        "http://localhost:5500/users/register",
+        data,
         {
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         }
       );
       if (response.data.error) {
-        // Email already registered
         alert(response.data.error);
       } else {
-        alert("New user added, please login")
-        navigate('/')
+        // Send welcome email to the new user
+        const emailData = {
+          to: email,
+          subject: "Welcome!",
+          text: `Hello ${name},\n\nWelcome to SysTech ERP. Your account has been successfully created.\n\nYour username: ${email}\nYour password: ${password}\n\nPlease do not share your password with anyone.\n\nThis email is to be regarded as a failsafe incase you forget your password.\n\nThank you for joining.\n`,
+        };
+        await axios.post("http://localhost:5500/nodemail/send-email", emailData);
+        alert("New user added, please login");
+        navigate("/");
       }
     } catch (error) {
-      console.log('Error', error);
-      alert('Email is already registered, please contact Admin.')
+      console.log("Error", error);
+      alert("Email is already registered, please contact Admin.");
     }
   };
 
@@ -85,6 +98,7 @@ function Registration() {
   const navDash = () => {
     navigate("/company-masters");
   };
+
   return (
     <div className="mt-8 flex items-center justify-center ">
       <div className="bg-white p-8 rounded-lg shadow-lg w-96">
