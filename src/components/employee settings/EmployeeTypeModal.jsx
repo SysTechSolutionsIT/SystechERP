@@ -1,49 +1,72 @@
-import { useFormik } from 'formik';
-import React, { useState } from 'react'
-import { EmployeeTypeData } from './EmployeeTypeMaster';
-import { Icon } from '@iconify/react';
-import axios from 'axios'
-import { useAuth } from '../Login';
+import { useFormik } from "formik";
+import React, { useState, useEffect } from "react";
+import { EmployeeTypeData } from "./EmployeeTypeMaster";
+import { Icon } from "@iconify/react";
+import axios from "axios";
+import { useAuth } from "../Login";
 
 const EmployeeTypeModal = ({ visible, onClick }) => {
-  const { token } = useAuth()
+  const { token } = useAuth();
   const formik = useFormik({
     initialValues: {
       EmployeeType: "",
       EmployeeTypeGroup: "",
       ShortName: "",
       Remark: "",
-      IUFlag:"I"
+      IUFlag: "I",
     },
-    onSubmit: (values, {resetForm}) => {
+    onSubmit: (values, { resetForm }) => {
       console.log(values);
-      addEmpType()
+      addEmpType();
       // resetForm()
     },
   });
 
-  const addEmpType = async() =>{
-    try{
-      const response = await axios.post("http://localhost:5500/employee-type/FnAddUpdateDeleteRecord", formik.values,
-      {headers:{ Authorization: `Bearer ${token}`}})
-      alert('Employee Type Added')
-    } catch(error){
-      console.error('Error', error)
+  const addEmpType = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5500/employee-type/FnAddUpdateDeleteRecord",
+        formik.values,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      alert("Employee Type Added");
+    } catch (error) {
+      console.error("Error", error);
     }
-  }
+  };
 
+  const [isStatusChecked, setStatusChecked] = useState(false);
+  const handleCheckboxChange = (fieldName, setChecked, event) => {
+    //This is how to use it (event) => handleCheckboxChange('Status', setStatusChecked, event)
+    const checked = event.target.checked;
+    setChecked(checked);
+    formik.setValues({
+      ...formik.values,
+      [fieldName]: checked.toString(),
+    });
+  };
 
-      const [isStatusChecked, setStatusChecked] = useState(false)
-    const handleCheckboxChange = (fieldName, setChecked, event) => {
-      //This is how to use it (event) => handleCheckboxChange('Status', setStatusChecked, event)
-        const checked = event.target.checked;
-        setChecked(checked);
-        formik.setValues({
-          ...formik.values,
-          [fieldName]: checked.toString(),
-        });
-      };
-
+  const [employeeTypeGroup, setEmployeeTypeGroup] = useState([]);
+  useEffect(() => {
+    const fetchEmpTypeData = async () => {
+      const CID = 1;
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/two-field/FnShowCategoricalData",
+          {
+            params: { MasterNameId: CID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        console.log("empTypeData", data);
+        setEmployeeTypeGroup(data);
+      } catch (error) {
+        console.error("Error fetching emptype:", error);
+      }
+    };
+    fetchEmpTypeData();
+  }, [token]);
 
   if (!visible) return null;
   return (
@@ -140,6 +163,6 @@ const EmployeeTypeModal = ({ visible, onClick }) => {
       </div>
     </form>
   );
-}
+};
 
-export default EmployeeTypeModal
+export default EmployeeTypeModal;

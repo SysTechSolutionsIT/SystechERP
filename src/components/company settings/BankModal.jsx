@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import { useFormik } from "formik";
-import { bankData } from "./BankMaster";
 import axios from "axios";
 import { useAuth } from "../Login";
+import TwoFieldsModal from "../company settings/TwoFieldsModal";
 
 const BankModal = ({ visible, onClick }) => {
   const { token } = useAuth();
-  const [Employees, setEmployees] = useState([])
+  const [Employees, setEmployees] = useState([]);
+  const [isModalOpen, setModalOpen] = useState(false); //Add Modal
+  const [MMId, setMMId] = useState();
 
   //Fetching Employee Names
   useEffect(() => {
@@ -86,10 +88,10 @@ const BankModal = ({ visible, onClick }) => {
     }
   };
 
-  const [AccountType, setAccountType] = useState([])
-  useEffect(() =>{
-    const fetchAccountTypes = async () =>{
-      const ID = 10
+  const [AccountType, setAccountType] = useState([]);
+  useEffect(() => {
+    const fetchAccountTypes = async () => {
+      const ID = 10;
       try {
         const response = await axios.get(
           "http://localhost:5500/two-field/FnShowCategoricalData",
@@ -99,14 +101,14 @@ const BankModal = ({ visible, onClick }) => {
           }
         );
         const data = response.data;
-        console.log('Account Types', data)
-        setAccountType(data)
+        console.log("Account Types", data);
+        setAccountType(data);
       } catch (error) {
-        console.error('Error',error);
+        console.error("Error", error);
       }
-    }
-    fetchAccountTypes()
-  },[token])
+    };
+    fetchAccountTypes();
+  }, [token]);
 
   const [currencies, setCurrencies] = useState([]);
   useEffect(() => {
@@ -190,23 +192,42 @@ const BankModal = ({ visible, onClick }) => {
                   onChange={formik.handleChange}
                 />
               </div>
-              <div>
-                <p className="capatilize font-semibold text-[13px]">
+              <div className="flex flex-col">
+                <p className="capatilize font-semibold text-[13px] mb-1">
                   Account Type
                 </p>
-                <select
-                  id="AccountType"
-                  value={formik.values.AccountType}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                >
-                  <option value="">Select Account Type</option>
-                  {AccountType.map((entry) => (
-                    <option key={entry.FieldId} value={entry.FieldId}>
-                      {entry.FieldDetails}
-                    </option>
-                  ))}
-                </select>
+                <div className="flex items-center">
+                  {AccountType.length > 0 ? (
+                    <select
+                      id="AccountType"
+                      name="AccountType"
+                      value={formik.values.AccountType}
+                      className="flex-1 px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                      onChange={formik.handleChange}
+                    >
+                      <option value="">Select Account Type</option>
+                      {AccountType.map((entry) => (
+                        <option key={entry.FieldId} value={entry.FieldId}>
+                          {entry.FieldDetails}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <p className="flex-1 px-4 py-2 font-normal text-gray-500">
+                      No available entries
+                    </p>
+                  )}
+                  <Icon
+                    icon="flat-color-icons:plus"
+                    width="24"
+                    height="24"
+                    className="ml-1 cursor-pointer"
+                    onClick={() => {
+                      setModalOpen(true);
+                      setMMId(10);
+                    }}
+                  />
+                </div>
               </div>
               <div>
                 <p className="capatilize font-semibold text-[13px]">
@@ -273,28 +294,44 @@ const BankModal = ({ visible, onClick }) => {
                   onChange={formik.handleChange}
                 />
               </div>
-              <div>
-                <p className="capitalize font-semibold text-[13px]">
-                  Currency Type
-                </p>
-                <select
-                  id="CurrencyType"
-                  name="currency"
-                  className="text-[11px] w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
-                  value={formik.values.CurrencyType}
-                  onChange={formik.handleChange}
-                >
-                  <option value="">Select Currency Type</option>
-                  {currencies.length > 0 &&
-                    currencies.map((currency) => (
-                      <option
-                        key={currency.FieldId}
-                        value={currency.FieldId}
-                      >
-                        {currency.FieldDetails}
-                      </option>
-                    ))}
-                </select>
+              <div className="flex flex-col">
+                <p className="mb-1 font-semibold text-[13px]">Currency Type</p>
+                <div className="flex">
+                  {currencies.length > 0 ? (
+                    <select
+                      id="CurrencyType"
+                      name="CurrencyType"
+                      className="text-[11px] w-full px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg mr-1"
+                      value={formik.values.CurrencyType}
+                      onChange={formik.handleChange}
+                    >
+                      <option value="">Select Currency Type</option>
+                      {currencies.length > 0 &&
+                        currencies.map((currency) => (
+                          <option
+                            key={currency.FieldId}
+                            value={currency.FieldDetails}
+                          >
+                            {currency.FieldDetails}
+                          </option>
+                        ))}
+                    </select>
+                  ) : (
+                    <p className="flex-1 px-4 py-2 font-normal text-gray-500">
+                      No available entries
+                    </p>
+                  )}
+                  <Icon
+                    icon="flat-color-icons:plus"
+                    width="24"
+                    height="24"
+                    className="ml-1 cursor-pointer"
+                    onClick={() => {
+                      setModalOpen(true);
+                      setMMId(11);
+                    }}
+                  />
+                </div>
               </div>
               <div>
                 <p className="capatilize font-semibold text-[13px]">Bank GST</p>
@@ -341,12 +378,9 @@ const BankModal = ({ visible, onClick }) => {
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 >
-                  <option value="">Select Department Head</option>
+                  <option value="">Select Authorized Person 1</option>
                   {Employees.map((entry) => (
-                    <option
-                      key={entry.EmployeeId}
-                      value={entry.EmployeeId}
-                    >
+                    <option key={entry.EmployeeId} value={entry.EmployeeId}>
                       {entry.EmployeeName}
                     </option>
                   ))}
@@ -393,12 +427,9 @@ const BankModal = ({ visible, onClick }) => {
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 >
-                  <option value="">Select Department Head</option>
+                  <option value="">Select Authorized Person 2</option>
                   {Employees.map((entry) => (
-                    <option
-                      key={entry.EmployeeId}
-                      value={entry.EmployeeId}
-                    >
+                    <option key={entry.EmployeeId} value={entry.EmployeeId}>
                       {entry.EmployeeName}
                     </option>
                   ))}
@@ -445,12 +476,9 @@ const BankModal = ({ visible, onClick }) => {
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 >
-                  <option value="">Select Department Head</option>
+                  <option value="">Select Authorized Person 3</option>
                   {Employees.map((entry) => (
-                    <option
-                      key={entry.EmployeeId}
-                      value={entry.EmployeeId}
-                    >
+                    <option key={entry.EmployeeId} value={entry.EmployeeId}>
                       {entry.EmployeeName}
                     </option>
                   ))}
@@ -504,6 +532,11 @@ const BankModal = ({ visible, onClick }) => {
             </button>
           </div>
         </div>
+        <TwoFieldsModal
+          visible={isModalOpen}
+          onClick={() => setModalOpen(false)}
+          MasterID={MMId}
+        />
       </div>
     </form>
   );

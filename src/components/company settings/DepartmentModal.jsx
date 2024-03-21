@@ -10,9 +10,11 @@ import { useAuth } from "../Login";
 const DepartmentModal = ({ visible, onClick }) => {
   const { token } = useAuth();
   const [CostCenters, setCostCenters] = useState([]);
-  const [Departments, setDepartments] = useState([])
+  const [Departments, setDepartments] = useState([]);
   const [Employees, setEmployees] = useState([]);
-  const [DepartmentGroup, setDepartmentGroup] = useState([])
+  const [DepartmentGroup, setDepartmentGroup] = useState([]);
+  const [isModalOpen, setModalOpen] = useState(false); //Add Modal
+  const [MMId, setMMId] = useState();
 
   const formik = useFormik({
     initialValues: {
@@ -23,9 +25,9 @@ const DepartmentModal = ({ visible, onClick }) => {
       BranchName: "",
       CostCenterId: "",
       DepartmentHeadId: "",
-      DepartmentHeadName:"",
+      DepartmentHeadName: "",
       DepartmentSubHeadId: "",
-      DepartmentSubHeadName:"",
+      DepartmentSubHeadName: "",
       DepartmentStdStaffStrength: "",
       DepartmentStdWorkerStrength: "",
       Remark: "",
@@ -48,11 +50,10 @@ const DepartmentModal = ({ visible, onClick }) => {
         DepartmentStdWorkerStrength: values.DepartmentStdWorkerStrength,
         Remark: values.Remark,
         IUFlag: "I",
-      }
-      addDept(updatedData)
+      };
+      addDept(updatedData);
     },
   });
-
 
   const addDept = async (data) => {
     try {
@@ -82,38 +83,41 @@ const DepartmentModal = ({ visible, onClick }) => {
     }
   };
 
-  useEffect(() =>{
-    const fetchDepartmentGroup = async () =>{
-      const DGID = 5
+  useEffect(() => {
+    const fetchDepartmentGroup = async () => {
+      const DGID = 5;
       try {
-        const response = await axios.get('http://localhost:5500/two-field/FnShowCategoricalData',
-        {
-          params: { MasterNameId: DGID },
-          headers: { Authorization: `Bearer ${token}` },
-        }) 
-        const data = response.data
-        setDepartmentGroup(data)
+        const response = await axios.get(
+          "http://localhost:5500/two-field/FnShowCategoricalData",
+          {
+            params: { MasterNameId: DGID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        setDepartmentGroup(data);
       } catch (error) {
-        console.error('Error', error);
+        console.error("Error", error);
       }
-    }
-    fetchDepartmentGroup()
-  },[token])
+    };
+    fetchDepartmentGroup();
+  }, [token]);
 
-  useEffect(() =>{
-    const fetchDepartments = async () =>{
+  useEffect(() => {
+    const fetchDepartments = async () => {
       try {
-        const response = await axios.get('http://localhost:5500/departmentmaster/FnShowActiveData',
-        { headers: {Authorization: `Bearer ${token}`}}
-      )
-      const data = response.data
-      setDepartments(data)
+        const response = await axios.get(
+          "http://localhost:5500/departmentmaster/FnShowActiveData",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const data = response.data;
+        setDepartments(data);
       } catch (error) {
-        console.error('Error', error);
+        console.error("Error", error);
       }
-    }
-    fetchDepartments()
-  },[token])
+    };
+    fetchDepartments();
+  }, [token]);
 
   useEffect(() => {
     const fetchCostCenters = async () => {
@@ -230,9 +234,7 @@ const DepartmentModal = ({ visible, onClick }) => {
                 >
                   <option value="">Select Parent Department Branch</option>
                   {Departments.map((entry) => (
-                    <option 
-                    key={entry.DepartmentId}
-                    value={entry.DepartmentId}>
+                    <option key={entry.DepartmentId} value={entry.DepartmentId}>
                       {entry.DepartmentName}
                     </option>
                   ))}
@@ -267,23 +269,42 @@ const DepartmentModal = ({ visible, onClick }) => {
                   </label>
                 </div>
               </div>
-              <div>
-                <p className="capatilize font-semibold text-[13px]">
+              <div className="flex flex-col">
+                <p className="capatilize font-semibold text-[13px] mb-1">
                   Department Group
                 </p>
-                <select
-                  id="DepartmentGroupId"
-                  value={formik.values.DepartmentGroupId}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                >
-                  <option value="">Select Department Group</option>
-                  {DepartmentGroup.map((entry) => (
-                    <option key={entry.FieldId} value={entry.FieldId}>
-                      {entry.FieldDetails}
-                    </option>
-                  ))}
-                </select>
+                <div className="flex items-center">
+                  {DepartmentGroup.length > 0 ? (
+                    <select
+                      id="DepartmentGroup"
+                      name="DepartmentGroup"
+                      value={formik.values.DepartmentGroup}
+                      className="flex-1 px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                      onChange={formik.handleChange}
+                    >
+                      <option value="">Select Department Group</option>
+                      {DepartmentGroup.map((entry) => (
+                        <option key={entry.FieldId} value={entry.FieldId}>
+                          {entry.FieldDetails}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <p className="flex-1 px-4 py-2 font-normal text-gray-500">
+                      No available entries
+                    </p>
+                  )}
+                  <Icon
+                    icon="flat-color-icons:plus"
+                    width="24"
+                    height="24"
+                    className="ml-1 cursor-pointer"
+                    onClick={() => {
+                      setModalOpen(true);
+                      setMMId(5);
+                    }}
+                  />
+                </div>
               </div>
               <div>
                 <label className="text-[13px] font-semibold">
@@ -297,10 +318,7 @@ const DepartmentModal = ({ visible, onClick }) => {
                 >
                   <option value="">Select Department Head</option>
                   {Employees.map((entry) => (
-                    <option
-                      key={entry.EmployeeId}
-                      value={entry.EmployeeId}
-                    >
+                    <option key={entry.EmployeeId} value={entry.EmployeeId}>
                       {entry.EmployeeName}
                     </option>
                   ))}
@@ -318,10 +336,7 @@ const DepartmentModal = ({ visible, onClick }) => {
                 >
                   <option value="">Select Department Head</option>
                   {Employees.map((entry) => (
-                    <option
-                      key={entry.EmployeeId}
-                      value={entry.EmployeeId}
-                    >
+                    <option key={entry.EmployeeId} value={entry.EmployeeId}>
                       {entry.EmployeeName}
                     </option>
                   ))}
@@ -339,10 +354,7 @@ const DepartmentModal = ({ visible, onClick }) => {
                 >
                   <option value="">Select Cost Center</option>
                   {CostCenters.map((entry) => (
-                    <option
-                      key={entry.CostCenterId}
-                      value={entry.CostCenterId}
-                    >
+                    <option key={entry.CostCenterId} value={entry.CostCenterId}>
                       {entry.CostCenterName}
                     </option>
                   ))}

@@ -595,23 +595,26 @@ export default function Personal({ ID }) {
                 Salutations
               </p>
               <div className="flex items-center">
-                <select
-                  id="Salutation"
-                  name="Salutation"
-                  className={
-                    "flex-1 px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
-                  }
-                  onChange={formik.handleChange}
-                  // Add name attribute to ensure Formik tracks changes
-                >
-                  <option value="">Select Salutations</option>
-                  {sals.length > 0 &&
-                    sals.map((entry) => (
+                {sals.length > 0 ? (
+                  <select
+                    id="Salutation"
+                    name="Salutation"
+                    value={formik.values.Salutation}
+                    className="flex-1 px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                    onChange={formik.handleChange}
+                  >
+                    <option value="">Select Department Group</option>
+                    {sals.map((entry) => (
                       <option key={entry.FieldId} value={entry.FieldId}>
                         {entry.FieldDetails}
                       </option>
                     ))}
-                </select>
+                  </select>
+                ) : (
+                  <p className="flex-1 px-4 py-2 font-normal text-gray-500">
+                    No available entries
+                  </p>
+                )}
                 <Icon
                   icon="flat-color-icons:plus"
                   width="24"
@@ -628,24 +631,27 @@ export default function Personal({ ID }) {
               <p className="capatilize font-semibold text-[13px] mb-1">
                 Employee Type Group
               </p>
-              {/* <div className="flex items-center">
-                <select
-                  id="EmployeeTypeGroupId"
-                  name="EmployeeTypeGroupId"
-                  className={
-                    "flex-1 px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
-                  }
-                  onChange={formik.handleChange}
-                  // Add name attribute to ensure Formik tracks changes
-                >
-                  <option value="">Select Group Type</option>
-                  {employeeTypeGroup.length > 0 &&
-                    employeeTypeGroup.map((entry) => (
+              <div className="flex items-center">
+                {/* {employeeTypeGroup.length > 0 ? (
+                  <select
+                    id="EmployeeTypeGroupId"
+                    name="EmployeeTypeGroupId"
+                    value={formik.values.EmployeeTypeGroupId}
+                    className="flex-1 px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                    onChange={formik.handleChange}
+                  >
+                    <option value="">Select Employee Type Group</option>
+                    {employeeTypeGroup.map((entry) => (
                       <option key={entry.FieldId} value={entry.FieldId}>
                         {entry.FieldDetails}
                       </option>
                     ))}
-                </select>
+                  </select>
+                ) : (
+                  <p className="flex-1 px-4 py-2 font-normal text-gray-500">
+                    No available entries
+                  </p>
+                )} */}
                 <Icon
                   icon="flat-color-icons:plus"
                   width="24"
@@ -656,7 +662,7 @@ export default function Personal({ ID }) {
                     setMMId(1);
                   }}
                 />
-              </div> */}
+              </div>
             </div>
             <div className="py-1">
               <p className="mb-1 capitalize  font-semibold text-[13px]">
@@ -891,22 +897,25 @@ export default function Personal({ ID }) {
                 Category
               </p>
               <div className="flex items-center">
-                <select
-                  id="CategoryId"
-                  name="CategoryId"
-                  className={
-                    "flex-1 px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
-                  }
-                  onChange={formik.handleChange}
-                  // Add name attribute to ensure Formik tracks changes
-                >
-                  <option value="">Select Type</option>
-                  {categories.map((entry) => (
-                    <option key={entry.FieldId} value={entry.FieldId}>
-                      {entry.FieldDetails}
-                    </option>
-                  ))}
-                </select>
+                {categories.length > 0 ? (
+                  <select
+                    id="CategoryId"
+                    name="CategoryId"
+                    className="flex-1 px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                    onChange={formik.handleChange}
+                  >
+                    <option value="">Select Categories</option>
+                    {categories.map((entry) => (
+                      <option key={entry.FieldId} value={entry.FieldId}>
+                        {entry.FieldDetails}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <p className="flex-1 px-4 py-2 font-normal text-gray-500">
+                    No available entries
+                  </p>
+                )}
                 <Icon
                   icon="flat-color-icons:plus"
                   width="24"
@@ -936,22 +945,25 @@ export default function Personal({ ID }) {
                 Religion
               </p>
               <div className="flex items-center">
-                <select
-                  id="ReligionId"
-                  name="ReligionId"
-                  className={
-                    "flex-1 px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
-                  }
-                  onChange={formik.handleChange}
-                  // Add name attribute to ensure Formik tracks changes
-                >
-                  <option value="">Select Type</option>
-                  {Religion.map((entry) => (
-                    <option key={entry.FieldId} value={entry.FieldId}>
-                      {entry.FieldDetails}
-                    </option>
-                  ))}
-                </select>
+                {Religion.length > 0 ? (
+                  <select
+                    id="ReligionId"
+                    name="ReligionId"
+                    className="flex-1 px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                    onChange={formik.handleChange}
+                  >
+                    <option value="">Select Religion</option>
+                    {Religion.map((entry) => (
+                      <option key={entry.FieldId} value={entry.FieldId}>
+                        {entry.FieldDetails}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <p className="flex-1 px-4 py-2 font-normal text-gray-500">
+                    No available entries
+                  </p>
+                )}
                 <Icon
                   icon="flat-color-icons:plus"
                   width="24"
@@ -969,22 +981,25 @@ export default function Personal({ ID }) {
                 Reference
               </p>
               <div className="flex items-center">
-                <select
-                  id="ReferenceId"
-                  name="ReferenceId"
-                  className={
-                    "flex-1 px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
-                  }
-                  onChange={formik.handleChange}
-                  // Add name attribute to ensure Formik tracks changes
-                >
-                  <option value="">Select Type</option>
-                  {Reference.map((entry) => (
-                    <option key={entry.FieldId} value={entry.FieldId}>
-                      {entry.FieldDetails}
-                    </option>
-                  ))}
-                </select>
+                {Reference.length > 0 ? (
+                  <select
+                    id="ReligionId"
+                    name="ReligionId"
+                    className="flex-1 px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                    onChange={formik.handleChange}
+                  >
+                    <option value="">Select Department Group</option>
+                    {Reference.map((entry) => (
+                      <option key={entry.FieldId} value={entry.FieldId}>
+                        {entry.FieldDetails}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <p className="flex-1 px-4 py-2 font-normal text-gray-500">
+                    No available entries
+                  </p>
+                )}
                 <Icon
                   icon="flat-color-icons:plus"
                   width="24"
@@ -1000,22 +1015,26 @@ export default function Personal({ ID }) {
             <div className="flex flex-col">
               <p className="capatilize font-semibold text-[13px] mb-1">Caste</p>
               <div className="flex items-center">
-                <select
-                  id="CasteId"
-                  name="CasteId"
-                  className={
-                    "flex-1 px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
-                  }
-                  onChange={formik.handleChange}
-                  // Add name attribute to ensure Formik tracks changes
-                >
-                  <option value="">Select Type</option>
-                  {Caste.map((entry) => (
-                    <option key={entry.FieldId} value={entry.FieldId}>
-                      {entry.FieldDetails}
-                    </option>
-                  ))}
-                </select>
+                {Caste.length > 0 ? (
+                  <select
+                    id="CasteId"
+                    name="CasteId"
+                    value={formik.values.CasteId}
+                    className="flex-1 px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                    onChange={formik.handleChange}
+                  >
+                    <option value="">Select Caste</option>
+                    {Caste.map((entry) => (
+                      <option key={entry.FieldId} value={entry.FieldId}>
+                        {entry.FieldDetails}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <p className="flex-1 px-4 py-2 font-normal text-gray-500">
+                    No available entries
+                  </p>
+                )}
                 <Icon
                   icon="flat-color-icons:plus"
                   width="24"
