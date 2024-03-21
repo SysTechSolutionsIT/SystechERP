@@ -153,6 +153,23 @@ router.post('/accessrights', authToken, async (req, res) => {
   }
 });
 
+router.get('/allowed-access', authToken, async (req, res) => {
+  try {
+    const employeeId = req.query.EmployeeId; // Assuming empid is passed as a query parameter
+
+    const user = await User.findOne({ where: { empid: employeeId } });
+    if (!user) {
+      return res.status(404).json({ error: 'Employee not found' });
+    }
+    res.json(user);
+
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+
 
 
 // Login

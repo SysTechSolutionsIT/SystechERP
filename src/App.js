@@ -56,6 +56,7 @@ import AdvanceRepayment from "./components/payroll settings/AdvanceRepayment";
 import EmployeeTypeEarningMaster from "./components/payroll settings/EmployeeTypeEarningMaster";
 import EmployeeTypeDeductionMaster from "./components/payroll settings/EmployeeTypeDeductionMaster";
 import GatePassApproval from "./components/attendance management/GatePassApproval";
+import DailyAttendanceProcessing from "./components/attendance management/DailyAttendanceProcessing";
 
 function App() {
   return (
@@ -147,6 +148,9 @@ function App() {
                   path="/manual-attendance-entry"
                   element={<ManualAttendanceEntry />}
                 />
+                <Route
+                  path='/daily-attendance-processing'
+                  element={<DailyAttendanceProcessing/>}/>
                 <Route
                   path="/manual-attendance-approval"
                   element={<ManualAttendanceApproval />}

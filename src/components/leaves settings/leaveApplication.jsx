@@ -2,7 +2,8 @@ import { Icon } from "@iconify/react";
 import axios from "axios";
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "react-bootstrap";
-import { useAuth } from "../Login";
+import { useAuth, useDetails } from "../Login";
+import NoDataNotice from "../NoDataNotice";
 import LeaveModal1 from "./LeaveModal1";
 import ViewLeaveApplication from "./ViewLeaveApplication";
 
@@ -13,6 +14,7 @@ const LeaveApp = () => {
   const [LeaveTypes, setLeaveTypes] = useState('')
   const [Employees, setEmployees] = useState([])
   const { token } = useAuth()
+  const { empid } = useDetails()
   
   const [columnVisibility, setColumnVisibility] = useState({
       ApprovalFlag: true,
@@ -149,13 +151,20 @@ const LeaveApp = () => {
 
     const fetchLeaveApps = async () =>{
       try {
-        const response = await axios.get('http://localhost:5500/leave-application/FnShowActiveData', {
+        const response = await axios.get('http://localhost:5500/leave-application/FnShowParticularEmployeeData', 
+        {
+          params: {
+            EmployeeId: empid
+          },
           headers:{
             Authorization: `Bearer ${token}`
           }
         })
         const data = response.data
-        data.sort((a, b) => new Date(b.LeaveApplicationDate) - new Date(a.LeaveApplicationDate));
+        // if(data.length > 1) { 
+        //   data.sort((a, b) => new Date(b.LeaveApplicationDate) - new Date(a.LeaveApplicationDate));
+        //  }
+        console.log(data)
         setLeaveApps(data)
       } catch (error) {
         console.error('Error', error);
@@ -297,10 +306,17 @@ const LeaveApp = () => {
           </button>
       </div>
       </div>
+      <div className="grid gap-4 justify-between">
       <LeaveModal1
         visible={isModalOpen}
         onClick={()=> setModalOpen(false)}/>
-      <div className="grid gap-4 justify-between">
+        
+        {LeaveApps.length === 0 ? (
+          <div className="flex justify-center items-center">
+          <NoDataNotice Text='No Leave Applications Yet' visible={isModalOpen}/>
+          </div>
+        ) : (
+      <div className="my-1 rounded-2xl bg-white p-2 pr-8">
         <div className="my-1 rounded-2xl bg-white p-2 pr-8">
           <table className="min-w-full text-center rounded-lg  whitespace-normal">
             <thead>
@@ -547,6 +563,8 @@ const LeaveApp = () => {
             </tbody>
           </table>
         </div>
+      </div>
+          )}
       </div>
       <ViewLeaveApplication
       visible={veEType}

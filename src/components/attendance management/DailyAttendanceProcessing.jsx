@@ -6,7 +6,7 @@ import axios from "axios";
 import MVEModal from "./ManualAttendanceViewEdit";
 import NoDataNotice from "../NoDataNotice";
 
-const ManualAttendanceEntry = () => {
+const DailyAttendanceProcessing = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false); //Add Modal
   const [manualAttendanceEntry, setManualAttendanceEntry] = useState([]);
@@ -119,11 +119,8 @@ const ManualAttendanceEntry = () => {
     const fetchManualAttendance = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5500/manual-attendance/FnShowParticularEmployeeData",
+          "http://localhost:5500/manual-attendance/FnShowActiveData",
           {
-            params:{
-              EmployeeId: empid
-            },
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -645,4 +642,4 @@ const ManualAttendanceEntry = () => {
   );
 };
 
-export default ManualAttendanceEntry;
+export default DailyAttendanceProcessing;

@@ -565,7 +565,7 @@ const Sidebar = () => {
                       </SubMenuGroup>
                   )}
 
-                  { (rights.includes(460) || rights.includes(706) || rights.includes(418)) &&
+                  { (rights.includes(460) || rights.includes(153) || rights.includes(418)) &&
                       <SubMenuMain
                           title="Leaves Management"
                           isOpen={isLeaveSubmenuOpen}
@@ -586,7 +586,7 @@ const Sidebar = () => {
                                   onClick={() => navigate("/leave-balance-master")}
                               />
                           )} */}
-                          {rights.includes(706) && (
+                          {rights.includes(153) && (
                               <SubMenuEntry
                                   title="Leave Application"
                                   onClick={() => navigate("/leave-application")}
@@ -656,7 +656,9 @@ const Sidebar = () => {
                           <SubMenuEntry title="Job Allocation" />
                           )}
                           {rights.includes(758) && (
-                          <SubMenuEntry title="Daily Attendance Processing" />
+                          <SubMenuEntry 
+                                title="Daily Attendance Processing" 
+                                onClick={() => navigate('/daily-attendance-processing')}/>
                           )}
                           {rights.includes(690) && (
                           <SubMenuEntry title="Attendance Import" />

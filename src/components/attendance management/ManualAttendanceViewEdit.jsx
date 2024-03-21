@@ -27,8 +27,8 @@ const MVEModal = ({ visible, onClick, edit, ID }) => {
       OutTime: "",
       JobTypeId: "",
       AttendanceFlag: "",
-      SanctionBy: "Sanction By",
-      Remarks: "",
+      SanctionBy: "",
+      Remark: "",
       AcFlag: "Y",
       IUFlag: "U",
     },
@@ -36,19 +36,20 @@ const MVEModal = ({ visible, onClick, edit, ID }) => {
       console.log(values);
       // compData.push(values);
       const updatedData = {
-        AttendanceId: ID,
-        ApprovalFlag: "P",
-        AttendanceFlag: values.AttendanceFlag,
+        AttendanceId: values.AttendanceId,
+        ApprovalFlag: values.ApprovalFlag,
         AttendanceDate: values.AttendanceDate,
+        AttendanceFlag: values.AttendanceFlag,
         FYear: values.FYear,
         EmployeeTypeId: values.EmployeeTypeId,
         EmployeeId: values.EmployeeId,
         ShiftId: values.ShiftId,
         InTime: values.InTime,
-        OutTime: new Date(),
         JobTypeId: values.JobTypeId,
+        AttendanceFlag: values.AttendanceFlag,
+        SanctionBy: values.SanctionBy,
         Remark: values.Remark,
-        AcFlag: "Y",
+        OutTime: new Date(),
         IUFlag: "U",
       };
 
@@ -79,6 +80,7 @@ const MVEModal = ({ visible, onClick, edit, ID }) => {
   useEffect(() => {
     fetchManData();
   }, [ID]);
+
   console.log(ID);
   const fetchManData = async () => {
     try {
@@ -104,6 +106,7 @@ const MVEModal = ({ visible, onClick, edit, ID }) => {
         AttendanceId: details.AttendanceId,
         ApprovalFlag: details.ApprovalFlag,
         AttendanceDate: details.AttendanceDate,
+        AttendanceFlag: details.AttendanceFlag,
         FYear: details.FYear,
         EmployeeTypeId: details.EmployeeTypeId,
         EmployeeId: details.EmployeeId,
@@ -192,17 +195,30 @@ const MVEModal = ({ visible, onClick, edit, ID }) => {
     fetchJobs();
   }, [token]);
 
+  const extractHoursMinutes = (datetimeString) => {
+    if (!datetimeString) return '';
+    // Split the datetime string by 'T' to separate date and time
+    const parts = datetimeString.split('T');
+    // Get the second part which contains the time
+    const timePart = parts[1];
+    // Extract only the time part (HH:MM)
+    const time = timePart.split('.')[0]; // Remove milliseconds if present
+    const [hours, minutes] = time.split(':');
+    // Return the extracted hours and minutes
+    return `${hours}:${minutes}`;
+  };
+
   //Date Formats
+  const handleFormatDate = (dateString) => {
+    try {
+      const date = new Date(dateString);
+      const formatted = date.toISOString().split("T")[0];
+      setFormattedDate(formatted);
+    } catch (error) {
+      console.error("Invalid date string:", dateString, error);
+    }
+  };
   useEffect(() => {
-    const handleFormatDate = (dateString) => {
-      try {
-        const date = new Date(dateString);
-        const formatted = date.toISOString().split("T")[0];
-        setFormattedDate(formatted);
-      } catch (error) {
-        console.error("Invalid date string:", dateString, error);
-      }
-    };
     handleFormatDate(details.AttendanceDate);
   }, [details]); // Run the effect when formikValues changes
 
@@ -213,7 +229,7 @@ const MVEModal = ({ visible, onClick, edit, ID }) => {
         <div className="bg-gray-200 w-[60%] p-8 rounded-lg">
           <div className="bg-blue-900 py-2 px-4 rounded-lg flex justify-between items-center">
             <p className="text-white text-[13px] font-semibold text-center">
-              Manual Attendance Approval
+              Record Out Time
             </p>
             <Icon
               icon="maki:cross"
@@ -235,7 +251,7 @@ const MVEModal = ({ visible, onClick, edit, ID }) => {
                     type="radio"
                     name="AttendanceFlag"
                     className="mr-2"
-                    checked={formik.values.AttendanceFlag == "M"}
+                    checked={formik.values.AttendanceFlag === "M"}
                     onChange={formik.handleChange}
                   />
                   Manual Attendance
@@ -245,7 +261,7 @@ const MVEModal = ({ visible, onClick, edit, ID }) => {
                     type="radio"
                     name="AttendanceFlag"
                     className="mr-2 ml-2"
-                    checked={formik.values.AttendanceFlag == "O"}
+                    checked={formik.values.AttendanceFlag === "O"}
                     onChange={formik.handleChange}
                   />
                   OutDoor Duty
@@ -369,9 +385,9 @@ const MVEModal = ({ visible, onClick, edit, ID }) => {
                 <p className="text-[13px] font-semibold">In Time</p>
                 <input
                   id="InTime"
-                  type="Datetime" // Change the input type to handle date and time
+                  type="time" // Change the input type to handle date and time
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  value={formik.values.InTime}
+                  value={extractHoursMinutes(formik.values.InTime)}
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />

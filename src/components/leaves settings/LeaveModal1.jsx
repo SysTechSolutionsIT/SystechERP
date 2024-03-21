@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { Icon } from "@iconify/react";
 import axios from "axios";
-import { useAuth } from "../Login";
+import { useAuth, useDetails } from "../Login";
 
 const LeaveModal1 = ({ visible, onClick }) => {
   const [details, setDetails] = useState([]);
@@ -13,6 +13,11 @@ const LeaveModal1 = ({ visible, onClick }) => {
   const [ FinancialYears, setFinancialYears] = useState([])
   const { token } = useAuth()
   const [searchTerm, setSearchTerm] = useState('');
+  const { name } = useDetails()
+  const { empid } = useDetails()
+
+  console.log('Name and EMPID', name, empid)
+
 
   const handleInputChange = (event) => {
     const { value } = event.target;
@@ -46,7 +51,7 @@ const LeaveModal1 = ({ visible, onClick }) => {
         ApprovalFlag: "P",
         FYear: values.FYear,
         LeaveApplicationDate: values.LeaveApplicationDate,
-        EmployeeId: values.EmployeeId,
+        EmployeeId: empid,
         EmployeeType: values.EmployeeType,
         EmployeeTypeGroup: values.EmployeeTypeGroup,
         LeaveFromDate: values.LeaveFromDate,
@@ -61,6 +66,14 @@ const LeaveModal1 = ({ visible, onClick }) => {
       onClick()
     },
   });
+
+  useEffect(() =>{
+    formik.setValues({
+      ...formik.values,
+      EmployeeType: Employees.EmployeeTypeId,
+      EmployeeTypeGroup: Employees.EmployeeTypeGroup
+    });
+  },[Employees])
 
   useEffect(() =>{
     const fetchLeaveType = async() =>{
@@ -116,12 +129,13 @@ const LeaveModal1 = ({ visible, onClick }) => {
   useEffect(() =>{
     const fetchEmployees = async () =>{
       try {
-        const response = await axios.get('http://localhost:5500/employee/personal/FnShowActiveData',
-        { headers: { Authorization: `Bearer ${token}`}}
+        const response = await axios.get('http://localhost:5500/employee/personal/FnShowPerticularData',
+        { params: { EmployeeId: empid },
+          headers: { Authorization: `Bearer ${token}`}}
         )
         const data = response.data
         console.log('Employees', data)
-        setEmployees(data)
+        // setEmployees(data)
       } catch (error) {
         console.error('Error', error);
       }
@@ -297,6 +311,13 @@ const LeaveModal1 = ({ visible, onClick }) => {
             <div className="flex items-center">
               <div className="relative w-full">
               <input
+                id="EmployeeName"
+                type="text"
+                value={name} // Set value to current date
+                readOnly // Make the input field read-only
+                className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]`}
+              />
+              {/* <input
             type="text"
             id="EmployeeName"
             name="EmployeeName"
@@ -336,7 +357,7 @@ const LeaveModal1 = ({ visible, onClick }) => {
                 <div className="px-4 py-2 text-gray-500">No matching results</div>
               )}
             </div>
-          )}
+          )} */}
               </div>
             </div>
           </div>

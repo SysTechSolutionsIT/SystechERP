@@ -22,6 +22,7 @@ const ApproveAll = ({ visible, onClick }) => {
         // };
         console.log(values)
         approveAll(values)
+        onClick()
     }
   })
 
@@ -82,7 +83,7 @@ const ApproveAll = ({ visible, onClick }) => {
         <div className="py-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <p className="text-[13px] font-semibold">Attendance Date</p>
+              <p className="text-[13px] font-semibold">Approved Attendance Date</p>
               <input
                 id="AttendanceDate"
                 type="date"

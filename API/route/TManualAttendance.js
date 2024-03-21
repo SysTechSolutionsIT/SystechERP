@@ -179,6 +179,25 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
   }
 });
 
+router.get("/FnShowParticularEmployeeData", authToken, async (req, res) => {
+  const EmployeeId = req.query.EmployeeId;
+  try {
+    const Shift = await TManualAttendance.findAll({
+      where: {
+        EmployeeId: EmployeeId,
+      },
+      attributes: {
+        exclude: ["IUFlag"],
+      },
+      order: [["AttendanceId", "ASC"]],
+    });
+    res.json(Shift);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 //showing pending entries
 router.get("/FnShowManualPendingData", authToken, async (req, res) => {
   try {
@@ -247,7 +266,7 @@ router.post(
   authToken,
   async (req, res) => {
     const Shift = req.body;
-    const AttendanceId = Shift.AttendanceId; // Access the  AttendanceId from the request body
+    const AttendanceId = req.query.AttendanceId; // Access the  AttendanceId from the request body
 
     try {
       if (Shift.IUFlag === "D") {

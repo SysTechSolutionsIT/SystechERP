@@ -22,6 +22,24 @@ const UserRights = ({ID}) => {
     console.log('Checked Labels', checkedLabels);
   }, [checkedLabels]);
 
+  const fetchAccessRights = async () =>{
+    try {
+      const response = await axios.get('http://localhost:5500/users/allowed-access',{
+        params :{ EmployeeId: ID },
+        headers: { Authorization: `Bearer ${token}`}
+      })
+      const data = response.data.accessrights
+      setCheckedLabels(data)
+      console.log('Predefined rights', data)
+    } catch (error) {
+      console.error('Error', error);
+    }
+  } 
+
+  useEffect(() => {
+    fetchAccessRights()
+  },[ID])
+
   const ToggleMenu = ({ title, items, handleItemChange, checkedLabels }) => {
     const [headingChecked, setHeadingChecked] = useState(false);
     const [itemsChecked, setItemsChecked] = useState(() => {

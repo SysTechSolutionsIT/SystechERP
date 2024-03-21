@@ -111,6 +111,11 @@ const ManualAttendanceApproval = () => {
         )?.JobTypeName;
         return jobTypeValue;
 
+        case "InTime":
+          return extractTimeFromDate(result[columnName]);
+        case "OutTime":
+          return extractTimeFromDate(result[columnName]);
+
       case "AcFlag":
         const acFlagValue = result[columnName] ? "Active" : "Inactive";
         return acFlagValue;
@@ -184,6 +189,15 @@ const ManualAttendanceApproval = () => {
     };
     fetchShift();
   }, [token]);
+
+  function extractTimeFromDate(dateString) {
+    const date = new Date(dateString);
+    const hours = date.getUTCHours().toString().padStart(2, "0");
+    const minutes = date.getUTCMinutes().toString().padStart(2, "0");
+    const seconds = date.getUTCSeconds().toString().padStart(2, "0");
+
+    return `${hours}:${minutes}:${seconds}`;
+  }
 
   //Job types
   useEffect(() => {

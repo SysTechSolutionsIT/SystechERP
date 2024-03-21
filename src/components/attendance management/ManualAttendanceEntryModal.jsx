@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import React from "react";
 import { Icon } from "@iconify/react";
 import { useState, useEffect } from "react";
-import { useAuth } from "../Login";
+import { useAuth, useDetails } from "../Login";
 import axios from "axios";
 
 const ManualAttendanceEntryModal = ({ visible, onClick }) => {
@@ -12,12 +12,13 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
   const [employeeTypes, setEmployeeTypes] = useState([]);
   const [Shifts, setShift] = useState([]);
   const [Jobs, setJobs] = useState([]);
+  const { empid, name } = useDetails()
 
   const formik = useFormik({
     initialValues: {
       ApprovalFlag: "P",
       AttendanceFlag: "",
-      AttendanceDate: "",
+      AttendanceDate: new Date().toISOString().split('T')[0],
       FYear: "",
       EmployeeTypeId: "",
       EmployeeId: "",
@@ -38,7 +39,7 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
         AttendanceFlag: values.AttendanceFlag,
         FYear: formik.values.FYear,
         AttendanceDate: formik.values.AttendanceDate,
-        EmployeeId: formik.values.EmployeeId,
+        EmployeeId: empid,
         EmployeeTypeId: formik.values.EmployeeTypeId,
         EmployeeTypeGroup: formik.values.EmployeeTypeGroup,
         ShiftId: formik.values.ShiftId,
@@ -269,28 +270,20 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
                   {Fins.length > 0 &&
                     Fins.map((year) => (
                       <option key={year.FYearId} value={year.FYearId}>
-                        {year.Name}
+                        {year.ShortName}
                       </option>
                     ))}
                 </select>
               </div>
               <div>
                 <p className="text-[13px] font-semibold">Employee Name</p>
-                <select
+                <input
                   id="EmployeeId"
                   name="EmployeeId"
-                  className="w-full px-4 py-2 font-normal text-[11px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
-                  value={formik.values.EmployeeId}
-                  onChange={formik.handleChange}
-                >
-                  <option value="">Select Employee</option>
-                  {Details.length > 0 &&
-                    Details.map((entry) => (
-                      <option key={entry.EmployeeId} value={entry.EmployeeId}>
-                        {entry.EmployeeName}
-                      </option>
-                    ))}
-                </select>
+                  value={name}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  readOnly
+                />
               </div>
               <div className="py-1">
                 <p className="font-semibold text-[13px]">Employee Type</p>
