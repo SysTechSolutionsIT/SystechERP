@@ -217,6 +217,14 @@ router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
   }
 });
 
+router.get('/GetEmployeeDetails', authToken, async (req, res) => {
+  try {
+    
+  } catch (error) {
+    
+  }
+})
+
 //For monthly attendances
 router.get("/GetWeeklyOff", authToken, async (req, res) => {
   try {

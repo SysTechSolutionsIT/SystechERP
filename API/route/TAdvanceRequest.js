@@ -52,6 +52,10 @@ const TAdvanceRequest = sequelize.define("TAdvanceRequest", {
   AdvanceDate: {
     type: DataTypes.DATE,
   },
+  EmployeeId: {
+    type: DataTypes.STRING,
+    allowNull:false
+  },
   EmployeeName: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -59,6 +63,9 @@ const TAdvanceRequest = sequelize.define("TAdvanceRequest", {
   FYear: {
     type: DataTypes.STRING,
     allowNull: false,
+  },
+  MEmployee: {
+    type: DataTypes.STRING,
   },
   AdvanceType: {
     type: DataTypes.STRING,
@@ -105,14 +112,12 @@ const TAdvanceRequest = sequelize.define("TAdvanceRequest", {
   },
   CreatedOn: {
     type: DataTypes.DATE,
-    allowNull: false,
   },
   ModifiedBy: {
     type: DataTypes.STRING,
   },
   ModifiedOn: {
     type: DataTypes.DATE,
-    allowNull: false,
   },
   ApprovedBy: {
     type: DataTypes.STRING,
@@ -200,22 +205,66 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
   }
 });
 
-router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
-  const earningHead = req.body;
+router.get("/FnShowEmployeeAdvanceRequests", authToken, async (req, res) => {
+  const EmployeeId = req.query.EmployeeId;
   try {
-    if (earningHead.IUFlag === "D") {
+    const years = await TAdvanceRequest.findAll({
+      where: {
+        EmployeeId: EmployeeId,
+      },
+      attributes: {
+        exclude: ["IUFlag"],
+      },
+      order: [["EmployeeId", "ASC"]],
+    });
+    res.json(years);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+const generateAdvanceId = async (req, res, next) => {
+  try {
+    if (req.body.IUFlag === 'I') {
+      const totalRecords = await TAdvanceRequest.count();
+      const newId = (totalRecords + 1).toString().padStart(4, "0");
+      req.body.AdvanceId = newId;
+    }
+    next();
+  } catch (error) {
+    console.error("Error generating Advance Request Id:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+router.post("/FnAddUpdateDeleteRecord", generateAdvanceId, authToken, async (req, res) => {
+  const AdvanceReq = req.body;
+  const AdvanceId = req.query.AdvanceId
+  try {
+    if (AdvanceReq.IUFlag === "D") {
       // "Soft-delete" operation
       const result = await TAdvanceRequest.update(
         { AcFlag: "N" },
-        { where: { AdvanceId: earningHead.AdvanceId } }
+        { where: { AdvanceId: AdvanceReq.AdvanceId } }
       );
 
       res.json({
         message: result[0] ? "Record Deleted Successfully" : "Record Not Found",
       });
-    } else {
+    } else if (AdvanceReq.IUFlag === 'U') {
       // Add or update operation
-      const result = await TAdvanceRequest.upsert(earningHead, {
+      const result = await TAdvanceRequest.update(AdvanceReq, {
+        where: { AdvanceId: AdvanceReq.AdvanceId },
+        returning: true,
+      });
+
+      res.json({
+        message: result ? "Operation successful" : "Operation failed",
+      });
+    } else {
+
+      const result = await TAdvanceRequest.create(AdvanceReq, {
         returning: true,
       });
 
@@ -233,7 +282,7 @@ router.get("/FnShowPendingData", authToken, async (req, res) => {
   try {
     const approvedRecords = await TAdvanceRequest.findAll({
       where: {
-        AdvanceStatus: "Pending",
+        ApprovalFlag: "P",
       },
       attributes: {
         exclude: ["IUFlag"],
