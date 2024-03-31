@@ -4,6 +4,7 @@ import { useAuth } from '../Login';
 
 const UserRights = ({ID}) => {
   const [checkedLabels, setCheckedLabels] = useState([])
+  const [preDefinedLabels, setPreDefinedLabels] = useState([])
   const { token } = useAuth()
 
   const handleItemChange = (itemName, isChecked) => {
@@ -29,7 +30,8 @@ const UserRights = ({ID}) => {
         headers: { Authorization: `Bearer ${token}`}
       })
       const data = response.data.accessrights
-      setCheckedLabels(data)
+      const dataNums = data.split(',').map(Number);
+      setPreDefinedLabels(dataNums)
       console.log('Predefined rights', data)
     } catch (error) {
       console.error('Error', error);
@@ -37,8 +39,15 @@ const UserRights = ({ID}) => {
   } 
 
   useEffect(() => {
+    const allLabels = [...preDefinedLabels, ...checkedLabels];
+    const threeDigitLabels = allLabels.filter(label => label >= 100 && label <= 999);
+    const checkedLabelsStrings = threeDigitLabels.map(label => String(label));
+    setCheckedLabels(prevState => [...prevState, ...checkedLabelsStrings]);
+}, [preDefinedLabels]);  
+
+  useEffect(() => {
     fetchAccessRights()
-  },[ID])
+  },[ID, token])
 
   const ToggleMenu = ({ title, items, handleItemChange, checkedLabels }) => {
     const [headingChecked, setHeadingChecked] = useState(false);

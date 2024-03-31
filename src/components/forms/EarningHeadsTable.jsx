@@ -28,7 +28,7 @@ const EarningHeadsTable = ({ ID }) => {
         const data = response.data;
         setHeads(data);
       } catch (error) {
-        // colsole.log("Error while fetching course data: ", error);
+        console.log("Error while fetching course data: ", error);
       }
     };
     fetchHeadsData();

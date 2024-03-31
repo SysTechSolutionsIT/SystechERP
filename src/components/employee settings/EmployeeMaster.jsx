@@ -14,6 +14,7 @@ const EmployeeMaster = () => {
   const [edit, setEdit] = useState(false);
   const [CCid, setCCid] = useState();
   const [employeeTypes, setEmployeeTypes] = useState([]);
+  const [employeeWork, setEmployeeWork] = useState([])
   const [isModalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -121,7 +122,7 @@ const EmployeeMaster = () => {
     };
   }, []);
 
-  useEffect(() => {
+  
     const fetchEmpData = async () => {
       try {
         const response = await axios.get(
@@ -139,6 +140,25 @@ const EmployeeMaster = () => {
       }
     };
 
+  const fetchEmpWork = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5500/employee/work/FnShowActiveData",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+        );
+        const data = response.data;
+        setEmployeeWork(data);
+      } catch (error) {
+        console.error("Error", error);
+      }
+    };
+    
+  useEffect(() => {
+    fetchEmpWork();
     fetchEmpData();
   }, [token]);
 

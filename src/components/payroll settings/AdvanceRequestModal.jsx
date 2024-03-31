@@ -1,21 +1,29 @@
 import React from "react";
 import { useFormik } from "formik";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import axios from "axios";
-import { useAuth } from "../Login";
+import { useAuth, useDetails } from "../Login";
 
 const AdvanceRequestModal = ({ visible, onClick }) => {
   const { token } = useAuth();
+  const { name, empid } = useDetails()
+  const [Employees, setEmployees] = useState([])
+  const [searchTerm, setSearchTerm] = useState("");
+
   const formik = useFormik({
     initialValues: {
-      AdvanceDate: "",
-      EmployeeName: "",
+      AdvanceDate: new Date().toISOString().split('T')[0],
+      EmployeeId: empid,
+      EmployeeName: name,
       AdvanceType: "",
       AdvanceStatus: "",
-      ApprovalFlag: "Pending",
+      ApprovalFlag: "P",
+      FYear:"",
       ProjectId: "",
       Amount: "",
+      MEmployee:"",
+      MEmployeeName: "",
       Installment: "",
       AMonth: "",
       AYear: "",
@@ -24,9 +32,29 @@ const AdvanceRequestModal = ({ visible, onClick }) => {
       IUFlag: "I",
       Remark: "",
     },
-    onSubmit: (values) => {
-      console.log(values);
-      addReq(values);
+    onSubmit: (values, {resetForm}) => {
+      const updatedData = {
+        AdvanceDate: values.AdvanceDate,
+        EmployeeId: empid,
+        EmployeeName: name,
+        AdvanceType: values.AdvanceType,
+        AdvanceStatus: values.AdvanceStatus,
+        ApprovalFlag: "P",
+        FYear:values.FYear,
+        ProjectId: values.ProjectId,
+        Amount: values.Amount,
+        MEmployee:values.MEmployee,
+        Installment: values.Installment,
+        AMonth: values.AMonth,
+        AYear: values.AYear,
+        Purpose: values.Purpose,
+        AcFlag: "Y",
+        IUFlag: "I",
+        Remark: values.Remark,
+      }
+      addReq(updatedData);
+      resetForm()
+      onClick()
     },
   });
 
@@ -41,31 +69,55 @@ const AdvanceRequestModal = ({ visible, onClick }) => {
           },
         }
       );
-      if (response.status === 200) {
-        const data = response.data;
-        console.log(data);
-        alert("Record added successfully");
-        onClick();
-        window.location.reload();
-      } else {
-        console.error(`HTTP error! Status: ${response.status}`);
-        // Handle error response
-      }
+        alert("Advance Request Added");
     } catch (error) {
       console.log("Error: ", error.message);
       // Handle network error
     }
   };
 
-  const [isStatusChecked, setStatusChecked] = useState(false);
-  const handleCheckboxChange = (fieldName, setChecked, event) => {
-    const checked = event.target.checked;
-    setChecked(checked);
-    formik.setValues({
-      ...formik.values,
-      [fieldName]: checked.toString(),
-    });
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/employee/personal/FnShowActiveData",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const data = response.data;
+        console.log("Employees", data);
+        setEmployees(data);
+      } catch (error) {
+        console.error("Error", error);
+      }
+    };
+    fetchEmployees();
+  }, [token]);
+
+const [FYear, setFYear] = useState([])
+useEffect(() =>{
+  const fetchFinancialYears = async () =>{
+    try {
+      const response = await axios.get('http://localhost:5500/financials/FnShowActiveData',
+      { headers: { Authorization: `Bearer ${token}` }}
+      )
+      const data = response.data
+      console.log('Financial Years', data)
+      setFYear(data)
+    } catch (error) {
+      console.error('Error', error);
+    }
+  }
+  fetchFinancialYears()
+},[token])
+
+  const handleInputChange = (event) => {
+    const { value } = event.target;
+    setSearchTerm(value);
   };
+
+  const filteredEmployees = Employees.filter((employee) =>
+    employee.EmployeeName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   if (!visible) return null;
   return (
@@ -95,6 +147,19 @@ const AdvanceRequestModal = ({ visible, onClick }) => {
                   id="AdvanceDate"
                   type="date"
                   value={formik.values.AdvanceDate}
+                  readOnly
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                  onChange={formik.handleChange}
+                />
+              </div>
+              <div>
+                <p className="capatilize font-semibold  text-[13px]">
+                  Employee Id
+                </p>
+                <input
+                  id="EmployeeId"
+                  type="text"
+                  value={empid}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -106,7 +171,7 @@ const AdvanceRequestModal = ({ visible, onClick }) => {
                 <input
                   id="EmployeeName"
                   type="text"
-                  value={formik.values.EmployeeName}
+                  value={name}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -138,6 +203,29 @@ const AdvanceRequestModal = ({ visible, onClick }) => {
                 </div>
               </div>
               <div>
+                <label
+                  className="text-[13px] font-semibold"
+                >
+                  Financial Year
+                </label>
+                <div className="flex items-center">
+                <select
+                  id="FYear"
+                  name="FYear"
+                  value={formik.values.FYear}
+                  onChange={formik.handleChange}
+                  className="w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                >
+                  <option value="">Select a Financial Year</option>
+                  {FYear.length > 0 && FYear.map((entry) => (
+                    <option key={entry.FYearId} value={entry.ShortName}>
+                      {entry.ShortName}
+                    </option>
+                  ))}
+                </select>
+                </div>
+              </div> 
+              <div>
                 <p className="capitalize font-semibold text-[13px]">
                   Advance Status
                 </p>
@@ -147,10 +235,10 @@ const AdvanceRequestModal = ({ visible, onClick }) => {
                   value={formik.values.AdvanceStatus}
                   onChange={formik.handleChange}
                 >
-                  <option value="">Select Advance Status</option>
-                  <option value="Pending">Pending</option>
-                  <option value="Partial Repayment">Partial Repayment</option>
+                  <option value="">Select Means of Advance Repayment</option>
                   <option value="Repayment">Repayment</option>
+                  <option value="Partial Repayment">Partial Repayment</option>
+                  <option value="Salary Deduction">Salary Deduction</option>
                 </select>
               </div>
               <div>
@@ -188,6 +276,58 @@ const AdvanceRequestModal = ({ visible, onClick }) => {
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
+              </div>
+              <div>
+                <label className="text-[13px] font-semibold">
+                  Supervisor/Manager
+                </label>
+                <div className="flex items-center">
+                  <div className="relative w-full">
+                    <input
+                      type="text"
+                      id="MEmployeeName"
+                      name="MEmployeeName"
+                      value={formik.values.MEmployeeName}
+                      onChange={(e) => {
+                        formik.handleChange(e);
+                        handleInputChange(e);
+                      }}
+                      onFocus={() => setSearchTerm("")}
+                      className="w-full px-4 py-2 font-normal bg-white focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                      placeholder='Search for Managing Employee'
+                    />
+
+                    {searchTerm && (
+                      <div
+                        className="absolute z-10 bg-white w-full border border-gray-300 rounded-lg mt-1 overflow-hidden"
+                        style={{ maxHeight: "150px", overflowY: "auto" }}
+                      >
+                        {filteredEmployees.length > 0 ? (
+                          filteredEmployees.map((entry) => (
+                            <div
+                              key={entry.EmployeeId}
+                              onClick={() => {
+                                formik.setValues({
+                                  ...formik.values,
+                                  MEmployeeName: entry.EmployeeName,
+                                  MEmployee: entry.EmployeeId,
+                                });
+                                setSearchTerm("");
+                              }}
+                              className="px-4 py-2 cursor-pointer hover:bg-gray-200 font-semibold text-[11px]"
+                            >
+                              {entry.EmployeeName}
+                            </div>
+                          ))
+                        ) : (
+                          <div className="px-4 py-2 text-gray-500">
+                            No matching results
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
               <div>
                 <p className="capitalize font-semibold text-[13px]">

@@ -288,7 +288,7 @@ const addLeaveBalancesForAllEmployees = async (employeesData) => {
         LeaveEarned11: 0,
         LeaveEarned12: 0,
         SanctionLeaveDays: 0,
-        LeaveBalance: 0,
+        LeaveBalance: DefaultBalance,
         Remark: "",
         IUFlag: "I",
       }));
