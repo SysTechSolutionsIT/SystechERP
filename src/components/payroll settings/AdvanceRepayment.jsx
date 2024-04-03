@@ -5,6 +5,7 @@ import { Icon } from "@iconify/react";
 import { useRef } from "react";
 import { useAuth } from "../Login";
 import axios from "axios";
+import AdvanceRepaymentModal from "./AdvanceRepaymentModal";
 
 export const advanceData = [
   // Item 1
@@ -97,6 +98,7 @@ export const advanceData = [
 const AdvanceRepayment = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
+  const [AdvanceReqID, setAdvanceReqID] = useState()
   const { token } = useAuth();
 
   // const [PTView, setPTView] = useState(false);
@@ -393,27 +395,14 @@ const AdvanceRepayment = () => {
                     <tr key={key}>
                       <td className="px-2 text-[11px] border-2">
                         <div className="flex items-center gap-2 text-center justify-center">
-                          <Icon
-                            className="cursor-pointer"
-                            icon="lucide:eye"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                          />
-                          <Icon
-                            className="cursor-pointer"
-                            icon="mdi:edit"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                          />
-                          <Icon
-                            className="cursor-pointer"
-                            icon="material-symbols:delete-outline"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                          />
+                        <button
+                          className="font-semibold px-2 rounded-lg text-white bg-blue-900 border-2 border-blue-900 hover:bg-white hover:text-blue-900 duration-300 py-1 whitespace-normal text-center text-[11px] "
+                        onClick={() => {
+                        setModalOpen(true)
+                        setAdvanceReqID(result.AdvanceId)}
+                        }>
+                          Repayment
+                        </button>
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
@@ -436,27 +425,14 @@ const AdvanceRepayment = () => {
                     <tr key={index}>
                       <td className="px-2 text-[11px] border-2">
                         <div className="flex items-center gap-2 text-center justify-center">
-                          <Icon
-                            className="cursor-pointer"
-                            icon="lucide:eye"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                          />
-                          <Icon
-                            className="cursor-pointer"
-                            icon="mdi:edit"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                          />
-                          <Icon
-                            className="cursor-pointer"
-                            icon="material-symbols:delete-outline"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                          />
+                        <button
+                          className="font-semibold px-2 rounded-lg text-white bg-blue-900 border-2 border-blue-900 hover:bg-white hover:text-blue-900 duration-300 py-1 whitespace-normal text-center text-[11px] "
+                        onClick={() => {
+                        setModalOpen(true)
+                        setAdvanceReqID(result.AdvanceId)}
+                        }>
+                          Repayment
+                        </button>
                         </div>
                       </td>
 
@@ -479,6 +455,10 @@ const AdvanceRepayment = () => {
           </table>
         </div>
       </div>
+      <AdvanceRepaymentModal
+      visible={isModalOpen}
+      onClick={() => setModalOpen(false)}
+      ID={AdvanceReqID}/>
     </div>
   );
 };

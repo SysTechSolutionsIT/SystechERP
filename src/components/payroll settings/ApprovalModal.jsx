@@ -16,6 +16,7 @@ const AdvanceApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
       AdvanceId: ID,
       EmployeeName: "",
       AdvanceType: "",
+      FYear:"",
       AdvanceStatus: "",
       ApprovalFlag: "",
       ProjectId: "",
@@ -39,6 +40,7 @@ const AdvanceApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
         AdvanceId: ID,
         EmployeeName: values.EmployeeName,
         AdvanceType: values.AdvanceType,
+        FYear: values.FYear,
         AdvanceStatus:
           values.ApprovedInstallments === 1 ? "Repayment" : "Partial Repayment",
         ApprovalFlag: "A",
@@ -55,8 +57,10 @@ const AdvanceApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
         ApprovedAmount: values.ApprovedAmount,
         ApprovedBy: values.ApprovedBy,
       };
+
       console.log("Updated Data sent to request", updatedData);
       addReq(updatedData);
+
     },
   });
 
@@ -104,7 +108,7 @@ const AdvanceApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
         }
       );
       const data = response.data;
-      console.log("response object", data);
+      console.log("response object details array", data);
       setDetails(data);
     } catch (error) {
       console.log("Error while fetching course data: ", error.message);

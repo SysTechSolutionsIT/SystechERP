@@ -55,6 +55,7 @@ const MTwoField = require("./route/MTwoField");
 const MMasterName = require("./route/MMasterName");
 const EmpDocs = require("./route/MEmployeeDocs");
 const NodeMailer = require('./route/NodeMailer')
+const AdvanceInstallments = require('./route/TAdvanceInstallments')
 
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());
@@ -108,6 +109,7 @@ app.use("/manual-attendance", TManualAttendance);
 app.use("/gate-pass", MGatePass);
 app.use("/leave-balance", MLeaves);
 app.use("/master-names", MMasterName);
+app.use('/advance-installments', AdvanceInstallments)
 // app.use('file-upload', HandleImage)
 
 // Start the server
