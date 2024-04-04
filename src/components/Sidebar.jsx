@@ -15,9 +15,9 @@ const Sidebar = () => {
   const [isLeaveSubmenuOpen, setLeaveSubmenuOpen] = useState(false);
   const [isSalarySubmenuOpen, setSalarySubmenuOpen] = useState(false);
   const [isRegisterSubmenuOpen, setRegisterSubmenuOpen] = useState(false);
-  const [filteredData, setFilteredData] = useState([]);
+  const [filteredMenuItems, setFilteredMenuItems] = useState([])
   const { rights } = useDetails()
-  console.log('Access rights in sidebar', rights) 
+  // console.log('Access rights in sidebar', rights) 
 
   const [open, setOpen] = useState(true);
   const navigate = useNavigate();
@@ -47,6 +47,7 @@ const Sidebar = () => {
     { "954": "Department Master" },
     { "736": "Three Field Master" },
     { "624": "Two Field Master" },
+    { "777": "User Roles"},
     { "368": "HRM" },
     { "431": "Employee Settings" },
     { "217": "Employee Master" },
@@ -90,7 +91,6 @@ const Sidebar = () => {
     { "907": "Monthly Attendance Processing" }
   ];
 
-  const [filteredMenuItems, setFilteredMenuItems] = useState([]);
 
   useEffect(() => {
     // Filter menu items based on access rights
@@ -153,55 +153,55 @@ const Sidebar = () => {
     </span>
   );
 
+  const [filteredData, setFilteredData] = useState([]);
+
   const searchSubmenuLabels = (menu, searchQuery) => {
     const filteredData = [];
-
-    if (menu.subMenu) {
-      menu.subMenu.forEach((subMenuItem) => {
-        if (subMenuItem.label.toLowerCase().includes(searchQuery)) {
-          filteredData.push({
-            label: subMenuItem.label,
-            path: subMenuItem.path,
-          });
+  
+    for (const menuItem of menu) {
+      for (const itemId in menuItem) {
+        const label = menuItem[itemId];
+        if (label.toLowerCase().includes(searchQuery)) {
+          filteredData.push({ label, id: itemId });
         }
-
-        // Recursively search within sub-submenus
-        filteredData.push(...searchSubmenuLabels(subMenuItem, searchQuery));
-      });
+      }
     }
-
+  
     return filteredData;
   };
 
   const handleSearchChange = (word) => {
+    console.log("Search Query:", word);
+  
     const query = word.toLowerCase();
-
+  
     if (query.trim() === "") {
       // If the search query is empty, clear the results
       setFilteredData([]);
     } else {
       // Search for matching submenu labels
       const filteredData = [];
-
+  
       menuItems.forEach((menuItem) => {
-        if (menuItem.subMenu) {
-          // Search within top-level submenus
-          const submenuData = searchSubmenuLabels(menuItem, query);
-          filteredData.push(...submenuData);
-        }
+        // Search within top-level menu items
+        const submenuData = searchSubmenuLabels([menuItem], query);
+        filteredData.push(...submenuData);
       });
-
+  
       setFilteredData(filteredData);
     }
   };
+  
+  
+  
 
   return (
-    <div className="flex">
-      <div
-        className={`${
-          open ? "w-[250px]" : "w-[80px]"
-        } bg-blue-900 overflow-x-hidden sidebar bottom-0 lg:left-0 p-0 text-center border-0 border-radius-xl ease-in-out duration-300`}
-      >
+<div className="flex h-screen">
+  <div
+    className={`${
+      open ? "w-[250px]" : "w-[80px]"
+    } bg-blue-900 overflow-x-hidden sidebar bottom-0 lg:left-0 p-0 text-center border-0 border-radius-xl ease-in-out duration-300 overflow-y-auto w-fit scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-blue-900`}
+  >
         <div className="text-white-100 text-xl items-center px-2">
           <div className="p-2.5 mt-1 flex items-center">
             <img
@@ -240,18 +240,18 @@ const Sidebar = () => {
               <div
                 key={index}
                 className="mt-1 flex items-center rounded-md px-4 duration-300 cursor-pointer hover-bg-gray-300 hover-bg-opacity-25 text-white"
-                onClick={() => navigate(menuItem.path)}
+                onClick={() => navigate(menuItem.label)} // Use menuItem.label as the path
               >
                 {open && (
                   <div className="flex justify-between w-full items-center">
-                    <span className="font-[Inter] font-semibold text-[15px] ml-4 text-white-200">
+                    <span className="font-[Inter] font-thin text-[15px] ml-4 text-white-200">
                       {menuItem.label}
                     </span>
                   </div>
                 )}
               </div>
             ))
-          ) : (
+          )  : (
             <div>
               <div className="mt-1 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white">
                 <Icon
@@ -286,7 +286,7 @@ const Sidebar = () => {
                   </div>
                 )}
               </div> */}
-                {rights.includes(549) || rights.includes(703) || rights.includes(864) || rights.includes(287) || rights.includes(610) || rights.includes(954) || rights.includes(736) || rights.includes(624) ? (
+                {rights.includes(549) || rights.includes(703) || rights.includes(872) || rights.includes(287) || rights.includes(610) || rights.includes(954) || rights.includes(736) || rights.includes(624) || rights.includes(777)? (
                   <div
                     className="mt-1 flex items-center rounded-md px-4 duration-300
                   cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white whitespace-nowrap"
@@ -334,7 +334,7 @@ const Sidebar = () => {
                         onClick={() => navigate("/company-masters")}
                       />
                     )}
-                    {rights.includes(864) && (
+                    {rights.includes(872) && (
                       <SubMenuEntry
                         title="Financial Year Master"
                         onClick={() => navigate("/financial-masters")}
@@ -372,6 +372,12 @@ const Sidebar = () => {
                       <SubMenuEntry
                         title="Two Field Master"
                         onClick={() => navigate("/two-field-master")}
+                      />
+                    )}
+                    {rights.includes(777) && (
+                      <SubMenuEntry
+                        title="User Roles"
+                        onClick={() => navigate("/user-role-settings")}
                       />
                     )}
                   </SubMenuGroup>

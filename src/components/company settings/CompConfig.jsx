@@ -33,6 +33,7 @@ export default function EMPTabs() {
       shiftFlag: "",
       jobApp: "",
       holiday: "",
+      ALockDay:"",
       odFlag: "",
       otFlag: "",
       LAFlag: "",
@@ -62,7 +63,6 @@ export default function EMPTabs() {
       const updatedData = {
         CompanyId: "00001",
         BranchId: "00001",
-        CCID: ccid,
         currency: values.currency,
         theme: values.theme,
         date: values.date,
@@ -77,6 +77,7 @@ export default function EMPTabs() {
         shiftFlag: values.shiftFlag,
         jobApp: values.jobApp,
         holiday: values.holiday,
+        ALockDay: values.ALockDay,
         odFlag: values.odFlag,
         otFlag: values.otFlag,
         LAFlag: values.LAFlag,
@@ -98,7 +99,7 @@ export default function EMPTabs() {
         message: values.message,
         smsUrl: values.smsUrl,
         sms: values.sms,
-        IUFlag: "U",
+        IUFlag: "I",
       };
       // updateEmpId(values.empIdPrefix)
       console.log("Updated Data is: ", updatedData);
@@ -141,19 +142,17 @@ export default function EMPTabs() {
         }
       );
       alert("Company Configuration Updated");
-      window.location.reload();
+      fetchCompanyConfig()
     } catch (error) {
       console.error("Error", error);
     }
   };
 
-  useEffect(() => {
-    const fetchCompanyConfig = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:5500/company-config/FnShowParticularData`,
+  const fetchCompanyConfig = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5500/company-config/FnShowAllData`,
           {
-            params: { CompanyId: "00001" },
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -168,6 +167,7 @@ export default function EMPTabs() {
       }
     };
 
+    useEffect(() => {
     fetchCompanyConfig();
   }, [token]);
   console.log("CCID: ", ccid);
@@ -210,7 +210,7 @@ export default function EMPTabs() {
   //For Payroll Settings
   const months = [
     "January",
-    "February",
+    "Feburary",
     "March",
     "April",
     "May",

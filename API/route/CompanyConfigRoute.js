@@ -43,7 +43,6 @@ const CompanyConfig = sequelize.define("CompanyConfig", {
   },
   CCID: {
     type: DataTypes.INTEGER,
-    autoIncrement: true,
     primaryKey: true,
   },
   currency: { type: DataTypes.STRING, allowNull: true },
@@ -61,6 +60,7 @@ const CompanyConfig = sequelize.define("CompanyConfig", {
   shiftFlag: { type: DataTypes.STRING, allowNull: true },
   jobApp: { type: DataTypes.STRING, allowNull: true },
   holiday: { type: DataTypes.STRING, allowNull: true },
+  ALockDay: { type: DataTypes.INTEGER, allowNull: true },
   odFlag: { type: DataTypes.STRING, allowNull: true },
   otFlag: { type: DataTypes.STRING, allowNull: true },
   LAFlag: { type: DataTypes.STRING, allowNull: true },
@@ -102,18 +102,19 @@ sequelize
 // GET endpoint to retrieve all cost centers
 router.get("/FnShowAllData", authToken, async (req, res) => {
   try {
-    const Records = await CompanyConfig.findAll({
+    const Record = await CompanyConfig.findAll({
       attributes: {
         exclude: ["IUFlag"],
       },
-      order: [["CCID", "ASC"]],
+      order: [["CCID", "DESC"]],
     });
-    res.json(Records);
+    res.json(Record);
   } catch (error) {
     console.error("Error retrieving data:", error);
     res.status(500).send("Internal Server Error");
   }
 });
+
 
 // GET endpoint to retrieve active cost centers
 // router.get("/FnShowActiveData", authToken, async (req, res) => {
@@ -154,8 +155,22 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
   }
 });
 
+const generateCCID = async (req, res, next) => {
+  try {
+    if (req.body.IUFlag === 'I') {
+      const totalRecords = await CompanyConfig.count();
+      const newId = (totalRecords + 1).toString().padStart(3, "0");
+      req.body.CCID = newId;
+    }
+    next();
+  } catch (error) {
+    console.error("Error generating CCID:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
 // POST endpoint to add, update, or delete a cost center
-router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
+router.post("/FnAddUpdateDeleteRecord", generateCCID, authToken, async (req, res) => {
   const Record = req.body;
   try {
     if (Record.IUFlag === "D") {

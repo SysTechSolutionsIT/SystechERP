@@ -158,7 +158,8 @@ const UserRights = ({ID}) => {
         { name: '610', label: 'Cost Center Master' },
         { name: '954', label: 'Department Master' },
         { name: '736', label: 'Three Field Master' },
-        { name: '624', label: 'Two Field Master' }
+        { name: '624', label: 'Two Field Master' },
+        { name: '777', label: 'User Roles'}
       ],      
     },
   ];
