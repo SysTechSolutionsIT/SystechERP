@@ -79,7 +79,6 @@ const handleAccNoChange = (event) => {
         BankGST: values.BankGST,
         AuthorizedPersonCount: values.AuthorizedPersonCount,
         Remark: values.Remark,
-        AcFlag: "Y",
         IUFlag: "I",
         AuthorizedPerson1: values.AuthorizedPerson1,
         AuthorizedPersonRole1: values.AuthorizedPersonRole1,
@@ -89,8 +88,8 @@ const handleAccNoChange = (event) => {
         AuthorizedPersonRole3: values.AuthorizedPersonRole3,
       }
       console.log(updatedData);
-      addBank();
-      resetForm()
+      addBank(updatedData);
+      // resetForm()
     },
   });
 
