@@ -273,11 +273,11 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex sticky top-0 h-screen">
       <div
         className={`${
           open ? "w-[250px]" : "w-[80px]"
-        } bg-blue-900 overflow-x-hidden sidebar bottom-0 lg:left-0 p-0 text-center border-0 border-radius-xl ease-in-out duration-300 overflow-y-auto w-fit scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-blue-900`}
+        } bg-blue-900 overflow-x-hidden sidebar bottom-0 lg:left-0 p-0 text-center border-0 border-radius-xl ease-in-out duration-300 overflow-y-scroll w-fit scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-blue-900`}
       >
         <div className="text-white-100 text-xl items-center px-2">
           <div className="p-2.5 mt-1 flex items-center">
