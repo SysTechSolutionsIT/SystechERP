@@ -128,7 +128,7 @@ router.get("/FnShowActiveData", authToken, async (req, res) => {
 router.get("/FnShowParticularData", authToken, async (req, res) => {
   const costCenterId = req.query.CostCenterId;
   try {
-    const costCenters = await MCostCenter.findAll({
+    const costCenters = await MCostCenter.findOne({
       where: {
         CostCenterId: costCenterId,
       },

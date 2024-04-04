@@ -6,7 +6,6 @@ import axios from "axios";
 import { useAuth, useDetails } from "../Login";
 
 const CostCenterModal = ({ visible, onClick }) => {
-  const [statusCheck, setStatus] = useState(false);
   const { token } = useAuth();
   const { companyId } = useDetails();
   console.log("IDs: ", companyId);
@@ -15,11 +14,9 @@ const CostCenterModal = ({ visible, onClick }) => {
     initialValues: {
       CostCenterName: "",
       Remark: "",
-      Status: statusCheck,
     },
     onSubmit: async (values) => {
       console.log(values);
-      const status = statusCheck === true;
 
       try {
         const formData = {
@@ -28,9 +25,8 @@ const CostCenterModal = ({ visible, onClick }) => {
           Remark: values.Remark,
           AcFlag: "Y",
           IUFlag: "I",
-          CreatedOn: "",
+          CreatedOn: new Date(),
           ModifiedOn: "",
-          Status: status, // StatusCheck was already part of formik.values
         };
 
         const response = await axios.post(
@@ -39,7 +35,6 @@ const CostCenterModal = ({ visible, onClick }) => {
           {
             headers: {
               Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
             },
           } //Send the extracted form data
         );
@@ -97,20 +92,6 @@ const CostCenterModal = ({ visible, onClick }) => {
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
-              </div>
-              <div>
-                <p className="capitalize font-semibold  text-[13px]">Status</p>
-                <label className="capitalize font-semibold  text-[11px]">
-                  <input
-                    id="Status"
-                    type="checkbox"
-                    checked={statusCheck}
-                    value={formik.values.status}
-                    className={`w-5 h-5 mr-2 mt-2 focus:outline-gray-300 border-2 rounded-lg`}
-                    onChange={(event) => setStatus(!statusCheck)}
-                  />
-                  Active
-                </label>
               </div>
             </div>
           </div>

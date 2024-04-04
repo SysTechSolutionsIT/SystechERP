@@ -46,6 +46,18 @@ const VECost = ({ visible, onClick, edit, ID }) => {
   });
 
   // API
+
+  useEffect(() => {
+    if (details !== null) {
+      // Check if details is not null before setting formik values
+      formik.setValues({
+        CostCenterId: details?.CostCenterId,
+        CostCenterName: details?.CostCenterName,
+        Remark: details?.Remark,
+      });
+    }
+  }, [details]);
+
   useEffect(() => {
     fetchNewData();
   }, [ID]);
@@ -67,13 +79,13 @@ const VECost = ({ visible, onClick, edit, ID }) => {
     }
   };
 
-  console.log("details", details);
   useEffect(() => {
-    if (details) {
+    if (details !== null) {
+      // Check if details is not null before setting formik values
       formik.setValues({
-        CostCenterId: details.CostCenterId,
-        CostCenterName: details.CostCenterName,
-        Remark: details.Remark,
+        CostCenterId: details?.CostCenterId,
+        CostCenterName: details?.CostCenterName,
+        Remark: details?.Remark,
       });
     }
   }, [details]);
@@ -125,7 +137,7 @@ const VECost = ({ visible, onClick, edit, ID }) => {
               </div>
               <div>
                 <p className="capatilize font-semibold  text-[13px]">Remarks</p>
-                <textarea
+                <textbox
                   id="Remark"
                   value={formik.values.Remark}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
