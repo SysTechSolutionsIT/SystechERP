@@ -11,6 +11,17 @@ const BankModal = ({ visible, onClick }) => {
   const [isModalOpen, setModalOpen] = useState(false); //Add Modal
   const [MMId, setMMId] = useState();
 
+  const [accountNo, setAccountNo] = useState('');
+
+const handleAccNoChange = (event) => {
+  const { value } = event.target;
+  
+  // Only update the account number state if the input value contains only numbers
+  if (/^[0-9]*$/.test(value)) {
+    setAccountNo(value);
+  }
+};
+
   //Fetching Employee Names
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -53,35 +64,50 @@ const BankModal = ({ visible, onClick }) => {
       AuthorizedPerson3: "",
       AuthorizedPersonRole3: "",
     },
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: (values, {resetForm}) => {
+      const updatedData = {
+        BankName: values.BankName,
+        BranchName: values.BranchName,
+        BranchAddress: values.BranchAddress,
+        AccountType: values.AccountType,
+        AccountNo: accountNo,
+        IFSCCode: values.IFSCCode,
+        SwiftCode: values.SwiftCode,
+        RegisteredEmailId: values.RegisteredEmailId,
+        RegisteredContactNo: values.RegisteredContactNo,
+        CurrencyType: values.CurrencyType,
+        BankGST: values.BankGST,
+        AuthorizedPersonCount: values.AuthorizedPersonCount,
+        Remark: values.Remark,
+        AcFlag: "Y",
+        IUFlag: "I",
+        AuthorizedPerson1: values.AuthorizedPerson1,
+        AuthorizedPersonRole1: values.AuthorizedPersonRole1,
+        AuthorizedPerson2: values.AuthorizedPerson2,
+        AuthorizedPersonRole2: values.AuthorizedPersonRole2,
+        AuthorizedPerson3: values.AuthorizedPerson3,
+        AuthorizedPersonRole3: values.AuthorizedPersonRole3,
+      }
+      console.log(updatedData);
       addBank();
-      // alert("Bank Added Successfully");
+      resetForm()
     },
   });
 
-  const addBank = async () => {
+  const addBank = async (data) => {
     try {
       const response = await axios.post(
         "http://localhost:5500/bankmaster/FnAddUpdateDeleteRecord",
-        formik.values,
+        data,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      if (response.status === 200) {
-        const data = response.data;
         console.log(data);
         alert("Bank added successfully");
         onClick();
-        window.location.reload();
-        // Handle successful response
-      } else {
-        console.error(`HTTP error! Status: ${response.status}`);
-        // Handle error response
-      }
     } catch (error) {
       console.error("Error:", error.message);
       // Handle network error
@@ -242,16 +268,16 @@ const BankModal = ({ visible, onClick }) => {
                 </div>
               </div>
               <div>
-                <p className="capatilize font-semibold text-[13px]">
+                <p className="capitalize font-semibold text-[13px]">
                   Account No.
                 </p>
                 <input
-                  id="AccountNo"
-                  type="text"
-                  placeholder=" Enter Account No."
-                  value={formik.values.AccountNo}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
+                id="AccountNo"
+                type="text"
+                placeholder="Enter Account No."
+                value={accountNo}
+                className="w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                onChange={handleAccNoChange}                
                 />
               </div>
               <div>

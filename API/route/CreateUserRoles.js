@@ -29,11 +29,14 @@ const sequelize = new Sequelize(
   );
   
 const UserRoles = sequelize.define('UserRoles', {
-    CompanyId: { type: DataTypes.STRING(5), allowNull: false, defaultValue: '00001' },
-    BranchId: { type: DataTypes.STRING(5), allowNull: false, defaultValue: '00001' },
-    RoleId:{ type: DataTypes.STRING(5), allowNull: false, defaultValue: '001' },
-    RoleName: { type: DataTypes.STRING(100), allowNull: false, defaultValue: 'NA' },
+    CompanyId: { type: DataTypes.STRING(5), defaultValue: '00001' },
+    BranchId: { type: DataTypes.STRING(5), defaultValue: '00001' },
+    RoleId:{ type: DataTypes.INTEGER(5), allowNull: false, primaryKey:true, autoIncrement:true},
+    RoleName: { type: DataTypes.STRING(100), defaultValue: 'NA' },
     AccessRights:  { type: DataTypes.STRING(255), allowNull: true, defaultValue: 'NA' },
+    AcFlag: { type: DataTypes.STRING(1), allowNull:false, defaultValue:'Y'}
+},{
+  timestamps:false
 })
 
   // Middleware for parsing JSON
@@ -133,27 +136,11 @@ const UserRoles = sequelize.define('UserRoles', {
   });
 
 
-  const generateUserRoleId = async (req, res, next) => {
-    try{
-      const totalRecords = await UserRoles.count()
-  
-      req.body.forEach((item, index) => {
-        const newId = (totalRecords + index + 1).toString().padStart(3,"0")
-        item.RoleId = newId
-      })
-  
-      next()
-    } catch (error){
-      console.error('Error generating Leave Balance Id', error);
-      res.status(500).send('Internal Server Error')
-    }
-  }
-
-  router.post("/FnAddUpdateDeleteRecord", generateUserRoleId, authToken, async (req, res) => {
+  router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
     const Roles = req.body;
     const RoleId = req.query.RoleId
     try {
-      if (Roles.IUFlag === "D") {
+      if (req.query.IUFlag === "D") {
         // "Soft-delete" operation
         const result = await UserRoles.update(
           { AcFlag: "N" },
@@ -163,7 +150,7 @@ const UserRoles = sequelize.define('UserRoles', {
         res.json({
           message: result[0] ? "Record Deleted Successfully" : "Record Not Found",
         });
-      } else if (Roles.IUFlag === 'U') {
+      } else if (req.query.IUFlag === 'U') {
         // Add or update operation
         const result = await UserRoles.update(Roles, {
           where: { RoleId: Roles.RoleId },
