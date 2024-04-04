@@ -138,7 +138,7 @@ const TwoFieldsMaster = () => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setMenuOpen(false);
+        setShowDropdown(false);
       }
     };
 
@@ -237,7 +237,10 @@ const TwoFieldsMaster = () => {
             />
           </button>
           {showDropdown && (
-            <div className="absolute top-32 bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50">
+            <div
+              ref={menuRef}
+              className="absolute top-32 bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50"
+            >
               {/* Dropdown content */}
               <div className="flex items-center mb-2">
                 <button

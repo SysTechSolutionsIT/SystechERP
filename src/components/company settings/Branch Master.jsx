@@ -60,7 +60,7 @@ const BranchMaster = () => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setMenuOpen(false);
+        setShowDropdown(false);
       }
     };
 
@@ -156,7 +156,10 @@ const BranchMaster = () => {
             />
           </button>
           {showDropdown && (
-            <div className="absolute top-32 bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50 top-[calc(100% + 10px)]">
+            <div
+              ref={menuRef}
+              className="absolute top-32 bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50 top-[calc(100% + 10px)]"
+            >
               {/* Dropdown content */}
               <div className="flex items-center mb-2">
                 <button
