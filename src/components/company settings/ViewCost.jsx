@@ -5,25 +5,23 @@ import { Icon } from "@iconify/react";
 import { useAuth } from "../Login";
 
 const VECost = ({ visible, onClick, edit, ID }) => {
-  const [status, setStatus] = useState(false);
-  const [details, setDetails] = useState();
+  const [details, setDetails] = useState([]);
   const { token } = useAuth();
+  console.log("Cost Center ID:", ID);
 
   const formik = useFormik({
     initialValues: {
+      CostCenterId: "",
       CostCenterName: "",
       Remark: "",
-      Status: status,
     },
     onSubmit: async (values) => {
-      const stat = status === true;
       const updatedData = {
         CostCenterId: ID,
         CostCenterName: values.CostCenterName,
         Remark: values.Remark,
         ModifiedOn: new Date(),
         IUFlag: "U",
-        Status: stat,
       };
       axios
         .post(
@@ -71,26 +69,14 @@ const VECost = ({ visible, onClick, edit, ID }) => {
 
   console.log("details", details);
   useEffect(() => {
-    if (details.length > 0) {
+    if (details) {
       formik.setValues({
-        CostCenterId: details[0].CostCenterId,
-        CostCenterName: details[0].CostCenterName,
-        Remark: details[0].Remark,
-        Status: details[0].Status === "1", // Assuming "1" means true
+        CostCenterId: details.CostCenterId,
+        CostCenterName: details.CostCenterName,
+        Remark: details.Remark,
       });
-      setStatus(details[0].Status === "1");
     }
   }, [details]);
-
-  const [isStatusChecked, setStatusChecked] = useState(false);
-  const handleCheckboxChange = (fieldName, setChecked, event) => {
-    const checked = event.target.checked;
-    setChecked(checked);
-    formik.setValues({
-      ...formik.values,
-      [fieldName]: checked,
-    });
-  };
 
   if (!visible) return null;
   return (
@@ -146,22 +132,6 @@ const VECost = ({ visible, onClick, edit, ID }) => {
                   onChange={formik.handleChange}
                   disabled={!edit}
                 />
-              </div>
-              <div>
-                <p className="capitalize font-semibold  text-[13px]">Status</p>
-                <label className="capitalize font-semibold  text-[11px]">
-                  <input
-                    id="Status"
-                    type="checkbox"
-                    checked={formik.values.Status}
-                    className={`w-5 h-5 mr-2 mt-5 focus:outline-gray-300 border-2 rounded-lg`}
-                    onChange={(event) =>
-                      handleCheckboxChange("status", setStatusChecked, event)
-                    }
-                    disabled={!edit}
-                  />
-                  Active
-                </label>
               </div>
             </div>
             <div className="flex mt-5 gap-10 justify-center">

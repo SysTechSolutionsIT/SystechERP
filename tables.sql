@@ -263,14 +263,6 @@ If pIUFlag='I'
 End if;
 	
 
-
-
-
-
-
-
-
-
 END$$
 
 CREATE DEFINER=`u172510268_devs`@`127.0.0.1` PROCEDURE `UspMCompany` (IN `pCompanyId` INT(5), IN `pCompanySectorId` VARCHAR(500), IN `pCompanyName` VARCHAR(500), IN `pShortName` VARCHAR(3), IN `pNatureOfBusiness` VARCHAR(1000), IN `pLogo` VARCHAR(1000), IN `pAcFlag` CHAR(1), IN `pSingleCompany` CHAR(1), IN `pCreatedBy` VARCHAR(500), IN `pModifiedBy` VARCHAR(500), IN `pIUFlag` VARCHAR(1), OUT `pResult` VARCHAR(100))   BEGIN

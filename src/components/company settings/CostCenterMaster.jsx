@@ -6,8 +6,8 @@ import VECost from "./ViewCost";
 import axios from "axios";
 import { useAuth, useDetails } from "../Login";
 
-
 const CostCenterMaster = () => {
+  const [CC, setCC] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
 
@@ -38,17 +38,16 @@ const CostCenterMaster = () => {
   //Max Searchbar width
   const getColumnMaxWidth = (columnName) => {
     let maxWidth = 0;
-    const allRows = [...CC];  // costCenters is not defined
-  
+    const allRows = [...CC, ...filteredData]; // costCenters is not defined
+
     allRows.forEach((row) => {
       const cellContent = row[columnName];
       const cellWidth = getTextWidth(cellContent, "11px");
       maxWidth = Math.max(maxWidth, cellWidth);
     });
-  
+
     return maxWidth + 10;
   };
-  
 
   const getTextWidth = (text, fontSize) => {
     const canvas = document.createElement("canvas");
@@ -59,13 +58,11 @@ const CostCenterMaster = () => {
 
   //API
   //For API
-  const [CC, setCC] = useState([]);
-
   useEffect(() => {
-    fetchCompData();
+    fetchCostCenterData();
   }, [token]);
 
-  const fetchCompData = async () => {
+  const fetchCostCenterData = async () => {
     try {
       const response = await axios.get(
         "http://localhost:5500/cost-center/FnShowActiveData",
@@ -77,13 +74,12 @@ const CostCenterMaster = () => {
       );
       console.log("Response Object", response);
       const data = response.data;
-      console.log(data);
       setCC(data);
+      console.log(data);
     } catch (error) {
       console.log("Error while fetching course data: ", error.message);
     }
   };
-  console.log(CC);
 
   const handleSearchChange = (searchWord) => {
     // Filter the data based on the search word in the "costCenterName" column
@@ -193,96 +189,102 @@ const CostCenterMaster = () => {
                 <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px]">
                   Cost Center Name
                 </th>
-                <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px]">
-                  Status
-                </th>
               </tr>
               <tr>
                 <th className="border-2"></th>
                 <th className="p-2 font-semibold text-black border-2 " />
                 <th className="p-2 font-semibold text-black border-2">
-  <input
-    type="text"
-    placeholder="Search"
-    className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
-    style={{
-      maxWidth: getColumnMaxWidth("CostCenterName") + "px",
-    }}
-    onChange={(e) =>
-      handleSearchChange(e.target.value)
-    }
-  />
-</th>
-
-                <th className="p-2 font-semibold text-black border-2">
                   <input
                     type="text"
                     placeholder="Search"
                     className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
-                    style={{ maxWidth: getColumnMaxWidth("status") + "px" }}
-                    onChange={(e) =>
-                      handleSearchChange("status", e.target.value)
-                    }
+                    style={{
+                      maxWidth: getColumnMaxWidth("CostCenterName") + "px",
+                    }}
+                    onChange={(e) => handleSearchChange(e.target.value)}
                   />
                 </th>
               </tr>
             </thead>
             <tbody className="">
-                {filteredData.length > 0
-                  ? filteredData.map((result, key) => (
-                      <tr key={key}>
-                        <td className="px-2 border-2">
-                          <div className="flex items-center gap-2 text-center justify-center">
-                            <Icon
-                              icon="material-symbols:delete-outline"
-                              color="#556987"
-                              width="20"
-                              height="20"
-                              onClick={() => deleteRecord(result.CostCenterId)}
-                            />
-                          </div>
-                        </td>
-                        <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                          {result.CostCenterId}
-                        </td>
-                        <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                          {result.CostCenterName}
-                        </td>
-                        <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                          {result.searchWordtatus ? "Active" : "Inactive"}
-                        </td>
-                      </tr>
-                    ))
-                  : CC &&
-                    CC.length > 0 &&
-                    CC.map((entry, index) => (
-                      <tr key={index}>
-                        <td className="px-2 border-2">
-                          <div className="flex items-center gap-2 text-center justify-center">
-                            <Icon
-                              icon="material-symbols:delete-outline"
-                              color="#556987"
-                              width="20"
-                              height="20"
-                              onClick={() => deleteRecord(entry.CostCenterId)}
-                            />
-                          </div>
-                        </td>
-                        <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                          {entry.CostCenterId}
-                        </td>
-                        <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                          {entry.CostCenterName}
-                        </td>
-                        <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
-                          {entry.Status ? "Active" : "Inactive"}
-                        </td>
-                      </tr>
-                    ))}
-              </tbody>
+              {filteredData.length > 0 &&
+                filteredData.map((result, key) => (
+                  <tr key={key}>
+                    <td className="px-2 border-2">
+                      <div className="flex items-center gap-2 text-center justify-center">
+                        <Icon
+                          icon="mdi:edit"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() => {
+                            setVeCost(true); // Open VEModal
+                            setEdit(true); // Disable edit mode for VEModal
+                            setCCid(result.CostCenterId); // Pass ID to VEModal
+                          }}
+                        />
+                        <Icon
+                          icon="material-symbols:delete-outline"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          onClick={() => deleteRecord(result.CostCenterId)}
+                        />
+                      </div>
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                      {result.CostCenterId}
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                      {result.CostCenterName}
+                    </td>
+                  </tr>
+                ))}
+              {CC.length > 0 &&
+                CC.map((entry, index) => (
+                  <tr key={index}>
+                    <td className="px-2 border-2">
+                      <div className="flex items-center gap-2 text-center justify-center">
+                        <Icon
+                          icon="mdi:edit"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() => {
+                            setVeCost(true); // Open VEModal
+                            setEdit(true); // Disable edit mode for VEModal
+                            setCCid(entry.CostCenterId); // Pass ID to VEModal
+                          }}
+                        />
+                        <Icon
+                          icon="material-symbols:delete-outline"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          onClick={() => deleteRecord(entry.CostCenterId)}
+                        />
+                      </div>
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                      {entry.CostCenterId}
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                      {entry.CostCenterName}
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
           </table>
         </div>
       </div>
+      <VECost
+        visible={veCost}
+        onClick={() => setVeCost(false)}
+        edit={edit}
+        ID={CCid}
+      />
     </div>
   );
 };

@@ -54,14 +54,16 @@ const MLeaves = require("./route/MLeaves");
 const MTwoField = require("./route/MTwoField");
 const MMasterName = require("./route/MMasterName");
 const EmpDocs = require("./route/MEmployeeDocs");
-const NodeMailer = require('./route/NodeMailer')
+const NodeMailer = require("./route/NodeMailer");
+const MLAttendance = require("./route/MLAttendance");
+const MCostCenter = require("./route/MCostCenterRoute");
 
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());
 app.use(express.static("public"));
 // Use the user routes
 app.use("/users", userRoutes);
-app.use('/nodemail', NodeMailer)
+app.use("/nodemail", NodeMailer);
 app.use("/companies", MCompany);
 app.use("/financials", MFinancialYear);
 app.use("/employee/personal", MEmployee);
@@ -79,7 +81,7 @@ app.use("/two-field", MTwoField);
 app.use("/financials", MFinancialYear);
 app.use("/job-type", MJobType);
 // app.use("/destinationmaster", DestinationMaster);
-app.use("/cost-center", CCMaster);
+app.use("/cost-center", MCostCenter);
 app.use("/employee-type", MEmployeeType);
 app.use("/employee-grade", MEmployeeGrade);
 app.use("/designation-master", MDesignation);
@@ -108,6 +110,7 @@ app.use("/manual-attendance", TManualAttendance);
 app.use("/gate-pass", MGatePass);
 app.use("/leave-balance", MLeaves);
 app.use("/master-names", MMasterName);
+app.use("/MLAttendance", MLAttendance);
 // app.use('file-upload', HandleImage)
 
 // Start the server

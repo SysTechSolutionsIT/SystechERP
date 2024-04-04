@@ -3,6 +3,7 @@ import { useFormik } from "formik";
 import { Icon } from "@iconify/react";
 import axios from "axios";
 import { useAuth } from "../Login";
+import LMonthlyAtt from "./LMonthlyAtt";
 
 const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
   const [details, setDetails] = useState([]);
@@ -68,12 +69,24 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
         IUFlag: "U",
       };
 
-      updateApproval(updatedData)
-      updateLeaveBalance(updatedData)
-      onClick()
+      updateApproval(updatedData);
+      updateLeaveBalance(updatedData);
+      onClick();
     },
   });
-  
+
+  // Calling the LMonthlyAttendance FUnction
+
+  const [isLMonthlyAttCalled, setIsLMonthlyAttCalled] = useState(false);
+
+  useEffect(() => {
+    if (ApprovalFlag === "A" && !isLMonthlyAttCalled) {
+      // Call the LMonthlyAtt function only when ApprovalFlag is 'A' and it hasn't been called before
+      LMonthlyAtt(ID);
+      setIsLMonthlyAttCalled(true); // Set the state to indicate that the function has been called
+    }
+  }, [ApprovalFlag]);
+
   const updateApproval = async (values) => {
     try {
       const response = axios.post(
@@ -84,8 +97,8 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      if(ApprovalFlag === 'A') alert('Leave Approved')
-      else if (ApprovalFlag === 'R') alert('Leave Rejected')
+      if (ApprovalFlag === "A") alert("Leave Approved");
+      else if (ApprovalFlag === "R") alert("Leave Rejected");
       // FetchLeaveBalanceData()
     } catch (error) {
       console.error("Error", error);
@@ -94,21 +107,23 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
 
   const updateLeaveBalance = async (values) => {
     try {
-      const response = await axios.patch('http://localhost:5500/leave-balance/FnLeaveApproved', values,
-      {
-        params: { 
-          EmployeeId: details.EmployeeId,
-          LeaveTypeId: details.LeaveTypeId,
-          FYear: details.FYear
-        },
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      alert('Leave Balance Updated')
+      const response = await axios.patch(
+        "http://localhost:5500/leave-balance/FnLeaveApproved",
+        values,
+        {
+          params: {
+            EmployeeId: details.EmployeeId,
+            LeaveTypeId: details.LeaveTypeId,
+            FYear: details.FYear,
+          },
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      alert("Leave Balance Updated");
     } catch (error) {
       console.error("Error updating Leave balance", error);
     }
-  }
-  
+  };
 
   const fetchLeaveBalanceData = async () => {
     try {
@@ -167,16 +182,6 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
 
   const [isStatusChecked, setStatusChecked] = useState(false);
 
-  const handleCheckboxChange = (fieldName, setChecked, event) => {
-    //This is how to use it (event) => handleCheckboxChange('Status', setStatusChecked, event)
-    const checked = event.target.checked;
-    setChecked(checked);
-    formik.setValues({
-      ...formik.values,
-      [fieldName]: checked.toString(),
-    });
-  };
-
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
@@ -202,15 +207,15 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
           params: { LeaveApplicationId: ID },
           headers: { Authorization: `Bearer ${token}` },
         }
-        );
-        const data = response.data;
-        console.log(data);
-        setDetails(data);
-      } catch (error) {
-        console.error("Error", error);
-      }
-    };
-    useEffect(() => {
+      );
+      const data = response.data;
+      console.log(data);
+      setDetails(data);
+    } catch (error) {
+      console.error("Error", error);
+    }
+  };
+  useEffect(() => {
     fetchLeaveApplication();
   }, [token, ID]);
 
@@ -295,7 +300,6 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
     LeaveTypes.length > 0 &&
     LeaveTypes.find((type) => type.LeaveTypeId == leaveTypeId);
 
-  const [status, setStatus] = useState(false);
   const columnHeads = [
     "Leave Type",
     "Approval Flag",
@@ -531,9 +535,17 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
                         <td className="px-4 border-2 whitespace-normal bg-white rounded-lg text-left text-[11px]">
                           {item.LeaveTypeId}
                         </td>
-                        <td className={`px-4 border-2 whitespace-normal rounded-lg text-left text-[11px] ${item.ApprovalFlag === 'A' ? 'bg-green-600' : (item.ApprovalFlag === 'R' ? 'bg-red-500' : 'bg-yellow-500')}`}>
-  {item.ApprovalFlag}
-</td>
+                        <td
+                          className={`px-4 border-2 whitespace-normal rounded-lg text-left text-[11px] ${
+                            item.ApprovalFlag === "A"
+                              ? "bg-green-600"
+                              : item.ApprovalFlag === "R"
+                              ? "bg-red-500"
+                              : "bg-yellow-500"
+                          }`}
+                        >
+                          {item.ApprovalFlag}
+                        </td>
 
                         <td className="px-4 border-2 whitespace-normal bg-white rounded-lg text-left text-[11px]">
                           {item.FYear}

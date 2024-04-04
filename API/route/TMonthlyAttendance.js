@@ -90,12 +90,20 @@ router.use(bodyParser.json());
 // Model synchronization
 
 sequelize
-  .sync()
+  .authenticate()
   .then(() => {
-    console.log("TMonthlyAttendance model synchronized successfully.");
+    console.log("Connection has been established successfully.");
+  })
+  .catch((err) => {
+    console.error("Unable to connect to the database:", err);
+  });
+
+TMonthlyAttendance.sync()
+  .then(() => {
+    console.log("MLeaveTyepe model synchronized successfully.");
   })
   .catch((error) => {
-    console.error("Error synchronizing TMonthlyAttendance model:", error);
+    console.error("Error synchronizing MLeaveTyepe model:", error);
   });
 
 router.get("/FnShowParticularData", authToken, async (req, res) => {

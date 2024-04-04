@@ -307,7 +307,10 @@ router.get("/MAttendance/count", async (req, res) => {
     const counts = await TManualAttendance.findAll({
       attributes: [
         "EmployeeId",
-        [sequelize.fn("COUNT", sequelize.col("AttendanceId")), "Mcount"],
+        [
+          sequelize.fn("COUNT", sequelize.col("AttendanceId")),
+          "ManualAttendance",
+        ],
       ],
       where: {
         ApprovalFlag: "A",

@@ -57,6 +57,7 @@ import EmployeeTypeEarningMaster from "./components/payroll settings/EmployeeTyp
 import EmployeeTypeDeductionMaster from "./components/payroll settings/EmployeeTypeDeductionMaster";
 import GatePassApproval from "./components/attendance management/GatePassApproval";
 import DailyAttendanceProcessing from "./components/attendance management/DailyAttendanceProcessing";
+import MonthlyAttendance from "./components/attendance management/MonthlyAttendance";
 
 function App() {
   return (
@@ -66,7 +67,7 @@ function App() {
           <EmployeeTypeProvider>
             <Routes>
               <Route index element={<Login />} />
-      <Route path="registration" element={<Registration />} />
+              <Route path="registration" element={<Registration />} />
               <Route
                 element={
                   <div className="flex min-h-screen">
@@ -149,8 +150,9 @@ function App() {
                   element={<ManualAttendanceEntry />}
                 />
                 <Route
-                  path='/daily-attendance-processing'
-                  element={<DailyAttendanceProcessing/>}/>
+                  path="/daily-attendance-processing"
+                  element={<DailyAttendanceProcessing />}
+                />
                 <Route
                   path="/manual-attendance-approval"
                   element={<ManualAttendanceApproval />}
@@ -186,6 +188,10 @@ function App() {
                 <Route
                   path="/employee-type-deduction"
                   element={<EmployeeTypeDeductionMaster />}
+                />
+                <Route
+                  path="/monthly-attendance-processing"
+                  element={<MonthlyAttendance />}
                 />
                 <Route path="/advance-request" element={<AdvanceRequest />} />
                 <Route path="/leave-application" element={<LeaveApp />} />

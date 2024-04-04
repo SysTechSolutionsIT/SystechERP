@@ -547,19 +547,12 @@ const LeaveApproval = () => {
           </table>
         </div>
       </div>
-      {/* <LeaveApprovalModal
+      <LeaveApprovalModal
         visible={isModalOpen}
         onClick={() => setModalOpen(false)}
         ID={id}
         ApprovalFlag={ApprovalFlag}
-      /> */}
-      {isModalOpen && (
-        <LMonthlyAtt
-          visible={isModalOpen}
-          onClick={() => setModalOpen(false)}
-          LID={id}
-        />
-      )}
+      />
     </div>
   );
 };
