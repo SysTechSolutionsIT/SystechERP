@@ -53,20 +53,19 @@ const UserRolesModal = ({visible, onClick, edit, ID}) => {
     console.log('Checked Labels', checkedLabels);
   }, [checkedLabels]);
 
+
   const fetchAccessRights = async () =>{
     try {
-      const response = await axios.get('http://localhost:5500/users/allowed-access',{
-        params :{ EmployeeId: ID },
+    const response = await axios.get('http://localhost:5500/create-user-roles/FnShowParticularData',
+    {
+        params: {RoleId: ID},
         headers: { Authorization: `Bearer ${token}`}
-      })
-      const data = response.data.accessrights
-      const dataNums = data.split(',').map(Number);
-      setPreDefinedLabels(dataNums)
-      console.log('Predefined rights', data)
+    })
+    const data = response.data
     } catch (error) {
-      console.error('Error', error);
+        
     }
-  } 
+  }
 
   useEffect(() => {
     const allLabels = [...preDefinedLabels, ...checkedLabels];

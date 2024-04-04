@@ -10,7 +10,7 @@ import { useAuth } from "../Login";
 const UserRoles = () => {
     const [isModalOpen, setModalOpen] = useState(false);
     const [filteredData, setFilteredData] = useState([]);
-    const [departments, setDepartments] = useState([]);
+    const [roles, setRoles] = useState([]);
     const [Employees, setEmployees] = useState([])
     const { token } = useAuth();
   
@@ -29,7 +29,7 @@ const UserRoles = () => {
         const response = await axios.post(
           apiUrl,
           {
-            DepartmentId: deptid,
+            RoleId: deptid,
             IUFlag: "D",
           },
           {
@@ -52,10 +52,10 @@ const UserRoles = () => {
     };
   
     useEffect(() => {
-      const fetchDept = async () => {
+      const fetchUserRoles = async () => {
         try {
           const response = await axios.get(
-            "http://localhost:5500/departmentmaster/FnShowActiveData",
+            "http://localhost:5500/create-user-roles/FnShowActiveData",
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -65,13 +65,13 @@ const UserRoles = () => {
           console.log("Response Object", response);
           const data = response.data;
           console.log(data);
-          setDepartments(data);
+          setRoles(data);
         } catch (error) {
           console.log("Error while fetching course data: ", error.message);
         }
       };
-      fetchDept();
-    }, [token]);
+      fetchUserRoles();
+    }, [token, isModalOpen]);
   
     useEffect(() =>{
       const fetchEmployees = async () =>{
@@ -90,7 +90,7 @@ const UserRoles = () => {
     },[token])
   
     const handleSearchChange = (title, searchWord) => {
-      const newFilter = departments.filter((item) => {
+      const newFilter = roles.filter((item) => {
         const value = item[title];
         return value && value.toLowerCase().includes(searchWord.toLowerCase());
       });
@@ -103,33 +103,13 @@ const UserRoles = () => {
     };
     
     const [columnVisibility, setColumnVisibility] = useState({
-      DepartmentName: true,
-      BranchName: false,
-      ParentDeptId: true,
-      DepartmentType: true,
-      DepartmentGroupId: true,
-      DepartmentHeadId: true,
-      DepartmentSubHeadId: false,
-      CostCenterId: false,
-      DepartmentStdStaffStrength: false,
-      DepartmentStdWorkerStrength: false,
-      Remark: false,
-      status: false,
+      RoleName: true,
+      AccessRights: true
     });
   
     const columnNames = {
-      DepartmentName: "Department Name",
-      BranchName: "Company Branch Name",
-      ParentDeptId: "Parent Department",
-      DepartmentType: "Department Type",
-      DepartmentGroupId: "Department Group",
-      DepartmentHeadId: "Department Head",
-      DepartmentSubHeadId: "Department Sub-Head",
-      CostCenterId: "Cost Center",
-      DepartmentStdStaffStrength: "Standard Staff Strength",
-      DepartmentStdWorkerStrength: "Standard Worker Strength",
-      Remark: "Remarks",
-      AcFlag: "Status",
+      RoleName: 'Role Name',
+      AccessRights: 'Access Rights'
     };
   
     const [showDropdown, setShowDropdown] = useState(false);
@@ -195,7 +175,7 @@ const UserRoles = () => {
     //Max Searchbar width
     const getColumnMaxWidth = (columnName) => {
       let maxWidth = 0;
-      const allRows = [...departments, ...filteredData];
+      const allRows = [...roles, ...filteredData];
   
       allRows.forEach((row) => {
         const cellContent = row[columnName];
@@ -374,7 +354,7 @@ const UserRoles = () => {
                               onClick={() => {
                                 setVeDept(true); // Open VEModal
                                 setEdit(false); // Disable edit mode for VEModal
-                                setDid(result.DepartmentId); // Pass ID to VEModal
+                                setDid(result.RoleId); // Pass ID to VEModal
                               }}
                             />
                             <Icon
@@ -386,7 +366,7 @@ const UserRoles = () => {
                               onClick={() => {
                                 setVeDept(true); // Open VEModal
                                 setEdit(true); // Disable edit mode for VEModal
-                                setDid(result.DepartmentId); // Pass ID to VEModal
+                                setDid(result.RoleId); // Pass ID to VEModal
                               }}
                             />
                             <Icon
@@ -399,7 +379,7 @@ const UserRoles = () => {
                           </div>
                         </td>
                         <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
-                          {result.DepartmentId}
+                          {result.RoleId}
                         </td>
                         {selectedColumns.map((columnName) =>
                           columnVisibility[columnName] ? (
@@ -413,7 +393,7 @@ const UserRoles = () => {
                         )}
                       </tr>
                     ))
-                  : departments.map((result, index) => (
+                  : roles.map((result, index) => (
                       <tr key={index}>
                         <td className="px-2 border-2">
                           <div className="flex items-center gap-2 text-center justify-center">
@@ -426,7 +406,7 @@ const UserRoles = () => {
                               onClick={() => {
                                 setVeDept(true); // Open VEModal
                                 setEdit(false); // Disable edit mode for VEModal
-                                setDid(result.DepartmentId); // Pass ID to VEModal
+                                setDid(result.RoleId); // Pass ID to VEModal
                               }}
                             />
                             <Icon
@@ -438,7 +418,7 @@ const UserRoles = () => {
                               onClick={() => {
                                 setVeDept(true); // Open VEModal
                                 setEdit(true); // Disable edit mode for VEModal
-                                setDid(result.DepartmentId); // Pass ID to VEModal
+                                setDid(result.RoleId); // Pass ID to VEModal
                               }}
                             />
                             <Icon
@@ -447,61 +427,37 @@ const UserRoles = () => {
                               width="20"
                               height="20"
                               className="cursor-pointer"
-                              onClick={() => deleteDept(result.DepartmentId)}
+                              onClick={() => deleteDept(result.RoleId)}
                             />
                           </div>
                         </td>
                         <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
-                          {result.DepartmentId}
+                          {result.RoleId}
                         </td>
                         {selectedColumns.map((columnName) => {
-                      if (columnVisibility[columnName]) {
-                          if (columnName === 'ParentDeptId') {
-                              const parentDept = departments.find((parentDept) => parentDept.DepartmentId == result.DepartmentId);
-                              return (
-                                  <td
-                                      key={columnName}
-                                      className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                                  >
-                                      {parentDept?.DepartmentName}
-                                  </td>
-                              );
-                          } else if (columnName === 'DepartmentHeadId') {
-                              const employee = Employees.find((employee) => employee.EmployeeId == result.DepartmentHeadId);
-                              return (
-                                  <td
-                                      key={columnName}
-                                      className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                                  >
-                                      {employee?.EmployeeName}
-                                  </td>
-                              );
-                          } 
-                          else if (columnName === 'DepartmentSubHeadId') {
-                            const employee = Employees.find((employee) => employee.EmployeeId == result.DepartmentSubHeadId);
-                            return (
-                                <td
-                                    key={columnName}
-                                    className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                                >
-                                    {employee?.EmployeeName}
-                                </td>
-                            );
-                          }
-                          else {
-                              return (
-                                  <td
-                                      key={columnName}
-                                      className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                                  >
-                                      {result[columnName]}
-                                  </td>
-                              );
-                          }
-                      } else {
+                        if (columnVisibility[columnName] == 'AccessRights') {
+                          return (
+                            <td
+                              key={columnName}
+                              className={`px-4 border-2 text-left text-[11px] whitespace-normal capitalize`}
+                            >
+                              {result[columnName]}
+                            </td>
+                          );
+                        }
+                        else if (columnVisibility[columnName]) {
+                          return (
+                            <td
+                              key={columnName}
+                              className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                            >
+                              {result[columnName]}
+                            </td>
+                          );
+                        } else {
                           return <td key={columnName} className="hidden"></td>;
-                      }
-                  })}
+                        }
+                      })}
                       </tr>
                     ))}
               </tbody>

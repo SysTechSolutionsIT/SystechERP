@@ -37,17 +37,14 @@ const MBanks = sequelize.define("MBanks", {
   CompanyId: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    defaultValue: 1,
   },
   BranchId: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    defaultValue: 1,
   },
   BankId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true,
   },
   AccountType: DataTypes.STRING(50),
   BankName: {
@@ -160,8 +157,22 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
   }
 });
 
+const generateBankId = async (req, res, next) => {
+  try {
+    if (req.body.IUflag === 'I') {
+      const totalRecords = await MBanks.count()
+      const newId = (totalRecords + 1).toString().padStart(3,'0')
+      req.body.BankId = newId
+    }
+    next()
+  } catch (error) {
+    console.error('Error generating BankId', error);
+    res.status(500).send('Internal Server Errir')
+  }
+}
+
 // POST endpoint to add, update, or delete a bank
-router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
+router.post("/FnAddUpdateDeleteRecord", generateBankId, authToken, async (req, res) => {
   const bank = req.body;
   try {    
     if (bank.IUFlag === "D") {
