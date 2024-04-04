@@ -374,6 +374,7 @@ const Sidebar = () => {
               </div> */}
               {rights.includes(549) ||
               rights.includes(703) ||
+              rights.includes(986) ||
               rights.includes(872) ||
               rights.includes(287) ||
               rights.includes(610) ||
@@ -439,7 +440,7 @@ const Sidebar = () => {
                       onClick={() => navigate("/branch-master")}
                     />
                   )}
-                  {rights.includes(864) && (
+                  {rights.includes(872) && (
                     <SubMenuEntry
                       title="Financial Year Master"
                       onClick={() => navigate("/financial-masters")}
