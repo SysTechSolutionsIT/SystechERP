@@ -18,7 +18,6 @@ const FinMaster = () => {
   const menuRef = useRef(null);
 
   const [columnVisibility, setColumnVisibility] = useState({
-    FYearId: true,
     Name: true,
     StartDate: true,
     EndDate: true,
@@ -28,7 +27,6 @@ const FinMaster = () => {
   });
 
   const columnNames = {
-    FYearId: "ID",
     Name: "Financial Year",
     StartDate: "Start Date",
     EndDate: "End Date",
@@ -139,24 +137,19 @@ const FinMaster = () => {
   console.log(Fins);
 
   const handleSearchChange = (title, searchWord) => {
-    const searchData = [...Fins];
-
-    const newFilter = searchData.filter((item) => {
-      // Check if the item matches the search term in any of the selected columns
-      const matches = selectedColumns.some((columnName) => {
-        const newCol = columnName.charAt(0).toLowerCase() + columnName.slice(1);
-        const value = item[newCol];
-        return (
-          value &&
-          value.toString().toLowerCase().includes(searchWord.toLowerCase())
-        );
-      });
-
-      return matches;
+    const newFilter = Fins.filter((item) => {
+      const value = item[title];
+      return value && value.toLowerCase().includes(searchWord.toLowerCase());
     });
-
-    // Update the filtered data
-    setFilteredData(newFilter);
+    
+    if (searchWord === "") {
+      setFilteredData([]);
+    } 
+    else if (searchWord !== "" && newFilter.length === 0) {
+      setFilteredData(['NA']);
+    } else {
+      setFilteredData(newFilter);
+    }
   };
 
   //Editing Date
@@ -313,6 +306,9 @@ const FinMaster = () => {
                 <th className="px-1 text-[13px] font-bold text-black border-2 border-gray-400">
                   Actions
                 </th>
+                <th className="px-1 text-[13px] font-bold text-black border-2 border-gray-400">
+                  ID
+                </th>
                 {selectedColumns.map((columnName) => (
                   <th
                     key={columnName}
@@ -325,6 +321,7 @@ const FinMaster = () => {
                 ))}
               </tr>
               <tr>
+              <th className="border-2"></th>
                 <th className="border-2"></th>
                 {selectedColumns.map(
                   (columnName) =>
@@ -353,122 +350,141 @@ const FinMaster = () => {
               </tr>
             </thead>
             <tbody className="">
-              {filteredData.length > 0
-                ? filteredData.map((result, key) => (
-                    <tr key={key}>
-                      <td className="px-2 border-2">
-                        <div className="flex items-center gap-2 text-center justify-center">
-                          <Icon
-                            icon="lucide:eye"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            className="cursor-pointer"
-                            onClick={() => {
-                              setFin(true); // Open VEModal
-                              setEdit(false); // Disable edit mode for VEModal
-                              setFid(result.FYearId); // Pass ID to VEModal
-                            }}
-                          />
-                          <Icon
-                            icon="mdi:edit"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            className="cursor-pointer"
-                            onClick={() => {
-                              setFin(true); // Open VEModal
-                              setEdit(true); // Disable edit mode for VEModal
-                              setFid(result.FYearId); // Pass ID to VEModal
-                            }}
-                          />
-                          <Icon
-                            icon="material-symbols:delete-outline"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            className="cursor-pointer"
-                            onClick={() => deleteRecord(result.FYearId)}
-                          />
-                        </div>
-                      </td>
-                      {selectedColumns.map((columnName) => (
-                        <td
-                          key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-left text-[11px] ${
-                            columnVisibility[columnName] ? "" : "hidden"
-                          }`}
-                        >
-                          {columnName === "YearClose"
-                            ? result[columnName] === "N"
-                              ? "Inactive"
-                              : "Active"
-                            : columnName === "StartDate" ||
-                              columnName === "EndDate"
-                            ? formatDate(result[columnName])
-                            : result[columnName]}
-                        </td>
-                      ))}
-                    </tr>
-                  ))
-                : Fins.length > 0 &&
-                  Fins.map((result, index) => (
-                    <tr key={index}>
-                      <td className="px-2 border-2">
-                        <div className="flex items-center gap-2 text-center justify-center">
-                          <Icon
-                            icon="lucide:eye"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            className="cursor-pointer"
-                            onClick={() => {
-                              setFin(true); // Open VEModal
-                              setEdit(false); // Disable edit mode for VEModal
-                              setFid(result.FYearId); // Pass ID to VEModal
-                            }}
-                          />
-                          <Icon
-                            icon="mdi:edit"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            className="cursor-pointer"
-                            onClick={() => {
-                              setFin(true); // Open VEModal
-                              setEdit(true); // Disable edit mode for VEModal
-                              setFid(result.FYearId); // Pass ID to VEModal
-                            }}
-                          />
-                          <Icon
-                            icon="material-symbols:delete-outline"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            className="cursor-pointer"
-                            onClick={() => deleteRecord(result.FYearId)}
-                          />
-                        </div>
-                      </td>
-                      {selectedColumns.map((columnName) => (
-                        <td
-                          key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-left text-[11px] ${
-                            columnVisibility[columnName] ? "" : "hidden"
-                          }`}
-                        >
-                          {columnName === "YearClose"
-                            ? result[columnName] === "N"
-                              ? "Inactive"
-                              : "Active"
-                            : columnName === "StartDate" ||
-                              columnName === "EndDate"
-                            ? formatDate(result[columnName])
-                            : result[columnName]}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
+            {filteredData.length > 0 ? (
+  filteredData.map((result, key) => (
+    <tr key={key}>
+      <td className="px-2 border-2">
+        <div className="flex items-center gap-2 text-center justify-center">
+          <Icon
+            icon="lucide:eye"
+            color="#556987"
+            width="20"
+            height="20"
+            className="cursor-pointer"
+            onClick={() => {
+              setFin(true); // Open VEModal
+              setEdit(false); // Disable edit mode for VEModal
+              setFid(result.FYearId); // Pass ID to VEModal
+            }}
+          />
+          <Icon
+            icon="mdi:edit"
+            color="#556987"
+            width="20"
+            height="20"
+            className="cursor-pointer"
+            onClick={() => {
+              setFin(true); // Open VEModal
+              setEdit(true); // Disable edit mode for VEModal
+              setFid(result.FYearId); // Pass ID to VEModal
+            }}
+          />
+          <Icon
+            icon="material-symbols:delete-outline"
+            color="#556987"
+            width="20"
+            height="20"
+            className="cursor-pointer"
+            onClick={() => delet(result.FYearId)}
+          />
+        </div>
+      </td>
+      <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
+        {result.FYearId}
+      </td>
+      {selectedColumns.map((columnName) =>
+        columnVisibility[columnName] ? (
+          <td
+            key={columnName}
+            className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+          >
+            {result[columnName] === "1"
+              ? "Yes"
+              : result[columnName] === "0"
+              ? "No"
+              : result[columnName] === null
+              ? "N/A"
+              : result[columnName]}
+          </td>
+        ) : (
+          <td key={columnName} className="hidden"></td>
+        )
+      )}
+    </tr>
+  ))
+) : filteredData.length === 0 && Fins && Fins.length > 0 ? (
+  Fins.map((result, key) => (
+    <tr key={key}>
+      <td className="px-2 border-2">
+        <div className="flex items-center gap-2 text-center justify-center">
+          <Icon
+            icon="lucide:eye"
+            color="#556987"
+            width="20"
+            height="20"
+            className="cursor-pointer"
+            onClick={() => {
+              setFin(true); // Open VEModal
+              setEdit(false); // Disable edit mode for VEModal
+              setFid(result.FYearId); // Pass ID to VEModal
+            }}
+          />
+          <Icon
+            icon="mdi:edit"
+            color="#556987"
+            width="20"
+            height="20"
+            className="cursor-pointer"
+            onClick={() => {
+              setFin(true); // Open VEModal
+              setEdit(true); // Disable edit mode for VEModal
+              setFid(result.FYearId); // Pass ID to VEModal
+            }}
+          />
+          <Icon
+            icon="material-symbols:delete-outline"
+            color="#556987"
+            width="20"
+            height="20"
+            className="cursor-pointer"
+            onClick={() => delet(result.FYearId)}
+          />
+        </div>
+      </td>
+      <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
+        {result.FYearId}
+      </td>
+      {selectedColumns.map((columnName) =>
+        columnVisibility[columnName] ? (
+          <td
+            key={columnName}
+            className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+          >
+            {result[columnName] === "1"
+              ? "Yes"
+              : result[columnName] === "0"
+              ? "No"
+              : result[columnName] === null
+              ? "N/A"
+              : result[columnName]}
+          </td>
+        ) : (
+          <td key={columnName} className="hidden"></td>
+        )
+      )}
+    </tr>
+  ))
+) : filteredData[0] == 'NA' ? (
+  <tr>
+    <td className="text-center">
+      No results
+    </td>
+  </tr>
+) : (
+  <tr>
+    <td className="hidden">No Results</td>
+  </tr>
+)}
             </tbody>
           </table>
         </div>
