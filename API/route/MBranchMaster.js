@@ -176,7 +176,7 @@ router.post(
   authToken,
   async (req, res) => {
     const Branch = req.body;
-    const BranchId = Branch.BranchId; // Access the BranchId from the request body
+    const BranchId = req.query.BranchId; // Access the BranchId from the request body
 
     try {
       if (Branch.IUFlag === "D") {
