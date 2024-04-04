@@ -10,7 +10,7 @@ const DepartmentMaster = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
   const [departments, setDepartments] = useState([]);
-  const [Employees, setEmployees] = useState([])
+  const [Employees, setEmployees] = useState([]);
   const { token } = useAuth();
 
   const deleteDept = async (deptid) => {
@@ -72,21 +72,22 @@ const DepartmentMaster = () => {
     fetchDept();
   }, [token]);
 
-  useEffect(() =>{
-    const fetchEmployees = async () =>{
+  useEffect(() => {
+    const fetchEmployees = async () => {
       try {
-        const response = await axios.get('http://localhost:5500/employee/personal/FnShowActiveData',
-        { headers: { Authorization: `Bearer ${token}`}}
-        )
-        const data = response.data
-        console.log('Employees', data)
-        setEmployees(data)
+        const response = await axios.get(
+          "http://localhost:5500/employee/personal/FnShowActiveData",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const data = response.data;
+        console.log("Employees", data);
+        setEmployees(data);
       } catch (error) {
-        console.error('Error', error);
+        console.error("Error", error);
       }
-    }
-    fetchEmployees()
-  },[token])
+    };
+    fetchEmployees();
+  }, [token]);
 
   const handleSearchChange = (title, searchWord) => {
     const newFilter = departments.filter((item) => {
@@ -100,7 +101,7 @@ const DepartmentMaster = () => {
       setFilteredData(newFilter);
     }
   };
-  
+
   const [columnVisibility, setColumnVisibility] = useState({
     DepartmentName: true,
     BranchName: false,
@@ -180,7 +181,7 @@ const DepartmentMaster = () => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setMenuOpen(false);
+        setShowDropdown(false);
       }
     };
 
@@ -230,7 +231,10 @@ const DepartmentMaster = () => {
             />
           </button>
           {showDropdown && (
-            <div className="absolute top-32 bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50 top-[calc(100% + 10px)]">
+            <div
+              ref={menuRef}
+              className="absolute top-32 bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50 top-[calc(100% + 10px)]"
+            >
               {/* Dropdown content */}
               <div className="flex items-center mb-2">
                 <button
@@ -377,7 +381,7 @@ const DepartmentMaster = () => {
                             }}
                           />
                           <Icon
-                          icon="mdi:edit"
+                            icon="mdi:edit"
                             color="#556987"
                             width="20"
                             height="20"
@@ -454,53 +458,61 @@ const DepartmentMaster = () => {
                         {result.DepartmentId}
                       </td>
                       {selectedColumns.map((columnName) => {
-                    if (columnVisibility[columnName]) {
-                        if (columnName === 'ParentDeptId') {
-                            const parentDept = departments.find((parentDept) => parentDept.DepartmentId == result.DepartmentId);
-                            return (
-                                <td
-                                    key={columnName}
-                                    className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                                >
-                                    {parentDept?.DepartmentName}
-                                </td>
+                        if (columnVisibility[columnName]) {
+                          if (columnName === "ParentDeptId") {
+                            const parentDept = departments.find(
+                              (parentDept) =>
+                                parentDept.DepartmentId == result.DepartmentId
                             );
-                        } else if (columnName === 'DepartmentHeadId') {
-                            const employee = Employees.find((employee) => employee.EmployeeId == result.DepartmentHeadId);
                             return (
-                                <td
-                                    key={columnName}
-                                    className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                                >
-                                    {employee?.EmployeeName}
-                                </td>
-                            );
-                        } 
-                        else if (columnName === 'DepartmentSubHeadId') {
-                          const employee = Employees.find((employee) => employee.EmployeeId == result.DepartmentSubHeadId);
-                          return (
                               <td
-                                  key={columnName}
-                                  className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                                key={columnName}
+                                className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
                               >
-                                  {employee?.EmployeeName}
+                                {parentDept?.DepartmentName}
                               </td>
-                          );
-                        }
-                        else {
-                            return (
-                                <td
-                                    key={columnName}
-                                    className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                                >
-                                    {result[columnName]}
-                                </td>
                             );
+                          } else if (columnName === "DepartmentHeadId") {
+                            const employee = Employees.find(
+                              (employee) =>
+                                employee.EmployeeId == result.DepartmentHeadId
+                            );
+                            return (
+                              <td
+                                key={columnName}
+                                className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                              >
+                                {employee?.EmployeeName}
+                              </td>
+                            );
+                          } else if (columnName === "DepartmentSubHeadId") {
+                            const employee = Employees.find(
+                              (employee) =>
+                                employee.EmployeeId ==
+                                result.DepartmentSubHeadId
+                            );
+                            return (
+                              <td
+                                key={columnName}
+                                className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                              >
+                                {employee?.EmployeeName}
+                              </td>
+                            );
+                          } else {
+                            return (
+                              <td
+                                key={columnName}
+                                className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                              >
+                                {result[columnName]}
+                              </td>
+                            );
+                          }
+                        } else {
+                          return <td key={columnName} className="hidden"></td>;
                         }
-                    } else {
-                        return <td key={columnName} className="hidden"></td>;
-                    }
-                })}
+                      })}
                     </tr>
                   ))}
             </tbody>
