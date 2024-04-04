@@ -59,6 +59,7 @@ import GatePassApproval from "./components/attendance management/GatePassApprova
 import DailyAttendanceProcessing from "./components/attendance management/DailyAttendanceProcessing";
 import MonthlyAttendance from "./components/attendance management/MonthlyAttendance";
 import UserRoles from "./components/company settings/UserRoles";
+import BranchMaster from "./components/company settings/Branch Master";
 
 function App() {
   return (
@@ -116,6 +117,7 @@ function App() {
                   path="/employee-type-master"
                   element={<EmployeeTypeMaster />}
                 />
+                <Route path="/branch-master" element={<BranchMaster />} />
                 <Route
                   path="/employee-grade-master"
                   element={<EmployeeGradeMaster />}

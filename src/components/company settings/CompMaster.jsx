@@ -155,7 +155,7 @@ const CompMaster = () => {
       if (response.status === 200) {
         const data = response.data;
         setCompanies(data);
-        setLoading(false)
+        setLoading(false);
       } else {
         console.error("Failed to fetch data");
       }
@@ -232,7 +232,10 @@ const CompMaster = () => {
             />
           </button>
           {showDropdown && (
-            <div className="absolute top-32 bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50 top-[calc(100% + 10px)]">
+            <div
+              ref={menuRef}
+              className="absolute top-32 bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50 top-[calc(100% + 10px)]"
+            >
               {/* Dropdown content */}
               <div className="flex items-center mb-2">
                 <button
@@ -310,184 +313,183 @@ const CompMaster = () => {
         </div>
       </div>
       <CompanyModal visible={isModalOpen} onClick={() => setModalOpen(false)} />
-  <div className="grid gap-2 justify-between">
-      <div className="my-1 rounded-2xl bg-white p-2 pr-8 ">
-    <table className="min-w-full text-center whitespace-normal z-0">
-      <thead className="border-b-2">
-        <tr className="">
-          <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
-            Actions
-          </th>
-          <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
-            ID
-          </th>
+      <div className="grid gap-2 justify-between">
+        <div className="my-1 rounded-2xl bg-white p-2 pr-8 ">
+          <table className="min-w-full text-center whitespace-normal z-0">
+            <thead className="border-b-2">
+              <tr className="">
+                <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
+                  Actions
+                </th>
+                <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
+                  ID
+                </th>
 
-          {selectedColumns.map((columnName) =>
-            columnVisibility[columnName] ? (
-              <th
-                key={columnName}
-                className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal`}
-              >
-                {columnNames[columnName]}
-              </th>
-            ) : null
-          )}
-        </tr>
-        <tr>
-          <th className="border-2"></th>
-          <th className="p-2 font-bold text-black border-2 " />
-          {selectedColumns.map((columnName) =>
-            columnVisibility[columnName] ? (
-              <th
-                key={columnName}
-                className="p-2 font-semibold text-black border-2"
-              >
-                <input
-                  type="text"
-                  placeholder={`Search `}
-                  className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
-                  style={{
-                    maxWidth: getColumnMaxWidth(columnName) + "px",
-                  }}
-                  onChange={(e) =>
-                    handleSearchChange(columnName, e.target.value)
-                  }
-                />
-              </th>
-            ) : null
-          )}
-        </tr>
-      </thead>
-      <tbody className="">
-        {filteredData.length > 0
-          ? filteredData.map((result, key) => (
-              <tr key={key}>
-                <td className="px-2 border-2">
-                  <div className="flex items-center gap-2 text-center justify-center">
-                    <Icon
-                      icon="lucide:eye"
-                      color="#556987"
-                      width="20"
-                      height="20"
-                      className="cursor-pointer"
-                      onClick={() => {
-                        setVE(true); // Open VEModal
-                        setEdit(false); // Disable edit mode for VEModal
-                        setCid(result.CompanyId); // Pass ID to VEModal
-                      }}
-                    />
-                    <Icon
-                      icon="mdi:edit"
-                      color="#556987"
-                      width="20"
-                      height="20"
-                      className="cursor-pointer"
-                      onClick={() => {
-                        setVE(true); // Open VEModal
-                        setEdit(true); // Disable edit mode for VEModal
-                        setCid(result.CompanyId); // Pass ID to VEModal
-                      }}
-                    />
-                    <Icon
-                      icon="material-symbols:delete-outline"
-                      color="#556987"
-                      width="20"
-                      height="20"
-                      className="cursor-pointer"
-                      onClick={() => deleteComp(result.CompanyId)}
-                    />
-                  </div>
-                </td>
-                <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
-                  {result.CompanyId}
-                </td>
-                {selectedColumns.map((columnName) => (
-                  <td
-                    key={columnName}
-                    className={`px-4 border-2 whitespace-normal text-[11px] text-left${
-                      columnVisibility[columnName] ? "" : "hidden"
-                    }`}
-                  >
-                    {result[columnName] === "true"
-                      ? "Yes"
-                      : result[columnName] === "false"
-                      ? "No"
-                      : result[columnName] === null
-                      ? "N/A"
-                      : result[columnName]}
-                  </td>
-                ))}
-              </tr>
-            ))
-          : Array.isArray(companies) &&
-            companies.length > 0 &&
-            companies.map((result, key) => (
-              <tr key={key}>
-                <td className="px-2 border-2">
-                  <div className="flex items-center gap-2 text-center justify-center">
-                    <Icon
-                      icon="lucide:eye"
-                      color="#556987"
-                      width="20"
-                      height="20"
-                      className="cursor-pointer"
-                      onClick={() => {
-                        setVE(true); // Open VEModal
-                        setEdit(false); // Disable edit mode for VEModal
-                        setCid(result.CompanyId); // Pass ID to VEModal
-                      }}
-                    />
-                    <Icon
-                      icon="mdi:edit"
-                      color="#556987"
-                      width="20"
-                      height="20"
-                      className="cursor-pointer"
-                      onClick={() => {
-                        setVE(true); // Open VEModal
-                        setEdit(true); // Disable edit mode for VEModal
-                        setCid(result.CompanyId); // Pass ID to VEModal
-                      }}
-                    />
-                    <Icon
-                      icon="material-symbols:delete-outline"
-                      color="#556987"
-                      width="20"
-                      height="20"
-                      className="cursor-pointer"
-                      onClick={() => deleteComp(result.CompanyId)}
-                    />
-                  </div>
-                </td>
-                <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
-                  {result.CompanyId}
-                </td>
                 {selectedColumns.map((columnName) =>
                   columnVisibility[columnName] ? (
-                    <td
+                    <th
                       key={columnName}
-                      className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                      className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal`}
                     >
-                      {result[columnName] === "true"
-                        ? "Yes"
-                        : result[columnName] === "false"
-                        ? "No"
-                        : result[columnName] === null
-                        ? "N/A"
-                        : result[columnName]}
-                    </td>
-                  ) : (
-                    <td key={columnName} className="hidden"></td>
-                  )
+                      {columnNames[columnName]}
+                    </th>
+                  ) : null
                 )}
               </tr>
-            ))}
-      </tbody>
-    </table> 
-  </div>
-</div>
-<VEModal visible={VE} onClick={() => setVE(false)} edit={edit} ID={Cid} />
-
+              <tr>
+                <th className="border-2"></th>
+                <th className="p-2 font-bold text-black border-2 " />
+                {selectedColumns.map((columnName) =>
+                  columnVisibility[columnName] ? (
+                    <th
+                      key={columnName}
+                      className="p-2 font-semibold text-black border-2"
+                    >
+                      <input
+                        type="text"
+                        placeholder={`Search `}
+                        className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
+                        style={{
+                          maxWidth: getColumnMaxWidth(columnName) + "px",
+                        }}
+                        onChange={(e) =>
+                          handleSearchChange(columnName, e.target.value)
+                        }
+                      />
+                    </th>
+                  ) : null
+                )}
+              </tr>
+            </thead>
+            <tbody className="">
+              {filteredData.length > 0
+                ? filteredData.map((result, key) => (
+                    <tr key={key}>
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setVE(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setCid(result.CompanyId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setVE(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setCid(result.CompanyId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => deleteComp(result.CompanyId)}
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
+                        {result.CompanyId}
+                      </td>
+                      {selectedColumns.map((columnName) => (
+                        <td
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-[11px] text-left${
+                            columnVisibility[columnName] ? "" : "hidden"
+                          }`}
+                        >
+                          {result[columnName] === "true"
+                            ? "Yes"
+                            : result[columnName] === "false"
+                            ? "No"
+                            : result[columnName] === null
+                            ? "N/A"
+                            : result[columnName]}
+                        </td>
+                      ))}
+                    </tr>
+                  ))
+                : Array.isArray(companies) &&
+                  companies.length > 0 &&
+                  companies.map((result, key) => (
+                    <tr key={key}>
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setVE(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setCid(result.CompanyId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setVE(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setCid(result.CompanyId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => deleteComp(result.CompanyId)}
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
+                        {result.CompanyId}
+                      </td>
+                      {selectedColumns.map((columnName) =>
+                        columnVisibility[columnName] ? (
+                          <td
+                            key={columnName}
+                            className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                          >
+                            {result[columnName] === "true"
+                              ? "Yes"
+                              : result[columnName] === "false"
+                              ? "No"
+                              : result[columnName] === null
+                              ? "N/A"
+                              : result[columnName]}
+                          </td>
+                        ) : (
+                          <td key={columnName} className="hidden"></td>
+                        )
+                      )}
+                    </tr>
+                  ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <VEModal visible={VE} onClick={() => setVE(false)} edit={edit} ID={Cid} />
     </div>
   );
 };

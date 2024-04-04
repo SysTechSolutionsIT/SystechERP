@@ -15,9 +15,9 @@ const Sidebar = () => {
   const [isLeaveSubmenuOpen, setLeaveSubmenuOpen] = useState(false);
   const [isSalarySubmenuOpen, setSalarySubmenuOpen] = useState(false);
   const [isRegisterSubmenuOpen, setRegisterSubmenuOpen] = useState(false);
-  const [filteredMenuItems, setFilteredMenuItems] = useState([])
-  const { rights } = useDetails()
-  // console.log('Access rights in sidebar', rights) 
+  const [filteredMenuItems, setFilteredMenuItems] = useState([]);
+  const { rights } = useDetails();
+  // console.log('Access rights in sidebar', rights)
 
   const [open, setOpen] = useState(true);
   const navigate = useNavigate();
@@ -36,113 +36,138 @@ const Sidebar = () => {
   };
 
   const menuItems = [
-    { "927": "Dashboard" },
-    { "135": "User Settings" },
-    { "864": "Company Settings" },
-    { "549": "Company Configuration" },
-    { "703": "Company Master" },
-    { "872": "Financial Year Master" },
-    { "287": "Bank Master" },
-    { "610": "Cost Center Master" },
-    { "954": "Department Master" },
-    { "736": "Three Field Master" },
-    { "624": "Two Field Master" },
-    { "777": "User Roles"},
-    { "368": "HRM" },
-    { "431": "Employee Settings" },
-    { "217": "Employee Master" },
-    { "820": "Employee Type Master" },
-    { "598": "Employee Grade Master" },
-    { "143": "Designation Master" },
-    { "502": "KRA Master" },
-    { "395": "Job Responsibility Master" },
-    { "786": "Employee Band Master" },
-    { "619": "Attendance Settings" },
-    { "875": "Job Type Master" },
-    { "752": "Shift Master" },
-    { "201": "Weekly Off Master" },
-    { "409": "Holiday Master" },
-    { "148": "Attendance Device Master" },
-    { "924": "Payroll Management" },
-    { "269": "Earning Heads Master" },
-    { "370": "Deduction Heads Master" },
-    { "548": "Employee Type Earning Master" },
-    { "753": "Employee Type Deduction Master" },
-    { "654": "Professional Tax Setting" },
-    { "531": "Advance Request" },
-    { "317": "Advance Approval" },
-    { "497": "Advance Repayment" },
-    { "803": "Leaves Management" },
-    { "460": "Leave Type Master" },
-    { "706": "Leave Balance Upload" },
-    { "153": "Leave Application" },
-    { "418": "Leave Approvals" },
-    { "849": "Attendance Management" },
-    { "273": "Shift Roster" },
-    { "159": "Manual Attendance Entry" },
-    { "523": "Manual Attendance Approval" },
-    { "926": "Out Door Duty Attendance Entry" },
-    { "832": "Out Door Duty Attendance Approval" },
-    { "871": "Employee Gate Pass Entry" },
-    { "619": "Employee Gate Pass Approval" },
-    { "625": "Job Allocation" },
-    { "758": "Daily Attendance Processing" },
-    { "690": "Attendance Import" },
-    { "907": "Monthly Attendance Processing" }
+    { 927: "Dashboard" },
+    { 135: "User Settings" },
+    { 864: "Company Settings" },
+    { 549: "Company Configuration" },
+    { 703: "Company Master" },
+    { 986: "Branch Master" },
+    { 872: "Financial Year Master" },
+    { 287: "Bank Master" },
+    { 610: "Cost Center Master" },
+    { 954: "Department Master" },
+    { 736: "Three Field Master" },
+    { 624: "Two Field Master" },
+    { 777: "User Roles" },
+    { 368: "HRM" },
+    { 431: "Employee Settings" },
+    { 217: "Employee Master" },
+    { 820: "Employee Type Master" },
+    { 598: "Employee Grade Master" },
+    { 143: "Designation Master" },
+    { 502: "KRA Master" },
+    { 395: "Job Responsibility Master" },
+    { 786: "Employee Band Master" },
+    { 619: "Attendance Settings" },
+    { 875: "Job Type Master" },
+    { 752: "Shift Master" },
+    { 201: "Weekly Off Master" },
+    { 409: "Holiday Master" },
+    { 148: "Attendance Device Master" },
+    { 924: "Payroll Management" },
+    { 269: "Earning Heads Master" },
+    { 370: "Deduction Heads Master" },
+    { 548: "Employee Type Earning Master" },
+    { 753: "Employee Type Deduction Master" },
+    { 654: "Professional Tax Setting" },
+    { 531: "Advance Request" },
+    { 317: "Advance Approval" },
+    { 497: "Advance Repayment" },
+    { 803: "Leaves Management" },
+    { 460: "Leave Type Master" },
+    { 706: "Leave Balance Upload" },
+    { 153: "Leave Application" },
+    { 418: "Leave Approvals" },
+    { 849: "Attendance Management" },
+    { 273: "Shift Roster" },
+    { 159: "Manual Attendance Entry" },
+    { 523: "Manual Attendance Approval" },
+    { 926: "Out Door Duty Attendance Entry" },
+    { 832: "Out Door Duty Attendance Approval" },
+    { 871: "Employee Gate Pass Entry" },
+    { 619: "Employee Gate Pass Approval" },
+    { 625: "Job Allocation" },
+    { 758: "Daily Attendance Processing" },
+    { 690: "Attendance Import" },
+    { 907: "Monthly Attendance Processing" },
   ];
 
   const menuLinks = [
-    { "title": "Company Configuration", "path": "/company-configurations" },
-    { "title": "Company Master", "path": "/company-masters" },
-    { "title": "Financial Year Master", "path": "/financial-masters" },
-    { "title": "Bank Master", "path": "/bank-master" },
-    { "title": "Cost Center Master", "path": "/costcenter-master" },
-    { "title": "Department Master", "path": "/department-master" },
-    { "title": "Three Field Master", "path": "/three-field-master" },
-    { "title": "Two Field Master", "path": "/two-field-master" },
-    { "title": "User Roles", "path": "/user-role-settings" },
-    { "title": "Employee Master", "path": "/employee-master" },
-    { "title": "Employee Type Master", "path": "/employee-type-master" },
-    { "title": "Employee Grade Master", "path": "/employee-grade-master" },
-    { "title": "Designation Master", "path": "/designation-master" },
-    { "title": "KRA Master", "path": "/kra-master" },
-    { "title": "Job Responsibility Master", "path": "/jobs-responsibility-master" },
-    { "title": "Employee Band Master", "path": "/employee-band-master" },
-    { "title": "Job Type Master", "path": "/job-type-master" },
-    { "title": "Shift Master", "path": "/shift-master" },
-    { "title": "Weekly Off Master", "path": "/weeklyoff-master" },
-    { "title": "Holiday Master", "path": "/holiday-master" },
-    { "title": "Attendance Device Master", "path": "/attDevice-master" },
-    { "title": "Earning Heads Master", "path": "/earning-heads-master" },
-    { "title": "Deduction Heads Master", "path": "/deduction-heads-master" },
-    { "title": "Employee Type Earning Master", "path": "/employee-type-earning" },
-    { "title": "Employee Type Deduction Master", "path": "/employee-type-deduction" },
-    { "title": "Professional Tax Setting", "path": "/professional-tax-master" },
-    { "title": "Advance Request", "path": "/advance-request" },
-    { "title": "Advance Approval", "path": "/advance-approval" },
-    { "title": "Advance Repayment", "path": "/advance-repayment" },
-    { "title": "Leave Type Master", "path": "/leave-type-master" },
-    { "title": "Leave Application", "path": "/leave-application" },
-    { "title": "Leave Approvals", "path": "/leave-approval" },
-    { "title": "Shift Roster", "path": "/shift-roster" },
-    { "title": "Manual Attendance Entry", "path": "/manual-attendance-entry" },
-    { "title": "Manual Attendance Approval", "path": "/manual-attendance-approval" },
-    { "title": "Out Door Duty Attendance Entry", "path": "/outdoor-attendance-entry" },
-    { "title": "Out Door Duty Attendance Approval", "path": "/outdoor-attendance-approval" },
-    { "title": "Employee Gate Pass Entry", "path": "/attendance-master/empGatePassEntry" },
-    { "title": "Employee Gate Pass Approval", "path": "/gatepass-approval" },
-    { "title": "Daily Attendance Processing", "path": "/daily-attendance-processing" },
-    { "title": "Attendance Import", "path": "/attendance-import" },
-    { "title": "Monthly Attendance Processing", "path": "/monthly-attendance-processing" },
-    { "title": "Daily Overtime Processing", "path": "/daily-overtime-processing" },
-    { "title": "Monthly Overtime Processing", "path": "/monthly-overtime-processing" },
-    { "title": "Overtime Approvals", "path": "/overtime-approvals" },
-    { "title": "Advance Management", "path": "/advance-management" },
-    { "title": "Earning-Deduction Imports", "path": "/ED-imports" },
-    { "title": "Salary Processing", "path": "/salary-processing" },
-    { "title": "Salary Corrections", "path": "/salary-corrections" }
-  ]
-  
+    { title: "Company Configuration", path: "/company-configurations" },
+    { title: "Company Master", path: "/company-masters" },
+    { title: "Financial Year Master", path: "/financial-masters" },
+    { title: "Bank Master", path: "/bank-master" },
+    { title: "Cost Center Master", path: "/costcenter-master" },
+    { title: "Department Master", path: "/department-master" },
+    { title: "Three Field Master", path: "/three-field-master" },
+    { title: "Two Field Master", path: "/two-field-master" },
+    { title: "User Roles", path: "/user-role-settings" },
+    { title: "Employee Master", path: "/employee-master" },
+    { title: "Employee Type Master", path: "/employee-type-master" },
+    { title: "Employee Grade Master", path: "/employee-grade-master" },
+    { title: "Designation Master", path: "/designation-master" },
+    { title: "KRA Master", path: "/kra-master" },
+    { title: "Job Responsibility Master", path: "/jobs-responsibility-master" },
+    { title: "Employee Band Master", path: "/employee-band-master" },
+    { title: "Job Type Master", path: "/job-type-master" },
+    { title: "Shift Master", path: "/shift-master" },
+    { title: "Weekly Off Master", path: "/weeklyoff-master" },
+    { title: "Holiday Master", path: "/holiday-master" },
+    { title: "Attendance Device Master", path: "/attDevice-master" },
+    { title: "Earning Heads Master", path: "/earning-heads-master" },
+    { title: "Deduction Heads Master", path: "/deduction-heads-master" },
+    { title: "Employee Type Earning Master", path: "/employee-type-earning" },
+    {
+      title: "Employee Type Deduction Master",
+      path: "/employee-type-deduction",
+    },
+    { title: "Professional Tax Setting", path: "/professional-tax-master" },
+    { title: "Advance Request", path: "/advance-request" },
+    { title: "Advance Approval", path: "/advance-approval" },
+    { title: "Advance Repayment", path: "/advance-repayment" },
+    { title: "Leave Type Master", path: "/leave-type-master" },
+    { title: "Leave Application", path: "/leave-application" },
+    { title: "Leave Approvals", path: "/leave-approval" },
+    { title: "Shift Roster", path: "/shift-roster" },
+    { title: "Manual Attendance Entry", path: "/manual-attendance-entry" },
+    {
+      title: "Manual Attendance Approval",
+      path: "/manual-attendance-approval",
+    },
+    {
+      title: "Out Door Duty Attendance Entry",
+      path: "/outdoor-attendance-entry",
+    },
+    {
+      title: "Out Door Duty Attendance Approval",
+      path: "/outdoor-attendance-approval",
+    },
+    {
+      title: "Employee Gate Pass Entry",
+      path: "/attendance-master/empGatePassEntry",
+    },
+    { title: "Employee Gate Pass Approval", path: "/gatepass-approval" },
+    {
+      title: "Daily Attendance Processing",
+      path: "/daily-attendance-processing",
+    },
+    { title: "Attendance Import", path: "/attendance-import" },
+    {
+      title: "Monthly Attendance Processing",
+      path: "/monthly-attendance-processing",
+    },
+    { title: "Daily Overtime Processing", path: "/daily-overtime-processing" },
+    {
+      title: "Monthly Overtime Processing",
+      path: "/monthly-overtime-processing",
+    },
+    { title: "Overtime Approvals", path: "/overtime-approvals" },
+    { title: "Advance Management", path: "/advance-management" },
+    { title: "Earning-Deduction Imports", path: "/ED-imports" },
+    { title: "Salary Processing", path: "/salary-processing" },
+    { title: "Salary Corrections", path: "/salary-corrections" },
+    { title: "Branch Master", path: "/branch-master" },
+  ];
 
   useEffect(() => {
     // Filter menu items based on access rights
@@ -209,7 +234,7 @@ const Sidebar = () => {
 
   const searchSubmenuLabels = (menu, searchQuery, rights) => {
     const filteredData = [];
-  
+
     for (const menuItem of menu) {
       for (const itemId in menuItem) {
         const label = menuItem[itemId];
@@ -221,41 +246,39 @@ const Sidebar = () => {
         }
       }
     }
-  
+
     return filteredData;
   };
-  
 
   const handleSearchChange = (word) => {
     console.log("Search Query:", word);
-  
+
     const query = word.toLowerCase();
-  
+
     if (query.trim() === "") {
       // If the search query is empty, clear the results
       setFilteredData([]);
     } else {
       // Search for matching submenu labels
       const filteredData = [];
-  
+
       menuItems.forEach((menuItem) => {
         // Search within top-level menu items
         const submenuData = searchSubmenuLabels([menuItem], query, rights);
         filteredData.push(...submenuData);
       });
-  
+
       setFilteredData(filteredData);
     }
   };
-  
 
   return (
-<div className="flex h-screen">
-  <div
-    className={`${
-      open ? "w-[250px]" : "w-[80px]"
-    } bg-blue-900 overflow-x-hidden sidebar bottom-0 lg:left-0 p-0 text-center border-0 border-radius-xl ease-in-out duration-300 overflow-y-auto w-fit scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-blue-900`}
-  >
+    <div className="flex h-screen">
+      <div
+        className={`${
+          open ? "w-[250px]" : "w-[80px]"
+        } bg-blue-900 overflow-x-hidden sidebar bottom-0 lg:left-0 p-0 text-center border-0 border-radius-xl ease-in-out duration-300 overflow-y-auto w-fit scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-blue-900`}
+      >
         <div className="text-white-100 text-xl items-center px-2">
           <div className="p-2.5 mt-1 flex items-center">
             <img
@@ -279,23 +302,24 @@ const Sidebar = () => {
             />
             {open && (
               <>
-              <input
-                type="text"
-                id="search"
-                placeholder="Search something..."
-                className="bg-gray-100 focus:outline-none w-full text-[13px] ml-1"
-                onChange={(e) => {
-                  handleSearchChange(e.target.value);
-                }}
-              />
-              {/* <Icon icon="entypo:circle-with-cross" width="24" height="24"  style={{color: '#e63333'}} /> */}
+                <input
+                  type="text"
+                  id="search"
+                  placeholder="Search something..."
+                  className="bg-gray-100 focus:outline-none w-full text-[13px] ml-1"
+                  onChange={(e) => {
+                    handleSearchChange(e.target.value);
+                  }}
+                />
+                {/* <Icon icon="entypo:circle-with-cross" width="24" height="24"  style={{color: '#e63333'}} /> */}
               </>
             )}
-            
           </div>
           {filteredData.length > 0 ? (
             filteredData.map((menuItem, index) => {
-              const menuItemLink = menuLinks.find(link => link.title === menuItem.label);
+              const menuItemLink = menuLinks.find(
+                (link) => link.title === menuItem.label
+              );
 
               return (
                 <div
@@ -313,7 +337,7 @@ const Sidebar = () => {
                 </div>
               );
             })
-          )  : (
+          ) : (
             <div>
               <div className="mt-1 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white">
                 <Icon
@@ -348,17 +372,15 @@ const Sidebar = () => {
                   </div>
                 )}
               </div> */}
-                {rights.includes(549) || rights.includes(703) || rights.includes(872) || rights.includes(287) || rights.includes(610) || rights.includes(954) || rights.includes(736) || rights.includes(624) || rights.includes(777)? (
-                  <div
-                    className="mt-1 flex items-center rounded-md px-4 duration-300
               {rights.includes(549) ||
               rights.includes(703) ||
-              rights.includes(864) ||
+              rights.includes(872) ||
               rights.includes(287) ||
               rights.includes(610) ||
               rights.includes(954) ||
               rights.includes(736) ||
-              rights.includes(624) ? (
+              rights.includes(624) ||
+              rights.includes(777) ? (
                 <div
                   className="mt-1 flex items-center rounded-md px-4 duration-300
                   cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white whitespace-nowrap"
@@ -411,6 +433,12 @@ const Sidebar = () => {
                       onClick={() => navigate("/company-masters")}
                     />
                   )}
+                  {rights.includes(986) && (
+                    <SubMenuEntry
+                      title="Branch Master"
+                      onClick={() => navigate("/branch-master")}
+                    />
+                  )}
                   {rights.includes(864) && (
                     <SubMenuEntry
                       title="Financial Year Master"
@@ -439,26 +467,20 @@ const Sidebar = () => {
                       title="Destination Master"
                       onClick={() => navigate("/destination-master")}
                     /> */}
-                    {rights.includes(736) && (
-                      <SubMenuEntry
-                        title="Three Field Master"
-                        onClick={() => navigate("/three-field-master")}
-                      />
-                    )}
-                    {rights.includes(624) && (
-                      <SubMenuEntry
-                        title="Two Field Master"
-                        onClick={() => navigate("/two-field-master")}
-                      />
-                    )}
-                    {rights.includes(777) && (
-                      <SubMenuEntry
-                        title="User Roles"
-                        onClick={() => navigate("/user-role-settings")}
-                      />
-                    )}
-                  </SubMenuGroup>
-                )}
+                  {rights.includes(736) && (
+                    <SubMenuEntry
+                      title="Three Field Master"
+                      onClick={() => navigate("/three-field-master")}
+                    />
+                  )}
+                  {rights.includes(624) && (
+                    <SubMenuEntry
+                      title="Two Field Master"
+                      onClick={() => navigate("/two-field-master")}
+                    />
+                  )}
+                </SubMenuGroup>
+              )}
 
               <div
                 className="mt-1 flex items-center rounded-md px-4 duration-300
