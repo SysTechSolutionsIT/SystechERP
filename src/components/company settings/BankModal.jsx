@@ -153,6 +153,18 @@ const BankModal = ({ visible, onClick }) => {
           </div>
           <div className="py-4">
             <div className="grid grid-cols-2 gap-4">
+            <div>
+                <p className="capatilize font-semibold text-[13px]">
+                  Bank Id
+                </p>
+                <input
+                  id="BankId"
+                  type="text"
+                  placeholder="Enter Bank Id"
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  disabled={true}
+                />
+              </div>
               <div>
                 <p className="capatilize font-semibold text-[13px]">
                   Bank Name
@@ -235,7 +247,7 @@ const BankModal = ({ visible, onClick }) => {
                 </p>
                 <input
                   id="AccountNo"
-                  type="number"
+                  type="text"
                   placeholder=" Enter Account No."
                   value={formik.values.AccountNo}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}

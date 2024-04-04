@@ -5,6 +5,7 @@ import { useAuth } from '../Login';
 import { Icon } from '@iconify/react';
 
 const UserRolesModal = ({visible, onClick, edit, ID}) => {
+  const [checkedLabels, setCheckedLabels] = useState([])
 
   const formik = useFormik({
     initialValues:{
@@ -13,7 +14,6 @@ const UserRolesModal = ({visible, onClick, edit, ID}) => {
     }
   })
 
-  const [checkedLabels, setCheckedLabels] = useState([])
   const [preDefinedLabels, setPreDefinedLabels] = useState([])
   const { token } = useAuth()
 
@@ -334,7 +334,7 @@ const menus = [
   Menu7,
 ];
 
-const addUserRole = async() => {
+const addUserRole = async(data) => {
   try {
     const reponse = await axios.post('http://localhost:5500/create-user-roles', data,
     {

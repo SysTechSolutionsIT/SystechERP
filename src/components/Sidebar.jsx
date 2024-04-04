@@ -91,6 +91,58 @@ const Sidebar = () => {
     { "907": "Monthly Attendance Processing" }
   ];
 
+  const menuLinks = [
+    { "title": "Company Configuration", "path": "/company-configurations" },
+    { "title": "Company Master", "path": "/company-masters" },
+    { "title": "Financial Year Master", "path": "/financial-masters" },
+    { "title": "Bank Master", "path": "/bank-master" },
+    { "title": "Cost Center Master", "path": "/costcenter-master" },
+    { "title": "Department Master", "path": "/department-master" },
+    { "title": "Three Field Master", "path": "/three-field-master" },
+    { "title": "Two Field Master", "path": "/two-field-master" },
+    { "title": "User Roles", "path": "/user-role-settings" },
+    { "title": "Employee Master", "path": "/employee-master" },
+    { "title": "Employee Type Master", "path": "/employee-type-master" },
+    { "title": "Employee Grade Master", "path": "/employee-grade-master" },
+    { "title": "Designation Master", "path": "/designation-master" },
+    { "title": "KRA Master", "path": "/kra-master" },
+    { "title": "Job Responsibility Master", "path": "/jobs-responsibility-master" },
+    { "title": "Employee Band Master", "path": "/employee-band-master" },
+    { "title": "Job Type Master", "path": "/job-type-master" },
+    { "title": "Shift Master", "path": "/shift-master" },
+    { "title": "Weekly Off Master", "path": "/weeklyoff-master" },
+    { "title": "Holiday Master", "path": "/holiday-master" },
+    { "title": "Attendance Device Master", "path": "/attDevice-master" },
+    { "title": "Earning Heads Master", "path": "/earning-heads-master" },
+    { "title": "Deduction Heads Master", "path": "/deduction-heads-master" },
+    { "title": "Employee Type Earning Master", "path": "/employee-type-earning" },
+    { "title": "Employee Type Deduction Master", "path": "/employee-type-deduction" },
+    { "title": "Professional Tax Setting", "path": "/professional-tax-master" },
+    { "title": "Advance Request", "path": "/advance-request" },
+    { "title": "Advance Approval", "path": "/advance-approval" },
+    { "title": "Advance Repayment", "path": "/advance-repayment" },
+    { "title": "Leave Type Master", "path": "/leave-type-master" },
+    { "title": "Leave Application", "path": "/leave-application" },
+    { "title": "Leave Approvals", "path": "/leave-approval" },
+    { "title": "Shift Roster", "path": "/shift-roster" },
+    { "title": "Manual Attendance Entry", "path": "/manual-attendance-entry" },
+    { "title": "Manual Attendance Approval", "path": "/manual-attendance-approval" },
+    { "title": "Out Door Duty Attendance Entry", "path": "/outdoor-attendance-entry" },
+    { "title": "Out Door Duty Attendance Approval", "path": "/outdoor-attendance-approval" },
+    { "title": "Employee Gate Pass Entry", "path": "/attendance-master/empGatePassEntry" },
+    { "title": "Employee Gate Pass Approval", "path": "/gatepass-approval" },
+    { "title": "Daily Attendance Processing", "path": "/daily-attendance-processing" },
+    { "title": "Attendance Import", "path": "/attendance-import" },
+    { "title": "Monthly Attendance Processing", "path": "/monthly-attendance-processing" },
+    { "title": "Daily Overtime Processing", "path": "/daily-overtime-processing" },
+    { "title": "Monthly Overtime Processing", "path": "/monthly-overtime-processing" },
+    { "title": "Overtime Approvals", "path": "/overtime-approvals" },
+    { "title": "Advance Management", "path": "/advance-management" },
+    { "title": "Earning-Deduction Imports", "path": "/ED-imports" },
+    { "title": "Salary Processing", "path": "/salary-processing" },
+    { "title": "Salary Corrections", "path": "/salary-corrections" }
+  ]
+  
 
   useEffect(() => {
     // Filter menu items based on access rights
@@ -155,20 +207,24 @@ const Sidebar = () => {
 
   const [filteredData, setFilteredData] = useState([]);
 
-  const searchSubmenuLabels = (menu, searchQuery) => {
+  const searchSubmenuLabels = (menu, searchQuery, rights) => {
     const filteredData = [];
   
     for (const menuItem of menu) {
       for (const itemId in menuItem) {
         const label = menuItem[itemId];
-        if (label.toLowerCase().includes(searchQuery)) {
-          filteredData.push({ label, id: itemId });
+        // Check if the item's ID is in the rights array
+        if (rights.length > 0 && rights.includes(Number(itemId))) {
+          if (label.toLowerCase().includes(searchQuery)) {
+            filteredData.push({ label, id: itemId });
+          }
         }
       }
     }
   
     return filteredData;
   };
+  
 
   const handleSearchChange = (word) => {
     console.log("Search Query:", word);
@@ -184,15 +240,13 @@ const Sidebar = () => {
   
       menuItems.forEach((menuItem) => {
         // Search within top-level menu items
-        const submenuData = searchSubmenuLabels([menuItem], query);
+        const submenuData = searchSubmenuLabels([menuItem], query, rights);
         filteredData.push(...submenuData);
       });
   
       setFilteredData(filteredData);
     }
   };
-  
-  
   
 
   return (
@@ -224,6 +278,7 @@ const Sidebar = () => {
               onClick={() => setOpen(true)}
             />
             {open && (
+              <>
               <input
                 type="text"
                 id="search"
@@ -233,24 +288,31 @@ const Sidebar = () => {
                   handleSearchChange(e.target.value);
                 }}
               />
+              {/* <Icon icon="entypo:circle-with-cross" width="24" height="24"  style={{color: '#e63333'}} /> */}
+              </>
             )}
+            
           </div>
           {filteredData.length > 0 ? (
-            filteredData.map((menuItem, index) => (
-              <div
-                key={index}
-                className="mt-1 flex items-center rounded-md px-4 duration-300 cursor-pointer hover-bg-gray-300 hover-bg-opacity-25 text-white"
-                onClick={() => navigate(menuItem.label)} // Use menuItem.label as the path
-              >
-                {open && (
-                  <div className="flex justify-between w-full items-center">
-                    <span className="font-[Inter] font-thin text-[15px] ml-4 text-white-200">
-                      {menuItem.label}
-                    </span>
-                  </div>
-                )}
-              </div>
-            ))
+            filteredData.map((menuItem, index) => {
+              const menuItemLink = menuLinks.find(link => link.title === menuItem.label);
+
+              return (
+                <div
+                  key={index}
+                  className="mt-1 flex items-center rounded-md px-4 duration-300 cursor-pointer hover-bg-gray-300 hover-bg-opacity-25 text-white"
+                  onClick={() => menuItemLink && navigate(menuItemLink.path)} // Navigate to the corresponding path if menuItemLink exists
+                >
+                  {open && (
+                    <div className="flex justify-between w-full items-center">
+                      <span className="font-[Inter] font-thin text-[15px] ml-4 text-white-200">
+                        {menuItem.label}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              );
+            })
           )  : (
             <div>
               <div className="mt-1 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-300 hover:bg-opacity-25 text-white">
