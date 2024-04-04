@@ -385,7 +385,7 @@ const FinMaster = () => {
             width="20"
             height="20"
             className="cursor-pointer"
-            onClick={() => delet(result.FYearId)}
+            onClick={() => deleteRecord(result.FYearId)}
           />
         </div>
       </td>
@@ -447,7 +447,7 @@ const FinMaster = () => {
             width="20"
             height="20"
             className="cursor-pointer"
-            onClick={() => delet(result.FYearId)}
+            onClick={() => deleteRecord(result.FYearId)}
           />
         </div>
       </td>
