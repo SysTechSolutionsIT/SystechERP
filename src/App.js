@@ -58,6 +58,7 @@ import EmployeeTypeDeductionMaster from "./components/payroll settings/EmployeeT
 import GatePassApproval from "./components/attendance management/GatePassApproval";
 import DailyAttendanceProcessing from "./components/attendance management/DailyAttendanceProcessing";
 import MonthlyAttendance from "./components/attendance management/MonthlyAttendance";
+import UserRoles from "./components/company settings/UserRoles";
 
 function App() {
   return (
@@ -199,6 +200,7 @@ function App() {
                 <Route path="/ED-imports" element={<EDImports />} />
                 <Route path="/salary-processing" element={<SalProcessing />} />
                 <Route path="/advance-approval" element={<AdvanceApproval />} />
+                <Route path="/user-role-settings" element={<UserRoles />} />
                 <Route
                   path="/attendance-master/empGatePassEntry"
                   element={<GateEntryMaster />}

@@ -57,6 +57,8 @@ const EmpDocs = require("./route/MEmployeeDocs");
 const NodeMailer = require("./route/NodeMailer");
 const MLAttendance = require("./route/MLAttendance");
 const MCostCenter = require("./route/MCostCenterRoute");
+const AdvanceInstallments = require("./route/TAdvanceInstallments");
+const CreateUserRoles = require("./route/CreateUserRoles");
 
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());
@@ -110,6 +112,8 @@ app.use("/manual-attendance", TManualAttendance);
 app.use("/gate-pass", MGatePass);
 app.use("/leave-balance", MLeaves);
 app.use("/master-names", MMasterName);
+app.use("/advance-installments", AdvanceInstallments);
+app.use("/create-user-roles", CreateUserRoles);
 app.use("/MLAttendance", MLAttendance);
 // app.use('file-upload', HandleImage)
 

@@ -36,18 +36,15 @@ const TAdvanceRequest = sequelize.define("TAdvanceRequest", {
   CompanyId: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    defaultValue: 1,
   },
   BranchId: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    defaultValue: 1,
   },
   AdvanceId: {
     type: DataTypes.INTEGER,
     allowNull: false,
     primaryKey: true,
-    autoIncrement: true,
   },
   AdvanceDate: {
     type: DataTypes.DATE,
@@ -298,12 +295,14 @@ router.get("/FnShowPendingData", authToken, async (req, res) => {
 
 // GET endpoint to retrieve all records where ApprovalFlag is "R"
 router.get("/FnShowRepaymentData", authToken, async (req, res) => {
+  const advanceId = req.query.AdvanceId
   try {
     const rejectedRecords = await TAdvanceRequest.findAll({
       where: {
         AdvanceStatus: {
           [Sequelize.Op.or]: ["Repayment", "Partial Repayment"],
         },
+        ApprovalFlag: 'A'
       },
       attributes: {
         exclude: ["IUFlag"],
@@ -316,5 +315,30 @@ router.get("/FnShowRepaymentData", authToken, async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
+router.get("/FnShowParticularRepaymentData", authToken, async (req, res) => {
+  const advanceId = req.query.AdvanceId
+  try {
+    const advanceRecords = await TAdvanceRequest.findOne({
+      where: {
+        AdvanceId: advanceId,
+        AdvanceStatus: {
+          [Sequelize.Op.or]: ["Repayment", "Partial Repayment"],
+        },
+        ApprovalFlag: 'A'
+      },
+      attributes: {
+        exclude: ["IUFlag"],
+      },
+      order: [["AdvanceId", "ASC"]],
+    });
+    res.json(advanceRecords);
+  } catch (error) {
+    console.error("Error retrieving rejected data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+
 
 module.exports = router;

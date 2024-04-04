@@ -8,6 +8,7 @@ import { useAuth } from "../Login";
 const RejectionModal = ({ visible, onClick, ID }) => {
   const { token } = useAuth();
   const [details, setDetails] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   console.log("ID:", ID);
   const formik = useFormik({
@@ -19,6 +20,9 @@ const RejectionModal = ({ visible, onClick, ID }) => {
       ApprovalFlag: "",
       ProjectId: "",
       Amount: "",
+      MEmployeeName:"",
+      RejectedBy:"",
+      RejectReason:"",
       Installment: "",
       AMonth: "",
       AYear: "",
@@ -37,11 +41,14 @@ const RejectionModal = ({ visible, onClick, ID }) => {
         EmployeeName: values.EmployeeName,
         AdvanceType: values.AdvanceType,
         AdvanceStatus: "Complete",
-        ApprovalFlag: "Rejected",
+        ApprovalFlag: "R",
         AcFlag: "Y",
         IUFlag: "U",
         RejectedBy: values.RejectedBy,
         RejectReason: values.RejectReason,
+        ApprovedInstallments: "",
+        ApprovedAmount: "",
+        ApprovedBy: "",
       };
       console.log("Updated Data sent to request", updatedData);
       addReq(updatedData);
@@ -63,7 +70,7 @@ const RejectionModal = ({ visible, onClick, ID }) => {
       if (response.status === 200) {
         const data = response.data;
         console.log(data);
-        alert("Record Updated successfully");
+        alert("Advance Rejected");
         onClick();
         window.location.reload();
       } else {
@@ -117,6 +124,33 @@ const RejectionModal = ({ visible, onClick, ID }) => {
     });
   };
 
+  const [Employees, setEmployees] = useState([])
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/employee/personal/FnShowActiveData",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const data = response.data;
+        console.log("Employees", data);
+        setEmployees(data);
+      } catch (error) {
+        console.error("Error", error);
+      }
+    };
+    fetchEmployees();
+  }, [token]);
+
+  const handleInputChange = (event) => {
+    const { value } = event.target;
+    setSearchTerm(value);
+  };
+
+  const filteredEmployees = Employees.filter((employee) =>
+    employee.EmployeeName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   if (!visible) return null;
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -147,7 +181,7 @@ const RejectionModal = ({ visible, onClick, ID }) => {
                   value={formik.values.EmployeeName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
-                  disabled={true}
+                 readOnly
                 />
               </div>
               <div>
@@ -161,7 +195,8 @@ const RejectionModal = ({ visible, onClick, ID }) => {
                     name="AdvanceType"
                     value="Official"
                     onChange={formik.handleChange}
-                    disabled={true}
+                    checked={formik.values.AdvanceType === 'Official'}
+                    readOnly
                   />
                   <label className="text-[13px]">Official</label>
                 </div>
@@ -173,7 +208,8 @@ const RejectionModal = ({ visible, onClick, ID }) => {
                     value="Personal"
                     style={{ marginTop: "10px" }}
                     onChange={formik.handleChange}
-                    disabled={true}
+                    checked={formik.values.AdvanceType === 'Personal'}
+                    readOnly
                   />
                   <label className="text-[13px]">Personal</label>
                 </div>
@@ -186,7 +222,7 @@ const RejectionModal = ({ visible, onClick, ID }) => {
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
                   value={formik.values.ProjectId}
                   onChange={formik.handleChange}
-                  disabled={true}
+                 readOnly
                 >
                   <option value="">Select Project</option>
                   <option value="1">Project 1</option>
@@ -214,7 +250,7 @@ const RejectionModal = ({ visible, onClick, ID }) => {
                   value={formik.values.Installment}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
-                  disabled={true}
+                 readOnly
                 />
               </div>
               <div>
@@ -226,7 +262,7 @@ const RejectionModal = ({ visible, onClick, ID }) => {
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
                   value={formik.values.AMonth}
                   onChange={formik.handleChange}
-                  disabled={true}
+                 readOnly
                 >
                   <option value="">Select Advance Starting Month</option>
                   <option value="January">January</option>
@@ -257,7 +293,7 @@ const RejectionModal = ({ visible, onClick, ID }) => {
                   <option value="2023">2023</option>
                   <option value="2024">2024</option>
                   <option value="2025">2025</option>
-                  disabled={true}
+                 readOnly
                 </select>
               </div>
               <div>
@@ -268,7 +304,7 @@ const RejectionModal = ({ visible, onClick, ID }) => {
                   value={formik.values.Purpose}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
-                  disabled={true}
+                 readOnly
                 />
               </div>
               <div>
@@ -279,22 +315,63 @@ const RejectionModal = ({ visible, onClick, ID }) => {
                   value={formik.values.Remark}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
-                  disabled={true}
+                 readOnly
                 />
               </div>
               <br />
               <div>
-                <p className="capatilize font-semibold  text-[13px]">
+                <label className="text-[13px] font-semibold">
                   Rejected By
-                </p>
-                <input
-                  id="RejectedBy"
-                  type="text"
-                  value={formik.values.RejectedBy}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                />
+                </label>
+                <div className="flex items-center">
+                  <div className="relative w-full">
+                    <input
+                      type="text"
+                      id="MEmployeeName"
+                      name="MEmployeeName"
+                      value={formik.values.MEmployeeName}
+                      onChange={(e) => {
+                        formik.handleChange(e);
+                        handleInputChange(e);
+                      }}
+                      onFocus={() => setSearchTerm("")}
+                      className="w-full px-4 py-2 font-normal bg-white focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                      placeholder='Search for Managing Employee'
+                    />
+
+                    {searchTerm && (
+                      <div
+                        className="absolute z-10 bg-white w-full border border-gray-300 rounded-lg mt-1 overflow-hidden"
+                        style={{ maxHeight: "150px", overflowY: "auto" }}
+                      >
+                        {filteredEmployees.length > 0 ? (
+                          filteredEmployees.map((entry) => (
+                            <div
+                              key={entry.EmployeeId}
+                              onClick={() => {
+                                formik.setValues({
+                                  ...formik.values,
+                                  MEmployeeName: entry.EmployeeName,
+                                  RejectedBy: entry.EmployeeId,
+                                });
+                                setSearchTerm("");
+                              }}
+                              className="px-4 py-2 cursor-pointer hover:bg-gray-200 font-semibold text-[11px]"
+                            >
+                              {entry.EmployeeName}
+                            </div>
+                          ))
+                        ) : (
+                          <div className="px-4 py-2 text-gray-500">
+                            No matching results
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
+
               <div>
                 <p className="capatilize font-semibold  text-[13px]">
                   Reject Reason

@@ -4,202 +4,155 @@ import { useEffect } from "react";
 import { Icon } from "@iconify/react";
 import { useRef } from "react";
 import AdvanceRequestModal from "./AdvanceRequestModal";
-import { useAuth } from "../Login";
+import { useAuth, useDetails } from "../Login";
 import axios from "axios";
+import NoDataNotice from "../NoDataNotice";
+import ViewAdvanceRequest from "./ViewAdvanceRequest";
 
-export const advanceData = [
-  // Item 1
-  {
-    ApprovalFlag: true,
-    AdvanceId: 1,
-    AdvanceDate: "2023-09-04",
-    Employee: "John Doe",
-    AdvanceType: "Office",
-    AdvanceStatus: "Pending",
-    Project: "Project ABC",
-    Amount: 1000,
-    Installment: 3,
-    AdvanceStartingMonth: "September",
-    AdvanceStartingYear: 2023,
-    Purpose: "Equipment Purchase",
-    Status: "Active",
-    Remark: "Approval pending from manager",
-  },
-  // Item 2
-  {
-    ApprovalFlag: false,
-    AdvanceId: 2,
-    AdvanceDate: "2023-09-05",
-    Employee: "Jane Smith",
-    AdvanceType: "Personal",
-    AdvanceStatus: "Repayment",
-    Project: "",
-    Amount: 500,
-    Installment: 1,
-    AdvanceStartingMonth: "August",
-    AdvanceStartingYear: 2023,
-    Purpose: "Vacation",
-    Status: "Active",
-    Remark: "Pending repayment",
-  },
-  // Item 3
-  {
-    ApprovalFlag: true,
-    AdvanceId: 3,
-    AdvanceDate: "2023-09-06",
-    Employee: "Alice Johnson",
-    AdvanceType: "Office",
-    AdvanceStatus: "Partial Repayment",
-    Project: "Project XYZ",
-    Amount: 1500,
-    Installment: 2,
-    AdvanceStartingMonth: "October",
-    AdvanceStartingYear: 2023,
-    Purpose: "Travel Expenses",
-    Status: "Active",
-    Remark: "Partial repayment in progress",
-  },
-  // Item 4
-  {
-    ApprovalFlag: true,
-    AdvanceId: 4,
-    AdvanceDate: "2023-09-07",
-    Employee: "Bob Anderson",
-    AdvanceType: "Personal",
-    AdvanceStatus: "Pending",
-    Project: "",
-    Amount: 750,
-    Installment: 1,
-    AdvanceStartingMonth: "September",
-    AdvanceStartingYear: 2023,
-    Purpose: "Education Fees",
-    Status: "Active",
-    Remark: "Awaiting approval",
-  },
-  // Item 5
-  {
-    ApprovalFlag: false,
-    AdvanceId: 5,
-    AdvanceDate: "2023-09-08",
-    Employee: "Eva Williams",
-    AdvanceType: "Office",
-    AdvanceStatus: "Repayment",
-    Project: "Project DEF",
-    Amount: 1200,
-    Installment: 4,
-    AdvanceStartingMonth: "November",
-    AdvanceStartingYear: 2023,
-    Purpose: "Software Licenses",
-    Status: "Active",
-    Remark: "Repayment initiated",
-  },
-];
 
 const AdvanceRequest = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
+  const [advanceReq, setAdvanceReq] = useState([]);
   const { token } = useAuth();
+  const { empid } = useDetails()
 
-  // const [PTView, setPTView] = useState(false);
-  // const [edit, setEdit] = useState(false);
-  // const [PTId, setPTId] = useState();
+  // View and Edit
+  const [veDeductionH, setVeDeductionH] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const [EHid, setEHid] = useState();
 
   // Hamburger Menu
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
-  // Menu outside click
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setMenuOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  //Max Searchbar width
-  const getColumnMaxWidth = (columnName) => {
-    let maxWidth = 0;
-    const allRows = [...advanceData];
-
-    allRows.forEach((row) => {
-      const cellContent = row[columnName];
-      const cellWidth = getTextWidth(cellContent, "11px"); // You can adjust the font size here
-      maxWidth = Math.max(maxWidth, cellWidth);
-    });
-
-    return maxWidth + 10; // Adding some padding to the width
-  };
-
-  const getTextWidth = (text, fontSize) => {
-    const canvas = document.createElement("canvas");
-    const context = canvas.getContext("2d");
-    context.font = fontSize + " sans-serif";
-    return context.measureText(text).width;
-  };
 
   const [columnVisibility, setColumnVisibility] = useState({
+    ApprovalFlag:true,
     AdvanceDate: true,
+    EmployeeId: true,
     EmployeeName: true,
     AdvanceType: true,
     AdvanceStatus: true,
     ProjectId: true,
     Amount: true,
     Installment: true,
-    AcFlag: true,
+    ApprovedBy: false,
+    ApprovedAmount:false,
+    ApprovedInstallments:false,
+    RejectedBy: false,
+    RejectReason: false
   });
-  //Toggle
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [selectedColumns, setSelectedColumns] = useState([
-    ...Object.keys(columnVisibility),
-  ]);
 
-  const toggleColumn = (columnName) => {
-    if (selectedColumns.includes(columnName)) {
-      setSelectedColumns((prevSelected) =>
-        prevSelected.filter((col) => col !== columnName)
-      );
-    } else {
-      setSelectedColumns((prevSelected) => [...prevSelected, columnName]);
-    }
-  };
+  const columnNames = {
+    ApprovalFlag:"Approval Flag",
+    AdvanceDate: "Advance Date",
+    EmployeeId: "Employee ID",
+    EmployeeName: "Employee Name",
+    AdvanceType: "Advance Type",
+    AdvanceStatus: "Advance Status",
+    ProjectId: "Project",
+    Amount: "Amount",
+    Installment: "Installment",
+    ApprovedBy: 'Approved By',
+    ApprovedAmount:'Approved Amount',
+    ApprovedInstallments:'Approved Installments',
+    RejectedBy: 'Rejected By',
+    RejectReason: 'Reject Reason'
+  }
 
-  useEffect(() => {
-    console.log("Selected Columns:", selectedColumns);
-  }, [selectedColumns]);
-
-  const selectAllColumns = () => {
-    setSelectedColumns([...Object.keys(columnVisibility)]);
-  };
-
-  const deselectAllColumns = () => {
-    setSelectedColumns([]);
-  };
+    // Menu click outside
+    useEffect(() => {
+      const handleClickOutside = (event) => {
+        if (menuRef.current && !menuRef.current.contains(event.target)) {
+          setMenuOpen(false);
+        }
+      };
+  
+      document.addEventListener("mousedown", handleClickOutside);
+  
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, []);
+  
+    //Max Searchbar width
+    const getColumnMaxWidth = (columnName) => {
+      let maxWidth = 0;
+      const allRows = [...advanceReq];
+  
+      allRows.forEach((row) => {
+        const cellContent = row[columnName];
+        const cellWidth = getTextWidth(cellContent, "11px"); // You can adjust the font size here
+        maxWidth = Math.max(maxWidth, cellWidth);
+      });
+  
+      return maxWidth + 10; // Adding some padding to the width
+    };
+  
+    const getTextWidth = (text, fontSize) => {
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+      context.font = fontSize + " sans-serif";
+      return context.measureText(text).width;
+    };
+  
+    //Toggle columns
+    const [showDropdown, setShowDropdown] = useState(false);
+    const [selectedColumns, setSelectedColumns] = useState([
+      ...Object.keys(columnVisibility),
+    ]);
+  
+    const toggleColumn = (columnName) => {
+      setColumnVisibility((prevVisibility) => ({
+        ...prevVisibility,
+        [columnName]: !prevVisibility[columnName],
+      }));
+    };
+  
+    useEffect(() => {
+      console.log("Selected Columns:", selectedColumns);
+    }, [selectedColumns]);
+  
+    const selectAllColumns = () => {
+      setSelectedColumns([...Object.keys(columnVisibility)]);
+      setColumnVisibility((prevVisibility) => {
+        const updatedVisibility = { ...prevVisibility };
+        Object.keys(updatedVisibility).forEach((columnName) => {
+          updatedVisibility[columnName] = true;
+        });
+        return updatedVisibility;
+      });
+    };
+  
+    const deselectAllColumns = () => {
+      setSelectedColumns([]);
+      setColumnVisibility((prevVisibility) => {
+        const updatedVisibility = { ...prevVisibility };
+        Object.keys(updatedVisibility).forEach((columnName) => {
+          updatedVisibility[columnName] = false;
+        });
+        return updatedVisibility;
+      });
+    };
 
   // API
-  const [advanceReq, setAdvanceReq] = useState([]);
 
   useEffect(() => {
     fetchRequestData();
-  }, []);
+  }, [token, isModalOpen]);
 
   const fetchRequestData = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5500/advance-request/FnShowActiveData",
+        "http://localhost:5500/advance-request/FnShowEmployeeAdvanceRequests",
         {
+          params: { EmployeeId: empid },
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      console.log("Response Object", response);
       const data = response.data;
       console.log(data);
       setAdvanceReq(data);
@@ -207,7 +160,6 @@ const AdvanceRequest = () => {
       console.log("Error while fetching course data: ", error);
     }
   };
-  console.log(advanceReq);
 
   const handleSearchChange = (title, searchWord) => {
     const searchData = [...advanceReq];
@@ -331,51 +283,57 @@ const AdvanceRequest = () => {
         visible={isModalOpen}
         onClick={() => setModalOpen(false)}
       />
+
+    {advanceReq.length === 0  ? (
+          <div className="flex justify-center items-center">
+          <NoDataNotice Text='No Advance Requests Yet' visible={isModalOpen}/>
+          </div>
+        ) : (
       <div className="grid gap-4  justify-between">
         <div className="my-1 rounded-2xl bg-white p-2 pr-8">
           <table className="min-w-full text-center  rounded-lg justify-center whitespace-normal">
             <thead>
-              <tr>
-                <th className=" w-auto px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
+            <tr>
+                <th className=" px-1 text-[13px] font-bold text-black border-2 border-gray-400">
                   Actions
-                </th>
-                <th className=" w-auto px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
-                  Approval Flag
                 </th>
                 <th className=" w-auto px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
                   ID
                 </th>
-                {selectedColumns.map((columnName) => (
-                  <th
-                    key={columnName}
-                    className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 ${
-                      columnVisibility[columnName] ? "" : "hidden"
-                    }`}
-                  >
-                    {columnName}
-                  </th>
-                ))}
+                {selectedColumns.map((columnName) =>
+                  columnVisibility[columnName] ? (
+                    <th
+                      key={columnName}
+                      className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal`}
+                    >
+                      {columnNames[columnName]}
+                    </th>
+                  ) : null
+                )}
               </tr>
               <tr>
-                <th className="p-2 font-bold text-black border-2 " />
-                <th className="p-2 font-bold text-black border-2 " />
-                <th className="p-2 font-bold text-black border-2 " />
-                {selectedColumns.map((columnName) => (
-                  <th
-                    key={columnName}
-                    className="p-2 font-bold text-black border-2 text-[11px]"
-                  >
-                    <input
-                      type="text"
-                      placeholder={`Search `}
-                      className="w-auto text-[11px] h-6 border-2 border-slate-500 rounded-lg justify-center text-center whitespace-normal"
-                      style={{ maxWidth: getColumnMaxWidth(columnName) + "px" }}
-                      onChange={(e) =>
-                        handleSearchChange(columnName, e.target.value)
-                      }
-                    />
-                  </th>
-                ))}
+                <th className="border-2"></th>
+                <th className="p-2 font-semibold text-black border-2" />
+                {selectedColumns.map((columnName) =>
+                  columnVisibility[columnName] ? (
+                    <th
+                      key={columnName}
+                      className="p-2 font-semibold text-black border-2"
+                    >
+                      <input
+                        type="text"
+                        placeholder={`Search `}
+                        className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
+                        style={{
+                          maxWidth: getColumnMaxWidth(columnName) + "px",
+                        }}
+                        onChange={(e) =>
+                          handleSearchChange(columnName, e.target.value)
+                        }
+                      />
+                    </th>
+                  ) : null
+                )}
               </tr>
             </thead>
             <tbody className="">
@@ -383,45 +341,67 @@ const AdvanceRequest = () => {
                 ? filteredData.map((result, key) => (
                     <tr key={key}>
                       <td className="px-2 text-[11px] border-2">
-                        <div className="flex items-center gap-2 text-center justify-center">
+                      <div className="flex gap-2 text-center">
                           <Icon
-                            className="cursor-pointer"
                             icon="lucide:eye"
                             color="#556987"
                             width="20"
                             height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setVeDeductionH(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setEHid(result.AdvanceId); // Pass ID to VEModal
+                            }}
                           />
                           <Icon
-                            className="cursor-pointer"
                             icon="mdi:edit"
                             color="#556987"
                             width="20"
                             height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setVeDeductionH(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setEHid(result.AdvanceId); // Pass ID to VEModal
+                            }}
                           />
                           <Icon
-                            className="cursor-pointer"
                             icon="material-symbols:delete-outline"
                             color="#556987"
                             width="20"
                             height="20"
+                            className="cursor-pointer"
                           />
                         </div>
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {result.ApprovalFlag}
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
                         {result.AdvanceId}
                       </td>
                       {selectedColumns.map((columnName) => (
-                        <td
-                          key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-[11px] text-left${
-                            columnVisibility[columnName] ? "" : "hidden"
-                          }`}
-                        >
-                          {result[columnName]}
-                        </td>
+                          columnVisibility[columnName] ? (
+                              columnName === 'ApprovalFlag' ? (
+                                  <td
+                                      key={columnName}
+                                      className={`px-4 border-2 whitespace-normal font-bold text-[15px] text-center capitalize ${
+                                          result[columnName] === 'P' ? 'bg-yellow-500' :
+                                          result[columnName] === 'R' ? 'bg-red-500' :
+                                          result[columnName] === 'A' ? 'bg-green-600' : ''
+                                      }`}
+                                  >
+                                      {result[columnName]}
+                                  </td>
+                              ) : (
+                                  <td
+                                      key={columnName}
+                                      className={`px-4 border-2 whitespace-normal text-left text-[11px]`}
+                                  >
+                                      {result[columnName]}
+                                  </td>
+                              )
+                          ) : (
+                              <td key={columnName} className="hidden"></td>
+                          )
                       ))}
                     </tr>
                   ))
@@ -429,45 +409,67 @@ const AdvanceRequest = () => {
                   advanceReq.map((result, index) => (
                     <tr key={index}>
                       <td className="px-2 text-[11px] border-2">
-                        <div className="flex items-center gap-2 text-center justify-center">
+                      <div className="flex items-center gap-2 text-center justify-center">
                           <Icon
-                            className="cursor-pointer"
                             icon="lucide:eye"
                             color="#556987"
                             width="20"
                             height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setVeDeductionH(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setEHid(result.AdvanceId); // Pass ID to VEModal
+                            }}
                           />
                           <Icon
-                            className="cursor-pointer"
                             icon="mdi:edit"
                             color="#556987"
                             width="20"
                             height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setVeDeductionH(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setEHid(result.AdvanceId); // Pass ID to VEModal
+                            }}
                           />
                           <Icon
-                            className="cursor-pointer"
                             icon="material-symbols:delete-outline"
                             color="#556987"
                             width="20"
                             height="20"
+                            className="cursor-pointer"
                           />
                         </div>
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {result.ApprovalFlag}
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
                         {result.AdvanceId}
                       </td>
                       {selectedColumns.map((columnName) => (
-                        <td
-                          key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-left text-[11px]${
-                            columnVisibility[columnName] ? "" : "hidden"
-                          }`}
-                        >
-                          {result[columnName]}
-                        </td>
+                          columnVisibility[columnName] ? (
+                              columnName === 'ApprovalFlag' ? (
+                                  <td
+                                      key={columnName}
+                                      className={`px-4 border-2 whitespace-normal font-bold text-[15px] text-center capitalize ${
+                                          result[columnName] === 'P' ? 'bg-yellow-500' :
+                                          result[columnName] === 'R' ? 'bg-red-500' :
+                                          result[columnName] === 'A' ? 'bg-green-600' : ''
+                                      }`}
+                                  >
+                                      {result[columnName]}
+                                  </td>
+                              ) : (
+                                  <td
+                                      key={columnName}
+                                      className={`px-4 border-2 whitespace-normal text-left text-[11px]`}
+                                  >
+                                      {result[columnName]}
+                                  </td>
+                              )
+                          ) : (
+                              <td key={columnName} className="hidden"></td>
+                          )
                       ))}
                     </tr>
                   ))}
@@ -475,6 +477,12 @@ const AdvanceRequest = () => {
           </table>
         </div>
       </div>
+        )}
+      <ViewAdvanceRequest 
+      visible={veDeductionH}
+      onClick={() => setVeDeductionH(false)}
+      ID = {EHid} 
+      edit={edit}/>
     </div>
   );
 };

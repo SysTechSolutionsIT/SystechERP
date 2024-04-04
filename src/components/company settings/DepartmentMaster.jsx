@@ -377,7 +377,7 @@ const DepartmentMaster = () => {
                             }}
                           />
                           <Icon
-                            icon="mdi:edit"
+                          icon="mdi:edit"
                             color="#556987"
                             width="20"
                             height="20"
