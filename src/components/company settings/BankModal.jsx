@@ -11,16 +11,16 @@ const BankModal = ({ visible, onClick }) => {
   const [isModalOpen, setModalOpen] = useState(false); //Add Modal
   const [MMId, setMMId] = useState();
 
-  const [accountNo, setAccountNo] = useState('');
+  const [accountNo, setAccountNo] = useState("");
 
-const handleAccNoChange = (event) => {
-  const { value } = event.target;
-  
-  // Only update the account number state if the input value contains only numbers
-  if (/^[0-9]*$/.test(value)) {
-    setAccountNo(value);
-  }
-};
+  const handleAccNoChange = (event) => {
+    const { value } = event.target;
+
+    // Only update the account number state if the input value contains only numbers
+    if (/^[0-9]*$/.test(value)) {
+      setAccountNo(value);
+    }
+  };
 
   //Fetching Employee Names
   useEffect(() => {
@@ -64,7 +64,7 @@ const handleAccNoChange = (event) => {
       AuthorizedPerson3: "",
       AuthorizedPersonRole3: "",
     },
-    onSubmit: (values, {resetForm}) => {
+    onSubmit: (values) => {
       const updatedData = {
         BankName: values.BankName,
         BranchName: values.BranchName,
@@ -86,10 +86,9 @@ const handleAccNoChange = (event) => {
         AuthorizedPersonRole2: values.AuthorizedPersonRole2,
         AuthorizedPerson3: values.AuthorizedPerson3,
         AuthorizedPersonRole3: values.AuthorizedPersonRole3,
-      }
+      };
       console.log(updatedData);
       addBank(updatedData);
-      // resetForm()
     },
   });
 
@@ -104,9 +103,12 @@ const handleAccNoChange = (event) => {
           },
         }
       );
-        console.log(data);
-        alert("Bank added successfully");
-        onClick();
+      console.log(data);
+      console.log("Response:", response);
+      console.log("Data:", response.data);
+      alert("Bank added successfully");
+      window.location.reload();
+      onClick();
     } catch (error) {
       console.error("Error:", error.message);
       // Handle network error
@@ -178,10 +180,8 @@ const handleAccNoChange = (event) => {
           </div>
           <div className="py-4">
             <div className="grid grid-cols-2 gap-4">
-            <div>
-                <p className="capatilize font-semibold text-[13px]">
-                  Bank Id
-                </p>
+              <div>
+                <p className="capatilize font-semibold text-[13px]">Bank Id</p>
                 <input
                   id="BankId"
                   type="text"
@@ -271,12 +271,12 @@ const handleAccNoChange = (event) => {
                   Account No.
                 </p>
                 <input
-                id="AccountNo"
-                type="text"
-                placeholder="Enter Account No."
-                value={accountNo}
-                className="w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
-                onChange={handleAccNoChange}                
+                  id="AccountNo"
+                  type="text"
+                  placeholder="Enter Account No."
+                  value={accountNo}
+                  className="w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                  onChange={handleAccNoChange}
                 />
               </div>
               <div>
