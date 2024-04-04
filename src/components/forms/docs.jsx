@@ -64,7 +64,7 @@ const Documents = ({ ID, name }) => {
           }
         );
         alert("Documents Deleted Permanently");
-        fetchDocData()
+        fetchDocData();
       } catch (error) {
         console.error("Error", error);
       }
@@ -129,7 +129,7 @@ const Documents = ({ ID, name }) => {
         );
         alert("Documents Added");
         handleUpload();
-        fetchDocData()
+        fetchDocData();
       } catch (error) {
         console.error("Error", error);
       }
@@ -164,14 +164,16 @@ const Documents = ({ ID, name }) => {
     return (
       <form>
         <div className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center w-full">
-          <div className="bg-gray-200 w-[60%] p-8 rounded-lg max-h-[80%] overflow-y-scroll">
+          <div className="bg-gray-200 w-[60%] p-8 rounded-lg max-h-[80%] overflow-y-clip">
             <div className="bg-blue-900 py-2 px-4 rounded-lg flex justify-between items-center">
               <p className="text-white text-[13px] font-semibold">
                 Document Master
               </p>
               <p className="text-white underline text-[11px] font-semibold">
-                Note: Please enter unique document names if you are uplading
-                similar documents
+                Note: (1) Please enter unique document names if you are uplading
+                similar documents <br />
+                (2) Add passport expiry date as remark while uploading the
+                passport
               </p>
               <Icon
                 icon="maki:cross"

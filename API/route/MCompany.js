@@ -72,7 +72,7 @@ sequelize
     console.error("Unable to connect to the database:", err);
   });
 
-  MCompany.sync()
+MCompany.sync()
   .then(() => {
     console.log("MCaderwiseEarning model synchronized successfully.");
   })
@@ -214,7 +214,7 @@ router.post(
         { where: { CompanyId: req.query.CompanyId } }
       );
 
-      return res.json({ Status: "Success" });
+      return res.json({ Message: "Success" });
     } catch (error) {
       console.error(error);
       return res.json({ Message: "Error" });

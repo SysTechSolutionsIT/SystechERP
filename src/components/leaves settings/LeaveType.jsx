@@ -8,12 +8,12 @@ import { useAuth, useDetails } from "../Login";
 const LeaveTypeMaster = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false); //Add Modal
-  const [leaveData, setLeaveData] = useState([])
-  const { token } = useAuth()
-  const { fYear } = useDetails()
-  const [Employees, setEmployees] = useState([])
-  const [LeaveTypes, setLeaveTypes] = useState([])
-  const [FinancialYears, setFinancialYears] = useState([])
+  const [leaveData, setLeaveData] = useState([]);
+  const { token } = useAuth();
+  const { fYear } = useDetails();
+  const [Employees, setEmployees] = useState([]);
+  const [LeaveTypes, setLeaveTypes] = useState([]);
+  const [FinancialYears, setFinancialYears] = useState([]);
   const [employeeId, setEmployeeId] = useState("");
   const [employeeTypeId, setEmployeeTypeId] = useState("");
   const [employeeType, setEmployeeType] = useState("");
@@ -35,44 +35,46 @@ const LeaveTypeMaster = () => {
       return; // If the user cancels deletion, do nothing
     }
     try {
-      const response = await axios.post('http://localhost:5500/leave-type/FnAddUpdateDeleteRecord',
-      {
-        LeaveTypeId: DeleteId,
-        IUFlag:'D'
-      },
-      {
-        headers:{
-          Authorization: `Bearer ${token}`
+      const response = await axios.post(
+        "http://localhost:5500/leave-type/FnAddUpdateDeleteRecord",
+        {
+          LeaveTypeId: DeleteId,
+          IUFlag: "D",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      }
-      )
-      alert('Leave Type Deleted')
-      fetchLeaveType()
+      );
+      alert("Leave Type Deleted");
+      fetchLeaveType();
     } catch (error) {
-      console.error('Error', error);
+      console.error("Error", error);
     }
-  }
-
+  };
 
   const fetchLeaveType = async () => {
     try {
-      const response = await axios.get('http://localhost:5500/leave-type/FnShowActiveData', {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const response = await axios.get(
+        "http://localhost:5500/leave-type/FnShowActiveData",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      })
-      const data = response.data
-      console.log(data)
-      setLeaveData(data)
+      );
+      const data = response.data;
+      console.log(data);
+      setLeaveData(data);
     } catch (error) {
-      console.error('Error', error);
+      console.error("Error", error);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchLeaveType()
-  }, [token, isModalOpen])
-
+    fetchLeaveType();
+  }, [token, isModalOpen]);
 
   //Hamburger Menu
   const [menuOpen, setMenuOpen] = useState(false);
@@ -248,72 +250,82 @@ const LeaveTypeMaster = () => {
   }, [token]);
 
   const today = new Date();
-const formattedDate = today.toISOString().split("T")[0];
+  const formattedDate = today.toISOString().split("T")[0];
 
-const addLeaveBalancesForAllEmployees = async (employeesData) => {
-  try {
-    const currentYear = new Date().getFullYear();
-    
-    const leaveBalancesPayload = employeesData.map((employee) => {
-      const { EmployeeId, EmployeeTypeId, EmployeeTypeGroupId, EmployeeName } = employee;
-      const selectedEmployeeType = employeeTypes.find(
-        (type) => type.EmployeeTypeId === EmployeeTypeId
+  const addLeaveBalancesForAllEmployees = async (employeesData) => {
+    try {
+      const currentYear = new Date().getFullYear();
+
+      const leaveBalancesPayload = employeesData
+        .map((employee) => {
+          const {
+            EmployeeId,
+            EmployeeTypeId,
+            EmployeeTypeGroupId,
+            EmployeeName,
+          } = employee;
+          const selectedEmployeeType = employeeTypes.find(
+            (type) => type.EmployeeTypeId === EmployeeTypeId
+          );
+
+          const employeeType = selectedEmployeeType
+            ? selectedEmployeeType.ShortName
+            : "";
+
+          return LeaveTypes.map(
+            ({ LeaveTypeId, ShortName, DefaultBalance }) => ({
+              FYear: fYear,
+              EmployeeId: EmployeeId,
+              EmployeeTypeId: EmployeeTypeId,
+              EmployeeType: employeeType,
+              EmployeeTypeGroup: EmployeeTypeGroupId,
+              LeaveTypeId: LeaveTypeId,
+              LeaveTypeDesc: ShortName,
+              Month: new Date().getMonth() + 1,
+              Year: currentYear,
+              LeaveBalanceDate: formattedDate,
+              EmployeeName: EmployeeName,
+              OpeningBalance: DefaultBalance,
+              LeaveEarned1: 0,
+              LeaveEarned2: 0,
+              LeaveEarned3: 0,
+              LeaveEarned4: 0,
+              LeaveEarned5: 0,
+              LeaveEarned6: 0,
+              LeaveEarned7: 0,
+              LeaveEarned8: 0,
+              LeaveEarned9: 0,
+              LeaveEarned10: 0,
+              LeaveEarned11: 0,
+              LeaveEarned12: 0,
+              SanctionLeaveDays: 0,
+              LeaveBalance: DefaultBalance,
+              Remark: "",
+              IUFlag: "I",
+            })
+          );
+        })
+        .flat();
+
+      console.log(leaveBalancesPayload);
+
+      const confirmAdd = window.confirm(
+        "Are you sure you want to generate leaves for all employees?"
       );
 
-      const employeeType = selectedEmployeeType ? selectedEmployeeType.ShortName : '';
-      
-      return LeaveTypes.map(({ LeaveTypeId, ShortName, DefaultBalance }) => ({
-        FYear: fYear,
-        EmployeeId: EmployeeId,
-        EmployeeTypeId: EmployeeTypeId,
-        EmployeeType: employeeType,
-        EmployeeTypeGroup: EmployeeTypeGroupId,
-        LeaveTypeId: LeaveTypeId,
-        LeaveTypeDesc: ShortName,
-        Month: new Date().getMonth() + 1,
-        Year: currentYear,
-        LeaveBalanceDate: formattedDate,
-        EmployeeName: EmployeeName,
-        OpeningBalance: DefaultBalance,
-        LeaveEarned1: 0,
-        LeaveEarned2: 0,
-        LeaveEarned3: 0,
-        LeaveEarned4: 0,
-        LeaveEarned5: 0,
-        LeaveEarned6: 0,
-        LeaveEarned7: 0,
-        LeaveEarned8: 0,
-        LeaveEarned9: 0,
-        LeaveEarned10: 0,
-        LeaveEarned11: 0,
-        LeaveEarned12: 0,
-        SanctionLeaveDays: 0,
-        LeaveBalance: DefaultBalance,
-        Remark: "",
-        IUFlag: "I",
-      }));
-    }).flat();
+      if (!confirmAdd) return;
 
-    console.log(leaveBalancesPayload);
+      const response = await axios.post(
+        "http://localhost:5500/leave-balance/FnAddUpdateDeleteRecord",
+        leaveBalancesPayload,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
-    const confirmAdd = window.confirm(
-      "Are you sure you want to generate leaves for all employees?"
-    );
-
-    if (!confirmAdd) return;
-
-    const response = await axios.post(
-      "http://localhost:5500/leave-balance/FnAddUpdateDeleteRecord",
-      leaveBalancesPayload,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-
-    alert("Leave Balances Generated");
-  } catch (error) {
-    console.error("Error", error);
-  }
-};
-
+      alert("Leave Balances Generated");
+    } catch (error) {
+      console.error("Error", error);
+    }
+  };
 
   return (
     <div className="top-25 min-w-[40%]">
@@ -336,8 +348,9 @@ const addLeaveBalancesForAllEmployees = async (employeesData) => {
             Column Visibility
             <Icon
               icon="fe:arrow-down"
-              className={`mt-1.5 ml-2 ${showDropdown ? "rotate-180" : ""
-                } cursor-pointer`}
+              className={`mt-1.5 ml-2 ${
+                showDropdown ? "rotate-180" : ""
+              } cursor-pointer`}
             />
           </button>
           {showDropdown && (
@@ -438,8 +451,9 @@ const addLeaveBalancesForAllEmployees = async (employeesData) => {
                     columnVisibility[columnName] && (
                       <th
                         key={columnName}
-                        className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 capitalize whitespace-normal max-w-xs ${columnVisibility[columnName] ? "" : "hidden"
-                          }`}
+                        className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 capitalize whitespace-normal max-w-xs ${
+                          columnVisibility[columnName] ? "" : "hidden"
+                        }`}
                       >
                         {columnName
                           .replace(/([a-z])([A-Z])/g, "$1 $2")
@@ -482,115 +496,117 @@ const addLeaveBalancesForAllEmployees = async (employeesData) => {
             <tbody className="">
               {filteredData.length > 0
                 ? filteredData.map((result, key) => (
-                  <tr key={key}>
-                    <td className="px-2 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setLVE(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setLeaveId(result.LeaveTypeId); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setLVE(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setLeaveId(result.LeaveTypeId); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {result.LeaveTypeId}
-                    </td>
-                    {selectedColumns.map(
-                      (columnName) =>
-                        columnVisibility[columnName] && (
-                          <td
-                            key={columnName}
-                            className={`px-4 border-2 whitespace-normal text-[11px] text-left${columnVisibility[columnName] ? "" : "hidden"
+                    <tr key={key}>
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setLVE(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setLeaveId(result.LeaveTypeId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setLVE(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setLeaveId(result.LeaveTypeId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                        {result.LeaveTypeId}
+                      </td>
+                      {selectedColumns.map(
+                        (columnName) =>
+                          columnVisibility[columnName] && (
+                            <td
+                              key={columnName}
+                              className={`px-4 border-2 whitespace-normal text-[11px] text-left${
+                                columnVisibility[columnName] ? "" : "hidden"
                               }`}
-                          >
-                            {result[columnName]}
-                          </td>
-                        )
-                    )}
-                  </tr>
-                ))
+                            >
+                              {result[columnName]}
+                            </td>
+                          )
+                      )}
+                    </tr>
+                  ))
                 : leaveData.map((entry, index) => (
-                  <tr key={index}>
-                    <td className="px-2 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setLVE(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setLeaveId(entry.LeaveTypeId); // Pass ID to VEModal
-                          }}
-                        />
+                    <tr key={index}>
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setLVE(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setLeaveId(entry.LeaveTypeId); // Pass ID to VEModal
+                            }}
+                          />
 
-                        <Icon
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setLVE(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setLeaveId(entry.LeaveTypeId); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => deleteLeaveType(entry.LeaveTypeId)}
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {entry.LeaveTypeId}
-                    </td>
-                    {selectedColumns.map(
-                      (columnName) =>
-                        columnVisibility[columnName] && (
-                          <td
-                            key={columnName}
-                            className={`px-4 border-2 whitespace-normal text-left text-[11px]${columnVisibility[columnName] ? "" : "hidden"
+                          <Icon
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setLVE(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setLeaveId(entry.LeaveTypeId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => deleteLeaveType(entry.LeaveTypeId)}
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                        {entry.LeaveTypeId}
+                      </td>
+                      {selectedColumns.map(
+                        (columnName) =>
+                          columnVisibility[columnName] && (
+                            <td
+                              key={columnName}
+                              className={`px-4 border-2 whitespace-normal text-left text-[11px]${
+                                columnVisibility[columnName] ? "" : "hidden"
                               }`}
-                          >
-                            {entry[columnName]}
-                          </td>
-                        )
-                    )}
-                  </tr>
-                ))}
+                            >
+                              {entry[columnName]}
+                            </td>
+                          )
+                      )}
+                    </tr>
+                  ))}
             </tbody>
           </table>
         </div>

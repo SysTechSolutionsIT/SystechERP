@@ -28,21 +28,23 @@ const sequelize = new Sequelize(
   }
 );
 
-const MLeaves = sequelize.define('MLeaves', {
+const MLeaves = sequelize.define(
+  "MLeaves",
+  {
     CompanyId: {
       type: DataTypes.STRING(5),
       allowNull: false,
-      defaultValue: '00001',
+      defaultValue: "00001",
     },
     BranchId: {
       type: DataTypes.STRING(5),
       allowNull: false,
-      defaultValue: '00001',
+      defaultValue: "00001",
     },
     LeaveBalanceId: {
       type: DataTypes.STRING(5),
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
     },
     FYear: {
       type: DataTypes.STRING(5),
@@ -146,7 +148,7 @@ const MLeaves = sequelize.define('MLeaves', {
     AcFlag: {
       type: DataTypes.STRING(1),
       allowNull: false,
-      defaultValue: 'Y',
+      defaultValue: "Y",
     },
     CreatedBy: {
       type: DataTypes.STRING(500),
@@ -164,10 +166,12 @@ const MLeaves = sequelize.define('MLeaves', {
       type: DataTypes.DATE,
       allowNull: true,
     },
-  }, {
-    timestamps: false, 
-});
-  
+  },
+  {
+    timestamps: false,
+  }
+);
+
 router.use(bodyParser.json());
 
 sequelize
@@ -187,98 +191,97 @@ MLeaves.sync()
     console.error("Error synchronizing MLeaveTyepe model:", error);
   });
 
-  router.get("/FnShowAllData", authToken, async (req, res) => {
-    try {
-      const Leaves = await MLeaves.findAll({
-        attributes: {
-          exclude: ['id']
-        },
-        order: [["LeaveBalanceId", "ASC"]],
-      });
-      res.json(Leaves);
-    } catch (error) {
-      console.error("Error retrieving data:", error);
-      res.status(500).send("Internal Server Error");
-    } 
-  });
-  
-  // GET endpoint to retrieve active companies
-  router.get("/FnShowActiveData", authToken, async (req, res) => {
-    try {
-      const Leaves = await MLeaves.findAll({
-        where: {
-          AcFlag: "Y",
-        },
-        attributes: {
-          exclude: ["id"],
-        },
-        order: [["LeaveBalanceId", "ASC"]],
-      });
-      res.json(Leaves);
-    } catch (error) {
-      console.error("Error retrieving data:", error);
-      res.status(500).send("Internal Server Error");
-    }
-  });
-  
-  router.get("/FnShowParticularData", authToken, async (req, res) => {
-    const LeaveBalanceId = req.query.LeaveBalanceId;
-    try {
-      const Leaves = await MLeaves.findOne({
-        where: {
-          LeaveBalanceId: LeaveBalanceId,
-        },
-        attributes: {
-          exclude: ["id"],
-        },
-        order: [["LeaveBalanceId", "ASC"]],
-      });
-      res.json(Leaves);
-    } catch (error) {
-      console.error("Error retrieving data:", error);
-      res.status(500).send("Internal Server Error");
-    }
-  });
+router.get("/FnShowAllData", authToken, async (req, res) => {
+  try {
+    const Leaves = await MLeaves.findAll({
+      attributes: {
+        exclude: ["id"],
+      },
+      order: [["LeaveBalanceId", "ASC"]],
+    });
+    res.json(Leaves);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
-  router.get("/FnShowParticularEmployeeData", authToken, async (req, res) => {
-    const EmployeeId = req.query.EmployeeId; 
-    const FYear = req.query.FYear
-    const Month = req.query.Month
-    const Year = req.query.Year
-    try {
-      const Leaves = await MLeaves.findAll({
-        where: {
-          EmployeeId: EmployeeId, 
-          FYear : FYear,
-        },
-        attributes: {
-          exclude: ["id"],
-        },
-        order: [["LeaveBalanceId", "ASC"]],
-      });
-      res.json(Leaves);
-    } catch (error) {
-      console.error("Error retrieving data:", error);
-      res.status(500).send("Internal Server Error");
-    }
-  });
-  
-  
+// GET endpoint to retrieve active companies
+router.get("/FnShowActiveData", authToken, async (req, res) => {
+  try {
+    const Leaves = await MLeaves.findAll({
+      where: {
+        AcFlag: "Y",
+      },
+      attributes: {
+        exclude: ["id"],
+      },
+      order: [["LeaveBalanceId", "ASC"]],
+    });
+    res.json(Leaves);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+router.get("/FnShowParticularData", authToken, async (req, res) => {
+  const LeaveBalanceId = req.query.LeaveBalanceId;
+  try {
+    const Leaves = await MLeaves.findOne({
+      where: {
+        LeaveBalanceId: LeaveBalanceId,
+      },
+      attributes: {
+        exclude: ["id"],
+      },
+      order: [["LeaveBalanceId", "ASC"]],
+    });
+    res.json(Leaves);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+router.get("/FnShowParticularEmployeeData", authToken, async (req, res) => {
+  const EmployeeId = req.query.EmployeeId;
+  const FYear = req.query.FYear;
+  const Month = req.query.Month;
+  const Year = req.query.Year;
+  try {
+    const Leaves = await MLeaves.findAll({
+      where: {
+        EmployeeId: EmployeeId,
+        FYear: FYear,
+      },
+      attributes: {
+        exclude: ["id"],
+      },
+      order: [["LeaveBalanceId", "ASC"]],
+    });
+    res.json(Leaves);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 const generateLeaveBalanceId = async (req, res, next) => {
-  try{
-    const totalRecords = await MLeaves.count()
+  try {
+    const totalRecords = await MLeaves.count();
 
     req.body.forEach((item, index) => {
-      const newId = (totalRecords + index + 1).toString().padStart(5,"0")
-      item.LeaveBalanceId = newId
-    })
+      const newId = (totalRecords + index + 1).toString().padStart(5, "0");
+      item.LeaveBalanceId = newId;
+    });
 
-    next()
-  } catch (error){
-    console.error('Error generating Leave Balance Id', error);
-    res.status(500).send('Internal Server Error')
+    next();
+  } catch (error) {
+    console.error("Error generating Leave Balance Id", error);
+    res.status(500).send("Internal Server Error");
   }
-}
+};
 
 router.patch("/FnUpdateRecords", authToken, async (req, res) => {
   try {
@@ -304,10 +307,16 @@ router.patch("/FnUpdateRecords", authToken, async (req, res) => {
     });
 
     const updateResults = await Promise.all(updatePromises);
-    const totalUpdatedRecords = updateResults.reduce((sum, count) => sum + count, 0);
+    const totalUpdatedRecords = updateResults.reduce(
+      (sum, count) => sum + count,
+      0
+    );
 
     res.json({
-      message: totalUpdatedRecords > 0 ? "Records Updated Successfully" : "No Records Updated",
+      message:
+        totalUpdatedRecords > 0
+          ? "Records Updated Successfully"
+          : "No Records Updated",
       totalUpdatedRecords,
     });
   } catch (error) {
@@ -316,34 +325,45 @@ router.patch("/FnUpdateRecords", authToken, async (req, res) => {
   }
 });
 
-
-
-router.patch('/FnLeaveApproved', authToken, async (req, res) => {
+router.patch("/FnLeaveApproved", authToken, async (req, res) => {
   const EmployeeId = req.query.EmployeeId;
   const LeaveTypeId = req.query.LeaveTypeId;
-  const FYear = req.query.FYear
+  const FYear = req.query.FYear;
   const LeaveDetails = req.body;
 
   try {
     // Update the SanctionLeaveDays column
     await MLeaves.update(
       { SanctionLeaveDays: LeaveDetails.SanctionLeaveDays },
-      { where: { EmployeeId: EmployeeId, LeaveTypeId: LeaveTypeId, FYear: FYear } }
+      {
+        where: {
+          EmployeeId: EmployeeId,
+          LeaveTypeId: LeaveTypeId,
+          FYear: FYear,
+        },
+      }
     );
 
     // Retrieve the OpeningBalance from the database
     const leaveRecord = await MLeaves.findOne({
-      where: { EmployeeId: EmployeeId, LeaveTypeId: LeaveTypeId, FYear: FYear }
+      where: { EmployeeId: EmployeeId, LeaveTypeId: LeaveTypeId, FYear: FYear },
     });
 
     if (leaveRecord) {
       // Calculate the remaining leave balance
-      const remainingLeaves = leaveRecord.OpeningBalance - LeaveDetails.SanctionLeaveDays;
-      console.log(remainingLeaves)
+      const remainingLeaves =
+        leaveRecord.LeaveBalance - LeaveDetails.SanctionLeaveDays;
+      console.log(remainingLeaves);
       // Update the LeavesTaken column
       await MLeaves.update(
         { LeaveBalance: remainingLeaves },
-        { where: { EmployeeId: EmployeeId, LeaveTypeId: LeaveTypeId, FYear: FYear} }
+        {
+          where: {
+            EmployeeId: EmployeeId,
+            LeaveTypeId: LeaveTypeId,
+            FYear: FYear,
+          },
+        }
       );
 
       res.status(200).send("Leave details updated successfully.");
@@ -356,10 +376,63 @@ router.patch('/FnLeaveApproved', authToken, async (req, res) => {
   }
 });
 
-  
-  router.post("/FnAddUpdateDeleteRecord", generateLeaveBalanceId, authToken, async (req, res) => {
+// Route to update a Specific Leaves Earned
+router.patch("/FnLeaveEarnedUpdate", authToken, async (req, res) => {
+  const EmployeeId = req.query.EmployeeId;
+  const FYear = req.query.FYear;
+  const CarryForward = req.query.CarryForward;
+
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth() + 1;
+  const LEno = `LeavesEarned${currentMonth}`;
+  console.log("LeavesEarned Number:", LEno);
+
+  try {
+    // Update the SanctionLeaveDays column
+    await MLeaves.update(
+      { LEno: CarryForward },
+      { where: { EmployeeId: EmployeeId, FYear: FYear } }
+    );
+    res.status(200).send("Leave details updated successfully.");
+  } catch (error) {
+    console.error("Error updating leave details:", error);
+    res.status(500).send("Internal server error.");
+  }
+});
+
+// Route to update a Specific Leaves Earned
+router.get("/FnFetchLeaveEarned", authToken, async (req, res) => {
+  const EmployeeId = req.query.EmployeeId;
+  const FYear = req.query.FYear;
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth() + 1;
+  const LEno = `LeaveEarned${currentMonth}`;
+
+  try {
+    const Leaves = await MLeaves.findOne({
+      where: {
+        EmployeeId: EmployeeId,
+        FYear: FYear,
+      },
+      attributes: {
+        include: [[LEno, LEno]], // Dynamically include the column with name matching LEno
+      },
+    });
+    res.json(Leaves);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+//Posting new data
+router.post(
+  "/FnAddUpdateDeleteRecord",
+  generateLeaveBalanceId,
+  authToken,
+  async (req, res) => {
     const Leaves = req.body;
-  
+
     try {
       if (Array.isArray(Leaves)) {
         // Handle multiple inserts
@@ -371,23 +444,25 @@ router.patch('/FnLeaveApproved', authToken, async (req, res) => {
             });
           })
         );
-  
+
         res.json({
           message: results ? "Operations successful" : "Operations failed",
         });
       } else {
         // Handle single insert or update
         const LeaveBalanceId = Leaves.LeaveBalanceId;
-  
+
         if (Leaves.IUFlag === "D") {
           // "Soft-delete" operation
           const result = await MLeaves.update(
             { AcFlag: "N" },
             { where: { LeaveBalanceId: LeaveBalanceId } }
           );
-  
+
           res.json({
-            message: result[0] ? "Record Deleted Successfully" : "Record Not Found",
+            message: result[0]
+              ? "Record Deleted Successfully"
+              : "Record Not Found",
           });
         } else {
           // Add or update operation
@@ -395,7 +470,7 @@ router.patch('/FnLeaveApproved', authToken, async (req, res) => {
             where: { LeaveBalanceId: LeaveBalanceId },
             returning: true,
           });
-  
+
           res.json({
             message: result ? "Operation successful" : "Operation failed",
           });
@@ -405,15 +480,15 @@ router.patch('/FnLeaveApproved', authToken, async (req, res) => {
       console.error("Error performing operation:", error);
       res.status(500).send("Internal Server Error");
     }
+  }
+);
+
+process.on("SIGINT", () => {
+  console.log("Received SIGINT. Closing Sequelize connection...");
+  sequelize.close().then(() => {
+    console.log("Sequelize connection closed. Exiting...");
+    process.exit(0);
   });
-  
-  process.on("SIGINT", () => {
-    console.log("Received SIGINT. Closing Sequelize connection...");
-    sequelize.close().then(() => {
-      console.log("Sequelize connection closed. Exiting...");
-      process.exit(0);
-    });
-  });
-  
-  module.exports = router;
-  
+});
+
+module.exports = router;

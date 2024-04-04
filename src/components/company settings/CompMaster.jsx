@@ -155,7 +155,7 @@ const CompMaster = () => {
       if (response.status === 200) {
         const data = response.data;
         setCompanies(data);
-        setLoading(false)
+        setLoading(false);
       } else {
         console.error("Failed to fetch data");
       }
@@ -236,7 +236,10 @@ const CompMaster = () => {
             />
           </button>
           {showDropdown && (
-            <div className="absolute top-32 bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50 top-[calc(100% + 10px)]">
+            <div
+              ref={menuRef}
+              className="absolute top-32 bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50 top-[calc(100% + 10px)]"
+            >
               {/* Dropdown content */}
               <div className="flex items-center mb-2">
                 <button
@@ -314,17 +317,17 @@ const CompMaster = () => {
         </div>
       </div>
       <CompanyModal visible={isModalOpen} onClick={() => setModalOpen(false)} />
-  <div className="grid gap-2 justify-between">
-      <div className="my-1 rounded-2xl bg-white p-2 pr-8 ">
-    <table className="min-w-full text-center whitespace-normal z-0">
-      <thead className="border-b-2">
-        <tr className="">
-          <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
-            Actions
-          </th>
-          <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
-            ID
-          </th>
+      <div className="grid gap-2 justify-between">
+        <div className="my-1 rounded-2xl bg-white p-2 pr-8 ">
+          <table className="min-w-full text-center whitespace-normal z-0">
+            <thead className="border-b-2">
+              <tr className="">
+                <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
+                  Actions
+                </th>
+                <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
+                  ID
+                </th>
 
           {selectedColumns.map((columnName) =>
             columnVisibility[columnName] ? (

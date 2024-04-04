@@ -32,41 +32,60 @@ const sequelize = new Sequelize(
   }
 );
 
-const MCostCenter = sequelize.define(
-  "MCostCenter",
+// Define the MBranch model
+const MBranch = sequelize.define(
+  "MBranch",
   {
     CompanyId: {
       type: DataTypes.STRING(5),
       allowNull: false,
+      defaultValue: "00001",
     },
     BranchId: {
       type: DataTypes.STRING(5),
       allowNull: false,
-      defaultValue: "00001",
-    },
-    CostCenterId: {
-      type: DataTypes.STRING,
-      allowNull: false,
       primaryKey: true,
     },
-    CostCenterName: {
-      type: DataTypes.STRING(500),
+    BranchName: {
+      type: DataTypes.STRING(5),
       allowNull: false,
+    },
+    BranchShortName: {
+      type: DataTypes.STRING(5),
+      allowNull: false,
+    },
+    IUFlag: DataTypes.STRING,
+    BranchAddress: {
+      type: DataTypes.STRING(500),
     },
     AcFlag: {
       type: DataTypes.STRING(1),
+      allowNull: false,
       defaultValue: "Y",
     },
-    IUFlag: {
-      type: DataTypes.STRING(1),
+    CreatedBy: {
+      type: DataTypes.STRING(500),
+      allowNull: true,
     },
-    Remark: DataTypes.STRING(500),
+    CreatedOn: {
+      type: DataTypes.DATE,
+    },
+    ModifiedBy: {
+      type: DataTypes.STRING(500),
+    },
+    ModifiedOn: {
+      type: DataTypes.DATE,
+    },
+    Remark: {
+      type: DataTypes.STRING(500),
+    },
   },
   {
-    tableName: "MCostCenter", // Specify the table name if it differs from the model name
-    timestamps: false, // Disable timestamps (createdAt and updatedAt)
+    timestamps: false,
   }
 );
+
+sequelize.sync();
 
 // Middleware for parsing JSON
 router.use(bodyParser.json());
@@ -75,102 +94,96 @@ router.use(bodyParser.json());
 sequelize
   .authenticate()
   .then(() => {
-    console.log("Connection has been established successfully.");
+    console.log("Connection has been established successfully. --BranchMaster");
   })
   .catch((err) => {
     console.error("Unable to connect to the database:", err);
   });
 
-MCostCenter.sync()
-  .then(() => {
-    console.log("MLeaveTyepe model synchronized successfully.");
-  })
-  .catch((error) => {
-    console.error("Error synchronizing MLeaveTyepe model:", error);
-  });
-
-// GET endpoint to retrieve all cost centers
+// GET endpoint to retrieve all companies
 router.get("/FnShowAllData", authToken, async (req, res) => {
   try {
-    const costCenters = await MCostCenter.findAll({
+    const companies = await MBranch.findAll({
       attributes: {
         exclude: ["IUFlag"],
       },
-      order: [["CostCenterId", "ASC"]],
+      order: [["BranchId", "ASC"]],
     });
-    res.json(costCenters);
+    res.json(companies);
   } catch (error) {
     console.error("Error retrieving data:", error);
     res.status(500).send("Internal Server Error");
   }
 });
 
-// GET endpoint to retrieve active cost centers
-router.get("/FnShowActiveData", authToken, async (req, res) => {
+// GET endpoint to retrieve active companies
+router.get("/FnShowActiveData", async (req, res) => {
   try {
-    const costCenters = await MCostCenter.findAll({
+    const companies = await MBranch.findAll({
       where: {
         AcFlag: "Y",
       },
       attributes: {
         exclude: ["IUFlag"],
       },
-      order: [["CostCenterId", "ASC"]],
+      order: [["BranchId", "ASC"]],
     });
-    res.json(costCenters);
+    res.json(companies);
   } catch (error) {
     console.error("Error retrieving data:", error);
     res.status(500).send("Internal Server Error");
   }
 });
 
-// GET endpoint to retrieve a particular cost center by ID
+// GET endpoint to retrieve a particular company by ID
 router.get("/FnShowParticularData", authToken, async (req, res) => {
-  const costCenterId = req.query.CostCenterId;
+  const BranchId = req.query.BranchId;
   try {
-    const costCenters = await MCostCenter.findAll({
+    const companies = await MBranch.findOne({
       where: {
-        CostCenterId: costCenterId,
+        BranchId: BranchId,
       },
       attributes: {
         exclude: ["IUFlag"],
       },
-      order: [["CostCenterId", "ASC"]],
+      order: [["BranchId", "ASC"]],
     });
-    res.json(costCenters);
+    res.json(companies);
   } catch (error) {
     console.error("Error retrieving data:", error);
     res.status(500).send("Internal Server Error");
   }
 });
 
-const generateCostCenterId = async (req, res, next) => {
+// POST endpoint to add, update, or "soft-delete" a company
+const generateBranchId = async (req, res, next) => {
   try {
     if (req.body.IUFlag === "I") {
-      const totalRecords = await MCostCenter.count();
-      const newId = (totalRecords + 1).toString().padStart(3, "0");
-      req.body.CostCenterId = newId;
+      const totalRecords = await MBranch.count();
+      const newId = (totalRecords + 1).toString().padStart(5, "0");
+      req.body.BranchId = newId;
     }
     next();
   } catch (error) {
-    console.error("Error generating EmployeeTypeId:", error);
+    console.error("Error generating BranchId:", error);
     res.status(500).send("Internal Server Error");
   }
 };
 
-// POST endpoint to add, update, or delete a cost center
 router.post(
   "/FnAddUpdateDeleteRecord",
-  generateCostCenterId,
+  generateBranchId,
   authToken,
   async (req, res) => {
-    const costCenter = req.body;
+    const Branch = req.body;
+    const BranchId = Branch.BranchId; // Access the BranchId from the request body
+
     try {
-      if (costCenter.IUFlag === "D") {
+      if (Branch.IUFlag === "D") {
         // "Soft-delete" operation
-        const result = await MCostCenter.update(
+        const result = await MBranch.update(
           { AcFlag: "N" },
-          { where: { CostCenterId: costCenter.CostCenterId } }
+          { where: { BranchId: BranchId } }
         );
 
         res.json({
@@ -178,9 +191,18 @@ router.post(
             ? "Record Deleted Successfully"
             : "Record Not Found",
         });
-      } else {
+      } else if (Branch.IUFlag === "U") {
         // Add or update operation
-        const result = await MCostCenter.upsert(costCenter, {
+        const result = await MBranch.update(Branch, {
+          where: { BranchId: Branch.BranchId },
+          returning: true,
+        });
+
+        res.json({
+          message: result ? "Operation successful" : "Operation failed",
+        });
+      } else {
+        const result = await MBranch.create(Branch, {
           returning: true,
         });
 
@@ -195,5 +217,12 @@ router.post(
   }
 );
 
-// Export the router
+process.on("SIGINT", () => {
+  console.log("Received SIGINT. Closing Sequelize connection...");
+  sequelize.close().then(() => {
+    console.log("Sequelize connection closed. Exiting...");
+    process.exit(0);
+  });
+});
+
 module.exports = router;

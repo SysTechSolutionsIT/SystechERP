@@ -57,7 +57,9 @@ import EmployeeTypeEarningMaster from "./components/payroll settings/EmployeeTyp
 import EmployeeTypeDeductionMaster from "./components/payroll settings/EmployeeTypeDeductionMaster";
 import GatePassApproval from "./components/attendance management/GatePassApproval";
 import DailyAttendanceProcessing from "./components/attendance management/DailyAttendanceProcessing";
+import MonthlyAttendance from "./components/attendance management/MonthlyAttendance";
 import UserRoles from "./components/company settings/UserRoles";
+import BranchMaster from "./components/company settings/Branch Master";
 
 function App() {
   return (
@@ -67,7 +69,7 @@ function App() {
           <EmployeeTypeProvider>
             <Routes>
               <Route index element={<Login />} />
-      <Route path="registration" element={<Registration />} />
+              <Route path="registration" element={<Registration />} />
               <Route
                 element={
                   <div className="flex min-h-screen">
@@ -115,6 +117,7 @@ function App() {
                   path="/employee-type-master"
                   element={<EmployeeTypeMaster />}
                 />
+                <Route path="/branch-master" element={<BranchMaster />} />
                 <Route
                   path="/employee-grade-master"
                   element={<EmployeeGradeMaster />}
@@ -150,8 +153,9 @@ function App() {
                   element={<ManualAttendanceEntry />}
                 />
                 <Route
-                  path='/daily-attendance-processing'
-                  element={<DailyAttendanceProcessing/>}/>
+                  path="/daily-attendance-processing"
+                  element={<DailyAttendanceProcessing />}
+                />
                 <Route
                   path="/manual-attendance-approval"
                   element={<ManualAttendanceApproval />}
@@ -188,13 +192,17 @@ function App() {
                   path="/employee-type-deduction"
                   element={<EmployeeTypeDeductionMaster />}
                 />
+                <Route
+                  path="/monthly-attendance-processing"
+                  element={<MonthlyAttendance />}
+                />
                 <Route path="/advance-request" element={<AdvanceRequest />} />
                 <Route path="/leave-application" element={<LeaveApp />} />
                 <Route path="/leave-approval" element={<LeaveApproval />} />
                 <Route path="/ED-imports" element={<EDImports />} />
                 <Route path="/salary-processing" element={<SalProcessing />} />
                 <Route path="/advance-approval" element={<AdvanceApproval />} />
-                <Route path="/user-role-settings" element={<UserRoles/>}/>
+                <Route path="/user-role-settings" element={<UserRoles />} />
                 <Route
                   path="/attendance-master/empGatePassEntry"
                   element={<GateEntryMaster />}

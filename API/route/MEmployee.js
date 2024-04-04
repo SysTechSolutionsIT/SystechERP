@@ -152,6 +152,24 @@ router.get("/FnShowActiveData", authToken, async (req, res) => {
   }
 });
 
+//ROute to provide only employee Ids
+router.get("/FnShowEmpIds", async (req, res) => {
+  try {
+    const employees = await MEmployee.findAll({
+      where: {
+        AcFlag: "Y",
+      },
+      attributes: ["EmployeeId"], // Only retrieve EmployeeId
+      order: [["EmployeeId", "ASC"]],
+      distinct: true, // Ensure uniqueness
+    });
+    res.json(employees);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 router.get("/FnShowPerticularData", authToken, async (req, res) => {
   const employeeId = req.query.EmployeeId;
   try {
@@ -195,31 +213,43 @@ router.get("/FnShowImageData", authToken, async (req, res) => {
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null,'public/employee-photo')
+    cb(null, "public/employee-photo");
   },
-  filename: (req, file, cb) =>{
-    cb(null, file.fieldname + "_" + Date.now() + path.extname(file.originalname))
-  }
-})
-
-const upload = multer({
-  storage: storage
-})
-
-router.post("/upload", authToken, upload.single('image'), authToken, async (req, res) => {
-  try {
-    const image = req.file.filename;
-    // Update the record in the MCompany table using Sequelize
-    await MEmployee.update({ EmployeePhoto: image }, { where: { EmployeeId: req.query.EmployeeId } });
-
-    return res.json({ Status: 'Success' });
-  } catch (error) {
-    console.error(error);
-    return res.json({ Message: 'Error' });
-  }
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      file.fieldname + "_" + Date.now() + path.extname(file.originalname)
+    );
+  },
 });
 
-router.get('/get-upload', authToken, async (req, res) => {
+const upload = multer({
+  storage: storage,
+});
+
+router.post(
+  "/upload",
+  authToken,
+  upload.single("image"),
+  authToken,
+  async (req, res) => {
+    try {
+      const image = req.file.filename;
+      // Update the record in the MCompany table using Sequelize
+      await MEmployee.update(
+        { EmployeePhoto: image },
+        { where: { EmployeeId: req.query.EmployeeId } }
+      );
+
+      return res.json({ Status: "Success" });
+    } catch (error) {
+      console.error(error);
+      return res.json({ Message: "Error" });
+    }
+  }
+);
+
+router.get("/get-upload", authToken, async (req, res) => {
   const employeeId = req.query.EmployeeId;
   try {
     const employees = await MEmployee.findOne({
@@ -234,12 +264,12 @@ router.get('/get-upload', authToken, async (req, res) => {
     console.error("Error retrieving data:", error);
     res.status(500).send("Internal Server Error");
   }
-})
+});
 
 // Middleware for generating EarningHeadId
 const generateEmployeeId = async (req, res, next) => {
   try {
-    if (req.body.IUFlag === 'I') {
+    if (req.body.IUFlag === "I") {
       const totalRecords = await MEmployee.count();
       const newId = (totalRecords + 1).toString().padStart(3, "0");
       req.body.EmployeeTypeId = newId;
@@ -251,35 +281,42 @@ const generateEmployeeId = async (req, res, next) => {
   }
 };
 
-router.post("/FnAddUpdateDeleteRecord", generateEmployeeId, authToken, async (req, res) => {
-  const employee = req.body; // Access the EmployeeId from query parameters
+router.post(
+  "/FnAddUpdateDeleteRecord",
+  generateEmployeeId,
+  authToken,
+  async (req, res) => {
+    const employee = req.body; // Access the EmployeeId from query parameters
 
-  try {
-    if (employee.IUFlag === "D") {
-      // "Soft-delete" operation
-      const result = await MEmployee.update(
-        { AcFlag: "N" },
-        { where: { EmployeeId: employee.EmployeeId } }
-      );
+    try {
+      if (employee.IUFlag === "D") {
+        // "Soft-delete" operation
+        const result = await MEmployee.update(
+          { AcFlag: "N" },
+          { where: { EmployeeId: employee.EmployeeId } }
+        );
 
-      res.json({
-        message: result[0] ? "Record Deleted Successfully" : "Record Not Found",
-      });
-    } else {
-      // Add or update operation
-      const result = await MEmployee.upsert(employee, {
-        where: { EmployeeId: employee.EmployeeId }, // Specify the where condition for update
-        returning: true,
-      });
+        res.json({
+          message: result[0]
+            ? "Record Deleted Successfully"
+            : "Record Not Found",
+        });
+      } else {
+        // Add or update operation
+        const result = await MEmployee.upsert(employee, {
+          where: { EmployeeId: employee.EmployeeId }, // Specify the where condition for update
+          returning: true,
+        });
 
-      res.json({
-        message: result ? "Operation successful" : "Operation failed",
-      });
+        res.json({
+          message: result ? "Operation successful" : "Operation failed",
+        });
+      }
+    } catch (error) {
+      console.error("Error performing operation:", error);
+      res.status(500).send("Internal Server Error");
     }
-  } catch (error) {
-    console.error("Error performing operation:", error);
-    res.status(500).send("Internal Server Error");
   }
-});
+);
 
 module.exports = router;
