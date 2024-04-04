@@ -79,7 +79,6 @@ const BankModal = ({ visible, onClick }) => {
         BankGST: values.BankGST,
         AuthorizedPersonCount: values.AuthorizedPersonCount,
         Remark: values.Remark,
-        AcFlag: "Y",
         IUFlag: "I",
         AuthorizedPerson1: values.AuthorizedPerson1,
         AuthorizedPersonRole1: values.AuthorizedPersonRole1,
