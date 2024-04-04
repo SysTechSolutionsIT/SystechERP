@@ -7,6 +7,17 @@ import { useAuth } from "../Login";
 const ViewBank = ({ visible, onClick, edit, ID }) => {
   const { token } = useAuth();
   const [details, setDetails] = useState([]);
+  const [accountNo, setAccountNo] = useState();
+
+const handleAccNoChange = (event) => {
+  const { value } = event.target;
+  
+  // Only update the account number state if the input value contains only numbers
+  if (/^[0-9]*$/.test(value)) {
+    setAccountNo(value);
+  }
+};
+
   const formik = useFormik({
     initialValues: {
       BankName: "",
@@ -39,7 +50,7 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
         BranchName: values.BranchName,
         BranchAddress: values.BranchAddress,
         AccountType: values.AccountType,
-        AccountNo: values.AccountNo,
+        AccountNo: accountNo,
         IFSCCode: values.IFSCCode,
         SwiftCode: values.SwiftCode,
         RegisteredEmailId: values.RegisteredEmailId,
@@ -68,9 +79,8 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
       })
       .then((response) => {
         // Handle success
-        console.log("Data updated successfully", response);
-        // You can also perform additional actions here, like closing the modal or updating the UI.
-        window.location.reload();
+        alert("Bank data updated successfully");
+        onClick()
       })
       .catch((error) => {
         // Handle error
@@ -125,6 +135,7 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
         AuthorizedPerson3: details.AuthorizedPerson3,
         AuthorizedPersonRole3: details.AuthorizedPersonRole3,
       });
+      setAccountNo(details.AccountNo)
     }
   }, [details]);
 
@@ -289,17 +300,16 @@ const ViewBank = ({ visible, onClick, edit, ID }) => {
                 </select>
               </div>
               <div>
-                <p className="capatilize text-left font-semibold  text-[13px]">
+                <p className="capitalize font-semibold text-[13px]">
                   Account No.
                 </p>
                 <input
-                  id="AccountNo"
-                  type="number"
-                  placeholder=" Enter Account No."
-                  value={formik.values.AccountNo}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                  disabled={!edit}
+                id="AccountNo"
+                type="text"
+                placeholder="Enter Account No."
+                value={accountNo}
+                className="w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                onChange={handleAccNoChange}                
                 />
               </div>
               <div>
