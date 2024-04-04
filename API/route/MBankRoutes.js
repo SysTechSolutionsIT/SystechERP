@@ -96,10 +96,10 @@ router.use(bodyParser.json());
 sequelize
   .authenticate()
   .then(() => {
-    console.log('Connection has been established successfully.');
+    console.log("Connection has been established successfully.");
   })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
+  .catch((err) => {
+    console.error("Unable to connect to the database:", err);
   });
 
 // GET endpoint to retrieve all banks
@@ -159,43 +159,52 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
 
 const generateBankId = async (req, res, next) => {
   try {
-    if (req.body.IUflag === 'I') {
-      const totalRecords = await MBanks.count()
-      const newId = (totalRecords + 1).toString().padStart(3,'0')
-      req.body.BankId = newId
+    if (req.body.IUFlag === "I") {
+      const totalRecords = await MBanks.count();
+      const newId = (totalRecords + 1).toString().padStart(5, "0");
+      req.body.BankId = newId;
     }
-    next()
+    next();
   } catch (error) {
-    console.error('Error generating BankId', error);
-    res.status(500).send('Internal Server Errir')
-  }
-}
-
-// POST endpoint to add, update, or delete a bank
-router.post("/FnAddUpdateDeleteRecord", generateBankId, authToken, async (req, res) => {
-  const bank = req.body;
-  try {    
-    if (bank.IUFlag === "D") {
-    // "Soft-delete" operation
-    const result = await MBanks.update(
-      { AcFlag: "N" },
-      { where: { BankId: bank.BankId } }
-    );
-
-    res.json({
-      message: result[0] ? "Record Deleted Successfully" : "Record Not Found",
-    });
-  } else {
-    const result = await MBanks.upsert(bank, {
-      returning: true,
-    });
-    res.json({ message: result ? "Operation successful" : "Operation failed" });
-  }
-  } catch (error) {
-    console.error("Error retrieving data:", error);
+    console.error("Error generating BankId", error);
     res.status(500).send("Internal Server Error");
   }
-});
+};
+
+// POST endpoint to add, update, or delete a bank
+router.post(
+  "/FnAddUpdateDeleteRecord",
+  generateBankId,
+  authToken,
+  async (req, res) => {
+    const bank = req.body;
+    try {
+      if (bank.IUFlag === "D") {
+        // "Soft-delete" operation
+        const result = await MBanks.update(
+          { AcFlag: "N" },
+          { where: { BankId: bank.BankId } }
+        );
+
+        res.json({
+          message: result[0]
+            ? "Record Deleted Successfully"
+            : "Record Not Found",
+        });
+      } else {
+        const result = await MBanks.upsert(bank, {
+          returning: true,
+        });
+        res.json({
+          message: result ? "Operation successful" : "Operation failed",
+        });
+      }
+    } catch (error) {
+      console.error("Error retrieving data:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  }
+);
 
 // Export the router
 module.exports = router;
