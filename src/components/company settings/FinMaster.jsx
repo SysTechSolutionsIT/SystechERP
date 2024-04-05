@@ -195,6 +195,20 @@ const FinMaster = () => {
     }
   };
 
+
+    const convertDate = (dateStr) => {
+      // Convert string to Date object
+      const dateObj = new Date(dateStr);
+      
+      // Extract day, month, and year
+      const day = dateObj.getDate();
+      const month = dateObj.getMonth() + 1; // Months are zero-based
+      const year = dateObj.getFullYear();
+      
+      // Return formatted date with dash separators
+      return `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year}`;
+    };
+
   return (
     <div className="top-25 min-w-[40%]">
       <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
@@ -389,7 +403,7 @@ const FinMaster = () => {
                       </div>
                     </td>
                     <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
-                      {result.FYearId}
+                      {result.CompanyId}
                     </td>
                     {selectedColumns.map((columnName) =>
                       columnVisibility[columnName] ? (
@@ -397,13 +411,14 @@ const FinMaster = () => {
                           key={columnName}
                           className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
                         >
-                          {result[columnName] === "1"
-                            ? "Yes"
-                            : result[columnName] === "0"
-                            ? "No"
-                            : result[columnName] === null
-                            ? "N/A"
-                            : result[columnName]}
+                        {columnName === "StartDate" || columnName === "EndDate" ? (
+                          convertDate(result[columnName])
+                        ) : (
+                          result[columnName] === "1" ? "Yes" :
+                          result[columnName] === "0" ? "No" :
+                          result[columnName] === null ? "N/A" :
+                          result[columnName]
+                        )}
                         </td>
                       ) : (
                         <td key={columnName} className="hidden"></td>
@@ -411,7 +426,9 @@ const FinMaster = () => {
                     )}
                   </tr>
                 ))
-              ) : filteredData.length === 0 && Fins && Fins.length > 0 ? (
+              ) : filteredData.length === 0 &&
+                Fins &&
+                Fins.length > 0 ? (
                 Fins.map((result, key) => (
                   <tr key={key}>
                     <td className="px-2 border-2">
@@ -451,7 +468,7 @@ const FinMaster = () => {
                       </div>
                     </td>
                     <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
-                      {result.FYearId}
+                      {result.CompanyId}
                     </td>
                     {selectedColumns.map((columnName) =>
                       columnVisibility[columnName] ? (
@@ -459,13 +476,14 @@ const FinMaster = () => {
                           key={columnName}
                           className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
                         >
-                          {result[columnName] === "1"
-                            ? "Yes"
-                            : result[columnName] === "0"
-                            ? "No"
-                            : result[columnName] === null
-                            ? "N/A"
-                            : result[columnName]}
+                        {columnName === "StartDate" || columnName === "EndDate" ? (
+                          convertDate(result[columnName])
+                        ) : (
+                          result[columnName] === "1" ? "Yes" :
+                          result[columnName] === "0" ? "No" :
+                          result[columnName] === null ? "N/A" :
+                          result[columnName]
+                        )}
                         </td>
                       ) : (
                         <td key={columnName} className="hidden"></td>
