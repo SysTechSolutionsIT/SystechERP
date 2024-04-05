@@ -35,15 +35,15 @@ const sequelize = new Sequelize(
 // Define the MBanks model
 const MBanks = sequelize.define("MBanks", {
   CompanyId: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING(5),
     allowNull: false,
   },
   BranchId: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING(5),
     allowNull: false,
   },
   BankId: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING(5),
     primaryKey: true,
   },
   AccountType: DataTypes.STRING(50),
@@ -102,6 +102,11 @@ sequelize
     console.error("Unable to connect to the database:", err);
   });
 
+  try {
+    MBanks.sync()
+  } catch (error) {
+    
+  }
 // GET endpoint to retrieve all banks
 router.get("/FnShowAllData", authToken, async (req, res) => {
   try {
