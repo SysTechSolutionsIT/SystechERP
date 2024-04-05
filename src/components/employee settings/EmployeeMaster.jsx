@@ -21,7 +21,6 @@ const EmployeeMaster = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
   const [columnVisibility, setColumnVisibility] = useState({
-    EmployeeId: true,
     EmployeeName: true,
     EmployeeTypeGroupId: true,
     Salutation: false,
@@ -65,7 +64,6 @@ const EmployeeMaster = () => {
   });
 
   const columnNames = {
-    EmployeeId: "ID",
     EmployeeName: "Employee Name",
     EmployeeTypeGroupId: "Employee Type",
     Salutation: "Salutation",
@@ -172,6 +170,8 @@ const EmployeeMaster = () => {
 
     if (searchWord === "") {
       setFilteredData([]);
+    } else if (searchWord !== "" && newFilter.length === 0) {
+      setFilteredData(["NA"]);
     } else {
       setFilteredData(newFilter);
     }
@@ -514,6 +514,9 @@ const EmployeeMaster = () => {
                 <th className=" px-1 text-[13px] font-bold text-black border-2 border-gray-400">
                   Actions
                 </th>
+                <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
+                  ID
+                </th>
                 {selectedColumns.map((columnName) =>
                   columnVisibility[columnName] ? (
                     <th
@@ -527,7 +530,7 @@ const EmployeeMaster = () => {
               </tr>
               <tr>
                 <th className="border-2"></th>
-                {/* <th className="p-2 font-semibold text-black border-2 " /> */}
+                <th className="p-2 font-semibold text-black border-2 " />
                 {selectedColumns.map((columnName) =>
                   columnVisibility[columnName] ? (
                     <th
@@ -551,12 +554,12 @@ const EmployeeMaster = () => {
               </tr>
             </thead>
             <tbody className="">
-              {filteredData.length > 0
-                ? filteredData.map((result, key) => (
-                    <tr key={key}>
-                      <td className="px-4 border-2">
-                        <div className="flex items-center gap-2 text-center justify-center">
-                          <Icon
+              {filteredData.length > 0 ? (
+                filteredData.map((result, key) => (
+                  <tr key={key}>
+                    <td className="px-2 border-2">
+                      <div className="flex items-center gap-2 text-center justify-center">
+                            <Icon
                             icon="lucide:eye"
                             color="#556987"
                             width="20"
@@ -573,7 +576,7 @@ const EmployeeMaster = () => {
                             height="20"
                             className="cursor-pointer"
                             onClick={() =>
-                              navigate(`/view-employee/${result.EmployeeId}`)
+                              navigate(`/edit-employee/${result.EmployeeId}`)
                             }
                           />
                           <Icon
@@ -584,27 +587,39 @@ const EmployeeMaster = () => {
                             className="cursor-pointer"
                             onClick={() => deleteEmp(result.EmployeeId)}
                           />
-                        </div>
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {result.EmployeeId}
-                      </td>
-                      {selectedColumns.map((columnName) => (
+                      </div>
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
+                      {result.EmployeeId}
+                    </td>
+                    {selectedColumns.map((columnName) =>
+                      columnVisibility[columnName] ? (
                         <td
                           key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-[11px] text-left${
-                            columnVisibility[columnName] ? "" : "hidden"
-                          }`}
-                        ></td>
-                      ))}
-                    </tr>
-                  ))
-                : employeeData.length > 0 &&
-                  employeeData.map((result, index) => (
-                    <tr key={index}>
-                      <td className="px-4 border-2">
-                        <div className="flex items-center gap-2 text-center justify-center cur">
-                          <Icon
+                          className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                        >
+                          {result[columnName] === "true"
+                            ? "Yes"
+                            : result[columnName] === "false"
+                            ? "No"
+                            : result[columnName] === null
+                            ? "N/A"
+                            : result[columnName]}
+                        </td>
+                      ) : (
+                        <td key={columnName} className="hidden"></td>
+                      )
+                    )}
+                  </tr>
+                ))
+              ) : filteredData.length === 0 &&
+                employeeData &&
+                employeeData.length > 0 ? (
+                employeeData.map((result, key) => (
+                  <tr key={key}>
+                    <td className="px-2 border-2">
+                      <div className="flex items-center gap-2 text-center justify-center">
+                            <Icon
                             icon="lucide:eye"
                             color="#556987"
                             width="20"
@@ -620,9 +635,9 @@ const EmployeeMaster = () => {
                             width="20"
                             height="20"
                             className="cursor-pointer"
-                            onClick={() => {
-                              navigate(`/edit-employee/${result.EmployeeId}`);
-                            }}
+                            onClick={() =>
+                              navigate(`/edit-employee/${result.EmployeeId}`)
+                            }
                           />
                           <Icon
                             icon="material-symbols:delete-outline"
@@ -632,22 +647,40 @@ const EmployeeMaster = () => {
                             className="cursor-pointer"
                             onClick={() => deleteEmp(result.EmployeeId)}
                           />
-                        </div>
-                      </td>
-                      {selectedColumns.map((columnName) =>
-                        columnVisibility[columnName] ? (
-                          <td
-                            key={columnName}
-                            className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                          >
-                            {result[columnName]}
-                          </td>
-                        ) : (
-                          <td key={columnName} className="hidden"></td>
-                        )
-                      )}
-                    </tr>
-                  ))}
+                      </div>
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
+                      {result.EmployeeId}
+                    </td>
+                    {selectedColumns.map((columnName) =>
+                      columnVisibility[columnName] ? (
+                        <td
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-left text-[11px]`}
+                        >
+                          {result[columnName] === "true"
+                            ? "Yes"
+                            : result[columnName] === "false"
+                            ? "No"
+                            : result[columnName] === null
+                            ? "N/A"
+                            : result[columnName]}
+                        </td>
+                      ) : (
+                        <td key={columnName} className="hidden"></td>
+                      )
+                    )}
+                  </tr>
+                ))
+              ) : filteredData[0] == "NA" ? (
+                <tr>
+                  <td className="text-center">No results</td>
+                </tr>
+              ) : (
+                <tr>
+                  <td className="hidden">No Results</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
