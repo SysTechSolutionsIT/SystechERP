@@ -81,26 +81,19 @@ const Work = ({ ID, name }) => {
         data,
         {
           params: { EmployeeId: ID },
-          headers: { Authorization: `Bearer ${token}` }, // Moved headers here
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-      if (response.data) {
-        alert("Employee details updated successfully");
-      } else {
-        console.error(
-          "Failed to update employee details. Response:",
-          response.data
-        );
-      }
+      alert('Work Details Updated');
     } catch (error) {
       console.error("Error:", error.message);
     }
   };
+  
 
   useEffect(() => {
     const fetchWorkDetails = async () => {
       try {
-        // Add a check for ID before making the API call
         if (ID) {
           const response = await axios.get(
             `http://localhost:5500/employee/work/FnShowParticularData`,
