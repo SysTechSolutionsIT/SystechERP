@@ -480,6 +480,12 @@ const Sidebar = () => {
                       onClick={() => navigate("/two-field-master")}
                     />
                   )}
+                  {rights.includes(777) && (
+                    <SubMenuEntry
+                      title="User Roles"
+                      onClick={() => navigate("/user-role-settings")}
+                    />
+                  )}
                 </SubMenuGroup>
               )}
 

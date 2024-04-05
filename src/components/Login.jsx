@@ -16,12 +16,10 @@ export const AuthProvider = ({ children }) => {
 
   const handleSetToken = (newToken) => {
     setToken(newToken);
-    // Save token to a cookie whenever it changes
     Cookies.set("token", newToken, { expires: 7 }); // Set an expiration date if needed
   };
 
   useEffect(() => {
-    // Check if a token exists in cookies and set it in the state
     const savedToken = Cookies.get("token");
     if (savedToken) {
       setToken(savedToken);

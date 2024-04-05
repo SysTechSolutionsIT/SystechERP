@@ -150,9 +150,9 @@ router.get("/FnShowCategoricalData", authToken, async (req, res) => {
         MasterNameId: MasterNameId,
       },
       attributes: {
-        exclude: ["IUFlag"],
+        exclude: ["AcFlag"],
       },
-      order: [["FieldId", "ASC"]],
+      order: [["MasterNameId", "ASC"]],
     });
     res.json(TField);
   } catch (error) {

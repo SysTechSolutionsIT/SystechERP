@@ -245,7 +245,7 @@ export default function Personal({ ID }) {
       }
     };
     fetchEmployeeTypes();
-  }, [token]);
+  }, [token, ID]);
 
   //Fetching category
 
@@ -269,7 +269,7 @@ export default function Personal({ ID }) {
       }
     };
     fetchCategoryData();
-  }, [token]);
+  }, [token, ID]);
 
   const [sals, setSalutation] = useState([]);
   useEffect(() => {
@@ -291,9 +291,10 @@ export default function Personal({ ID }) {
       }
     };
     fetchSalutationsData();
-  }, [token]);
+  }, [token, ID]);
 
   const [employeeTypeGroup, setEmployeeTypeGroup] = useState([]);
+
   useEffect(() => {
     const fetchEmpTypeData = async () => {
       const CID = 1;
@@ -305,15 +306,23 @@ export default function Personal({ ID }) {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        const data = response.data;
-        console.log("empTypeData", data);
-        setEmployeeTypeGroup(data);
+        console.log('Employee Group Response', response)
+        const groupData = response.data;
+  
+        if (Array.isArray(groupData)) { // Check if groupData is an array
+          setEmployeeTypeGroup(groupData);
+        } else {
+          console.error("API response is not an array:", groupData);
+        }
       } catch (error) {
         console.error("Error fetching emptype:", error);
       }
     };
+  
     fetchEmpTypeData();
-  }, [token]);
+  }, [token, ID]);
+  
+  
 
   const [Religion, setReligion] = useState([]);
   useEffect(() => {
@@ -335,7 +344,7 @@ export default function Personal({ ID }) {
       }
     };
     fetchReligionData();
-  }, [token]);
+  }, [token, ID]);
 
   const [Reference, setReference] = useState([]);
   useEffect(() => {
@@ -349,6 +358,7 @@ export default function Personal({ ID }) {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
+
         const data = response.data;
         console.log("Reference", data);
         setReference(data);
@@ -357,7 +367,7 @@ export default function Personal({ ID }) {
       }
     };
     fetchReferenceData();
-  }, [token]);
+  }, [token, ID]);
 
   const [Caste, setCaste] = useState([]);
   useEffect(() => {
@@ -379,7 +389,7 @@ export default function Personal({ ID }) {
       }
     };
     fetchCasteData();
-  }, [token]);
+  }, [token, ID]);
 
   useEffect(() => {
     if (details) {
@@ -600,10 +610,10 @@ export default function Personal({ ID }) {
                     id="Salutation"
                     name="Salutation"
                     value={formik.values.Salutation}
-                    className="flex-1 px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                    className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
                     onChange={formik.handleChange}
                   >
-                    <option value="">Select Department Group</option>
+                    <option value="">Select Salutation</option>
                     {sals.map((entry) => (
                       <option key={entry.FieldId} value={entry.FieldId}>
                         {entry.FieldDetails}
@@ -632,26 +642,20 @@ export default function Personal({ ID }) {
                 Employee Type Group
               </p>
               <div className="flex items-center">
-                {/* {employeeTypeGroup.length > 0 ? (
-                  <select
-                    id="EmployeeTypeGroupId"
-                    name="EmployeeTypeGroupId"
-                    value={formik.values.EmployeeTypeGroupId}
-                    className="flex-1 px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
-                    onChange={formik.handleChange}
+                <select
+                  id="EmployeeTypeGroupId"
+                  name="EmployeeTypeGroupId"
+                  value={formik.values.EmployeeTypeGroupId}
+                  className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
+                  onChange={formik.handleChange}
                   >
-                    <option value="">Select Employee Type Group</option>
-                    {employeeTypeGroup.map((entry) => (
-                      <option key={entry.FieldId} value={entry.FieldId}>
-                        {entry.FieldDetails}
-                      </option>
-                    ))}
-                  </select>
-                ) : (
-                  <p className="flex-1 px-4 py-2 font-normal text-gray-500">
-                    No available entries
-                  </p>
-                )} */}
+                  <option value="">Select Employee Type Group</option>
+                  {Array.isArray(employeeTypeGroup) &&  employeeTypeGroup.map((entry) => (
+                    <option key={entry.FieldId} value={entry.FieldId}>
+                      {entry.FieldDetails}
+                    </option>
+                  ))}
+                </select>
                 <Icon
                   icon="flat-color-icons:plus"
                   width="24"
@@ -901,7 +905,7 @@ export default function Personal({ ID }) {
                   <select
                     id="CategoryId"
                     name="CategoryId"
-                    className="flex-1 px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                    className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
                     onChange={formik.handleChange}
                   >
                     <option value="">Select Categories</option>
@@ -949,7 +953,7 @@ export default function Personal({ ID }) {
                   <select
                     id="ReligionId"
                     name="ReligionId"
-                    className="flex-1 px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                    className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
                     onChange={formik.handleChange}
                   >
                     <option value="">Select Religion</option>
@@ -985,7 +989,7 @@ export default function Personal({ ID }) {
                   <select
                     id="ReligionId"
                     name="ReligionId"
-                    className="flex-1 px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                    className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
                     onChange={formik.handleChange}
                   >
                     <option value="">Select Department Group</option>
@@ -1020,7 +1024,7 @@ export default function Personal({ ID }) {
                     id="CasteId"
                     name="CasteId"
                     value={formik.values.CasteId}
-                    className="flex-1 px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                    className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
                     onChange={formik.handleChange}
                   >
                     <option value="">Select Caste</option>

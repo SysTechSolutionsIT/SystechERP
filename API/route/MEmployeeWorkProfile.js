@@ -42,7 +42,7 @@ const MEmployeeWorkProfile = sequelize.define(
       defaultValue: "00001",
     },
     EmployeeId: {
-      type: DataTypes.INTEGER(5),
+      type: DataTypes.STRING(5),
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
@@ -190,6 +190,7 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
 
 router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
   const work = req.body;
+  const EmployeeId = req.query.EmployeeId
   try {
     if (work.IUFlag === "D") {
       // "Soft-delete" operation
@@ -201,9 +202,19 @@ router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
       res.json({
         message: result[0] ? "Record Deleted Successfully" : "Record Not Found",
       });
-    } else {
+    } else if (work.IUFlag === 'U') {
       // Add or update operation
-      const result = await MEmployeeWorkProfile.upsert(work, {
+      const result = await MEmployeeWorkProfile.update(work, {
+        where: { EmployeeId: EmployeeId },
+        returning: true,
+      });
+
+      res.json({
+        message: result ? "Operation successful" : "Operation failed",
+      });
+    } else {
+
+      const result = await MEmployeeWorkProfile.create(work, {
         returning: true,
       });
 
