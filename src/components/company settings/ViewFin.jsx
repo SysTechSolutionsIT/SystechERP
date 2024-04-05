@@ -191,7 +191,6 @@ const VEFModal = ({ visible, onClick, edit, ID }) => {
                     className={`w-5 h-5 mr-2 mt-5 focus:outline-blue-900 border border-gray-300 rounded-lg`}
                     onChange={() => setYearCloseCheck(!YearCloseCheck)}
                   />
-                  Active
                 </label>
               </div>
               <div>

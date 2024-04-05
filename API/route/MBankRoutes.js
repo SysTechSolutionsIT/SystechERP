@@ -105,6 +105,11 @@ sequelize
     console.error("Unable to connect to the database:", err);
   });
 
+  try {
+    MBanks.sync()
+  } catch (error) {
+    
+  }
 // GET endpoint to retrieve all banks
 router.get("/FnShowAllData", authToken, async (req, res) => {
   try {
