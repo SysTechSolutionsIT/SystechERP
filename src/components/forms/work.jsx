@@ -14,7 +14,7 @@ const Work = ({ ID, name }) => {
 
   const formik = useFormik({
     initialValues: {
-      EmployeeId: "",
+      EmployeeId: ID,
       DOJ: "",
       DOL: "",
       ContractorId: "",
@@ -33,7 +33,7 @@ const Work = ({ ID, name }) => {
       BondAttachment: "",
       CurrentJob: "",
       Remark: "",
-      AcFlag: 'Y',
+      AcFlag: "Y",
       IUFlag: "U",
       CreatedBy: "",
       CreatedOn: "",
@@ -42,7 +42,7 @@ const Work = ({ ID, name }) => {
     },
     onSubmit: (values) => {
       const updatedData = {
-        EmployeeId: values.EmployeeId,
+        EmployeeId: ID,
         DOJ: values.DOJ,
         DOL: values.DOL,
         ContractorId: values.ContractorId,
@@ -67,7 +67,7 @@ const Work = ({ ID, name }) => {
         CreatedOn: values.CreatedOn,
         ModifiedBy: values.ModifiedBy,
         ModifiedOn: values.ModifiedOn,
-        IUFlag: 'U',
+        IUFlag: "U",
       };
       console.log(values);
       updateEmpWork(updatedData);
@@ -84,12 +84,11 @@ const Work = ({ ID, name }) => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      alert('Work Details Updated');
+      alert("Work Details Updated");
     } catch (error) {
       console.error("Error:", error.message);
     }
   };
-  
 
   useEffect(() => {
     const fetchWorkDetails = async () => {
@@ -103,8 +102,8 @@ const Work = ({ ID, name }) => {
             }
           );
           const data = response.data;
-          console.log('Work details data', response);
-          setDetails(data)
+          console.log("Work details data", response);
+          setDetails(data);
         }
       } catch (error) {
         console.error("Error", error);
@@ -118,7 +117,7 @@ const Work = ({ ID, name }) => {
     setChecked(checked);
     formik.setValues({
       ...formik.values,
-      [fieldName]: checked ? 'Y' : 'N',
+      [fieldName]: checked ? "Y" : "N",
     });
   };
 
@@ -154,23 +153,26 @@ const Work = ({ ID, name }) => {
     }
   }, [details]);
 
-  const [WeeklyOff, setWeeklyOff] = useState([])
-  useEffect(() =>{
-    const fetchWeeklyOff = async() =>{
+  const [WeeklyOff, setWeeklyOff] = useState([]);
+  useEffect(() => {
+    const fetchWeeklyOff = async () => {
       try {
-        const response = await axios.get('http://localhost:5500/weekly-off/FnShowActiveData',{
-          headers: { Authorization: `Bearer ${token}`}
-        })
-        const data = response.data
-        setWeeklyOff(data)
+        const response = await axios.get(
+          "http://localhost:5500/weekly-off/FnShowActiveData",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        setWeeklyOff(data);
       } catch (error) {
-        console.error('Error', error);
+        console.error("Error", error);
       }
-    }
-    fetchWeeklyOff()
-  },[token])
+    };
+    fetchWeeklyOff();
+  }, [token]);
 
-  const [CostCenters, setCostCenters] = useState([])
+  const [CostCenters, setCostCenters] = useState([]);
   useEffect(() => {
     const fetchCostCenters = async () => {
       try {
@@ -192,58 +194,64 @@ const Work = ({ ID, name }) => {
     fetchCostCenters();
   }, [token]);
 
-  const [DepartmentGroup, setDepartmentGroup] = useState([])
-  useEffect(() =>{
-    const fetchDepartmentGroup = async () =>{
-      const DGID = 5
+  const [DepartmentGroup, setDepartmentGroup] = useState([]);
+  useEffect(() => {
+    const fetchDepartmentGroup = async () => {
+      const DGID = 5;
       try {
-        const response = await axios.get('http://localhost:5500/two-field/FnShowCategoricalData',
-        {
-          params: { MasterNameId: DGID },
-          headers: { Authorization: `Bearer ${token}` },
-        }) 
-        const data = response.data
-        setDepartmentGroup(data)
+        const response = await axios.get(
+          "http://localhost:5500/two-field/FnShowCategoricalData",
+          {
+            params: { MasterNameId: DGID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        setDepartmentGroup(data);
       } catch (error) {
-        console.error('Error', error);
+        console.error("Error", error);
       }
-    }
-    fetchDepartmentGroup()
-  },[token])
+    };
+    fetchDepartmentGroup();
+  }, [token]);
 
-  const [Departments, setDepartments] = useState([])
-  useEffect(() =>{
-    const fetchDepartments = async () =>{
+  const [Departments, setDepartments] = useState([]);
+  useEffect(() => {
+    const fetchDepartments = async () => {
       try {
-        const response = await axios.get('http://localhost:5500/departmentmaster/FnShowActiveData',
-        { headers: {Authorization: `Bearer ${token}`}}
-      )
-      const data = response.data
-      setDepartments(data)
+        const response = await axios.get(
+          "http://localhost:5500/departmentmaster/FnShowActiveData",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const data = response.data;
+        setDepartments(data);
       } catch (error) {
-        console.error('Error', error);
+        console.error("Error", error);
       }
-    }
-    fetchDepartments()
-  },[token])
+    };
+    fetchDepartments();
+  }, [token]);
 
-  const [Designations, setDesignations] = useState([])
-  useEffect(() =>{
-    const fetchDesignations = async () =>{
+  const [Designations, setDesignations] = useState([]);
+  useEffect(() => {
+    const fetchDesignations = async () => {
       try {
-        const response = await axios.get('http://localhost:5500/designation-master/FnShowActiveData',{
-          headers: {Authorization: `Bearer ${token}`}
-        })
-        const data = response.data
-        setDesignations(data)
+        const response = await axios.get(
+          "http://localhost:5500/designation-master/FnShowActiveData",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        setDesignations(data);
       } catch (error) {
-        console.error('Error', error);
+        console.error("Error", error);
       }
-    }
-    fetchDesignations()
-  }, [token])
+    };
+    fetchDesignations();
+  }, [token]);
 
-  const [Employees, setEmployees] = useState([])
+  const [Employees, setEmployees] = useState([]);
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
@@ -261,7 +269,7 @@ const Work = ({ ID, name }) => {
     fetchEmployees();
   }, [token]);
 
-  const [Shifts, setShifts] = useState([])
+  const [Shifts, setShifts] = useState([]);
   useEffect(() => {
     const fetchShifts = async () => {
       try {
@@ -278,20 +286,22 @@ const Work = ({ ID, name }) => {
     fetchShifts();
   }, [token]);
 
-  const [Grades, setGrades] = useState([])
-  useEffect(() =>{
-    const fetchGrades = async () =>{
+  const [Grades, setGrades] = useState([]);
+  useEffect(() => {
+    const fetchGrades = async () => {
       try {
-        const response = await axios.get('http://localhost:5500/employee-grade/FnShowActiveData',
-        { headers: { Authorization: `Bearer ${token}` } })
-        const data = response.data
-        setGrades(data)
+        const response = await axios.get(
+          "http://localhost:5500/employee-grade/FnShowActiveData",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const data = response.data;
+        setGrades(data);
       } catch (error) {
-        console.error('Error', error);
+        console.error("Error", error);
       }
-    }
-    fetchGrades()
-  }, [token])
+    };
+    fetchGrades();
+  }, [token]);
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -303,7 +313,7 @@ const Work = ({ ID, name }) => {
             </p>
             <input
               id="EmployeeId"
-              type="number"
+              type="String"
               value={ID}
               className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg `}
               onChange={formik.handleChange}
@@ -352,15 +362,20 @@ const Work = ({ ID, name }) => {
             <select
               id="WeeklyOff"
               className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-              value={formik.values.WeeklyOff}
+              value={formik.values.WeeklyOff || ""}
               onChange={formik.handleChange}
             >
               <option value="">Select Weekly Off</option>
-              {WeeklyOff.map((entry) => (
-                <option key={entry.WeeklyOffId} value={entry.WeeklyOffId}>
-                  {entry.WeeklyOffName}
-                </option>
-              ))}
+              {WeeklyOff &&
+                WeeklyOff.map(
+                  (
+                    entry // Add a check for WeeklyOff before using .map()
+                  ) => (
+                    <option key={entry.WeeklyOffId} value={entry.WeeklyOffId}>
+                      {entry.WeeklyOffName}
+                    </option>
+                  )
+                )}
             </select>
           </div>
           <div className="py-1">
@@ -374,14 +389,12 @@ const Work = ({ ID, name }) => {
               onChange={formik.handleChange}
             >
               <option value="">Select Cost Center</option>
-              {CostCenters.map((entry) => (
-                    <option
-                      key={entry.CostCenterId}
-                      value={entry.CostCenterId}
-                    >
-                      {entry.CostCenterName}
-                    </option>
-                  ))}
+              {CostCenters &&
+                CostCenters.map((entry) => (
+                  <option key={entry.CostCenterId} value={entry.CostCenterId}>
+                    {entry.CostCenterName}
+                  </option>
+                ))}
             </select>
           </div>
           <div className="py-1">
@@ -389,18 +402,18 @@ const Work = ({ ID, name }) => {
               Department Group
             </p>
             <select
-                  id="DeptGroupId"
-                  value={formik.values.DeptGroupId}
-                  className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
-                  onChange={formik.handleChange}
-                >
-                  <option value="">Select Department Group</option>
-                  {DepartmentGroup.map((entry) => (
-                    <option key={entry.FieldId} value={entry.FieldId}>
-                      {entry.FieldDetails}
-                    </option>
-                  ))}
-                </select>
+              id="DeptGroupId"
+              value={formik.values.DeptGroupId}
+              className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
+              onChange={formik.handleChange}
+            >
+              <option value="">Select Department Group</option>
+              {DepartmentGroup.map((entry) => (
+                <option key={entry.FieldId} value={entry.FieldId}>
+                  {entry.FieldDetails}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="py-1">
             <p className="mb-0.5 capitalize font-semibold text-[13px]">
@@ -413,16 +426,14 @@ const Work = ({ ID, name }) => {
               onChange={formik.handleChange}
             >
               <option value="">Select Department</option>
-              {Departments.map((entry) => (
-                entry.DepartmentType === 'Main' && (
-                  <option 
-                    key={entry.DepartmentId}
-                    value={entry.DepartmentId}
-                  >
-                    {entry.DepartmentName}
-                  </option>
-                )
-              ))}
+              {Departments.map(
+                (entry) =>
+                  entry.DepartmentType === "Main" && (
+                    <option key={entry.DepartmentId} value={entry.DepartmentId}>
+                      {entry.DepartmentName}
+                    </option>
+                  )
+              )}
             </select>
           </div>
           <div className="py-1">
@@ -436,16 +447,14 @@ const Work = ({ ID, name }) => {
               onChange={formik.handleChange}
             >
               <option value="">Select Sub Department</option>
-              {Departments.map((entry) => (
-                entry.DepartmentType === 'Sub' && (
-                  <option 
-                    key={entry.DepartmentId}
-                    value={entry.DepartmentId}
-                  >
-                    {entry.DepartmentName}
-                  </option>
-                )
-              ))}
+              {Departments.map(
+                (entry) =>
+                  entry.DepartmentType === "Sub" && (
+                    <option key={entry.DepartmentId} value={entry.DepartmentId}>
+                      {entry.DepartmentName}
+                    </option>
+                  )
+              )}
             </select>
           </div>
           <div className="py-1">
@@ -508,7 +517,9 @@ const Work = ({ ID, name }) => {
               className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
               onChange={formik.handleChange}
             >
-              <option value={formik.values.BandId}>{formik.values.BandId}</option>
+              <option value={formik.values.BandId}>
+                {formik.values.BandId}
+              </option>
               <option value="">Select Band</option>
               <option value="Example 1">Example 1</option>
               <option value="Example 2">Example 2</option>
@@ -524,7 +535,9 @@ const Work = ({ ID, name }) => {
               className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
               onChange={formik.handleChange}
             >
-              <option value={formik.values.ZoneId}>{formik.values.ZoneId}</option>
+              <option value={formik.values.ZoneId}>
+                {formik.values.ZoneId}
+              </option>
               <option value="">Select Zone</option>
               <option value="Example 1">Example 1</option>
               <option value="Example 2">Example 2</option>
@@ -542,7 +555,10 @@ const Work = ({ ID, name }) => {
             >
               <option value="">Select Grade</option>
               {Grades.map((entry) => (
-                <option key={entry.EmployeeGradeId} value={entry.EmployeeGradeId}>
+                <option
+                  key={entry.EmployeeGradeId}
+                  value={entry.EmployeeGradeId}
+                >
                   {entry.EmployeeGradeName}
                 </option>
               ))}
@@ -558,7 +574,9 @@ const Work = ({ ID, name }) => {
               className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
               onChange={formik.handleChange}
             >
-              <option value={formik.values.ContractorId}>{formik.values.ContractorId}</option>
+              <option value={formik.values.ContractorId}>
+                {formik.values.ContractorId}
+              </option>
               <option value="">Select Contractor</option>
               <option value="Example 1">Example 1</option>
               <option value="Example 2">Example 2</option>
@@ -609,21 +627,7 @@ const Work = ({ ID, name }) => {
               Active
             </label>
           </div>
-          <div className="py-1">
-            <p className="capitalize font-semibold text-[13px]">Status</p>
-            <label className="capitalize font-semibold text-[13px]">
-              <input
-                id="Status"
-                type="checkbox"
-                checked={formik.values.Status}
-                className={`w-5 h-5 mr-2 mt-2 focus:outline-gray-300 border border-blue-900 rounded-lg`}
-                onChange={(e) =>
-                  handleCheckboxChange("Status", setStatusCheck, e)
-                }
-              />
-              Active
-            </label>
-          </div>
+
           <div className="py-1">
             <p className="mb-1 capitalize font-semibold text-[13px]">Remark</p>
             <input

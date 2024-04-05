@@ -44,23 +44,22 @@ const MEmployeeWorkProfile = sequelize.define(
     EmployeeId: {
       type: DataTypes.STRING(5),
       allowNull: false,
-      autoIncrement: true,
       primaryKey: true,
     },
-    DOJ: { type: DataTypes.STRING(50), allowNull: true },
-    DOL: { type: DataTypes.STRING(50), allowNull: true },
+    DOJ: { type: DataTypes.DATEONLY, allowNull: true },
+    DOL: { type: DataTypes.DATEONLY, allowNull: true },
     ContractorId: {
       type: DataTypes.STRING(50),
       allowNull: true,
       defaultValue: null,
     },
     ContractorStartDate: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.DATEONLY,
       allowNull: true,
       defaultValue: null,
     },
     ContractorEndDate: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.DATEONLY,
       allowNull: true,
       defaultValue: null,
     },
@@ -82,7 +81,7 @@ const MEmployeeWorkProfile = sequelize.define(
       defaultValue: null,
     },
     WeeklyOff: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
+      type: DataTypes.STRING,
       allowNull: true,
       defaultValue: null,
     },
@@ -190,7 +189,7 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
 
 router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
   const work = req.body;
-  const EmployeeId = req.query.EmployeeId
+  const EmployeeId = req.query.EmployeeId;
   try {
     if (work.IUFlag === "D") {
       // "Soft-delete" operation
@@ -202,7 +201,7 @@ router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
       res.json({
         message: result[0] ? "Record Deleted Successfully" : "Record Not Found",
       });
-    } else if (work.IUFlag === 'U') {
+    } else if (work.IUFlag === "U") {
       // Add or update operation
       const result = await MEmployeeWorkProfile.update(work, {
         where: { EmployeeId: EmployeeId },
@@ -213,7 +212,6 @@ router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
         message: result ? "Operation successful" : "Operation failed",
       });
     } else {
-
       const result = await MEmployeeWorkProfile.create(work, {
         returning: true,
       });
@@ -228,13 +226,10 @@ router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
   }
 });
 
-router.get('/GetEmployeeDetails', authToken, async (req, res) => {
+router.get("/GetEmployeeDetails", authToken, async (req, res) => {
   try {
-    
-  } catch (error) {
-    
-  }
-})
+  } catch (error) {}
+});
 
 //For monthly attendances
 router.get("/GetWeeklyOff", authToken, async (req, res) => {
