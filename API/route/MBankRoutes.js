@@ -35,6 +35,7 @@ const sequelize = new Sequelize(
 // Define the MBanks model
 const MBanks = sequelize.define("MBanks", {
   CompanyId: {
+<<<<<<< HEAD
     type: DataTypes.STRING(5),
     allowNull: false,
   },
@@ -44,6 +45,17 @@ const MBanks = sequelize.define("MBanks", {
   },
   BankId: {
     type: DataTypes.STRING(5),
+=======
+    type: DataTypes.STRING(11),
+    allowNull: false,
+  },
+  BranchId: {
+    type: DataTypes.STRING(11),
+    allowNull: false,
+  },
+  BankId: {
+    type: DataTypes.STRING(11),
+>>>>>>> 0375935ecc8ffae39c960697a933aaf8973f8679
     primaryKey: true,
   },
   AccountType: DataTypes.STRING(50),
@@ -91,6 +103,9 @@ const MBanks = sequelize.define("MBanks", {
 
 // Middleware for parsing JSON
 router.use(bodyParser.json());
+try {
+  MBanks.sync();
+} catch (error) {}
 
 // Model synchronization
 sequelize

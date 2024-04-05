@@ -8,11 +8,12 @@ const VEBranch = ({ visible, onClick, edit, ID }) => {
   const [details, setDetails] = useState([]);
   const [companies, setCompanies] = useState([]);
   const { token } = useAuth();
-  console.log("Cost Center ID:", ID);
+  console.log("Branch ID:", ID);
 
   const formik = useFormik({
     initialValues: {
       CompanyId: "",
+      BranchId: ID,
       BranchName: "",
       BranchShortName: "",
       BranchAddress: "",
@@ -24,17 +25,18 @@ const VEBranch = ({ visible, onClick, edit, ID }) => {
     onSubmit: async (values) => {
       const updatedData = {
         CompanyId: values.CompanyId,
+        BranchId: ID,
         BranchName: values.BranchName,
         BranchShortName: values.BranchShortName,
         BranchAddress: values.BranchAddress,
         Remark: values.Remark,
         IUFlag: "U",
         AcFlag: "Y",
-        CreatedOn: new Date(),
+        ModifiedOn: new Date(),
       };
       axios
         .post(
-          `http://localhost:5500/cost-center/FnAddUpdateDeleteRecord`,
+          `http://localhost:5500/branch-master/FnAddUpdateDeleteRecord`,
           updatedData,
           {
             params: { BranchId: ID },
@@ -43,8 +45,7 @@ const VEBranch = ({ visible, onClick, edit, ID }) => {
         )
         .then((response) => {
           // Handle success
-          console.log("Data updated successfully", response);
-          // You can also perform additional actions here, like closing the modal or updating the UI.
+          alert("Data Updated");
           window.location.reload();
         })
         .catch((error) => {
@@ -109,6 +110,7 @@ const VEBranch = ({ visible, onClick, edit, ID }) => {
       });
     }
   }, [details]);
+  console.log("Formik", formik.values);
 
   if (!visible) return null;
   return (
@@ -156,6 +158,7 @@ const VEBranch = ({ visible, onClick, edit, ID }) => {
                   value={formik.values.BranchName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
+                  disabled={!edit}
                 />
               </div>
               <div>
@@ -167,6 +170,7 @@ const VEBranch = ({ visible, onClick, edit, ID }) => {
                   value={formik.values.BranchShortName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
+                  disabled={!edit}
                 />
               </div>
               <div>
@@ -178,6 +182,7 @@ const VEBranch = ({ visible, onClick, edit, ID }) => {
                   value={formik.values.BranchAddress}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
+                  disabled={!edit}
                 />
               </div>
               <div>
@@ -189,6 +194,7 @@ const VEBranch = ({ visible, onClick, edit, ID }) => {
                   value={formik.values.Remark}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
+                  disabled={!edit}
                 />
               </div>
             </div>
