@@ -8,7 +8,6 @@ const VEBranch = ({ visible, onClick, edit, ID }) => {
   const [details, setDetails] = useState([]);
   const [companies, setCompanies] = useState([]);
   const { token } = useAuth();
-  console.log("Branch ID:", ID);
 
   const formik = useFormik({
     initialValues: {
@@ -70,7 +69,6 @@ const VEBranch = ({ visible, onClick, edit, ID }) => {
         }
       );
       const data = response.data;
-      console.log("company", data);
       setCompanies(data);
     } catch (error) {
       console.log("Error while fetching course data: ", error.message);
@@ -91,7 +89,6 @@ const VEBranch = ({ visible, onClick, edit, ID }) => {
         }
       );
       const data = response.data;
-      console.log(data);
       setDetails(data);
     } catch (error) {
       console.log("Error while fetching course data: ", error.message);
@@ -110,7 +107,6 @@ const VEBranch = ({ visible, onClick, edit, ID }) => {
       });
     }
   }, [details]);
-  console.log("Formik", formik.values);
 
   if (!visible) return null;
   return (

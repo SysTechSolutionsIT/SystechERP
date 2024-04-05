@@ -97,6 +97,8 @@ const DepartmentMaster = () => {
 
     if (searchWord === "") {
       setFilteredData([]);
+    } else if (searchWord !== "" && newFilter.length === 0) {
+      setFilteredData(["NA"]);
     } else {
       setFilteredData(newFilter);
     }
@@ -362,159 +364,145 @@ const DepartmentMaster = () => {
                 )}
               </tr>
             </thead>
-            <tbody>
-              {filteredData.length > 0
-                ? filteredData.map((result, key) => (
-                    <tr key={key}>
-                      <td className="px-2 border-2">
-                        <div className="flex items-center gap-2 text-center justify-center">
-                          <Icon
-                            icon="lucide:eye"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            className="cursor-pointer"
-                            onClick={() => {
-                              setVeDept(true); // Open VEModal
-                              setEdit(false); // Disable edit mode for VEModal
-                              setDid(result.DepartmentId); // Pass ID to VEModal
-                            }}
-                          />
-                          <Icon
-                            icon="mdi:edit"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            className="cursor-pointer"
-                            onClick={() => {
-                              setVeDept(true); // Open VEModal
-                              setEdit(true); // Disable edit mode for VEModal
-                              setDid(result.DepartmentId); // Pass ID to VEModal
-                            }}
-                          />
-                          <Icon
-                            icon="material-symbols:delete-outline"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            className="cursor-pointer"
-                          />
-                        </div>
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
-                        {result.DepartmentId}
-                      </td>
-                      {selectedColumns.map((columnName) =>
-                        columnVisibility[columnName] ? (
-                          <td
-                            key={columnName}
-                            className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                          >
-                            {result[columnName]}
-                          </td>
-                        ) : null
-                      )}
-                    </tr>
-                  ))
-                : departments.map((result, index) => (
-                    <tr key={index}>
-                      <td className="px-2 border-2">
-                        <div className="flex items-center gap-2 text-center justify-center">
-                          <Icon
-                            icon="lucide:eye"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            className="cursor-pointer"
-                            onClick={() => {
-                              setVeDept(true); // Open VEModal
-                              setEdit(false); // Disable edit mode for VEModal
-                              setDid(result.DepartmentId); // Pass ID to VEModal
-                            }}
-                          />
-                          <Icon
-                            icon="mdi:edit"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            className="cursor-pointer"
-                            onClick={() => {
-                              setVeDept(true); // Open VEModal
-                              setEdit(true); // Disable edit mode for VEModal
-                              setDid(result.DepartmentId); // Pass ID to VEModal
-                            }}
-                          />
-                          <Icon
-                            icon="material-symbols:delete-outline"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            className="cursor-pointer"
-                            onClick={() => deleteDept(result.DepartmentId)}
-                          />
-                        </div>
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
-                        {result.DepartmentId}
-                      </td>
-                      {selectedColumns.map((columnName) => {
-                        if (columnVisibility[columnName]) {
-                          if (columnName === "ParentDeptId") {
-                            const parentDept = departments.find(
-                              (parentDept) =>
-                                parentDept.DepartmentId == result.DepartmentId
-                            );
-                            return (
-                              <td
-                                key={columnName}
-                                className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                              >
-                                {parentDept?.DepartmentName}
-                              </td>
-                            );
-                          } else if (columnName === "DepartmentHeadId") {
-                            const employee = Employees.find(
-                              (employee) =>
-                                employee.EmployeeId == result.DepartmentHeadId
-                            );
-                            return (
-                              <td
-                                key={columnName}
-                                className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                              >
-                                {employee?.EmployeeName}
-                              </td>
-                            );
-                          } else if (columnName === "DepartmentSubHeadId") {
-                            const employee = Employees.find(
-                              (employee) =>
-                                employee.EmployeeId ==
-                                result.DepartmentSubHeadId
-                            );
-                            return (
-                              <td
-                                key={columnName}
-                                className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                              >
-                                {employee?.EmployeeName}
-                              </td>
-                            );
-                          } else {
-                            return (
-                              <td
-                                key={columnName}
-                                className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                              >
-                                {result[columnName]}
-                              </td>
-                            );
-                          }
-                        } else {
-                          return <td key={columnName} className="hidden"></td>;
-                        }
-                      })}
-                    </tr>
-                  ))}
+            <tbody className="">
+              {filteredData.length > 0 ? (
+                filteredData.map((result, key) => (
+                  <tr key={key}>
+                    <td className="px-2 border-2">
+                      <div className="flex items-center gap-2 text-center justify-center">
+                        <Icon
+                          icon="lucide:eye"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() => {
+                            setVeDept(true); // Open VEModal
+                            setEdit(false); // Disable edit mode for VEModal
+                            setDid(result.DepartmentId); // Pass ID to VEModal
+                          }}
+                        />
+                        <Icon
+                          icon="mdi:edit"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() => {
+                            setVeDept(true); // Open VEModal
+                            setEdit(true); // Disable edit mode for VEModal
+                            setDid(result.DepartmentId); // Pass ID to VEModal
+                          }}
+                        />
+                        <Icon
+                          icon="material-symbols:delete-outline"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                        />
+                      </div>
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
+                      {result.DepartmentId}
+                    </td>
+                    {selectedColumns.map((columnName) =>
+                      columnVisibility[columnName] ? (
+                        <td
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                        >
+                          {result[columnName]}
+                        </td>
+                      ) : (
+                        <td key={columnName} className="hidden"></td>
+                      )
+                    )}
+                  </tr>
+                ))
+              ) : filteredData.length === 0 &&
+                departments &&
+                departments.length > 0 ? (
+                departments.map((result, key) => (
+                  <tr key={key}>
+                    <td className="px-2 border-2">
+                      <div className="flex items-center gap-2 text-center justify-center">
+                        <Icon
+                          icon="lucide:eye"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() => {
+                            setVeDept(true); // Open VEModal
+                            setEdit(false); // Disable edit mode for VEModal
+                            setDid(result.DepartmentId); // Pass ID to VEModal
+                          }}
+                        />
+                        <Icon
+                          icon="mdi:edit"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() => {
+                            setVeDept(true); // Open VEModal
+                            setEdit(true); // Disable edit mode for VEModal
+                            setDid(result.DepartmentId); // Pass ID to VEModal
+                          }}
+                        />
+                        <Icon
+                          icon="material-symbols:delete-outline"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() => deleteDept(result.DepartmentId)}
+                        />
+                      </div>
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
+                      {result.CompanyId}
+                    </td>
+                    {selectedColumns.map((columnName) =>
+                      columnVisibility[columnName] ? (
+                        <td
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                        >
+                          {columnName === "ParentDeptId"
+                            ? departments.find(
+                                (parentDept) =>
+                                  parentDept.DepartmentId == result.DepartmentId
+                              )?.DepartmentName
+                            : columnName === "DepartmentHeadId"
+                            ? Employees.find(
+                                (employee) =>
+                                  employee.EmployeeId == result.DepartmentHeadId
+                              )?.EmployeeName
+                            : columnName === "DepartmentSubHeadId"
+                            ? Employees.find(
+                                (employee) =>
+                                  employee.EmployeeId ==
+                                  result.DepartmentSubHeadId
+                              )?.EmployeeName
+                            : result[columnName]}
+                        </td>
+                      ) : (
+                        <td key={columnName} className="hidden"></td>
+                      )
+                    )}
+                  </tr>
+                ))
+              ) : filteredData[0] == "NA" ? (
+                <tr>
+                  <td className="text-center">No results</td>
+                </tr>
+              ) : (
+                <tr>
+                  <td className="hidden">No Results</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

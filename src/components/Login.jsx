@@ -35,7 +35,6 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-
 export const DetailsContext = createContext();
 
 export function useDetails() {
@@ -46,10 +45,10 @@ export const DetailsProvider = ({ children }) => {
   const [companyId, setCompanyId] = useState("");
   const [branchId, setBranchId] = useState("");
   const [fYear, setFYear] = useState("");
-  const [name, setName] = useState('')
-  const [role, setRole] = useState('')
-  const [empid, setEmpid] = useState('')
-  const [rights, setRights] = useState('')
+  const [name, setName] = useState("");
+  const [role, setRole] = useState("");
+  const [empid, setEmpid] = useState("");
+  const [rights, setRights] = useState("");
 
   const handleSetCompanyId = (newID) => {
     setCompanyId(newID);
@@ -67,33 +66,33 @@ export const DetailsProvider = ({ children }) => {
   };
 
   const handleName = (newName) => {
-    setName(newName)
-    Cookies.set('name', newName, {expires: 7})
-  }
+    setName(newName);
+    Cookies.set("name", newName, { expires: 7 });
+  };
 
   const handleRole = (newRole) => {
-    setRole(newRole)
-    Cookies.set('role', newRole, {expires: 7})
-  }
+    setRole(newRole);
+    Cookies.set("role", newRole, { expires: 7 });
+  };
 
   const handleEmpid = (newEmpid) => {
-    setEmpid(newEmpid)
-    Cookies.set('empid', newEmpid, {expires: 7})
-  }
+    setEmpid(newEmpid);
+    Cookies.set("empid", newEmpid, { expires: 7 });
+  };
 
   const handleRights = (newRights) => {
-    setRights(newRights)
-    Cookies.set('rights', newRights, {expires: 7})
-  }
+    setRights(newRights);
+    Cookies.set("rights", newRights, { expires: 7 });
+  };
 
   useEffect(() => {
     const savedCompanyId = Cookies.get("companyId");
     const savedBrancId = Cookies.get("branchId");
     const savedFYear = Cookies.get("fYear");
-    const savedName = Cookies.get('name')
-    const savedRole = Cookies.get('role')
-    const savedempid = Cookies.get('empid')
-    const savedRights = Cookies.get('rights')
+    const savedName = Cookies.get("name");
+    const savedRole = Cookies.get("role");
+    const savedempid = Cookies.get("empid");
+    const savedRights = Cookies.get("rights");
 
     if (savedCompanyId) {
       setCompanyId(savedCompanyId);
@@ -107,20 +106,20 @@ export const DetailsProvider = ({ children }) => {
       setFYear(savedFYear);
     }
 
-    if(savedName){
-      setName(savedName)
+    if (savedName) {
+      setName(savedName);
     }
 
-    if(savedRole){
-      setRole(savedRole)
+    if (savedRole) {
+      setRole(savedRole);
     }
 
-    if(savedempid){
-      setEmpid(savedempid)
+    if (savedempid) {
+      setEmpid(savedempid);
     }
 
-    if(savedRights){
-      setRights(savedRights)
+    if (savedRights) {
+      setRights(savedRights);
     }
   }, []);
 
@@ -140,7 +139,7 @@ export const DetailsProvider = ({ children }) => {
         empid,
         setEmpid: handleEmpid,
         rights,
-        setRights: handleRights
+        setRights: handleRights,
       }}
     >
       {children}
@@ -148,20 +147,20 @@ export const DetailsProvider = ({ children }) => {
   );
 };
 
-
 function Login() {
   const [email, setEmail] = useState("ggwpfax@gmail.com");
   const [password, setPassword] = useState("Udayan@99");
   const [companies, setCompanies] = useState([]);
   const { token, setToken } = useAuth();
-  const { companyId, setCompanyId } = useDetails(); 
-  const { branchId, setBranchId } = useDetails()
-  const { fYear, setFYear } = useDetails()
-  const { name, setName } = useDetails()
-  const { role, setRole } = useDetails()
-  const { empid, setEmpid} = useDetails()
-  const { rights, setRights } = useDetails()
-  const [finYears, setFinYears] = useState([])
+  const { companyId, setCompanyId } = useDetails();
+  const { branchId, setBranchId } = useDetails();
+  const { fYear, setFYear } = useDetails();
+  const { name, setName } = useDetails();
+  const { role, setRole } = useDetails();
+  const { empid, setEmpid } = useDetails();
+  const { rights, setRights } = useDetails();
+  const [finYears, setFinYears] = useState([]);
+  const [branches, setBranches] = useState([]);
 
   const handleCompanyChange = (e) => {
     const selectedCompanyId = e.target.value;
@@ -169,10 +168,10 @@ function Login() {
     setCompanyId(selectedCompanyId);
   };
 
-  const handleFinChange = (e) =>{
-    const selectedFYear = e.target.value
-    setFYear(selectedFYear)
-  }
+  const handleFinChange = (e) => {
+    const selectedFYear = e.target.value;
+    setFYear(selectedFYear);
+  };
 
   const handleBranchChange = (e) => {
     const selectedBranchId = e.target.value;
@@ -201,17 +200,17 @@ function Login() {
         }
       );
 
-      console.log(response.data)
+      console.log(response.data);
       const token = await response.data.token;
       setToken(response.data.token);
-      const name = await response.data.name
-      setName(name)
-      const role = await response.data.role
-      setRole(role)
-      const empid = await response.data.empid
-      setEmpid(empid)
-      const rights = await response.data.rights
-      setRights(rights)
+      const name = await response.data.name;
+      setName(name);
+      const role = await response.data.role;
+      setRole(role);
+      const empid = await response.data.empid;
+      setEmpid(empid);
+      const rights = await response.data.rights;
+      setRights(rights);
       // Set token in the AuthContext
       // setToken(token);
 
@@ -219,8 +218,8 @@ function Login() {
       if (token) {
         navigate("/dashboard");
         console.log("Company Id", companyId);
-        console.log('Branch Id', branchId)
-        console.log('Fin year', fYear)
+        console.log("Branch Id", branchId);
+        console.log("Fin year", fYear);
       }
     } catch (error) {
       console.log("Error", error);
@@ -245,18 +244,35 @@ function Login() {
     }
   };
 
-  useEffect(() =>{
-    const fetchFinancialYears = async () =>{
+  useEffect(() => {
+    const fetchFinancialYears = async () => {
       try {
-        const response = await axios.get('http://localhost:5500/financials/FnShowActiveData')
-        const data = response.data
-        setFinYears(data)
+        const response = await axios.get(
+          "http://localhost:5500/financials/FnShowActiveData"
+        );
+        const data = response.data;
+        setFinYears(data);
       } catch (error) {
         console.error("Error", error);
       }
-    }
-    fetchFinancialYears()
-  },[])
+    };
+    fetchFinancialYears();
+  }, []);
+
+  useEffect(() => {
+    const fetchBranchMaster = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/branch-master/FnShowActiveData"
+        );
+        const data = response.data;
+        setBranches(data);
+      } catch (error) {
+        console.error("Error", error);
+      }
+    };
+    fetchBranchMaster();
+  }, []);
 
   return (
     <DetailsProvider value={companyId}>
@@ -304,8 +320,11 @@ function Login() {
               className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-400 text-[13px]"
             >
               <option value="">Select a branch</option>
-              <option value="00001">Main</option>
-              <option value="00002">Sub</option>
+              {branches.map((company) => (
+                <option key={company.BranchId} value={company.BranchId}>
+                  {company.BranchName}
+                </option>
+              ))}
             </select>
           </div>
           <div className="mb-2">
@@ -331,10 +350,7 @@ function Login() {
             </select>
           </div>
           <div className="mb-2">
-            <label
-              htmlFor="email"
-              className="block text-gray-700 text-[13px]"
-            >
+            <label htmlFor="email" className="block text-gray-700 text-[13px]">
               Email:
             </label>
             <input

@@ -7,13 +7,18 @@ import { useAuth, useDetails } from "../Login";
 
 const CostCenterModal = ({ visible, onClick }) => {
   const { token } = useAuth();
-  const { companyId } = useDetails();
+  const { companyId, branchId } = useDetails();
   console.log("IDs: ", companyId);
 
   const formik = useFormik({
     initialValues: {
+      CompanyId: "",
       CostCenterName: "",
       Remark: "",
+      AcFlag: "Y",
+      IUFlag: "I",
+      CreatedOn: new Date(),
+      ModifiedOn: "",
     },
     onSubmit: async (values) => {
       console.log(values);

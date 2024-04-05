@@ -57,13 +57,9 @@ const MCostCenter = sequelize.define(
       type: DataTypes.STRING(1),
       defaultValue: "Y",
     },
-    IUFlag: {
-      type: DataTypes.STRING(1),
-    },
     Remark: DataTypes.STRING(500),
   },
   {
-    tableName: "MCostCenter", // Specify the table name if it differs from the model name
     timestamps: false, // Disable timestamps (createdAt and updatedAt)
   }
 );
