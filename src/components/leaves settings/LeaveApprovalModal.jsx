@@ -7,7 +7,6 @@ import LMonthlyAtt from "./LMonthlyAtt";
 
 const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
   const [details, setDetails] = useState([]);
-  const { token } = useAuth();
   const [Employees, setEmployees] = useState([]);
   const [LeaveTypes, setLeaveTypes] = useState("");
   const [employeeTypes, setEmployeeTypes] = useState([]);
@@ -18,6 +17,7 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
   const [LeaveBalance, setLeaveBalance] = useState([]);
   const [Data, setData] = useState([]);
   const [LeaveTaken, setLeaveTaken] = useState([]);
+  const { token } = useAuth();
 
   const handleInputChange = (event) => {
     const { value } = event.target;
@@ -82,7 +82,7 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
   useEffect(() => {
     if (ApprovalFlag === "A" && !isLMonthlyAttCalled) {
       // Call the LMonthlyAtt function only when ApprovalFlag is 'A' and it hasn't been called before
-      LMonthlyAtt(ID);
+      // LMonthlyAtt(ID);
       setIsLMonthlyAttCalled(true); // Set the state to indicate that the function has been called
     }
   }, [ApprovalFlag]);
@@ -98,7 +98,8 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
         }
       );
       if (ApprovalFlag === "A") alert("Leave Approved");
-      else if (ApprovalFlag === "R") alert("Leave Rejected");
+      else if(ApprovalFlag === "R") alert("Leave Rejected");
+      else console.log('None of the two')
       // FetchLeaveBalanceData()
     } catch (error) {
       console.error("Error", error);
@@ -308,7 +309,7 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
     "Sanction Days",
   ];
 
-  if (!visible) return null;
+  if (!visible) return null
   return (
     <form onSubmit={formik.handleSubmit}>
       <div className="fixed overflow-y-scroll inset-0 bg-black bg-opacity-5 backdrop-blur-sm flex items-center justify-center w-full">
