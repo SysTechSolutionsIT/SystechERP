@@ -145,7 +145,7 @@ const WeeklyOffMaster = () => {
 
   useEffect(() => {
     fetchCompData();
-  }, []);
+  }, [isModalOpen]);
 
   const fetchCompData = async () => {
     try {
