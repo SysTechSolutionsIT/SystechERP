@@ -40,18 +40,9 @@ const AddHoliday = ({ visible, onClick }) => {
             },
           }
         );
-        if (response.status === 201) {
-          const data = response.data;
-          console.log(data);
-          alert("Record added successfully");
-          window.location.refresh();
-          onClick();
-
-          // Handle successful response
-        } else {
-          console.error(`HTTP error! Status: ${response.status}`);
-          // Handle error response
-        }
+        alert("Record added successfully");
+        window.location.reload();
+        onClick();
       } catch (error) {
         console.error("Error:", error.message);
         // Handle network error
@@ -63,6 +54,22 @@ const AddHoliday = ({ visible, onClick }) => {
     formik.resetForm();
   }, []);
 
+  const [finYears, setFinYears] = useState([]);
+
+  useEffect(() => {
+    const fetchFinancialYears = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/financials/FnShowActiveData"
+        );
+        const data = response.data;
+        setFinYears(data);
+      } catch (error) {
+        console.error("Error", error);
+      }
+    };
+    fetchFinancialYears();
+  }, []);
   if (!visible) return null;
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -147,14 +154,19 @@ const AddHoliday = ({ visible, onClick }) => {
               </div>
               <div>
                 <p className="text-[13px] font-semibold">FYear</p>
-                <input
+                <select
+                  type="dropdown"
                   id="FYear"
-                  type="number"
-                  placeholder="Enter FYear"
-                  value={formik.values.FYear}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
-                />
+                  className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-400 text-[13px]"
+                >
+                  <option value="">Select a Financial Year</option>
+                  {finYears.map((year, index) => (
+                    <option key={index} value={year.ShortName}>
+                      {year.Name}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div>
                 <p className="text-[13px] font-semibold">Remarks</p>

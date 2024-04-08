@@ -296,7 +296,7 @@ router.get("/MLeaves/count", async (req, res) => {
     const totals = await TLeaves.findAll({
       attributes: [
         "EmployeeId",
-        [sequelize.fn("SUM", sequelize.col("SanctionLeaveDays")), "LCount"],
+        [sequelize.fn("SUM", sequelize.col("SanctionLeaveDays")), "Presenty"],
       ],
       where: {
         ApprovalFlag: "A",

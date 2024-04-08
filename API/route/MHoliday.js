@@ -3,6 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const { Sequelize, DataTypes } = require("sequelize");
+const { Op } = require("sequelize");
 
 // Create an Express router
 const router = express.Router();
@@ -47,7 +48,7 @@ const MHoliday = sequelize.define(
       defaultValue: "00001",
     },
     FYear: {
-      type: DataTypes.STRING(5),
+      type: DataTypes.STRING,
       allowNull: false,
     },
     HolidayId: {
@@ -221,28 +222,42 @@ router.post(
 router.get("/Mholidays/calc-holidays", async (req, res) => {
   try {
     const currentDate = new Date();
-    currentDate.setDate(currentDate.getDate() - 1);
-    const currentMonth = currentDate.getMonth() + 1; // Months are zero-based, so add 1 to get the current month
+    currentDate.setMonth(currentDate.getMonth() - 1); // Adjust the month directly to get the previous month
+    const previousMonth = currentDate.getMonth() + 1; // Find holidays in the previous month using Sequelize query
 
-    // Find holidays in the current month using Sequelize query
+    const year = currentDate.getFullYear();
+
     const holidays = await MHoliday.findAll({
       where: {
         HolidayDate: {
           [Op.and]: [
             {
-              [Op.gte]: new Date(
-                currentDate.getFullYear(),
-                currentMonth - 1,
-                1
-              ),
-            }, // Start of current month
-            { [Op.lte]: new Date(currentDate.getFullYear(), currentMonth, 0) }, // End of current month
+              [Op.gte]: new Date(year, previousMonth - 1, 1), // Start of previous month
+            },
+            { [Op.lte]: new Date(year, previousMonth, 0) }, // End of previous month
           ],
         },
       },
     });
 
-    res.json(holidays);
+    // Initialize arrays to hold paid and unpaid holidays
+    const paidHolidays = [];
+    const unpaidHolidays = [];
+
+    // Iterate over holidays and categorize them based on HolidayType
+    holidays.forEach((holiday) => {
+      if (holiday.HolidayType === "Paid") {
+        paidHolidays.push(holiday);
+      } else if (holiday.HolidayType === "Unpaid") {
+        unpaidHolidays.push(holiday);
+      }
+    });
+
+    // Return the categorized holidays along with the general list of holidays
+    res.json({
+      paidHolidays: paidHolidays,
+      unpaidHolidays: unpaidHolidays,
+    });
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ message: "Internal server error" });

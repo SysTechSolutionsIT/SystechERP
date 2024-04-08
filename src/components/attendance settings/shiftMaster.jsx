@@ -5,157 +5,9 @@ import AddShift from "./AddShift";
 import axios from "axios";
 import { useAuth } from "../Login";
 
-export const ShiftData = [
-  {
-    shiftId: 1,
-    employeeType: "contract staff",
-    shiftName: "Morning Shift",
-    startTime: "08:00",
-    endTime: "16:00",
-    OTstartTime: "16:30",
-    graceEarlyTime: "07:45",
-    graceLateTime: "08:15",
-    halfDayHour: 4,
-    fullDayHours: 8,
-    twoDayShift: "no",
-    autoRotateFlag: "yes",
-    shiftGraceHoursMin: 1,
-    shiftGraceHoursMax: 2,
-    remark: "",
-    status: "active",
-  },
-  {
-    shiftId: 2,
-    employeeType: "trainee worker",
-    shiftName: "Afternoon Shift",
-    startTime: "12:00",
-    endTime: "20:00",
-    OTstartTime: "20:30",
-    graceEarlyTime: "11:45",
-    graceLateTime: "12:15",
-    halfDayHour: 4,
-    fullDayHours: 8,
-    twoDayShift: "no",
-    autoRotateFlag: "yes",
-    shiftGraceHoursMin: 1,
-    shiftGraceHoursMax: 2,
-    remark: "",
-    status: "active",
-  },
-  {
-    shiftId: 3,
-    employeeType: "trainer staff",
-    shiftName: "Night Shift",
-    startTime: "20:00",
-    endTime: "04:00",
-    OTstartTime: "04.30",
-    graceEarlyTime: "19.45",
-    graceLateTime: "20.15",
-    halfDayHour: 4,
-    fullDayHours: 8,
-    twoDayShift: "yes",
-    autoRotateFlag: "yes",
-    shiftGraceHoursMin: 1,
-    shiftGraceHoursMax: 2,
-    remark: "Night Shift",
-    status: "active",
-  },
-  {
-    shiftId: 4,
-    employeeType: "worker",
-    shiftName: "General Shift",
-    startTime: "09.00",
-    endTime: "17.00",
-    OTstartTime: "17.30",
-    graceEarlyTime: "08.45",
-    graceLateTime: "09.15",
-    halfDayHour: 4,
-    fullDayHours: 8,
-    twoDayShift: "no",
-    autoRotateFlag: "yes",
-    shiftGraceHoursMin: 1,
-    shiftGraceHoursMax: 2,
-    remark: "General Shift",
-    status: "active",
-  },
-  {
-    shiftId: 5,
-    employeeType: "company staff",
-    shiftName: "Morning Shift",
-    startTime: "08.00",
-    endTime: "16.00",
-    OTstartTime: "16.30",
-    graceEarlyTime: "07.45",
-    graceLateTime: "08.15",
-    halfDayHour: 4,
-    fullDayHours: 8,
-    twoDayShift: "no",
-    autoRotateFlag: "yes",
-    shiftGraceHoursMin: 1,
-    shiftGraceHoursMax: 2,
-    remark: "Morning Shift for company staffs only.",
-    status: "active",
-  },
-  {
-    shiftId: 6,
-    employeeType: "contract staff",
-    shiftName: "Afternoon Shift",
-    startTime: "12.00",
-    endTime: "20.00",
-    OTstartTime: "20.30",
-    graceEarlyTime: "11.45",
-    graceLateTime: "12.15",
-    halfDayHour: 4,
-    fullDayHours: 8,
-    twoDayShift: "no",
-    autoRotateFlag: "yes",
-    shiftGraceHoursMin: 1,
-    shiftGraceHoursMax: 2,
-    remark: "",
-    status: "inactive",
-  },
-  {
-    shiftId: 7,
-    employeeType: "trainee worker",
-    shiftName: "Night Shift",
-    startTime: "20.00",
-    endTime: "04.00",
-    OTstartTime: "04.30",
-    graceEarlyTime: "19.45",
-    graceLateTime: "20.15",
-    halfDayHour: 4,
-    fullDayHours: 8,
-    twoDayShift: "yes",
-    autoRotateFlag: "yes",
-    shiftGraceHoursMin: 1,
-    shiftGraceHoursMax: 2,
-    remark: "",
-    status: "inactive",
-  },
-  {
-    shiftId: 8,
-    employeeType: "trainer staff",
-    shiftName: "General Shift",
-    startTime: "09.00",
-    endTime: "17.00",
-    OTstartTime: "17.30",
-    graceEarlyTime: "08.45",
-    graceLateTime: "09.15",
-    halfDayHour: 4,
-    fullDayHours: 8,
-    twoDayShift: "no",
-    autoRotateFlag: "yes",
-    shiftGraceHoursMin: 1,
-    shiftGraceHoursMax: 2,
-    remark: "",
-    status: "inactive",
-  },
-];
-
 const ShiftMaster = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false); //Add Modal
-  const [Fins, setFins] = useState('')
 
   const { token } = useAuth();
   //View and Edit
@@ -200,7 +52,6 @@ const ShiftMaster = () => {
     ShiftGraceHoursMax: "Shift Grace Hours Max",
     Remark: "Remarks",
   };
-
 
   //Toggle
   const [showDropdown, setShowDropdown] = useState(false);
@@ -259,7 +110,7 @@ const ShiftMaster = () => {
   //Max Searchbar width
   const getColumnMaxWidth = (columnName) => {
     let maxWidth = 0;
-    const allRows = [...ShiftData, ...filteredData];
+    const allRows = [...Shift, ...filteredData];
 
     allRows.forEach((row) => {
       const cellContent = row[columnName];
@@ -286,11 +137,14 @@ const ShiftMaster = () => {
 
   const fetchShiftData = async () => {
     try {
-      const response = await axios.get("http://localhost:5500/shift-master/FnShowActiveData", {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        "http://localhost:5500/shift-master/FnShowActiveData",
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
+      );
       console.log("Response Object", response);
       const data = response.data;
       console.log(data);
@@ -302,33 +156,31 @@ const ShiftMaster = () => {
   console.log(Shift);
 
   const handleSearchChange = (title, searchWord) => {
-    const searchData = [...ShiftData, ...Shift]; // Combine hardcoded and API data
-  
+    const searchData = [...Shift]; // Combine hardcoded and API data
+
     const newFilter = searchData.filter((item) => {
       // Check if the item matches the search term in any of the selected columns
       const matches = selectedColumns.some((columnName) => {
-        const formattedColumnName = columnName.charAt(0).toUpperCase() + columnName.slice(1);
+        const formattedColumnName =
+          columnName.charAt(0).toUpperCase() + columnName.slice(1);
         const value = item[formattedColumnName];
         return (
           value &&
           value.toString().toLowerCase().includes(searchWord.toLowerCase())
         );
       });
-  
+
       return matches;
     });
-  
+
     // Update the filtered data
     setFilteredData(newFilter);
   };
-  
 
   return (
     <div className="top-25 min-w-[40%]">
       <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
-        <div className="text-[15px]">
-          Attendance Settings / Shift Master
-        </div>
+        <div className="text-[15px]">Attendance Settings / Shift Master</div>
         <div className="flex gap-4">
           <button
             onClick={() => setShowDropdown(!showDropdown)}
@@ -337,7 +189,9 @@ const ShiftMaster = () => {
             Column Visibility
             <Icon
               icon="fe:arrow-down"
-              className={`ml-2 ${showDropdown ? "rotate-180" : ""} cursor-pointer`}
+              className={`ml-2 ${
+                showDropdown ? "rotate-180" : ""
+              } cursor-pointer`}
             />
           </button>
           {showDropdown && (
@@ -433,7 +287,7 @@ const ShiftMaster = () => {
                 <th className="w-auto text-[13px] px-1 font-bold text-black border-2 border-gray-400 whitespace-normal">
                   ID
                 </th>
-                {selectedColumns.map((columnName) => (
+                {selectedColumns.map((columnName) =>
                   columnVisibility[columnName] ? (
                     <th
                       key={columnName}
@@ -442,154 +296,161 @@ const ShiftMaster = () => {
                       {columnNames[columnName]}
                     </th>
                   ) : null
-                ))}
+                )}
               </tr>
               <tr>
                 <th className="border-2"></th>
                 <th className="p-2 font-bold text-black border-2 " />
-                {selectedColumns.map((columnName) => (
+                {selectedColumns.map((columnName) =>
                   columnVisibility[columnName] ? (
-                    <th key={columnName} className="p-2 font-semibold text-black border-2">
+                    <th
+                      key={columnName}
+                      className="p-2 font-semibold text-black border-2"
+                    >
                       <input
                         type="text"
                         placeholder={`Search `}
                         className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
-                        style={{ maxWidth: getColumnMaxWidth(columnName) + "px" }}
-                        onChange={(e) => handleSearchChange(columnName, e.target.value)}
+                        style={{
+                          maxWidth: getColumnMaxWidth(columnName) + "px",
+                        }}
+                        onChange={(e) =>
+                          handleSearchChange(columnName, e.target.value)
+                        }
                       />
                     </th>
                   ) : null
-                ))}
+                )}
               </tr>
             </thead>
             <tbody className="">
               {filteredData.length > 0
                 ? filteredData.map((result, key) => (
-                  <tr key={key}>
-                    <td className="px-2 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setSVE(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setShiftId(result.ShiftId); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setSVE(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setShiftId(result.ShiftId); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {result.ShiftId}
-                    </td>
-                    {selectedColumns.map((columnName) => (
-                      columnVisibility[columnName] ? (
-                        <td
-                          key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                        >
-                          {columnName === "twoDayShift" ||
+                    <tr key={key}>
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setSVE(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setShiftId(result.ShiftId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setSVE(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setShiftId(result.ShiftId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                        {result.ShiftId}
+                      </td>
+                      {selectedColumns.map((columnName) =>
+                        columnVisibility[columnName] ? (
+                          <td
+                            key={columnName}
+                            className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                          >
+                            {columnName === "twoDayShift" ||
                             columnName === "autoRotateFlag"
-                            ? result[columnName] === "yes"
-                              ? "Yes"
-                              : "No"
-                            : columnName === "status"
+                              ? result[columnName] === "yes"
+                                ? "Yes"
+                                : "No"
+                              : columnName === "status"
                               ? result[columnName] === "active"
                                 ? "Active"
                                 : "Inactive"
                               : result[columnName]}
-                        </td>
-                      ) : null
-                    ))}
-                  </tr>
-                ))
+                          </td>
+                        ) : null
+                      )}
+                    </tr>
+                  ))
                 : Shift.length > 0 &&
-                Shift.map((result, index) => (
-                  <tr key={index}>
-                    <td className="px-2 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setSVE(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setShiftId(result.ShiftId); // Pass ID to VEModal
-                          }}
-                        />
+                  Shift.map((result, index) => (
+                    <tr key={index}>
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setSVE(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setShiftId(result.ShiftId); // Pass ID to VEModal
+                            }}
+                          />
 
-                        <Icon
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setSVE(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setShiftId(result.ShiftId); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {result.ShiftId}
-                    </td>
-                    {selectedColumns.map((columnName) => (
-                      columnVisibility[columnName] ? (
-                        <td
-                          key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                        >
-                          {columnName === "twoDayShift" ||
+                          <Icon
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setSVE(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setShiftId(result.ShiftId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                        {result.ShiftId}
+                      </td>
+                      {selectedColumns.map((columnName) =>
+                        columnVisibility[columnName] ? (
+                          <td
+                            key={columnName}
+                            className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                          >
+                            {columnName === "twoDayShift" ||
                             columnName === "autoRotateFlag"
-                            ? result[columnName] === "yes"
-                              ? "Yes"
-                              : "No"
-                            : columnName === "status"
+                              ? result[columnName] === "yes"
+                                ? "Yes"
+                                : "No"
+                              : columnName === "status"
                               ? result[columnName] === "active"
                                 ? "Active"
                                 : "Inactive"
                               : result[columnName]}
-                        </td>
-                      ) : (
-                        <td key={columnName} className="hidden"></td>
-                      )
-                    ))}
-                  </tr>
-                ))}
+                          </td>
+                        ) : (
+                          <td key={columnName} className="hidden"></td>
+                        )
+                      )}
+                    </tr>
+                  ))}
             </tbody>
           </table>
         </div>

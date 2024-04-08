@@ -6,26 +6,31 @@ import { useAuth } from "../Login";
 
 const AddWeek = ({ visible, onClick }) => {
   const { token } = useAuth();
-  const [weeklyOffData, setWeeklyOffData] = useState([])
+  const [weeklyOffData, setWeeklyOffData] = useState([]);
 
   const formik = useFormik({
     initialValues: {
       WeeklyOffName: "",
       Remark: "",
+      AcFlag: "Y",
+      IUFlag: "I",
+      CreatedOn: new Date(),
     },
-    onSubmit: async (values, {resetForm}) => {
+    onSubmit: async (values) => {
       const formData = {
         WeeklyOffName: values.WeeklyOffName,
         Remark: values.Remark,
-        IUFlag:"I"
+        IUFlag: "I",
+        AcFlag: "Y",
+        CreatedOn: new Date(),
       };
       console.log(formData);
-    AddWeeklyOff(formData)
-    onClick()
-    resetForm()
-  }});
+      AddWeeklyOff(formData);
+      onClick();
+    },
+  });
 
-  const AddWeeklyOff = async(data) =>{
+  const AddWeeklyOff = async (data) => {
     try {
       const response = await axios.post(
         "http://localhost:5500/weekly-off/FnAddUpdateDeleteRecord",
@@ -36,12 +41,13 @@ const AddWeek = ({ visible, onClick }) => {
           },
         }
       );
-     alert('Weekly Off Added')
+      alert("Weekly Off Added");
+      window.location.reload();
+      console.log(response.data);
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error:", error.response.data);
     }
-  }
-
+  };
 
   if (!visible) return null;
   return (
@@ -51,6 +57,11 @@ const AddWeek = ({ visible, onClick }) => {
           <div className="bg-blue-900 py-2 px-4 rounded-lg flex justify-between items-center">
             <p className="text-white text-[13px] font-semibold text-center">
               Weekly Off Master
+            </p>
+            <p className="text-white underline text-[11px] font-semibold">
+              Note: (1) Please enter Weekday names with first letter capital{" "}
+              <br />
+              (2) Separate multiple entries by a comma (,)
             </p>
             <Icon
               icon="maki:cross"
