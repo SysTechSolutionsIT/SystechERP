@@ -16,17 +16,17 @@ const AddWeek = ({ visible, onClick }) => {
       IUFlag: "I",
       CreatedOn: new Date(),
     },
-    onSubmit: async (values, { resetForm }) => {
+    onSubmit: async (values) => {
       const formData = {
         WeeklyOffName: values.WeeklyOffName,
         Remark: values.Remark,
         IUFlag: "I",
+        AcFlag: "Y",
         CreatedOn: new Date(),
       };
       console.log(formData);
       AddWeeklyOff(formData);
       onClick();
-      resetForm();
     },
   });
 
@@ -42,8 +42,10 @@ const AddWeek = ({ visible, onClick }) => {
         }
       );
       alert("Weekly Off Added");
+      window.location.reload();
+      console.log(response.data);
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error:", error.response.data);
     }
   };
 

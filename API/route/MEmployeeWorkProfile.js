@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const { Sequelize, DataTypes } = require("sequelize");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
-const MWeeklyOff = require("./MWeeklyOff");
+const MWeeklyOff = require("./MWeeklyOffModel");
 const { Op } = require("sequelize");
 
 const authToken = (req, res, next) => {
@@ -270,7 +270,7 @@ router.get("/GetWeeklyOff", authToken, async (req, res) => {
         const counts = await MWeeklyOff.count({
           where: {
             // Check if the WeekDayName contains the specified weekday
-            WeekDayName: {
+            WeeklyOffName: {
               [Op.like]: `%${weekdays}%`,
             },
             // Check if the date falls within the previous month
