@@ -8,6 +8,8 @@ import AddWeek  from '../attendance settings/AddWeek'
 import CostCenterModal from '../company settings/CostCenterModal'
 import TwoFieldsModal from "../company settings/TwoFieldsModal";
 import DepartmentModal from '../company settings/DepartmentModal'
+import DesignationModal from '../employee settings/DesignationModal'
+import AddShift from '../attendance settings/AddShift'
 // import { useEmployeeData } from "../employee settings/EmployeeMaster";
 const Work = ({ ID, name }) => {
   const [statusCheck, setStatusCheck] = useState(false);
@@ -18,7 +20,7 @@ const Work = ({ ID, name }) => {
   const [MMId, setMMId] = useState();
 
   const { token } = useAuth();
-  console.log("in work profile:", ID, name);
+  console.log("in work profile:", ID);
 
   const formik = useFormik({
     initialValues: {
@@ -245,6 +247,7 @@ const Work = ({ ID, name }) => {
   }, [token]);
 
   const [Designations, setDesignations] = useState([]);
+  const [isDesignationModalOpen, setDesignationModalOpen] = useState(false)
   useEffect(() => {
     const fetchDesignations = async () => {
       try {
@@ -261,7 +264,7 @@ const Work = ({ ID, name }) => {
       }
     };
     fetchDesignations();
-  }, [token]);
+  }, [token, isDesignationModalOpen]);
 
   const [Employees, setEmployees] = useState([]);
   useEffect(() => {
@@ -282,6 +285,7 @@ const Work = ({ ID, name }) => {
   }, [token]);
 
   const [Shifts, setShifts] = useState([]);
+  const [isShiftModalOpen, setShiftModalOpen] = useState(false)
   useEffect(() => {
     const fetchShifts = async () => {
       try {
@@ -519,41 +523,76 @@ const Work = ({ ID, name }) => {
             <p className="mb-0.5 capitalize font-semibold text-[13px]">
               Sub-Department
             </p>
-            <select
-              id="SubDeptId"
-              value={formik.values.SubDeptId}
-              className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
-              onChange={formik.handleChange}
-            >
-              <option value="">Select Sub Department</option>
-              {Departments.map(
-                (entry) =>
-                  entry.DepartmentType === "Sub" && (
-                    <option key={entry.DepartmentId} value={entry.DepartmentId}>
-                      {entry.DepartmentName}
-                    </option>
-                  )
-              )}
-            </select>
-          </div>
+            <div className="flex items-center">
+            {Departments.length > 0 ? (
+                  <select
+                    id="SubDeptId"
+                    name="SubDeptId"
+                    value={formik.values.SubDeptId}
+                    className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
+                    onChange={formik.handleChange}
+                  >
+                    <option value="">Select Department</option>
+                    {Departments.map((entry) => (
+                      entry.DepartmentType === 'Sub' && (
+                        <option key={entry.DepartmentId} value={entry.DepartmentId}>
+                        {entry.DepartmentName}
+                      </option>
+                      )
+                    ))}
+                  </select>
+                ) : (
+                  <p className="flex-1 px-4 py-2 font-normal text-gray-500">
+                    No available entries
+                  </p>
+                )}
+                <Icon
+                  icon="flat-color-icons:plus"
+                  width="24"
+                  height="24"
+                  className="ml-1 cursor-pointer"
+                  onClick={() => {
+                    setDepartmentModalOpen(true);
+                  }}
+                />
+              </div>
+              </div>
           <div className="py-1">
             <p className="mb-0.5 capitalize font-semibold text-[13px]">
               Designation
             </p>
-            <select
-              id="DesgId"
-              value={formik.values.DesgId}
-              className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
-              onChange={formik.handleChange}
-            >
-              <option value="">Select Designation</option>
-              {Designations.map((entry) => (
-                <option key={entry.DesignationId} value={entry.DesignationId}>
-                  {entry.DesignationName}
-                </option>
-              ))}
-            </select>
-          </div>
+            <div className="flex items-center">
+            {Designations.length > 0 ? (
+                  <select
+                    id="DesgId"
+                    name="DesgId"
+                    value={formik.values.DesgId}
+                    className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
+                    onChange={formik.handleChange}
+                  >
+                    <option value="">Select Designation</option>
+                    {Designations.map((entry) => (
+                        <option key={entry.DesignationId} value={entry.DesignationId}>
+                        {entry.DesignationName}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <p className="flex-1 px-4 py-2 font-normal text-gray-500">
+                    No available entries
+                  </p>
+                )}
+                <Icon
+                  icon="flat-color-icons:plus"
+                  width="24"
+                  height="24"
+                  className="ml-1 cursor-pointer"
+                  onClick={() => {
+                    setDesignationModalOpen(true);
+                  }}
+                />
+              </div>
+              </div>
           <div className="py-1">
             <p className="mb-0.5 capitalize font-semibold text-[13px]">
               Reporting To
@@ -574,20 +613,38 @@ const Work = ({ ID, name }) => {
           </div>
           <div className="py-1">
             <p className="mb-0.5 capitalize font-semibold text-[13px]">Shift</p>
-            <select
-              id="ShiftId"
-              value={formik.values.ShiftId}
-              className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
-              onChange={formik.handleChange}
-            >
-              <option value="">Select Shift</option>
-              {Shifts.map((entry) => (
-                <option key={entry.ShiftId} value={entry.ShiftId}>
-                  {entry.ShiftName}
-                </option>
-              ))}
-            </select>
-          </div>
+            <div className="flex items-center">
+            {Shifts.length > 0 ? (
+                  <select
+                    id="ShiftId"
+                    name="ShiftId"
+                    value={formik.values.ShiftId}
+                    className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
+                    onChange={formik.handleChange}
+                  >
+                    <option value="">Select Shift</option>
+                    {Shifts.map((entry) => (
+                        <option key={entry.ShiftId} value={entry.ShiftId}>
+                        {entry.ShiftName}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <p className="flex-1 px-4 py-2 font-normal text-gray-500">
+                    No available entries
+                  </p>
+                )}
+                <Icon
+                  icon="flat-color-icons:plus"
+                  width="24"
+                  height="24"
+                  className="ml-1 cursor-pointer"
+                  onClick={() => {
+                    setShiftModalOpen(true);
+                  }}
+                />
+              </div>
+              </div>
           <div className="py-1">
             <p className="mb-0.5 capitalize font-semibold text-[13px]">Band</p>
             <select
@@ -721,6 +778,8 @@ const Work = ({ ID, name }) => {
         <AddWeek visible={isWeeklyOffModalOpen} onClick={() => setWeeklyOffModal(false)}/>
         <CostCenterModal visible={isCostCenterModalOpen} onClick={() => setIsCostCenterModalOpen(false)}/>
         <DepartmentModal visible={isDepartmentModalOpen} onClick={() =>setDepartmentModalOpen(false)}/>
+        <DesignationModal visible={isDesignationModalOpen} onClick={() => setDesignationModalOpen(false)}/>
+        <AddShift visible={isShiftModalOpen} onClick={() => setShiftModalOpen(false)} />
         <TwoFieldsModal
               visible={istwoFieldModal}
               onClick={() => settwoFieldModal(false)}

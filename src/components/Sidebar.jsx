@@ -214,17 +214,17 @@ const Sidebar = () => {
   );
 
   const SubMenuGroup = ({ children }) => (
-    <div className="text-left text-sm font-thin px-2 w-full ease-linear duration-200 whitespace-nowrap">
+    <div className="text-left text-sm font-thin px-2 w-full ease-in-out duration-300 whitespace-nowrap">
       {children}
     </div>
   );
 
   const SubMenuEntry = ({ title, onClick }) => (
     <span
-      className="flex justify-between mt-1 w-full items-center hover:bg-gray-300 hover:bg-opacity-25 rounded-lg cursor-pointer"
+      className="flex justify-between mt-1 w-full items-center hover:bg-gray-300 hover:bg-opacity-25 rounded-lg cursor-pointer ease-in-out duration-300"
       onClick={onClick}
     >
-      <h1 className="font-[Inter] text-white text-[14px] cursor-pointer py-0.5 px-3 items-center rounded-md mt-1 whitespace-normal">
+      <h1 className="font-[Inter] text-white text-[14px] cursor-pointer py-0.5 px-3 items-center rounded-md mt-1 whitespace-normal ease-in-out duration-300">
         {title}
       </h1>
     </span>
@@ -413,7 +413,7 @@ const Sidebar = () => {
                           color="white"
                           width="30"
                           height="30"
-                          className=""
+                          className="duration-300"
                         />
                       </span>
                     </div>

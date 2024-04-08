@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const { Sequelize, DataTypes } = require("sequelize");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
+const MEmployeeType = require('./MEmployeeTypeModels')
 
 const authToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
@@ -28,21 +29,6 @@ const sequelize = new Sequelize(
   }
 );
 
-const MEmployeeType = sequelize.define('MEmployeeType', {
-    CompanyId: { type: DataTypes.STRING(5), allowNull: false, defaultValue: '00001' },
-    BranchId: { type: DataTypes.STRING(5), allowNull: false, defaultValue: '00001' },
-    EmployeeTypeId: { type: DataTypes.INTEGER(3),autoIncrement:true, allowNull: false, primaryKey: true },
-    EmployeeType: { type: DataTypes.STRING(50), allowNull: false },
-    EmployeeTypeGroup: { type: DataTypes.STRING(50), allowNull: false },
-    ShortName: { type: DataTypes.STRING(1) },
-    Remark: { type: DataTypes.STRING(500) },
-    AcFlag: { type: DataTypes.STRING(1), defaultValue: 'Y' },
-    CreatedBy: { type: DataTypes.STRING(5) },
-    CreatedOn: { type: DataTypes.STRING(10) },
-    ModifiedBy: { type: DataTypes.STRING(5) },
-    ModifiedOn: { type: DataTypes.STRING(10) },
-  }, { timestamps: false });
-
   // Middleware for parsing JSON
 router.use(bodyParser.json());
 
@@ -55,6 +41,12 @@ sequelize
   .catch(err => {
     console.error('Unable to connect to the database:', err);
   });
+
+  try {
+    MEmployeeType.sync()
+  } catch (error) {
+    
+  }
 
 router.get("/FnShowAllData", authToken, async (req, res) => {
   try {
@@ -165,4 +157,5 @@ router.post("/FnAddUpdateDeleteRecord", generateEmployeeTypeId, authToken, async
   });
   
 
-module.exports = router;
+module.exports = [router, MEmployeeType];
+// module.exports = MEmployeeType

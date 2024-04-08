@@ -5,6 +5,8 @@ const jwt = require("jsonwebtoken");
 const router = express.Router();
 const multer = require("multer");
 const path = require("path");
+const CompanyConfig = require('./CompanyConfigModels')
+const MEmployeeType = require('./MEmployeeTypeModels')
 
 const authToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
@@ -266,20 +268,122 @@ router.get("/get-upload", authToken, async (req, res) => {
   }
 });
 
-// Middleware for generating EarningHeadId
 const generateEmployeeId = async (req, res, next) => {
   try {
-    if (req.body.IUFlag === "I") {
-      const totalRecords = await MEmployee.count();
-      const newId = (totalRecords + 1).toString().padStart(3, "0");
-      req.body.EmployeeTypeId = newId;
+    if (req.body.IUFlag === 'I') {
+      // Fetch the company configuration to check if empID column is 'Yes' or 'No'
+      const config = await CompanyConfig.findAll({
+        attributes: {
+          exclude: ["IUFlag"],
+        },
+        order: [["CCID", "DESC"]],
+      });
+
+      // Check if config array is empty or not
+      if (!config || config.length === 0) {
+        throw new Error("Company configuration not found");
+      }
+
+      // Check if empID column is 'Yes' or 'No'
+      const isEmpIDEnabled = config[0].empID === "Yes";
+
+      if (isEmpIDEnabled) {
+        // Fetch the EmployeeTypeId from the request body
+        const employeeTypeId = req.query.EmployeeTypeId;
+
+        // Fetch the corresponding employee type to get the ShortName
+        const employeeType = await MEmployeeType.findOne({
+          where: {
+            EmployeeTypeId: employeeTypeId
+          }
+        });
+
+        if (!employeeType) {
+          throw new Error("Employee type not found");
+        }
+
+        // Get the prefix from ShortName
+        const prefix = employeeType.ShortName;
+
+        // Find the next available EmployeeId
+        let employeeId = await findNextAvailableEmployeeId(prefix);
+
+        // Update req.body with the generated EmployeeId
+        req.body.EmployeeId = employeeId;
+      }
     }
+    
     next();
   } catch (error) {
     console.error("Error generating EmployeeId:", error);
     res.status(500).send("Internal Server Error");
   }
 };
+
+// Function to find the next available EmployeeId with the given prefix
+const findNextAvailableEmployeeId = async (prefix) => {
+  let newId = '0001'; // Default starting EmployeeId
+  let isUnique = false;
+  
+  // Check if there exists a record with the given prefix + newId
+  while (!isUnique) {
+    const existingEmployee = await MEmployee.findOne({
+      where: {
+        EmployeeId: prefix + newId
+      }
+    });
+
+    // If no record found, mark it as unique, otherwise increment newId
+    if (!existingEmployee) {
+      isUnique = true;
+    } else {
+      newId = (parseInt(newId) + 1).toString().padStart(4, "0"); // Increment newId
+    }
+  }
+
+  return prefix + newId;
+};
+
+
+  function updateEmployeeIdInTables(oldEmployeeId, newEmployeeId, callback) {
+    const sqlTablesQuery = `SELECT table_name FROM information_schema.tables WHERE table_schema = ?`;
+    
+    connection.query(sqlTablesQuery, [connection.config.database], (err, tables) => {
+      if (err) {
+        console.error('Error fetching tables: ' + err.message);
+        callback(err, null);
+      } else {
+        tables.forEach(table => {
+          const tableName = table.table_name;
+          const sqlColumnQuery = `SELECT COUNT(*) AS count FROM information_schema.columns WHERE table_schema = ? AND table_name = ? AND column_name = 'EmployeeId'`;
+          connection.query(sqlColumnQuery, [connection.config.database, tableName], (err, columns) => {
+            if (err) {
+              console.error(`Error fetching columns for table ${tableName}: ` + err.message);
+            } else {
+              const count = columns[0].count;
+              if (count > 0) {
+                const sqlUpdateQuery = `UPDATE ${tableName} SET EmployeeId = ? WHERE EmployeeId = ?`;
+                connection.query(sqlUpdateQuery, [newEmployeeId, oldEmployeeId], (err, results) => {
+                  if (err) {
+                    console.error(`Error updating table ${tableName}: ` + err.message);
+                  } else {
+                    console.log(`Updated EmployeeId in table ${tableName}`);
+                  }
+                });
+              } else {
+                console.log(`Table ${tableName} does not have an EmployeeId column. Skipping...`);
+              }
+            }
+          });
+        });
+        callback(null, 'All tables updated');
+      }
+    });
+  }
+
+  router.post('/FnSwitchEmployeeType', authToken, async(req, res) => {
+    const OldEmployeeTypeId = req.query.EmployeeTypeId
+  })
 
 router.post(
   "/FnAddUpdateDeleteRecord",

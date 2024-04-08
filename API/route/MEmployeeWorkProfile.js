@@ -5,6 +5,8 @@ const jwt = require("jsonwebtoken");
 const router = express.Router();
 const MWeeklyOff = require("./MWeeklyOffModel");
 const { Op } = require("sequelize");
+const CompanyConfig = require("./CompanyConfigModels");
+const MEmployeeType = require("./MEmployeeTypeModels");
 
 const authToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
@@ -189,44 +191,102 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
   }
 });
 
-router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
-  const work = req.body;
-  const EmployeeId = req.query.EmployeeId;
+const generateEmployeeId = async (req, res, next) => {
   try {
-    if (work.IUFlag === "D") {
-      // "Soft-delete" operation
-      const result = await MEmployeeWorkProfile.update(
-        { AcFlag: "N" },
-        { where: { EmployeeId: work.EmployeeId } }
-      );
+    if (req.body.IUFlag === "I") {
+      // Fetch the company configuration to check if empID column is 'Yes' or 'No'
+      const config = await CompanyConfig.findAll({
+        attributes: {
+          exclude: ["IUFlag"],
+        },
+        order: [["CCID", "DESC"]],
+      });
+      // Check if config array is empty or not
+      if (!config || config.length === 0) {
+        throw new Error("Company configuration not found");
+      }
 
-      res.json({
-        message: result[0] ? "Record Deleted Successfully" : "Record Not Found",
-      });
-    } else if (work.IUFlag === "U") {
-      // Add or update operation
-      const result = await MEmployeeWorkProfile.update(work, {
-        where: { EmployeeId: EmployeeId },
-        returning: true,
-      });
+      // Check if empID column is 'Yes' or 'No'
+      if (config[0].empID === "Yes") {
+        // Fetch the EmployeeTypeId from the request body
+        const employeeTypeId = req.query.EmployeeTypeId;
 
-      res.json({
-        message: result ? "Operation successful" : "Operation failed",
-      });
-    } else {
-      const result = await MEmployeeWorkProfile.create(work, {
-        returning: true,
-      });
+        // Fetch the corresponding employee type to get the ShortName
+        const employeeType = await MEmployeeType.findOne({
+          where: {
+            EmployeeTypeId: employeeTypeId,
+          },
+        });
+        if (!employeeType) {
+          throw new Error("Employee type not found");
+        }
 
-      res.json({
-        message: result ? "Operation successful" : "Operation failed",
-      });
+        // Get the prefix from ShortName
+        const prefix = employeeType.ShortName;
+
+        // Generate EmployeeId with prefixes based on ShortName
+        const totalRecords = await MEmployeeWorkProfile.count();
+        const newId = (totalRecords + 1).toString().padStart(3, "0");
+        req.body.EmployeeId = prefix + newId;
+      } else {
+        // Generate EmployeeId without prefixes
+        const totalRecords = await MEmployeeWorkProfile.count();
+        const newId = (totalRecords + 1).toString().padStart(3, "0");
+        req.body.EmployeeId = newId;
+      }
     }
+    next();
   } catch (error) {
-    console.error("Error performing operation:", error);
+    console.error("Error generating EmployeeId:", error);
     res.status(500).send("Internal Server Error");
   }
-});
+};
+
+router.post(
+  "/FnAddUpdateDeleteRecord",
+  generateEmployeeId,
+  authToken,
+  async (req, res) => {
+    const work = req.body;
+    const EmployeeId = req.query.EmployeeId;
+    try {
+      if (work.IUFlag === "D") {
+        // "Soft-delete" operation
+        const result = await MEmployeeWorkProfile.update(
+          { AcFlag: "N" },
+          { where: { EmployeeId: work.EmployeeId } }
+        );
+
+        res.json({
+          message: result[0]
+            ? "Record Deleted Successfully"
+            : "Record Not Found",
+        });
+      } else if (work.IUFlag === "U") {
+        // Add or update operation
+        const result = await MEmployeeWorkProfile.update(work, {
+          where: { EmployeeId: EmployeeId },
+          returning: true,
+        });
+
+        res.json({
+          message: result ? "Operation successful" : "Operation failed",
+        });
+      } else {
+        const result = await MEmployeeWorkProfile.create(work, {
+          returning: true,
+        });
+
+        res.json({
+          message: result ? "Operation successful" : "Operation failed",
+        });
+      }
+    } catch (error) {
+      console.error("Error performing operation:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  }
+);
 
 router.get("/GetEmployeeDetails", authToken, async (req, res) => {
   try {

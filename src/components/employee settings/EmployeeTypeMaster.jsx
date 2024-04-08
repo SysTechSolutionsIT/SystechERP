@@ -78,7 +78,7 @@ const EmployeeTypeMaster = () => {
   const columnNames = {
     EmployeeType: "Employee Type",
     EmployeeTypeGroup: "Employee Type Group",
-    ShortName: "Short Name",
+    ShortName: "Prefix",
     Remark: "Remarks",
   }
 

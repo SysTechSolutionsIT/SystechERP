@@ -122,7 +122,7 @@ const EmployeeTypeModal = ({ visible, onClick }) => {
                 </select>
               </div>
               <div>
-                <p className="text-[13px] font-semibold">Short Name</p>
+                <p className="text-[13px] font-semibold">Prefix</p>
                 <input
                   id="ShortName"
                   type="text"

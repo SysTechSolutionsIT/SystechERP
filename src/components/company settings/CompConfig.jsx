@@ -512,7 +512,7 @@ export default function EMPTabs() {
                       </div>
                     </div>
                     {/* <div className="flex mb-6"> */}
-                    <div className="w-1/2 pr-4">
+                    {/* <div className="w-1/2 pr-4">
                       <p className="mb-2 capitalize mt-2 font-semibold text-[13px]">
                         Enter Prefix
                       </p>
@@ -524,7 +524,7 @@ export default function EMPTabs() {
                         onChange={formik.handleChange}
                         disabled={!edit}
                       />
-                    </div>
+                    </div> */}
                     {/* </div> */}
                     <div className="flex flex-col p-2">
                       <p className="mb-3 font-semibold text-[13px]">
