@@ -17,8 +17,16 @@ const TwoFieldsModal = ({ visible, onClick, MasterID }) => {
       CreatedOn: new Date(),
     },
     onSubmit: (values) => {
+      const updatedData = {
+        MasterNameId: MasterID ? MasterID : values.MasterNameId,
+        FieldDetails: values.FieldDetails,
+        AcFlag: "Y",
+        IUFlag: "I",
+        Remark: values.Remark,
+        CreatedOn: new Date(),
+      }
       console.log(values);
-      addField(values);
+      addField(updatedData);
     },
   });
 
@@ -133,6 +141,7 @@ const TwoFieldsModal = ({ visible, onClick, MasterID }) => {
           <div className="flex gap-10 justify-center">
             <button
               type="submit"
+              onClick={formik.handleSubmit}
               className="bg-blue-900 text-white text-[13px] font-semibold py-2 px-4 rounded-lg w-36"
             >
               Save

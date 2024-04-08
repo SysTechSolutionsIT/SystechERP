@@ -3,12 +3,20 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../Login";
 import { useParams } from "react-router-dom";
+import { Icon } from "@iconify/react";
+import AddWeek  from '../attendance settings/AddWeek'
+import CostCenterModal from '../company settings/CostCenterModal'
+import TwoFieldsModal from "../company settings/TwoFieldsModal";
+import DepartmentModal from '../company settings/DepartmentModal'
 // import { useEmployeeData } from "../employee settings/EmployeeMaster";
 const Work = ({ ID, name }) => {
   const [statusCheck, setStatusCheck] = useState(false);
   const [details, setDetails] = useState();
   const [workDetails, setWorkDetails] = useState();
   const [bondApplicableCheck, setBondApplicableCheck] = useState(false);
+  const [istwoFieldModal, settwoFieldModal] = useState(false)
+  const [MMId, setMMId] = useState();
+
   const { token } = useAuth();
   console.log("in work profile:", ID, name);
 
@@ -69,6 +77,7 @@ const Work = ({ ID, name }) => {
         ModifiedOn: values.ModifiedOn,
         IUFlag: "U",
       };
+      
       console.log(values);
       updateEmpWork(updatedData);
     },
@@ -154,6 +163,7 @@ const Work = ({ ID, name }) => {
   }, [details]);
 
   const [WeeklyOff, setWeeklyOff] = useState([]);
+  const [isWeeklyOffModalOpen, setWeeklyOffModal] = useState(false)
   useEffect(() => {
     const fetchWeeklyOff = async () => {
       try {
@@ -170,9 +180,10 @@ const Work = ({ ID, name }) => {
       }
     };
     fetchWeeklyOff();
-  }, [token]);
+  }, [token, isWeeklyOffModalOpen]);
 
   const [CostCenters, setCostCenters] = useState([]);
+  const [isCostCenterModalOpen, setIsCostCenterModalOpen] = useState(false)
   useEffect(() => {
     const fetchCostCenters = async () => {
       try {
@@ -186,13 +197,13 @@ const Work = ({ ID, name }) => {
         );
         const data = response.data;
         setCostCenters(data);
-        console.log(data);
+        console.log('cost centers in work' ,data);
       } catch (error) {
         console.error("Error fetching cost centers", error);
       }
     };
     fetchCostCenters();
-  }, [token]);
+  }, [token, isCostCenterModalOpen]);
 
   const [DepartmentGroup, setDepartmentGroup] = useState([]);
   useEffect(() => {
@@ -213,9 +224,10 @@ const Work = ({ ID, name }) => {
       }
     };
     fetchDepartmentGroup();
-  }, [token]);
+  }, [token, istwoFieldModal]);
 
   const [Departments, setDepartments] = useState([]);
+  const [isDepartmentModalOpen, setDepartmentModalOpen] = useState(false)
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
@@ -359,83 +371,150 @@ const Work = ({ ID, name }) => {
             <p className="mb-0.5 capitalize font-semibold text-[13px]">
               Weekly Off
             </p>
-            <select
-              id="WeeklyOff"
-              className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-              value={formik.values.WeeklyOff || ""}
-              onChange={formik.handleChange}
-            >
-              <option value="">Select Weekly Off</option>
-              {WeeklyOff &&
-                WeeklyOff.map(
-                  (
-                    entry // Add a check for WeeklyOff before using .map()
-                  ) => (
-                    <option key={entry.WeeklyOffId} value={entry.WeeklyOffId}>
-                      {entry.WeeklyOffName}
-                    </option>
-                  )
+            <div className="flex items-center">
+                {WeeklyOff.length > 0 ? (
+                  <select
+                    id="WeeklyOff"
+                    name="WeeklyOff"
+                    value={formik.values.WeeklyOff}
+                    className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
+                    onChange={formik.handleChange}
+                  >
+                    <option value="">Select Weekly Off</option>
+                    {WeeklyOff.map((entry) => (
+                      <option key={entry.WeeklyOffId} value={entry.WeeklyOffId}>
+                        {entry.WeeklyOffName}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <p className="flex-1 px-4 py-2 font-normal text-gray-500">
+                    No available entries
+                  </p>
                 )}
-            </select>
-          </div>
+                <Icon
+                  icon="flat-color-icons:plus"
+                  width="24"
+                  height="24"
+                  className="ml-1 cursor-pointer"
+                  onClick={() => {
+                    setWeeklyOffModal(true);
+                    // setMMId(8);
+                  }}
+                />
+              </div>
+              </div>
           <div className="py-1">
             <p className="mb-0.5 capitalize font-semibold text-[13px]">
               Cost Center
             </p>
-            <select
-              id="CostCenterId"
-              value={formik.values.CostCenterId}
-              className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
-              onChange={formik.handleChange}
-            >
-              <option value="">Select Cost Center</option>
-              {CostCenters &&
-                CostCenters.map((entry) => (
-                  <option key={entry.CostCenterId} value={entry.CostCenterId}>
-                    {entry.CostCenterName}
-                  </option>
-                ))}
-            </select>
-          </div>
+            <div className="flex items-center">
+                {CostCenters.length > 0 ? (
+                  <select
+                    id="CostCenterId"
+                    name="CostCenterId"
+                    value={formik.values.CostCenterId}
+                    className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
+                    onChange={formik.handleChange}
+                  >
+                    <option value="">Select Cost Center</option>
+                    {CostCenters.map((entry) => (
+                      <option key={entry.CostCenterId} value={entry.CostCenterId}>
+                        {entry.CostCenterName}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <p className="flex-1 px-4 py-2 font-normal text-gray-500">
+                    No available entries
+                  </p>
+                )}
+                <Icon
+                  icon="flat-color-icons:plus"
+                  width="24"
+                  height="24"
+                  className="ml-1 cursor-pointer"
+                  onClick={() => {
+                    setIsCostCenterModalOpen(true);
+                  }}
+                />
+              </div>
+              </div>
           <div className="py-1">
             <p className="mb-0.5 capitalize font-semibold text-[13px]">
               Department Group
             </p>
-            <select
-              id="DeptGroupId"
-              value={formik.values.DeptGroupId}
-              className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
-              onChange={formik.handleChange}
-            >
-              <option value="">Select Department Group</option>
-              {DepartmentGroup.map((entry) => (
-                <option key={entry.FieldId} value={entry.FieldId}>
-                  {entry.FieldDetails}
-                </option>
-              ))}
-            </select>
-          </div>
+            <div className="flex items-center">
+                {DepartmentGroup.length > 0 ? (
+                  <select
+                    id="DeptGroupId"
+                    name="DeptGroupId"
+                    value={formik.values.DeptGroupId}
+                    className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
+                    onChange={formik.handleChange}
+                  >
+                    <option value="">Select Department Group</option>
+                    {DepartmentGroup.map((entry) => (
+                      <option key={entry.FieldId} value={entry.FieldId}>
+                        {entry.FieldDetails}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <p className="flex-1 px-4 py-2 font-normal text-gray-500">
+                    No available entries
+                  </p>
+                )}
+                <Icon
+                  icon="flat-color-icons:plus"
+                  width="24"
+                  height="24"
+                  className="ml-1 cursor-pointer"
+                  onClick={() => {
+                    settwoFieldModal(true);
+                    setMMId(5)
+                  }}
+                />
+              </div>
+              </div>
           <div className="py-1">
             <p className="mb-0.5 capitalize font-semibold text-[13px]">
               Department
             </p>
-            <select
-              id="DeptId"
-              value={formik.values.DeptId}
-              className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
-              onChange={formik.handleChange}
-            >
-              <option value="">Select Department</option>
-              {Departments.map(
-                (entry) =>
-                  entry.DepartmentType === "Main" && (
-                    <option key={entry.DepartmentId} value={entry.DepartmentId}>
-                      {entry.DepartmentName}
-                    </option>
-                  )
-              )}
-            </select>
-          </div>
+            <div className="flex items-center">
+                {Departments.length > 0 ? (
+                  <select
+                    id="DeptId"
+                    name="DeptId"
+                    value={formik.values.DeptId}
+                    className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
+                    onChange={formik.handleChange}
+                  >
+                    <option value="">Select Department</option>
+                    {Departments.map((entry) => (
+                      entry.DepartmentType === 'Main' && (
+                        <option key={entry.DepartmentId} value={entry.DepartmentId}>
+                        {entry.DepartmentName}
+                      </option>
+                      )
+                    ))}
+                  </select>
+                ) : (
+                  <p className="flex-1 px-4 py-2 font-normal text-gray-500">
+                    No available entries
+                  </p>
+                )}
+                <Icon
+                  icon="flat-color-icons:plus"
+                  width="24"
+                  height="24"
+                  className="ml-1 cursor-pointer"
+                  onClick={() => {
+                    setDepartmentModalOpen(true);
+                  }}
+                />
+              </div>
+              </div>
           <div className="py-1">
             <p className="mb-0.5 capitalize font-semibold text-[13px]">
               Sub-Department
@@ -639,10 +718,18 @@ const Work = ({ ID, name }) => {
             />
           </div>
         </div>
-
+        <AddWeek visible={isWeeklyOffModalOpen} onClick={() => setWeeklyOffModal(false)}/>
+        <CostCenterModal visible={isCostCenterModalOpen} onClick={() => setIsCostCenterModalOpen(false)}/>
+        <DepartmentModal visible={isDepartmentModalOpen} onClick={() =>setDepartmentModalOpen(false)}/>
+        <TwoFieldsModal
+              visible={istwoFieldModal}
+              onClick={() => settwoFieldModal(false)}
+              MasterID={MMId}
+            />
         <div className="flex mt-5 justify-center gap-4">
           <button
-            type="submit"
+            type="button"
+            onClick={formik.handleSubmit}
             className="px-8 py-2 bg-blue-900 text-white text-lg rounded-md"
           >
             Save Details

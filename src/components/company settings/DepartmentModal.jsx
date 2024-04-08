@@ -71,7 +71,7 @@ const DepartmentModal = ({ visible, onClick }) => {
         console.log(data);
         alert("Department added successfully");
         onClick();
-        window.location.reload();
+        // window.location.reload();
         // Handle successful response
       } else {
         console.error(`HTTP error! Status: ${response.status}`);
@@ -402,6 +402,7 @@ const DepartmentModal = ({ visible, onClick }) => {
           <div className="flex gap-10 justify-center">
             <button
               type="submit"
+              onClick={formik.handleSubmit}
               className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg w-36"
             >
               Save

@@ -1251,6 +1251,7 @@ export default function Personal({ ID }) {
       <div className="flex justify-center gap-4">
         <button
           type="submit"
+          onClick={formik.handleSubmit}
           className="px-8 py-2 bg-blue-900 text-white text-lg rounded-md hover:bg-green-600 duration-500"
         >
           Save details

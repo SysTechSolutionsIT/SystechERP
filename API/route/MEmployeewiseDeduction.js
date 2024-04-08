@@ -136,6 +136,12 @@ router.use(bodyParser.json());
   }
 })();
 
+try {
+  MEmployeewiseDeduction.sync()
+} catch (error) {
+  
+}
+
 router.get("/FnshowActiveData", authToken, async (req, res) => {
   try {
     const EmpDeduction = await MEmployeewiseDeduction.findAll({

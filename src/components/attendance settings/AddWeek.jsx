@@ -6,6 +6,7 @@ import { useAuth } from "../Login";
 
 const AddWeek = ({ visible, onClick }) => {
   const { token } = useAuth();
+  const [weeklyOffData, setWeeklyOffData] = useState([]);
 
   const formik = useFormik({
     initialValues: {
@@ -15,7 +16,7 @@ const AddWeek = ({ visible, onClick }) => {
       IUFlag: "I",
       CreatedOn: new Date(),
     },
-    onSubmit: async (values) => {
+    onSubmit: async (values, { resetForm }) => {
       const formData = {
         WeeklyOffName: values.WeeklyOffName,
         Remark: values.Remark,
@@ -23,26 +24,28 @@ const AddWeek = ({ visible, onClick }) => {
         CreatedOn: new Date(),
       };
       console.log(formData);
-      try {
-        const response = await axios.post(
-          "http://localhost:5500/weekly-off/FnAddUpdateDeleteRecord",
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        alert("Weekly Off Added");
-      } catch (error) {
-        console.error("Error:", error);
-      }
+      AddWeeklyOff(formData);
+      onClick();
+      resetForm();
     },
   });
 
-  useEffect(() => {
-    formik.resetForm();
-  }, []);
+  const AddWeeklyOff = async (data) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5500/weekly-off/FnAddUpdateDeleteRecord",
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      alert("Weekly Off Added");
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   if (!visible) return null;
   return (
@@ -97,6 +100,7 @@ const AddWeek = ({ visible, onClick }) => {
             <div className="flex mt-5 gap-10 justify-center">
               <button
                 type="submit"
+                onClick={formik.handleSubmit}
                 className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg w-36"
               >
                 Save
