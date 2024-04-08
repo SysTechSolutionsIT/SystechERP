@@ -7,6 +7,7 @@ import { Icon } from '@iconify/react';
 const UserRolesModal = ({visible, onClick, edit, ID}) => {
   const [checkedLabels, setCheckedLabels] = useState([])
   const [preDefinedLabels, setPreDefinedLabels] = useState([])
+  const [details, setDetails] = useState([])
   const { token } = useAuth()
 
   const formik = useFormik({
@@ -19,23 +20,30 @@ const UserRolesModal = ({visible, onClick, edit, ID}) => {
         RoleName: values.RoleName,
         AccessRights: checkedLabels.toString(),
       }
-      addUserRole(updatedData)
+      console.log('Updated labels', updatedData)
+      updateAccessRights(updatedData)
     }
   })
 
-  const addUserRole = async(data) => {
+  const updateAccessRights = async(data) =>{
     try {
-      const reponse = await axios.post('http://localhost:5500/create-user-roles/FnAddUpdateDeleteRecord', data,
+      const response = await axios.post('http://localhost:5500/create-user-roles/FnAddUpdateDeleteRecord',
+      data,
       {
-        params: { IUFlag: 'I'},
-        headers: { Authorization: `Bearer ${token}`}
+        params: {
+          RoleId: ID,
+          IUFlag: 'U'
+        },
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       })
-      alert('User role created successfully')
-      onClick()
+      alert('Access Rights Updated')
     } catch (error) {
       console.error('Error', error);
     }
   }
+
   
   const handleItemChange = (itemName, isChecked) => {
     setCheckedLabels(prevItems => {
@@ -62,10 +70,35 @@ const UserRolesModal = ({visible, onClick, edit, ID}) => {
         headers: { Authorization: `Bearer ${token}`}
     })
     const data = response.data
+    console.log('Access rights in details', data)
+    setDetails(data)
     } catch (error) {
-        
+        console.error('Error', error);
     }
   }
+
+  useEffect(() =>{
+    fetchAccessRights()
+  },[token, visible])
+
+  useEffect(() => {
+    if (details){
+      formik.setValues({
+        RoleName: details.RoleName,
+        AccessRights: details.AccessRights
+      })
+    }
+  },[details])
+
+  useEffect(() => {
+    if (details && details.AccessRights) { // Add null check
+      // Extract AccessRights from details and split it into an array
+      const accessRightsArray = details.AccessRights.split(',');
+      // Update checkedLabels with the fetched access rights
+      setCheckedLabels(accessRightsArray);
+    }
+  }, [details]);
+  
 
   useEffect(() => {
     const allLabels = [...preDefinedLabels, ...checkedLabels];
@@ -203,6 +236,7 @@ const handleChange = (itemName, isChecked) => {
                                     name={item.name}
                                     checked={checkedLabels.includes(item.name)}
                                     onChange={(e) => handleChange(item.name, e.target.checked)}
+                                    disabled={!edit}
                                 />
                                 {item.label}
                             </label>
@@ -357,15 +391,16 @@ const menus = [
           <div className="py-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="capatilize font-semibold  text-[13px]">
+                <p className="capatilize font-semibold text-[13px]">
                   Role Name
                 </p>
                 <input
                   id="RoleName"
                   type="text"
                   value={formik.values.RoleName}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                  className={`w-full px-4 py-2 bg-white font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
+                  disabled={!edit}
                 />
               </div>
           </div>
@@ -379,6 +414,7 @@ const menus = [
                     items={subMenu.items}
                     handleItemChange={handleItemChange}
                     checkedLabels={checkedLabels}
+                    disabled={!edit}
                   />
                   ))}
                 </div>
@@ -388,6 +424,7 @@ const menus = [
          <div className="flex justify-center gap-4 mt-5">
       <button
         type="submit"
+        disabled={!edit}
         className="px-6 py-2 bg-blue-900 text-white text-lg rounded-md hover:bg-green-600 duration-500 "
       >
         Save User Rights
