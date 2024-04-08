@@ -20,7 +20,7 @@ const Work = ({ ID, name }) => {
   const [MMId, setMMId] = useState();
 
   const { token } = useAuth();
-  console.log("in work profile:", ID, name);
+  console.log("in work profile:", ID);
 
   const formik = useFormik({
     initialValues: {
@@ -526,9 +526,9 @@ const Work = ({ ID, name }) => {
             <div className="flex items-center">
             {Departments.length > 0 ? (
                   <select
-                    id="DeptId"
-                    name="DeptId"
-                    value={formik.values.DeptId}
+                    id="SubDeptId"
+                    name="SubDeptId"
+                    value={formik.values.SubDeptId}
                     className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
                     onChange={formik.handleChange}
                   >
