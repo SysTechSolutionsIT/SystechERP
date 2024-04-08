@@ -9,6 +9,7 @@ import { useAuth } from "../Login";
 export default function AddEmployeePersonal() {
   const { token } = useAuth();
   const [employeeTypes, setEmployeeTypes] = useState([])
+  const [EmpTypeId, setEmpTypeId] = useState();
 
   const formik = useFormik({
     initialValues: {
@@ -74,12 +75,18 @@ export default function AddEmployeePersonal() {
 
   formik.values.EmployeeName = `${formik.values.FirstName} ${formik.values.LastName}`;
 
+  useEffect(() =>{
+    setEmpTypeId(formik.values.EmployeeTypeId)
+    console.log('Current EMP TYPE ID', EmpTypeId)
+  }, [formik.values.EmployeeTypeId])
+
   const addEmpPersonal = async () => {
     try {
       const personal = await axios.post(
         "http://localhost:5500/employee/personal/FnAddUpdateDeleteRecord",
         formik.values,
         {
+          params:{EmployeeTypeId: EmpTypeId},
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json", // Specify the content type
@@ -122,9 +129,10 @@ export default function AddEmployeePersonal() {
           ModifiedOn: "",
         },
         {
+          params:{EmployeeTypeId: EmpTypeId}, // Specify the content type
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json", // Specify the content type
+            "Content-Type": "application/json",
           },
         }
       );
@@ -163,9 +171,11 @@ export default function AddEmployeePersonal() {
             ModifiedOn: ""         
         },
         {
+          params:{EmployeeTypeId: EmpTypeId}, // Specify the content type
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json", // Specify the content type
+
           },
         }
       );
@@ -194,9 +204,11 @@ export default function AddEmployeePersonal() {
           ModifiedOn: ""
         },
         {
+          params:{EmployeeTypeId: EmpTypeId}, // Specify the content type
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json", // Specify the content type
+
           },
         }
       );
@@ -223,9 +235,11 @@ export default function AddEmployeePersonal() {
           ModifiedOn: ""
         },
         {
+          params:{EmployeeTypeId: EmpTypeId}, // Specify the content type
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json", // Specify the content type
+
           },
         }
       );
@@ -254,9 +268,11 @@ export default function AddEmployeePersonal() {
           ModifiedOn: ""
         },
         {
+          params:{EmployeeTypeId: EmpTypeId}, // Specify the content type
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json", // Specify the content type
+
           },
         }
       );

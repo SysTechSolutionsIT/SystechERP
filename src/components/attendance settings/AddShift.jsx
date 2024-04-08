@@ -307,6 +307,7 @@ const AddShift = ({ visible, onClick }) => {
           <div className="flex gap-10 justify-center">
             <button
               type="submit"
+              onClick={formik.handleSubmit}
               className="bg-blue-900 text-white text-[13px] font-semibold py-2 px-4 rounded-lg w-36"
             >
               Save

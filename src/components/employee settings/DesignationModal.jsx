@@ -83,15 +83,6 @@ const DesignationModal = ({ visible, onClick }) => {
                     <div className="py-4">
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <p className="text-[13px] font-semibold">Designation ID</p>
-                                <input
-                                    type="number"
-                                    disabled={true}
-                                    className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                                    onChange={formik.handleChange}
-                                />
-                            </div>
-                            <div>
                                 <p className="text-[13px] font-semibold">Designation Name</p>
                                 <input
                                     id="DesignationName"
@@ -137,6 +128,7 @@ const DesignationModal = ({ visible, onClick }) => {
                     <div className="flex gap-10 justify-center">
                         <button
                             type="submit"
+                            onClick={formik.handleSubmit}
                             className="bg-blue-900 text-white text-[13px] font-semibold py-2 px-4 rounded-lg w-36"
                         >
                             Save

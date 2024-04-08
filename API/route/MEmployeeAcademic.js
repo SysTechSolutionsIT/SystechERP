@@ -3,6 +3,8 @@ const bodyParser = require("body-parser");
 const { Sequelize, DataTypes } = require("sequelize");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
+const CompanyConfig = require('./CompanyConfigModels')
+const MEmployeeType = require('./MEmployeeTypeModels')
 
 const authToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
@@ -117,7 +119,60 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
   }
 });
 
-router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
+const generateEmployeeId = async (req, res, next) => {
+  try {
+        if (req.body.IUFlag === 'I'){
+        // Fetch the company configuration to check if empID column is 'Yes' or 'No'
+        const config = await CompanyConfig.findAll({
+          attributes: {
+            exclude: ["IUFlag"],
+          },
+          order: [["CCID", "DESC"]],
+        });
+        // Check if config array is empty or not
+        if (!config || config.length === 0) {
+          throw new Error("Company configuration not found");
+        }
+    
+        // Check if empID column is 'Yes' or 'No'
+        if (config[0].empID === "Yes") {
+          // Fetch the EmployeeTypeId from the request body
+          const employeeTypeId = req.query.EmployeeTypeId;
+    
+          // Fetch the corresponding employee type to get the ShortName
+          const employeeType = await MEmployeeType.findOne({
+            where: {
+              EmployeeTypeId: employeeTypeId
+            }
+          });
+          if (!employeeType) {
+            throw new Error("Employee type not found");
+          }
+    
+          // Get the prefix from ShortName
+          const prefix = employeeType.ShortName;
+    
+          // Generate EmployeeId with prefixes based on ShortName
+          const totalRecords = await MEmployeeAcademic.count();
+          const newId = (totalRecords + 1).toString().padStart(3, "0");
+          req.body.EmployeeId = prefix + newId;
+        } else {
+          // Generate EmployeeId without prefixes
+          const totalRecords = await MEmployeeAcademic.count();
+          const newId = (totalRecords + 1).toString().padStart(3, "0");
+          req.body.EmployeeId = newId;
+        }
+        next();
+      }
+      } catch (error) {
+        console.error("Error generating EmployeeId:", error);
+        res.status(500).send("Internal Server Error");
+    };
+  }
+
+
+
+router.post("/FnAddUpdateDeleteRecord", generateEmployeeId, authToken, async (req, res) => {
   const academic = req.body;
   try {
     if (academic.IUFlag === "D") {
