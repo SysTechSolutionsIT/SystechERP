@@ -195,7 +195,7 @@ const UserRoles = () => {
   
     return (
       <div className="top-25 min-w-[40%]">
-        <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
+        <div className="bg-blue-900 h-15 w-auto p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
           <div className="text-[15px]">Company Settings / Department Master</div>
           <div className="flex gap-4">
             <button
@@ -292,9 +292,9 @@ const UserRoles = () => {
           visible={isModalOpen}
           onClick={() => setModalOpen(false)}
         />
-        <div className="grid gap-4 justify-between">
+        <div className="grid gap-4 w-[60%] justify-between">
           <div className="my-1 rounded-2xl bg-white p-2 pr-8">
-            <table className="min-w-full text-center rounded-lg  whitespace-normal">
+            <table className="text-center rounded-lg whitespace-pre-wrap">
               <thead>
                 <tr>
                   <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
