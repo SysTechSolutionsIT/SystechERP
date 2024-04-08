@@ -3,6 +3,8 @@ const bodyParser = require("body-parser");
 const { Sequelize, DataTypes } = require("sequelize");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
+const MWeeklyOff = require("./MWeeklyOff");
+const { Op } = require("sequelize");
 
 const authToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
@@ -234,20 +236,58 @@ router.get("/GetEmployeeDetails", authToken, async (req, res) => {
 //For monthly attendances
 router.get("/GetWeeklyOff", authToken, async (req, res) => {
   try {
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth(); // Current month
+    const currentYear = currentDate.getFullYear(); // Current year
+
     const employees = await MEmployeeWorkProfile.findAll({
       attributes: ["EmployeeId", "WeeklyOff"],
     });
 
-    if (!employees) {
+    if (!employees || employees.length === 0) {
       return res.status(404).json({ message: "No employees found" });
     }
 
-    const weeklyOffs = {};
+    const weeklyOffCounts = {};
+
     employees.forEach((employee) => {
-      weeklyOffs[employee.EmployeeId] = employee.WeeklyOff;
+      const weeklyOffDays = employee.WeeklyOff.split(",").map((day) =>
+        day.trim()
+      ); // Split and trim to get individual weekdays
+      const weekdays = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+      ];
+
+      let totalCount = 0;
+
+      weeklyOffDays.forEach(async (day) => {
+        const counts = await MWeeklyOff.count({
+          where: {
+            // Check if the WeekDayName contains the specified weekday
+            WeekDayName: {
+              [Op.like]: `%${weekdays}%`,
+            },
+            // Check if the date falls within the previous month
+            CreatedOn: {
+              [Op.gte]: new Date(currentYear, currentMonth - 1, 1), // Start of previous month
+              [Op.lt]: new Date(currentYear, currentMonth, 1), // Start of current month
+            },
+          },
+        });
+
+        totalCount += counts;
+      });
+
+      weeklyOffCounts[employee.EmployeeId] = totalCount;
     });
 
-    res.json(weeklyOffs);
+    res.json(weeklyOffCounts);
   } catch (error) {
     console.error("Error retrieving data:", error);
     res.status(500).send("Internal Server Error");

@@ -11,12 +11,16 @@ const AddWeek = ({ visible, onClick }) => {
     initialValues: {
       WeeklyOffName: "",
       Remark: "",
+      AcFlag: "Y",
+      IUFlag: "I",
+      CreatedOn: new Date(),
     },
     onSubmit: async (values) => {
       const formData = {
         WeeklyOffName: values.WeeklyOffName,
         Remark: values.Remark,
-        IUFlag:"I"
+        IUFlag: "I",
+        CreatedOn: new Date(),
       };
       console.log(formData);
       try {
@@ -29,7 +33,7 @@ const AddWeek = ({ visible, onClick }) => {
             },
           }
         );
-       alert('Weekly Off Added')
+        alert("Weekly Off Added");
       } catch (error) {
         console.error("Error:", error);
       }
@@ -48,6 +52,11 @@ const AddWeek = ({ visible, onClick }) => {
           <div className="bg-blue-900 py-2 px-4 rounded-lg flex justify-between items-center">
             <p className="text-white text-[13px] font-semibold text-center">
               Weekly Off Master
+            </p>
+            <p className="text-white underline text-[11px] font-semibold">
+              Note: (1) Please enter Weekday names with first letter capital{" "}
+              <br />
+              (2) Separate multiple entries by a comma (,)
             </p>
             <Icon
               icon="maki:cross"
