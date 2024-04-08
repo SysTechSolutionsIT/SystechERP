@@ -151,49 +151,48 @@ const MonthlyAttendance = () => {
 
   useEffect(() => {
     if (ManAttData.length > 0 && ALeaves.length > 0 && mergedWeeks.length > 0) {
-      setMonthlyAttendance(mergeCounts(ManAttData, ALeaves, mergedWeeks));
+      const monthlyAttendance = mergeCounts(ManAttData, ALeaves, mergedWeeks);
+      setMonthlyAttendance(monthlyAttendance);
     }
-  }, [ManAttData, ALeaves, WeeklyOff, token]);
-
+  }, [ManAttData, ALeaves, mergedWeeks, token]);
+  
   function mergeCounts(attendanceCounts, leaveCounts, weeklyOffs) {
-    const combinedCounts = {};
-
-    // Initialize combinedCounts with EmployeeId as keys and Mcount and Lcount as values
+    const combinedCountsMap = new Map();
+  
+    // Merge attendance counts
     attendanceCounts.forEach((attendanceCount) => {
-      combinedCounts[attendanceCount.EmployeeId] = {
-        EmployeeId: attendanceCount.EmployeeId,
-        ManualAttendance: attendanceCount.ManualAttendance,
-      };
+      const { EmployeeId, ManualAttendance } = attendanceCount;
+      combinedCountsMap.set(EmployeeId, { EmployeeId, ManualAttendance });
     });
-
-    // Update Lcount for existing EmployeeIds and add new EmployeeIds with Lcount
+  
+    // Merge leave counts
     leaveCounts.forEach((leaveCount) => {
-      if (combinedCounts[leaveCount.EmployeeId]) {
-        combinedCounts[leaveCount.EmployeeId].Presenty = leaveCount.Presenty;
+      const { EmployeeId, Presenty } = leaveCount;
+      if (combinedCountsMap.has(EmployeeId)) {
+        const existingRecord = combinedCountsMap.get(EmployeeId);
+        combinedCountsMap.set(EmployeeId, { ...existingRecord, Presenty });
       } else {
-        combinedCounts[leaveCount.EmployeeId] = {
-          EmployeeId: leaveCount.EmployeeId,
-          Presenty: leaveCount.Presenty,
-        };
+        combinedCountsMap.set(EmployeeId, { EmployeeId, Presenty });
       }
     });
-
-    // Append Wcount for each employee from weeklyOffs
+  
+    // Merge weekly offs
     weeklyOffs.forEach((weeklyOff) => {
-      if (combinedCounts[weeklyOff.EmployeeId]) {
-        combinedCounts[weeklyOff.EmployeeId].TotalCount = weeklyOff.TotalCount;
+      const { EmployeeId, TotalCount } = weeklyOff;
+      if (combinedCountsMap.has(EmployeeId)) {
+        const existingRecord = combinedCountsMap.get(EmployeeId);
+        combinedCountsMap.set(EmployeeId, { ...existingRecord, TotalCount });
       } else {
-        combinedCounts[weeklyOff.EmployeeId] = {
-          EmployeeId: weeklyOff.EmployeeId,
-          TotalCount: weeklyOff.TotalCount,
-        };
+        combinedCountsMap.set(EmployeeId, { EmployeeId, TotalCount });
       }
     });
-    // Convert the object into an array of values
-    const combinedCountsArray = Object.values(combinedCounts);
+  
+    // Convert the map values into an array
+    const combinedCountsArray = Array.from(combinedCountsMap.values());
     console.log("Combined Records are: ", combinedCountsArray);
     return combinedCountsArray;
   }
+  
   console.log("Monthly Attendance: ", MonthlyAttendance);
 
   // Calculating Total Days of the week and appending that to Monthly Attendance Array
