@@ -3,8 +3,6 @@ const bodyParser = require("body-parser");
 const { Sequelize, DataTypes } = require("sequelize");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
-const MWeeklyOff = require("./MWeeklyOffModel");
-const { Op } = require("sequelize");
 const CompanyConfig = require("./CompanyConfigModels");
 const MEmployeeType = require("./MEmployeeTypeModels");
 
@@ -288,66 +286,17 @@ router.post(
   }
 );
 
-router.get("/GetEmployeeDetails", authToken, async (req, res) => {
-  try {
-  } catch (error) {}
-});
-
 //For monthly attendances
-router.get("/GetWeeklyOff", authToken, async (req, res) => {
+router.get("/FnFetchWeeklyOff", authToken, async (req, res) => {
   try {
-    const currentDate = new Date();
-    const currentMonth = currentDate.getMonth(); // Current month
-    const currentYear = currentDate.getFullYear(); // Current year
-
     const employees = await MEmployeeWorkProfile.findAll({
+      where: {
+        AcFlag: "Y",
+      },
       attributes: ["EmployeeId", "WeeklyOff"],
+      order: [["EmployeeId", "ASC"]],
     });
-
-    if (!employees || employees.length === 0) {
-      return res.status(404).json({ message: "No employees found" });
-    }
-
-    const weeklyOffCounts = {};
-
-    employees.forEach((employee) => {
-      const weeklyOffDays = employee.WeeklyOff.split(",").map((day) =>
-        day.trim()
-      ); // Split and trim to get individual weekdays
-      const weekdays = [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-      ];
-
-      let totalCount = 0;
-
-      weeklyOffDays.forEach(async (day) => {
-        const counts = await MWeeklyOff.count({
-          where: {
-            // Check if the WeekDayName contains the specified weekday
-            WeeklyOffName: {
-              [Op.like]: `%${weekdays}%`,
-            },
-            // Check if the date falls within the previous month
-            CreatedOn: {
-              [Op.gte]: new Date(currentYear, currentMonth - 1, 1), // Start of previous month
-              [Op.lt]: new Date(currentYear, currentMonth, 1), // Start of current month
-            },
-          },
-        });
-
-        totalCount += counts;
-      });
-
-      weeklyOffCounts[employee.EmployeeId] = totalCount;
-    });
-
-    res.json(weeklyOffCounts);
+    res.json(employees);
   } catch (error) {
     console.error("Error retrieving data:", error);
     res.status(500).send("Internal Server Error");

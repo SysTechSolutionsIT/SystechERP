@@ -17,49 +17,10 @@ const MonthlyAttendance = () => {
   const [ALeaves, setALeaves] = useState([]); // Approved Leaves Record
   const [Holidays, setHolidays] = useState(0); //Holidays of the given month
   const [WeeklyOff, setWeeklyOffs] = useState([]); //Weekly offs of particular employee
+  const [WeekOffCounts, setWeekOffCounts] = useState([]);
+  const [mergedWeeks, setMergedWeeks] = useState([]); //contain Employee Id and WeeklyOff counts
 
-  //Fetching employee names and IDs
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const [ManAttResponse, LeavesResponse, getWeeklyOffs, getHolidays] =
-  //         await Promise.all([
-  //           axios.get(
-  //             "http://localhost:5500/manual-attendance/MAttendance/count",
-  //             {
-  //               headers: { Authorization: `Bearer ${token}` },
-  //             }
-  //           ),
-  //           axios.get("http://localhost:5500/MLAttendance/FnshowActiveData", {
-  //             headers: { Authorization: `Bearer ${token}` },
-  //           }),
-  //           axios.get("http://localhost:5500/weekly-off/MWeeklyOff/count", {
-  //             headers: { Authorization: `Bearer ${token}` },
-  //           }),
-  //           axios.get(
-  //             "http://localhost:5500/holiday-master/Mholidays/calc-holidays",
-  //             {
-  //               headers: { Authorization: `Bearer ${token}` },
-  //             }
-  //           ),
-  //         ]);
-
-  //       setManAttData(ManAttResponse.data);
-  //       setALeaves(LeavesResponse.data);
-  //       setWeeklyOffs(getWeeklyOffs.data);
-  //       setHolidays(getHolidays.data);
-  //       console.log("Leaves Response:", ALeaves);
-  //       console.log("Manual Attendance Response", ManAttData);
-  //       console.log("Weekly Off", WeeklyOff);
-  //       console.log("Holidays:", Holidays);
-  //     } catch (error) {
-  //       console.error("Error while fetching data: ", error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, [token]);
-
+  //1. Fetching approved manual attendance data
   useEffect(() => {
     const fetchManualAttendanceData = async () => {
       try {
@@ -78,6 +39,8 @@ const MonthlyAttendance = () => {
 
     fetchManualAttendanceData();
   }, [token]);
+
+  //2. Fetching approved leaves
 
   useEffect(() => {
     const fetchLeavesData = async () => {
@@ -98,11 +61,12 @@ const MonthlyAttendance = () => {
     fetchLeavesData();
   }, [token]);
 
+  //Part A: fetching emp ID and weekly Off
   useEffect(() => {
     const fetchWeeklyOffData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5500/employee/work/GetWeeklyOff",
+          "http://localhost:5500/employee/work/FnFetchWeeklyOff",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -116,6 +80,55 @@ const MonthlyAttendance = () => {
 
     fetchWeeklyOffData();
   }, [token]);
+
+  //Part B: Fetcing counts of weekly off per month
+
+  useEffect(() => {
+    const fetchWeeklyOffCounts = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/weekly-off/GetWeeklyOffCount",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        setWeekOffCounts(response.data);
+        console.log("Weekly Off COunts Response:", response.data);
+      } catch (error) {
+        console.error("Error while fetching weekly off count data:", error);
+      }
+    };
+
+    fetchWeeklyOffCounts();
+  }, [WeeklyOff, token]);
+
+  //Merge counts of weekly off with employee id
+  useEffect(() => {
+    const mergedData = WeeklyOff.map(({ EmployeeId, WeeklyOff }) => {
+      const totalCountObj = WeekOffCounts.find(
+        ({ WeeklyOffId }) => WeeklyOffId === WeeklyOff
+      );
+      const totalCount = totalCountObj ? totalCountObj.TotalCount : 0;
+      return { EmployeeId, TotalCount: totalCount };
+    });
+
+    // Filter out entries with empty WeeklyOff or no corresponding TotalCount
+    const filteredData = mergedData.filter(
+      ({ TotalCount }) => TotalCount !== 0
+    );
+
+    // Store the merged and filtered data in an array
+    setMergedWeeks(
+      filteredData.map(({ EmployeeId, TotalCount }) => ({
+        EmployeeId,
+        TotalCount,
+      }))
+    );
+  }, [token, WeeklyOff, WeekOffCounts]);
+
+  console.log("Merged Array:", mergedWeeks);
+
+  // 4. Fetching Holidays in a week
 
   useEffect(() => {
     const fetchHolidaysData = async () => {
@@ -137,10 +150,10 @@ const MonthlyAttendance = () => {
   }, [token]);
 
   useEffect(() => {
-    if (ManAttData.length > 0 && ALeaves.length > 0 && WeeklyOff.length > 0) {
-      setMonthlyAttendance(mergeCounts(ManAttData, ALeaves, WeeklyOff));
+    if (ManAttData.length > 0 && ALeaves.length > 0 && mergedWeeks.length > 0) {
+      setMonthlyAttendance(mergeCounts(ManAttData, ALeaves, mergedWeeks));
     }
-  }, [ManAttData, ALeaves, WeeklyOff]);
+  }, [ManAttData, ALeaves, WeeklyOff, token]);
 
   function mergeCounts(attendanceCounts, leaveCounts, weeklyOffs) {
     const combinedCounts = {};
@@ -166,22 +179,22 @@ const MonthlyAttendance = () => {
     });
 
     // Append Wcount for each employee from weeklyOffs
-    for (const employeeId in combinedCounts) {
-      if (Object.prototype.hasOwnProperty.call(combinedCounts, employeeId)) {
-        const weeklyOffData = weeklyOffs.find(
-          (employee) => employee.EmployeeId === employeeId
-        );
-        if (weeklyOffData) {
-          combinedCounts[employeeId].WeekOffs = weeklyOffData.WeekOffs;
-        }
+    weeklyOffs.forEach((weeklyOff) => {
+      if (combinedCounts[weeklyOff.EmployeeId]) {
+        combinedCounts[weeklyOff.EmployeeId].TotalCount = weeklyOff.TotalCount;
+      } else {
+        combinedCounts[weeklyOff.EmployeeId] = {
+          EmployeeId: weeklyOff.EmployeeId,
+          TotalCount: weeklyOff.TotalCount,
+        };
       }
-    }
-
+    });
     // Convert the object into an array of values
     const combinedCountsArray = Object.values(combinedCounts);
     console.log("Combined Records are: ", combinedCountsArray);
     return combinedCountsArray;
   }
+  console.log("Monthly Attendance: ", MonthlyAttendance);
 
   // Calculating Total Days of the week and appending that to Monthly Attendance Array
 
@@ -206,31 +219,14 @@ const MonthlyAttendance = () => {
     AppendTotalDays();
   }, [token]);
 
-  //Fetching Presenty Absenty based on Leaves:
-  useEffect(() => {
-    const FetchLeavesAttendance = async (values) => {
-      try {
-        const response = await axios.get(
-          "http://localhost:5500/MLAttendance/FnshowActiveData",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        const data = response.data;
-        console.log("Monthly attendance presenty results", data);
-        console.log();
-      } catch (error) {
-        console.error("Error updating Leave balance", error);
-      }
-    };
-
-    FetchLeavesAttendance();
-  }, [token]);
-
   //Now main module of Present days calculations
   if (MonthlyAttendance.length > 0) {
     MonthlyAttendance.map((record) => {
-      const Presenty = record.MCount + Holidays + record.Wcount + record.Lcount;
+      const Presenty =
+        record.ManualAttendance +
+        Holidays +
+        record.TotalCount +
+        record.Presenty;
     });
   }
 
