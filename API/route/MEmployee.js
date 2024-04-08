@@ -320,9 +320,58 @@ const generateEmployeeId = async (req, res, next) => {
   }
 };
 
+const switchEmployeeId = async (req, res, next) => {
+  try {
+      // Fetch the company configuration to check if empID column is 'Yes' or 'No'
+      const config = await CompanyConfig.findAll({
+        attributes: {
+          exclude: ["IUFlag"],
+        },
+        order: [["CCID", "DESC"]],
+      });
+
+      // Check if config array is empty or not
+      if (!config || config.length === 0) {
+        throw new Error("Company configuration not found");
+      }
+
+      // Check if empID column is 'Yes' or 'No'
+      const isEmpIDEnabled = config[0].empID === "Yes";
+
+      if (isEmpIDEnabled) {
+        // Fetch the EmployeeTypeId from the request body
+        const employeeTypeId = req.body.EmployeeTypeId;
+
+        // Fetch the corresponding employee type to get the ShortName
+        const employeeType = await MEmployeeType.findOne({
+          where: {
+            EmployeeTypeId: employeeTypeId
+          }
+        });
+
+        if (!employeeType) {
+          throw new Error("Employee type not found");
+        }
+
+        // Get the prefix from ShortName
+        const prefix = employeeType.ShortName;
+
+        // Find the next available EmployeeId
+        let employeeId = await findNextAvailableEmployeeId(prefix);
+
+        // Update req.body with the generated EmployeeId
+        req.body.EmployeeId = employeeId;
+      }    
+    next();
+  } catch (error) {
+    console.error("Error generating EmployeeId:", error);
+    // res.status(500).send("Internal Server Error");
+  }
+};
+
 // Function to find the next available EmployeeId with the given prefix
 const findNextAvailableEmployeeId = async (prefix) => {
-  let newId = '0001'; // Default starting EmployeeId
+  let newId = '001'; // Default starting EmployeeId
   let isUnique = false;
   
   // Check if there exists a record with the given prefix + newId
@@ -337,7 +386,7 @@ const findNextAvailableEmployeeId = async (prefix) => {
     if (!existingEmployee) {
       isUnique = true;
     } else {
-      newId = (parseInt(newId) + 1).toString().padStart(4, "0"); // Increment newId
+      newId = (parseInt(newId) + 1).toString().padStart(3, "0"); // Increment newId
     }
   }
 
@@ -345,44 +394,132 @@ const findNextAvailableEmployeeId = async (prefix) => {
 };
 
 
-  function updateEmployeeIdInTables(oldEmployeeId, newEmployeeId, callback) {
-    const sqlTablesQuery = `SELECT table_name FROM information_schema.tables WHERE table_schema = ?`;
-    
-    connection.query(sqlTablesQuery, [connection.config.database], (err, tables) => {
-      if (err) {
-        console.error('Error fetching tables: ' + err.message);
-        callback(err, null);
-      } else {
-        tables.forEach(table => {
-          const tableName = table.table_name;
-          const sqlColumnQuery = `SELECT COUNT(*) AS count FROM information_schema.columns WHERE table_schema = ? AND table_name = ? AND column_name = 'EmployeeId'`;
-          connection.query(sqlColumnQuery, [connection.config.database, tableName], (err, columns) => {
-            if (err) {
-              console.error(`Error fetching columns for table ${tableName}: ` + err.message);
-            } else {
-              const count = columns[0].count;
-              if (count > 0) {
-                const sqlUpdateQuery = `UPDATE ${tableName} SET EmployeeId = ? WHERE EmployeeId = ?`;
-                connection.query(sqlUpdateQuery, [newEmployeeId, oldEmployeeId], (err, results) => {
-                  if (err) {
-                    console.error(`Error updating table ${tableName}: ` + err.message);
-                  } else {
-                    console.log(`Updated EmployeeId in table ${tableName}`);
-                  }
-                });
-              } else {
-                console.log(`Table ${tableName} does not have an EmployeeId column. Skipping...`);
-              }
-            }
-          });
-        });
-        callback(null, 'All tables updated');
+async function updateEmployeeIdInTables(oldEmployeeId, newEmployeeId, newEmployeeTypeId, callback) {
+  try {
+    // Fetch table names from Sequelize
+    const tables = await sequelize.query(
+      `SELECT table_name FROM information_schema.tables WHERE table_schema = ?`,
+      {
+        replacements: [sequelize.config.database],
+        type: sequelize.QueryTypes.SELECT
       }
-    });
+    );
+
+    // Iterate through tables
+    for (const table of tables) {
+      const tableName = table.table_name;
+      // Check if the table has an 'EmployeeId' column
+      const hasEmployeeIdColumn = await sequelize.query(
+        `SELECT COUNT(*) AS count FROM information_schema.columns WHERE table_schema = ? AND table_name = ? AND column_name = 'EmployeeId'`,
+        {
+          replacements: [sequelize.config.database, tableName],
+          type: sequelize.QueryTypes.SELECT
+        }
+      );
+
+      const hasEmployeeTypeIdColumn = await sequelize.query(
+        `SELECT COUNT(*) AS count FROM information_schema.columns WHERE table_schema = ? AND table_name = ? AND column_name = 'EmployeeTypeId'`,
+        {
+          replacements: [sequelize.config.database, tableName],
+          type: sequelize.QueryTypes.SELECT
+        }
+      );
+
+      // If the table has the 'EmployeeId' column, update the EmployeeId values
+      if (hasEmployeeIdColumn[0].count > 0) {
+        // Construct the UPDATE query to update EmployeeId
+        let updateQuery = `UPDATE ${tableName} SET EmployeeId = ? WHERE EmployeeId = ?`;
+        let replacements = [newEmployeeId, oldEmployeeId];
+
+        // If the table has the 'EmployeeTypeId' column, include it in the update query
+        if (hasEmployeeTypeIdColumn[0].count > 0 && newEmployeeTypeId) {
+          updateQuery = `UPDATE ${tableName} SET EmployeeId = ?, EmployeeTypeId = ? WHERE EmployeeId = ?`;
+          replacements = [newEmployeeId, newEmployeeTypeId, oldEmployeeId];
+        }
+
+        // Execute the update query with the appropriate replacements
+        await sequelize.query(updateQuery, {
+          replacements,
+          type: sequelize.QueryTypes.UPDATE
+        });
+        console.log(`Updated EmployeeId in table ${tableName}`);
+      } else {
+        console.log(`Table ${tableName} does not have an EmployeeId column. Skipping...`);
+      }
+    }
+
+    // Callback indicating successful update
+    callback(null, 'All tables updated');
+  } catch (error) {
+    // If an error occurs during the update, log it and callback with the error
+    console.error('Error updating employee ID in tables:', error);
+    callback(error, null);
   }
+}
+
 
   router.post('/FnSwitchEmployeeType', authToken, async(req, res) => {
-    const OldEmployeeTypeId = req.query.EmployeeTypeId
+    const newEmployeeTypeId = req.body.EmployeeTypeId
+    const oldEmployeeId = req.body.EmployeeId
+    let newEmployeeId = null
+    // Generate new employee ID based on the new Employee Type Id
+    try {
+      // Fetch the company configuration to check if empID column is 'Yes' or 'No'
+      const config = await CompanyConfig.findAll({
+        attributes: {
+          exclude: ["IUFlag"],
+        },
+        order: [["CCID", "DESC"]],
+      });
+
+      // Check if config array is empty or not
+      if (!config || config.length === 0) {
+        throw new Error("Company configuration not found");
+      }
+
+      // Check if empID column is 'Yes' or 'No'
+      const isEmpIDEnabled = config[0].empID === "Yes";
+
+      if (isEmpIDEnabled) {
+        // Fetch the EmployeeTypeId from the request body
+        const employeeTypeId = req.body.EmployeeTypeId;
+
+        // Fetch the corresponding employee type to get the ShortName
+        const employeeType = await MEmployeeType.findOne({
+          where: {
+            EmployeeTypeId: employeeTypeId
+          }
+        });
+
+        if (!employeeType) {
+          throw new Error("Employee type not found");
+        }
+
+        // Get the prefix from ShortName
+        const prefix = employeeType.ShortName;
+
+        // Find the next available EmployeeId
+        let employeeId = await findNextAvailableEmployeeId(prefix);
+
+        // Update req.body with the generated EmployeeId
+         newEmployeeId = employeeId;
+      }    
+    next();
+  } catch (error) {
+    console.error("Error generating new EmployeeId:", error);
+    // res.status(500).send("Internal Server Error");
+  }
+
+    // Update the EmployeeId in all tables across the database
+    updateEmployeeIdInTables(oldEmployeeId, newEmployeeId, newEmployeeTypeId, (err, result) => {
+        if (err) {
+            console.error('Error updating employee ID in tables:', err);
+            // res.status(500).send('Internal Server Error');
+        } else {
+            console.log('Employee ID updated in all tables');
+            // res.status(200).send('Employee ID updated successfully');
+        }
+    });
   })
 
 router.post(

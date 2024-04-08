@@ -159,6 +159,10 @@ export default function Personal({ ID }) {
     },
   });
 
+  const [changedEmployeeTypeId, setChangedEmployeeTypeId] = useState()
+  useEffect(() =>{
+    setChangedEmployeeTypeId(formik.values.EmployeeTypeId)
+  }, [formik.values.EmployeeTypeId])
   // Patch
   const updateEmpPersonal = async (data) => {
     try {
@@ -182,6 +186,31 @@ export default function Personal({ ID }) {
       console.error("Error:", error.message);
     }
   };
+
+  const swtichEmployeeType = async() => {
+
+    const confirmDelete = window.confirm(
+      "Are you sure you want to change the Employee Type?"
+    );
+
+    if (!confirmDelete) {
+      return; // If the user cancels deletion, do nothing
+    }
+
+    try {
+      const response = await axios.post(`http://localhost:5500/employee/personal/FnSwitchEmployeeType`, {
+          EmployeeTypeId: changedEmployeeTypeId,
+          EmployeeId: ID,
+        },{
+        headers: {
+          Authorization: `Bearer ${token}`
+        }}
+      )
+      alert('Employee Type Updated')
+    } catch (error) {
+      console.error('Error', error);
+    }
+  }
 
   const fetchPersonalData = async () => {
     try {
@@ -564,6 +593,13 @@ export default function Personal({ ID }) {
                   </option>
                 ))}
               </select>
+            <button
+                type="button"
+                onClick={swtichEmployeeType}
+                className="bg-blue-900 text-white mt-2 duration-300 font-semibold rounded-lg w-fit p-2 h-8 hover:border-2 hover:border-blue-900  text-[11px] hover:bg-white hover:text-blue-900"
+              >
+                Change Employee Type
+              </button>
             </div>
             <div>
               <p className="capitalize font-semibold text-[13px]">
@@ -595,7 +631,7 @@ export default function Personal({ ID }) {
               <button
                 type="button"
                 onClick={handleUpload}
-                className="bg-blue-900 text-white font-semibold rounded-lg w-24 h-8 mt-2 text-[11px] hover:bg-white hover:text-black hover:ease-linear"
+                className="bg-blue-900  text-white font-semibold rounded-lg w-fit p-2 duration-300  h-8 mt-2 text-[11px] hover:bg-white hover:text-black hover:border-2 hover:border-blue-900 hover:ease-linear"
               >
                 Upload Employee Photo
               </button>
