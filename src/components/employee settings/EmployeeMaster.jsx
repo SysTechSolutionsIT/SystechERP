@@ -14,7 +14,7 @@ const EmployeeMaster = () => {
   const [edit, setEdit] = useState(false);
   const [CCid, setCCid] = useState();
   const [employeeTypes, setEmployeeTypes] = useState([]);
-  const [employeeWork, setEmployeeWork] = useState([])
+  const [employeeWork, setEmployeeWork] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -120,23 +120,22 @@ const EmployeeMaster = () => {
     };
   }, []);
 
-  
-    const fetchEmpData = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:5500/employee/personal/FnShowActiveData",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const data = response.data;
-        setEmployeeData(data);
-      } catch (error) {
-        console.error("Error", error);
-      }
-    };
+  const fetchEmpData = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5500/employee/personal/FnShowActiveData",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = response.data;
+      setEmployeeData(data);
+    } catch (error) {
+      console.error("Error", error);
+    }
+  };
 
   const fetchEmpWork = async () => {
     try {
@@ -147,14 +146,14 @@ const EmployeeMaster = () => {
             Authorization: `Bearer ${token}`,
           },
         }
-        );
-        const data = response.data;
-        setEmployeeWork(data);
-      } catch (error) {
-        console.error("Error", error);
-      }
-    };
-    
+      );
+      const data = response.data;
+      setEmployeeWork(data);
+    } catch (error) {
+      console.error("Error", error);
+    }
+  };
+
   useEffect(() => {
     fetchEmpWork();
     fetchEmpData();
@@ -220,7 +219,7 @@ const EmployeeMaster = () => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setMenuOpen(false);
+        setShowDropdown(false);
       }
     };
 
@@ -427,7 +426,10 @@ const EmployeeMaster = () => {
             />
           </button>
           {showDropdown && (
-            <div className="absolute top-32 bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50 top-[calc(100% + 10px)]">
+            <div
+              ref={menuRef}
+              className="absolute top-32 bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50 top-[calc(100% + 10px)]"
+            >
               {/* Dropdown content */}
               <div className="flex items-center mb-2">
                 <button
@@ -559,34 +561,34 @@ const EmployeeMaster = () => {
                   <tr key={key}>
                     <td className="px-2 border-2">
                       <div className="flex items-center gap-2 text-center justify-center">
-                            <Icon
-                            icon="lucide:eye"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            className="cursor-pointer"
-                            onClick={() =>
-                              navigate(`/view-employee/${result.EmployeeId}`)
-                            }
-                          />
-                          <Icon
-                            icon="mdi:edit"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            className="cursor-pointer"
-                            onClick={() =>
-                              navigate(`/edit-employee/${result.EmployeeId}`)
-                            }
-                          />
-                          <Icon
-                            icon="material-symbols:delete-outline"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            className="cursor-pointer"
-                            onClick={() => deleteEmp(result.EmployeeId)}
-                          />
+                        <Icon
+                          icon="lucide:eye"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() =>
+                            navigate(`/view-employee/${result.EmployeeId}`)
+                          }
+                        />
+                        <Icon
+                          icon="mdi:edit"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() =>
+                            navigate(`/edit-employee/${result.EmployeeId}`)
+                          }
+                        />
+                        <Icon
+                          icon="material-symbols:delete-outline"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() => deleteEmp(result.EmployeeId)}
+                        />
                       </div>
                     </td>
                     <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
@@ -619,34 +621,34 @@ const EmployeeMaster = () => {
                   <tr key={key}>
                     <td className="px-2 border-2">
                       <div className="flex items-center gap-2 text-center justify-center">
-                            <Icon
-                            icon="lucide:eye"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            className="cursor-pointer"
-                            onClick={() =>
-                              navigate(`/view-employee/${result.EmployeeId}`)
-                            }
-                          />
-                          <Icon
-                            icon="mdi:edit"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            className="cursor-pointer"
-                            onClick={() =>
-                              navigate(`/edit-employee/${result.EmployeeId}`)
-                            }
-                          />
-                          <Icon
-                            icon="material-symbols:delete-outline"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            className="cursor-pointer"
-                            onClick={() => deleteEmp(result.EmployeeId)}
-                          />
+                        <Icon
+                          icon="lucide:eye"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() =>
+                            navigate(`/view-employee/${result.EmployeeId}`)
+                          }
+                        />
+                        <Icon
+                          icon="mdi:edit"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() =>
+                            navigate(`/edit-employee/${result.EmployeeId}`)
+                          }
+                        />
+                        <Icon
+                          icon="material-symbols:delete-outline"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() => deleteEmp(result.EmployeeId)}
+                        />
                       </div>
                     </td>
                     <td className="px-4 border-2 whitespace-normal text-[11px] text-center">

@@ -400,6 +400,7 @@ const DepartmentMaster = () => {
                           width="20"
                           height="20"
                           className="cursor-pointer"
+                          onClick={() => deleteDept(result.DepartmentId)}
                         />
                       </div>
                     </td>

@@ -1,35 +1,38 @@
-import { Icon } from '@iconify/react';
-import axios from 'axios';
-import React, { useEffect, useRef, useState } from 'react'
-import EmployeeTypeModal from './EmployeeTypeModal';
-import ViewEmployeeType from './ViewEmployeeType';
-import { useAuth } from '../Login';
+import { Icon } from "@iconify/react";
+import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
+import EmployeeTypeModal from "./EmployeeTypeModal";
+import ViewEmployeeType from "./ViewEmployeeType";
+import { useAuth } from "../Login";
 
 const EmployeeTypeMaster = () => {
-  const { token } = useAuth()
+  const { token } = useAuth();
   const [isModalOpen, setModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
-  const [EmployeeTypeData, setEmployeeTypeData] = useState([])
+  const [EmployeeTypeData, setEmployeeTypeData] = useState([]);
 
-  useEffect(() =>{
-    const fetchEmpTypeData = async() =>{
-      try{
-        const response = await axios.get("http://localhost:5500/employee-type/FnShowActiveData", {
-          headers:{
-            Authorization: `Bearer ${token}`
+  useEffect(() => {
+    const fetchEmpTypeData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/employee-type/FnShowActiveData",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        })
-        const data = response.data
-        console.log(data)
-        setEmployeeTypeData(data)
-      }catch(error){
-        console.error('Error', error)
+        );
+        const data = response.data;
+        console.log(data);
+        setEmployeeTypeData(data);
+      } catch (error) {
+        console.error("Error", error);
       }
-    }
-    fetchEmpTypeData()
-  },[token])
+    };
+    fetchEmpTypeData();
+  }, [token]);
 
-  const deleteEmpType = async (DeleteId) =>{
+  const deleteEmpType = async (DeleteId) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this Employee Type?"
     );
@@ -37,23 +40,25 @@ const EmployeeTypeMaster = () => {
     if (!confirmDelete) {
       return; // If the user cancels deletion, do nothing
     }
-    try{
-      const response = await axios.post(`http://localhost:5500/employee-type/FnAddUpdateDeleteRecord`,
-      {
-        EmployeeTypeId: DeleteId,
-        IUFlag:"D"
-      },
-      {
-        headers:{
-          Authorization: `Bearer ${token}`
+    try {
+      const response = await axios.post(
+        `http://localhost:5500/employee-type/FnAddUpdateDeleteRecord`,
+        {
+          EmployeeTypeId: DeleteId,
+          IUFlag: "D",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      })
-      alert('Employee Type Deleted')
-      window.location.reload()
-    } catch (error){
-      console.error('Error', error)
+      );
+      alert("Employee Type Deleted");
+      window.location.reload();
+    } catch (error) {
+      console.error("Error", error);
     }
-  }
+  };
 
   const handleSearchChange = (title, searchWord) => {
     const newFilter = EmployeeTypeData.filter((item) => {
@@ -63,6 +68,8 @@ const EmployeeTypeMaster = () => {
 
     if (searchWord === "") {
       setFilteredData([]);
+    } else if (searchWord !== "" && newFilter.length === 0) {
+      setFilteredData(["NA"]);
     } else {
       setFilteredData(newFilter);
     }
@@ -80,7 +87,7 @@ const EmployeeTypeMaster = () => {
     EmployeeTypeGroup: "Employee Type Group",
     ShortName: "Prefix",
     Remark: "Remarks",
-  }
+  };
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedColumns, setSelectedColumns] = useState([
@@ -108,7 +115,7 @@ const EmployeeTypeMaster = () => {
       return updatedVisibility;
     });
   };
-  
+
   const deselectAllColumns = () => {
     setSelectedColumns([]);
     setColumnVisibility((prevVisibility) => {
@@ -131,7 +138,7 @@ const EmployeeTypeMaster = () => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setMenuOpen(false);
+        setShowDropdown(false);
       }
     };
 
@@ -177,12 +184,16 @@ const EmployeeTypeMaster = () => {
             Column Visibility
             <Icon
               icon="fe:arrow-down"
-              className={`mt-1.5 ml-2 ${showDropdown ? "rotate-180" : ""
-                } cursor-pointer`}
+              className={`mt-1.5 ml-2 ${
+                showDropdown ? "rotate-180" : ""
+              } cursor-pointer`}
             />
           </button>
           {showDropdown && (
-            <div className="absolute top-32 bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50">
+            <div
+              ref={menuRef}
+              className="absolute top-32 bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50"
+            >
               {/* Dropdown content */}
               <div className="flex items-center mb-2">
                 <button
@@ -211,9 +222,7 @@ const EmployeeTypeMaster = () => {
                   />
                   <span
                     className={
-                      columnVisibility[columnName]
-                        ? "font-semibold"
-                        : ""
+                      columnVisibility[columnName] ? "font-semibold" : ""
                     }
                   >
                     {columnName}
@@ -276,38 +285,45 @@ const EmployeeTypeMaster = () => {
                 <th className="w-auto px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
                   ID
                 </th>
-                {selectedColumns.map((columnName) => (
-                columnVisibility[columnName] ? (
-                  <th
-                    key={columnName}
-                    className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal`}
-                  >
-                    {columnNames[columnName]}
-                  </th>
-                ) : null
-              ))}
+                {selectedColumns.map((columnName) =>
+                  columnVisibility[columnName] ? (
+                    <th
+                      key={columnName}
+                      className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal`}
+                    >
+                      {columnNames[columnName]}
+                    </th>
+                  ) : null
+                )}
               </tr>
               <tr>
                 <th className="border-2" />
                 <th className="p-2 font-bold text-black border-2 whitespace-normal" />
-                {selectedColumns.map((columnName) => (
-                columnVisibility[columnName] ? (
-                  <th key={columnName} className="p-2 font-semibold text-black border-2">
-                    <input
-                      type="text"
-                      placeholder={`Search `}
-                      className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
-                      style={{ maxWidth: getColumnMaxWidth(columnName) + "px" }}
-                      onChange={(e) => handleSearchChange(columnName, e.target.value)}
-                    />
-                  </th>
-                ) : null
-              ))}
+                {selectedColumns.map((columnName) =>
+                  columnVisibility[columnName] ? (
+                    <th
+                      key={columnName}
+                      className="p-2 font-semibold text-black border-2"
+                    >
+                      <input
+                        type="text"
+                        placeholder={`Search `}
+                        className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
+                        style={{
+                          maxWidth: getColumnMaxWidth(columnName) + "px",
+                        }}
+                        onChange={(e) =>
+                          handleSearchChange(columnName, e.target.value)
+                        }
+                      />
+                    </th>
+                  ) : null
+                )}
               </tr>
             </thead>
             <tbody>
-              {filteredData.length > 0
-                ? filteredData.map((result, index) => (
+              {filteredData.length > 0 ? (
+                filteredData.map((result, index) => (
                   <tr key={index}>
                     <td className="px-2 border-2">
                       <div className="flex items-center gap-2 text-center justify-center">
@@ -348,19 +364,24 @@ const EmployeeTypeMaster = () => {
                     <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
                       {result.EmployeeTypeId}
                     </td>
-                    {selectedColumns.map((columnName) => (
-                    columnVisibility[columnName] ? (
-                      <td
-                        key={columnName}
-                        className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                      >
-                        {result[columnName]}
-                      </td>
-                    ) : null
-                  ))}
+                    {selectedColumns.map((columnName) =>
+                      columnVisibility[columnName] ? (
+                        <td
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                        >
+                          {result[columnName]}
+                        </td>
+                      ) : (
+                        <td key={columnName} className="hidden"></td>
+                      )
+                    )}
                   </tr>
                 ))
-                : EmployeeTypeData.map((result, index) => (
+              ) : filteredData.length === 0 &&
+                EmployeeTypeData &&
+                EmployeeTypeData.length > 0 ? (
+                EmployeeTypeData.map((result, index) => (
                   <tr key={index}>
                     <td className="px-2 text-[11px] border-2">
                       <div className="flex items-center gap-2 text-center justify-center">
@@ -401,32 +422,41 @@ const EmployeeTypeMaster = () => {
                     <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
                       {result.EmployeeTypeId}
                     </td>
-                    {selectedColumns.map((columnName) => (
-                    columnVisibility[columnName] ? (
-                      <td
-                        key={columnName}
-                        className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                      >
-                        {result[columnName]}
-                      </td>
-                    ) : (
-                      <td key={columnName} className="hidden"></td>
-                    )
-                  ))}
+                    {selectedColumns.map((columnName) =>
+                      columnVisibility[columnName] ? (
+                        <td
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                        >
+                          {result[columnName]}
+                        </td>
+                      ) : (
+                        <td key={columnName} className="hidden"></td>
+                      )
+                    )}
                   </tr>
-                ))}
+                ))
+              ) : filteredData[0] == "NA" ? (
+                <tr>
+                  <td className="text-center">No results</td>
+                </tr>
+              ) : (
+                <tr>
+                  <td className="hidden">No Results</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
       </div>
       <ViewEmployeeType
-                          visible={veEType}
-                          onClick={() => setVeEType(false)}
-                          edit={edit}
-                          ID={id}
-                        />
+        visible={veEType}
+        onClick={() => setVeEType(false)}
+        edit={edit}
+        ID={id}
+      />
     </div>
   );
-}
+};
 
-export default EmployeeTypeMaster
+export default EmployeeTypeMaster;

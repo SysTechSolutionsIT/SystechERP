@@ -143,7 +143,7 @@ const CostCenterMaster = () => {
   //For Deletion
   const deleteRecord = async (DeleteId) => {
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete this company?"
+      "Are you sure you want to delete this record?"
     );
 
     if (!confirmDelete) {

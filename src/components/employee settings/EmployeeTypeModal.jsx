@@ -1,12 +1,16 @@
 import { useFormik } from "formik";
 import React, { useState, useEffect } from "react";
 import { EmployeeTypeData } from "./EmployeeTypeMaster";
+import TwoFieldsModal from "../company settings/TwoFieldsModal";
 import { Icon } from "@iconify/react";
 import axios from "axios";
 import { useAuth } from "../Login";
 
 const EmployeeTypeModal = ({ visible, onClick }) => {
   const { token } = useAuth();
+  const [isModalOpen, setModalOpen] = useState(false); //Add Modal
+  const [MMId, setMMId] = useState();
+
   const formik = useFormik({
     initialValues: {
       EmployeeType: "",
@@ -33,17 +37,6 @@ const EmployeeTypeModal = ({ visible, onClick }) => {
     } catch (error) {
       console.error("Error", error);
     }
-  };
-
-  const [isStatusChecked, setStatusChecked] = useState(false);
-  const handleCheckboxChange = (fieldName, setChecked, event) => {
-    //This is how to use it (event) => handleCheckboxChange('Status', setStatusChecked, event)
-    const checked = event.target.checked;
-    setChecked(checked);
-    formik.setValues({
-      ...formik.values,
-      [fieldName]: checked.toString(),
-    });
   };
 
   const [employeeTypeGroup, setEmployeeTypeGroup] = useState([]);
@@ -108,18 +101,42 @@ const EmployeeTypeModal = ({ visible, onClick }) => {
                   onChange={formik.handleChange}
                 />
               </div>
-              <div>
-                <p className="text-[13px] font-semibold">Employee Type Group</p>
-                <select
-                  id="EmployeeTypeGroup"
-                  value={formik.values.EmployeeTypeGroup}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                >
-                  <option value="">Select Employee Type Group</option>
-                  <option value="Worker">Worker</option>
-                  <option value="Staff">Staff</option>
-                </select>
+              <div className="flex flex-col">
+                <p className="capatilize font-semibold text-[13px] mb-1">
+                  Employee Type Group
+                </p>
+                <div className="flex items-center">
+                  <select
+                    id="EmployeeTypeGroup"
+                    name="EmployeeTypeGroup"
+                    value={formik.values.EmployeeTypeGroup}
+                    className="w-full px-4 py-2 font-normal text-[11px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
+                    onChange={formik.handleChange}
+                  >
+                    <option value="">Select Employee Type Group</option>
+                    {Array.isArray(employeeTypeGroup) &&
+                      employeeTypeGroup.map((entry) => (
+                        <option key={entry.FieldId} value={entry.FieldId}>
+                          {entry.FieldDetails}
+                        </option>
+                      ))}
+                  </select>
+                  <Icon
+                    icon="flat-color-icons:plus"
+                    width="24"
+                    height="24"
+                    className="ml-1 cursor-pointer"
+                    onClick={() => {
+                      setModalOpen(true);
+                      setMMId(1);
+                    }}
+                  />
+                </div>
+                <TwoFieldsModal
+                  visible={isModalOpen}
+                  onClick={() => setModalOpen(false)}
+                  MasterID={MMId}
+                />
               </div>
               <div>
                 <p className="text-[13px] font-semibold">Prefix</p>

@@ -1,127 +1,63 @@
-import { Icon } from '@iconify/react';
-import axios from 'axios';
-import React, { useEffect, useRef, useState } from 'react'
-import DesignationModal from './DesignationModal';
-import ViewDesignation from './ViewDesignation';
-import { useAuth } from '../Login';
-
-export const DesignData = [
-  {
-    ID: 1,
-    Name: "ADMINISTRATOR",
-    ReportDesignationName: "ADMINISTRATOR",
-    Status: "Y"
-  },
-  {
-    ID: 2,
-    Name: "PROJECT MANAGER",
-    ReportDesignationName: "ADMINISTRATOR",
-    Status: "Y"
-  },
-  {
-    ID: 3,
-    Name: "HMI MANAGER",
-    ReportDesignationName: "ADMINISTRATOR",
-    Status: "Y"
-  },
-  {
-    ID: 4,
-    Name: "ACCOUNT HEAD",
-    ReportDesignationName: "ADMINISTRATOR",
-    Status: "Y"
-  },
-  {
-    ID: 5,
-    Name: "SR.LEAD ENGINEER",
-    ReportDesignationName: "ADMINISTRATOR",
-    Status: "Y"
-  },
-  {
-    ID: 6,
-    Name: "PURCHASE MANAGER",
-    ReportDesignationName: "ADMINISTRATOR",
-    Status: "Y"
-  },
-  {
-    ID: 7,
-    Name: "LEAD ENGINEER",
-    ReportDesignationName: "ADMINISTRATOR",
-    Status: "Y"
-  },
-  {
-    ID: 8,
-    Name: "SALES MANAGER",
-    ReportDesignationName: "ADMINISTRATOR",
-    Status: "Y"
-  },
-  {
-    ID: 9,
-    Name: "SR. TECHNICIAN",
-    ReportDesignationName: "ADMINISTRATOR",
-    Status: "Y"
-  },
-  {
-    ID: 10,
-    Name: "SR. PROJECT ENGINEER",
-    ReportDesignationName: "ADMINISTRATOR",
-    Status: "Y"
-  },
-  {
-    ID: 11,
-    Name: "OFFICE BOY",
-    ReportDesignationName: "ADMINISTRATOR",
-    Status: "Y"
-  }
-]
+import { Icon } from "@iconify/react";
+import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
+import DesignationModal from "./DesignationModal";
+import ViewDesignation from "./ViewDesignation";
+import { useAuth } from "../Login";
 
 const DesignationMaster = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
-  const [DesignData, setDesignData] = useState([])
-  const {token} = useAuth()
+  const [DesignData, setDesignData] = useState([]);
+  const { token } = useAuth();
 
-  useEffect(() =>{
-    const fetchDesignations = async() =>{
-      try{
-        const response = await axios.get("http://localhost:5500/designation-master/FnShowActiveData", {
-          headers:{
-            Authorization: `Bearer ${token}`
+  useEffect(() => {
+    const fetchDesignations = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/designation-master/FnShowActiveData",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        })
-        const data = response.data
-        setDesignData(data)
-      } catch(error){
-        console.error('Error', error);
+        );
+        const data = response.data;
+        setDesignData(data);
+      } catch (error) {
+        console.error("Error", error);
       }
-    }
-    fetchDesignations()
-  },[token])
+    };
+    fetchDesignations();
+  }, [token]);
 
-  const deleteDesignation = async(DeleteId) =>{
+  const deleteDesignation = async (DeleteId) => {
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete this Employee Type?"
+      "Are you sure you want to delete this Record?"
     );
 
     if (!confirmDelete) {
       return;
     }
-    try{
-      const response = await axios.post(`http://localhost:5500/designation-master/FnAddUpdateDeleteRecord`,
+    try {
+      const response = await axios.post(
+        `http://localhost:5500/designation-master/FnAddUpdateDeleteRecord`,
         {
           DesignationId: DeleteId,
-          IUFlag:"D"
+          IUFlag: "D",
         },
         {
-          headers:{
-            Authorization: `Bearer ${token}`
-          }
-      })
-      alert('Designation Deleted')
-      window.location.reload()
-    } catch (error){
-      console.error('Error', error);
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      alert("Designation Deleted");
+      window.location.reload();
+    } catch (error) {
+      console.error("Error", error);
     }
-  }
+  };
 
   const handleSearchChange = (title, searchWord) => {
     const newFilter = DesignData.filter((item) => {
@@ -138,7 +74,7 @@ const DesignationMaster = () => {
 
   const [columnVisibility, setColumnVisibility] = useState({
     DesignationName: true,
-    ReportDesignationId: true
+    ReportDesignationId: true,
   });
 
   const [showDropdown, setShowDropdown] = useState(false);
@@ -225,8 +161,9 @@ const DesignationMaster = () => {
             Column Visibility
             <Icon
               icon="fe:arrow-down"
-              className={`mt-1.5 ml-2 ${showDropdown ? "rotate-180" : ""
-                } cursor-pointer`}
+              className={`mt-1.5 ml-2 ${
+                showDropdown ? "rotate-180" : ""
+              } cursor-pointer`}
             />
           </button>
           {showDropdown && (
@@ -259,9 +196,7 @@ const DesignationMaster = () => {
                   />
                   <span
                     className={
-                      columnVisibility[columnName]
-                        ? "font-semibold"
-                        : ""
+                      columnVisibility[columnName] ? "font-semibold" : ""
                     }
                   >
                     {columnName}
@@ -327,8 +262,9 @@ const DesignationMaster = () => {
                 {selectedColumns.map((columnName) => (
                   <th
                     key={columnName}
-                    className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] capitalize whitespace-normal${columnVisibility[columnName] ? "" : "hidden"
-                      }`}
+                    className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] capitalize whitespace-normal${
+                      columnVisibility[columnName] ? "" : "hidden"
+                    }`}
                   >
                     {columnName}
                   </th>
@@ -358,133 +294,139 @@ const DesignationMaster = () => {
             <tbody>
               {filteredData.length > 0
                 ? filteredData.map((result, index) => (
-                  <tr key={index}>
-                    <td className="px-2 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          className="cursor-pointer"
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          onClick={() => {
-                            setVeDesign(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setid(result.DesignationId); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          className="cursor-pointer"
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          onClick={() => {
-                            setVeDesign(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setid(result.DesignationId); // Pass ID to VEModal
-                          }}
-                        />
-                        {/* <ViewDesignation
+                    <tr key={index}>
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            className="cursor-pointer"
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            onClick={() => {
+                              setVeDesign(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setid(result.DesignationId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            className="cursor-pointer"
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            onClick={() => {
+                              setVeDesign(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setid(result.DesignationId); // Pass ID to VEModal
+                            }}
+                          />
+                          {/* <ViewDesignation
                           visible={veDesign}
                           onClick={() => setVeDesign(false)}
                           edit={edit}
                           ID={id}
                         /> */}
-                        <Icon
-                          className="cursor-pointer"
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          onClick={()=> deleteDesignation(result.DesignationId)}
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
-                      {result.DesignationId}
-                    </td>
-                    {selectedColumns.map((columnName) => (
-                      <td
-                        key={columnName}
-                        className={`px-4 text-[11px] border-2 whitespace-normal text-left${columnVisibility[columnName] ? "" : "hidden"
+                          <Icon
+                            className="cursor-pointer"
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            onClick={() =>
+                              deleteDesignation(result.DesignationId)
+                            }
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
+                        {result.DesignationId}
+                      </td>
+                      {selectedColumns.map((columnName) => (
+                        <td
+                          key={columnName}
+                          className={`px-4 text-[11px] border-2 whitespace-normal text-left${
+                            columnVisibility[columnName] ? "" : "hidden"
                           }`}
-                      >
-                        {result[columnName]}
-                      </td>
-                    ))}
-                  </tr>
-                ))
+                        >
+                          {result[columnName]}
+                        </td>
+                      ))}
+                    </tr>
+                  ))
                 : DesignData.map((result, index) => (
-                  <tr key={index}>
-                    <td className="px-2 text-[11px] border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          className="cursor-pointer"
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          onClick={() => {
-                            setVeDesign(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setid(result.DesignationId); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          className="cursor-pointer"
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          onClick={() => {
-                            setVeDesign(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setid(result.DesignationId); // Pass ID to VEModal
-                          }}
-                        />
-                        {/* <ViewDesignation
+                    <tr key={index}>
+                      <td className="px-2 text-[11px] border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            className="cursor-pointer"
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            onClick={() => {
+                              setVeDesign(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setid(result.DesignationId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            className="cursor-pointer"
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            onClick={() => {
+                              setVeDesign(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setid(result.DesignationId); // Pass ID to VEModal
+                            }}
+                          />
+                          {/* <ViewDesignation
                           visible={veDesign}
                           onClick={() => setVeDesign(false)}
                           edit={edit}
                           ID={id}
                         /> */}
-                        <Icon
-                          className="cursor-pointer"
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          onClick={()=> deleteDesignation(result.DesignationId)}
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
-                      {result.DesignationId}
-                    </td>
-                    {selectedColumns.map((columnName) => (
-                      <td
-                        key={columnName}
-                        className={`px-4 text-[11px] border-2 whitespace-normal ${columnName === "EmployeeFare" && "text-right"
-                          } ${columnVisibility[columnName] ? "" : "hidden"}`}
-                      >
-                        {result[columnName]}
+                          <Icon
+                            className="cursor-pointer"
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            onClick={() =>
+                              deleteDesignation(result.DesignationId)
+                            }
+                          />
+                        </div>
                       </td>
-                    ))}
-                  </tr>
-                ))}
+                      <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
+                        {result.DesignationId}
+                      </td>
+                      {selectedColumns.map((columnName) => (
+                        <td
+                          key={columnName}
+                          className={`px-4 text-[11px] border-2 whitespace-normal ${
+                            columnName === "EmployeeFare" && "text-right"
+                          } ${columnVisibility[columnName] ? "" : "hidden"}`}
+                        >
+                          {result[columnName]}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
             </tbody>
           </table>
         </div>
-      </div> 
+      </div>
       <ViewDesignation
-                          visible={veDesign}
-                          onClick={() => setVeDesign(false)}
-                          edit={edit}
-                          ID={id}
-                        />
+        visible={veDesign}
+        onClick={() => setVeDesign(false)}
+        edit={edit}
+        ID={id}
+      />
     </div>
   );
-}
+};
 
-export default DesignationMaster
+export default DesignationMaster;

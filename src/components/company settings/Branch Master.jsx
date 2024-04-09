@@ -33,8 +33,8 @@ const BranchMaster = () => {
     BranchName: "Branch Name",
     BranchShortName: "Branch Short Name",
     BranchAddress: "Branch Address",
-    Remark: "Remark"
-  }
+    Remark: "Remark",
+  };
 
   //Toggle
   const [showDropdown, setShowDropdown] = useState(false);
@@ -151,6 +151,44 @@ const BranchMaster = () => {
     }
   };
 
+  // Delete Branch
+  const deleteBranch = async (DeleteId) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this branch?"
+    );
+
+    if (!confirmDelete) {
+      return; // If the user cancels deletion, do nothing
+    }
+
+    try {
+      const apiUrl = `http://localhost:5500/branch-master/FnAddUpdateDeleteRecord`;
+
+      const response = await axios.post(
+        apiUrl,
+        {
+          BranchId: DeleteId,
+          IUFlag: "D",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data.message === "Record Deleted Successfully") {
+        console.log(`Record with ID ${DeleteId} deleted successfully.`);
+        alert("Record Deleted");
+        window.location.reload();
+      } else {
+        console.error(`Failed to delete record with ID ${DeleteId}.`);
+      }
+    } catch (error) {
+      console.error("Error deleting record:", error);
+    }
+  };
+
   return (
     <div className="top-25 min-w-[40%]">
       <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
@@ -261,177 +299,177 @@ const BranchMaster = () => {
           <div className="my-1 rounded-2xl bg-white p-2 pr-8">
             <table className="min-w-full text-center rounded-lg  whitespace-normal">
               <thead>
-              <tr className="">
-                <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
-                  Actions
-                </th>
-                <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
-                  ID
-                </th>
+                <tr className="">
+                  <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
+                    Actions
+                  </th>
+                  <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
+                    ID
+                  </th>
 
-                {selectedColumns.map((columnName) =>
-                  columnVisibility[columnName] ? (
-                    <th
-                      key={columnName}
-                      className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal`}
-                    >
-                      {columnNames[columnName]}
-                    </th>
-                  ) : null
-                )}
-              </tr>
+                  {selectedColumns.map((columnName) =>
+                    columnVisibility[columnName] ? (
+                      <th
+                        key={columnName}
+                        className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal`}
+                      >
+                        {columnNames[columnName]}
+                      </th>
+                    ) : null
+                  )}
+                </tr>
                 <tr>
                   <th className="border-2" />
                   <th className="p-2 font-bold text-black border-2 " />
-                {selectedColumns.map((columnName) =>
-                  columnVisibility[columnName] ? (
-                    <th
-                      key={columnName}
-                      className="p-2 font-semibold text-black border-2"
-                    >
-                      <input
-                        type="text"
-                        placeholder={`Search `}
-                        className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
-                        style={{
-                          maxWidth: getColumnMaxWidth(columnName) + "px",
-                        }}
-                        onChange={(e) =>
-                          handleSearchChange(columnName, e.target.value)
-                        }
-                      />
-                    </th>
-                  ) : null
-                )}
-              </tr>
+                  {selectedColumns.map((columnName) =>
+                    columnVisibility[columnName] ? (
+                      <th
+                        key={columnName}
+                        className="p-2 font-semibold text-black border-2"
+                      >
+                        <input
+                          type="text"
+                          placeholder={`Search `}
+                          className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
+                          style={{
+                            maxWidth: getColumnMaxWidth(columnName) + "px",
+                          }}
+                          onChange={(e) =>
+                            handleSearchChange(columnName, e.target.value)
+                          }
+                        />
+                      </th>
+                    ) : null
+                  )}
+                </tr>
               </thead>
               <tbody className="">
-              {filteredData.length > 0 ? (
-                filteredData.map((result, key) => (
-                  <tr key={key}>
-                    <td className="px-2 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                      <Icon
-                      className="cursor-pointer"
-                      icon="lucide:eye"
-                      color="#556987"
-                      width="20"
-                      height="20"
-                      onClick={() => {
-                        setVEBranch(true); // Open VEModal
-                        setEdit(false); // Disable edit mode for VEModal
-                        setid(result.BranchId); // Pass ID to VEModal
-                      }}
-                    />
-                    <Icon
-                      className="cursor-pointer"
-                      icon="mdi:edit"
-                      color="#556987"
-                      width="20"
-                      height="20"
-                      onClick={() => {
-                        setVEBranch(true); // Open VEModal
-                        setEdit(true); // Disable edit mode for VEModal
-                        setid(result.BranchId); // Pass ID to VEModal
-                      }}
-                    />
-                    <Icon
-                      className="cursor-pointer"
-                      icon="material-symbols:delete-outline"
-                      color="#556987"
-                      width="20"
-                      height="20"
-                    />
-                      </div>
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
-                      {result.BranchId}
-                    </td>
-                    {selectedColumns.map((columnName) =>
-                      columnVisibility[columnName] ? (
-                        <td
-                        key={columnName}
-                        className={`px-4 text-[11px] border-2 whitespace-normal ${
-                          columnName === "BranchShortName" && "text-right"
-                        } ${columnVisibility[columnName] ? "" : "hidden"}`}
-                      >
-                        {result[columnName]}
-                        </td>
-                      ) : (
-                        <td key={columnName} className="hidden"></td>
-                      )
-                    )}
+                {filteredData.length > 0 ? (
+                  filteredData.map((result, key) => (
+                    <tr key={key}>
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            className="cursor-pointer"
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            onClick={() => {
+                              setVEBranch(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setid(result.BranchId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            className="cursor-pointer"
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            onClick={() => {
+                              setVEBranch(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setid(result.BranchId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            className="cursor-pointer"
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            onClick={() => deleteBranch(result.BranchId)}
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
+                        {result.BranchId}
+                      </td>
+                      {selectedColumns.map((columnName) =>
+                        columnVisibility[columnName] ? (
+                          <td
+                            key={columnName}
+                            className={`px-4 text-[11px] border-2 whitespace-normal ${
+                              columnName === "BranchShortName" && "text-right"
+                            } ${columnVisibility[columnName] ? "" : "hidden"}`}
+                          >
+                            {result[columnName]}
+                          </td>
+                        ) : (
+                          <td key={columnName} className="hidden"></td>
+                        )
+                      )}
+                    </tr>
+                  ))
+                ) : filteredData.length === 0 && branch && branch.length > 0 ? (
+                  branch.map((result, key) => (
+                    <tr key={key}>
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            className="cursor-pointer"
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            onClick={() => {
+                              setVEBranch(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setid(result.BranchId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            className="cursor-pointer"
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            onClick={() => {
+                              setVEBranch(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setid(result.BranchId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            className="cursor-pointer"
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            onClick={() => deleteBranch(result.BranchId)}
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
+                        {result.BranchId}
+                      </td>
+                      {selectedColumns.map((columnName) =>
+                        columnVisibility[columnName] ? (
+                          <td
+                            key={columnName}
+                            className={`px-4 text-[11px] border-2 whitespace-normal ${
+                              columnName === "BranchShortName" && "text-right"
+                            } ${columnVisibility[columnName] ? "" : "hidden"}`}
+                          >
+                            {result[columnName]}
+                          </td>
+                        ) : (
+                          <td key={columnName} className="hidden"></td>
+                        )
+                      )}
+                    </tr>
+                  ))
+                ) : filteredData[0] == "NA" ? (
+                  <tr>
+                    <td className="text-center">No results</td>
                   </tr>
-                ))
-              ) : filteredData.length === 0 &&
-                branch &&
-                branch.length > 0 ? (
-                branch.map((result, key) => (
-                  <tr key={key}>
-                    <td className="px-2 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                      <Icon
-                        className="cursor-pointer"
-                        icon="lucide:eye"
-                        color="#556987"
-                        width="20"
-                        height="20"
-                        onClick={() => {
-                          setVEBranch(true); // Open VEModal
-                          setEdit(false); // Disable edit mode for VEModal
-                          setid(result.BranchId); // Pass ID to VEModal
-                        }}
-                      />
-                      <Icon
-                        className="cursor-pointer"
-                        icon="mdi:edit"
-                        color="#556987"
-                        width="20"
-                        height="20"
-                        onClick={() => {
-                          setVEBranch(true); // Open VEModal
-                          setEdit(true); // Disable edit mode for VEModal
-                          setid(result.BranchId); // Pass ID to VEModal
-                        }}
-                      />
-                      <Icon
-                        className="cursor-pointer"
-                        icon="material-symbols:delete-outline"
-                        color="#556987"
-                        width="20"
-                        height="20"
-                      />
-                      </div>
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
-                      {result.BranchId}
-                    </td>
-                    {selectedColumns.map((columnName) =>
-                      columnVisibility[columnName] ? (
-                        <td
-                        key={columnName}
-                        className={`px-4 text-[11px] border-2 whitespace-normal ${
-                          columnName === "BranchShortName" && "text-right"
-                        } ${columnVisibility[columnName] ? "" : "hidden"}`}
-                      >
-                        {result[columnName]}
-                        </td>
-                      ) : (
-                        <td key={columnName} className="hidden"></td>
-                      )
-                    )}
+                ) : (
+                  <tr>
+                    <td className="hidden">No Results</td>
                   </tr>
-                ))
-              ) : filteredData[0] == "NA" ? (
-                <tr>
-                  <td className="text-center">No results</td>
-                </tr>
-              ) : (
-                <tr>
-                  <td className="hidden">No Results</td>
-                </tr>
-              )}
-            </tbody>
+                )}
+              </tbody>
             </table>
           </div>
         </div>

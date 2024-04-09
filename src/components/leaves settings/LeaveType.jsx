@@ -90,6 +90,16 @@ const LeaveTypeMaster = () => {
     Remarks: false,
   });
 
+  const columnNames = {
+    LeaveType: "Leave Type",
+    ShortName: "Short Name",
+    DefaultBalance: "Default Balance",
+    MaxPerMonth: "Max Per Month",
+    PaidFlag: "Paid Flag",
+    CarryForwardFlag: "Carry Forward Flag",
+    Remarks: "Remarks",
+  };
+
   const handleSearchChange = (title, searchWord) => {
     const newFilter = leaveData.filter((item) => {
       const value = item[title];
@@ -98,6 +108,8 @@ const LeaveTypeMaster = () => {
 
     if (searchWord === "") {
       setFilteredData([]);
+    } else if (searchWord !== "" && newFilter.length === 0) {
+      setFilteredData(["NA"]);
     } else {
       setFilteredData(newFilter);
     }
@@ -134,7 +146,7 @@ const LeaveTypeMaster = () => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setMenuOpen(false);
+        setShowDropdown(false);
       }
     };
 
@@ -354,7 +366,10 @@ const LeaveTypeMaster = () => {
             />
           </button>
           {showDropdown && (
-            <div className="absolute top-32 bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50">
+            <div
+              ref={menuRef}
+              className="absolute top-32 bg-white border border-gray-300 shadow-md rounded-lg p-2 z-50"
+            >
               {/* Dropdown content */}
               <div className="flex items-center mb-2">
                 <button
@@ -446,167 +461,171 @@ const LeaveTypeMaster = () => {
                 <th className="w-auto text-[13px] px-1 font-bold text-black border-2 border-gray-400 whitespace-normal">
                   ID
                 </th>
-                {selectedColumns.map(
-                  (columnName) =>
-                    columnVisibility[columnName] && (
-                      <th
-                        key={columnName}
-                        className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 capitalize whitespace-normal max-w-xs ${
-                          columnVisibility[columnName] ? "" : "hidden"
-                        }`}
-                      >
-                        {columnName
-                          .replace(/([a-z])([A-Z])/g, "$1 $2")
-                          .split(" ")
-                          .map((word, index) => (
-                            <div key={index} className="whitespace-nowrap">
-                              {word}
-                            </div>
-                          ))}
-                      </th>
-                    )
+                {selectedColumns.map((columnName) =>
+                  columnVisibility[columnName] ? (
+                    <th
+                      key={columnName}
+                      className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal`}
+                    >
+                      {columnNames[columnName]}
+                    </th>
+                  ) : null
                 )}
               </tr>
               <tr>
                 <th className="border-2"></th>
                 <th className="p-2 font-bold text-black border-2 " />
-                {selectedColumns.map(
-                  (columnName) =>
-                    columnVisibility[columnName] && (
-                      <th
-                        key={columnName}
-                        className="p-2 font-bold text-black border-2 text-[11px] capitalize"
-                      >
-                        <input
-                          type="text"
-                          placeholder={`Search `}
-                          className="w-auto text-[11px] h-6 border-2  border-slate-500 rounded-lg justify-center text-center whitespace-normal"
-                          style={{
-                            maxWidth: getColumnMaxWidth(columnName) + "px",
-                          }}
-                          onChange={(e) =>
-                            handleSearchChange(columnName, e.target.value)
-                          }
-                        />
-                      </th>
-                    )
+                {selectedColumns.map((columnName) =>
+                  columnVisibility[columnName] ? (
+                    <th
+                      key={columnName}
+                      className="p-2 font-semibold text-black border-2 whitespace-normal"
+                    >
+                      <input
+                        type="text"
+                        placeholder={`Search `}
+                        className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px] whitespace-normal"
+                        style={{
+                          maxWidth: getColumnMaxWidth(columnName) + "px",
+                        }}
+                        onChange={(e) =>
+                          handleSearchChange(columnName, e.target.value)
+                        }
+                      />
+                    </th>
+                  ) : null
                 )}
               </tr>
             </thead>
             <tbody className="">
-              {filteredData.length > 0
-                ? filteredData.map((result, key) => (
-                    <tr key={key}>
-                      <td className="px-2 border-2">
-                        <div className="flex items-center gap-2 text-center justify-center">
-                          <Icon
-                            icon="lucide:eye"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            className="cursor-pointer"
-                            onClick={() => {
-                              setLVE(true); // Open VEModal
-                              setEdit(false); // Disable edit mode for VEModal
-                              setLeaveId(result.LeaveTypeId); // Pass ID to VEModal
-                            }}
-                          />
-                          <Icon
-                            icon="mdi:edit"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            className="cursor-pointer"
-                            onClick={() => {
-                              setLVE(true); // Open VEModal
-                              setEdit(true); // Disable edit mode for VEModal
-                              setLeaveId(result.LeaveTypeId); // Pass ID to VEModal
-                            }}
-                          />
-                          <Icon
-                            icon="material-symbols:delete-outline"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            className="cursor-pointer"
-                          />
-                        </div>
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {result.LeaveTypeId}
-                      </td>
-                      {selectedColumns.map(
-                        (columnName) =>
-                          columnVisibility[columnName] && (
-                            <td
-                              key={columnName}
-                              className={`px-4 border-2 whitespace-normal text-[11px] text-left${
-                                columnVisibility[columnName] ? "" : "hidden"
-                              }`}
-                            >
-                              {result[columnName]}
-                            </td>
-                          )
-                      )}
-                    </tr>
-                  ))
-                : leaveData.map((entry, index) => (
-                    <tr key={index}>
-                      <td className="px-2 border-2">
-                        <div className="flex items-center gap-2 text-center justify-center">
-                          <Icon
-                            icon="lucide:eye"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            className="cursor-pointer"
-                            onClick={() => {
-                              setLVE(true); // Open VEModal
-                              setEdit(false); // Disable edit mode for VEModal
-                              setLeaveId(entry.LeaveTypeId); // Pass ID to VEModal
-                            }}
-                          />
+              {filteredData.length > 0 ? (
+                filteredData.map((result, key) => (
+                  <tr key={key}>
+                    <td className="px-2 border-2">
+                      <div className="flex items-center gap-2 text-center justify-center">
+                        <Icon
+                          icon="lucide:eye"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() => {
+                            setLVE(true); // Open VEModal
+                            setEdit(false); // Disable edit mode for VEModal
+                            setLeaveId(result.LeaveTypeId); // Pass ID to VEModal
+                          }}
+                        />
+                        <Icon
+                          icon="mdi:edit"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() => {
+                            setLVE(true); // Open VEModal
+                            setEdit(true); // Disable edit mode for VEModal
+                            setLeaveId(result.LeaveTypeId); // Pass ID to VEModal
+                          }}
+                        />
+                        <Icon
+                          icon="material-symbols:delete-outline"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() => deleteLeaveType(result.LeaveTypeId)}
+                        />
+                      </div>
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                      {result.LeaveTypeId}
+                    </td>
+                    {selectedColumns.map((columnName) =>
+                      columnVisibility[columnName] ? (
+                        <td
+                          key={columnName}
+                          className={`px-4 text-[11px] border-2 whitespace-normal text-left${
+                            columnVisibility[columnName] ? "" : "hidden"
+                          }`}
+                        >
+                          {result[columnName]}
+                        </td>
+                      ) : (
+                        <td key={columnName} className="hidden"></td>
+                      )
+                    )}
+                  </tr>
+                ))
+              ) : filteredData.length === 0 &&
+                leaveData &&
+                leaveData.length > 0 ? (
+                leaveData.map((entry, index) => (
+                  <tr key={index}>
+                    <td className="px-2 border-2">
+                      <div className="flex items-center gap-2 text-center justify-center">
+                        <Icon
+                          icon="lucide:eye"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() => {
+                            setLVE(true); // Open VEModal
+                            setEdit(false); // Disable edit mode for VEModal
+                            setLeaveId(entry.LeaveTypeId); // Pass ID to VEModal
+                          }}
+                        />
 
-                          <Icon
-                            icon="mdi:edit"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            className="cursor-pointer"
-                            onClick={() => {
-                              setLVE(true); // Open VEModal
-                              setEdit(true); // Disable edit mode for VEModal
-                              setLeaveId(entry.LeaveTypeId); // Pass ID to VEModal
-                            }}
-                          />
-                          <Icon
-                            icon="material-symbols:delete-outline"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            className="cursor-pointer"
-                            onClick={() => deleteLeaveType(entry.LeaveTypeId)}
-                          />
-                        </div>
-                      </td>
-                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {entry.LeaveTypeId}
-                      </td>
-                      {selectedColumns.map(
-                        (columnName) =>
-                          columnVisibility[columnName] && (
-                            <td
-                              key={columnName}
-                              className={`px-4 border-2 whitespace-normal text-left text-[11px]${
-                                columnVisibility[columnName] ? "" : "hidden"
-                              }`}
-                            >
-                              {entry[columnName]}
-                            </td>
-                          )
-                      )}
-                    </tr>
-                  ))}
+                        <Icon
+                          icon="mdi:edit"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() => {
+                            setLVE(true); // Open VEModal
+                            setEdit(true); // Disable edit mode for VEModal
+                            setLeaveId(entry.LeaveTypeId); // Pass ID to VEModal
+                          }}
+                        />
+                        <Icon
+                          icon="material-symbols:delete-outline"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() => deleteLeaveType(entry.LeaveTypeId)}
+                        />
+                      </div>
+                    </td>
+                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                      {entry.LeaveTypeId}
+                    </td>
+                    {selectedColumns.map((columnName) =>
+                      columnVisibility[columnName] ? (
+                        <td
+                          key={columnName}
+                          className={`px-4 text-[11px] border-2 whitespace-normal ${
+                            columnVisibility[columnName] ? "" : "hidden"
+                          }`}
+                        >
+                          {entry[columnName]}
+                        </td>
+                      ) : (
+                        <td key={columnName} className="hidden"></td>
+                      )
+                    )}
+                  </tr>
+                ))
+              ) : filteredData[0] == "NA" ? (
+                <tr>
+                  <td className="text-center">No results</td>
+                </tr>
+              ) : (
+                <tr>
+                  <td className="hidden">No Results</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
