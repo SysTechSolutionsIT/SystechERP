@@ -153,7 +153,7 @@ const UserRoles = sequelize.define('UserRoles', {
       } else if (req.query.IUFlag === 'U') {
         // Add or update operation
         const result = await UserRoles.update(Roles, {
-          where: { RoleId: Roles.RoleId },
+          where: { RoleId: RoleId },
           returning: true,
         });
   

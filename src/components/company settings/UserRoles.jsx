@@ -6,6 +6,7 @@ import axios from "axios";
 import DepartmentModal from "./DepartmentModal";
 import VEDept from "./ViewDept";
 import { useAuth } from "../Login";
+import ViewUserRoles from './ViewUserRoles'
 
 const UserRoles = () => {
     const [isModalOpen, setModalOpen] = useState(false);
@@ -16,7 +17,7 @@ const UserRoles = () => {
   
     const deleteDept = async (deptid) => {
       const confirmDelete = window.confirm(
-        "Are you sure you want to delete this company?"
+        "Are you sure you want to delete this role?"
       );
   
       if (!confirmDelete) {
@@ -464,7 +465,7 @@ const UserRoles = () => {
             </table>
           </div>
         </div>
-        <VEDept
+        <ViewUserRoles
           visible={veDept}
           onClick={() => setVeDept(false)}
           edit={edit}

@@ -5,11 +5,15 @@ import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import axios from "axios";
 import { useAuth } from "../Login";
+import TwoFieldsModal from "../company settings/TwoFieldsModal";
+
 
 export default function AddEmployeePersonal() {
   const { token } = useAuth();
   const [employeeTypes, setEmployeeTypes] = useState([])
   const [EmpTypeId, setEmpTypeId] = useState();
+  const [isModalOpen, setModalOpen] = useState(false)
+  const [MMId, setMMId] = useState();
 
   const formik = useFormik({
     initialValues: {
@@ -298,7 +302,145 @@ export default function AddEmployeePersonal() {
     fetchEmployeeTypes()
   },[token])
 
+  const [categories, setCategories] = useState([]);
+  useEffect(() => {
+    const fetchCategoryData = async () => {
+      const CID = 8;
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/two-field/FnShowCategoricalData",
+          {
+            params: { MasterNameId: CID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        console.log("Category", data);
+        setCategories(data);
+      } catch (error) {
+        console.error("Error fetching currencies:", error);
+      }
+    };
+    fetchCategoryData();
+  }, [token]);
 
+  const [sals, setSalutation] = useState([]);
+  useEffect(() => {
+    const fetchSalutationsData = async () => {
+      const CID = 4;
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/two-field/FnShowCategoricalData",
+          {
+            params: { MasterNameId: CID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        console.log("Salutations", data);
+        setSalutation(data);
+      } catch (error) {
+        console.error("Error fetching sals:", error);
+      }
+    };
+    fetchSalutationsData();
+  }, [token, ]);
+
+  const [Religion, setReligion] = useState([]);
+  useEffect(() => {
+    const fetchReligionData = async () => {
+      const CID = 7;
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/two-field/FnShowCategoricalData",
+          {
+            params: { MasterNameId: CID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        console.log("Religion", data);
+        setReligion(data);
+      } catch (error) {
+        console.error("Error fetching currencies:", error);
+      }
+    };
+    fetchReligionData();
+  }, [token, ]);
+
+  const [Reference, setReference] = useState([]);
+  useEffect(() => {
+    const fetchReferenceData = async () => {
+      const CID = 6;
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/two-field/FnShowCategoricalData",
+          {
+            params: { MasterNameId: CID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        const data = response.data;
+        console.log("Reference", data);
+        setReference(data);
+      } catch (error) {
+        console.error("Error fetching currencies:", error);
+      }
+    };
+    fetchReferenceData();
+  }, [token, ]);
+
+  const [Caste, setCaste] = useState([]);
+  useEffect(() => {
+    const fetchCasteData = async () => {
+      const CID = 9;
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/two-field/FnShowCategoricalData",
+          {
+            params: { MasterNameId: CID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        console.log("caste", data);
+        setCaste(data);
+      } catch (error) {
+        console.error("Error fetching caste:", error);
+      }
+    };
+    fetchCasteData();
+  }, [token, ]);
+
+  const [employeeTypeGroup, setEmployeeTypeGroup] = useState([]);
+
+  useEffect(() => {
+    const fetchEmpTypeData = async () => {
+      const CID = 1;
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/two-field/FnShowCategoricalData",
+          {
+            params: { MasterNameId: CID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        console.log('Employee Group Response', response)
+        const groupData = response.data;
+  
+        if (Array.isArray(groupData)) { // Check if groupData is an array
+          setEmployeeTypeGroup(groupData);
+        } else {
+          console.error("API response is not an array:", groupData);
+        }
+      } catch (error) {
+        console.error("Error fetching emptype:", error);
+      }
+    };
+  
+    fetchEmpTypeData();
+  }, [token]);
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -345,51 +487,73 @@ export default function AddEmployeePersonal() {
                 className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
               />
             </div>
-
-            <div className="py-1">
-              <p className="mb-1 font-semibold text-[13px]">Salutation *</p>
-              <select
-                id="Salutation"
-                name="Salutation"
-                className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                value={formik.values.Salutation}
-                onChange={formik.handleChange}
-              >
-                <option value="">Select Salutation</option>
-                <option value="Sir/Madam">Sir/Madam</option>
-                <option value="Dear [Mr./Ms./Dr.] [Last Name]">
-                  Dear [Mr./Ms./Dr.] [Last Name]
-                </option>
-                <option value="[Department] [Last Name]">
-                  [Department] [Last Name]
-                </option>
-                <option value="[Job Title] [Last Name]">
-                  [Job Title] [Last Name]
-                </option>
-                <option value="To Whom It May Concern">
-                  To Whom It May Concern
-                </option>
-                <option value="Greetings [Mr./Ms./Dr.] [Last Name]">
-                  Greetings [Mr./Ms./Dr.] [Last Name]
-                </option>
-              </select>
-            </div>
-
-            <div className="py-1">
-              <p className="mb-1 font-semibold text-[13px]">
-                Employee Type Group *
+            <div className="flex flex-col">
+              <p className="capatilize font-semibold text-[13px] mb-1">
+                Salutations
               </p>
-              <select
-                id="EmployeeTypeGroupId"
-                name="EmployeeTypeGroupId"
-                className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                value={formik.values.EmployeeTypeGroupId}
-                onChange={formik.handleChange}
-              >
-                <option value="">Select Group Type</option>
-                <option value="Worker">Worker</option>
-                <option value="Staff">Staff</option>
-              </select>
+              <div className="flex items-center">
+                {sals.length > 0 ? (
+                  <select
+                    id="Salutation"
+                    name="Salutation"
+                    value={formik.values.Salutation}
+                    className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
+                    onChange={formik.handleChange}
+                  >
+                    <option value="">Select Salutation</option>
+                    {sals.map((entry) => (
+                      <option key={entry.FieldId} value={entry.FieldId}>
+                        {entry.FieldDetails}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <p className="flex-1 px-4 py-2 font-normal text-gray-500">
+                    No available entries
+                  </p>
+                )}
+                <Icon
+                  icon="flat-color-icons:plus"
+                  width="24"
+                  height="24"
+                  className="ml-1 cursor-pointer"
+                  onClick={() => {
+                    setModalOpen(true);
+                    setMMId(4);
+                  }}
+                />
+              </div>
+            </div>
+            <div className="flex flex-col">
+              <p className="capatilize font-semibold text-[13px] mb-1">
+                Employee Type Group
+              </p>
+              <div className="flex items-center">
+                <select
+                  id="EmployeeTypeGroupId"
+                  name="EmployeeTypeGroupId"
+                  value={formik.values.EmployeeTypeGroupId}
+                  className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
+                  onChange={formik.handleChange}
+                  >
+                  <option value="">Select Employee Type Group</option>
+                  {Array.isArray(employeeTypeGroup) &&  employeeTypeGroup.map((entry) => (
+                    <option key={entry.FieldId} value={entry.FieldId}>
+                      {entry.FieldDetails}
+                    </option>
+                  ))}
+                </select>
+                <Icon
+                  icon="flat-color-icons:plus"
+                  width="24"
+                  height="24"
+                  className="ml-1 cursor-pointer"
+                  onClick={() => {
+                    setModalOpen(true);
+                    setMMId(1);
+                  }}
+                />
+              </div>
             </div>
             <div className="py-1">
               <p className="mb-1 capitalize  font-semibold text-[13px]">
@@ -619,24 +783,41 @@ export default function AddEmployeePersonal() {
                 onChange={formik.handleChange}
               />
             </div>
-            <div className="py-1">
-              <p className="mb-1 capitalize  font-semibold text-[13px]">
+            <div className="flex flex-col">
+              <p className="capatilize font-semibold text-[13px] mb-1">
                 Category
               </p>
-              <select
-                id="CategoryId"
-                name="CategoryId"
-                className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                value={formik.values.CategoryId}
-                onChange={formik.handleChange}
-              >
-                <option value="">Select Category</option>
-                <option value="Category 1">Category 1</option>
-                <option value="Category 2">Category 2</option>
-                <option value="Category 3">Category 3</option>
-                <option value="Category 4">Category 4</option>
-                <option value="Category 5">Category 5</option>
-              </select>
+              <div className="flex items-center">
+                {categories.length > 0 ? (
+                  <select
+                    id="CategoryId"
+                    name="CategoryId"
+                    className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
+                    onChange={formik.handleChange}
+                  >
+                    <option value="">Select Categories</option>
+                    {categories.map((entry) => (
+                      <option key={entry.FieldId} value={entry.FieldId}>
+                        {entry.FieldDetails}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <p className="flex-1 px-4 py-2 font-normal text-gray-500">
+                    No available entries
+                  </p>
+                )}
+                <Icon
+                  icon="flat-color-icons:plus"
+                  width="24"
+                  height="24"
+                  className="ml-1 cursor-pointer"
+                  onClick={() => {
+                    setModalOpen(true);
+                    setMMId(8);
+                  }}
+                />
+              </div>
             </div>
             <div className="py-1">
               <p className="mb-1 capitalize  font-semibold text-[13px]">
@@ -650,78 +831,112 @@ export default function AddEmployeePersonal() {
                 onChange={formik.handleChange}
               />
             </div>
-            <div className="py-1">
-              <p className="mb-1 capitalize  font-semibold text-[13px]">
+            <div className="flex flex-col">
+              <p className="capatilize font-semibold text-[13px] mb-1">
                 Religion
               </p>
-              <select
-                id="ReligionId"
-                name="ReligionId"
-                className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                value={formik.values.ReligionId}
-                onChange={formik.handleChange}
-              >
-                <option value="">Select Religion</option>
-                <option value="Religion 1">Religion 1</option>
-                <option value="Religion 2">Religion 2</option>
-                <option value="Religion 3">Religion 3</option>
-                <option value="Religion 4">Religion 4</option>
-                <option value="Religion 5">Religion 5</option>
-              </select>
+              <div className="flex items-center">
+                {Religion.length > 0 ? (
+                  <select
+                    id="ReligionId"
+                    name="ReligionId"
+                    className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
+                    onChange={formik.handleChange}
+                  >
+                    <option value="">Select Religion</option>
+                    {Religion.map((entry) => (
+                      <option key={entry.FieldId} value={entry.FieldId}>
+                        {entry.FieldDetails}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <p className="flex-1 px-4 py-2 font-normal text-gray-500">
+                    No available entries
+                  </p>
+                )}
+                <Icon
+                  icon="flat-color-icons:plus"
+                  width="24"
+                  height="24"
+                  className="ml-1 cursor-pointer"
+                  onClick={() => {
+                    setModalOpen(true);
+                    setMMId(7);
+                  }}
+                />
+              </div>
             </div>
-            <div className="py-1">
-              <p className="mb-1 font-semibold text-[13px]">Reference</p>
-              <select
-                id="ReferenceId"
-                name="ReferenceId"
-                className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                value={formik.values.ReferenceId}
-                onChange={formik.handleChange}
-              >
-                <option value="">Select Reference</option>
-                <option value="Professional References">
-                  Professional References
-                </option>
-                <option value="Supervisor/Manager References">
-                  Supervisor/Manager References
-                </option>
-                <option value="Colleague References">
-                  Colleague References
-                </option>
-                <option value="Client/Customer References">
-                  Client/Customer References
-                </option>
-                <option value="Subordinate References">
-                  Subordinate References
-                </option>
-                <option value="Educational References">
-                  Educational References
-                </option>
-                <option value="Personal References">Personal References</option>
-                <option value="Character References">
-                  Character References
-                </option>
-                <option value="Industry Experts or Mentors">
-                  Industry Experts or Mentors
-                </option>
-              </select>
+            <div className="flex flex-col">
+              <p className="capatilize font-semibold text-[13px] mb-1">
+                Reference
+              </p>
+              <div className="flex items-center">
+                {Reference.length > 0 ? (
+                  <select
+                    id="ReligionId"
+                    name="ReligionId"
+                    className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
+                    onChange={formik.handleChange}
+                  >
+                    <option value="">Select Department Group</option>
+                    {Reference.map((entry) => (
+                      <option key={entry.FieldId} value={entry.FieldId}>
+                        {entry.FieldDetails}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <p className="flex-1 px-4 py-2 font-normal text-gray-500">
+                    No available entries
+                  </p>
+                )}
+                <Icon
+                  icon="flat-color-icons:plus"
+                  width="24"
+                  height="24"
+                  className="ml-1 cursor-pointer"
+                  onClick={() => {
+                    setModalOpen(true);
+                    setMMId(6);
+                  }}
+                />
+              </div>
             </div>
-            <div className="py-1">
-              <p className="mb-1 font-semibold text-[13px]">Caste</p>
-              <select
-                id="CasteId"
-                name="CasteId"
-                className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                value={formik.values.CasteId}
-                onChange={formik.handleChange}
-              >
-                <option value="">Select Caste</option>
-                <option value="Caste 1">Caste 1</option>
-                <option value="Caste 2">Caste 2</option>
-                <option value="Caste 3">Caste 3</option>
-                <option value="Caste 4">Caste 4</option>
-                <option value="Caste 5">Caste 5</option>
-              </select>
+            <div className="flex flex-col">
+              <p className="capatilize font-semibold text-[13px] mb-1">Caste</p>
+              <div className="flex items-center">
+                {Caste.length > 0 ? (
+                  <select
+                    id="CasteId"
+                    name="CasteId"
+                    value={formik.values.CasteId}
+                    className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
+                    onChange={formik.handleChange}
+                  >
+                    <option value="">Select Caste</option>
+                    {Caste.map((entry) => (
+                      <option key={entry.FieldId} value={entry.FieldId}>
+                        {entry.FieldDetails}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <p className="flex-1 px-4 py-2 font-normal text-gray-500">
+                    No available entries
+                  </p>
+                )}
+                <Icon
+                  icon="flat-color-icons:plus"
+                  width="24"
+                  height="24"
+                  className="ml-1 cursor-pointer"
+                  onClick={() => {
+                    setModalOpen(true);
+                    setMMId(9);
+                  }}
+                />
+              </div>
             </div>
             <div className="py-1">
               <p className="mb-1 text-[13px] font-semibold">Blood Group</p>
@@ -910,6 +1125,11 @@ export default function AddEmployeePersonal() {
           </div>
         </div>
       </div>
+      <TwoFieldsModal
+              visible={isModalOpen}
+              onClick={() => setModalOpen(false)}
+              MasterID={MMId}
+            />
       <div className="flex justify-center gap-4">
         <button
           type="submit"
