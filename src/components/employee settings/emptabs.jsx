@@ -58,7 +58,7 @@ export default function EMPTabs() {
           <button
             className="flex text-[13px] bg-white text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white duration-200 font-semibold px-4 rounded-lg cursor-pointer whitespace-nowrap"
             onClick={() => {
-              navigate("/employee-master");
+              navigate("/h7b8n1y4");
             }}
           >
             Back
@@ -227,7 +227,7 @@ export default function EMPTabs() {
 
                 {/* Salary Structure Tab */}
                 <div className={openTab === 3 ? "block" : "hidden"}>
-                  <SalaryStructure ID={employeeId} name={name} />
+                  {/* <SalaryStructure ID={employeeId} name={name} /> */}
                 </div>
 
                 {/* Professional Profile Tab */}

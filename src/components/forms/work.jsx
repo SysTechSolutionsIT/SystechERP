@@ -252,7 +252,7 @@ const Work = ({ ID, name }) => {
     const fetchDesignations = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5500/designation-master/FnShowActiveData",
+          "http://localhost:5500/d9e7x2a1/FnShowActiveData",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -290,7 +290,7 @@ const Work = ({ ID, name }) => {
     const fetchShifts = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5500/shift-master/FnShowActiveData",
+          "http://localhost:5500/k8g2d4j9/FnShowActiveData",
           { headers: { Authorization: `Bearer ${token}` } }
         );
         const data = response.data;

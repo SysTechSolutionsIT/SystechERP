@@ -93,68 +93,68 @@ const Sidebar = () => {
   ];
 
   const menuLinks = [
-    { title: "Company Configuration", path: "/company-configurations" },
-    { title: "Company Master", path: "/company-masters" },
-    { title: "Financial Year Master", path: "/financial-masters" },
-    { title: "Bank Master", path: "/bank-master" },
-    { title: "Cost Center Master", path: "/costcenter-master" },
-    { title: "Department Master", path: "/department-master" },
-    { title: "Three Field Master", path: "/three-field-master" },
-    { title: "Two Field Master", path: "/two-field-master" },
-    { title: "User Roles", path: "/user-role-settings" },
-    { title: "Employee Master", path: "/employee-master" },
-    { title: "Employee Type Master", path: "/employee-type-master" },
-    { title: "Employee Grade Master", path: "/employee-grade-master" },
-    { title: "Designation Master", path: "/designation-master" },
-    { title: "KRA Master", path: "/kra-master" },
-    { title: "Job Responsibility Master", path: "/jobs-responsibility-master" },
+    { title: "Company Configuration", path: "/r3fz7k5b" },
+    { title: "Company Master", path: "/y5ts9c4z" },
+    { title: "Financial Year Master", path: "/q8wn1g6k" },
+    { title: "Bank Master", path: "/i2p8s6xq" },
+    { title: "Cost Center Master", path: "/e9u0b7h3" },
+    { title: "Department Master", path: "/m4c8n2p1" },
+    { title: "Three Field Master", path: "/f2q1r9z3" },
+    { title: "Two Field Master", path: "/a6o0w3x5" },
+    { title: "User Roles", path: "/n1m5z7t8" },
+    { title: "Employee Master", path: "/h7b8n1y4" },
+    { title: "Employee Type Master", path: "/t5p7e1i2" },
+    { title: "Employee Grade Master", path: "/u4y8i2x7" },
+    { title: "Designation Master", path: "/d9e7x2a1" },
+    { title: "KRA Master", path: "/b3i7w1y8" },
+    { title: "Job Responsibility Master", path: "/z6r4u2e9" },
     { title: "Employee Band Master", path: "/employee-band-master" },
-    { title: "Job Type Master", path: "/job-type-master" },
-    { title: "Shift Master", path: "/shift-master" },
-    { title: "Weekly Off Master", path: "/weeklyoff-master" },
-    { title: "Holiday Master", path: "/holiday-master" },
-    { title: "Attendance Device Master", path: "/attDevice-master" },
-    { title: "Earning Heads Master", path: "/earning-heads-master" },
-    { title: "Deduction Heads Master", path: "/deduction-heads-master" },
-    { title: "Employee Type Earning Master", path: "/employee-type-earning" },
+    { title: "Job Type Master", path: "/c7v2m8n5" },
+    { title: "Shift Master", path: "/k8g2d4j9" },
+    { title: "Weekly Off Master", path: "/x5r1c9j0" },
+    { title: "Holiday Master", path: "/s3f9n7v2" },
+    { title: "Attendance Device Master", path: "/p2l4o8n9" },
+    { title: "Earning Heads Master", path: "/i9u6l3b7" },
+    { title: "Deduction Heads Master", path: "/w2z8a6s3" },
+    { title: "Employee Type Earning Master", path: "/x8q5g2h1" },
     {
       title: "Employee Type Deduction Master",
-      path: "/employee-type-deduction",
+      path: "/u3v9y4z6",
     },
-    { title: "Professional Tax Setting", path: "/professional-tax-master" },
-    { title: "Advance Request", path: "/advance-request" },
-    { title: "Advance Approval", path: "/advance-approval" },
-    { title: "Advance Repayment", path: "/advance-repayment" },
-    { title: "Leave Type Master", path: "/leave-type-master" },
-    { title: "Leave Application", path: "/leave-application" },
-    { title: "Leave Approvals", path: "/leave-approval" },
-    { title: "Shift Roster", path: "/shift-roster" },
-    { title: "Manual Attendance Entry", path: "/manual-attendance-entry" },
+    { title: "Professional Tax Setting", path: "/h7x4p8o3" },
+    { title: "Advance Request", path: "/a0bdhs87t" },
+    { title: "Advance Approval", path: "/p7c9h3g2" },
+    { title: "Advance Repayment", path: "/q0f8x6m3" },
+    { title: "Leave Type Master", path: "/q1d9y3z6" },
+    { title: "Leave Application", path: "/a5d3g2p6" },
+    { title: "Leave Approvals", path: "/b8m4n9r1" },
+    { title: "Shift Roster", path: "/j5t9l4n2" },
+    { title: "Manual Attendance Entry", path: "/r7e2p6g1" },
     {
       title: "Manual Attendance Approval",
-      path: "/manual-attendance-approval",
+      path: "//z3x7y9b2",
     },
     {
       title: "Out Door Duty Attendance Entry",
-      path: "/outdoor-attendance-entry",
+      path: "/q8c2j4m6",
     },
     {
       title: "Out Door Duty Attendance Approval",
-      path: "/outdoor-attendance-approval",
+      path: "/s5e1p3g7",
     },
     {
       title: "Employee Gate Pass Entry",
-      path: "/attendance-master/empGatePassEntry",
+      path: "/e4d6j7r9",
     },
-    { title: "Employee Gate Pass Approval", path: "/gatepass-approval" },
+    { title: "Employee Gate Pass Approval", path: "/r9w7v3k1" },
     {
       title: "Daily Attendance Processing",
-      path: "/daily-attendance-processing",
+      path: "/f0t4r1n5",
     },
     { title: "Attendance Import", path: "/attendance-import" },
     {
       title: "Monthly Attendance Processing",
-      path: "/monthly-attendance-processing",
+      path: "/k1j7o9r5",
     },
     { title: "Daily Overtime Processing", path: "/daily-overtime-processing" },
     {
@@ -163,10 +163,10 @@ const Sidebar = () => {
     },
     { title: "Overtime Approvals", path: "/overtime-approvals" },
     { title: "Advance Management", path: "/advance-management" },
-    { title: "Earning-Deduction Imports", path: "/ED-imports" },
-    { title: "Salary Processing", path: "/salary-processing" },
+    { title: "Earning-Deduction Imports", path: "/l6t3z9d1" },
+    { title: "Salary Processing", path: "/o5v2w1t8" },
     { title: "Salary Corrections", path: "/salary-corrections" },
-    { title: "Branch Master", path: "/branch-master" },
+    { title: "Branch Master", path: "/l3r2o5v7" },
   ];
 
   useEffect(() => {
@@ -425,65 +425,65 @@ const Sidebar = () => {
                   {rights.includes(549) && (
                     <SubMenuEntry
                       title="Company Configuration"
-                      onClick={() => navigate("/company-configurations")}
+                      onClick={() => navigate("/r3fz7k5b")}
                     />
                   )}
                   {rights.includes(703) && (
                     <SubMenuEntry
                       title="Company Master"
-                      onClick={() => navigate("/company-masters")}
+                      onClick={() => navigate("/y5ts9c4z")}
                     />
                   )}
                   {rights.includes(986) && (
                     <SubMenuEntry
                       title="Branch Master"
-                      onClick={() => navigate("/branch-master")}
+                      onClick={() => navigate("/l3r2o5v7")}
                     />
                   )}
                   {rights.includes(872) && (
                     <SubMenuEntry
                       title="Financial Year Master"
-                      onClick={() => navigate("/financial-masters")}
+                      onClick={() => navigate("/q8wn1g6k")}
                     />
                   )}
                   {rights.includes(287) && (
                     <SubMenuEntry
                       title="Bank Master"
-                      onClick={() => navigate("/bank-master")}
+                      onClick={() => navigate("/i2p8s6xq")}
                     />
                   )}
                   {rights.includes(610) && (
                     <SubMenuEntry
                       title="Cost Center Master"
-                      onClick={() => navigate("/costcenter-master")}
+                      onClick={() => navigate("/e9u0b7h3")}
                     />
                   )}
                   {rights.includes(954) && (
                     <SubMenuEntry
                       title="Department Master"
-                      onClick={() => navigate("/department-master")}
+                      onClick={() => navigate("/m4c8n2p1")}
                     />
                   )}
                   {/* <SubMenuEntry
                       title="Destination Master"
-                      onClick={() => navigate("/destination-master")}
+                      onClick={() => navigate("/o7l5m1d9")}
                     /> */}
                   {rights.includes(736) && (
                     <SubMenuEntry
                       title="Three Field Master"
-                      onClick={() => navigate("/three-field-master")}
+                      onClick={() => navigate("/f2q1r9z3")}
                     />
                   )}
                   {rights.includes(624) && (
                     <SubMenuEntry
                       title="Two Field Master"
-                      onClick={() => navigate("/two-field-master")}
+                      onClick={() => navigate("/a6o0w3x5")}
                     />
                   )}
                   {rights.includes(777) && (
                     <SubMenuEntry
                       title="User Roles"
-                      onClick={() => navigate("/user-role-settings")}
+                      onClick={() => navigate("/n1m5z7t8")}
                     />
                   )}
                 </SubMenuGroup>
@@ -548,38 +548,38 @@ const Sidebar = () => {
                       {rights.includes(217) && (
                         <SubMenuEntry
                           title="Employee Master"
-                          onClick={() => navigate("/employee-master")}
+                          onClick={() => navigate("/h7b8n1y4")}
                         />
                       )}
                       {rights.includes(820) && (
                         <SubMenuEntry
                           title="Employee Type Master"
-                          onClick={() => navigate("/employee-type-master")}
+                          onClick={() => navigate("/t5p7e1i2")}
                         />
                       )}
                       {rights.includes(598) && (
                         <SubMenuEntry
                           title="Employee Grade Master"
-                          onClick={() => navigate("/employee-grade-master")}
+                          onClick={() => navigate("/u4y8i2x7")}
                         />
                       )}
                       {rights.includes(143) && (
                         <SubMenuEntry
                           title="Designation Master"
-                          onClick={() => navigate("/designation-master")}
+                          onClick={() => navigate("/d9e7x2a1")}
                         />
                       )}
                       {rights.includes(502) && (
                         <SubMenuEntry
                           title="KRA Master"
-                          onClick={() => navigate("/kra-master")}
+                          onClick={() => navigate("/b3i7w1y8")}
                         />
                       )}
                       {rights.includes(395) && (
                         <SubMenuEntry
                           title="Job Responsibility Master"
                           onClick={() =>
-                            navigate("/jobs-responsibility-master")
+                            navigate("/z6r4u2e9")
                           }
                         />
                       )}
@@ -606,31 +606,31 @@ const Sidebar = () => {
                       {rights.includes(875) && (
                         <SubMenuEntry
                           title="Job Type Master"
-                          onClick={() => navigate("/job-type-master")}
+                          onClick={() => navigate("/c7v2m8n5")}
                         />
                       )}
                       {rights.includes(752) && (
                         <SubMenuEntry
                           title="Shift Master"
-                          onClick={() => navigate("/shift-master")}
+                          onClick={() => navigate("/k8g2d4j9")}
                         />
                       )}
                       {rights.includes(201) && (
                         <SubMenuEntry
                           title="Weekly Off Master"
-                          onClick={() => navigate("/weeklyoff-master")}
+                          onClick={() => navigate("/x5r1c9j0")}
                         />
                       )}
                       {rights.includes(409) && (
                         <SubMenuEntry
                           title="Holiday Master"
-                          onClick={() => navigate("/holiday-master")}
+                          onClick={() => navigate("/s3f9n7v2")}
                         />
                       )}
                       {rights.includes(148) && (
                         <SubMenuEntry
                           title="Atten. Device Master"
-                          onClick={() => navigate("/attDevice-master")}
+                          onClick={() => navigate("/p2l4o8n9")}
                         />
                       )}
                     </SubMenuGroup>
@@ -656,49 +656,49 @@ const Sidebar = () => {
                       {rights.includes(269) && (
                         <SubMenuEntry
                           title="Earning Heads Master"
-                          onClick={() => navigate("/earning-heads-master")}
+                          onClick={() => navigate("/i9u6l3b7")}
                         />
                       )}
                       {rights.includes(370) && (
                         <SubMenuEntry
                           title="Deduction Heads Master"
-                          onClick={() => navigate("/deduction-heads-master")}
+                          onClick={() => navigate("/w2z8a6s3")}
                         />
                       )}
                       {rights.includes(548) && (
                         <SubMenuEntry
                           title="Employee Type Earning Master"
-                          onClick={() => navigate("/employee-type-earning")}
+                          onClick={() => navigate("/x8q5g2h1")}
                         />
                       )}
                       {rights.includes(753) && (
                         <SubMenuEntry
                           title="Employee Type Deduction Master"
-                          onClick={() => navigate("/employee-type-deduction")}
+                          onClick={() => navigate("/u3v9y4z6")}
                         />
                       )}
                       {rights.includes(654) && (
                         <SubMenuEntry
                           title="Professional Tax Setting"
-                          onClick={() => navigate("/professional-tax-master")}
+                          onClick={() => navigate("/h7x4p8o3")}
                         />
                       )}
                       {rights.includes(531) && (
                         <SubMenuEntry
                           title="Advance Request"
-                          onClick={() => navigate("/advance-request")}
+                          onClick={() => navigate("/a0bdhs87t")}
                         />
                       )}
                       {rights.includes(317) && (
                         <SubMenuEntry
                           title="Advance Approval"
-                          onClick={() => navigate("/advance-approval")}
+                          onClick={() => navigate("/p7c9h3g2")}
                         />
                       )}
                       {rights.includes(497) && (
                         <SubMenuEntry
                           title="Advance Repayment"
-                          onClick={() => navigate("/advance-repayment")}
+                          onClick={() => navigate("/q0f8x6m3")}
                         />
                       )}
                     </SubMenuGroup>
@@ -720,25 +720,25 @@ const Sidebar = () => {
                       {rights.includes(460) && (
                         <SubMenuEntry
                           title="Leave Type Master"
-                          onClick={() => navigate("/leave-type-master")}
+                          onClick={() => navigate("/q1d9y3z6")}
                         />
                       )}
                       {/* {rights.includes(706) && (
                               <SubMenuEntry
                                   title="Leave Balance Upload"
-                                  onClick={() => navigate("/leave-balance-master")}
+                                  onClick={() => navigate("/g9f3c2v1")}
                               />
                           )} */}
                       {rights.includes(153) && (
                         <SubMenuEntry
                           title="Leave Application"
-                          onClick={() => navigate("/leave-application")}
+                          onClick={() => navigate("/a5d3g2p6")}
                         />
                       )}
                       {rights.includes(418) && (
                         <SubMenuEntry
                           title="Leave Approvals"
-                          onClick={() => navigate("/leave-approval")}
+                          onClick={() => navigate("/b8m4n9r1")}
                         />
                       )}
                     </SubMenuGroup>
@@ -768,34 +768,34 @@ const Sidebar = () => {
                       {rights.includes(273) && (
                         <SubMenuEntry
                           title="Shift Roster"
-                          onClick={() => navigate("/shift-roster")}
+                          onClick={() => navigate("/j5t9l4n2")}
                         />
                       )}
                       {rights.includes(159) && (
                         <SubMenuEntry
                           title="Manual Attendance Entry"
-                          onClick={() => navigate("/manual-attendance-entry")}
+                          onClick={() => navigate("/r7e2p6g1")}
                         />
                       )}
                       {rights.includes(523) && (
                         <SubMenuEntry
                           title="Manual Attendance Approval"
                           onClick={() =>
-                            navigate("/manual-attendance-approval")
+                            navigate("//z3x7y9b2")
                           }
                         />
                       )}
                       {rights.includes(926) && (
                         <SubMenuEntry
                           title="Out Door Duty Attendance Entry"
-                          onClick={() => navigate("/outdoor-attendance-entry")}
+                          onClick={() => navigate("/q8c2j4m6")}
                         />
                       )}
                       {rights.includes(832) && (
                         <SubMenuEntry
                           title="Out Door Duty Attendance Approval"
                           onClick={() =>
-                            navigate("/outdoor-attendance-approval")
+                            navigate("/s5e1p3g7")
                           }
                         />
                       )}
@@ -803,14 +803,14 @@ const Sidebar = () => {
                         <SubMenuEntry
                           title="Employee Gate Pass Entry"
                           onClick={() =>
-                            navigate("/attendance-master/empGatePassEntry")
+                            navigate("/e4d6j7r9")
                           }
                         />
                       )}
                       {rights.includes(619) && (
                         <SubMenuEntry
                           title="Employee Gate Pass Approval"
-                          onClick={() => navigate("/gatepass-approval")}
+                          onClick={() => navigate("/r9w7v3k1")}
                         />
                       )}
                       {rights.includes(625) && (
@@ -820,7 +820,7 @@ const Sidebar = () => {
                         <SubMenuEntry
                           title="Daily Attendance Processing"
                           onClick={() =>
-                            navigate("/daily-attendance-processing")
+                            navigate("/f0t4r1n5")
                           }
                         />
                       )}
@@ -832,7 +832,7 @@ const Sidebar = () => {
                           title="Monthly Attendance 
                           Processing"
                           onClick={() =>
-                            navigate("/monthly-attendance-processing")
+                            navigate("/k1j7o9r5")
                           }
                         />
                       )}
@@ -871,13 +871,13 @@ const Sidebar = () => {
                       {rights.includes(407) && (
                         <SubMenuEntry
                           title="Earning-Deduction Imports"
-                          onClick={() => navigate("/ED-imports")}
+                          onClick={() => navigate("/l6t3z9d1")}
                         />
                       )}
                       {rights.includes(603) && (
                         <SubMenuEntry
                           title="Salary Processing"
-                          onClick={() => navigate("/salary-processing")}
+                          onClick={() => navigate("/o5v2w1t8")}
                         />
                       )}
                       {rights.includes(141) && (

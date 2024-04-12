@@ -19,7 +19,7 @@ function LMonthlyAtt({ LID }) {
     const fetchLeaveApplication = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5500/leave-application/FnShowParticularData",
+          "http://localhost:5500/a5d3g2p6/FnShowParticularData",
           {
             params: { LeaveApplicationId: LID },
             headers: { Authorization: `Bearer ${token}` },

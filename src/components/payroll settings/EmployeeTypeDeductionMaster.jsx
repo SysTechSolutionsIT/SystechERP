@@ -135,7 +135,7 @@ const [columnVisibility, setColumnVisibility] = useState({
             }
         }
         fetchCaderwiseHeads()
-      },[token])
+      },[token, isModalOpen])
 
       const deleteEmployeeTypeDeduction = async(CaderwiseId, DeductionHeadId) =>{
         const confirmDelete = window.confirm('Are you sure you want to delete this Deduction Head?')

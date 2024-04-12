@@ -64,7 +64,7 @@ const BankModal = ({ visible, onClick }) => {
       AuthorizedPerson3: "",
       AuthorizedPersonRole3: "",
     },
-    onSubmit: (values) => {
+    onSubmit: (values, {resetForm}) => {
       const updatedData = {
         BankName: values.BankName,
         BranchName: values.BranchName,
@@ -89,6 +89,8 @@ const BankModal = ({ visible, onClick }) => {
       };
       console.log(updatedData);
       addBank(updatedData);
+      resetForm()
+      onClick()
     },
   });
 
@@ -107,7 +109,6 @@ const BankModal = ({ visible, onClick }) => {
       console.log("Response:", response);
       console.log("Data:", response.data);
       alert("Bank added successfully");
-      window.location.reload();
       onClick();
     } catch (error) {
       console.error("Error:", error.message);
@@ -135,7 +136,7 @@ const BankModal = ({ visible, onClick }) => {
       }
     };
     fetchAccountTypes();
-  }, [token]);
+  }, [token, isModalOpen]);
 
   const [currencies, setCurrencies] = useState([]);
   useEffect(() => {

@@ -204,7 +204,7 @@ const AdvanceRepayment = () => {
   const fetchRequestData = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5500/advance-request/FnShowRepaymentData",
+        "http://localhost:5500/a0bdhs87t/FnShowRepaymentData",
         {
           headers: {
             Authorization: `Bearer ${token}`,

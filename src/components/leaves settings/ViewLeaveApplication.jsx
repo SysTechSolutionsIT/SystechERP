@@ -139,7 +139,7 @@ const ViewLeaveApplication = ({ visible, onClick, edit, ID }) => {
 
   const updateLeaveApplication = async (data) =>{
     try{
-      const response = await axios.post('http://localhost:5500/leave-application/FnAddUpdateDeleteRecord', data, {
+      const response = await axios.post('http://localhost:5500/a5d3g2p6/FnAddUpdateDeleteRecord', data, {
         params:{ LeaveApplicationId: ID },
         headers:{ Authorization: `Bearer ${token}`}
       })
@@ -152,7 +152,7 @@ const ViewLeaveApplication = ({ visible, onClick, edit, ID }) => {
   useEffect(() =>{
     const fetchLeaveApplication = async() =>{
         try {
-            const response = await axios.get('http://localhost:5500/leave-application/FnShowParticularData',
+            const response = await axios.get('http://localhost:5500/a5d3g2p6/FnShowParticularData',
             {
                 params: { LeaveApplicationId: ID},
                 headers: { Authorization: `Bearer ${token}`}

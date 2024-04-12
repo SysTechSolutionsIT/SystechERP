@@ -153,7 +153,7 @@ const LeaveApproval = () => {
     const fetchLeaveApps = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5500/leave-application/FnShowActiveData",
+          "http://localhost:5500/a5d3g2p6/FnShowActiveData",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -219,7 +219,7 @@ const LeaveApproval = () => {
     if (!confirmDelete) return;
     try {
       const response = await axios.post(
-        "http://localhost:5500/leave-application/FnAddUpdateDeleteRecord",
+        "http://localhost:5500/a5d3g2p6/FnAddUpdateDeleteRecord",
         {
           LeaveApplicationId: DeleteId,
           IUFlag: "D",

@@ -268,57 +268,6 @@ router.get("/get-upload", authToken, async (req, res) => {
   }
 });
 
-const generateEmployeeId = async (req, res, next) => {
-  try {
-    if (req.body.IUFlag === 'I') {
-      // Fetch the company configuration to check if empID column is 'Yes' or 'No'
-      const config = await CompanyConfig.findAll({
-        attributes: {
-          exclude: ["IUFlag"],
-        },
-        order: [["CCID", "DESC"]],
-      });
-
-      // Check if config array is empty or not
-      if (!config || config.length === 0) {
-        throw new Error("Company configuration not found");
-      }
-
-      // Check if empID column is 'Yes' or 'No'
-      const isEmpIDEnabled = config[0].empID === "Yes";
-
-      if (isEmpIDEnabled) {
-        // Fetch the EmployeeTypeId from the request body
-        const employeeTypeId = req.query.EmployeeTypeId;
-
-        // Fetch the corresponding employee type to get the ShortName
-        const employeeType = await MEmployeeType.findOne({
-          where: {
-            EmployeeTypeId: employeeTypeId
-          }
-        });
-
-        if (!employeeType) {
-          throw new Error("Employee type not found");
-        }
-
-        // Get the prefix from ShortName
-        const prefix = employeeType.ShortName;
-
-        // Find the next available EmployeeId
-        let employeeId = await findNextAvailableEmployeeId(prefix);
-
-        // Update req.body with the generated EmployeeId
-        req.body.EmployeeId = employeeId;
-      }
-    }
-    
-    next();
-  } catch (error) {
-    console.error("Error generating EmployeeId:", error);
-    res.status(500).send("Internal Server Error");
-  }
-};
 
 const switchEmployeeId = async (req, res, next) => {
   try {
@@ -368,6 +317,59 @@ const switchEmployeeId = async (req, res, next) => {
     // res.status(500).send("Internal Server Error");
   }
 };
+
+const generateEmployeeId = async (req, res, next) => {
+  try {
+    if (req.body.IUFlag === 'I') {
+      // Fetch the company configuration to check if empID column is 'Yes' or 'No'
+      const emptypeid = await MEmployeeType.findOne({
+        attributes: {
+          exclude: ["IUFlag"],
+        },
+        order: [["EmployeeTypeId", "DESC"]],
+      });
+
+      // Check if emptypeid array is empty or not
+      if (!emptypeid || emptypeid.length === 0) {
+        throw new Error("Company configuration not found");
+      }
+
+      // Check if empID column is 'Yes' or 'No'
+      const isEmpIDEnabled = emptypeid.PrefixEnabled === "Yes";
+
+      if (isEmpIDEnabled) {
+        // Fetch the EmployeeTypeId from the request body
+        const employeeTypeId = req.query.EmployeeTypeId;
+
+        // Fetch the corresponding employee type to get the ShortName
+        const employeeType = await MEmployeeType.findOne({
+          where: {
+            EmployeeTypeId: employeeTypeId
+          }
+        });
+
+        if (!employeeType) {
+          throw new Error("Employee type not found");
+        }
+
+        // Get the prefix from ShortName
+        const prefix = employeeType.ShortName;
+
+        // Find the next available EmployeeId
+        let employeeId = await findNextAvailableEmployeeId(prefix);
+
+        // Update req.body with the generated EmployeeId
+        req.body.EmployeeId = employeeId;
+      }
+    }
+    
+    next();
+  } catch (error) {
+    console.error("Error generating EmployeeId:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
 
 // Function to find the next available EmployeeId with the given prefix
 const findNextAvailableEmployeeId = async (prefix) => {
@@ -465,20 +467,20 @@ async function updateEmployeeIdInTables(oldEmployeeId, newEmployeeId, newEmploye
     // Generate new employee ID based on the new Employee Type Id
     try {
       // Fetch the company configuration to check if empID column is 'Yes' or 'No'
-      const config = await CompanyConfig.findAll({
+      const emptypeid = await MEmployeeType.findOne({
         attributes: {
           exclude: ["IUFlag"],
         },
-        order: [["CCID", "DESC"]],
+        order: [["EmployeeTypeId", "DESC"]],
       });
 
-      // Check if config array is empty or not
-      if (!config || config.length === 0) {
+      // Check if emptypeid array is empty or not
+      if (!emptypeid || emptypeid.length === 0) {
         throw new Error("Company configuration not found");
       }
 
       // Check if empID column is 'Yes' or 'No'
-      const isEmpIDEnabled = config[0].empID === "Yes";
+      const isEmpIDEnabled = emptypeid.PrefixEnabled === "Yes";
 
       if (isEmpIDEnabled) {
         // Fetch the EmployeeTypeId from the request body

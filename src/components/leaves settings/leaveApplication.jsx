@@ -151,7 +151,7 @@ const LeaveApp = () => {
 
     const fetchLeaveApps = async () =>{
       try {
-        const response = await axios.get('http://localhost:5500/leave-application/FnShowParticularEmployeeData', 
+        const response = await axios.get('http://localhost:5500/a5d3g2p6/FnShowParticularEmployeeData', 
         {
           params: {
             EmployeeId: empid
@@ -213,7 +213,7 @@ const LeaveApp = () => {
     const confirmDelete = window.confirm('Are you sure you want to delete this Leave Application')
     if(!confirmDelete) return
     try {
-      const response = await axios.post('http://localhost:5500/leave-application/FnAddUpdateDeleteRecord',
+      const response = await axios.post('http://localhost:5500/a5d3g2p6/FnAddUpdateDeleteRecord',
         { 
           LeaveApplicationId: DeleteId,
           IUFlag: 'D'

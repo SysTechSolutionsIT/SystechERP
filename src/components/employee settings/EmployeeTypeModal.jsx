@@ -10,11 +10,13 @@ const EmployeeTypeModal = ({ visible, onClick }) => {
   const { token } = useAuth();
   const [isModalOpen, setModalOpen] = useState(false); //Add Modal
   const [MMId, setMMId] = useState();
+  const [ShortNameEnabled, setShortNameEnabled] = useState()
 
   const formik = useFormik({
     initialValues: {
       EmployeeType: "",
       EmployeeTypeGroup: "",
+      Enabled:"",
       ShortName: "",
       Remark: "",
       IUFlag: "I",
@@ -22,7 +24,8 @@ const EmployeeTypeModal = ({ visible, onClick }) => {
     onSubmit: (values, { resetForm }) => {
       console.log(values);
       addEmpType();
-      // resetForm()
+      resetForm()
+      onClick()
     },
   });
 
@@ -59,7 +62,7 @@ const EmployeeTypeModal = ({ visible, onClick }) => {
       }
     };
     fetchEmpTypeData();
-  }, [token]);
+  }, [token, isModalOpen]);
 
   if (!visible) return null;
   return (
@@ -79,17 +82,6 @@ const EmployeeTypeModal = ({ visible, onClick }) => {
           </div>
           <div className="py-4">
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-[13px] font-semibold">Employee Type ID</p>
-                <input
-                  id="ID"
-                  type="number"
-                  placeholder="Enter Employee Type ID"
-                  disabled={true}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                />
-              </div>
               <div>
                 <p className="text-[13px] font-semibold">Employee Type</p>
                 <input
@@ -138,15 +130,50 @@ const EmployeeTypeModal = ({ visible, onClick }) => {
                   MasterID={MMId}
                 />
               </div>
+              <div className="flex flex-col">
+                <p className="capatilize font-semibold text-[13px] mb-1">
+                  Is Prefix Enabled
+                </p>
+                  <div className="flex">
+                    <label className="flex items-center text-[13px]">
+                      <input
+                        type="radio"
+                        name="PrefixEnabled"
+                        value="Yes"
+                        className="mr-2"
+                        checked={formik.values.PrefixEnabled === "Yes"}
+                        onChange={(e) => {
+                          formik.handleChange(e); // Handle formik change
+                          setShortNameEnabled(true); // Update shortNameEnabled state
+                        }}
+                      />
+                      Yes
+                    </label>
+                    <label className="flex items-center text-[13px]">
+                      <input
+                        type="radio"
+                        name="PrefixEnabled"
+                        value="No"
+                        className="mr-2 ml-2"
+                        checked={formik.values.PrefixEnabled === "No"}
+                        onChange={(e) => {
+                          formik.handleChange(e); // Handle formik change
+                          setShortNameEnabled(false); // Update shortNameEnabled state
+                        }}
+                      />
+                      No
+                    </label>
+                  </div>
+                </div>
               <div>
                 <p className="text-[13px] font-semibold">Prefix</p>
                 <input
                   id="ShortName"
                   type="text"
-                  placeholder="Enter Short Name"
                   value={formik.values.ShortName}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  className={`w-full px-4 py-2 font-normal  focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
+                  disabled={!ShortNameEnabled}
                 />
               </div>
               <div>

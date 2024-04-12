@@ -146,7 +146,7 @@ const LeaveModal1 = ({ visible, onClick }) => {
 
   const addLeaveApplication = async (data) =>{
     try{
-      const response = await axios.post('http://localhost:5500/leave-application/FnAddUpdateDeleteRecord', data, {
+      const response = await axios.post('http://localhost:5500/a5d3g2p6/FnAddUpdateDeleteRecord', data, {
         headers:{
           Authorization: `Bearer ${token}`
         }

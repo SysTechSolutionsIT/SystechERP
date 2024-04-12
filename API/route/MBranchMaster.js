@@ -47,7 +47,7 @@ const MBranch = sequelize.define(
       primaryKey: true,
     },
     BranchName: {
-      type: DataTypes.STRING(5),
+      type: DataTypes.STRING(50),
       allowNull: false,
     },
     BranchShortName: {
@@ -183,7 +183,7 @@ router.post(
         // "Soft-delete" operation
         const result = await MBranch.update(
           { AcFlag: "N" },
-          { where: { BranchId: BranchId } }
+          { where: { BranchId: Branch.BranchId } }
         );
 
         res.json({

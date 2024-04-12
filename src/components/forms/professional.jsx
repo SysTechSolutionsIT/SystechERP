@@ -293,7 +293,7 @@ const Professional = ({ ID, name }) => {
             </p>
             <input
               id="ID"
-              type="number"
+              type="text"
               value={ID}
               className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg `}
               onChange={formik.handleChange}

@@ -21,9 +21,11 @@ const EmployeeTypeDeductionModal = ({ visible, onClick }) => {
           EmployeeTypeGroup: "",
           Remark: "",
           },
-          onSubmit: (values) =>{
+          onSubmit: (values, {resetForm}) =>{
               console.log(selectedHeads)
               addCaderwiseDeduction(selectedHeads)
+              resetForm()
+              onClick()
           }
       })
   

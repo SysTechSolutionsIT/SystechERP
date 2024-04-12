@@ -87,18 +87,18 @@ app.use("/job-type", MJobType);
 app.use("/cost-center", MCostCenter);
 app.use("/employee-type", MEmployeeType);
 app.use("/employee-grade", MEmployeeGrade);
-app.use("/designation-master", MDesignation);
+app.use("/d9e7x2a1", MDesignation);
 app.use("/KRA-master", MKRA);
 app.use("/job-responsibility", MJobResponsibility);
-app.use("/shift-master", MShift);
+app.use("/k8g2d4j9", MShift);
 app.use("/leave-type", MLeaveType);
-app.use("/leave-application", TLeaves);
+app.use("/a5d3g2p6", TLeaves);
 app.use("/weekly-off", MWeeklyOff);
 app.use("/earning-heads", EarningHeadsMaster);
-app.use("/holiday-master", MHoliday);
+app.use("/s3f9n7v2", MHoliday);
 app.use("/deduction-heads", DeductionHeadsMaster);
 app.use("/professional-tax", ProfessionalTaxMaster);
-app.use("/advance-request", AdvanceRequest);
+app.use("/a0bdhs87t", AdvanceRequest);
 // app.use("/attendance-master", AttendanceMaster);
 // // app.use("/employeeid", EmployeeId);
 // app.use("/ed-imports", EDImports);
@@ -116,7 +116,7 @@ app.use("/master-names", MMasterName);
 app.use("/advance-installments", AdvanceInstallments);
 app.use("/create-user-roles", CreateUserRoles);
 app.use("/MLAttendance", MLAttendance);
-app.use("/branch-master", BranchMaster);
+app.use("/l3r2o5v7", BranchMaster);
 
 // app.use('file-upload', HandleImage)
 

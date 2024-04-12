@@ -157,7 +157,29 @@ const EmployeeMaster = () => {
   useEffect(() => {
     fetchEmpWork();
     fetchEmpData();
-  }, [token]);
+  }, [token, isModalOpen]);
+
+  const [employeeTypeGroup, setEmployeeTypeGroup] = useState([]);
+  useEffect(() => {
+    const fetchEmpTypeData = async () => {
+      const CID = 1;
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/two-field/FnShowCategoricalData",
+          {
+            params: { MasterNameId: CID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        console.log("empTypeData", data);
+        setEmployeeTypeGroup(data);
+      } catch (error) {
+        console.error("Error fetching emptype:", error);
+      }
+    };
+    fetchEmpTypeData();
+  }, [token, isModalOpen]);
 
   const [filteredData, setFilteredData] = useState([]);
 
@@ -578,7 +600,7 @@ const EmployeeMaster = () => {
                           height="20"
                           className="cursor-pointer"
                           onClick={() =>
-                            navigate(`/edit-employee/${result.EmployeeId}`)
+                            navigate(`/v6w2s4h8/${result.EmployeeId}`)
                           }
                         />
                         <Icon
@@ -595,22 +617,25 @@ const EmployeeMaster = () => {
                       {result.EmployeeId}
                     </td>
                     {selectedColumns.map((columnName) =>
-                      columnVisibility[columnName] ? (
-                        <td
-                          key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                        >
-                          {result[columnName] === "true"
-                            ? "Yes"
-                            : result[columnName] === "false"
-                            ? "No"
-                            : result[columnName] === null
-                            ? "N/A"
-                            : result[columnName]}
-                        </td>
-                      ) : (
-                        <td key={columnName} className="hidden"></td>
-                      )
+                    columnVisibility[columnName] ? (
+                      <td
+                        key={columnName}
+                        className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                      >
+                        {columnName === "EmployeeTypeGroupId" ? (
+                          // Check if columnName is EmployeeTypeGroupId
+                          employeeTypeGroup.find((item) => item.FieldId === result[columnName])?.FieldDetails || "Unknown FieldName"
+                        ) : (
+                          // If not EmployeeTypeGroupId, handle boolean and null values
+                          result[columnName] === true ? "Yes" :
+                          result[columnName] === false ? "No" :
+                          result[columnName] === null ? "N/A" :
+                          result[columnName]
+                        )}
+                      </td>
+                    ) : (
+                      <td key={columnName} className="hidden"></td>
+                    )
                     )}
                   </tr>
                 ))
@@ -638,7 +663,7 @@ const EmployeeMaster = () => {
                           height="20"
                           className="cursor-pointer"
                           onClick={() =>
-                            navigate(`/edit-employee/${result.EmployeeId}`)
+                            navigate(`/v6w2s4h8/${result.EmployeeId}`)
                           }
                         />
                         <Icon
@@ -655,22 +680,25 @@ const EmployeeMaster = () => {
                       {result.EmployeeId}
                     </td>
                     {selectedColumns.map((columnName) =>
-                      columnVisibility[columnName] ? (
-                        <td
-                          key={columnName}
-                          className={`px-4 border-2 whitespace-normal text-left text-[11px]`}
-                        >
-                          {result[columnName] === "true"
-                            ? "Yes"
-                            : result[columnName] === "false"
-                            ? "No"
-                            : result[columnName] === null
-                            ? "N/A"
-                            : result[columnName]}
-                        </td>
-                      ) : (
-                        <td key={columnName} className="hidden"></td>
-                      )
+                    columnVisibility[columnName] ? (
+                      <td
+                        key={columnName}
+                        className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                      >
+                        {columnName === "EmployeeTypeGroupId" ? (
+                          // Check if columnName is EmployeeTypeGroupId
+                          employeeTypeGroup.find((item) => item.FieldId === result[columnName])?.FieldDetails || "Unknown FieldName"
+                        ) : (
+                          // If not EmployeeTypeGroupId, handle boolean and null values
+                          result[columnName] === true ? "Yes" :
+                          result[columnName] === false ? "No" :
+                          result[columnName] === null ? "N/A" :
+                          result[columnName]
+                        )}
+                      </td>
+                    ) : (
+                      <td key={columnName} className="hidden"></td>
+                    )
                     )}
                   </tr>
                 ))

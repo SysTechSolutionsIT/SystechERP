@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import { Icon } from "@iconify/react";
 import { useAuth } from "../Login";
 
 const UserRights = ({ ID }) => {
@@ -40,6 +41,29 @@ const UserRights = ({ ID }) => {
       console.error("Error", error);
     }
   };
+
+  const [ preDefinedRoles, setPreDefinedRoles ] = useState([])
+  useEffect(() => {
+    const fetchUserRoles = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/create-user-roles/FnShowActiveData",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log("Response Object", response);
+        const data = response.data;
+        console.log(data);
+        setPreDefinedRoles(data);
+      } catch (error) {
+        console.log("Error while fetching course data: ", error.message);
+      }
+    };
+    fetchUserRoles();
+  }, [token]);
 
   useEffect(() => {
     const allLabels = [...preDefinedLabels, ...checkedLabels];
@@ -93,45 +117,83 @@ const UserRights = ({ ID }) => {
       handleItemChange(name, checked);
     };
 
-    const handleChange = (itemName, isChecked) => {
-      handleItemChange(itemName, isChecked);
-    };
-
-    return (
-      <div className="">
-        <div>
-          <label className="font-bold text-[16px] flex items-center whitespace-nowrap">
-            <input
-              type="checkbox"
-              className="h-5 w-5 mr-2"
-              checked={checkedLabels.includes(title)}
-              onChange={handleHeadingChange}
-            />
-            {title}
-          </label>
-          <hr className="border-t-2 mt-1 border-black font-bold" />
-        </div>
-        <div className="mt-2">
-          <ul>
-            {items.map((item) => (
-              <li key={item.name}>
-                <label className="text-[14px] flex items-center mt-1 whitespace-nowrap">
-                  <input
-                    type="checkbox"
-                    className="h-4 w-4 mr-2"
-                    name={item.name}
-                    checked={checkedLabels.includes(item.name)}
-                    onChange={(e) => handleChange(item.name, e.target.checked)}
-                  />
-                  {item.label}
-                </label>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    );
+    
+    const clearCheckedItems = () => {
+      // Uncheck all items
+      setItemsChecked((prevItems) => {
+          const updatedItems = {};
+          for (const itemName in prevItems) {
+              updatedItems[itemName] = false;
+              handleItemChange(itemName, false);
+          }
+          return updatedItems;
+      });
   };
+
+  const handleHeadingClick = () => {
+    if (!headingChecked) {
+        // If the title is unchecked, set all items to checked
+        setHeadingChecked(true);
+        const updatedItems = {};
+        items.forEach((item) => {
+            updatedItems[item.name] = true;
+            handleItemChange(item.name, true);
+        });
+        setItemsChecked(updatedItems);
+    } else {
+        // If the title is checked, uncheck all items
+        setHeadingChecked(false);
+        const updatedItems = {};
+        items.forEach((item) => {
+            updatedItems[item.name] = false;
+            handleItemChange(item.name, false);
+        });
+        setItemsChecked(updatedItems);
+    }
+};
+
+// Function to handle item checkbox change
+const handleChange = (itemName, isChecked) => {
+handleItemChange(itemName, isChecked);
+setItemsChecked((prevItems) => {
+    const updatedItems = { ...prevItems, [itemName]: isChecked };
+    setHeadingChecked(Object.values(updatedItems).every((item) => item));
+    return updatedItems;
+});
+};
+
+
+return (
+  <div className="">
+      <div>
+          <label className="font-bold text-[16px] flex items-center whitespace-nowrap">
+          <Icon icon="carbon:checkbox-checked" className = 'cursor-pointer hover:shadow-lg duration-300 mr-2' width="24" height="24"  style={{color: '#1ec247'}} onClick={handleHeadingClick} />
+              {title}
+              <Icon icon="fluent-emoji-high-contrast:cross-mark-button" className = 'cursor-pointer hover:shadow-lg duration-300 ml-2' width="22" height="22"  style={{color: '#e63333'}} onClick={clearCheckedItems} />                </label>
+          <hr className="border-t-2 mt-1 border-black font-bold" />
+      </div>
+      <div className="mt-2 ml-2">
+          <ul>
+              {items.map((item) => (
+                  <li key={item.name}>
+                      <label className="text-[14px] flex items-center mt-1 whitespace-nowrap">
+                          <input
+                              type="checkbox"
+                              className="h-4 w-4 mr-2"
+                              name={item.name}
+                              checked={checkedLabels.includes(item.name)}
+                              onChange={(e) => handleChange(item.name, e.target.checked)}
+                          />
+                          {item.label}
+                      </label>
+                  </li>
+              ))}
+          </ul>
+      </div>
+  </div>
+);
+};
+
 
   const addAccessRights = async () => {
     try {
@@ -271,6 +333,17 @@ const UserRights = ({ ID }) => {
 
   return (
     <>
+    {/* <div className="mb-4">
+            <select
+              className={`w-[30%] px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+              onChange={(e) => handleRoleSelect(e.target.value)}
+            >
+              <option value="">Select Role</option>
+              {preDefinedRoles.map((item, index) => (
+                <option key={index} value={item.RoleName}>{item.RoleName}</option>
+              ))}
+            </select>
+        </div> */}
       <div className="grid grid-cols-4 gap-5">
         {menus.map((menu, index) => (
           <div key={index}>

@@ -47,7 +47,7 @@ const AddShift = ({ visible, onClick }) => {
       console.log(formData);
       try {
         const response = await axios.post(
-          "http://localhost:5500/shift-master/FnAddUpdateDeleteRecord",
+          "http://localhost:5500/k8g2d4j9/FnAddUpdateDeleteRecord",
           formData,
           {
             headers: {

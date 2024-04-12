@@ -118,7 +118,7 @@ const VECost = ({ visible, onClick, edit, ID }) => {
                   id="CostCenterId"
                   type="number"
                   value={ID}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                  className={`w-full px-4 bg-white py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   disabled={true}
                 />
               </div>
@@ -136,9 +136,12 @@ const VECost = ({ visible, onClick, edit, ID }) => {
                 />
               </div>
               <div>
-                <p className="capatilize font-semibold  text-[13px]">Remarks</p>
-                <textbox
+                <p className="capatilize font-semibold  text-[13px]">
+                  Remarks
+                </p>
+                <input
                   id="Remark"
+                  type="text"
                   value={formik.values.Remark}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}

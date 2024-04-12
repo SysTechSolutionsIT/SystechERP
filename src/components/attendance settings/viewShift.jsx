@@ -49,7 +49,7 @@ const ViewShift = ({ visible, onClick, edit, ID }) => {
       };
       console.log(formData);
       axios
-        .post(`http://localhost:5500/shift-master/FnAddUpdateDeleteRecord`, formData, {
+        .post(`http://localhost:5500/k8g2d4j9/FnAddUpdateDeleteRecord`, formData, {
           params: { ShiftId: ID },
           headers: { Authorization: `Bearer ${token}`},
         })
@@ -74,7 +74,7 @@ const ViewShift = ({ visible, onClick, edit, ID }) => {
   const fetchShiftData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5500/shift-master/FnShowParticularData`,
+        `http://localhost:5500/k8g2d4j9/FnShowParticularData`,
         {
           params: { ShiftId: ID },
           headers: { Authorization: `Bearer ${token}` },

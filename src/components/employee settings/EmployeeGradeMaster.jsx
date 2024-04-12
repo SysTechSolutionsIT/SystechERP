@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useAuth } from "../Login";
 import EmployeeGradeModal from "./EmployeeGradeModal";
 import ViewEmployeeGrade from "./ViewEmployeeGrade";
+import NoDataNotice from "../NoDataNotice";
 
 const EmployeeGradeMaster = () => {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -269,6 +270,11 @@ const EmployeeGradeMaster = () => {
         visible={isModalOpen}
         onClick={() => setModalOpen(false)}
       />
+      {EmployeeGradeData.length === 0 ? (
+        <div className="flex justify-center items-center">
+          <NoDataNotice Text="No Grade Data Yet" visible={isModalOpen} />
+        </div>
+      ) : (
       <div className="grid gap-4 justify-between">
         <div className="my-1 rounded-2xl bg-white p-2 pr-8">
           <table className="min-w-full text-center rounded-lg  whitespace-normal">
@@ -440,6 +446,7 @@ const EmployeeGradeMaster = () => {
           </table>
         </div>
       </div>
+      )}
       <ViewEmployeeGrade
         visible={veEGrade}
         onClick={() => setVeEGrade(false)}

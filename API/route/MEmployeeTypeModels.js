@@ -22,6 +22,7 @@ const sequelize = new Sequelize(
     EmployeeTypeId: { type: DataTypes.INTEGER(3),autoIncrement:true, allowNull: false, primaryKey: true },
     EmployeeType: { type: DataTypes.STRING(50), allowNull: false },
     EmployeeTypeGroup: { type: DataTypes.STRING(50), allowNull: false },
+    PrefixEnabled: { type: DataTypes.STRING(50), allowNull: false },
     ShortName: { type: DataTypes.STRING(1) },
     Remark: { type: DataTypes.STRING(500) },
     AcFlag: { type: DataTypes.STRING(1), defaultValue: 'Y' },

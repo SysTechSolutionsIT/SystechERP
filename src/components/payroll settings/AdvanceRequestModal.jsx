@@ -61,7 +61,7 @@ const AdvanceRequestModal = ({ visible, onClick }) => {
   const addReq = async (values) => {
     try {
       const response = await axios.post(
-        "http://localhost:5500/advance-request/FnAddUpdateDeleteRecord",
+        "http://localhost:5500/a0bdhs87t/FnAddUpdateDeleteRecord",
         values,
         {
           headers: {

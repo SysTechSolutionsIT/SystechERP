@@ -27,7 +27,7 @@ const DesignationModal = ({ visible, onClick }) => {
   const addDesignation = async (values) => {
     try {
       const response = await axios.post(
-        "http://localhost:5500/designation-master/FnAddUpdateDeleteRecord",
+        "http://localhost:5500/d9e7x2a1/FnAddUpdateDeleteRecord",
         values,
         {
           headers: {
@@ -45,7 +45,7 @@ const DesignationModal = ({ visible, onClick }) => {
     const fetchDesignations = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5500/designation-master/FnShowActiveData",
+          "http://localhost:5500/d9e7x2a1/FnShowActiveData",
           {
             headers: { Authorization: `Bearer ${token}` },
           }

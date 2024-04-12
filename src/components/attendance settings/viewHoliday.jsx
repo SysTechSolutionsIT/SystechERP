@@ -36,7 +36,7 @@ const ViewHoliday = ({ visible, onClick, edit, ID }) => {
       console.log(formData);
       axios
         .post(
-          `http://localhost:5500/holiday-master/FnAddUpdateDeleteRecord`,
+          `http://localhost:5500/s3f9n7v2/FnAddUpdateDeleteRecord`,
           formData,
           {
             params: { HolidayId: ID },
@@ -66,7 +66,7 @@ const ViewHoliday = ({ visible, onClick, edit, ID }) => {
   const fetchHolidayData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5500/holiday-master/FnShowParticularData`,
+        `http://localhost:5500/s3f9n7v2/FnShowParticularData`,
         {
           params: { HolidayId: ID },
           headers: { Authorization: `Bearer ${token}` },
