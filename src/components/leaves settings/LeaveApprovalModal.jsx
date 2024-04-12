@@ -77,17 +77,12 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
 
   // Calling the LMonthlyAttendance FUnction
 
-  const [isLMonthlyAttCalled, setIsLMonthlyAttCalled] = useState(false);
-
-  useEffect(() => {
-    if (ApprovalFlag === "A" && !isLMonthlyAttCalled) {
-      // Call the LMonthlyAtt function only when ApprovalFlag is 'A' and it hasn't been called before
-      // LMonthlyAtt(ID);
-      setIsLMonthlyAttCalled(true); // Set the state to indicate that the function has been called
-    }
-  }, [ApprovalFlag]);
-
   const updateApproval = async (values) => {
+    if (ApprovalFlag === "A") {
+      <LMonthlyAtt ID={ID} />;
+      alert("Leave Approved");
+    } else if (ApprovalFlag === "R") alert("Leave Rejected");
+    else console.log("None of the two");
     try {
       const response = axios.post(
         `http://localhost:5500/leave-application/FnAddUpdateDeleteRecord`,
@@ -97,9 +92,7 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      if (ApprovalFlag === "A") alert("Leave Approved");
-      else if(ApprovalFlag === "R") alert("Leave Rejected");
-      else console.log('None of the two')
+
       // FetchLeaveBalanceData()
     } catch (error) {
       console.error("Error", error);
@@ -147,10 +140,6 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
     } catch (error) {
       console.error("Error", error);
     }
-  };
-
-  const UpdateLeaveBalane = () => {
-    setLeaveBalance(LeaveBalance - 1);
   };
 
   function calculateLeaveDays(leaveFromDate, leaveToDate) {
@@ -309,7 +298,7 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
     "Sanction Days",
   ];
 
-  if (!visible) return null
+  if (!visible) return null;
   return (
     <form onSubmit={formik.handleSubmit}>
       <div className="fixed overflow-y-scroll inset-0 bg-black bg-opacity-5 backdrop-blur-sm flex items-center justify-center w-full">

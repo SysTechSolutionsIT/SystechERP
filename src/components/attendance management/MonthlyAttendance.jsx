@@ -72,7 +72,6 @@ const MonthlyAttendance = () => {
           }
         );
         setWeeklyOffs(response.data);
-        console.log("Weekly Off Response:", response.data);
       } catch (error) {
         console.error("Error while fetching weekly off data:", error);
       }
@@ -102,32 +101,6 @@ const MonthlyAttendance = () => {
     fetchWeeklyOffCounts();
   }, [WeeklyOff, token]);
 
-  //Merge counts of weekly off with employee id
-  useEffect(() => {
-    const mergedData = WeeklyOff.map(({ EmployeeId, WeeklyOff }) => {
-      const totalCountObj = WeekOffCounts.find(
-        ({ WeeklyOffId }) => WeeklyOffId === WeeklyOff
-      );
-      const totalCount = totalCountObj ? totalCountObj.TotalCount : 0;
-      return { EmployeeId, TotalCount: totalCount };
-    });
-
-    // Filter out entries with empty WeeklyOff or no corresponding TotalCount
-    const filteredData = mergedData.filter(
-      ({ TotalCount }) => TotalCount !== 0
-    );
-
-    // Store the merged and filtered data in an array
-    setMergedWeeks(
-      filteredData.map(({ EmployeeId, TotalCount }) => ({
-        EmployeeId,
-        TotalCount,
-      }))
-    );
-  }, [token, WeeklyOff, WeekOffCounts]);
-
-  console.log("Merged Array:", mergedWeeks);
-
   // 4. Fetching Holidays in a week
 
   useEffect(() => {
@@ -150,21 +123,26 @@ const MonthlyAttendance = () => {
   }, [token]);
 
   useEffect(() => {
-    if (ManAttData.length > 0 && ALeaves.length > 0 && mergedWeeks.length > 0) {
-      const monthlyAttendance = mergeCounts(ManAttData, ALeaves, mergedWeeks);
+    if (
+      ManAttData.length > 0 &&
+      ALeaves.length > 0 &&
+      WeekOffCounts.length > 0
+    ) {
+      const monthlyAttendance = mergeCounts(ManAttData, ALeaves, WeekOffCounts);
       setMonthlyAttendance(monthlyAttendance);
     }
-  }, [ManAttData, ALeaves, mergedWeeks, token]);
-  
+    console.log("Monthly Attendance: ", MonthlyAttendance);
+  }, [ManAttData, ALeaves, WeekOffCounts, token]);
+
   function mergeCounts(attendanceCounts, leaveCounts, weeklyOffs) {
     const combinedCountsMap = new Map();
-  
+
     // Merge attendance counts
     attendanceCounts.forEach((attendanceCount) => {
       const { EmployeeId, ManualAttendance } = attendanceCount;
       combinedCountsMap.set(EmployeeId, { EmployeeId, ManualAttendance });
     });
-  
+
     // Merge leave counts
     leaveCounts.forEach((leaveCount) => {
       const { EmployeeId, Presenty } = leaveCount;
@@ -175,7 +153,7 @@ const MonthlyAttendance = () => {
         combinedCountsMap.set(EmployeeId, { EmployeeId, Presenty });
       }
     });
-  
+
     // Merge weekly offs
     weeklyOffs.forEach((weeklyOff) => {
       const { EmployeeId, TotalCount } = weeklyOff;
@@ -186,14 +164,12 @@ const MonthlyAttendance = () => {
         combinedCountsMap.set(EmployeeId, { EmployeeId, TotalCount });
       }
     });
-  
+
     // Convert the map values into an array
     const combinedCountsArray = Array.from(combinedCountsMap.values());
     console.log("Combined Records are: ", combinedCountsArray);
     return combinedCountsArray;
   }
-  
-  console.log("Monthly Attendance: ", MonthlyAttendance);
 
   // Calculating Total Days of the week and appending that to Monthly Attendance Array
 
