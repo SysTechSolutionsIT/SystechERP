@@ -128,7 +128,7 @@ export default function EMPTabs() {
     };
 
     fetchCurrencyData();
-  }, [token]);
+  }, [token, isModalOpen]);
 
   const updateCompanyConfig = async (data) => {
     try {

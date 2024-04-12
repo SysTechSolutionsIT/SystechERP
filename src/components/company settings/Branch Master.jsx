@@ -292,7 +292,7 @@ const BranchMaster = () => {
       <BranchModal visible={isModalOpen} onClick={() => setModalOpen(false)} />
       {branch.length === 0 ? (
         <div className="flex justify-center items-center">
-          <NoDataNotice Text="No Data Yet" visible={isModalOpen} />
+          <NoDataNotice Text="No Branch Data Yet" visible={isModalOpen} />
         </div>
       ) : (
         <div className="grid gap-4 justify-between">

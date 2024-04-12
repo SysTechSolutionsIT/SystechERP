@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import ViewBank from "./ViewBank";
 import { useAuth } from "../Login";
+import NoDataNotice from "../NoDataNotice";
 
 const BankMaster = () => {
   const { token } = useAuth();
@@ -312,6 +313,11 @@ const BankMaster = () => {
         </div>
       </div>
       <BankModal visible={isModalOpen} onClick={handleModalClose} />
+      {banks.length === 0 ? (
+        <div className="flex justify-center items-center">
+          <NoDataNotice Text="No Bank Data Yet" visible={isModalOpen} />
+        </div>
+      ) : (
       <div className="grid gap-4 justify-between">
         <div className="my-1 rounded-2xl bg-white p-2 pr-8">
           <table className="min-w-full text-center rounded-lg whitespace-normal">
@@ -487,6 +493,7 @@ const BankMaster = () => {
           </table>
         </div>
       </div>
+      )}
       <ViewBank
         visible={vebank}
         onClick={() => setVeBank(false)}
