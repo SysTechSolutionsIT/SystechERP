@@ -3,6 +3,8 @@ const bodyParser = require("body-parser");
 const { Sequelize, DataTypes } = require("sequelize");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
+const TLeaves = require("../model/TLeavesModel");
+const MLeaveType = require("../model/MLeaveTypeModel");
 
 const authToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
@@ -28,132 +30,123 @@ const sequelize = new Sequelize(
   }
 );
 
-const TLeaves = sequelize.define(
-  "TLeaves",
-  {
-    CompanyId: {
-      type: DataTypes.STRING(5),
-      allowNull: false,
-      defaultValue: "00001",
-    },
-    BranchId: {
-      type: DataTypes.STRING(5),
-      allowNull: false,
-      defaultValue: "00001",
-    },
-    FYear: {
-      type: DataTypes.STRING(5),
-      allowNull: false,
-    },
-    LeaveApplicationId: {
-      type: DataTypes.STRING(20),
-      allowNull: false,
-    },
-    LeaveApplicationDate: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    EmployeeId: {
-      type: DataTypes.STRING(5),
-      allowNull: false,
-    },
-    EmployeeType: {
-      type: DataTypes.STRING(10),
-      allowNull: false,
-    },
-    EmployeeTypeGroup: {
-      type: DataTypes.STRING(5),
-      allowNull: false,
-    },
-    LeaveFromDate: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    LeaveToDate: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    LeaveTypeId: {
-      type: DataTypes.STRING(5),
-      allowNull: false,
-    },
-    LeaveDays: {
-      type: DataTypes.DECIMAL(10, 2),
-      allowNull: false,
-      defaultValue: 0,
-    },
-    SanctionBy: {
-      type: DataTypes.STRING(5),
-      allowNull: true,
-    },
-    SanctionFromDate: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
-    SanctionToDate: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
-    SanctionLeaveDays: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      defaultValue: 0,
-    },
-    Remark: {
-      type: DataTypes.STRING(1000),
-      allowNull: true,
-    },
-    ApprovalFlag: {
-      type: DataTypes.STRING(1),
-      allowNull: true,
-      defaultValue: "P",
-    },
-    AcFlag: {
-      type: DataTypes.STRING(1),
-      allowNull: false,
-      defaultValue: "Y",
-    },
-    CreatedBy: {
-      type: DataTypes.STRING(500),
-      allowNull: true,
-      defaultValue: "",
-    },
-    CreatedOn: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    ModifiedBy: {
-      type: DataTypes.STRING(500),
-      allowNull: true,
-    },
-    ModifiedOn: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-  },
-  {
-    timestamps: false,
-  }
-);
+// const TLeaves = sequelize.define(
+//   "TLeaves",
+//   {
+//     CompanyId: {
+//       type: DataTypes.STRING(5),
+//       allowNull: false,
+//       defaultValue: "00001",
+//     },
+//     BranchId: {
+//       type: DataTypes.STRING(5),
+//       allowNull: false,
+//       defaultValue: "00001",
+//     },
+//     FYear: {
+//       type: DataTypes.STRING(5),
+//       allowNull: false,
+//     },
+//     LeaveApplicationId: {
+//       type: DataTypes.STRING(20),
+//       allowNull: false,
+//     },
+//     LeaveApplicationDate: {
+//       type: DataTypes.DATE,
+//       allowNull: false,
+//     },
+//     EmployeeId: {
+//       type: DataTypes.STRING(5),
+//       allowNull: false,
+//     },
+//     EmployeeType: {
+//       type: DataTypes.STRING(10),
+//       allowNull: false,
+//     },
+//     EmployeeTypeGroup: {
+//       type: DataTypes.STRING(5),
+//       allowNull: false,
+//     },
+//     LeaveFromDate: {
+//       type: DataTypes.DATE,
+//       allowNull: false,
+//     },
+//     LeaveToDate: {
+//       type: DataTypes.DATE,
+//       allowNull: false,
+//     },
+//     LeaveTypeId: {
+//       type: DataTypes.STRING(5),
+//       allowNull: false,
+//     },
+//     LeaveDays: {
+//       type: DataTypes.DECIMAL(10, 2),
+//       allowNull: false,
+//       defaultValue: 0,
+//     },
+//     SanctionBy: {
+//       type: DataTypes.STRING(5),
+//       allowNull: true,
+//     },
+//     SanctionFromDate: {
+//       type: DataTypes.DATE,
+//       allowNull: true,
+//     },
+//     SanctionToDate: {
+//       type: DataTypes.DATE,
+//       allowNull: true,
+//     },
+//     SanctionLeaveDays: {
+//       type: DataTypes.INTEGER,
+//       allowNull: true,
+//       defaultValue: 0,
+//     },
+//     Remark: {
+//       type: DataTypes.STRING(1000),
+//       allowNull: true,
+//     },
+//     ApprovalFlag: {
+//       type: DataTypes.STRING(1),
+//       allowNull: true,
+//       defaultValue: "P",
+//     },
+//     AcFlag: {
+//       type: DataTypes.STRING(1),
+//       allowNull: false,
+//       defaultValue: "Y",
+//     },
+//     CreatedBy: {
+//       type: DataTypes.STRING(500),
+//       allowNull: true,
+//       defaultValue: "",
+//     },
+//     CreatedOn: {
+//       type: DataTypes.DATE,
+//       allowNull: false,
+//     },
+//     ModifiedBy: {
+//       type: DataTypes.STRING(500),
+//       allowNull: true,
+//     },
+//     ModifiedOn: {
+//       type: DataTypes.DATE,
+//       allowNull: false,
+//     },
+//   },
+//   {
+//     timestamps: false,
+//   }
+// );
 
-router.use(bodyParser.json());
+// router.use(bodyParser.json());
 
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log("Connection has been established successfully.");
-  })
-  .catch((err) => {
-    console.error("Unable to connect to the database:", err);
-  });
-
-TLeaves.sync()
-  .then(() => {
-    console.log("MLeaveTyepe model synchronized successfully.");
-  })
-  .catch((error) => {
-    console.error("Error synchronizing MLeaveTyepe model:", error);
-  });
+// TLeaves.sync()
+//   .then(() => {
+//     console.log("MLeaveTyepe model synchronized successfully.");
+//   })
+//   .catch((error) => {
+//     console.error("Error synchronizing MLeaveTyepe model:", error);
+//   });
 
 router.get("/FnShowAllData", authToken, async (req, res) => {
   try {
@@ -289,26 +282,67 @@ router.post(
   }
 );
 
-//For monthly attendance
-router.get("/MLeaves/count", async (req, res) => {
-  try {
-    // Use Sequelize's aggregation functions to sum SanctionLeaveDays and group them by EmployeeId
-    const totals = await TLeaves.findAll({
-      attributes: [
-        "EmployeeId",
-        [sequelize.fn("SUM", sequelize.col("SanctionLeaveDays")), "Presenty"],
-      ],
-      where: {
-        ApprovalFlag: "A",
-      },
-      group: ["EmployeeId"],
-    });
+router.get("/CalculatePresenty", authToken, async (req, res) => {
+  const LeaveBody = req.body;
+  const LeavesEarned = req.query.LeavesEarned;
+  let Presenty, Absenty, CarryForward;
+  const AMonth = new Date(LeaveBody.SanctionFromDate).getMonth();
 
-    res.json(totals);
-  } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ message: "Internal server error" });
+  const MPM = await MLeaveType.findOne({
+    where: {
+      LeaveTypeId: LeaveBody.LeaveTypeId,
+    },
+    attributes: {
+      include: ["MaxPerMonth"],
+    },
+    order: [["LeaveApplicationId", "ASC"]],
+  });
+
+  if (LeaveBody.SanctionLeaveDays < MPM) {
+    Presenty += LeaveBody.SanctionLeaveDays;
+    MaxUsedFlag = false;
+    if (MLeaveType.CarryForwardFlag === "Y") {
+      CarryForward = MPM - LeaveBody.SanctionLeaveDays;
+    }
+    //Updating Leave Balance
   }
+  // When leaves taken is exactly equal to maximum of the month
+  else if (LeaveBody.SanctionLeaveDays == MPM) {
+    Presenty += LeaveBody.SanctionLeaveDays;
+    MaxUsedFlag = true;
+    if (MLeaveType.CarryForwardFlag === "Y") {
+      CarryForward = 0;
+    }
+  } else {
+    // where leaves taken exceeds maximum per month
+    // Here we must check for Leaves Earned Module
+    Presenty = MPM;
+    const Remain = LeaveBody.SanctionLeaveDays - MPM;
+    MaxUsedFlag = true;
+
+    if (LeavesEarned > 0 && Remain < LeavesEarned) {
+      //Update Leaves Earned
+      CarryForward = LeavesEarned - Remain;
+    } else if (Remain == LeavesEarned) {
+      CarryForward = 0;
+    } else {
+      Absenty = LeaveBody.SanctionLeaveDays - MPM;
+    }
+
+    if (MLeaveType.CarryForwardFlag === "Y") {
+      CarryForward = 0;
+    }
+  }
+
+  const LeavePresentyObject = {
+    EmployeeId: LeaveBody.EmployeeId,
+    FYear: LeaveBody.FYear,
+    Month: AMonth,
+    Presenty: Presenty,
+    Absenty: Absenty,
+    CarryForward: CarryForward,
+  };
+  res.json(LeavePresentyObject);
 });
 
 process.on("SIGINT", () => {

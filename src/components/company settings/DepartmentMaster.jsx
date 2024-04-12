@@ -215,6 +215,28 @@ const DepartmentMaster = () => {
     return context.measureText(text).width;
   };
 
+  //Fetching
+  const [DepartmentGroup, setDepartmentGroup] = useState([]);
+  useEffect(() => {
+    const fetchDepartmentGroup = async () => {
+      const DGID = 5;
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/two-field/FnShowCategoricalData",
+          {
+            params: { MasterNameId: DGID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        setDepartmentGroup(data);
+      } catch (error) {
+        console.error("Error", error);
+      }
+    };
+    fetchDepartmentGroup();
+  }, [token]);
+
   return (
     <div className="top-25 min-w-[40%]">
       <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
@@ -413,7 +435,12 @@ const DepartmentMaster = () => {
                           key={columnName}
                           className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
                         >
-                          {result[columnName]}
+                          {columnName === "DepartmentGroupId"
+                            ? DepartmentGroup.find(
+                                (group) =>
+                                  group.FieldId === result.DepartmentGroupId
+                              )?.FieldDetails || ""
+                            : result[columnName]}
                         </td>
                       ) : (
                         <td key={columnName} className="hidden"></td>
@@ -487,6 +514,11 @@ const DepartmentMaster = () => {
                                   employee.EmployeeId ==
                                   result.DepartmentSubHeadId
                               )?.EmployeeName
+                            : columnName === "DepartmentGroupId"
+                            ? DepartmentGroup.find(
+                                (group) =>
+                                  group.FieldId === result.DepartmentGroupId
+                              )?.FieldDetails || ""
                             : result[columnName]}
                         </td>
                       ) : (

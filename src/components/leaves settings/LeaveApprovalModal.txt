@@ -8,7 +8,7 @@ import LMonthlyAtt from "./LMonthlyAtt";
 const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
   const [details, setDetails] = useState([]);
   const [Employees, setEmployees] = useState([]);
-  const [LeaveTypeData, setLeaveTypes] = useState("");
+  const [LeaveTypes, setLeaveTypes] = useState("");
   const [employeeTypes, setEmployeeTypes] = useState([]);
   const [previousLeaves, setPreviousLeaves] = useState([]);
   const [employeeId, setEmployeeId] = useState("");
@@ -16,13 +16,14 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [LeaveBalance, setLeaveBalance] = useState([]);
   const [LeavesEarned, setLeavesEarned] = useState(0);
-  const [PresentyObject, setPresentyObject] = useState([]);
-  let CarryForward = 0;
-  let Presenty = 0;
-  let Absenty = 0;
-  let MaxUsedFlag = 0;
+  const [Presenty, setPresenty] = useState(0);
+  const [Absenty, setAbsenty] = useState(0);
+  const [MaxUsedFlag, setMaxUsedFlag] = useState(false);
+  const [CarryForward, setCarryForward] = useState(0);
+  const [leaveApprovalCalled, setLeaveApprovalCalled] = useState(false);
 
   const [Data, setData] = useState([]);
+  const [LeaveTaken, setLeaveTaken] = useState([]);
   const { token } = useAuth();
 
   const handleInputChange = (event) => {
@@ -53,11 +54,11 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
       SanctionToDate: "",
       SanctionLeaveDays: "",
     },
-    onSubmit: async (values) => {
+    onSubmit: (values) => {
       console.log(values);
       const updatedData = {
         ApprovalFlag: ApprovalFlag,
-        LeaveApplicationId: ID,
+        LeaveApplicationId: values.LeaveApplicationId,
         FYear: values.FYear,
         LeaveApplicationDate: values.LeaveApplicationDate,
         EmployeeId: values.EmployeeId,
@@ -75,44 +76,42 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
         IUFlag: "U",
       };
 
-      await updateApproval(updatedData);
-      await updateLeaveBalance(updatedData);
-      //Call presenty absenty function
-      console.log("Calling presenty logic");
-      if (ApprovalFlag == "A") {
-        // Call AfterApproval function
-        calculatePresenty(updatedData);
-      }
-
-      onClick();
+      updateApproval(updatedData);
+      // updateLeaveBalance(updatedData);
+      // onClick();
     },
   });
 
   // Calling the LMonthlyAttendance FUnction
 
   const updateApproval = async (values) => {
-    if (ApprovalFlag === "A") {
+    if (ApprovalFlag === "A" && !leaveApprovalCalled) {
       console.log("Update approval function");
       console.log("LID:", values.LeaveApplicationId);
       console.log("Employee ID: ", values.EmployeeId);
-      fetchLeaveEarned();
-      alert("Leave Approved");
+
+      AfterLeaveApproval();
+
+      // Set the state variable to true to indicate that AfterLeaveApproval has been called
+      setLeaveApprovalCalled(true);
+
+      // alert("Leave Approved");
     } else if (ApprovalFlag === "R") alert("Leave Rejected");
     else console.log("None of the two");
-    try {
-      const response = axios.post(
-        `http://localhost:5500/leave-application/FnAddUpdateDeleteRecord`,
-        values,
-        {
-          params: { LeaveApplicationId: ID },
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+    // try {
+    //   const response = axios.post(
+    //     `http://localhost:5500/leave-application/FnAddUpdateDeleteRecord`,
+    //     values,
+    //     {
+    //       params: { LeaveApplicationId: ID },
+    //       headers: { Authorization: `Bearer ${token}` },
+    //     }
+    //   );
 
-      // FetchLeaveBalanceData()
-    } catch (error) {
-      console.error("Error", error);
-    }
+    //   // FetchLeaveBalanceData()
+    // } catch (error) {
+    //   console.error("Error", error);
+    // }
   };
 
   const updateLeaveBalance = async (values) => {
@@ -131,24 +130,26 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
     }
   };
 
-  //Returning Presenty Object
-  const calculatePresenty = async (values) => {
-    console.log("IN calculate Presenty");
+  const fetchLeaveBalanceData = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:5500/leave-application/CalculatePresenty",
-        values,
+      const response = await axios.post(
+        "http://localhost:5500/leave-balance/FnShowParticularEmployeeData",
         {
-          params: { LeavesEarned: LeavesEarned },
+          params: {
+            EmployeeId: employeeId,
+            FYear: formik.values.FYear,
+          },
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      console.log("response", response.data);
+
       const data = response.data;
-      setPresentyObject(data);
-      // alert("Leave Balance Updated");
+      setLeaveBalance(data.LeaveBalance);
+      setData(data);
+      console.log(data);
+      //UpdateLeaveBalance()
     } catch (error) {
-      console.error("Error updating Leave balance", error);
+      console.error("Error", error);
     }
   };
 
@@ -169,7 +170,7 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
   useEffect(() => {
     // Calculate leave days whenever LeaveFromDate or LeaveToDate changes
     const newLeaveDays = calculateLeaveDays(
-      formik.values.SanctionFrcomDate,
+      formik.values.SanctionFromDate,
       formik.values.SanctionToDate
     );
 
@@ -179,6 +180,8 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
       SanctionLeaveDays: newLeaveDays,
     });
   }, [formik.values.SanctionFromDate, formik.values.SanctionToDate]);
+
+  const [isStatusChecked, setStatusChecked] = useState(false);
 
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -196,31 +199,6 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
     };
     fetchEmployees();
   }, [token]);
-
-  const fetchLeaveEarned = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:5500/leave-balance/FnFetchLeaveEarned",
-        {
-          params: {
-            EmployeeId: details.EmployeeId,
-            FYear: details.FYear,
-          },
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      const data = response.data;
-      console.log("Leave earned", data);
-
-      if (data && data.length > 0) {
-        setLeavesEarned(data);
-      } else {
-        setLeavesEarned(0);
-      }
-    } catch (error) {
-      console.error("Error", error);
-    }
-  };
 
   const fetchLeaveApplication = async () => {
     try {
@@ -284,7 +262,7 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
         const response = await axios.get(
           "http://localhost:5500/leave-application/FnShowParticularEmployeeData",
           {
-            params: { EmployeeId: details?.EmployeeId },
+            params: { EmployeeId: employeeId },
             headers: { Authorization: `Bearer ${token}` },
           }
         );
@@ -302,16 +280,15 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
     const fetchLeaveType = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5500/leave-type/FnShowParticularData",
+          "http://localhost:5500/leave-type/FnShowActiveData",
           {
-            params: { LeaveTypeId: details.LeaveTypeId },
             headers: {
               Authorization: `Bearer ${token}`,
             },
           }
         );
         const data = response.data;
-        console.log("Leave Type data", data);
+        console.log(data);
         setLeaveTypes(data);
       } catch (error) {
         console.error("Error", error);
@@ -319,7 +296,11 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
     };
 
     fetchLeaveType();
-  }, [token, ID, details]);
+  }, [token]);
+
+  const leaveType =
+    LeaveTypes.length > 0 &&
+    LeaveTypes.find((type) => type.LeaveTypeId == leaveTypeId);
 
   const columnHeads = [
     "Leave Type",
@@ -328,7 +309,151 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
     "Leave Applied",
     "Sanction Days",
   ];
-  // Function for when leaves are approved
+
+  //For calculating attendances based on leaves
+
+  function AfterLeaveApproval() {
+    useEffect(() => {
+      const fetchLeaveEarned = async () => {
+        try {
+          const response = await axios.get(
+            "http://localhost:5500/leave-balance/FnFetchLeaveEarned",
+            {
+              params: {
+                EmployeeId: details.EmployeeId,
+                FYear: details.FYear,
+              },
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+          const data = response.data;
+          console.log("Leave earned", data);
+          if (data.length > 0) {
+            setLeavesEarned(data);
+          } else {
+            setLeavesEarned(0);
+          }
+        } catch (error) {
+          console.error("Error", error);
+        }
+      };
+
+      fetchLeaveEarned();
+    }, [token, details]);
+
+    //Updating Leaves Earned
+    const UpdateLeaveEarned = async (CarryForward) => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/leave-type/FnLeaveEarnedUpdate",
+          {
+            params: {
+              EmployeeId: details.EmployeeId,
+              FYear: details.FYear,
+              CarryForward: CarryForward,
+            },
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const data = response.data;
+        console.log("Response", data);
+      } catch (error) {
+        console.error("Error", error);
+      }
+    };
+
+    //Updating Attendances
+    const updateAttendance = async (values) => {
+      try {
+        const response = await axios.post(
+          "http://localhost:5500/MLAttendance/FnAddUpdateDeleteRecord",
+          values,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        console.log("UPdated attendance posted");
+      } catch (error) {
+        console.error("Error updating Leave balance", error);
+      }
+    };
+
+    //Updating Leave Balance
+    // const updateLeaveBalance = async () => {
+    //   try {
+    //     console.log("Leave balance in funciton", LeaveBalance);
+    //     const response = await axios.patch(
+    //       "http://localhost:5500/leave-balance/FnUpdateRecords",
+    //       LeaveBalance,
+    //       {
+    //         params: {
+    //           EmployeeId: employeeId,
+    //           FYear: formik.values.FYear,
+    //         },
+    //         headers: { Authorization: `Bearer ${token}` },
+    //       }
+    //     );
+    //     alert("Leave Balance Updated");
+    //   } catch (error) {
+    //     console.error("Error", error);
+    //   }
+    // };
+
+    // Calculating Monthly Attendance after fetching the data
+    useEffect(() => {
+      // Your logic for calculating Presenty, Absenty, MaxUsedFlag, CarryForward, and updating attendance
+      // Make sure to use appropriate state setter functions and avoid direct mutations
+
+      // When leaves taken is less than the maximum of the month
+      if (details.SanctionedDays < LeaveTypes.MaxPerMonth) {
+        Presenty += details.SanctionedDays;
+        MaxUsedFlag = false;
+        if (LeaveTypes.CarryForwardFlag === "Y") {
+          CarryForward = LeaveTypes.MaxPerMonth - details.SanctionedDays;
+        }
+        //Updating Leave Balance
+      }
+      // When leaves taken is exactly equal to maximum of the month
+      else if (details.SanctionedDays == LeaveTypes.MaxPerMonth) {
+        Presenty += details.SanctionedDays;
+        MaxUsedFlag = true;
+        if (LeaveTypes.CarryForwardFlag === "Y") {
+          CarryForward = 0;
+        }
+      } else {
+        // where leaves taken exceeds maximum per month
+        // Here we must check for Leaves Eaened Module
+        Presenty = LeaveTypes.MaxPerMonth;
+        const Remain = details.SanctionedDays - LeaveTypes.MaxPerMonth;
+        MaxUsedFlag = true;
+
+        if (Remain < LeavesEarned) {
+          //Update Leaves Earned
+          CarryForward = LeavesEarned - Remain;
+        } else if (Remain == LeavesEarned) {
+          CarryForward = 0;
+        } else {
+          Absenty = details.SanctionedDays - LeaveTypes.MaxPerMonth;
+        }
+
+        if (LeaveTypes.CarryForwardFlag === "Y") {
+          CarryForward = 0;
+        }
+      }
+      UpdateLeaveEarned(CarryForward);
+      // updateLeaveBalance()
+      const UpdationObject = {
+        EmployeeId: details.EmployeeId,
+        Presenty: Presenty,
+        Absenty: Absenty,
+        FYear: details.FYear,
+        Month: new Date(details?.SanctionFromDate).getMonth(),
+      };
+      updateAttendance(UpdationObject);
+    }, [details, LeaveTypes, LeavesEarned]);
+  }
 
   if (!visible) return null;
   return (
@@ -399,9 +524,9 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
               <div>
                 <p className="text-[13px] font-semibold">Leave Type</p>
                 <input
-                  id="LeaveTypeId"
+                  id="LeaveType"
                   type="text"
-                  value={LeaveTypeData?.LeaveType}
+                  value={leaveType?.LeaveType}
                   className={`w-full px-4 py-2 font-normal bg-white focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../Login";
 import axios from "axios";
 
-function LMonthlyAtt({ LID }) {
+const LMonthlyAtt = ({ LID }) => {
   const { token } = useAuth();
   const [details, setDetails] = useState([]);
   const [leaveDetails, setLeaveDetails] = useState([]);
@@ -63,7 +63,7 @@ function LMonthlyAtt({ LID }) {
     const fetchLeaveEarned = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5500/leave-type/FnFetchLeaveEarned",
+          "http://localhost:5500/leave-balance/FnFetchLeaveEarned",
           {
             params: {
               EmployeeId: details.EmployeeId,
@@ -200,7 +200,7 @@ function LMonthlyAtt({ LID }) {
     updateAttendance(UpdationObject);
   }, [details, LeaveTypes, LeavesEarned]);
 
-  return <div>LMonthlyAtt</div>;
-}
+  return <div></div>;
+};
 
 export default LMonthlyAtt;

@@ -33,12 +33,10 @@ const MLeaves = sequelize.define(
   {
     CompanyId: {
       type: DataTypes.STRING(5),
-      allowNull: false,
       defaultValue: "00001",
     },
     BranchId: {
       type: DataTypes.STRING(5),
-      allowNull: false,
       defaultValue: "00001",
     },
     LeaveBalanceId: {
@@ -326,10 +324,11 @@ router.patch("/FnUpdateRecords", authToken, async (req, res) => {
 });
 
 router.patch("/FnLeaveApproved", authToken, async (req, res) => {
-  const EmployeeId = req.query.EmployeeId;
-  const LeaveTypeId = req.query.LeaveTypeId;
-  const FYear = req.query.FYear;
+  const EmployeeId = req.body.EmployeeId;
+  const LeaveTypeId = req.body.LeaveTypeId;
+  const FYear = req.body.FYear;
   const LeaveDetails = req.body;
+  console.log(LeaveDetails);
 
   try {
     // Update the SanctionLeaveDays column
@@ -407,6 +406,7 @@ router.get("/FnFetchLeaveEarned", authToken, async (req, res) => {
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth() + 1;
   const LEno = `LeaveEarned${currentMonth}`;
+  console.log("LEno", LEno);
 
   try {
     const Leaves = await MLeaves.findOne({

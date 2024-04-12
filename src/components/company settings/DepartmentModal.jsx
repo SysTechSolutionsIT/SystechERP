@@ -6,6 +6,7 @@ import { Icon } from "@iconify/react";
 import axios from "axios";
 import { useAuth } from "../Login";
 // import { costCenters } from "./CostCenterMaster";
+import BranchModal from "./AddBranch";
 
 const DepartmentModal = ({ visible, onClick }) => {
   const { token } = useAuth();
@@ -13,8 +14,10 @@ const DepartmentModal = ({ visible, onClick }) => {
   const [Departments, setDepartments] = useState([]);
   const [Employees, setEmployees] = useState([]);
   const [DepartmentGroup, setDepartmentGroup] = useState([]);
+  const [branches, setBranches] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false); //Add Modal
   const [MMId, setMMId] = useState();
+  const [BranchModalOpen, setBranchModalOpen] = useState(false); //Add Modal
 
   const formik = useFormik({
     initialValues: {
@@ -157,22 +160,20 @@ const DepartmentModal = ({ visible, onClick }) => {
     fetchEmployees();
   }, [token]);
 
-  const [status, setStatus] = useState(false);
-
-  const handleStatusChange = () => {
-    setStatus(!status);
-  };
-
-  const [isStatusChecked, setStatusChecked] = useState(false);
-  const handleCheckboxChange = (fieldName, setChecked, event) => {
-    //This is how to use it (event) => handleCheckboxChange('Status', setStatusChecked, event)
-    const checked = event.target.checked;
-    setChecked(checked);
-    formik.setValues({
-      ...formik.values,
-      [fieldName]: checked.toString(),
-    });
-  };
+  useEffect(() => {
+    const fetchBranchMaster = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/branch-master/FnShowActiveData"
+        );
+        const data = response.data;
+        setBranches(data);
+      } catch (error) {
+        console.error("Error", error);
+      }
+    };
+    fetchBranchMaster();
+  }, []);
 
   if (!visible) return null;
   return (
@@ -209,19 +210,45 @@ const DepartmentModal = ({ visible, onClick }) => {
               </div>
               <div>
                 <p className="capatilize font-semibold text-[13px] ">
-                  Company Branch Name
+                  Branch Name
                 </p>
-                <select
-                  id="BranchName"
-                  value={formik.values.BranchName}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                >
-                  <option value="">Select Company Branch</option>
-                  <option value="00001">Main</option>
-                  <option value="00002">Sub</option>
-                </select>
+                <div className="flex items-center">
+                  {branches.length > 0 ? (
+                    <select
+                      type="dropdown"
+                      id="branch"
+                      required
+                      onChange={formik.values.BranchId}
+                      className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-400 text-[13px]"
+                    >
+                      <option value="">Select a branch</option>
+                      {branches.map((company) => (
+                        <option key={company.BranchId} value={company.BranchId}>
+                          {company.BranchName}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <p className="flex-1 px-4 py-2 font-normal text-gray-500">
+                      No available entries
+                    </p>
+                  )}
+                  <Icon
+                    icon="flat-color-icons:plus"
+                    width="24"
+                    height="24"
+                    className="ml-1 cursor-pointer"
+                    onClick={() => {
+                      setBranchModalOpen(true);
+                    }}
+                  />
+                </div>
               </div>
+              <BranchModal
+                visible={BranchModalOpen}
+                onClick={() => setBranchModalOpen(false)}
+              />
+
               <div>
                 <p className="capatilize font-semibold text-[13px]">
                   Parent Department Name
@@ -276,9 +303,9 @@ const DepartmentModal = ({ visible, onClick }) => {
                 <div className="flex items-center">
                   {DepartmentGroup.length > 0 ? (
                     <select
-                      id="DepartmentGroup"
-                      name="DepartmentGroup"
-                      value={formik.values.DepartmentGroup}
+                      id="DepartmentGroupId"
+                      name="DepartmentGroupId"
+                      value={formik.values.DepartmentGroupId}
                       className="flex-1 px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
                       onChange={formik.handleChange}
                     >
