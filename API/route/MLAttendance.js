@@ -205,6 +205,26 @@ const job = schedule.scheduleJob(scheduleTime, function () {
   // yourFunction();
 });
 
+router.get("/FnFetchAttendances", async (req, res) => {
+  try {
+    // Fetch all employees with their attendance details
+    const employeesAttendance = await MLAttendance.findAll({
+      attributes: ["EmployeeId", "Presenty", "Absenty"],
+    });
+
+    // If there are no employees found
+    if (!employeesAttendance || employeesAttendance.length === 0) {
+      return res.status(404).json({ message: "No employees found" });
+    }
+
+    // If employees are found, send them in the response
+    res.status(200).json({ employees: employeesAttendance });
+  } catch (error) {
+    console.error("Error fetching employees attendance:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 process.on("SIGINT", () => {
   console.log("Received SIGINT. Closing Sequelize connection...");
   sequelize.close().then(() => {

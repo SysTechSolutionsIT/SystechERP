@@ -211,7 +211,32 @@ const BankMaster = () => {
     return context.measureText(text).width;
   };
 
+  //Fetching Account Type categories
+  const [AccTypes, setAccTypes] = useState([]);
+  useEffect(() => {
+    const fetchCategoryData = async () => {
+      const CID = 10;
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/two-field/FnShowCategoricalData",
+          {
+            params: { MasterNameId: CID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        setAccTypes(data);
+      } catch (error) {
+        console.error("Error fetching currencies:", error);
+      }
+    };
+    fetchCategoryData();
+  }, [token]);
 
+  const accountTypeMapping = {};
+  AccTypes.forEach((accType) => {
+    accountTypeMapping[accType.AccountType] = accType.FieldDetails;
+  });
 
   return (
     <div className="top-25 min-w-[40%]">
@@ -335,7 +360,7 @@ const BankMaster = () => {
                 )}
               </tr>
               <tr>
-              <th className="border-2"></th>
+                <th className="border-2"></th>
                 <th className="p-2 font-bold text-black border-2 " />
                 {selectedColumns.map((columnName) =>
                   columnVisibility[columnName] ? (
@@ -365,38 +390,38 @@ const BankMaster = () => {
                   <tr key={key}>
                     <td className="px-2 border-2">
                       <div className="flex items-center gap-2 text-center justify-center">
-                      <Icon
-                        icon="lucide:eye"
-                        color="#556987"
-                        width="20"
-                        height="20"
-                        className="cursor-pointer"
-                        onClick={() => {
-                          setVeBank(true);
-                          setEdit(false);
-                          setBid(result.BankId);
-                        }}
-                      />
-                      <Icon
-                        icon="mdi:edit"
-                        color="#556987"
-                        width="20"
-                        height="20"
-                        className="cursor-pointer"
-                        onClick={() => {
-                          setVeBank(true);
-                          setEdit(true);
-                          setBid(result.BankId);
-                        }}
-                      />
-                      <Icon
-                        icon="material-symbols:delete-outline"
-                        color="#556987"
-                        width="20"
-                        height="20"
-                        className="cursor-pointer"
-                        onClick={() => deleteBank(result.BankId)}
-                      />
+                        <Icon
+                          icon="lucide:eye"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() => {
+                            setVeBank(true);
+                            setEdit(false);
+                            setBid(result.BankId);
+                          }}
+                        />
+                        <Icon
+                          icon="mdi:edit"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() => {
+                            setVeBank(true);
+                            setEdit(true);
+                            setBid(result.BankId);
+                          }}
+                        />
+                        <Icon
+                          icon="material-symbols:delete-outline"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() => deleteBank(result.BankId)}
+                        />
                       </div>
                     </td>
                     <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
@@ -405,56 +430,56 @@ const BankMaster = () => {
                     {selectedColumns.map((columnName) =>
                       columnVisibility[columnName] ? (
                         <td
-                            key={columnName}
-                            className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                          >
-                            {result[columnName]}
-                          </td>
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                        >
+                          {columnName === "AccountType"
+                            ? accountTypeMapping[result[columnName]]
+                            : result[columnName]}
+                        </td>
                       ) : (
                         <td key={columnName} className="hidden"></td>
                       )
                     )}
                   </tr>
                 ))
-              ) : filteredData.length === 0 &&
-                banks &&
-                banks.length > 0 ? (
+              ) : filteredData.length === 0 && banks && banks.length > 0 ? (
                 banks.map((result, key) => (
                   <tr key={key}>
                     <td className="px-2 border-2">
                       <div className="flex items-center gap-2 text-center justify-center">
-                      <Icon
-                            icon="lucide:eye"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            className="cursor-pointer"
-                            onClick={() => {
-                              setVeBank(true);
-                              setEdit(false);
-                              setBid(result.BankId);
-                            }}
-                          />
-                          <Icon
-                            icon="mdi:edit"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            className="cursor-pointer"
-                            onClick={() => {
-                              setVeBank(true);
-                              setEdit(true);
-                              setBid(result.BankId);
-                            }}
-                          />
-                          <Icon
-                            icon="material-symbols:delete-outline"
-                            color="#556987"
-                            width="20"
-                            height="20"
-                            className="cursor-pointer"
-                            onClick={() => deleteBank(result.BankId)}
-                          />
+                        <Icon
+                          icon="lucide:eye"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() => {
+                            setVeBank(true);
+                            setEdit(false);
+                            setBid(result.BankId);
+                          }}
+                        />
+                        <Icon
+                          icon="mdi:edit"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() => {
+                            setVeBank(true);
+                            setEdit(true);
+                            setBid(result.BankId);
+                          }}
+                        />
+                        <Icon
+                          icon="material-symbols:delete-outline"
+                          color="#556987"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer"
+                          onClick={() => deleteBank(result.BankId)}
+                        />
                       </div>
                     </td>
                     <td className="px-4 border-2 whitespace-normal text-[11px] text-center">
@@ -463,11 +488,13 @@ const BankMaster = () => {
                     {selectedColumns.map((columnName) =>
                       columnVisibility[columnName] ? (
                         <td
-                            key={columnName}
-                            className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                          >
-                            {result[columnName]}
-                          </td>
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                        >
+                          {columnName === "AccountType"
+                            ? accountTypeMapping[result[columnName]]
+                            : result[columnName]}
+                        </td>
                       ) : (
                         <td key={columnName} className="hidden"></td>
                       )

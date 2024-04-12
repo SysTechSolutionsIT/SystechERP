@@ -241,22 +241,22 @@ router.get("/Mholidays/calc-holidays", async (req, res) => {
     });
 
     // Initialize arrays to hold paid and unpaid holidays
-    const paidHolidays = [];
-    const unpaidHolidays = [];
+    let paidHolidaysCount = 0;
+    let unpaidHolidaysCount = 0;
 
     // Iterate over holidays and categorize them based on HolidayType
     holidays.forEach((holiday) => {
       if (holiday.HolidayType === "Paid") {
-        paidHolidays.push(holiday);
+        paidHolidaysCount++;
       } else if (holiday.HolidayType === "Unpaid") {
-        unpaidHolidays.push(holiday);
+        unpaidHolidaysCount++;
       }
     });
 
-    // Return the categorized holidays along with the general list of holidays
+    // Return the counts of paid and unpaid holidays
     res.json({
-      paidHolidays: paidHolidays,
-      unpaidHolidays: unpaidHolidays,
+      paidHolidaysCount: paidHolidaysCount,
+      unpaidHolidaysCount: unpaidHolidaysCount,
     });
   } catch (error) {
     console.error("Error:", error);
