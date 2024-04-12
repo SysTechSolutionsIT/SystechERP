@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const { Sequelize, DataTypes } = require("sequelize");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
-const MEmployeeType = require('./MEmployeeTypeModels')
+const MEmployeeType = require("./MEmployeeTypeModels");
 
 const authToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
@@ -29,24 +29,22 @@ const sequelize = new Sequelize(
   }
 );
 
-  // Middleware for parsing JSON
+// Middleware for parsing JSON
 router.use(bodyParser.json());
 
 // Model synchronization
 sequelize
   .authenticate()
   .then(() => {
-    console.log('Connection has been established successfully.');
+    console.log("Connection has been established successfully.");
   })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
+  .catch((err) => {
+    console.error("Unable to connect to the database:", err);
   });
 
-  try {
-    MEmployeeType.sync()
-  } catch (error) {
-    
-  }
+try {
+  MEmployeeType.sync();
+} catch (error) {}
 
 router.get("/FnShowAllData", authToken, async (req, res) => {
   try {
@@ -60,7 +58,7 @@ router.get("/FnShowAllData", authToken, async (req, res) => {
   } catch (error) {
     console.error("Error retrieving data:", error);
     res.status(500).send("Internal Server Error");
-  } 
+  }
 });
 
 // GET endpoint to retrieve active companies
@@ -104,7 +102,7 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
 // Middleware for generating EarningHeadId
 const generateEmployeeTypeId = async (req, res, next) => {
   try {
-    if (req.body.IUFlag === 'I') {
+    if (req.body.IUFlag === "I") {
       const totalRecords = await MEmployeeType.count();
       const newId = (totalRecords + 1).toString().padStart(3, "0");
       req.body.EmployeeTypeId = newId;
@@ -116,10 +114,14 @@ const generateEmployeeTypeId = async (req, res, next) => {
   }
 };
 
-router.post("/FnAddUpdateDeleteRecord", generateEmployeeTypeId, authToken, async (req, res) => {
+router.post(
+  "/FnAddUpdateDeleteRecord",
+  generateEmployeeTypeId,
+  authToken,
+  async (req, res) => {
     const employeeType = req.body;
-    const employeeTypeId = employeeType.EmployeeTypeId;  // Access the EmployeeTypeId from the request body
-  
+    const employeeTypeId = employeeType.EmployeeTypeId; // Access the EmployeeTypeId from the request body
+
     try {
       if (employeeType.IUFlag === "D") {
         // "Soft-delete" operation
@@ -127,17 +129,19 @@ router.post("/FnAddUpdateDeleteRecord", generateEmployeeTypeId, authToken, async
           { AcFlag: "N" },
           { where: { EmployeeTypeId: employeeTypeId } }
         );
-  
+
         res.json({
-          message: result[0] ? "Record Deleted Successfully" : "Record Not Found",
+          message: result[0]
+            ? "Record Deleted Successfully"
+            : "Record Not Found",
         });
       } else {
         // Add or update operation
         const result = await MEmployeeType.upsert(employeeType, {
-          where: { EmployeeTypeId: employeeTypeId },  // Specify the where condition for update
+          where: { EmployeeTypeId: employeeTypeId }, // Specify the where condition for update
           returning: true,
         });
-  
+
         res.json({
           message: result ? "Operation successful" : "Operation failed",
         });
@@ -146,16 +150,16 @@ router.post("/FnAddUpdateDeleteRecord", generateEmployeeTypeId, authToken, async
       console.error("Error performing operation:", error);
       res.status(500).send("Internal Server Error");
     }
+  }
+);
+
+process.on("SIGINT", () => {
+  console.log("Received SIGINT. Closing Sequelize connection...");
+  sequelize.close().then(() => {
+    console.log("Sequelize connection closed. Exiting...");
+    process.exit(0);
   });
-  
-  process.on("SIGINT", () => {
-    console.log("Received SIGINT. Closing Sequelize connection...");
-    sequelize.close().then(() => {
-      console.log("Sequelize connection closed. Exiting...");
-      process.exit(0);
-    });
-  });
-  
+});
 
 module.exports = [router, MEmployeeType];
-// module.exports = MEmployeeType
+module.exports = MEmployeeType;

@@ -192,9 +192,6 @@ MLeaves.sync()
 router.get("/FnShowAllData", authToken, async (req, res) => {
   try {
     const Leaves = await MLeaves.findAll({
-      attributes: {
-        exclude: ["id"],
-      },
       order: [["LeaveBalanceId", "ASC"]],
     });
     res.json(Leaves);
@@ -211,9 +208,6 @@ router.get("/FnShowActiveData", authToken, async (req, res) => {
       where: {
         AcFlag: "Y",
       },
-      attributes: {
-        exclude: ["id"],
-      },
       order: [["LeaveBalanceId", "ASC"]],
     });
     res.json(Leaves);
@@ -229,9 +223,6 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
     const Leaves = await MLeaves.findOne({
       where: {
         LeaveBalanceId: LeaveBalanceId,
-      },
-      attributes: {
-        exclude: ["id"],
       },
       order: [["LeaveBalanceId", "ASC"]],
     });
@@ -252,9 +243,6 @@ router.get("/FnShowParticularEmployeeData", authToken, async (req, res) => {
       where: {
         EmployeeId: EmployeeId,
         FYear: FYear,
-      },
-      attributes: {
-        exclude: ["id"],
       },
       order: [["LeaveBalanceId", "ASC"]],
     });

@@ -126,9 +126,6 @@ const sequelize = new Sequelize(
 router.get("/FnShowAllData", authToken, async (req, res) => {
   try {
     const LeaveType = await mleavetype.findAll({
-      attributes: {
-        exclude: ["id"],
-      },
       order: [["LeaveTypeId", "ASC"]],
     });
     res.json(LeaveType);
@@ -145,9 +142,6 @@ router.get("/FnShowActiveData", authToken, async (req, res) => {
       where: {
         AcFlag: "Y",
       },
-      attributes: {
-        exclude: ["id"],
-      },
       order: [["LeaveTypeId", "ASC"]],
     });
     res.json(LeaveType);
@@ -163,9 +157,6 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
     const LeaveType = await mleavetype.findOne({
       where: {
         LeaveTypeId: LeaveTypeId,
-      },
-      attributes: {
-        exclude: ["id"],
       },
       order: [["LeaveTypeId", "ASC"]],
     });

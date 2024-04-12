@@ -135,8 +135,8 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
   const calculatePresenty = async (values) => {
     console.log("IN calculate Presenty");
     try {
-      const response = await axios.get(
-        "http://localhost:5500/leave-application/CalculatePresenty",
+      const response = await axios.post(
+        "http://localhost:5500/a5d3g2p6/CalculatePresenty",
         values,
         {
           params: { LeavesEarned: LeavesEarned },
@@ -304,7 +304,7 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
         const response = await axios.get(
           "http://localhost:5500/leave-type/FnShowParticularData",
           {
-            params: { LeaveTypeId: details.LeaveTypeId },
+            params: { LeaveTypeId: details?.LeaveTypeId },
             headers: {
               Authorization: `Bearer ${token}`,
             },
