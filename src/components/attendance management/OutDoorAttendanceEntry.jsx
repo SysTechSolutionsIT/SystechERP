@@ -41,7 +41,7 @@ const OutDoorAttendanceEntry = () => {
           axios.get("http://localhost:5500/employee-type/FnShowActiveData", {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          axios.get("http://localhost:5500/shift-master/FnShowActiveData", {
+          axios.get("http://localhost:5500/k8g2d4j9/FnShowActiveData", {
             headers: { Authorization: `Bearer ${token}` },
           }),
           axios.get("http://localhost:5500/job-type/FnShowActiveData", {

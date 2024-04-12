@@ -106,7 +106,7 @@ const AdvanceInstallmentModal = ({visible, onClick, edit, ID}) => {
   useEffect(() =>{
     const FetchAdvanceDetails = async () =>{
       try {
-        const response = await axios.get('http://localhost:5500/advance-request/FnShowParticularRepaymentData',
+        const response = await axios.get('http://localhost:5500/a0bdhs87t/FnShowParticularRepaymentData',
         {
           params: { AdvanceId: ID},
           headers: { Authorization: `Bearer ${token}`}

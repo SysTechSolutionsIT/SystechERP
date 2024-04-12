@@ -114,12 +114,12 @@ const BranchMaster = () => {
 
   useEffect(() => {
     fetchDestData();
-  }, [token]);
+  }, [token, isModalOpen]);
 
   const fetchDestData = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5500/branch-master/FnShowActiveData",
+        "http://localhost:5500/l3r2o5v7/FnShowActiveData",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -162,7 +162,7 @@ const BranchMaster = () => {
     }
 
     try {
-      const apiUrl = `http://localhost:5500/branch-master/FnAddUpdateDeleteRecord`;
+      const apiUrl = `http://localhost:5500/l3r2o5v7/FnAddUpdateDeleteRecord`;
 
       const response = await axios.post(
         apiUrl,
@@ -180,7 +180,7 @@ const BranchMaster = () => {
       if (response.data.message === "Record Deleted Successfully") {
         console.log(`Record with ID ${DeleteId} deleted successfully.`);
         alert("Record Deleted");
-        window.location.reload();
+        fetchDestData()
       } else {
         console.error(`Failed to delete record with ID ${DeleteId}.`);
       }
@@ -292,7 +292,7 @@ const BranchMaster = () => {
       <BranchModal visible={isModalOpen} onClick={() => setModalOpen(false)} />
       {branch.length === 0 ? (
         <div className="flex justify-center items-center">
-          <NoDataNotice Text="No Data Yet" visible={isModalOpen} />
+          <NoDataNotice Text="No Branch Data Yet" visible={isModalOpen} />
         </div>
       ) : (
         <div className="grid gap-4 justify-between">
@@ -391,7 +391,7 @@ const BranchMaster = () => {
                           <td
                             key={columnName}
                             className={`px-4 text-[11px] border-2 whitespace-normal ${
-                              columnName === "BranchShortName" && "text-right"
+                              columnName === "BranchShortName"
                             } ${columnVisibility[columnName] ? "" : "hidden"}`}
                           >
                             {result[columnName]}
@@ -449,7 +449,7 @@ const BranchMaster = () => {
                           <td
                             key={columnName}
                             className={`px-4 text-[11px] border-2 whitespace-normal ${
-                              columnName === "BranchShortName" && "text-right"
+                              columnName === "BranchShortName"
                             } ${columnVisibility[columnName] ? "" : "hidden"}`}
                           >
                             {result[columnName]}

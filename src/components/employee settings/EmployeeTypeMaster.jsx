@@ -30,7 +30,29 @@ const EmployeeTypeMaster = () => {
       }
     };
     fetchEmpTypeData();
-  }, [token]);
+  }, [token, isModalOpen]);
+
+  const [employeeTypeGroup, setEmployeeTypeGroup] = useState([]);
+  useEffect(() => {
+    const fetchEmpTypeData = async () => {
+      const CID = 1;
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/two-field/FnShowCategoricalData",
+          {
+            params: { MasterNameId: CID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        console.log("empTypeData", data);
+        setEmployeeTypeGroup(data);
+      } catch (error) {
+        console.error("Error fetching emptype:", error);
+      }
+    };
+    fetchEmpTypeData();
+  }, [token, isModalOpen]);
 
   const deleteEmpType = async (DeleteId) => {
     const confirmDelete = window.confirm(
@@ -78,6 +100,7 @@ const EmployeeTypeMaster = () => {
   const [columnVisibility, setColumnVisibility] = useState({
     EmployeeType: true,
     EmployeeTypeGroup: true,
+    PrefixEnabled: true,
     ShortName: true,
     Remark: false,
   });
@@ -85,7 +108,8 @@ const EmployeeTypeMaster = () => {
   const columnNames = {
     EmployeeType: "Employee Type",
     EmployeeTypeGroup: "Employee Type Group",
-    ShortName: "Prefix",
+    PrefixEnabled: 'ID Prefix Enabled',
+    ShortName: "Employee ID Prefix",
     Remark: "Remarks",
   };
 
@@ -370,7 +394,13 @@ const EmployeeTypeMaster = () => {
                           key={columnName}
                           className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
                         >
-                          {result[columnName]}
+                          {columnName === "EmployeeTypeGroup" ? (
+                            // Check if columnName is EmployeeTypeGroup
+                            employeeTypeGroup.find((item) => item.FieldId == result[columnName])?.FieldDetails || "Unknown FieldName"
+                          ) : (
+                            // If not EmployeeTypeGroup, simply display the result
+                            result[columnName]
+                          )}
                         </td>
                       ) : (
                         <td key={columnName} className="hidden"></td>
@@ -428,7 +458,13 @@ const EmployeeTypeMaster = () => {
                           key={columnName}
                           className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
                         >
-                          {result[columnName]}
+                          {columnName === "EmployeeTypeGroup" ? (
+                            // Check if columnName is EmployeeTypeGroup
+                            employeeTypeGroup.find((item) => item.FieldId == result[columnName])?.FieldDetails || "Unknown FieldName"
+                          ) : (
+                            // If not EmployeeTypeGroup, simply display the result
+                            result[columnName]
+                          )}
                         </td>
                       ) : (
                         <td key={columnName} className="hidden"></td>

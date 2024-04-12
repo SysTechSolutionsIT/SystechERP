@@ -188,7 +188,7 @@ const SplitData = (data) => {
                   <input
                     id="EmployeeId"
                     type="text"
-                    value={formik.values.EmployeeId}
+                    value={ID}
                     className={`w-full mt-1 px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                     onChange={formik.handleChange}
                     disabled={true}
@@ -288,7 +288,7 @@ const SplitData = (data) => {
               </p>
               <input
                 id="EmployeeId"
-                type="number"
+                type="text"
                 value={ID}
                 className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg `}
                 onChange={formik.handleChange}

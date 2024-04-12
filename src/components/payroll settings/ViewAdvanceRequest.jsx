@@ -60,7 +60,7 @@ const ViewAdvanceRequest = ({ visible, onClick, edit, ID}) => {
     const updateAdvanceRequest = async (values) => {
       try {
         const response = await axios.post(
-          "http://localhost:5500/advance-request/FnAddUpdateDeleteRecord",
+          "http://localhost:5500/a0bdhs87t/FnAddUpdateDeleteRecord",
           values,
           {
             params: { AdvancdId: ID},
@@ -93,7 +93,7 @@ const ViewAdvanceRequest = ({ visible, onClick, edit, ID}) => {
     useEffect(() => {
         const fetchAdvanceRequest = async () =>{
             try {
-                const response = await axios.get('http://localhost:5500/advance-request/FnShowParticularData',
+                const response = await axios.get('http://localhost:5500/a0bdhs87t/FnShowParticularData',
                 {
                     params: { AdvanceId: ID },
                     headers: { Authorization: `Bearer ${token}` } 

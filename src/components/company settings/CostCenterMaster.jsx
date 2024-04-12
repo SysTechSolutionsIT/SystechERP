@@ -5,6 +5,7 @@ import CostCenterModal from "./CostCenterModal";
 import VECost from "./ViewCost";
 import axios from "axios";
 import { useAuth, useDetails } from "../Login";
+import NoDataNotice from "../NoDataNotice";
 
 const CostCenterMaster = () => {
   const [CC, setCC] = useState([]);
@@ -60,7 +61,7 @@ const CostCenterMaster = () => {
   //For API
   useEffect(() => {
     fetchCostCenterData();
-  }, [token]);
+  }, [token, isModalOpen]);
 
   const fetchCostCenterData = async () => {
     try {
@@ -268,6 +269,11 @@ const CostCenterMaster = () => {
         visible={isModalOpen}
         onClick={() => setModalOpen(false)}
       />
+      {CC.length === 0 ? (
+        <div className="flex justify-center items-center">
+          <NoDataNotice Text="No Cost Center Data Yet" visible={isModalOpen} />
+        </div>
+      ) : (
       <div className="grid gap-4  justify-between">
         <div className="my-1 rounded-2xl bg-white p-2 pr-8">
           <table className="min-w-full text-center  rounded-lg justify-center whitespace-normal">
@@ -415,6 +421,7 @@ const CostCenterMaster = () => {
           </table>
         </div>
       </div>
+      )}
       <VECost
         visible={veCost}
         onClick={() => setVeCost(false)}

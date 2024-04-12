@@ -4,6 +4,7 @@ import FinancialModal from "./FinancialModal";
 import VEFModal from "./ViewFin";
 import axios from "axios";
 import { useAuth } from "../Login";
+import NoDataNotice from "../NoDataNotice";
 
 const FinMaster = () => {
   const [filteredData, setFilteredData] = useState([]);
@@ -114,7 +115,7 @@ const FinMaster = () => {
 
   useEffect(() => {
     fetchFinData();
-  }, [token]);
+  }, [token, isModalOpen]);
 
   const fetchFinData = async () => {
     try {
@@ -311,6 +312,11 @@ const FinMaster = () => {
         visible={isModalOpen}
         onClick={() => setModalOpen(false)}
       />
+      {Fins.length === 0 ? (
+        <div className="flex justify-center items-center">
+          <NoDataNotice Text="No Financial Year Data Yet" visible={isModalOpen} />
+        </div>
+      ) : (
       <div className="grid gap-2 justify-between">
         <div className="rounded-2xl bg-white p-2 pr-8">
           <table className="min-w-full text-center rounded-lg justify-center whitespace-normal">
@@ -503,7 +509,8 @@ const FinMaster = () => {
             </tbody>
           </table>
         </div>
-      </div>
+      </div> 
+      )}
       <VEFModal
         visible={veFin}
         onClick={() => setFin(false)}

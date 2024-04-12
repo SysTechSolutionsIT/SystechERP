@@ -15,7 +15,7 @@ const DesignationMaster = () => {
     const fetchDesignations = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5500/designation-master/FnShowActiveData",
+          "http://localhost:5500/d9e7x2a1/FnShowActiveData",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -41,7 +41,7 @@ const DesignationMaster = () => {
     }
     try {
       const response = await axios.post(
-        `http://localhost:5500/designation-master/FnAddUpdateDeleteRecord`,
+        `http://localhost:5500/d9e7x2a1/FnAddUpdateDeleteRecord`,
         {
           DesignationId: DeleteId,
           IUFlag: "D",

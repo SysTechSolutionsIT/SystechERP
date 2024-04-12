@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
 
   const handleSetToken = (newToken) => {
     setToken(newToken);
-    Cookies.set("token", newToken, { expires: 7 }); // Set an expiration date if needed
+    Cookies.set("token", newToken, { expires: 1 }); // Set an expiration date if needed
   };
 
   useEffect(() => {
@@ -214,7 +214,7 @@ function Login() {
 
       // Redirect if token is available
       if (token) {
-        navigate("/dashboard");
+        navigate('/j0hg2l4r');
         console.log("Company Id", companyId);
         console.log("Branch Id", branchId);
         console.log("Fin year", fYear);
@@ -261,7 +261,7 @@ function Login() {
     const fetchBranchMaster = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5500/branch-master/FnShowActiveData"
+          "http://localhost:5500/l3r2o5v7/FnShowActiveData"
         );
         const data = response.data;
         setBranches(data);

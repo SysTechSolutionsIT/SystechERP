@@ -349,7 +349,7 @@ export default function Personal({ ID }) {
     };
   
     fetchEmpTypeData();
-  }, [token, ID]);
+  }, [token, isModalOpen]);
   
   
 
@@ -675,7 +675,7 @@ export default function Personal({ ID }) {
             </div>
             <div className="flex flex-col">
               <p className="capatilize font-semibold text-[13px] mb-1">
-                Employee Type Group
+                Employee Type Group 
               </p>
               <div className="flex items-center">
                 <select

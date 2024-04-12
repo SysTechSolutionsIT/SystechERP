@@ -21,7 +21,7 @@ const BranchModal = ({ visible, onClick }) => {
       AcFlag: "Y",
       CreatedOn: new Date(),
     },
-    onSubmit: (values) => {
+    onSubmit: (values, {resetForm}) => {
       const updatedValues = {
         CompanyId: companyId,
         BranchName: values.BranchName,
@@ -33,13 +33,15 @@ const BranchModal = ({ visible, onClick }) => {
         CreatedOn: new Date(),
       };
       AddBranch(updatedValues);
+      resetForm()
+      onClick()
     },
   });
 
   const AddBranch = async (values) => {
     try {
       const response = await axios.post(
-        "http://localhost:5500/branch-master/FnAddUpdateDeleteRecord",
+        "http://localhost:5500/l3r2o5v7/FnAddUpdateDeleteRecord",
         values,
         {
           headers: {
@@ -52,7 +54,6 @@ const BranchModal = ({ visible, onClick }) => {
         console.log(data);
         alert("Branch added successfully");
         // Handle successful response
-        window.location.reload();
       } else {
         console.error(`HTTP error! Status: ${response.status}`);
         // Handle error response

@@ -43,7 +43,7 @@ const ViewDesignation = ({ visible, onClick, edit, ID }) => {
 
     const updateDesignation = async (data) =>{
         try{
-            const response = axios.post(`http://localhost:5500/designation-master/FnAddUpdateDeleteRecord`, data, {
+            const response = axios.post(`http://localhost:5500/d9e7x2a1/FnAddUpdateDeleteRecord`, data, {
                 params: {DesignationId: ID},    
                 headers:{Authorization: `Bearer ${token}`}
             })
@@ -56,7 +56,7 @@ const ViewDesignation = ({ visible, onClick, edit, ID }) => {
     useEffect(() => {
         const fetchDesignation = async() =>{
             try{
-                const response = await axios.get(`http://localhost:5500/designation-master/FnShowParticularData`,{
+                const response = await axios.get(`http://localhost:5500/d9e7x2a1/FnShowParticularData`,{
                     params: {DesignationId: ID},    
                     headers:{Authorization: `Bearer ${token}`}
                   })

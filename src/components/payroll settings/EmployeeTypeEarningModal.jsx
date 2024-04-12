@@ -20,10 +20,12 @@ const EmployeeTypeEarningModal = ({ visible, onClick }) => {
         EmployeeTypeGroup: "",
         Remark: "",
         },
-        onSubmit: (values) =>{
+        onSubmit: (values, {resetForm}) =>{
             console.log(values)
             console.log(selectedHeads)
             addCaderwiseEarning(selectedHeads)
+            resetForm()
+            onClick()
         }
     })
 

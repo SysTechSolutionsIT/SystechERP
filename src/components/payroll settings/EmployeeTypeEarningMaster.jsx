@@ -135,7 +135,7 @@ const [columnVisibility, setColumnVisibility] = useState({
             }
         }
         fetchCaderwiseHeads()
-      },[token])
+      },[token, isModalOpen])
 
       const deleteEmployeeTypeEarning = async(CaderwiseId, EarningHeadId) =>{
         const confirmDelete = window.confirm('Are you sure you want to delete this Earning Head?')

@@ -12,6 +12,7 @@ function Registration() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [role, setRole] = useState("");
+  const [accessRights, setAccessRights] = useState("");
   const [passwordMatchError, setPasswordMatchError] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -26,6 +27,24 @@ function Registration() {
 
   const navigate = useNavigate();
 
+  const [ preDefinedRoles, setPreDefinedRoles ] = useState([])
+  useEffect(() => {
+    const fetchUserRoles = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/create-user-roles/FnShowActiveData",
+        );
+        console.log("Response Object", response);
+        const data = response.data;
+        console.log(data);
+        setPreDefinedRoles(data);
+      } catch (error) {
+        console.log("Error while fetching course data: ", error.message);
+      }
+    };
+    fetchUserRoles();
+  }, []);
+
   const roleBasedAccess = {
     Admin: [
       287, 549, 610, 624, 703, 736, 872, 954, 143, 217, 395, 431, 502, 598,
@@ -36,12 +55,11 @@ function Registration() {
     Employee: [153, 159, 926, 871, 141, 531, 497],
   };
 
-  const [accessRights, setAccessRights] = useState("");
-  useEffect(() => {
-    if (role === "Admin") setAccessRights(roleBasedAccess.Admin.join(","));
-    if (role === "Employee")
-      setAccessRights(roleBasedAccess.Employee.join(","));
-  }, [role]);
+  // useEffect(() => {
+  //   if (role === "Admin") setAccessRights(roleBasedAccess.Admin.join(","));
+  //   if (role === "Employee")
+  //     setAccessRights(roleBasedAccess.Employee.join(","));
+  // }, [role]);
 
   const userRegistration = async () => {
     if (password !== confirmPassword) {
@@ -96,8 +114,27 @@ function Registration() {
   };
 
   const navDash = () => {
-    navigate("/company-masters");
+    navigate("/y5ts9c4z");
   };
+
+  const handleRoleChange = (event) => {
+    const selectedRole = event.target.value;
+    setRole(selectedRole);
+  
+    // Set access rights based on the selected role
+    const role = preDefinedRoles.find(role => role.RoleName === selectedRole);
+    if (role) {
+      setAccessRights(role.AccessRights);
+      console.log('Updated Access Rights', accessRights)
+    } else {
+      setAccessRights('');
+    }
+  };
+
+  useEffect(() => {
+    console.log('Updated Access Rights', accessRights);
+  }, [accessRights]);
+  
 
   return (
     <div className="mt-8 flex items-center justify-center ">
@@ -217,11 +254,14 @@ function Registration() {
               id="role"
               value={role}
               className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-              onChange={(e) => setRole(e.target.value)}
+              onChange={handleRoleChange}
             >
               <option value="">Select Role</option>
-              <option value="Admin">Admin</option>
-              <option value="Employee">Employee</option>
+              { preDefinedRoles.length > 0 ? ( preDefinedRoles.map((item, index) =>(
+                <option value={item.RoleName}>{item.RoleName}</option>
+              ))) : (
+                <option value=''>No Roles Defined Yet</option>
+              )}
             </select>
           </div>
           <div className="flex gap-10 justify-center">

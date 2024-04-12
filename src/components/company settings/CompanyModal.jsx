@@ -37,6 +37,7 @@ const CompanyModal = ({ visible, onClick }) => {
       console.log(values);
       addCompany(values);
       resetForm()
+      onClick()
     },
   });
 
@@ -74,7 +75,7 @@ const CompanyModal = ({ visible, onClick }) => {
       }
     }
     fetchCompanySectors()
-  },[token])
+  },[token, isTwoFieldOpen])
 
   const handleUpload = () =>{
     const formdata = new FormData()

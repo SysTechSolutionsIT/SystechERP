@@ -83,136 +83,136 @@ function App() {
                   </div>
                 }
               >
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/company-masters" element={<CompMaster />} />
-                <Route path="/financial-masters" element={<FinMaster />} />
+                <Route path="/j0hg2l4r" element={<Dashboard />} />
+                <Route path="/y5ts9c4z" element={<CompMaster />} />
+                <Route path="/q8wn1g6k" element={<FinMaster />} />
                 <Route
-                  path="/company-configurations"
+                  path="/r3fz7k5b"
                   element={<CompConfig />}
                 />
-                <Route path="/bank-master" element={<BankMaster />} />
+                <Route path="/i2p8s6xq" element={<BankMaster />} />
                 <Route
-                  path="/costcenter-master"
+                  path="/e9u0b7h3"
                   element={<CostCenterMaster />}
                 />
                 <Route
-                  path="/department-master"
+                  path="/m4c8n2p1"
                   element={<DepartmentMaster />}
                 />
                 <Route
-                  path="/destination-master"
+                  path="/o7l5m1d9"
                   element={<DestinationMaster />}
                 />
                 <Route
-                  path="/three-field-master"
+                  path="/f2q1r9z3"
                   element={<ThreeFieldsMaster />}
                 />
-                <Route path="/two-field-master" element={<TwoFieldsMaster />} />
-                <Route path="/employee-master" element={<EmployeeMaster />} />
+                <Route path="/a6o0w3x5" element={<TwoFieldsMaster />} />
+                <Route path="/h7b8n1y4" element={<EmployeeMaster />} />
                 <Route
-                  path="/leave-balance-master"
+                  path="/g9f3c2v1"
                   element={<LeaveBalance />}
                 />
                 <Route
-                  path="/employee-type-master"
+                  path="/t5p7e1i2"
                   element={<EmployeeTypeMaster />}
                 />
-                <Route path="/branch-master" element={<BranchMaster />} />
+                <Route path="/l3r2o5v7" element={<BranchMaster />} />
                 <Route
-                  path="/employee-grade-master"
+                  path="/u4y8i2x7"
                   element={<EmployeeGradeMaster />}
                 />
                 <Route
-                  path="/designation-master"
+                  path="/d9e7x2a1"
                   element={<DesignationMaster />}
                 />
-                <Route path="/kra-master" element={<KRAMaster />} />
+                <Route path="/b3i7w1y8" element={<KRAMaster />} />
                 <Route
-                  path="/jobs-responsibility-master"
+                  path="/z6r4u2e9"
                   element={<JobsResponsibilityMaster />}
                 />
                 {/* <Route path="/add-employee" element={<EMPTabs />} /> */}
-                <Route path="/shift-master" element={<ShiftMaster />} />
-                <Route path="/holiday-master" element={<HolidayMaster />} />
-                <Route path="/weeklyoff-master" element={<WeeklyOffMaster />} />
-                <Route path="/attDevice-master" element={<DeviceMaster />} />
-                <Route path="/job-type-master" element={<JobTypeMaster />} />
+                <Route path="/k8g2d4j9" element={<ShiftMaster />} />
+                <Route path="/s3f9n7v2" element={<HolidayMaster />} />
+                <Route path="/x5r1c9j0" element={<WeeklyOffMaster />} />
+                <Route path="/p2l4o8n9" element={<DeviceMaster />} />
+                <Route path="/c7v2m8n5" element={<JobTypeMaster />} />
                 <Route
-                  path="/leave-type-master"
+                  path="/q1d9y3z6"
                   element={<LeaveTypeMaster />}
                 />
 
                 <Route
-                  path="/edit-employee/:employeeId"
+                  path="/v6w2s4h8/:employeeId"
                   element={<EMPTabs />}
                 />
 
-                <Route path="/shift-roster" element={<ShiftRoster />} />
+                <Route path="/j5t9l4n2" element={<ShiftRoster />} />
                 <Route
-                  path="/manual-attendance-entry"
+                  path="/r7e2p6g1"
                   element={<ManualAttendanceEntry />}
                 />
                 <Route
-                  path="/daily-attendance-processing"
+                  path="/f0t4r1n5"
                   element={<DailyAttendanceProcessing />}
                 />
                 <Route
-                  path="/manual-attendance-approval"
+                  path="//z3x7y9b2"
                   element={<ManualAttendanceApproval />}
                 />
                 <Route
-                  path="/outdoor-attendance-entry"
+                  path="/q8c2j4m6"
                   element={<OutDoorAttendanceEntry />}
                 />
                 <Route
-                  path="/outdoor-attendance-approval"
+                  path="/s5e1p3g7"
                   element={<OutDoorAttendanceApproval />}
                 />
                 <Route
-                  path="/earning-heads-master"
+                  path="/i9u6l3b7"
                   element={<EarningHeadsMaster />}
                 />
                 <Route
-                  path="/deduction-heads-master"
+                  path="/w2z8a6s3"
                   element={<DeductionHeadsMaster />}
                 />
                 <Route
-                  path="/professional-tax-master"
+                  path="/h7x4p8o3"
                   element={<ProfesssionalTaxMaster />}
                 />
                 <Route
-                  path="/employee-type-earning-deduction"
+                  path="/y9n2m4o7"
                   element={<EmpTypeEarningDeduction />}
                 />
                 <Route
-                  path="/employee-type-earning"
+                  path="/x8q5g2h1"
                   element={<EmployeeTypeEarningMaster />}
                 />
                 <Route
-                  path="/employee-type-deduction"
+                  path="/u3v9y4z6"
                   element={<EmployeeTypeDeductionMaster />}
                 />
                 <Route
-                  path="/monthly-attendance-processing"
+                  path="/k1j7o9r5"
                   element={<MonthlyAttendance />}
                 />
-                <Route path="/advance-request" element={<AdvanceRequest />} />
-                <Route path="/leave-application" element={<LeaveApp />} />
-                <Route path="/leave-approval" element={<LeaveApproval />} />
-                <Route path="/ED-imports" element={<EDImports />} />
-                <Route path="/salary-processing" element={<SalProcessing />} />
-                <Route path="/advance-approval" element={<AdvanceApproval />} />
-                <Route path="/user-role-settings" element={<UserRoles />} />
+                <Route path="/a0bdhs87t" element={<AdvanceRequest />} />
+                <Route path="/a5d3g2p6" element={<LeaveApp />} />
+                <Route path="/b8m4n9r1" element={<LeaveApproval />} />
+                <Route path="/l6t3z9d1" element={<EDImports />} />
+                <Route path="/o5v2w1t8" element={<SalProcessing />} />
+                <Route path="/p7c9h3g2" element={<AdvanceApproval />} />
+                <Route path="/n1m5z7t8" element={<UserRoles />} />
                 <Route
-                  path="/attendance-master/empGatePassEntry"
+                  path="/e4d6j7r9"
                   element={<GateEntryMaster />}
                 />
                 <Route
-                  path="/advance-repayment"
+                  path="/q0f8x6m3"
                   element={<AdvanceRepayment />}
                 />
                 <Route
-                  path="/gatepass-approval"
+                  path="/r9w7v3k1"
                   element={<GatePassApproval />}
                 />
               </Route>

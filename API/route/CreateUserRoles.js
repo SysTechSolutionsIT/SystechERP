@@ -75,7 +75,7 @@ const UserRoles = sequelize.define('UserRoles', {
     } 
   });
 
-  router.get("/FnShowActiveData", authToken, async (req, res) => {
+  router.get("/FnShowActiveData", async (req, res) => {
     try {
       const Roles = await UserRoles.findAll({
         where: {

@@ -101,7 +101,7 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
     else console.log("None of the two");
     try {
       const response = axios.post(
-        `http://localhost:5500/leave-application/FnAddUpdateDeleteRecord`,
+        `http://localhost:5500/a5d3g2p6/FnAddUpdateDeleteRecord`,
         values,
         {
           params: { LeaveApplicationId: ID },
@@ -225,7 +225,7 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
   const fetchLeaveApplication = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5500/leave-application/FnShowParticularData",
+        "http://localhost:5500/a5d3g2p6/FnShowParticularData",
         {
           params: { LeaveApplicationId: ID },
           headers: { Authorization: `Bearer ${token}` },
@@ -282,7 +282,7 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
     const fetchPreviousLeaves = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5500/leave-application/FnShowParticularEmployeeData",
+          "http://localhost:5500/a5d3g2p6/FnShowParticularEmployeeData",
           {
             params: { EmployeeId: details?.EmployeeId },
             headers: { Authorization: `Bearer ${token}` },

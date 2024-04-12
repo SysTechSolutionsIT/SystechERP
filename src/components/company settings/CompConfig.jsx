@@ -128,7 +128,7 @@ export default function EMPTabs() {
     };
 
     fetchCurrencyData();
-  }, [token]);
+  }, [token, isModalOpen]);
 
   const updateCompanyConfig = async (data) => {
     try {
@@ -249,7 +249,7 @@ export default function EMPTabs() {
                 GENERAL
               </p>
             </li>
-            <li className="-mb-px mr-2 ml-2 cursor-pointer">
+            {/* <li className="-mb-px mr-2 ml-2 cursor-pointer">
               <p
                 className={
                   "inline-block px-2 py-1 font-semibold  rounded-lg " +
@@ -264,7 +264,7 @@ export default function EMPTabs() {
               >
                 COMPANY
               </p>
-            </li>
+            </li> */}
             <li className="-mb-px mr-2 cursor-pointer">
               <p
                 className={

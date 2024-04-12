@@ -49,11 +49,14 @@ const TwoFieldsMaster = () => {
 
   const [columnVisibility, setColumnVisibility] = useState({
     FieldDetails: true,
+    MasterNameId: true,
     AcFlag: true,
+
   });
 
   const columnNames = {
     FieldDetails: "Field Details",
+    MasterName: 'Master Name',
     AcFlag: "Status",
   };
 

@@ -12,7 +12,7 @@ import { useEmployeeType } from "./personal";
 const SalaryStructure = ({ID, name}) => {
   const { token } = useAuth();
   const { employeeTypeId } = useEmployeeType()
-  console.log(employeeTypeId)
+  console.log('Employee ID and Name in Salary Structure', ID, name)
   const [details, setDetails] = useState([]);
   const [isOTFlagChecked, setOTFlagChecked] = useState(false);
   const [isPFFlagChecked, setPFFlagChecked] = useState(false);
@@ -171,7 +171,7 @@ const SalaryStructure = ({ID, name}) => {
             </p>
             <input
               id="EmployeeId"
-              type="number"
+              type="text"
               value={ID}
               className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg `}
               onChange={formik.handleChange}

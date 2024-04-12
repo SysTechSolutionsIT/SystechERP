@@ -19,7 +19,7 @@ const FinancialModal = ({ visible, onClick }) => {
       Remark: "",
       IUFlag: "I",
     },
-    onSubmit: async (values) => {
+    onSubmit: async (values, {resetForm}) => {
       console.log(values)
       try {
         const formData = {
@@ -41,6 +41,7 @@ const FinancialModal = ({ visible, onClick }) => {
           }
         );
           alert("Financial record added successfully");
+          resetForm()
           onClick();
       } catch (error) {
         console.error("Error:", error.message);

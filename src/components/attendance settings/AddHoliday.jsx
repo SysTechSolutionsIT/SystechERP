@@ -32,7 +32,7 @@ const AddHoliday = ({ visible, onClick }) => {
       console.log(formData);
       try {
         const response = await axios.post(
-          "http://localhost:5500/holiday-master/FnAddUpdateDeleteRecord",
+          "http://localhost:5500/s3f9n7v2/FnAddUpdateDeleteRecord",
           formData,
           {
             headers: {

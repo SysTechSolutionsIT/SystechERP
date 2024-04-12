@@ -74,6 +74,7 @@ export default function AddEmployeePersonal() {
       addEmpAcademic()
       addEmpFam()
       alert("Employee Personal Details Added Successfully. Please add further details in the edit section.");
+      window.location.reload()
     },
   });
 
@@ -300,7 +301,7 @@ export default function AddEmployeePersonal() {
       }
     }
     fetchEmployeeTypes()
-  },[token])
+  },[token, isModalOpen])
 
   const [categories, setCategories] = useState([]);
   useEffect(() => {
@@ -322,7 +323,7 @@ export default function AddEmployeePersonal() {
       }
     };
     fetchCategoryData();
-  }, [token]);
+  }, [token, isModalOpen]);
 
   const [sals, setSalutation] = useState([]);
   useEffect(() => {
@@ -344,7 +345,7 @@ export default function AddEmployeePersonal() {
       }
     };
     fetchSalutationsData();
-  }, [token, ]);
+  }, [token, isModalOpen]);
 
   const [Religion, setReligion] = useState([]);
   useEffect(() => {
@@ -366,7 +367,7 @@ export default function AddEmployeePersonal() {
       }
     };
     fetchReligionData();
-  }, [token, ]);
+  }, [token, isModalOpen]);
 
   const [Reference, setReference] = useState([]);
   useEffect(() => {
@@ -389,7 +390,7 @@ export default function AddEmployeePersonal() {
       }
     };
     fetchReferenceData();
-  }, [token, ]);
+  }, [token,isModalOpen ]);
 
   const [Caste, setCaste] = useState([]);
   useEffect(() => {
@@ -411,7 +412,7 @@ export default function AddEmployeePersonal() {
       }
     };
     fetchCasteData();
-  }, [token, ]);
+  }, [token, isModalOpen]);
 
   const [employeeTypeGroup, setEmployeeTypeGroup] = useState([]);
 
@@ -440,7 +441,7 @@ export default function AddEmployeePersonal() {
     };
   
     fetchEmpTypeData();
-  }, [token]);
+  }, [token, isModalOpen]);
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -526,7 +527,7 @@ export default function AddEmployeePersonal() {
             </div>
             <div className="flex flex-col">
               <p className="capatilize font-semibold text-[13px] mb-1">
-                Employee Type Group
+                Employee Type Group *
               </p>
               <div className="flex items-center">
                 <select

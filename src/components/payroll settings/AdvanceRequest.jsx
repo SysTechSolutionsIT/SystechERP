@@ -145,7 +145,7 @@ const AdvanceRequest = () => {
   const fetchRequestData = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5500/advance-request/FnShowEmployeeAdvanceRequests",
+        "http://localhost:5500/a0bdhs87t/FnShowEmployeeAdvanceRequests",
         {
           params: { EmployeeId: empid },
           headers: {

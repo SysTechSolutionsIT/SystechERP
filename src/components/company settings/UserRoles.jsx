@@ -7,6 +7,7 @@ import DepartmentModal from "./DepartmentModal";
 import VEDept from "./ViewDept";
 import { useAuth } from "../Login";
 import ViewUserRoles from './ViewUserRoles'
+import NoDataNotice from '../NoDataNotice';
 
 const UserRoles = () => {
     const [isModalOpen, setModalOpen] = useState(false);
@@ -105,7 +106,7 @@ const UserRoles = () => {
     
     const [columnVisibility, setColumnVisibility] = useState({
       RoleName: true,
-      AccessRights: true
+      AccessRights: false
     });
   
     const columnNames = {
@@ -293,6 +294,11 @@ const UserRoles = () => {
           visible={isModalOpen}
           onClick={() => setModalOpen(false)}
         />
+        {roles.length === 0 ? (
+        <div className="flex justify-center items-center">
+          <NoDataNotice Text="No User Roles Defined Yet" visible={isModalOpen} />
+        </div>
+      ) : (
         <div className="grid gap-4 w-[60%] justify-between">
           <div className="my-1 rounded-2xl bg-white p-2 pr-8">
             <table className="text-center rounded-lg whitespace-pre-wrap">
@@ -465,6 +471,7 @@ const UserRoles = () => {
             </table>
           </div>
         </div>
+      )}
         <ViewUserRoles
           visible={veDept}
           onClick={() => setVeDept(false)}

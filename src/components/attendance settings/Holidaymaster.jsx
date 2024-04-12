@@ -186,7 +186,7 @@ const HolidayMaster = () => {
   const fetchHolidayData = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5500/holiday-master/FnShowActiveData",
+        "http://localhost:5500/s3f9n7v2/FnShowActiveData",
         {
           headers: {
             authorization: `Bearer ${token}`,
@@ -237,7 +237,7 @@ const HolidayMaster = () => {
     }
 
     try {
-      const apiUrl = `http://localhost:5500/holiday-master/FnAddUpdateDeleteRecord`;
+      const apiUrl = `http://localhost:5500/s3f9n7v2/FnAddUpdateDeleteRecord`;
 
       const response = await axios.post(
         apiUrl,

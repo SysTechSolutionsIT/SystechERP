@@ -67,7 +67,7 @@ const AdvanceApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
   const addReq = async (values) => {
     try {
       const response = await axios.post(
-        "http://localhost:5500/advance-request/FnAddUpdateDeleteRecord",
+        "http://localhost:5500/a0bdhs87t/FnAddUpdateDeleteRecord",
         values,
         {
           params: { AdvanceId: ID },
@@ -99,7 +99,7 @@ const AdvanceApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
   const fetchAppData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5500/advance-request/FnShowParticularData`,
+        `http://localhost:5500/a0bdhs87t/FnShowParticularData`,
         {
           params: { AdvanceId: ID },
           headers: {

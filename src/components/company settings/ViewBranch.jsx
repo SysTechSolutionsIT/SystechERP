@@ -35,7 +35,7 @@ const VEBranch = ({ visible, onClick, edit, ID }) => {
       };
       axios
         .post(
-          `http://localhost:5500/branch-master/FnAddUpdateDeleteRecord`,
+          `http://localhost:5500/l3r2o5v7/FnAddUpdateDeleteRecord`,
           updatedData,
           {
             params: { BranchId: ID },
@@ -82,7 +82,7 @@ const VEBranch = ({ visible, onClick, edit, ID }) => {
   const fetchNewData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5500/branch-master/FnShowParticularData`,
+        `http://localhost:5500/l3r2o5v7/FnShowParticularData`,
         {
           params: { BranchId: ID },
           headers: { Authorization: `Bearer ${token}` },
