@@ -4,6 +4,7 @@ import ViewWeek from "./viewWeek";
 import axios from "axios";
 import AddWeek from "./AddWeek";
 import { useAuth } from "../Login";
+import NoDataNotice from "../NoDataNotice";
 
 export const WeeklyOffData = [
   {
@@ -308,7 +309,11 @@ const WeeklyOffMaster = () => {
         </div>
       </div>
       <AddWeek visible={isModalOpen} onClick={() => setModalOpen(false)} />
-
+      {WeeklyOffData.length === 0 ? (
+        <div className="flex justify-center items-center">
+          <NoDataNotice Text="No Weekly Off Data Yet" visible={isModalOpen} />
+        </div>
+      ) : (
       <div className="grid gap-2 justify-between">
         <div className="my-1 rounded-2xl bg-white p-2 pr-8 ">
           <table className="min-w-full text-center whitespace-normal z-0">
@@ -491,6 +496,7 @@ const WeeklyOffMaster = () => {
           </table>
         </div>
       </div>
+      )}
       <ViewWeek
         visible={WVE}
         onClick={() => setWVE(false)}

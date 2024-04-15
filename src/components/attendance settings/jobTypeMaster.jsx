@@ -5,6 +5,7 @@ import AddJob from "./AddJob";
 import ViewJob from "./ViewJob";
 import { useAuth } from "../Login";
 import axios from "axios";
+import NoDataNotice from "../NoDataNotice";
 
 export const JobTypeData = [
   {
@@ -350,7 +351,11 @@ const JobTypeMaster = () => {
         </div>
       </div>
       <AddJob visible={isModalOpen} onClick={() => setModalOpen(false)} />
-
+      {JobTypeData.length === 0 ? (
+        <div className="flex justify-center items-center">
+          <NoDataNotice Text="No Job Type Data Yet" visible={isModalOpen} />
+        </div>
+      ) : (
       <div className="grid gap-2 justify-between">
         <div className="my-1 rounded-2xl bg-white p-2 pr-8 ">
           <table className="min-w-full text-center whitespace-normal z-0">
@@ -520,6 +525,7 @@ const JobTypeMaster = () => {
           </table>
         </div>
       </div>
+      )}
       <ViewJob
         visible={JVE}
         onClick={() => setJVE(false)}

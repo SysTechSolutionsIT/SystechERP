@@ -40,29 +40,20 @@ const Header = () => {
 
 
   return (
-    <nav className="top-0 w-full bg-blue-900 p-2 border-b-2 z-20 h-15 mb-2">
+    <nav className="w-full bg-blue-900 p-2 border-b-2 z-20 h-10 mb-2">
       <div className="flex justify-end sticky ">
-        <p className="p-2 flex items-center gap-2">
+        <p className=" flex items-center gap-2">
          {previewImage && (
            <img
            src='systechlogo.png'
            alt="Photo"
-           className="rounded-full w-8 h-auto"
+           className="rounded-full w-6 h-6"
          />
          )}
           <p className="text-white">{name}</p>
         </p>
-        <div className="mr-10 flex items-center">
-          {/* <Icon
-            className="w-6 h-6 mx-2"
-            icon="carbon:notification"
-            color="white"
-          />
-          <Icon
-            className="w-6 h-6 mx-2 cursor-pointer"
-            icon="carbon:settings"
-            color="white"
-          /> */}
+        <div className="mr-12 flex items-center">
+        <Icon icon="clarity:notification-solid" className='ml-4 cursor-pointer' width="24" height="24" color="white" />
         </div>
       </div>
     </nav>

@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import ViewAtt from "./ViewAtt";
 import AddAtt from "./AddAtt";
 import axios from "axios";
+import NoDataNotice from "../NoDataNotice";
 import { useAuth } from "../Login";
 
 export const DeviceData = [
@@ -344,7 +345,11 @@ const DeviceMaster = () => {
         </div>
       </div>
       <AddAtt visible={isModalOpen} onClick={() => setModalOpen(false)} />
-
+      {Att.length === 0 ? (
+        <div className="flex justify-center items-center">
+          <NoDataNotice Text="No Device Data Yet" visible={isModalOpen} />
+        </div>
+      ) : (
       <div className="grid gap-2 justify-between">
         <div className="my-1 rounded-2xl bg-white p-2 pr-8 ">
           <table className="min-w-full text-center whitespace-normal z-0">
@@ -524,6 +529,7 @@ const DeviceMaster = () => {
           </table>
         </div>
       </div>
+      )}
       <ViewAtt
         visible={DVE}
         onClick={() => setDVE(false)}

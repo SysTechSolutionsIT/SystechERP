@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import DesignationModal from "./DesignationModal";
 import ViewDesignation from "./ViewDesignation";
+import NoDataNotice from "../NoDataNotice";
 import { useAuth } from "../Login";
 
 const DesignationMaster = () => {
@@ -248,6 +249,11 @@ const DesignationMaster = () => {
         visible={isModalOpen}
         onClick={() => setModalOpen(false)}
       />
+      {DesignData.length === 0 ? (
+        <div className="flex justify-center items-center">
+          <NoDataNotice Text="No Designation Data Yet" visible={isModalOpen} />
+        </div>
+      ) : (
       <div className="grid gap-4 justify-between">
         <div className="my-1 rounded-2xl bg-white p-2 pr-8">
           <table className="min-w-full text-center rounded-lg  whitespace-normal">
@@ -419,6 +425,7 @@ const DesignationMaster = () => {
           </table>
         </div>
       </div>
+      )}
       <ViewDesignation
         visible={veDesign}
         onClick={() => setVeDesign(false)}

@@ -2,6 +2,7 @@ import { Icon } from "@iconify/react";
 import React, { useState, useEffect, useRef } from "react";
 import ViewShift from "./viewShift";
 import AddShift from "./AddShift";
+import NoDataNotice from "../NoDataNotice";
 import axios from "axios";
 import { useAuth } from "../Login";
 
@@ -275,7 +276,11 @@ const ShiftMaster = () => {
         </div>
       </div>
       <AddShift visible={isModalOpen} onClick={() => setModalOpen(false)} />
-
+      {Shift.length === 0 ? (
+        <div className="flex justify-center items-center">
+          <NoDataNotice Text="No Shift Data Yet" visible={isModalOpen} />
+        </div>
+      ) : (
       <div className="grid gap-2 justify-between">
         <div className="my-1 rounded-2xl bg-white p-2 pr-8 ">
           <table className="min-w-full text-center whitespace-normal z-0">
@@ -455,6 +460,7 @@ const ShiftMaster = () => {
           </table>
         </div>
       </div>
+      )}
       <ViewShift
         visible={SVE}
         onClick={() => setSVE(false)}

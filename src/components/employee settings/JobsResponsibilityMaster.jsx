@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { useAuth } from "../Login";
 import JobsResponsibilityModal from "./JobsResponsibilityModal";
+import NoDataNotice from "../NoDataNotice";
 import ViewJobsResponsibility from "./ViewJobsResponsibility";
 
 const JobsResponsibilityMaster = () => {
@@ -260,6 +261,11 @@ const JobsResponsibilityMaster = () => {
         visible={isModalOpen}
         onClick={() => setModalOpen(false)}
       />
+      {jobsRespData.length === 0 ? (
+        <div className="flex justify-center items-center">
+          <NoDataNotice Text="No Job Responsibility Data Yet" visible={isModalOpen} />
+        </div>
+      ) : (
       <div className="grid gap-4 justify-between">
         <div className="my-1 rounded-2xl bg-white p-2 pr-8">
           <table className="min-w-full text-center rounded-lg  whitespace-normal">
@@ -442,6 +448,7 @@ const JobsResponsibilityMaster = () => {
           </table>
         </div>
       </div>
+      )}
       <ViewJobsResponsibility
         visible={veJobs}
         onClick={() => setVeJobs(false)}

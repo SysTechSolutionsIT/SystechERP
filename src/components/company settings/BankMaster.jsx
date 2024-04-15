@@ -234,10 +234,10 @@ const BankMaster = () => {
     fetchCategoryData();
   }, [token]);
 
-  const accountTypeMapping = {};
-  AccTypes.forEach((accType) => {
-    accountTypeMapping[accType.AccountType] = accType.FieldDetails;
-  });
+  const getAccountTypeName = (accountTypeId) => {
+    const accountType = AccTypes.find(type => type.FieldId === accountTypeId);
+    return accountType ? accountType.FieldDetails : "Unknown";
+  };
 
   return (
     <div className="top-25 min-w-[40%]">
@@ -440,7 +440,7 @@ const BankMaster = () => {
                           className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
                         >
                           {columnName === "AccountType"
-                            ? accountTypeMapping[result[columnName]]
+                            ? getAccountTypeName([result[columnName]])
                             : result[columnName]}
                         </td>
                       ) : (
@@ -498,7 +498,7 @@ const BankMaster = () => {
                           className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
                         >
                           {columnName === "AccountType"
-                            ? accountTypeMapping[result[columnName]]
+                            ? getAccountTypeName(result[columnName])
                             : result[columnName]}
                         </td>
                       ) : (
