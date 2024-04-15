@@ -5,7 +5,7 @@ import axios from "axios";
 import { Icon } from "@iconify/react";
 import { useAuth } from "../Login";
 
-const MVEModal = ({ visible, onClick, edit, ID }) => {
+const ManualAttendanceRecordOutTime = ({ visible, onClick, edit, ID }) => {
   const [details, setDetails] = useState([]);
   const [personal, setPersonal] = useState([]);
   const [Shifts, setShift] = useState([]);
@@ -44,13 +44,13 @@ const MVEModal = ({ visible, onClick, edit, ID }) => {
         AttendanceFlag: values.AttendanceFlag,
         FYear: values.FYear,
         EmployeeTypeId: values.EmployeeTypeId,
-        AMonth: formik.values.AMonth,
-        AYear: formik.values.AYear,
+        AMonth: values.AMonth,
+        AYear: values.AYear,
         EmployeeId: values.EmployeeId,
         ShiftId: values.ShiftId,
         InTime: values.InTime,
+        OutTime: values.OutTime,
         JobTypeId: values.JobTypeId,
-        AttendanceFlag: values.AttendanceFlag,
         SanctionBy: values.SanctionBy,
         Remark: values.Remark,
         OutTime: new Date(),
@@ -234,7 +234,7 @@ const MVEModal = ({ visible, onClick, edit, ID }) => {
         <div className="bg-gray-200 w-[60%] p-8 rounded-lg">
           <div className="bg-blue-900 py-2 px-4 rounded-lg flex justify-between items-center">
             <p className="text-white text-[13px] font-semibold text-center">
-              Manual Attendance Entry
+              Record Out Time
             </p>
             <Icon
               icon="maki:cross"
@@ -432,7 +432,7 @@ const MVEModal = ({ visible, onClick, edit, ID }) => {
                 type="submit"
                 className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg w-36 text-[13px]"
               >
-                Save
+                Record Out Time
               </button>
               <button
                 className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg w-36 text-[13px]"
@@ -448,4 +448,4 @@ const MVEModal = ({ visible, onClick, edit, ID }) => {
   );
 };
 
-export default MVEModal;
+export default ManualAttendanceRecordOutTime;

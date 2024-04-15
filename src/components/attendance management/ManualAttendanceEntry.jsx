@@ -5,6 +5,7 @@ import ManualAttendanceEntryModal from "./ManualAttendanceEntryModal";
 import axios from "axios";
 import MVEModal from "./ManualAttendanceViewEdit";
 import NoDataNotice from "../NoDataNotice";
+import ManualAttendanceRecordOutTime from "./ManualAttendanceRecordOutTime";
 
 const ManualAttendanceEntry = () => {
   const [filteredData, setFilteredData] = useState([]);
@@ -17,6 +18,10 @@ const ManualAttendanceEntry = () => {
   const [MVE, setMVE] = useState(false);
   const [edit, setEdit] = useState(false);
   const [ManId, setManId] = useState();
+
+  const [RecordOuttime, setRecordOutttime] = useState(false)
+  const [editOuttime, setEditOuttime] = useState(false)
+  const [AttId, setAttId] = useState()
 
   // React Arrays
   const [employeeTypeMapping, setEmployeeTypes] = useState([]);
@@ -508,9 +513,9 @@ const ManualAttendanceEntry = () => {
                             height="20"
                             className="cursor-pointer"
                             onClick={() => {
-                              setMVE(true); // Open VEModal
-                              setEdit(false); // Disable edit mode for VEModal
-                              setManId(result.AttendanceId); // Pass ID to VEModal
+                              setRecordOutttime(true); // Open VEModal
+                                setEditOuttime(true); // Disable edit mode for VEModal
+                                setAttId(result.AttendanceId); // Pass ID to VEModal
                             }}
                           />
                         </div>
@@ -589,9 +594,9 @@ const ManualAttendanceEntry = () => {
                               className="cursor-pointer"
                               title="Add Out Time"
                               onClick={() => {
-                                setMVE(true); // Open VEModal
-                                setEdit(true); // Disable edit mode for VEModal
-                                setManId(result.AttendanceId); // Pass ID to VEModal
+                                setRecordOutttime(true); // Open VEModal
+                                setEditOuttime(true); // Disable edit mode for VEModal
+                                setAttId(result.AttendanceId); // Pass ID to VEModal
                               }}
                             />
                           </div>
@@ -644,6 +649,12 @@ const ManualAttendanceEntry = () => {
         onClick={() => setMVE(false)}
         edit={edit}
         ID={ManId}
+      />
+      <ManualAttendanceRecordOutTime
+      visible={RecordOuttime}
+      onClick={() => setRecordOutttime(false)}
+      edit={editOuttime}
+      ID={AttId}
       />
     </div>
   );

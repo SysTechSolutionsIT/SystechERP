@@ -25,7 +25,7 @@ const ManualAttendanceApproval = () => {
 
   useEffect(() => {
     fetchRequestData();
-  }, []);
+  }, [token]);
 
   const fetchRequestData = async () => {
     try {
@@ -323,12 +323,6 @@ const ManualAttendanceApproval = () => {
               className="mr-1 mt-0.5"
             />
             Approve All
-          </button>
-          <button
-            className="text-white font-semibold px-4 rounded-lg text-[13px] border border-white"
-            onClick={() => setAddOpen(true)}
-          >
-            Add
           </button>
           <button
             onClick={() => setShowDropdown(!showDropdown)}
