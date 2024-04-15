@@ -132,7 +132,7 @@ const Sidebar = () => {
     { title: "Manual Attendance Entry", path: "/r7e2p6g1" },
     {
       title: "Manual Attendance Approval",
-      path: "//z3x7y9b2",
+      path: "/z3x7y9b2",
     },
     {
       title: "Out Door Duty Attendance Entry",
@@ -781,7 +781,7 @@ const Sidebar = () => {
                         <SubMenuEntry
                           title="Manual Attendance Approval"
                           onClick={() =>
-                            navigate("//z3x7y9b2")
+                            navigate("/z3x7y9b2")
                           }
                         />
                       )}

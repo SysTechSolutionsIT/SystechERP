@@ -4,6 +4,7 @@ import ViewLeave from "./ViewLeave";
 import AddLeave from "./AddLeave";
 import axios from "axios";
 import { useAuth, useDetails } from "../Login";
+import NoDataNotice from "../NoDataNotice";
 
 const LeaveTypeMaster = () => {
   const [filteredData, setFilteredData] = useState([]);
@@ -225,7 +226,7 @@ const LeaveTypeMaster = () => {
     };
 
     fetchLeaveType();
-  }, [token]);
+  }, [token, isModalOpen]);
 
   useEffect(() => {
     const fetchEmployeeTypes = async () => {
@@ -449,7 +450,11 @@ const LeaveTypeMaster = () => {
         </div>
       </div>
       <AddLeave visible={isModalOpen} onClick={() => setModalOpen(false)} />
-
+      {leaveData.length === 0 ? (
+        <div className="flex justify-center items-center">
+          <NoDataNotice Text="No Branch Data Yet" visible={isModalOpen} />
+        </div>
+      ) : (
       <div className="grid gap-2 justify-between">
         <div className="my-1 rounded-2xl bg-white p-2 pr-8 ">
           <table className="min-w-full text-center whitespace-normal z-0">
@@ -630,6 +635,7 @@ const LeaveTypeMaster = () => {
           </table>
         </div>
       </div>
+      )}
       <ViewLeave
         visible={LVE}
         onClick={() => setLVE(false)}

@@ -61,7 +61,7 @@ const ManualAttendanceEntry = () => {
     };
 
     fetchData();
-  }, [token]);
+  }, [token, isModalOpen]);
 
   const renderColumnValue = (columnName, result) => {
     switch (columnName) {
@@ -163,8 +163,10 @@ const ManualAttendanceEntry = () => {
   const [columnVisibility, setColumnVisibility] = useState({
     ApprovalFlag: true,
     AttendanceDate: true,
-    FYear: true,
+    FYear: false,
     EmployeeTypeId: true,
+    AMonth: true,
+    AYear: true,
     EmployeeId: true,
     AttendanceFlag: true,
     ShiftId: true,
@@ -179,6 +181,8 @@ const ManualAttendanceEntry = () => {
     AttendanceDate: "Attendance Date",
     FYear: "FYear",
     EmployeeTypeId: "Employee Type",
+    AMonth: 'Attendance Month',
+    AYear: 'Attendance Year',
     EmployeeId: "Employee Name",
     AttendanceFlag: 'Attendance Flag',
     ShiftId: "Shift",

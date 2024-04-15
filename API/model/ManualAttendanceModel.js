@@ -54,6 +54,12 @@ const TManualAttendance = sequelize.define(
       type: DataTypes.STRING(5),
       allowNull: false,
     },
+    AMonth: {
+      type: DataTypes.INTEGER(2),
+    },
+    AYear: {
+      type: DataTypes.INTEGER(4),
+    },
     JobTypeId: {
       type: DataTypes.STRING(5),
       allowNull: false,

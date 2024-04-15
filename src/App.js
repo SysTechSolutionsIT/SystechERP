@@ -157,7 +157,7 @@ function App() {
                   element={<DailyAttendanceProcessing />}
                 />
                 <Route
-                  path="//z3x7y9b2"
+                  path="/z3x7y9b2"
                   element={<ManualAttendanceApproval />}
                 />
                 <Route

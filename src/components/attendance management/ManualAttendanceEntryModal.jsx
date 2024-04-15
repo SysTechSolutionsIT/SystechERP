@@ -4,6 +4,7 @@ import { Icon } from "@iconify/react";
 import { useState, useEffect } from "react";
 import { useAuth, useDetails } from "../Login";
 import axios from "axios";
+import { createRoutesFromChildren } from "react-router-dom";
 
 const ManualAttendanceEntryModal = ({ visible, onClick }) => {
   const { token } = useAuth();
@@ -21,6 +22,8 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
       AttendanceDate: new Date().toISOString().split('T')[0],
       FYear: "",
       EmployeeTypeId: "",
+      AMonth: new Date().getMonth() + 1, 
+      AYear: new Date().getFullYear(), 
       EmployeeId: "",
       EmployeeTypeGroup: "",
       ShiftId: "",
@@ -41,10 +44,12 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
         AttendanceDate: formik.values.AttendanceDate,
         EmployeeId: empid,
         EmployeeTypeId: formik.values.EmployeeTypeId,
+        AMonth: formik.values.AMonth,
+        AYear: formik.values.AYear,
         EmployeeTypeGroup: formik.values.EmployeeTypeGroup,
         ShiftId: formik.values.ShiftId,
         InTime: new Date(),
-        OutTime: formik.values.OutTime,
+        OutTime: null,
         JobTypeId: formik.values.JobTypeId,
         SanctionBy: formik.values.SanctionBy,
         ACFlag: "Y",
@@ -310,6 +315,26 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
                     </option>
                   ))}
                 </select>
+              </div>
+              <div>
+                <p className="text-[13px] font-semibold">Attendance Month</p>
+                <input
+                  id="AMonth"
+                  type="number"
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  value={formik.values.AMonth}
+                  onChange={formik.handleChange}
+                />
+              </div>
+              <div>
+                <p className="text-[13px] font-semibold">Attendance Year</p>
+                <input
+                  id="AYear"
+                  type="number"
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  value={formik.values.AYear}
+                  onChange={formik.handleChange}
+                />
               </div>
               <div>
                 <p className="mb-1 font-semibold text-[13px]">Shift</p>
