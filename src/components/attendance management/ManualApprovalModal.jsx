@@ -20,6 +20,8 @@ const MAModal = ({ visible, onClick, ID }) => {
       AttendanceDate: "",
       FYear: "",
       EmployeeTypeId: "",
+      AMonth: "",
+      AYear: "",
       EmployeeId: "",
       ShiftId: "",
       InTime: "",
@@ -40,6 +42,8 @@ const MAModal = ({ visible, onClick, ID }) => {
         AttendanceDate: values.AttendanceDate,
         FYear: values.FYear,
         EmployeeTypeId: values.EmployeeTypeId,
+        AMonth: formik.values.AMonth,
+        AYear: formik.values.AYear,
         EmployeeId: values.EmployeeId,
         ShiftId: values.ShiftId,
         InTime: values.InTime,
@@ -66,7 +70,7 @@ const MAModal = ({ visible, onClick, ID }) => {
           alert("Data updated successfully", response);
           onClick();
           // You can also perform additional actions here, like closing the modal or updating the UI.
-          window.location.reload();
+          // window.location.reload();
         })
         .catch((error) => {
           // Handle error
@@ -105,6 +109,8 @@ const MAModal = ({ visible, onClick, ID }) => {
         AttendanceDate: details.AttendanceDate,
         FYear: details.FYear,
         EmployeeTypeId: details.EmployeeTypeId,
+        AMonth: details.AMonth,
+        AYear: details.AYear,
         EmployeeId: details.EmployeeId,
         ShiftId: details.ShiftId,
         InTime: details.InTime,
@@ -191,6 +197,19 @@ const MAModal = ({ visible, onClick, ID }) => {
     fetchJobs();
   }, [token]);
 
+  const extractHoursMinutes = (datetimeString) => {
+    if (!datetimeString) return '';
+    // Split the datetime string by 'T' to separate date and time
+    const parts = datetimeString.split('T');
+    // Get the second part which contains the time
+    const timePart = parts[1];
+    // Extract only the time part (HH:MM)
+    const time = timePart.split('.')[0]; // Remove milliseconds if present
+    const [hours, minutes] = time.split(':');
+    // Return the extracted hours and minutes
+    return `${hours}:${minutes}`;
+  };
+
   //Date Formats
   useEffect(() => {
     const handleFormatDate = (dateString) => {
@@ -225,16 +244,13 @@ const MAModal = ({ visible, onClick, ID }) => {
           </div>
           <div className="py-4">
             <div className="grid grid-cols-2 gap-4">
-              <p className="mb-3 font-semibold text-[13px]">
-                Manual Attendance Entry
-              </p>
               <div className="flex">
                 <label className="flex items-center text-[13px]">
                   <input
                     type="radio"
                     name="AttendanceFlag"
                     className="mr-2"
-                    checked={formik.values.AttendanceFlag === "M"}
+                    checked={formik.values.AttendanceFlag = "M"}
                     onChange={formik.handleChange}
                   />
                   Manual Attendance
@@ -244,10 +260,10 @@ const MAModal = ({ visible, onClick, ID }) => {
                     type="radio"
                     name="AttendanceFlag"
                     className="mr-2 ml-2"
-                    checked={formik.values.AttendanceFlag === "O"}
+                    checked={formik.values.AttendanceFlag = "O"}
                     onChange={formik.handleChange}
                   />
-                  OutDoor Duty
+                  Out Door Duty
                 </label>
               </div>
               <div>
@@ -258,7 +274,7 @@ const MAModal = ({ visible, onClick, ID }) => {
                   id="AttendanceId"
                   type="text"
                   value={details?.AttendanceId}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                  className={`w-full px-4 py-2 font-normal bg-white focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                   disabled={true}
                 />
@@ -268,7 +284,7 @@ const MAModal = ({ visible, onClick, ID }) => {
                 <input
                   id="AttendanceDate"
                   type="text"
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  className={`w-full px-4 py-2 font-normal bg-white focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   value={formattedDate}
                   onChange={formik.handleChange}
                   disabled={true}
@@ -279,7 +295,7 @@ const MAModal = ({ visible, onClick, ID }) => {
                 <input
                   id="FYear"
                   type="text"
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  className={`w-full px-4 py-2 font-normal bg-white focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   value={formik.values.FYear}
                   onChange={formik.handleChange}
                   disabled={true}
@@ -290,7 +306,7 @@ const MAModal = ({ visible, onClick, ID }) => {
                 <select
                   id="EmployeeId"
                   name="EmployeeId"
-                  className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
+                  className="w-full px-4 py-2 font-normal bg-white text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
                   value={formik.values.EmployeeId}
                   onChange={formik.handleChange}
                   disabled={true}
@@ -313,7 +329,7 @@ const MAModal = ({ visible, onClick, ID }) => {
                 <p className="font-semibold text-[13px]">Employee Type</p>
                 <select
                   name="EmployeeTypeId"
-                  className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
+                  className="w-full px-4 py-2 font-normal bg-white text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
                   value={formik.values.EmployeeTypeId}
                   onChange={formik.handleChange}
                   disabled={true}
@@ -334,7 +350,7 @@ const MAModal = ({ visible, onClick, ID }) => {
                 <select
                   id="ShiftId"
                   name="ShiftId"
-                  className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
+                  className="w-full px-4 py-2 font-normal bg-white text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
                   value={formik.values.ShiftId}
                   onChange={formik.handleChange}
                   disabled={true}
@@ -352,9 +368,10 @@ const MAModal = ({ visible, onClick, ID }) => {
                 <select
                   id="JobTypeId"
                   name="JobTypeId"
-                  className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
+                  className="w-full px-4 py-2 font-normal bg-white text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
                   value={formik.values.JobTypeId}
                   onChange={formik.handleChange}
+                  disabled={true}
                 >
                   <option value="">Select Job Type</option>
                   {Jobs.map((entry) => (
@@ -368,9 +385,9 @@ const MAModal = ({ visible, onClick, ID }) => {
                 <p className="text-[13px] font-semibold">In Time</p>
                 <input
                   id="InTime"
-                  type="Datetime" // Change the input type to handle date and time
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  value={formik.values.InTime}
+                  type="time" // Change the input type to handle date and time
+                  className={`w-full px-4 py-2 font-normal bg-white focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  value={extractHoursMinutes(formik.values.InTime)}
                   onChange={formik.handleChange}
                   disabled={true}
                 />
@@ -379,29 +396,42 @@ const MAModal = ({ visible, onClick, ID }) => {
                 <p className="text-[13px] font-semibold">Out Time</p>
                 <input
                   id="OutTime"
-                  type="Datetime" // Change the input type to handle date and time
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  value={formik.values.OutTime}
+                  type="time" // Change the input type to handle date and time
+                  className={`w-full px-4 py-2 font-normal bg-white focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  value={extractHoursMinutes(formik.values.OutTime)}
                   onChange={formik.handleChange}
                   disabled={true}
                 />
               </div>
               <div>
                 <p className="text-[13px] font-semibold">Sanction By</p>
-                <input
+                <select
                   id="SanctionBy"
-                  type="text"
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  name="SanctionBy"
+                  className="w-full px-4 py-2 font-normal bg-white text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
                   value={formik.values.SanctionBy}
                   onChange={formik.handleChange}
-                />
+                >
+                  <option value="">
+                    Sanctioned By
+                  </option>
+                  {personal.length > 0 &&
+                    personal.map((employee) => (
+                      <option
+                        key={employee.EmployeeId}
+                        value={employee.EmployeeId}
+                      >
+                        {employee.EmployeeName}
+                      </option>
+                    ))}
+                </select>
               </div>
               <div>
                 <p className="text-[13px] font-semibold">Remark</p>
                 <input
                   id="Remark"
                   type="text"
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  className={`w-full px-4 py-2 font-normal bg-white focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   value={formik.values.Remark}
                   onChange={formik.handleChange}
                   disabled={true}

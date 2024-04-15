@@ -56,7 +56,7 @@ const TwoFieldsMaster = () => {
 
   const columnNames = {
     FieldDetails: "Field Details",
-    MasterName: 'Master Name',
+    MasterNameId: 'Master Name',
     AcFlag: "Status",
   };
 
