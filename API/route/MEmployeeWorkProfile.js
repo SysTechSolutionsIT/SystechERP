@@ -4,7 +4,7 @@ const { Sequelize, DataTypes } = require("sequelize");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
 const CompanyConfig = require("./CompanyConfigModels");
-const MEmployeeType = require("./MEmployeeTypeModels");
+const MEmployeeType = require("../model/MEmployeeTypeModels");
 
 const authToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];

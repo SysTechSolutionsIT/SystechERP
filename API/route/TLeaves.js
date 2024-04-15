@@ -288,29 +288,31 @@ router.post("/CalculatePresenty", authToken, async (req, res) => {
   let Presenty = 0; // Initialize Presenty as a number
   let Absenty = 0; // Initialize Absenty as a number
   let CarryForward = 0; // Initialize CarryForward as a number
-  const AMonth = new Date(LeaveBody.SanctionFromDate).getMonth();
+  const AMonth = new Date(LeaveBody.SanctionFromDate).getMonth() + 1;
+  const LeaveDays = LeaveBody.SanctionLeaveDays;
 
-  const MPM = await MLeaveType.findOne({
+  const Max = await MLeaveType.findOne({
     where: {
       LeaveTypeId: LeaveBody.LeaveTypeId,
     },
-    attributes: {
-      include: ["MaxPerMonth"],
-    },
+    attributes: ["MaxPerMonth"], // Specify the attribute directly
     order: [["LeaveTypeId", "ASC"]],
   });
+  const MPM = Max.MaxPerMonth;
 
-  if (LeaveBody.SanctionLeaveDays < MPM) {
-    Presenty = Presenty + LeaveBody.SanctionLeaveDays;
+  console.log("MPM:", MPM);
+
+  if (LeaveDays < MPM) {
+    Presenty += LeaveDays;
     MaxUsedFlag = false;
     if (MLeaveType.CarryForwardFlag === "Y") {
-      CarryForward = MPM - LeaveBody.SanctionLeaveDays;
+      CarryForward = MPM - LeaveDays;
     }
     //Updating Leave Balance
   }
   // When leaves taken is exactly equal to maximum of the month
-  else if (LeaveBody.SanctionLeaveDays == MPM) {
-    Presenty = Presenty + LeaveBody.SanctionLeaveDays;
+  else if (LeaveDays == MPM) {
+    Presenty += LeaveDays;
     MaxUsedFlag = true;
     if (MLeaveType.CarryForwardFlag === "Y") {
       CarryForward = 0;
@@ -319,7 +321,7 @@ router.post("/CalculatePresenty", authToken, async (req, res) => {
     // where leaves taken exceeds maximum per month
     // Here we must check for Leaves Earned Module
     Presenty = MPM;
-    const Remain = LeaveBody.SanctionLeaveDays - MPM;
+    const Remain = LeaveDays - MPM;
     MaxUsedFlag = true;
 
     if (LeavesEarned > 0 && Remain < LeavesEarned) {
@@ -328,7 +330,7 @@ router.post("/CalculatePresenty", authToken, async (req, res) => {
     } else if (Remain == LeavesEarned) {
       CarryForward = 0;
     } else {
-      Absenty = LeaveBody.SanctionLeaveDays - MPM;
+      Absenty = LeaveDays - MPM;
     }
 
     if (MLeaveType.CarryForwardFlag === "Y") {

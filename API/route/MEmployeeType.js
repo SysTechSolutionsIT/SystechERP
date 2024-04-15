@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const { Sequelize, DataTypes } = require("sequelize");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
-const MEmployeeType = require("./MEmployeeTypeModels");
+const MEmployeeType = require("../model/MEmployeeTypeModels");
 
 const authToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
@@ -28,20 +28,6 @@ const sequelize = new Sequelize(
     port: process.env.DB_PORT,
   }
 );
-
-// Middleware for parsing JSON
-router.use(bodyParser.json());
-
-// Model synchronization
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log("Connection has been established successfully.");
-  })
-  .catch((err) => {
-    console.error("Unable to connect to the database:", err);
-  });
-
 try {
   MEmployeeType.sync();
 } catch (error) {}
@@ -49,9 +35,6 @@ try {
 router.get("/FnShowAllData", authToken, async (req, res) => {
   try {
     const employeeType = await MEmployeeType.findAll({
-      attributes: {
-        // Your attribute configuration here
-      },
       order: [["EmployeeTypeId", "ASC"]],
     });
     res.json(employeeType);
@@ -161,5 +144,5 @@ process.on("SIGINT", () => {
   });
 });
 
-module.exports = [router, MEmployeeType];
-module.exports = MEmployeeType;
+// module.exports = [router, MEmployeeType];
+module.exports = router;

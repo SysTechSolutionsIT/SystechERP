@@ -176,7 +176,7 @@ const JobTypeMaster = () => {
 
   useEffect(() => {
     fetchJobData();
-  }, [token]);
+  }, [token, isModalOpen]);
 
   const fetchJobData = async () => {
     try {
@@ -186,15 +186,12 @@ const JobTypeMaster = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      console.log("Response Object", response);
       const data = response.data;
-      console.log(data);
       setJob(data);
     } catch (error) {
       console.log("Error while fetching job data: ", error.message);
     }
   };
-  console.log(job);
 
   //Searching -- api
   const handleSearchChange = (title, searchWord) => {
@@ -221,7 +218,7 @@ const JobTypeMaster = () => {
   //Deletion
   const deleteRecord = async (ID) => {
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete this company?"
+      "Are you sure you want to delete this entry?"
     );
 
     if (!confirmDelete) {

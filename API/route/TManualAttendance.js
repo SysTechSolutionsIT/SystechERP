@@ -17,17 +17,17 @@ const authToken = (req, res, next) => {
   });
 };
 
-// // Configure Sequelize with database connection details
-// const sequelize = new Sequelize(
-//   process.env.DB_NAME,
-//   process.env.DB_USER,
-//   process.env.DB_PASSWORD,
-//   {
-//     host: process.env.DB_HOST,
-//     dialect: "mysql",
-//     port: process.env.DB_PORT,
-//   }
-// );
+// Configure Sequelize with database connection details
+const sequelize = new Sequelize(
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASSWORD,
+  {
+    host: process.env.DB_HOST,
+    dialect: "mysql",
+    port: process.env.DB_PORT,
+  }
+);
 
 // const TManualAttendance = sequelize.define(
 //   "TManualAttendance",

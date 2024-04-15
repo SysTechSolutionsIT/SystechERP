@@ -15,7 +15,7 @@ const MonthlyAttendance = () => {
   // React Arrays
   const [ManAttData, setManAttData] = useState([]); //Approved Manual Attendance Records
   const [ALeaves, setALeaves] = useState([]); // Approved Leaves Record
-  const [Holidays, setHolidays] = useState(0); //Holidays of the given month
+  const [Holidays, setHolidays] = useState([]); //Holidays of the given month
   const [WeeklyOff, setWeeklyOffs] = useState([]); //Weekly offs of particular employee
   const [WeekOffCounts, setWeekOffCounts] = useState([]);
   const [mergedWeeks, setMergedWeeks] = useState([]); //contain Employee Id and WeeklyOff counts
@@ -135,73 +135,49 @@ const MonthlyAttendance = () => {
   }, [ManAttData, ALeaves, WeekOffCounts, token]);
 
   function mergeCounts(attendanceCounts, leaveCounts, weeklyOffs) {
-    const combinedCountsMap = new Map();
+    const mergedData = [];
 
-    // Merge attendance counts
-    attendanceCounts.forEach((attendanceCount) => {
-      const { EmployeeId, ManualAttendance } = attendanceCount;
-      combinedCountsMap.set(EmployeeId, { EmployeeId, ManualAttendance });
-    });
+    // Iterate over each Employee ID
+    ALeaves.forEach((leave) => {
+      // Retrieve data from each response object based on Employee ID
+      const employeeId = leave.EmployeeId;
+      const month = new Date.getMonth();
+      console.log("Month", month);
+      const paidHolidays = Holidays.paidHolidaysCount;
+      const unpaidHolidays = Holidays.unpaidHolidaysCount;
 
-    // Merge leave counts
-    leaveCounts.forEach((leaveCount) => {
-      const { EmployeeId, Presenty } = leaveCount;
-      if (combinedCountsMap.has(EmployeeId)) {
-        const existingRecord = combinedCountsMap.get(EmployeeId);
-        combinedCountsMap.set(EmployeeId, { ...existingRecord, Presenty });
-      } else {
-        combinedCountsMap.set(EmployeeId, { EmployeeId, Presenty });
-      }
-    });
+      // Find the corresponding manual attendance data for the current employee
+      const manualAttendance = ManAttData.find(
+        (attendance) => attendance.EmployeeId === employeeId
+      );
 
-    // Merge weekly offs
-    weeklyOffs.forEach((weeklyOff) => {
-      const { EmployeeId, TotalCount } = weeklyOff;
-      if (combinedCountsMap.has(EmployeeId)) {
-        const existingRecord = combinedCountsMap.get(EmployeeId);
-        combinedCountsMap.set(EmployeeId, { ...existingRecord, TotalCount });
-      } else {
-        combinedCountsMap.set(EmployeeId, { EmployeeId, TotalCount });
-      }
-    });
+      // Find the corresponding weekly off counts data for the current employee
+      const weeklyOffCounts = WeekOffCounts.find(
+        (weeklyOff) => weeklyOff.EmployeeId === employeeId
+      );
 
-    // Convert the map values into an array
-    const combinedCountsArray = Array.from(combinedCountsMap.values());
-    console.log("Combined Records are: ", combinedCountsArray);
-    return combinedCountsArray;
-  }
+      // Calculate total salaried days
+      const totalSalariedDays =
+        (manualAttendance ? manualAttendance.ManualAttendance : 0) +
+        (weeklyOffCounts ? weeklyOffCounts.TotalCount : 0) +
+        paidHolidays +
+        leave.Presenty;
 
-  // Calculating Total Days of the week and appending that to Monthly Attendance Array
+      // Construct the object for the current employee
+      const employeeData = {
+        EmployeeId: employeeId,
+        Month: month,
+        PaidHolidays: paidHolidays,
+        UnpaidHolidays: unpaidHolidays,
+        WeeklyOffs: weeklyOffCounts ? weeklyOffCounts.TotalCount : 0,
+        PaidLeaves: leave.Presenty,
+        UnpaidLeaves: leave.Absenty || 0,
+        TotalSalariedDays: totalSalariedDays,
+      };
 
-  useEffect(() => {
-    const AppendTotalDays = () => {
-      const currentDate = new Date();
-      currentDate.setDate(currentDate.getDate() - 1);
-      const currentYear = currentDate.getFullYear();
-      const currentMonth = currentDate.getMonth() + 1; // Months are zero-based, so add 1 to get the current month
-
-      // Get the total days in the current month
-      const totalDaysInMonth = new Date(currentYear, currentMonth, 0).getDate();
-
-      const updatedMonthlyAttendance = MonthlyAttendance.map((attendance) => ({
-        ...attendance,
-        TotalDaysInMonth: totalDaysInMonth,
-      }));
-
-      // Update the state with the modified array
-      setMonthlyAttendance(updatedMonthlyAttendance);
-    };
-    AppendTotalDays();
-  }, [token]);
-
-  //Now main module of Present days calculations
-  if (MonthlyAttendance.length > 0) {
-    MonthlyAttendance.map((record) => {
-      const Presenty =
-        record.ManualAttendance +
-        Holidays +
-        record.TotalCount +
-        record.Presenty;
+      // Push the data for the current employee to the final array
+      mergedData.push(employeeData);
+      console.log("Merged Data", mergedData);
     });
   }
 

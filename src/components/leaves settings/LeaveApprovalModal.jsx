@@ -152,6 +152,24 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
     }
   };
 
+  //Posting the above attendance data into MLAttendance table
+  useEffect(() => {
+    const AddAttendances = async () => {
+      if (PresentyObject) {
+        try {
+          const response = await axios.post(
+            "http://localhost:5500/MLAttendance/FnAddUpdateDeleteRecord",
+            PresentyObject,
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+        } catch (error) {
+          console.error("Error", error);
+        }
+      }
+    };
+    AddAttendances();
+  }, [token, PresentyObject]);
+
   function calculateLeaveDays(leaveFromDate, leaveToDate) {
     // Convert the date strings to Date objects
     const fromDate = new Date(leaveFromDate);

@@ -31,6 +31,7 @@ const mleavetype = sequelize.define(
     },
     LeaveTypeId: {
       type: DataTypes.STRING(5),
+      primaryKey: true,
       allowNull: false,
     },
     LeaveType: {

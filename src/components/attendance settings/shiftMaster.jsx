@@ -133,7 +133,7 @@ const ShiftMaster = () => {
 
   useEffect(() => {
     fetchShiftData();
-  }, [token]);
+  }, [token, isModalOpen]);
 
   const fetchShiftData = async () => {
     try {
