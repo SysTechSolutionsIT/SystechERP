@@ -145,7 +145,7 @@ const WeeklyOffMaster = () => {
 
   useEffect(() => {
     fetchCompData();
-  }, [isModalOpen]);
+  }, [token, isModalOpen]);
 
   const fetchCompData = async () => {
     try {
@@ -171,7 +171,8 @@ const WeeklyOffMaster = () => {
     const newFilter = searchData.filter((item) => {
       // Check if the item matches the search term in any of the selected columns
       const matches = selectedColumns.some((columnName) => {
-        const formattedColumnName = columnName.charAt(0).toUpperCase() + columnName.slice(1);
+        const formattedColumnName =
+          columnName.charAt(0).toUpperCase() + columnName.slice(1);
         const value = item[formattedColumnName];
         return (
           value &&
@@ -188,7 +189,7 @@ const WeeklyOffMaster = () => {
 
   //Deletion
   const deleteRecord = async (weekID) => {
-    alert("Are you sure you want to delete this bank?");
+    alert("Are you sure you want to delete this record?");
     try {
       const apiUrl = `http://localhost:5500/weekly-off-master/delete/${weekID}`;
 
@@ -213,9 +214,7 @@ const WeeklyOffMaster = () => {
   return (
     <div className="top-25 min-w-[40%]">
       <div className="bg-blue-900 h-15 p-2 ml-2 px-8 text-white font-semibold text-lg rounded-lg flex items-center justify-between mb-1 sm:overflow-y-clip">
-        <div className="text-[15px]">
-          Attendance Settings / Week Off Master
-        </div>
+        <div className="text-[15px]">Attendance Settings / Week Off Master</div>
         <div className="flex gap-4">
           <button
             onClick={() => setShowDropdown(!showDropdown)}
@@ -224,7 +223,9 @@ const WeeklyOffMaster = () => {
             Column Visibility
             <Icon
               icon="fe:arrow-down"
-              className={`ml-2 ${showDropdown ? "rotate-180" : ""} cursor-pointer`}
+              className={`ml-2 ${
+                showDropdown ? "rotate-180" : ""
+              } cursor-pointer`}
             />
           </button>
           {showDropdown && (
@@ -325,8 +326,9 @@ const WeeklyOffMaster = () => {
                     columnVisibility[columnName] && (
                       <th
                         key={columnName}
-                        className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 capitalize whitespace-normal max-w-xs ${columnVisibility[columnName] ? "" : "hidden"
-                          }`}
+                        className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 capitalize whitespace-normal max-w-xs ${
+                          columnVisibility[columnName] ? "" : "hidden"
+                        }`}
                       >
                         {columnName
                           .replace(/([a-z])([A-Z])/g, "$1 $2")
@@ -369,124 +371,126 @@ const WeeklyOffMaster = () => {
             <tbody className="">
               {filteredData.length > 0
                 ? filteredData.map((result, key) => (
-                  <tr key={key}>
-                    <td className="px-2 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setWVE(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setweekID(result.WeeklyOffId); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setWVE(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setweekID(result.WeeklyOffId); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => deleteRecord(result.WeeklyOffId)}
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {result.WeeklyOffId}
-                    </td>
-                    {selectedColumns.map(
-                      (columnName) =>
-                        columnVisibility[columnName] && (
-                          <td
-                            key={columnName}
-                            className={`px-4 border-2 whitespace-normal text-[11px] text-left${columnVisibility[columnName] ? "" : "hidden"
+                    <tr key={key}>
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setWVE(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setweekID(result.WeeklyOffId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setWVE(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setweekID(result.WeeklyOffId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => deleteRecord(result.WeeklyOffId)}
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                        {result.WeeklyOffId}
+                      </td>
+                      {selectedColumns.map(
+                        (columnName) =>
+                          columnVisibility[columnName] && (
+                            <td
+                              key={columnName}
+                              className={`px-4 border-2 whitespace-normal text-[11px] text-left${
+                                columnVisibility[columnName] ? "" : "hidden"
                               }`}
-                          >
-                            {columnName === "status"
-                              ? result.status
-                                ? "Active"
-                                : "Inactive"
-                              : result[columnName]}
-                          </td>
-                        )
-                    )}
-                  </tr>
-                ))
+                            >
+                              {columnName === "status"
+                                ? result.status
+                                  ? "Active"
+                                  : "Inactive"
+                                : result[columnName]}
+                            </td>
+                          )
+                      )}
+                    </tr>
+                  ))
                 : Weeks.length > 0 &&
-                Weeks.map((entry, index) => (
-                  <tr key={index}>
-                    <td className="px-2 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setWVE(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setweekID(entry.WeeklyOffId); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setWVE(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setweekID(entry.WeeklyOffId); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer"
-                          onClick={() => deleteRecord(entry.WeeklyOffId)}
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                      {entry.WeeklyOffId}
-                    </td>
-                    {selectedColumns.map(
-                      (columnName) =>
-                        columnVisibility[columnName] && (
-                          <td
-                            key={columnName}
-                            className={`px-4 border-2 whitespace-normal text-left text-[11px]${columnVisibility[columnName] ? "" : "hidden"
+                  Weeks.map((entry, index) => (
+                    <tr key={index}>
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <Icon
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setWVE(true); // Open VEModal
+                              setEdit(false); // Disable edit mode for VEModal
+                              setweekID(entry.WeeklyOffId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="mdi:edit"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setWVE(true); // Open VEModal
+                              setEdit(true); // Disable edit mode for VEModal
+                              setweekID(entry.WeeklyOffId); // Pass ID to VEModal
+                            }}
+                          />
+                          <Icon
+                            icon="material-symbols:delete-outline"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer"
+                            onClick={() => deleteRecord(entry.WeeklyOffId)}
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                        {entry.WeeklyOffId}
+                      </td>
+                      {selectedColumns.map(
+                        (columnName) =>
+                          columnVisibility[columnName] && (
+                            <td
+                              key={columnName}
+                              className={`px-4 border-2 whitespace-normal text-left text-[11px]${
+                                columnVisibility[columnName] ? "" : "hidden"
                               }`}
-                          >
-                            {columnName === "status"
-                              ? entry.status
-                                ? "Active"
-                                : "Inactive"
-                              : entry[columnName]}
-                          </td>
-                        )
-                    )}
-                  </tr>
-                ))}
+                            >
+                              {columnName === "status"
+                                ? entry.status
+                                  ? "Active"
+                                  : "Inactive"
+                                : entry[columnName]}
+                            </td>
+                          )
+                      )}
+                    </tr>
+                  ))}
             </tbody>
           </table>
         </div>

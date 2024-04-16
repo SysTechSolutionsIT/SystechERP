@@ -285,24 +285,25 @@ router.post(
 router.post("/CalculatePresenty", authToken, async (req, res) => {
   const LeaveBody = req.body;
   const LeavesEarned = req.query.LeavesEarned;
-  let Presenty, Absenty, CarryForward;
-  const AMonth = new Date(LeaveBody.SanctionFromDate).getMonth();
+  let Presenty = 0; // Initialize Presenty as a number
+  let Absenty = 0; // Initialize Absenty as a number
+  let CarryForward = 0; // Initialize CarryForward as a number
+  const AMonth = new Date(LeaveBody.SanctionFromDate).getMonth() + 1;
+  const LeaveDays = LeaveBody.SanctionLeaveDays;
 
   const Max = await MLeaveType.findOne({
     where: {
       LeaveTypeId: LeaveBody.LeaveTypeId,
     },
-    attributes: {
-      include: ["MaxPerMonth"],
-    },
-    order: [["LeaveApplicationId", "ASC"]],
+    attributes: ["MaxPerMonth"], // Specify the attribute directly
+    order: [["LeaveTypeId", "ASC"]],
   });
   const MPM = Max.MaxPerMonth;
 
   console.log("MPM:", MPM);
 
-  if (LeaveBody.SanctionLeaveDays < MPM) {
-    Presenty += LeaveBody.SanctionLeaveDays;
+  if (LeaveDays < MPM) {
+    Presenty += LeaveDays;
     MaxUsedFlag = false;
     if (MLeaveType.CarryForwardFlag === "Y") {
       CarryForward = MPM - LeaveDays;
@@ -310,8 +311,8 @@ router.post("/CalculatePresenty", authToken, async (req, res) => {
     //Updating Leave Balance
   }
   // When leaves taken is exactly equal to maximum of the month
-  else if (LeaveBody.SanctionLeaveDays == MPM) {
-    Presenty += LeaveBody.SanctionLeaveDays;
+  else if (LeaveDays == MPM) {
+    Presenty += LeaveDays;
     MaxUsedFlag = true;
     if (MLeaveType.CarryForwardFlag === "Y") {
       CarryForward = 0;

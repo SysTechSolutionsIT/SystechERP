@@ -60,6 +60,7 @@ const MCostCenter = require("./route/MCostCenterRoute");
 const AdvanceInstallments = require("./route/TAdvanceInstallments");
 const CreateUserRoles = require("./route/CreateUserRoles");
 const BranchMaster = require("./route/MBranchMaster");
+const TMonthlyAttendance = require("./route/TMonthlyAttendance");
 
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());
@@ -117,6 +118,7 @@ app.use("/advance-installments", AdvanceInstallments);
 app.use("/create-user-roles", CreateUserRoles);
 app.use("/MLAttendance", MLAttendance);
 app.use("/l3r2o5v7", BranchMaster);
+app.use("/monthly-attendance", TMonthlyAttendance);
 
 // app.use('file-upload', HandleImage)
 

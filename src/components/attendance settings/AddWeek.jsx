@@ -42,8 +42,6 @@ const AddWeek = ({ visible, onClick }) => {
         }
       );
       alert("Weekly Off Added");
-      window.location.reload();
-      console.log(response.data);
     } catch (error) {
       console.error("Error:", error.response.data);
     }

@@ -50,15 +50,23 @@ const TMonthlyAttendance = sequelize.define(
       type: DataTypes.STRING(5),
       allowNull: false,
     },
-    ApprovedMA: {
+    ManualAttendance: {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
-    Leaves: {
+    PaidLeaves: {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
-    Holidays: {
+    UnpaidLeaves: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    PaidHolidays: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    UnpaidHolidays: {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
@@ -70,11 +78,23 @@ const TMonthlyAttendance = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    MAYear: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    MAMonth: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     Presenty: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
     Absences: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    TotalSalariedDays: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -100,22 +120,52 @@ sequelize
 
 TMonthlyAttendance.sync()
   .then(() => {
-    console.log("MLeaveTyepe model synchronized successfully.");
+    console.log(" MOnthly Attendance model synchronized successfully.");
   })
   .catch((error) => {
-    console.error("Error synchronizing MLeaveTyepe model:", error);
+    console.error("Error synchronizing MOnthly Attendance model:", error);
   });
+
+router.get("/FnShowAllData", authToken, async (req, res) => {
+  try {
+    const Record = await TMonthlyAttendance.findAll({
+      order: [["MAttendanceId", "ASC"]],
+    });
+    res.json(Record);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+router.get("/FnShowMonthlyData", authToken, async (req, res) => {
+  const month = req.query.MAMonth;
+  const year = req.query.MAYear;
+  try {
+    const Record = await TMonthlyAttendance.findAll({
+      where: {
+        MAMonth: month,
+        MAYear: year, // Adding condition for the year
+      },
+      order: [["MAttendanceId", "ASC"]],
+    });
+    res.json(Record);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 router.get("/FnShowParticularData", authToken, async (req, res) => {
   const MAttendanceId = req.query.MAttendanceId;
   try {
-    const Shift = await TMonthlyAttendance.findOne({
+    const Record = await TMonthlyAttendance.findOne({
       where: {
         MAttendanceId: MAttendanceId,
       },
       order: [["MAttendanceId", "ASC"]],
     });
-    res.json(Shift);
+    res.json(Record);
   } catch (error) {
     console.error("Error retrieving data:", error);
     res.status(500).send("Internal Server Error");
@@ -159,12 +209,12 @@ router.post(
   generateMAttendanceId,
   authToken,
   async (req, res) => {
-    const Shift = req.body;
-    const MAttendanceId = Shift.MAttendanceId; // Access the  MAttendanceId from the request body
+    const Record = req.body;
+    const MAttendanceId = Record.MAttendanceId; // Access the  MAttendanceId from the request body
 
     try {
       // Add or update operation
-      const result = await TMonthlyAttendance.upsert(Shift, {
+      const result = await TMonthlyAttendance.upsert(Record, {
         where: { MAttendanceId: MAttendanceId }, // Specify the where condition for update
         returning: true,
       });

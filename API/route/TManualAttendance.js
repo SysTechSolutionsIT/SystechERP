@@ -4,6 +4,8 @@ const { Sequelize, DataTypes } = require("sequelize");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
 const TManualAttendance = require("../model/ManualAttendanceModel");
+const { Op } = require("sequelize");
+const moment = require("moment");
 
 const authToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
@@ -304,6 +306,10 @@ router.post(
 
 router.get("/MAttendance/count", async (req, res) => {
   try {
+    // Calculate the date range for the previous month
+    const startDate = moment().subtract(1, "months").startOf("month");
+    const endDate = moment().subtract(1, "months").endOf("month");
+
     // Use Sequelize's aggregation functions to count instances and group them by EmployeeId
     const counts = await TManualAttendance.findAll({
       attributes: [
@@ -315,6 +321,9 @@ router.get("/MAttendance/count", async (req, res) => {
       ],
       where: {
         ApprovalFlag: "A",
+        AttendanceDate: {
+          [Op.between]: [startDate, endDate],
+        },
       },
       group: ["EmployeeId"],
     });
