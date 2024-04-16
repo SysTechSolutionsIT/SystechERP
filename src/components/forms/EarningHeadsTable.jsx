@@ -285,7 +285,7 @@ const EarningHeadsTable = ({ ID }) => {
         </table>
         <div className="flex mt-2 justify-center gap-4">
           <button
-            type="submit"
+            type="button"
             className="px-2 py-2 bg-blue-900 text-white text-xs rounded-md"
             onClick={addEmployeewiseEarning}
           >

@@ -44,19 +44,18 @@ const MEmployeeSalary = sequelize.define(
       defaultValue: "00001",
     },
     EmployeeId: {
-      type: DataTypes.INTEGER(5),
+      type: DataTypes.STRING(5),
       allowNull: false,
-      autoIncrement: true,
       primaryKey: true,
     },
     GradeId: {
       type: DataTypes.STRING(5),
-      allowNull: false,
+      // allowNull: false,
       defaultValue: "00001",
     },
     BandId: {
       type: DataTypes.STRING(5),
-      allowNull: false,
+      // allowNull: false,
       defaultValue: "00001",
     },
     CTC: { type: DataTypes.DECIMAL(10, 2), defaultValue: 0 },
@@ -98,6 +97,12 @@ sequelize
   .catch((err) => {
     console.error("Unable to connect to the database:", err);
   });
+
+  try {
+    MEmployeeSalary.sync()
+  } catch (error) {
+    
+  }
 
 router.get("/FnShowAllData", authToken, async (req, res) => {
   try {
@@ -209,6 +214,8 @@ router.post(
   authToken,
   async (req, res) => {
     const salary = req.body;
+    console.log(req.body)
+    const EmployeeId = req.query.EmployeeId;
     try {
       if (salary.IUFlag === "D") {
         // "Soft-delete" operation
@@ -222,9 +229,18 @@ router.post(
             ? "Record Deleted Successfully"
             : "Record Not Found",
         });
-      } else {
+      } else if (salary.IUFlag === "U") {
         // Add or update operation
-        const result = await MEmployeeSalary.upsert(salary, {
+        const result = await MEmployeeSalary.update(salary, {
+          where: { EmployeeId: EmployeeId },
+          returning: true,
+        });
+
+        res.json({
+          message: result ? "Operation successful" : "Operation failed",
+        });
+      } else {
+        const result = await MEmployeeSalary.create(salary, {
           returning: true,
         });
 

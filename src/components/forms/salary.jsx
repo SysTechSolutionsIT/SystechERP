@@ -21,6 +21,7 @@ const SalaryStructure = ({ID, name}) => {
   const [isGratuatyApplicableChecked, setGratuatyApplicableChecked] =
     useState(false);
   const [isStatusChecked, setStatusCheched] = useState(false);
+
   const formik = useFormik({
     initialValues: {
       EmployeeId: "",
@@ -51,7 +52,7 @@ const SalaryStructure = ({ID, name}) => {
     },
     onSubmit: (values) => {
       const updatedData = {
-        EmployeeId: values.EmployeeId,
+        EmployeeId: ID,
         GradeId: values.GradeId,
         BandId: values.BandId,
         CTC: values.CTC,
@@ -72,13 +73,9 @@ const SalaryStructure = ({ID, name}) => {
         Remark: values.Remark,
         AcFlag: "Y",
         IUFlag: "U",
-        CreatedBy: values.CreatedBy,
-        CreatedOn: values.CreatedOn,
-        ModifiedBy: values.ModifiedBy,
-        ModifiedOn: values.ModifiedOn,
         
       };
-      console.log(values);
+      console.log('save details', values);
       updateEmpSalary(updatedData);
     },
   });
@@ -94,8 +91,9 @@ const SalaryStructure = ({ID, name}) => {
         }
       );
       alert("Salary Details Updated");
+      console.log('response', response)
     } catch (error) {
-      console.error("Error", error);
+      console.error("Error", error)
     }
   };
 
