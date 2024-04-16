@@ -159,10 +159,10 @@ export default function Personal({ ID }) {
     },
   });
 
-  const [changedEmployeeTypeId, setChangedEmployeeTypeId] = useState()
-  useEffect(() =>{
-    setChangedEmployeeTypeId(formik.values.EmployeeTypeId)
-  }, [formik.values.EmployeeTypeId])
+  const [changedEmployeeTypeId, setChangedEmployeeTypeId] = useState();
+  useEffect(() => {
+    setChangedEmployeeTypeId(formik.values.EmployeeTypeId);
+  }, [formik.values.EmployeeTypeId]);
   // Patch
   const updateEmpPersonal = async (data) => {
     try {
@@ -187,8 +187,7 @@ export default function Personal({ ID }) {
     }
   };
 
-  const swtichEmployeeType = async() => {
-
+  const swtichEmployeeType = async () => {
     const confirmDelete = window.confirm(
       "Are you sure you want to change the Employee Type?"
     );
@@ -198,19 +197,23 @@ export default function Personal({ ID }) {
     }
 
     try {
-      const response = await axios.post(`http://localhost:5500/employee/personal/FnSwitchEmployeeType`, {
+      const response = await axios.post(
+        `http://localhost:5500/employee/personal/FnSwitchEmployeeType`,
+        {
           EmployeeTypeId: changedEmployeeTypeId,
           EmployeeId: ID,
-        },{
-        headers: {
-          Authorization: `Bearer ${token}`
-        }}
-      )
-      alert('Employee Type Updated')
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      alert("Employee Type Updated");
     } catch (error) {
-      console.error('Error', error);
+      console.error("Error", error);
     }
-  }
+  };
 
   const fetchPersonalData = async () => {
     try {
@@ -335,10 +338,11 @@ export default function Personal({ ID }) {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        console.log('Employee Group Response', response)
+        console.log("Employee Group Response", response);
         const groupData = response.data;
-  
-        if (Array.isArray(groupData)) { // Check if groupData is an array
+
+        if (Array.isArray(groupData)) {
+          // Check if groupData is an array
           setEmployeeTypeGroup(groupData);
         } else {
           console.error("API response is not an array:", groupData);
@@ -347,11 +351,9 @@ export default function Personal({ ID }) {
         console.error("Error fetching emptype:", error);
       }
     };
-  
+
     fetchEmpTypeData();
   }, [token, isModalOpen]);
-  
-  
 
   const [Religion, setReligion] = useState([]);
   useEffect(() => {
@@ -478,8 +480,6 @@ export default function Personal({ ID }) {
 
   useEffect(() => {
     setEmployeeTypeId(details.EmployeeTypeId);
-    console.log("Emp Type id in personal", employeeTypeId);
-    console.log("Employee Photo:", details.EmployeePhoto);
   }, [details]);
 
   const handlePhotoChange = (event) => {
@@ -579,7 +579,7 @@ export default function Personal({ ID }) {
               <select
                 id="EmployeeTypeId"
                 name="EmployeeTypeId"
-                className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
+                className="w-full px-4 py-2 font-normal text-[11px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
                 value={formik.values.EmployeeTypeId}
                 onChange={formik.handleChange}
               >
@@ -593,7 +593,7 @@ export default function Personal({ ID }) {
                   </option>
                 ))}
               </select>
-            <button
+              <button
                 type="button"
                 onClick={swtichEmployeeType}
                 className="bg-blue-900 text-white mt-2 duration-300 font-semibold rounded-lg w-fit p-2 h-8 hover:border-2 hover:border-blue-900  text-[11px] hover:bg-white hover:text-blue-900"
@@ -675,22 +675,23 @@ export default function Personal({ ID }) {
             </div>
             <div className="flex flex-col">
               <p className="capatilize font-semibold text-[13px] mb-1">
-                Employee Type Group 
+                Employee Type Group
               </p>
               <div className="flex items-center">
                 <select
                   id="EmployeeTypeGroupId"
                   name="EmployeeTypeGroupId"
                   value={formik.values.EmployeeTypeGroupId}
-                  className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
+                  className="w-full px-4 py-2 font-normal text-[11px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
                   onChange={formik.handleChange}
-                  >
+                >
                   <option value="">Select Employee Type Group</option>
-                  {Array.isArray(employeeTypeGroup) &&  employeeTypeGroup.map((entry) => (
-                    <option key={entry.FieldId} value={entry.FieldId}>
-                      {entry.FieldDetails}
-                    </option>
-                  ))}
+                  {Array.isArray(employeeTypeGroup) &&
+                    employeeTypeGroup.map((entry) => (
+                      <option key={entry.FieldId} value={entry.FieldId}>
+                        {entry.FieldDetails}
+                      </option>
+                    ))}
                 </select>
                 <Icon
                   icon="flat-color-icons:plus"

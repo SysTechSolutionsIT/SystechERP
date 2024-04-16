@@ -195,7 +195,7 @@ const MonthlyAttendance = () => {
   useEffect(() => {
     const fetchMAttendanceData = async () => {
       const currentDate = new Date();
-      const month = currentDate.getMonth() - 1;
+      const month = currentDate.getMonth();
       const currentYear = currentDate.getFullYear();
       try {
         const response = await axios.get(

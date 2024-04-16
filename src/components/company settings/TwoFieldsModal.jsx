@@ -3,10 +3,13 @@ import React, { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import axios from "axios";
 import { useAuth } from "../Login";
+import AddMasterModal from "./AddMasterModal";
 
 const TwoFieldsModal = ({ visible, onClick, MasterID }) => {
   const { token } = useAuth();
   const [MNames, setMNames] = useState([]);
+  const [isAddMasterModalOpen, setAddMasterModalOpen] = useState(false);
+
   const formik = useFormik({
     initialValues: {
       MasterNameId: "",
@@ -24,7 +27,7 @@ const TwoFieldsModal = ({ visible, onClick, MasterID }) => {
         IUFlag: "I",
         Remark: values.Remark,
         CreatedOn: new Date(),
-      }
+      };
       console.log(values);
       addField(updatedData);
     },
@@ -33,7 +36,7 @@ const TwoFieldsModal = ({ visible, onClick, MasterID }) => {
   // Getting Master Names
   useEffect(() => {
     fetchMasterNamesData();
-  }, [token]);
+  }, [token, isAddMasterModalOpen]);
 
   const fetchMasterNamesData = async () => {
     try {
@@ -97,23 +100,41 @@ const TwoFieldsModal = ({ visible, onClick, MasterID }) => {
           </div>
           <div className="py-4">
             <div className="grid grid-cols-2 gap-4">
-              <div>
+              <div className="flex flex-col">
                 <p className="text-[13px] font-semibold">Master Name</p>
-                <select
-                  id="MasterNameId"
-                  name="MasterNameId"
-                  className="w-full px-4 py-1.5 font-normal text-[11px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                  value={formik.values.MasterNameId || MasterID || ""}
-                  onChange={formik.handleChange}
-                >
-                  <option value="">Select Type</option>
-                  {MNames.map((entry) => (
-                    <option key={entry.MasterId} value={entry.MasterId}>
-                      {entry.MasterName}
-                    </option>
-                  ))}
-                </select>
+                <div className="flex items-center">
+                  {MNames.length > 0 ? (
+                    <select
+                      id="MasterNameId"
+                      name="MasterNameId"
+                      className="w-full px-4 py-1.5 font-normal text-[11px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
+                      value={formik.values.MasterNameId || MasterID || ""}
+                      onChange={formik.handleChange}
+                    >
+                      <option value="">Select Type</option>
+                      {MNames.map((entry) => (
+                        <option key={entry.MasterId} value={entry.MasterId}>
+                          {entry.MasterName}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <p className="flex-1 px-4 py-2 font-normal text-gray-500">
+                      No available entries
+                    </p>
+                  )}
+                  <Icon
+                    icon="flat-color-icons:plus"
+                    width="24"
+                    height="24"
+                    className="ml-1 cursor-pointer"
+                    onClick={() => {
+                      setAddMasterModalOpen(true);
+                    }}
+                  />
+                </div>
               </div>
+
               <div>
                 <p className="text-[13px] font-semibold">Field Details</p>
                 <input
@@ -154,6 +175,12 @@ const TwoFieldsModal = ({ visible, onClick, MasterID }) => {
             </button>
           </div>
         </div>
+        {isAddMasterModalOpen && (
+          <AddMasterModal
+            isOpen={isAddMasterModalOpen}
+            onClose={() => setAddMasterModalOpen(false)}
+          />
+        )}
       </div>
     </form>
   );
