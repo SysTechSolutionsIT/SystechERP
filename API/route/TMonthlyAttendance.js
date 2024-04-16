@@ -190,44 +190,83 @@ router.get("/FnShowEmployeeData", authToken, async (req, res) => {
 });
 
 // Middleware for generating Id
+
 const generateMAttendanceId = async (req, res, next) => {
   try {
-    if (req.body.IUFlag === "I") {
-      const totalRecords = await TMonthlyAttendance.count();
-      const newId = (totalRecords + 1).toString().padStart(5, "0");
-      req.body.MAttendanceId = newId;
-    }
+    const totalRecords = await TMonthlyAttendance.count();
+
+    req.body.forEach((item, index) => {
+      const newId = (totalRecords + index + 1).toString().padStart(5, "0");
+      item.MAttendanceId = newId;
+    });
+
     next();
   } catch (error) {
-    console.error("Error generating  MAttendanceId:", error);
+    console.error("Error generating Leave Balance Id", error);
     res.status(500).send("Internal Server Error");
   }
 };
+
+
 
 router.post(
   "/FnAddUpdateDeleteRecord",
   generateMAttendanceId,
   authToken,
   async (req, res) => {
-    const Record = req.body;
-    const MAttendanceId = Record.MAttendanceId; // Access the  MAttendanceId from the request body
+    const MonthlyAttendance = req.body;
 
     try {
-      // Add or update operation
-      const result = await TMonthlyAttendance.upsert(Record, {
-        where: { MAttendanceId: MAttendanceId }, // Specify the where condition for update
-        returning: true,
-      });
+      if (Array.isArray(MonthlyAttendance)) {
+        // Handle multiple inserts
+        const results = await Promise.all(
+          MonthlyAttendance.map(async (item) => {
+            return TMonthlyAttendance.upsert(item, {
+              where: { MAttendanceId: item.MAttendanceId },
+              returning: true,
+            });
+          })
+        );
 
-      res.json({
-        message: result ? "Operation successful" : "Operation failed",
-      });
+        res.json({
+          message: results ? "Operations successful" : "Operations failed",
+        });
+      } else {
+        // Handle single insert or update
+        const MAttendanceId = MonthlyAttendance.MAttendanceId;
+
+        if (MonthlyAttendance.IUFlag === "D") {
+          // "Soft-delete" operation
+          const result = await TMonthlyAttendance.update(
+            { AcFlag: "N" },
+            { where: { MAttendanceId: MAttendanceId } }
+          );
+
+          res.json({
+            message: result[0]
+              ? "Record Deleted Successfully"
+              : "Record Not Found",
+          });
+        } else {
+          // Add or update operation
+          const result = await TMonthlyAttendance.upsert(MonthlyAttendance, {
+            where: { MAttendanceId: MAttendanceId },
+            returning: true,
+          });
+
+          res.json({
+            message: result ? "Operation successful" : "Operation failed",
+          });
+        }
+      }
     } catch (error) {
       console.error("Error performing operation:", error);
       res.status(500).send("Internal Server Error");
     }
   }
 );
+
+
 
 process.on("SIGINT", () => {
   console.log("Received SIGINT. Closing Sequelize connection...");
