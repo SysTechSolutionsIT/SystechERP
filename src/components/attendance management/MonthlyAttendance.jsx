@@ -25,8 +25,8 @@ const MonthlyAttendance = () => {
   const [WeekOffCounts, setWeekOffCounts] = useState([]);
   const [mergedWeeks, setMergedWeeks] = useState([]); //contain Employee Id and WeeklyOff counts
   const [employeeIdData, setEmployeeIdData] = useState([]); // looping per employee iid
-  const [isManualAttGenerationModalOpen, setManualAttGenerationModalOpen] = useState(false)
-
+  const [isManualAttGenerationModalOpen, setManualAttGenerationModalOpen] =
+    useState(false);
 
   //1. Fetching approved manual attendance data
   useEffect(() => {
@@ -188,8 +188,8 @@ const MonthlyAttendance = () => {
       );
       console.log("Posting monthly attendance.");
       console.log("Final Data", MonthlyAttendance);
-      alert('Employee Monthly Attendance Calculated')
-      setManualAttGenerationModalOpen(false)
+      alert("Employee Monthly Attendance Calculated");
+      setManualAttGenerationModalOpen(false);
     } catch (error) {
       console.error("Error while fetching holidays data:", error);
       console.log("Final Data", MonthlyAttendance);
@@ -201,7 +201,7 @@ const MonthlyAttendance = () => {
     const fetchMAttendanceData = async () => {
       const currentDate = new Date();
       const month = currentDate.getMonth();
-      console.log('Current Month', month)
+      console.log("Current Month", month);
       const currentYear = currentDate.getFullYear();
       try {
         const response = await axios.get(
@@ -297,7 +297,7 @@ const MonthlyAttendance = () => {
   //Displaying into table
 
   const columnNames = {
-    EmployeeId: 'Employee ID',
+    EmployeeId: "Employee ID",
     ManualAttendance: "Manual Attendance",
     PaidLeaves: "Paid Leaves",
     UnpaidLeaves: "Unpaid Leaves",
@@ -406,27 +406,36 @@ const MonthlyAttendance = () => {
     };
   }, []);
 
-
   const ManualAttendanceGenerationModal = ({ visible, onClick }) => {
     const currentDate = new Date();
     const monthNames = [
-      "January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
     ];
     const currentMonthName = monthNames[currentDate.getMonth() - 1];
-  
-    const [inputValue, setInputValue] = useState('');
-    const isInputValid = inputValue.toUpperCase() === 'GENERATE';
-  
+
+    const [inputValue, setInputValue] = useState("");
+    const isInputValid = inputValue.toUpperCase() === "GENERATE";
+
     if (!visible) return null;
-  
+
     return (
       <div className="fixed overflow-y-scroll inset-0 bg-black bg-opacity-5 backdrop-blur-sm flex items-center justify-center w-full h-full">
         <div className="bg-gray-200 w-[60%] p-8 rounded-lg">
           <div className="bg-blue-900 py-2 px-4 rounded-lg flex justify-between items-center">
             <span>
               <p className="text-white text-[13px] font-semibold text-center whitespace-nowrap">
-                Monthly Attendance Generation for the month of {" "}
+                Monthly Attendance Generation for the month of{" "}
                 <span className="text-white  text-[15px] font-bold p-1 border border-white rounded-md">
                   {currentMonthName}
                 </span>
@@ -458,7 +467,9 @@ const MonthlyAttendance = () => {
             <button
               type="button"
               onClick={postAttendanceData}
-              className={`bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg w-36 ${isInputValid ? '' : 'opacity-50 cursor-not-allowed'}`}
+              className={`bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg w-36 ${
+                isInputValid ? "" : "opacity-50 cursor-not-allowed"
+              }`}
               disabled={!isInputValid}
             >
               Generate
@@ -473,7 +484,7 @@ const MonthlyAttendance = () => {
         </div>
       </div>
     );
-  }
+  };
 
   return (
     <div className="top-25 min-w-[40%]">
@@ -537,13 +548,16 @@ const MonthlyAttendance = () => {
           )}
 
           <button
-            type='button'
+            type="button"
             className="text-white font-semibold px-4 rounded-lg text-[13px] border-2 border-white hover:bg-white hover:text-blue-900 duration-300 "
             onClick={() => setManualAttGenerationModalOpen(true)}
           >
             Generate Monthly Attendance
           </button>
-          <ManualAttendanceGenerationModal visible={isManualAttGenerationModalOpen} onClick={() => setManualAttGenerationModalOpen(false)}/>
+          <ManualAttendanceGenerationModal
+            visible={isManualAttGenerationModalOpen}
+            onClick={() => setManualAttGenerationModalOpen(false)}
+          />
           <div className="flex items-center">
             <button
               className=" cursor-pointer"
@@ -578,120 +592,125 @@ const MonthlyAttendance = () => {
       </div>
       {MonAttendance.length === 0 ? (
         <div className="flex justify-center items-center">
-          <NoDataNotice Text="No Monthly Attendance Data Yet" visible={isManualAttGenerationModalOpen} />
+          <NoDataNotice
+            Text="No Monthly Attendance Data Yet"
+            visible={isManualAttGenerationModalOpen}
+          />
         </div>
       ) : (
-      <div className="grid gap-2 justify-between">
-        <div className="my-1 rounded-2xl bg-white p-2 pr-8 ">
-          <table className="min-w-full text-center whitespace-normal z-0">
-            <thead className="border-b-2">
-              <tr className="">
-                <th className="w-auto text-[13px] px-1 font-bold text-black border-2 border-gray-400 whitespace-normal">
-                  ID
-                </th>
-                {selectedColumns.map(
-                  (columnName) =>
-                    columnVisibility[columnName] && (
-                      <th
-                        key={columnName}
-                        className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 capitalize ${
-                          columnVisibility[columnName] ? "" : "hidden"
-                        }`}
-                        style={{ whiteSpace: 'normal' }}
-                      >
-                        {columnNames[columnName]}
-                      </th>
-                    )
-                )}
-              </tr>
-              <tr>
-                {/* <th className="border-2"></th> */}
-                <th className="p-2 font-bold text-black border-2 " />
-                {selectedColumns.map(
-                  (columnName) =>
-                    columnVisibility[columnName] && (
-                      <th
-                        key={columnName}
-                        className="p-2 font-bold text-black border-2 text-[11px] capitalize"
-                      >
-                        <input
-                          type="text"
-                          placeholder={`Search `}
-                          className="w-auto text-[11px] h-6 border-2 border-slate-500 rounded-lg justify-center text-center whitespace-normal"
-                          style={{
-                            maxWidth: 50 + "px",
-                          }}
-                          onChange={(e) =>
-                            handleSearchChange(columnName, e.target.value)
-                          }
-                        />
-                      </th>
-                    )
-                )}
-              </tr>
-            </thead>
-            <tbody className="">
-              {filteredData.length > 0 ? (
-                filteredData.map((entry, index) => {
-                  const daysInMonth = entry.MAMonth ? new Date(entry.MAMonth, entry.MAMonth, 0).getDate() : 0;
-                  return (
-                    <tr key={index}>
-                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {entry.MAttendanceId}
-                      </td>
-                      {selectedColumns.map(
-                        (columnName) =>
-                          columnVisibility[columnName] && (
-                            <td
-                              key={columnName}
-                              className={`px-4 border-2 whitespace-normal text-left text-[11px]${
-                                columnVisibility[columnName] ? "" : "hidden"
-                              }`}
-                            >
-                              {columnName === "TotalSalariedDays" || columnName === "TotalDays" ? (
-                                `${entry[columnName]}/${daysInMonth}`
-                              ) : (
-                                entry[columnName]
-                              )}
-                            </td>
-                          )
-                      )}
-                    </tr>
-                  );
-                })
-              ) : MonAttendance.length > 0 ? (
-                MonAttendance.map((entry, index) => {
-                  const daysInMonth = entry.MAMonth ? new Date(entry.MAMonth, entry.MAMonth, 0).getDate() : 0;
-                  return (
-                    <tr key={index}>
-                      <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {entry.MAttendanceId}
-                      </td>
-                      {selectedColumns.map(
-                        (columnName) =>
-                          columnVisibility[columnName] && (
-                            <td
-                              key={columnName}
-                              className={`px-4 border-2 whitespace-normal text-left text-[11px]${
-                                columnVisibility[columnName] ? "" : "hidden"
-                              }`}
-                            >
-                              {columnName === "TotalSalariedDays" || columnName === "TotalDays" ? (
-                                `${entry[columnName]}/${daysInMonth}`
-                              ) : (
-                                entry[columnName]
-                              )}
-                            </td>
-                          )
-                      )}
-                    </tr>
-                  );
-                })
-              ) : null}
-            </tbody>
-          </table>
+        <div className="grid gap-2 justify-between">
+          <div className="my-1 rounded-2xl bg-white p-2 pr-8 ">
+            <table className="min-w-full text-center whitespace-normal z-0">
+              <thead className="border-b-2">
+                <tr className="">
+                  <th className="w-auto text-[13px] px-1 font-bold text-black border-2 border-gray-400 whitespace-normal">
+                    ID
+                  </th>
+                  {selectedColumns.map(
+                    (columnName) =>
+                      columnVisibility[columnName] && (
+                        <th
+                          key={columnName}
+                          className={`px-1 text-[13px] font-bold text-black border-2 border-gray-400 capitalize ${
+                            columnVisibility[columnName] ? "" : "hidden"
+                          }`}
+                          style={{ whiteSpace: "normal" }}
+                        >
+                          {columnNames[columnName]}
+                        </th>
+                      )
+                  )}
+                </tr>
+                <tr>
+                  {/* <th className="border-2"></th> */}
+                  <th className="p-2 font-bold text-black border-2 " />
+                  {selectedColumns.map(
+                    (columnName) =>
+                      columnVisibility[columnName] && (
+                        <th
+                          key={columnName}
+                          className="p-2 font-bold text-black border-2 text-[11px] capitalize"
+                        >
+                          <input
+                            type="text"
+                            placeholder={`Search `}
+                            className="w-auto text-[11px] h-6 border-2 border-slate-500 rounded-lg justify-center text-center whitespace-normal"
+                            style={{
+                              maxWidth: 50 + "px",
+                            }}
+                            onChange={(e) =>
+                              handleSearchChange(columnName, e.target.value)
+                            }
+                          />
+                        </th>
+                      )
+                  )}
+                </tr>
+              </thead>
+              <tbody className="">
+                {filteredData.length > 0
+                  ? filteredData.map((entry, index) => {
+                      const daysInMonth = entry.MAMonth
+                        ? new Date(entry.MAMonth, entry.MAMonth, 0).getDate()
+                        : 0;
+                      return (
+                        <tr key={index}>
+                          <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                            {entry.MAttendanceId}
+                          </td>
+                          {selectedColumns.map(
+                            (columnName) =>
+                              columnVisibility[columnName] && (
+                                <td
+                                  key={columnName}
+                                  className={`px-4 border-2 whitespace-normal text-left text-[11px]${
+                                    columnVisibility[columnName] ? "" : "hidden"
+                                  }`}
+                                >
+                                  {columnName === "TotalSalariedDays" ||
+                                  columnName === "TotalDays"
+                                    ? `${entry[columnName]}/${daysInMonth}`
+                                    : entry[columnName]}
+                                </td>
+                              )
+                          )}
+                        </tr>
+                      );
+                    })
+                  : MonAttendance.length > 0
+                  ? MonAttendance.map((entry, index) => {
+                      const daysInMonth = entry.MAMonth
+                        ? new Date(entry.MAMonth, entry.MAMonth, 0).getDate()
+                        : 0;
+                      return (
+                        <tr key={index}>
+                          <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
+                            {entry.MAttendanceId}
+                          </td>
+                          {selectedColumns.map(
+                            (columnName) =>
+                              columnVisibility[columnName] && (
+                                <td
+                                  key={columnName}
+                                  className={`px-4 border-2 whitespace-normal text-left text-[11px]${
+                                    columnVisibility[columnName] ? "" : "hidden"
+                                  }`}
+                                >
+                                  {columnName === "TotalSalariedDays" ||
+                                  columnName === "TotalDays"
+                                    ? `${entry[columnName]}/${daysInMonth}`
+                                    : entry[columnName]}
+                                </td>
+                              )
+                          )}
+                        </tr>
+                      );
+                    })
+                  : null}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
       )}
     </div>
   );

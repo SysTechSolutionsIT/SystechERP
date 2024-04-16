@@ -51,12 +51,11 @@ const TwoFieldsMaster = () => {
     FieldDetails: true,
     MasterNameId: true,
     AcFlag: true,
-
   });
 
   const columnNames = {
     FieldDetails: "Field Details",
-    MasterNameId: 'Master Name',
+    MasterNameId: "Master Name",
     AcFlag: "Status",
   };
 
@@ -131,7 +130,7 @@ const TwoFieldsMaster = () => {
 
   useEffect(() => {
     fetchTwoFieldData();
-  }, [token]);
+  }, [token, isModalOpen]);
 
   const fetchTwoFieldData = async () => {
     try {
