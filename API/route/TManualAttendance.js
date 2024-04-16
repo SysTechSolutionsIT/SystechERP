@@ -207,6 +207,9 @@ router.get("/FnShowManualPendingData", authToken, async (req, res) => {
     const approvedRecords = await TManualAttendance.findAll({
       where: {
         ApprovalFlag: "P",
+        OutTime: {
+          [Op.not]: null // Adding condition for OutTime not being null
+        }
       },
       attributes: {
         exclude: ["IUFlag"],
@@ -219,6 +222,7 @@ router.get("/FnShowManualPendingData", authToken, async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
 
 router.post("/FnApproveAll", authToken, async (req, res) => {
   try {

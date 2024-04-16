@@ -2,6 +2,7 @@ import { Icon } from "@iconify/react";
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "react-bootstrap";
 import ViewHoliday from "./viewHoliday";
+import NoDataNotice from "../NoDataNotice";
 import AddHoliday from "./AddHoliday";
 import axios from "axios";
 import { useAuth } from "../Login";
@@ -181,7 +182,7 @@ const HolidayMaster = () => {
 
   useEffect(() => {
     fetchHolidayData();
-  }, []);
+  }, [token, isModalOpen]);
 
   const fetchHolidayData = async () => {
     try {
@@ -361,7 +362,11 @@ const HolidayMaster = () => {
         </div>
       </div>
       <AddHoliday visible={isModalOpen} onClick={() => setModalOpen(false)} />
-
+      {Holiday.length === 0 ? (
+        <div className="flex justify-center items-center">
+          <NoDataNotice Text="No Holiday Data Yet" visible={isModalOpen} />
+        </div>
+      ) : (
       <div className="grid gap-2 justify-between">
         <div className="my-1 rounded-2xl bg-white p-2 pr-8 ">
           <table className="min-w-full text-center whitespace-normal z-0">
@@ -539,6 +544,7 @@ const HolidayMaster = () => {
           </table>
         </div>
       </div>
+      )}
       <ViewHoliday
         visible={HVE}
         onClick={() => setHVE(false)}

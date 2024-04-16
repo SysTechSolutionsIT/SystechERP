@@ -25,7 +25,7 @@ const ManualAttendanceApproval = () => {
 
   useEffect(() => {
     fetchRequestData();
-  }, [token]);
+  }, [token, isModalOpen]);
 
   const fetchRequestData = async () => {
     try {
@@ -53,7 +53,7 @@ const ManualAttendanceApproval = () => {
 
   const [columnVisibility, setColumnVisibility] = useState({
     AttendanceDate: true,
-    FYear: true,
+    FYear: false,
     EmployeeTypeId: true,
     EmployeeId: true,
     ShiftId: true,
@@ -111,11 +111,12 @@ const ManualAttendanceApproval = () => {
         )?.JobTypeName;
         return jobTypeValue;
 
-        case "InTime":
-          return extractTimeFromDate(result[columnName]);
-        case "OutTime":
-          return extractTimeFromDate(result[columnName]);
+      case "InTime":
+        return extractTimeFromDate(result[columnName]);
 
+      case "OutTime":
+        return extractTimeFromDate(result[columnName]);
+          
       case "AcFlag":
         const acFlagValue = result[columnName] ? "Active" : "Inactive";
         return acFlagValue;
@@ -466,7 +467,7 @@ const ManualAttendanceApproval = () => {
                         <div className="flex items-center gap-2 text-center justify-center">
                           <button
                             type="submit"
-                            className="bg-blue-900 text-white font-semibold py-1 px-1 rounded-lg text-[11px]"
+                            className="bg-green-600 text-white font-semibold py-1 px-2 rounded-lg text-[11px] hover:bg-white hover:border-green-500 hover:border-2 border-2 duration-300 hover:text-green-500"
                             onClick={() => {
                               setMVE(true); // Open VEModal
                               setAttId(result.AttendanceId); // Pass ID to VEModal
@@ -501,7 +502,7 @@ const ManualAttendanceApproval = () => {
                         <div className="flex items-center gap-2 text-center justify-center">
                           <button
                             type="submit"
-                            className="bg-blue-900 text-white font-semibold py-1 px-1 rounded-lg text-[11px]"
+                            className="bg-green-600 text-white font-semibold py-1 px-2 rounded-lg text-[11px] hover:bg-white hover:border-green-500 hover:border-2 border-2 duration-300 hover:text-green-500"
                             onClick={() => {
                               setMVE(true); // Open VEModal
                               setAttId(result.AttendanceId); // Pass ID to VEModal
