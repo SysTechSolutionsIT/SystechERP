@@ -20,9 +20,10 @@ const AddJob = ({ visible, onClick }) => {
       AcFlag: "Y",
       IUFlag: "I",
     },
-    onSubmit: (values) => {
+    onSubmit: (values, {resetForm}) => {
       console.log(values);
       addJobType(values);
+      resetForm()
     },
   });
 

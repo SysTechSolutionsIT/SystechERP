@@ -257,6 +257,63 @@ router.get("/GetWeeklyOffCount", authToken, async (req, res) => {
   }
 });
 
+router.get("/GetWeeklyOffCountByMonth", authToken, async (req, res) => {
+  try {
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const fromMonth = req.query.fromMonth ? parseInt(req.query.fromMonth) : currentDate.getMonth() + 1; // Adjust month to be 1-based
+    const toMonth = req.query.toMonth ? parseInt(req.query.toMonth) : fromMonth; // Default to fromMonth if toMonth is not provided
+    const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+    const weeklyOffData = await MWeeklyOff.findAll({
+      attributes: ["WeeklyOffId", "WeeklyOffName"],
+    });
+
+    if (!weeklyOffData || weeklyOffData.length === 0) {
+      return res.status(404).json({ message: "No weekly off data found" });
+    }
+
+    const weeklyOffCounts = [];
+
+    for (let month = fromMonth; month <= toMonth; month++) {
+      const adjustedMonth = month - 1; // Adjust month to be 0-based
+      const year = adjustedMonth < currentDate.getMonth() ? currentYear : currentYear - 1;
+      const previousMonth = adjustedMonth === 0 ? 11 : adjustedMonth - 1;
+      const previousYear = adjustedMonth === 0 ? year - 1 : year;
+
+      for (const weeklyOff of weeklyOffData) {
+        const weeklyOffId = weeklyOff.WeeklyOffId;
+        const weeklyOffDays = weeklyOff.WeeklyOffName.split(",").map(day => day.trim());
+
+        const offDays = [];
+
+        for (const day of weeklyOffDays) {
+          if (!offDays.includes(day)) {
+            offDays.push(day);
+          }
+        }
+
+        const totalCount = offDays.length;
+
+        weeklyOffCounts.push({
+          Monthly: month,
+          WeeklyOffId: weeklyOffId,
+          TotalCount: totalCount,
+          OffDays: offDays,
+        });
+      }
+    }
+
+    res.json(weeklyOffCounts);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+
+
+
 process.on("SIGINT", () => {
   console.log("Received SIGINT. Closing Sequelize connection...");
   sequelize.close().then(() => {

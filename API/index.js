@@ -120,7 +120,7 @@ app.use("/MLAttendance", MLAttendance);
 app.use("/l3r2o5v7", BranchMaster);
 app.use("/monthly-attendance", TMonthlyAttendance);
 
-// app.use('file-upload', HandleImage)
+// app.use(`file-upload`, HandleImage)
 
 // Start the server
 const port = 5500;
