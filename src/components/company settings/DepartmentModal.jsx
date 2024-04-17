@@ -164,16 +164,17 @@ const DepartmentModal = ({ visible, onClick }) => {
     const fetchBranchMaster = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5500/branch-master/FnShowActiveData"
+          "http://localhost:5500/l3r2o5v7/FnShowActiveData"
         );
         const data = response.data;
         setBranches(data);
+        console.log("Branches", branches);
       } catch (error) {
         console.error("Error", error);
       }
     };
     fetchBranchMaster();
-  }, []);
+  }, [token]);
 
   if (!visible) return null;
   return (
