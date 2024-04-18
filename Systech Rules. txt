@@ -1,0 +1,16 @@
+1. All Managers must have Manager role so that they can approve their sub-ordinates
+
+2. Probational Employee must have shortname as P, so that their leaves wont be generated
+
+3. Leave Application Approval Flags:
+    A. MP: manager pending
+    B. HRP: HR approval pending
+    C. MR: Manager rejection
+    D. A: HR approval ; 2 levels of approvals (from manager and HR) completed
+
+4. 'HR' and 'Admin' roles are compulsory, else 2 stage approval process will be halted
+
+5. Job Type names should start with a capital letter, 'Present', 'Absent', 'Weekly Off', 'Leaves' should be defined in the given way. 
+Any other definition of these 4 might cause problems with the system.
+
+6. 

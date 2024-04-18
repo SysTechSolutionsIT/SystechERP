@@ -55,7 +55,7 @@ const sequelize = new Sequelize(
 //       type: DataTypes.DATE,
 //       allowNull: false,
 //     },
-//     EmployeeId: {
+//     LeaveApplicationId: {
 //       type: DataTypes.STRING(5),
 //       allowNull: false,
 //     },
@@ -202,14 +202,43 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
 });
 
 router.get("/FnShowParticularEmployeeData", authToken, async (req, res) => {
-  const EmployeeId = req.query.EmployeeId; // Assuming you're using EmployeeId instead of LeaveApplicationId
+  const EmployeeId = req.query.EmployeeId; // Assuming you're using LeaveApplicationId instead of LeaveApplicationId
   try {
     const Leaves = await TLeaves.findAll({
       where: {
         EmployeeId: EmployeeId,
       },
-      attributes: {
-        exclude: ["id"],
+      order: [["LeaveApplicationId", "ASC"]],
+    });
+    res.json(Leaves);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+router.get("/FnFetchHRPendingLeaves", authToken, async (req, res) => {
+  try {
+    const Leaves = await TLeaves.findAll({
+      where: {
+        ApprovalFlag: "HRP",
+      },
+      order: [["LeaveApplicationId", "ASC"]],
+    });
+    res.json(Leaves);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+router.get("/FnShowManagerSanctionLeaves", authToken, async (req, res) => {
+  const SanctioningEMP = req.query.TBSanctionBy;
+  try {
+    const Leaves = await TLeaves.findAll({
+      where: {
+        TBSanctionBy: SanctioningEMP,
+        ApprovalFlag: "MP",
       },
       order: [["LeaveApplicationId", "ASC"]],
     });
@@ -249,30 +278,38 @@ router.post(
   authToken,
   async (req, res) => {
     const Leaves = req.body;
-    const LeaveApplicationId = Leaves.LeaveApplicationId; // Access the LeaveApplicationId from the request body
+    const LeaveApplicationId = req.query.LeaveApplicationId; // Access the LeaveApplicationId from the request body
 
     try {
-      if (Leaves.IUFlag == "D") {
-        // "Soft-delete" operation
+      if (Leaves.IUFlag === `D`) {
+        // `Soft-delete` operation
         const result = await TLeaves.update(
-          { AcFlag: "N" },
-          { where: { LeaveApplicationId: LeaveApplicationId } }
+          { AcFlag: `N` },
+          { where: { LeaveApplicationId: Leaves.LeaveApplicationId } }
         );
 
         res.json({
           message: result[0]
-            ? "Record Deleted Successfully"
-            : "Record Not Found",
+            ? `Record Deleted Successfully`
+            : `Record Not Found`,
         });
-      } else {
+      } else if (Leaves.IUFlag === `U`) {
         // Add or update operation
-        const result = await TLeaves.upsert(Leaves, {
-          where: { LeaveApplicationId: LeaveApplicationId }, // Specify the where condition for update
+        const result = await TLeaves.update(Leaves, {
+          where: { LeaveApplicationId: LeaveApplicationId },
           returning: true,
         });
 
         res.json({
-          message: result ? "Operation successful" : "Operation failed",
+          message: result ? `Operation successful` : `Operation failed`,
+        });
+      } else {
+        const result = await TLeaves.create(Leaves, {
+          returning: true,
+        });
+
+        res.json({
+          message: result ? `Operation successful` : `Operation failed`,
         });
       }
     } catch (error) {
@@ -339,7 +376,7 @@ router.post("/CalculatePresenty", authToken, async (req, res) => {
   }
 
   const LeavePresentyObject = {
-    EmployeeId: LeaveBody.EmployeeId,
+    LeaveApplicationId: LeaveBody.LeaveApplicationId,
     FYear: LeaveBody.FYear,
     Month: AMonth,
     Presenty: Presenty,

@@ -87,7 +87,6 @@ const UserRights = ({ ID }) => {
       });
       return initialState;
     });
-    const [isOpen, setIsOpen] = useState(false);
 
     // useEffect to update headingChecked when all items are checked
     useEffect(() => {
@@ -131,7 +130,25 @@ const UserRights = ({ ID }) => {
     };
 
     const handleHeadingClick = () => {
-      setIsOpen(!isOpen); // Toggle the menu state
+      if (!headingChecked) {
+        // If the title is unchecked, set all items to checked
+        setHeadingChecked(true);
+        const updatedItems = {};
+        items.forEach((item) => {
+          updatedItems[item.name] = true;
+          handleItemChange(item.name, true);
+        });
+        setItemsChecked(updatedItems);
+      } else {
+        // If the title is checked, uncheck all items
+        setHeadingChecked(false);
+        const updatedItems = {};
+        items.forEach((item) => {
+          updatedItems[item.name] = false;
+          handleItemChange(item.name, false);
+        });
+        setItemsChecked(updatedItems);
+      }
     };
 
     // Function to handle item checkbox change
@@ -148,61 +165,46 @@ const UserRights = ({ ID }) => {
       <div className="">
         <div>
           <label className="font-bold text-[16px] flex items-center whitespace-nowrap">
-            <Icon
-              icon="carbon:chevron-right"
-              className={`cursor-pointer hover:shadow-lg duration-300 mr-2 transform ${
-                isOpen ? "rotate-90" : ""
-              }`}
-              width="24"
-              height="24"
-              onClick={handleHeadingClick}
-            />
             {title}
           </label>
           <hr className="border-t-2 mt-1 border-black font-bold" />
         </div>
-        {isOpen && (
-          <div className="mt-2 ml-2">
-            <div className="flex mr-4 items-center">
-              <p
-                className="mr-2 cursor-pointer hover:shadow-lg duration-300 ml-2 text-[13px]"
-                width="22"
-                height="22"
-                style={{ color: "blue" }}
-                onClick={handleHeadingClick}
-              >
-                Select All
-              </p>
-              <p
-                className="cursor-pointer hover:shadow-lg duration-300 ml-2 text-[13px] mr-2"
-                width="22"
-                height="22"
-                style={{ color: "#e63333" }}
-                onClick={clearCheckedItems}
-              >
-                Deselect All
-              </p>
-            </div>
-            <ul>
-              {items.map((item) => (
-                <li key={item.name}>
-                  <label className="text-[14px] flex items-center mt-1 whitespace-nowrap">
-                    <input
-                      type="checkbox"
-                      className="h-4 w-4 mr-2"
-                      name={item.name}
-                      checked={checkedLabels.includes(item.name)}
-                      onChange={(e) =>
-                        handleChange(item.name, e.target.checked)
-                      }
-                    />
-                    {item.label}
-                  </label>
-                </li>
-              ))}
-            </ul>
+        <div className="mt-2 ml-2">
+          <div className="flex items-center">
+            <Icon
+              icon="carbon:checkbox-checked"
+              className="cursor-pointer hover:shadow-lg duration-300 mr-2"
+              width="24"
+              height="24"
+              style={{ color: "#1ec247" }}
+              onClick={handleHeadingClick}
+            />
+            <Icon
+              icon="fluent-emoji-high-contrast:cross-mark-button"
+              className="cursor-pointer hover:shadow-lg duration-300 ml-2"
+              width="22"
+              height="22"
+              style={{ color: "#e63333" }}
+              onClick={clearCheckedItems}
+            />
           </div>
-        )}
+          <ul>
+            {items.map((item) => (
+              <li key={item.name}>
+                <label className="text-[14px] flex items-center mt-1 whitespace-nowrap">
+                  <input
+                    type="checkbox"
+                    className="h-4 w-4 mr-2"
+                    name={item.name}
+                    checked={checkedLabels.includes(item.name)}
+                    onChange={(e) => handleChange(item.name, e.target.checked)}
+                  />
+                  {item.label}
+                </label>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     );
   };

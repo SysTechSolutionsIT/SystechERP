@@ -100,6 +100,7 @@ const DepartmentModal = ({ visible, onClick }) => {
         );
         const data = response.data;
         setDepartmentGroup(data);
+        console.log("Department group data");
       } catch (error) {
         console.error("Error", error);
       }
@@ -335,6 +336,7 @@ const DepartmentModal = ({ visible, onClick }) => {
                   />
                 </div>
               </div>
+
               <div>
                 <label className="text-[13px] font-semibold">
                   Department Head
