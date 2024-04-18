@@ -45,7 +45,7 @@ const EarningHeadsTable = ({ ID }) => {
           }
         );
         const caderwiseData = response.data;
-        console.log('Caderwise data', caderwiseData)
+        console.log("Caderwise data", caderwiseData);
 
         // Check if employee-wise entry exists
         const employeeWiseResponse = await axios.get(
@@ -56,16 +56,16 @@ const EarningHeadsTable = ({ ID }) => {
           }
         );
         const employeeWiseData = employeeWiseResponse.data;
-        console.log('Employee wise data', employeeWiseData)
+        console.log("Employee wise data", employeeWiseData);
 
-        if(employeeWiseData.length > 0){
-          console.log('Earning heads have already been defined')
-          setCaderwiseEarnings(employeeWiseData)
+        if (employeeWiseData.length > 0) {
+          console.log("Earning heads have already been defined");
+          setCaderwiseEarnings(employeeWiseData);
         } else {
-          console.log('Mapping from Caderwise earnings')
-          setCaderwiseEarnings(caderwiseData)
+          console.log("Mapping from Caderwise earnings");
+          setCaderwiseEarnings(caderwiseData);
         }
-        console.log('Earning for the employee', caderwiseEarnings)
+        console.log("Earning for the employee", caderwiseEarnings);
       } catch (error) {
         console.error("Error", error);
       }
@@ -75,9 +75,11 @@ const EarningHeadsTable = ({ ID }) => {
   }, [token, ID, employeeTypeId]);
 
   useEffect(() => {
-    const updatedHeads = heads.map(head => ({
+    const updatedHeads = heads.map((head) => ({
       ...head,
-      Selected: caderwiseEarnings.some(earnings => earnings.EarningHeadId === head.EarningHeadId)
+      Selected: caderwiseEarnings.some(
+        (earnings) => earnings.EarningHeadId === head.EarningHeadId
+      ),
     }));
     setHeads(updatedHeads);
   }, [caderwiseEarnings]);
@@ -263,7 +265,7 @@ const EarningHeadsTable = ({ ID }) => {
                     className="w-16 py-1 rounded-md text-center"
                     value={calculateValue(
                       item.Formula,
-                      details.GrossSalary,
+                      details ? details.GrossSalary : 0,
                       item.CalculationValue
                     )}
                     onChange={(e) =>

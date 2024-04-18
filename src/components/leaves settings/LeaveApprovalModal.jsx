@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { Icon } from "@iconify/react";
 import axios from "axios";
-import { useAuth } from "../Login";
+import { useAuth, useDetails } from "../Login";
 import LMonthlyAtt from "./LMonthlyAtt";
 
 const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
@@ -14,16 +14,11 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
   const [employeeId, setEmployeeId] = useState("");
   const [leaveTypeId, setLeaveTypeId] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [LeaveBalance, setLeaveBalance] = useState([]);
   const [LeavesEarned, setLeavesEarned] = useState(0);
   const [PresentyObject, setPresentyObject] = useState([]);
-  let CarryForward = 0;
-  let Presenty = 0;
-  let Absenty = 0;
-  let MaxUsedFlag = 0;
 
-  const [Data, setData] = useState([]);
   const { token } = useAuth();
+  const { empid } = useDetails();
 
   const handleInputChange = (event) => {
     const { value } = event.target;
@@ -48,40 +43,41 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
       LeaveFromDate: "",
       LeaveToDate: "",
       Remark: "",
-      SanctionBy: "",
+      SanctionBy: empid,
       SanctionFromDate: "",
       SanctionToDate: "",
       SanctionLeaveDays: "",
     },
     onSubmit: async (values) => {
       console.log(values);
+
       const updatedData = {
         ApprovalFlag: ApprovalFlag,
         LeaveApplicationId: ID,
         FYear: values.FYear,
         LeaveApplicationDate: values.LeaveApplicationDate,
         EmployeeId: values.EmployeeId,
-        EmployeeName: values.EmployeeName,
         LeaveFromDate: values.LeaveFromDate,
         EmployeeType: values.EmployeeType,
         LeaveTypeId: values.LeaveTypeId,
         EmployeeTypeGroup: values.EmployeeTypeGroup,
         LeaveToDate: values.LeaveToDate,
         Remark: values.Remark,
-        SanctionBy: values.SanctionBy,
+        SanctionBy: empid,
         SanctionFromDate: values.SanctionFromDate,
         SanctionToDate: values.SanctionToDate,
         SanctionLeaveDays: values.SanctionLeaveDays,
         IUFlag: "U",
       };
-
+      console.log("Updated data from leave approval modal:", updatedData);
       await updateApproval(updatedData);
-      await updateLeaveBalance(updatedData);
+
       //Call presenty absenty function
       console.log("Calling presenty logic");
       if (ApprovalFlag == "A") {
         // Call AfterApproval function
         calculatePresenty(updatedData);
+        await updateLeaveBalance(updatedData);
       }
 
       onClick();
@@ -97,7 +93,8 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
       console.log("Employee ID: ", values.EmployeeId);
       fetchLeaveEarned();
       alert("Leave Approved");
-    } else if (ApprovalFlag === "R") alert("Leave Rejected");
+    } else if (ApprovalFlag === "MR" || ApprovalFlag === "HRR")
+      alert("Leave Rejected");
     else console.log("None of the two");
     try {
       const response = axios.post(
@@ -108,6 +105,7 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+      console.log(response);
 
       // FetchLeaveBalanceData()
     } catch (error) {
@@ -169,6 +167,20 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
     };
     AddAttendances();
   }, [token, PresentyObject]);
+
+  useEffect(() => {
+    // Calculate leave days whenever LeaveFromDate or LeaveToDate changes
+    const newLeaveDays = calculateLeaveDays(
+      formik.values.LeaveFromDate,
+      formik.values.LeaveToDate
+    );
+
+    // Update the LeaveDays field in formik values
+    formik.setValues({
+      ...formik.values,
+      LeaveDays: newLeaveDays,
+    });
+  }, [formik.values.LeaveFromDate, formik.values.LeaveToDate]);
 
   function calculateLeaveDays(leaveFromDate, leaveToDate) {
     // Convert the date strings to Date objects
@@ -285,7 +297,6 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
         Remark: details.Remark,
         LeaveTypeId: details.LeaveTypeId,
         LeaveDays: details.LeaveDays,
-        SanctionBy: details.SanctionBy,
         SanctionFromDate: formatDate(details.LeaveFromDate),
         SanctionToDate: formatDate(details.LeaveToDate),
         SanctionLeaveDays: details.SanctionLeaveDays,
@@ -466,50 +477,10 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
                     <input
                       type="text"
                       id="SanctionBy"
-                      name="SanctionBy"
-                      value={formik.values.SanctionBy}
-                      onChange={(e) => {
-                        formik.handleChange(e);
-                        handleInputChange(e);
-                      }}
-                      onFocus={() => setSearchTerm("")}
+                      value={empid}
+                      readOnly
                       className="w-full px-4 py-2 font-normal bg-white focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
-                      placeholder={
-                        formik.values.EmployeeId
-                          ? formik.values.EmployeeName
-                          : "Search Employee Name"
-                      }
                     />
-
-                    {searchTerm && (
-                      <div
-                        className="absolute z-10 bg-white w-full border border-gray-300 rounded-lg mt-1 overflow-hidden"
-                        style={{ maxHeight: "150px", overflowY: "auto" }}
-                      >
-                        {filteredEmployees.length > 0 ? (
-                          filteredEmployees.map((entry, index) => (
-                            <div
-                              key={index}
-                              onClick={() => {
-                                formik.setValues({
-                                  ...formik.values,
-                                  SanctionBy: entry.EmployeeId,
-                                  EmployeeName: entry.EmployeeName,
-                                });
-                                setSearchTerm("");
-                              }}
-                              className="px-4 py-2 cursor-pointer hover:bg-gray-200 font-semibold text-[11px]"
-                            >
-                              {entry.EmployeeName}
-                            </div>
-                          ))
-                        ) : (
-                          <div className="px-4 py-2 text-gray-500">
-                            No matching results
-                          </div>
-                        )}
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>

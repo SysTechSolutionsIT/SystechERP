@@ -7,7 +7,7 @@ const DeductionHeadsTable = ({ ID }) => {
   console.log("ID in deduciton", ID);
   const { token } = useAuth();
   const { employeeTypeId } = useEmployeeType();
-  const [ caderwiseDeductions, setCaderwiseDeductions ] = useState([])
+  const [caderwiseDeductions, setCaderwiseDeductions] = useState([]);
   const [selectedHeads, setSelectedHeads] = useState([]);
   const [details, setDetails] = useState([]);
   const [heads, setHeads] = useState([]);
@@ -47,7 +47,7 @@ const DeductionHeadsTable = ({ ID }) => {
         );
         const data = response.data;
         setDetails(data);
-        console.log(data)
+        console.log(data);
       } catch (error) {
         console.error("Error", error);
       }
@@ -66,7 +66,7 @@ const DeductionHeadsTable = ({ ID }) => {
           }
         );
         const caderwiseData = response.data;
-        console.log('Caderwise data', caderwiseData)
+        console.log("Caderwise data", caderwiseData);
 
         // Check if employee-wise entry exists
         const employeeWiseResponse = await axios.get(
@@ -77,16 +77,16 @@ const DeductionHeadsTable = ({ ID }) => {
           }
         );
         const employeeWiseData = employeeWiseResponse.data;
-        console.log('Employee wise data', employeeWiseData)
+        console.log("Employee wise data", employeeWiseData);
 
-        if(employeeWiseData.length > 0){
-          console.log('Deduction heads have already been defined')
-          setCaderwiseDeductions(employeeWiseData)
+        if (employeeWiseData.length > 0) {
+          console.log("Deduction heads have already been defined");
+          setCaderwiseDeductions(employeeWiseData);
         } else {
-          console.log('Mapping from Caderwise deductions')
-          setCaderwiseDeductions(caderwiseData)
+          console.log("Mapping from Caderwise deductions");
+          setCaderwiseDeductions(caderwiseData);
         }
-        console.log('Deduction for the employee', caderwiseDeductions)
+        console.log("Deduction for the employee", caderwiseDeductions);
       } catch (error) {
         console.error("Error", error);
       }
@@ -96,9 +96,11 @@ const DeductionHeadsTable = ({ ID }) => {
   }, [token, ID, employeeTypeId]);
 
   useEffect(() => {
-    const updatedHeads = heads.map(head => ({
+    const updatedHeads = heads.map((head) => ({
       ...head,
-      Selected: caderwiseDeductions.some(deduction => deduction.DeductionHeadID === head.DeductionHeadID)
+      Selected: caderwiseDeductions.some(
+        (deduction) => deduction.DeductionHeadID === head.DeductionHeadID
+      ),
     }));
 
     setHeads(updatedHeads);
@@ -184,7 +186,7 @@ const DeductionHeadsTable = ({ ID }) => {
         })
       );
     setSelectedHeads(selectedHeadsData);
-    console.log('Selected Heads', selectedHeads);
+    console.log("Selected Heads", selectedHeads);
   }, [heads, employeeTypes, ID]);
 
   const addEmployeewiseDeduction = async () => {
@@ -265,7 +267,7 @@ const DeductionHeadsTable = ({ ID }) => {
                     className="w-16 py-1 rounded-md text-center"
                     value={calculateValue(
                       item.Formula,
-                      details.GrossSalary,
+                      details ? details.GrossSalary : 0,
                       item.CalculationValue
                     )}
                     onChange={(e) =>

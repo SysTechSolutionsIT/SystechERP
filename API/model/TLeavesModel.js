@@ -36,6 +36,7 @@ const TLeaves = sequelize.define(
     LeaveApplicationId: {
       type: DataTypes.STRING(20),
       allowNull: false,
+      primaryKey: true,
     },
     LeaveApplicationDate: {
       type: DataTypes.DATE,
@@ -70,6 +71,10 @@ const TLeaves = sequelize.define(
       allowNull: false,
       defaultValue: 0,
     },
+    TBSanctionBy: {
+      type: DataTypes.STRING(5),
+      allowNull: false,
+    },
     SanctionBy: {
       type: DataTypes.STRING(5),
       allowNull: true,
@@ -92,9 +97,9 @@ const TLeaves = sequelize.define(
       allowNull: true,
     },
     ApprovalFlag: {
-      type: DataTypes.STRING(1),
+      type: DataTypes.STRING(5),
       allowNull: true,
-      defaultValue: "P",
+      defaultValue: "MP",
     },
     AcFlag: {
       type: DataTypes.STRING(1),
@@ -108,7 +113,7 @@ const TLeaves = sequelize.define(
     },
     CreatedOn: {
       type: DataTypes.DATE,
-      allowNull: false,
+      allowNull: true,
     },
     ModifiedBy: {
       type: DataTypes.STRING(500),
@@ -116,7 +121,7 @@ const TLeaves = sequelize.define(
     },
     ModifiedOn: {
       type: DataTypes.DATE,
-      allowNull: false,
+      allowNull: true,
     },
   },
   {

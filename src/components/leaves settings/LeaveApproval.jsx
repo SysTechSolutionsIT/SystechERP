@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react";
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "react-bootstrap";
-import { useAuth } from "../Login";
+import { useAuth, useDetails } from "../Login";
 import axios from "axios";
 import LeaveApprovalModal from "./LeaveApprovalModal";
 import LMonthlyAtt from "./LMonthlyAtt";
@@ -9,13 +9,17 @@ import LMonthlyAtt from "./LMonthlyAtt";
 const LeaveApproval = () => {
   const [isModalOpen, setModalOpen] = useState(false); //Add Modal
   const { token } = useAuth();
-  const [LeaveApps, setLeaveApps] = useState([]);
+  const [LeaveApps, setLeaveApps] = useState([]); // For managers
+  const [HRPendings, setHRPendings] = useState([]); //for applications with HRP
   const [filteredData, setFilteredData] = useState([]);
   const [LeaveTypes, setLeaveTypes] = useState("");
   const [Employees, setEmployees] = useState([]);
   const [unapprovedLeaves, setUnapprovedLeaves] = useState([]);
   const [ApprovalFlag, setApprovalFlag] = useState("");
   const [testId, setTestId] = useState([]);
+  const { role } = useDetails();
+  console.log("Role:", role);
+  const { empid } = useDetails();
 
   const [columnVisibility, setColumnVisibility] = useState({
     ApprovalFlag: true,
@@ -106,8 +110,6 @@ const LeaveApproval = () => {
     }
   };
 
-  const [veEType, setVeEType] = useState(false);
-  const [edit, setEdit] = useState(false);
   const [id, setid] = useState();
 
   const [menuOpen, setMenuOpen] = useState(false);
@@ -149,29 +151,58 @@ const LeaveApproval = () => {
     return context.measureText(text).width;
   };
 
+  //Fetching manager and/or HR pending leaves
+
   useEffect(() => {
     const fetchLeaveApps = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:5500/a5d3g2p6/FnShowActiveData",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const data = response.data;
-        data.sort(
-          (a, b) =>
-            new Date(b.LeaveApplicationDate) - new Date(a.LeaveApplicationDate)
-        );
-        setLeaveApps(data);
-      } catch (error) {
-        console.error("Error", error);
+      if (role == "Admin") {
+        console.log("trying to fetch admin related data");
+        try {
+          const response = await axios.get(
+            "http://localhost:5500/a5d3g2p6/FnFetchHRPendingLeaves",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          const data = response.data;
+          data.sort(
+            (a, b) =>
+              new Date(b.LeaveApplicationDate) -
+              new Date(a.LeaveApplicationDate)
+          );
+
+          console.log("HR LA", LeaveApps);
+          setLeaveApps(data);
+        } catch (error) {
+          console.error("HR admin error Error", error);
+        }
+      } else {
+        try {
+          const response = await axios.get(
+            "http://localhost:5500/a5d3g2p6/FnShowManagerSanctionLeaves",
+            {
+              params: { TBSanctionBy: empid },
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          const data = response.data;
+          data.sort(
+            (a, b) =>
+              new Date(b.LeaveApplicationDate) -
+              new Date(a.LeaveApplicationDate)
+          );
+          setLeaveApps(data);
+        } catch (error) {
+          console.error(" Other role Error", error);
+        }
       }
     };
     fetchLeaveApps();
-  }, [token, isModalOpen]);
+  }, [ApprovalFlag, token, isModalOpen]);
 
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -205,7 +236,7 @@ const LeaveApproval = () => {
         console.log(data);
         setLeaveTypes(data);
       } catch (error) {
-        console.error("Error", error);
+        console.error("Leave types Error", error);
       }
     };
 
@@ -372,7 +403,9 @@ const LeaveApproval = () => {
                             onClick={() => {
                               setModalOpen(true);
                               setid(result.LeaveApplicationId);
-                              setApprovalFlag("A");
+                              setApprovalFlag(
+                                role === "HR" || "Admin" ? "A" : "HRP"
+                              );
                             }}
                           >
                             Approve
@@ -383,7 +416,9 @@ const LeaveApproval = () => {
                             onClick={() => {
                               setModalOpen(true);
                               setid(result.LeaveApplicationId);
-                              setApprovalFlag("R");
+                              setApprovalFlag(
+                                role === "HR" || "Admin" ? "HRR" : "MR"
+                              );
                             }}
                           >
                             Reject
@@ -451,98 +486,99 @@ const LeaveApproval = () => {
                       })}
                     </tr>
                   ))
-                : LeaveApps.filter((result) => result.ApprovalFlag === "P").map(
-                    (result, index) => (
-                      <tr key={index}>
-                        <td className="px-2 border-2">
-                          <div className="flex items-center gap-2 text-center justify-center">
-                            <button
-                              type="button"
-                              className="bg-green-600 text-white font-semibold py-1 px-2 rounded-lg text-[11px] hover:bg-white hover:border-green-500 hover:border-2 border-2 duration-300 hover:text-green-500"
-                              onClick={() =>
-                                HandleApprove(result.LeaveApplicationId)
-                              }
-                            >
-                              Approve
-                            </button>
-                            <button
-                              type="button"
-                              className="bg-red-500 text-white font-semibold py-1 hover:bg-white hover:border-red-500 hover:border-2 border-2 duration-300 hover:text-red-500  px-3 rounded-lg text-[11px]"
-                              onClick={() => {
-                                setModalOpen(true);
-                                setid(result.LeaveApplicationId);
-                                setApprovalFlag("R");
-                              }}
-                            >
-                              Reject
-                            </button>
-                          </div>
-                        </td>
-                        <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
-                          {result.LeaveApplicationId}
-                        </td>
-                        {selectedColumns.map((columnName) => {
-                          if (columnVisibility[columnName]) {
-                            if (columnName === "EmployeeName") {
-                              const employee = Employees.find(
-                                (employee) =>
-                                  employee.EmployeeId == result.EmployeeId
+                : LeaveApps.map((result, index) => (
+                    <tr key={index}>
+                      <td className="px-2 border-2">
+                        <div className="flex items-center gap-2 text-center justify-center">
+                          <button
+                            type="button"
+                            className="bg-green-600 text-white font-semibold py-1 px-2 rounded-lg text-[11px] hover:bg-white hover:border-green-500 hover:border-2 border-2 duration-300 hover:text-green-500"
+                            onClick={() => {
+                              setModalOpen(true);
+                              setid(result.LeaveApplicationId);
+                              setApprovalFlag(
+                                role === "HR" || "Admin" ? "A" : "HRP"
                               );
-                              return (
-                                <td
-                                  key={columnName}
-                                  className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                                >
-                                  {employee?.EmployeeName}
-                                </td>
+                            }}
+                          >
+                            Approve
+                          </button>
+                          <button
+                            type="button"
+                            className="bg-red-500 text-white font-semibold py-1 hover:bg-white hover:border-red-500 hover:border-2 border-2 duration-300 hover:text-red-500  px-3 rounded-lg text-[11px]"
+                            onClick={() => {
+                              setModalOpen(true);
+                              setid(result.LeaveApplicationId);
+                              setApprovalFlag(
+                                role === "HR" || "Admin" ? "HRR" : "MR"
                               );
-                            } else if (columnName === "LeaveTypeId") {
-                              const leaveType =
-                                LeaveTypes.length > 0 &&
-                                LeaveTypes.find(
-                                  (type) =>
-                                    type.LeaveTypeId == result.LeaveTypeId
-                                );
-                              return (
-                                <td
-                                  key={columnName}
-                                  className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                                >
-                                  {leaveType?.LeaveType}
-                                </td>
+                            }}
+                          >
+                            Reject
+                          </button>
+                        </div>
+                      </td>
+                      <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
+                        {result.LeaveApplicationId}
+                      </td>
+                      {selectedColumns.map((columnName) => {
+                        if (columnVisibility[columnName]) {
+                          if (columnName === "EmployeeName") {
+                            const employee = Employees.find(
+                              (employee) =>
+                                employee.EmployeeId == result.EmployeeId
+                            );
+                            return (
+                              <td
+                                key={columnName}
+                                className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                              >
+                                {employee?.EmployeeName}
+                              </td>
+                            );
+                          } else if (columnName === "LeaveTypeId") {
+                            const leaveType =
+                              LeaveTypes.length > 0 &&
+                              LeaveTypes.find(
+                                (type) => type.LeaveTypeId == result.LeaveTypeId
                               );
-                            } else if (
-                              columnName === "LeaveApplicationDate" ||
-                              columnName === "LeaveFromDate" ||
-                              columnName === "LeaveToDate"
-                            ) {
-                              return (
-                                <td
-                                  key={columnName}
-                                  className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                                >
-                                  {formatDate(result[columnName])}
-                                </td>
-                              );
-                            } else {
-                              return (
-                                <td
-                                  key={columnName}
-                                  className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                                >
-                                  {result[columnName]}
-                                </td>
-                              );
-                            }
+                            return (
+                              <td
+                                key={columnName}
+                                className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                              >
+                                {leaveType?.LeaveType}
+                              </td>
+                            );
+                          } else if (
+                            columnName === "LeaveApplicationDate" ||
+                            columnName === "LeaveFromDate" ||
+                            columnName === "LeaveToDate"
+                          ) {
+                            return (
+                              <td
+                                key={columnName}
+                                className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                              >
+                                {formatDate(result[columnName])}
+                              </td>
+                            );
                           } else {
                             return (
-                              <td key={columnName} className="hidden"></td>
+                              <td
+                                key={columnName}
+                                className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                              >
+                                {result[columnName]}
+                              </td>
                             );
                           }
-                        })}
-                      </tr>
-                    )
-                  )}
+                        } else {
+                          return <td key={columnName} className="hidden"></td>;
+                        }
+                      })}
+                    </tr>
+                  ))}
             </tbody>
           </table>
         </div>
