@@ -54,45 +54,40 @@ const TManualAttendance = sequelize.define(
       type: DataTypes.STRING(5),
       allowNull: false,
     },
-    AMonth: {
-      type: DataTypes.INTEGER(2),
-    },
-    AYear: {
-      type: DataTypes.INTEGER(4),
-    },
-    JobTypeId: {
-      type: DataTypes.STRING(5),
+    JobType: {
+      type: DataTypes.STRING(45),
       allowNull: false,
-      defaultValue: "00001",
+      defaultValue: "N/A",
+    },
+    checkbox:{
+      type:DataTypes.STRING(10),
+      allowNull: true,
+      defaultValue:'false'
     },
     ShiftId: {
       type: DataTypes.STRING(5),
-      allowNull: false,
+      allowNull: true,
     },
     EmployeeId: {
       type: DataTypes.STRING(5),
       allowNull: false,
     },
-    EmployeeTypeGroup: {
+    AttendanceDate: {
+      type: DataTypes.STRING(10),
+      allowNull: false,
+    },
+    AttendanceDay: {
+      type: DataTypes.STRING(10),
+      allowNull: false,
+    },
+    
+    InTime: {
       type: DataTypes.STRING(10),
       allowNull: true,
     },
-    AttendanceDate: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
-    InTime: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
     OutTime: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING(10),
       allowNull: true,
-    },
-    AttendanceFlag: {
-      type: DataTypes.STRING(1),
-      allowNull: true,
-      defaultValue: "E",
     },
     Remark: {
       type: DataTypes.STRING(500),

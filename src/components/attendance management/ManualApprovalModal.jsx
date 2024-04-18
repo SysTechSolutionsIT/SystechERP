@@ -29,7 +29,7 @@ const MAModal = ({ visible, onClick, ID }) => {
       JobTypeId: "",
       AttendanceFlag: "",
       SanctionBy: "Sanction By",
-      Remarks: "",
+      Remark: "",
       AcFlag: "Y",
       IUFlag: "U",
     },

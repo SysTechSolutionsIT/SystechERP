@@ -15,6 +15,8 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
   const [workDetails, setWorkDetails] = useState([])
   const [WeekOffCounts, setWeekOffCounts] = useState([])
   const [weeklyOffId, setWeeklyOffId] = useState()
+  const [FinancialYears, setFinancialYears] = useState([])
+  const [FinalManualAttData, setFinalManualAttData] = useState([])
 
   const [tableData, setTableData] = useState([]);
 
@@ -86,12 +88,13 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
   const fetchPersonalData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5500/employee/personal/FnShowActiveData`,
+        `http://localhost:5500/employee/personal/FnShowPerticularData`,
         {
+          params: { EmployeeId: empid },
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      console.log("Response Object", response);
+      console.log("Response Object of Employee Personal", response);
       const data = response.data;
       setDetails(data);
     } catch (error) {
@@ -241,6 +244,21 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
     fetchWeeklyOffCounts();
   }, [formik.values.FromDate, formik.values.ToDate, token, visible]);
   
+  useEffect(() =>{
+    const fetchFinancialYears = async () =>{
+      try {
+        const response = await axios.get('http://localhost:5500/financials/FnShowActiveData',
+        { headers: { Authorization: `Bearer ${token}` }}
+        )
+        const data = response.data
+        console.log('Financial Years', data)
+        setFinancialYears(data)
+      } catch (error) {
+        console.error('Error', error);
+      }
+    }
+    fetchFinancialYears()
+  },[token])
 
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -249,9 +267,9 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
     setSearchTerm(value);
   };
 
-  const filteredEmployees = Details.filter((employee) =>
-    employee.EmployeeName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // const filteredEmployees = Details.filter((employee) =>
+  //   employee.EmployeeName.toLowerCase().includes(searchTerm.toLowerCase())
+  // );
 
   const generateTableData = () => {
     // Function to generate table data based on selected date range
@@ -260,20 +278,34 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
     const data = [];
     const options = { weekday: 'long', year: 'numeric', month: '2-digit', day: '2-digit' }; // Use 'long' for full day names
     const formatter = new Intl.DateTimeFormat('en-UK', options);
-    for (let date = fromDate; date <= toDate; date.setDate(date.getDate() + 1)) {
-        const formattedDate = formatter.format(date);
-        const [weekday, datePart] = formattedDate.split(', '); // Extract weekday and date
-        const jobType = highlightWeeklyOffRows(weekday).jobType; // Determine jobType based on weekday
+    for (let AttendanceDate = fromDate; AttendanceDate <= toDate; AttendanceDate.setDate(AttendanceDate.getDate() + 1)) {
+        const formattedDate = formatter.format(AttendanceDate).replace(/\//g, '-'); // Replace slashes with dashes
+        const [weekday, datePart] = formattedDate.split(', '); // Extract weekday and AttendanceDate
+        const JobType = highlightWeeklyOffRows(weekday).JobType; // Determine JobType based on weekday
         const rowData = {
-            date: datePart, // Assign date
+            AttendanceDate: datePart, // Assign date
             checkbox: true,
-            day: weekday, // Assign weekday
-            jobType: jobType, // Set jobType based on highlightWeeklyOffRows logic
+            AttendanceDay: weekday, // Assign weekday
+            JobType: JobType, // Set JobType based on highlightWeeklyOffRows logic
         };
         data.push(rowData);
     }
     setTableData(data);
+    const finalData = data.map(row => ({
+      ...row,
+      EmployeeId: empid,
+      FYear: formik.values.FYear,
+      EmployeeTypeId: Details.EmployeeTypeId,
+      ShiftId: formik.values.ShiftId,
+      IUFlag: 'I',
+      ApprovalFlag: 'P'
+  }));
+
+  setFinalManualAttData(finalData)
+
+  console.log("Final table data:", finalData);
 };
+
 
 
   useEffect(() => {
@@ -290,7 +322,7 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
     setTableData(newData);
   };
 
-  const highlightWeeklyOffRows = (date) => {
+  const highlightWeeklyOffRows = (date, jobTypeFromDropdown) => {
     // Check if weeklyOffId is valid and WeekOffCounts is populated
     console.log("Entering highlightWeeklyOffRows function with date:", date);
     if (weeklyOffId && WeekOffCounts && WeekOffCounts.length > 0) {
@@ -306,29 +338,84 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
             const isWeeklyOff = weeklyOffDays && weeklyOffDays.includes(date);
             console.log("isWeeklyOff:", isWeeklyOff);
             // Determine the job type
-            const jobType = isWeeklyOff ? 'Weekly Off' : 'Present'; // Assuming 'Present' is the default JobType value
-            console.log("jobType:", jobType);
+            let JobType = isWeeklyOff ? 'Weekly Off' : 'Present'; // Assuming 'Present' is the default JobType value
+            console.log("JobType:", JobType);
+            // If a job type is selected from the dropdown for an Absent day, use it
+            if (jobTypeFromDropdown && jobTypeFromDropdown !== 'Present') {
+                JobType = jobTypeFromDropdown;
+            }
             // Find the corresponding job from the Jobs array
-            const job = Jobs.find(job => job.JobTypeName === jobType);
+            const job = Jobs.find(job => job.JobTypeName === JobType);
             console.log("job:", job);
             console.log(job.JobTypeName)
-            // Return the appropriate style based on whether it's a weekly off day and jobType is present
+            // Return the appropriate style based on whether it's a weekly off day and JobType is present
             if (isWeeklyOff) {
-                return { backgroundColor: 'rgb(205, 205, 0)', jobType: job.JobTypeName };
+                return { backgroundColor: 'rgb(205, 205, 0)', JobType: job.JobTypeName };
             } else if (job && job.JobTypeId === 1) { // Assuming JobTypeId 1 corresponds to 'Present'
-                return { backgroundColor: 'rgb(102, 204, 0)', jobType: job.JobTypeName };
+                return { backgroundColor: 'rgb(102, 204, 0)', JobType: job.JobTypeName };
+            } else if (job && job.JobTypeName === 'Absent') { // Condition for Absent job type
+                return { backgroundColor: 'red', JobType: job.JobTypeName };
             } else {
-                return { jobType: job.JobTypeName };
+                return { JobType: job.JobTypeName };
             }
         }
     }
     // Return empty style object if conditions are not met
     console.log("Function did not execute the main logic.");
-    return { jobType: 'Present' }; // Assuming "Present" is the default JobType value
+    return { JobType: 'Present' }; // Assuming "Present" is the default JobType value
+};
+
+const handleJobTypeChange = (index, newJobType) => {
+  const newData = [...tableData];
+  newData[index].JobType = newJobType;
+  setTableData(newData);
+
+  // Update final data as well
+  const updatedFinalData = FinalManualAttData.map((row, rowIndex) => {
+      if (rowIndex === index) {
+          return {
+              ...row,
+              JobType: newJobType
+          };
+      }
+      return row;
+  });
+  setFinalManualAttData(updatedFinalData);
 };
 
 
+const AddManualAttendance = async() =>{
+  try {
+    const response = await axios.post('http://localhost:5500/manual-attendance/FnAddUpdateDeleteRecord',
+    FinalManualAttData,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    alert('Manual Attendance Added Successfully')
+    onClick()
+  } catch (error) {
+    console.error('Error adding Manual Att', error);
+  }
+}
 
+const [maxDate] = useState(() => {
+  const today = new Date();
+  const year = today.getFullYear();
+  let month = today.getMonth() + 1;
+  let day = today.getDate();
+
+  // Add leading zero if month or day is less than 10
+  if (month < 10) {
+    month = "0" + month;
+  }
+  if (day < 10) {
+    day = "0" + day;
+  }
+
+  return `${year}-${month}-${day}`;
+});
 
   if (!visible) return null;
   return (
@@ -366,6 +453,7 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   value={formik.values.ToDate}
                   onChange={formik.handleChange}
+                  max={maxDate}
                 />
               </div>
               <div>
@@ -377,6 +465,29 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   readOnly
                 />
+              </div>
+              <div>
+                <label
+                  className="text-[13px] font-semibold"
+                >
+                  Financial Year
+                </label>
+                <div className="flex items-center">
+                <select
+                  id="FYear"
+                  name="FYear"
+                  value={formik.values.FYear}
+                  onChange={formik.handleChange}
+                  className="w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                >
+                  <option value="">Select a Financial Year</option>
+                  {FinancialYears.length > 0 && FinancialYears.map((entry) => (
+                    <option key={entry.FYearId} value={entry.ShortName}>
+                      {entry.ShortName}
+                    </option>
+                  ))}
+                </select>
+                </div>
               </div>
               <div>
                 <p className="font-semibold text-[13px]">Shift</p>
@@ -396,6 +507,24 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
                 </select>
               </div>
             </div>
+            <div className="flex items-center mt-3">
+            <div className="inline-flex items-center mr-3">
+              <div className="w-5 h-5 bg-green-500 mr-1"></div>
+              <div className="text-[11px]">Present</div>
+            </div>
+            <div className="inline-flex items-center mr-3">
+              <div className="w-5 h-5 bg-yellow-500 mr-1"></div>
+              <div className="text-[11px]">Weekly Off</div>
+            </div>
+            <div className="inline-flex items-center mr-3">
+              <div className="w-5 h-5 bg-red-500 mr-1"></div>
+              <div className="text-[11px]">Absent</div>
+            </div>
+            <div className="inline-flex items-center">
+              <div className="w-5 h-5 bg-purple-500 mr-1"></div>
+              <div className="text-[11px]">Leaves</div>
+            </div>
+          </div>
           </div>
           {/* Render the table */}
           <table className="w-full mt-4 text-center h-auto text-[11px] rounded-lg justify-center whitespace-normal">
@@ -404,7 +533,7 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
                 <th
                   className="bg-blue-900 text-[13px] text-white font-semibold border-white border-2"
                 >
-                  Dates
+                  Date
                 </th>
                 <th className="text-[13px]  font-semibold border-r-2 border-white py-1 px-2 bg-blue-900 text-white">
                   Checkbox
@@ -419,8 +548,8 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
             </thead>
             <tbody>
             {tableData.map((row, index) => (
-                <tr key={index} style={highlightWeeklyOffRows(row.day)} className='bg-white'>
-                    <td className="border-2 whitespace-normal text-[11px]">{row.date}</td>
+              <tr key={index} style={highlightWeeklyOffRows(row.AttendanceDay, row.JobType)} className='bg-white'>
+                    <td className="border-2 whitespace-normal text-[11px]">{row.AttendanceDate}</td>
                     <td className="border-2 whitespace-normal text-[11px]">
                         <label className="capitalize font-semibold text-[11px]">
                             <input
@@ -431,23 +560,19 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
                             />
                         </label>
                     </td>
-                    <td className="border-2 whitespace-normal text-[11px]">{row.day}</td>
+                    <td className="border-2 whitespace-normal text-[11px]">{row.AttendanceDay}</td>
                     <td className="border-2 whitespace-normal text-[11px]">
-                        <select
-                            className='border border-black rounded-md w-auto'
-                            value={row.jobType}
-                            onChange={(e) => {
-                                const newData = [...tableData];
-                                newData[index].jobType = e.target.value;
-                                setTableData(newData);
-                            }}
-                        >
-                            {Jobs.map((entry) => (
-                                <option key={entry.JobTypeId} value={entry.JobTypeName}>
-                                    {entry.JobTypeName}
-                                </option>
-                            ))}
-                        </select>
+                    <select
+                      className='border border-black rounded-md w-auto'
+                      value={row.JobType}
+                      onChange={(e) => handleJobTypeChange(index, e.target.value)}
+                  >
+                      {Jobs.map((entry) => (
+                          <option key={entry.JobTypeId} value={entry.JobTypeName}>
+                              {entry.JobTypeName}
+                          </option>
+                      ))}
+                  </select>
                     </td>
                 </tr>
             ))}
@@ -456,7 +581,8 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
           {/* End of table */}
           <div className="flex mt-4 gap-10 justify-center">
             <button
-              type="submit"
+              type="Button"
+              onClick={AddManualAttendance}
               className="bg-blue-900 text-white text-[13px] font-semibold py-2 px-4 rounded-lg w-36"
             >
               Save Attendance

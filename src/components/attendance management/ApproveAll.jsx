@@ -11,17 +11,18 @@ const ApproveAll = ({ visible, onClick }) => {
 
   const formik = useFormik({
     initialValues:{
-        AttendanceDate:"",
+        FromDate:"",
+        ToDate:"",
         EmployeeName:""
     },
     onSubmit: (values) =>{
-        // const formattedDate = new Date(values.AttendanceDate).toISOString().slice(0, 19).replace('T', ' ');
-        // const updatedData = {
-        //     ...values,
-        //     AttendanceDate: formattedDate,
-        // };
-        console.log(values)
-        approveAll(values)
+      const updatedData ={
+        FromDate: values.FromDate,
+        ToDate: values.ToDate,
+        EmployeeName:values.EmployeeName
+      }
+        console.log('Data',values)
+        approveAll(updatedData, updatedData.FromDate, updatedData.ToDate )
         onClick()
     }
   })
@@ -47,7 +48,7 @@ const ApproveAll = ({ visible, onClick }) => {
     fetchPersonalData();
   }, [token]);
 
-  const approveAll = async (data) => {
+  const approveAll = async (data, fromDate, toDate) => {
     const confirmApprove = window.confirm('Are you sure you want to approve all attendance for the day?')
     if(!confirmApprove) return
     try {
@@ -55,6 +56,10 @@ const ApproveAll = ({ visible, onClick }) => {
         "http://localhost:5500/manual-attendance/FnApproveAll",
         data,
         {
+          params: { 
+          FromDate: fromDate,
+          ToDate: toDate
+        },
           headers: { Authorization: `Bearer ${token}` },
         }
       );
@@ -83,12 +88,22 @@ const ApproveAll = ({ visible, onClick }) => {
         <div className="py-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <p className="text-[13px] font-semibold">Approved Attendance Date</p>
+              <p className="text-[13px] font-semibold">Approve Attendance From Date</p>
               <input
-                id="AttendanceDate"
+                id="FromDate"
                 type="date"
                 className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                value={formik.values.AttendanceDate}
+                value={formik.values.FromDate}
+                onChange={formik.handleChange}
+              />
+            </div>
+            <div>
+              <p className="text-[13px] font-semibold">Approve Attendance To Date</p>
+              <input
+                id="ToDate"
+                type="date"
+                className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                value={formik.values.ToDate}
                 onChange={formik.handleChange}
               />
             </div>

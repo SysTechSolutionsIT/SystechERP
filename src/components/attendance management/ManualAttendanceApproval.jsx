@@ -52,29 +52,21 @@ const ManualAttendanceApproval = () => {
   const menuRef = useRef(null);
 
   const [columnVisibility, setColumnVisibility] = useState({
-    AttendanceDate: true,
-    FYear: false,
-    EmployeeTypeId: true,
     EmployeeId: true,
+    AttendanceDate: true,
+    AttendanceDay: false,
+    FYear: true,
+    JobType: true,
     ShiftId: true,
-    InTime: true,
-    OutTime: true,
-    JobTypeId: true,
-    SanctionBy: true,
-    AcFlag: true,
   });
 
   const columnNames = {
+    EmployeeId: "Employee ID",
     AttendanceDate: "Attendance Date",
+    AttendanceDay: "Attendance Day",
     FYear: "FYear",
-    EmployeeTypeId: "Employee Type",
-    EmployeeId: "Employee Name",
+    JobType: "Job Type",
     ShiftId: "Shift",
-    InTime: "In Time",
-    OutTime: "Out Time",
-    JobTypeId: "Job Type",
-    SanctionBy: "Sanction By",
-    AcFlag: "Status",
   };
 
   //Handling rendering
@@ -122,7 +114,7 @@ const ManualAttendanceApproval = () => {
         return acFlagValue;
 
       case "AttendanceDate":
-        return formatDate(result[columnName]);
+        return result[columnName];
 
       default:
         return result[columnName];

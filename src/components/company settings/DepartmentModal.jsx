@@ -5,6 +5,7 @@ import { departments } from "./DepartmentMaster";
 import { Icon } from "@iconify/react";
 import axios from "axios";
 import { useAuth } from "../Login";
+import TwoFieldsModal from "./TwoFieldsModal";
 // import { costCenters } from "./CostCenterMaster";
 import BranchModal from "./AddBranch";
 
@@ -104,7 +105,7 @@ const DepartmentModal = ({ visible, onClick }) => {
       }
     };
     fetchDepartmentGroup();
-  }, [token]);
+  }, [token, isModalOpen]);
 
   useEffect(() => {
     const fetchDepartments = async () => {
@@ -443,6 +444,11 @@ const DepartmentModal = ({ visible, onClick }) => {
             </button>
           </div>
         </div>
+        <TwoFieldsModal
+              visible={isModalOpen}
+              onClick={() => setModalOpen(false)}
+              MasterID={MMId}
+            />
       </div>
     </form>
   );

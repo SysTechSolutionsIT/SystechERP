@@ -94,14 +94,37 @@ const ManualAttendanceEntry = () => {
           shiftMapping.find((item) => item.ShiftId == result[columnName]);
         return shiftValue?.ShiftName;
 
-      case "JobTypeId":
-        const jobTypeValue = jobTypeMapping.find(
-          (item) => item.JobTypeId == result[columnName]
-        )?.JobTypeName;
-        return jobTypeValue;
+        case "JobTypeId":
+          const jobType = jobTypeMapping.find(
+              (item) => item.JobTypeId === result[columnName]
+          );
+      
+          if (jobType) {
+              const jobTypeName = jobType.JobTypeName;
+              let bgColor = "";
+      
+              switch (jobTypeName) {
+                  case "Present":
+                      bgColor = "lightgreen";
+                      break;
+                  case "Weekly Off":
+                      bgColor = "yellow";
+                      break;
+                  case "Absent":
+                      bgColor = "red";
+                      break;
+                  default:
+                      bgColor = ""; // Or any default color
+                      break;
+              }
+      
+              return { jobTypeName, bgColor };
+          } else {
+              return ""; // Handle case when job type is not found
+          }      
 
       case "AttendanceDate":
-        return formatDate(result[columnName]);
+        return result[columnName];
 
       case "InTime":
         return extractTimeFromDate(result[columnName]);
@@ -144,7 +167,7 @@ const ManualAttendanceEntry = () => {
     };
 
     fetchManualAttendance();
-  }, [token]);
+  }, [token, isModalOpen]);
 
   const deleteAttendanceEntry = async (DeleteId) => {
     try {
@@ -166,35 +189,21 @@ const ManualAttendanceEntry = () => {
   const menuRef = useRef(null);
 
   const [columnVisibility, setColumnVisibility] = useState({
-    ApprovalFlag: true,
-    AttendanceDate: true,
-    FYear: false,
-    EmployeeTypeId: true,
-    AMonth: true,
-    AYear: true,
     EmployeeId: true,
-    AttendanceFlag: true,
+    AttendanceDate: true,
+    AttendanceDay: false,
+    FYear: true,
+    JobType: true,
     ShiftId: true,
-    InTime: true,
-    OutTime: true,
-    JobTypeId: true,
-    SanctionBy: true,
   });
 
   const columnNames = {
-    ApprovalFlag: "Approval Flag",
+    EmployeeId: "Employee ID",
     AttendanceDate: "Attendance Date",
+    AttendanceDay: "Attendance Day",
     FYear: "FYear",
-    EmployeeTypeId: "Employee Type",
-    AMonth: 'Attendance Month',
-    AYear: 'Attendance Year',
-    EmployeeId: "Employee Name",
-    AttendanceFlag: 'Attendance Flag',
+    JobType: "Job Type",
     ShiftId: "Shift",
-    InTime: "In Time",
-    OutTime: "Out Time",
-    JobTypeId: "Job Type",
-    SanctionBy: "Sanction By",
   };
 
   const handleSearchChange = (title, searchWord) => {
@@ -284,11 +293,22 @@ const ManualAttendanceEntry = () => {
     return context.measureText(text).width;
   };
 
-  //Formatting Dates
   const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toISOString().split("T")[0]; // Get only the date part
+    try {
+      // Split the date string into parts based on the "-" separator
+      const parts = dateString.split("-");
+      
+      // Reorder the parts to display in "dd-mm-yyyy" format
+      const formattedDate = `${parts[1]}-${parts[2]}-${parts[0]}`;
+      
+      return formattedDate;
+    } catch (error) {
+      console.error("Error formatting date:", error);
+      return ""; // Return empty string or another default value in case of error
+    }
   };
+  
+  
 
   function extractTimeFromDate(dateString) {
     const date = new Date(dateString);
@@ -506,7 +526,7 @@ const ManualAttendanceEntry = () => {
                             className="cursor-pointer"
                             onClick={() => deleteAttendanceEntry(result.AttendanceId)}
                           />
-                          <Icon
+                          {/* <Icon
                             icon="octicon:clock-16"
                             color="#556987"
                             width="20"
@@ -517,7 +537,7 @@ const ManualAttendanceEntry = () => {
                                 setEditOuttime(true); // Disable edit mode for VEModal
                                 setAttId(result.AttendanceId); // Pass ID to VEModal
                             }}
-                          />
+                          /> */}
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
@@ -549,7 +569,9 @@ const ManualAttendanceEntry = () => {
                       )}
                     </tr>
                   ))
-                : manualAttendanceEntry.map((result, index) => (
+                : manualAttendanceEntry
+                .slice(0, entriesToShow) // Limit the number of entries based on entriesToShow
+                .map((result, index) => (
                       <tr key={index}>
                         <td className="px-2 border-2">
                           <div className="flex items-center gap-2 text-center justify-center">
@@ -565,7 +587,6 @@ const ManualAttendanceEntry = () => {
                                 setManId(result.AttendanceId); // Pass ID to VEModal
                               }}
                             />
-
                             <Icon
                               icon="mdi:edit"
                               color="#556987"
@@ -586,7 +607,7 @@ const ManualAttendanceEntry = () => {
                               className="cursor-pointer"
                               onClick={() => deleteAttendanceEntry(result.AttendanceId)}
                             />
-                            <Icon
+                            {/* <Icon
                               icon="octicon:clock-16"
                               color="#556987"
                               width="18"
@@ -598,7 +619,7 @@ const ManualAttendanceEntry = () => {
                                 setEditOuttime(true); // Disable edit mode for VEModal
                                 setAttId(result.AttendanceId); // Pass ID to VEModal
                               }}
-                            />
+                            /> */}
                           </div>
                         </td>
                         <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
