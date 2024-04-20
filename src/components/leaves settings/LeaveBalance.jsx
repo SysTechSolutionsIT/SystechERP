@@ -435,7 +435,7 @@ const LeaveBalance = ({ID, name}) => {
               className="bg-blue-900 text-white text-[13px] font-semibold py-2 px-4 rounded-lg w-36"
               onClick={updateLeaveBalance}
             >
-              Save
+              Submit
             </button>
           </div>
           {showTable && (

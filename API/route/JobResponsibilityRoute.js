@@ -74,7 +74,7 @@ router.patch("/update/:id", authToken, async (req, res) => {
       jobResponsibility.Points = Points;
       jobResponsibility.Status = Status;
 
-      // Save the updated Job Responsibility
+      // Submit the updated Job Responsibility
       await jobResponsibility.save();
 
       res.json(jobResponsibility);

@@ -181,7 +181,7 @@ const AddJob = ({ visible, onClick }) => {
                 type="submit"
                 className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg w-36"
               >
-                Save
+                Submit
               </button>
               <button
                 className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg w-36"

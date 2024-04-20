@@ -1136,7 +1136,7 @@ export default function AddEmployeePersonal() {
           type="submit"
           className="px-8 py-2 bg-blue-900 text-white text-lg rounded-md"
         >
-          Save details
+          Submit details
         </button>
       </div>
     </form>

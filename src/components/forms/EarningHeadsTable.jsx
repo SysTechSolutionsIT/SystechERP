@@ -291,7 +291,7 @@ const EarningHeadsTable = ({ ID }) => {
             className="px-2 py-2 bg-blue-900 text-white text-xs rounded-md"
             onClick={addEmployeewiseEarning}
           >
-            Save Earning Heads Details
+            Submit Earning Heads Details
           </button>
         </div>
       </div>

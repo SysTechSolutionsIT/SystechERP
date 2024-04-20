@@ -69,7 +69,7 @@ router.post("/add", authToken, async (req, res) => {
       kra.Points = Points;
       kra.Status = Status;
 
-      // Save the updated KRA
+      // Submit the updated KRA
       await kra.save();
 
       res.json(kra);
