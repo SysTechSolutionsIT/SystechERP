@@ -341,7 +341,7 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
                   Active
                 </label>
               </div>
-              {edit && ( // Only show the "Save" button if edit is true
+              {edit && ( // Only show the "Submit" button if edit is true
                 <div>
                   <p className="capatilize font-semibold text-[13px]">
                     Modified By
@@ -358,12 +358,12 @@ const VEModal = ({ visible, onClick, edit, ID }) => {
               )}
             </div>
             <div className="flex mt-5 gap-10 justify-center">
-              {edit && ( // Only show the "Save" button if edit is true
+              {edit && ( // Only show the "Submit" button if edit is true
                 <button
                   type="submit"
                   className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg w-36"
                 >
-                  Save
+                  Submit
                 </button>
               )}
               <button

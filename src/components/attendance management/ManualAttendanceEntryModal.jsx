@@ -644,7 +644,7 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
               onClick={AddManualAttendance}
               className="bg-blue-900 text-white text-[13px] font-semibold py-2 px-4 rounded-lg w-36"
             >
-              Save Attendance
+              Submit Attendance
             </button>
             <button
               className="bg-blue-900 text-white text-[13px] font-semibold py-2 px-4 rounded-lg w-36"

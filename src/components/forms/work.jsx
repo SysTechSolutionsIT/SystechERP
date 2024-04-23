@@ -791,7 +791,7 @@ const Work = ({ ID, name }) => {
             onClick={formik.handleSubmit}
             className="px-8 py-2 bg-blue-900 text-white text-lg rounded-md"
           >
-            Save Details
+            Submit Details
           </button>
         </div>
       </div>

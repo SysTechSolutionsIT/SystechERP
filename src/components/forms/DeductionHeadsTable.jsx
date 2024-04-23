@@ -293,7 +293,7 @@ const DeductionHeadsTable = ({ ID }) => {
             className="px-2 py-2 bg-blue-900 text-white text-xs rounded-md"
             onClick={addEmployeewiseDeduction}
           >
-            Save Deduction Heads Details
+            Submit Deduction Heads Details
           </button>
         </div>
       </div>

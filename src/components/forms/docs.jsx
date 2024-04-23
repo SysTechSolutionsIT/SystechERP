@@ -231,7 +231,7 @@ const Documents = ({ ID, name }) => {
                 }}
                 className="bg-blue-900 text-white text-[13px] font-semibold py-2 px-4 rounded-lg w-36"
               >
-                Save
+                Submit
               </button>
               <button
                 className="bg-blue-900 text-white text-[13px] font-semibold py-2 px-4 rounded-lg w-36"
@@ -366,7 +366,7 @@ const Documents = ({ ID, name }) => {
             type="submit"
             className="px-8 py-2 bg-blue-900 text-white text-lg rounded-md"
           >
-            Save Details
+            Submit Details
           </button>
           <button
             className="px-8 py-2 bg-blue-900 text-white text-lg rounded-md"

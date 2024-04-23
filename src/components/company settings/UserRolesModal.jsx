@@ -391,7 +391,7 @@ const menus = [
         type="submit"
         className="px-6 py-2 bg-blue-900 text-white text-lg rounded-md hover:bg-green-600 duration-500 "
       >
-        Save User Rights
+        Submit User Rights
       </button>
     </div>
 

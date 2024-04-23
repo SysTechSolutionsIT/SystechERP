@@ -167,7 +167,7 @@ const ViewJobsResponsibility = ({ visible, onClick, edit, ID }) => {
                             type="submit"
                             className="bg-blue-900 text-white text-[13px] font-semibold py-2 px-4 rounded-lg w-36"
                         >
-                            Save
+                            Submit
                         </button>
                         <button
                             className="bg-blue-900 text-white text-[13px] font-semibold py-2 px-4 rounded-lg w-36"
