@@ -486,7 +486,7 @@ const ManualAttendanceApproval = () => {
                               setMVE(true); // Open VEModal
                               setAttId(result.AttendanceId); // Pass ID to VEModal
                               setApprovalFlag(
-                                role === "HR" || "Admin" ? "A" : "HRP"
+                                role === "HR" || role === "Admin" ? "A" : "HRP"
                               );
                             }}
                           >
@@ -524,7 +524,7 @@ const ManualAttendanceApproval = () => {
                               setMVE(true); // Open VEModal
                               setAttId(result.AttendanceId); // Pass ID to VEModal
                               setApprovalFlag(
-                                role === "HR" || "Admin" ? "A" : "HRP"
+                                role === "HR" || role === "Admin" ? "A" : "HRP"
                               );
                             }}
                           >

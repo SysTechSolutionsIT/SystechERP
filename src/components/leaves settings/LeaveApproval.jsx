@@ -404,7 +404,7 @@ const LeaveApproval = () => {
                               setModalOpen(true);
                               setid(result.LeaveApplicationId);
                               setApprovalFlag(
-                                role === "HR" || "Admin" ? "A" : "HRP"
+                                role === "HR" || role === "Admin" ? "A" : "HRP"
                               );
                             }}
                           >
@@ -417,7 +417,7 @@ const LeaveApproval = () => {
                               setModalOpen(true);
                               setid(result.LeaveApplicationId);
                               setApprovalFlag(
-                                role === "HR" || "Admin" ? "HRR" : "MR"
+                                role === "HR" || role === "Admin" ? "HRR" : "MR"
                               );
                             }}
                           >
@@ -497,7 +497,7 @@ const LeaveApproval = () => {
                               setModalOpen(true);
                               setid(result.LeaveApplicationId);
                               setApprovalFlag(
-                                role === "HR" || "Admin" ? "A" : "HRP"
+                                role === "HR" || role === "Admin" ? "A" : "HRP"
                               );
                             }}
                           >
@@ -510,7 +510,7 @@ const LeaveApproval = () => {
                               setModalOpen(true);
                               setid(result.LeaveApplicationId);
                               setApprovalFlag(
-                                role === "HR" || "Admin" ? "HRR" : "MR"
+                                role === "HR" || role === "Admin" ? "HRR" : "MR"
                               );
                             }}
                           >

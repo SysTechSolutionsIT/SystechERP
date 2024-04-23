@@ -16,6 +16,7 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [LeavesEarned, setLeavesEarned] = useState(0);
   const [PresentyObject, setPresentyObject] = useState([]);
+  console.log("Approval flag:", ApprovalFlag);
 
   const { token } = useAuth();
   const { empid, fYear, name } = useDetails();
@@ -74,7 +75,7 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
 
       //Call presenty absenty function
       console.log("Calling presenty logic");
-      if (ApprovalFlag == "A") {
+      if (ApprovalFlag === "A") {
         // Call AfterApproval function
         calculatePresenty(updatedData);
         await updateLeaveBalance(updatedData);
