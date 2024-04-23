@@ -15,7 +15,9 @@ const LeaveModal1 = ({ visible, onClick }) => {
   const { token } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const { name } = useDetails();
-  const { empid } = useDetails();
+  const { empid, fYear } = useDetails();
+  const [managerId, setManagerId] = useState();
+  const [managerName, setManagerName] = useState();
 
   const handleInputChange = (event) => {
     const { value } = event.target;
@@ -29,7 +31,7 @@ const LeaveModal1 = ({ visible, onClick }) => {
   const formik = useFormik({
     initialValues: {
       ApprovalFlag: "",
-      FYear: "",
+      fYear: fYear,
       LeaveApplicationDate: new Date().toISOString().split("T")[0],
       EmployeeId: "",
       EmployeeName: "",
@@ -39,30 +41,34 @@ const LeaveModal1 = ({ visible, onClick }) => {
       LeaveToDate: "",
       Remark: "",
       LeaveTypeId: "",
-      TBSanctionBy: "",
+      TBSanctionBy: managerId,
       LeaveDays: "",
       IUFlag: "I",
     },
     onSubmit: (values, { resetForm }) => {
-      const updatedData = {
-        ApprovalFlag: "MP",
-        FYear: values.FYear,
-        LeaveApplicationDate: values.LeaveApplicationDate,
-        EmployeeId: empid,
-        EmployeeType: values.EmployeeType,
-        EmployeeTypeGroup: values.EmployeeTypeGroup,
-        LeaveFromDate: values.LeaveFromDate,
-        LeaveToDate: values.LeaveToDate,
-        Remark: values.Remark,
-        LeaveTypeId: values.LeaveTypeId,
-        TBSanctionBy: values.TBSanctionBy,
-        LeaveDays: values.LeaveDays,
-        IUFlag: "I",
-      };
-      addLeaveApplication(updatedData);
-      console.log("Updated Leave data:", updatedData);
-      resetForm();
-      onClick();
+      if (managerId == null) {
+        alert("No reporting manager found. Application not submitted.");
+      } else {
+        const updatedData = {
+          ApprovalFlag: "MP",
+          FYear: fYear,
+          LeaveApplicationDate: values.LeaveApplicationDate,
+          EmployeeId: empid,
+          EmployeeType: values.EmployeeType,
+          EmployeeTypeGroup: values.EmployeeTypeGroup,
+          LeaveFromDate: values.LeaveFromDate,
+          LeaveToDate: values.LeaveToDate,
+          Remark: values.Remark,
+          LeaveTypeId: values.LeaveTypeId,
+          TBSanctionBy: managerId,
+          LeaveDays: values.LeaveDays,
+          IUFlag: "I",
+        };
+        addLeaveApplication(updatedData);
+        console.log("Updated Leave data:", updatedData);
+        resetForm();
+        onClick();
+      }
     },
   });
 
@@ -133,23 +139,6 @@ const LeaveModal1 = ({ visible, onClick }) => {
   }, [token]);
 
   useEffect(() => {
-    const fetchFinancialYears = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:5500/financials/FnShowActiveData",
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        const data = response.data;
-        console.log("Financial Years", data);
-        setFinancialYears(data);
-      } catch (error) {
-        console.error("Error", error);
-      }
-    };
-    fetchFinancialYears();
-  }, [token]);
-
-  useEffect(() => {
     const fetchEmployees = async () => {
       try {
         const response = await axios.get(
@@ -168,6 +157,54 @@ const LeaveModal1 = ({ visible, onClick }) => {
     };
     fetchEmployees();
   }, [token]);
+
+  useEffect(() => {
+    const fetchManager = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/employee/work/FnFetchManager",
+          {
+            params: { EmployeeId: empid },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        console.log("Manager:", data);
+
+        if (data === null) {
+          // Display an alert to add a manager
+          alert("Please add a manager.");
+        } else {
+          // Set the manager data
+          setManagerId(data);
+        }
+      } catch (error) {
+        console.error("Error", error);
+      }
+    };
+    fetchManager();
+  }, [token]);
+
+  useEffect(() => {
+    const fetchManagerName = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/employee/personal/FnFetchEmployeeName",
+
+          {
+            params: { EmployeeId: managerId },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data.EmployeeName;
+        console.log("ManagerName", data);
+        setManagerName(data);
+      } catch (error) {
+        console.error("Error", error);
+      }
+    };
+    fetchManagerName();
+  }, [token, managerId, visible]);
 
   const addLeaveApplication = async (data) => {
     try {
@@ -262,22 +299,14 @@ const LeaveModal1 = ({ visible, onClick }) => {
                   Financial Year
                 </label>
                 <div className="flex items-center">
-                  <select
-                    id="FYear"
-                    name="FYear"
-                    value={formik.values.FYear}
-                    onChange={formik.handleChange}
+                  <input
+                    id="fYear"
+                    name="fYear"
+                    value={fYear}
                     required
+                    disabled
                     className="w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
-                  >
-                    <option value="">Select a Financial Year</option>
-                    {FinancialYears.length > 0 &&
-                      FinancialYears.map((entry) => (
-                        <option key={entry.FYearId} value={entry.ShortName}>
-                          {entry.ShortName}
-                        </option>
-                      ))}
-                  </select>
+                  />
                 </div>
               </div>
               <div>
@@ -291,6 +320,7 @@ const LeaveModal1 = ({ visible, onClick }) => {
                       type="text"
                       value={name} // Set value to current date
                       readOnly // Make the input field read-only
+                      disabled
                       className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]`}
                     />
                     {/* <input
@@ -408,62 +438,23 @@ const LeaveModal1 = ({ visible, onClick }) => {
                 <label className="text-[13px] font-semibold">
                   To be Sanctioned By
                 </label>
-                <div className="flex items-center">
-                  <div className="relative w-full">
-                    <input
-                      type="text"
-                      id="TBSanctionBy"
-                      name="TBSanctionBy"
-                      value={formik.values.TBSanctionBy}
-                      onChange={(e) => {
-                        formik.handleChange(e);
-                        handleInputChange(e);
-                      }}
-                      onFocus={() => setSearchTerm("")}
-                      className="w-full px-4 py-2 font-normal bg-white focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
-                      placeholder={
-                        formik.values.EmployeeId
-                          ? formik.values.EmployeeName
-                          : "Search Employee Name"
-                      }
-                    />
-
-                    {searchTerm && (
-                      <div
-                        className="absolute z-10 bg-white w-full border border-gray-300 rounded-lg mt-1 overflow-hidden"
-                        style={{ maxHeight: "150px", overflowY: "auto" }}
-                      >
-                        {filteredEmployees.length > 0 ? (
-                          filteredEmployees.map((entry, index) => (
-                            <div
-                              key={index}
-                              onClick={() => {
-                                formik.setValues({
-                                  ...formik.values,
-                                  TBSanctionBy: entry.EmployeeId,
-                                });
-                                setSearchTerm("");
-                              }}
-                              className="px-4 py-2 cursor-pointer hover:bg-gray-200 font-semibold text-[11px]"
-                            >
-                              {entry.EmployeeName}
-                            </div>
-                          ))
-                        ) : (
-                          <div className="px-4 py-2 text-gray-500">
-                            No matching results
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
+                <div className="relative w-full text-[13px]">
+                  <textbox
+                    type="text"
+                    id="TBSanctionBy"
+                    name="TBSanctionBy"
+                    value={managerId}
+                    disabled
+                  >
+                    {managerName || "Enter Reporting employee"}
+                  </textbox>
                 </div>
               </div>
             </div>
           </div>
           <div className="flex gap-10 justify-center">
             <button
-              type="submit"
+              type="Submit"
               className="bg-blue-900 text-white text-[13px] font-semibold py-2 px-4 rounded-lg w-36"
             >
               Save

@@ -59,10 +59,10 @@ const TManualAttendance = sequelize.define(
       allowNull: false,
       defaultValue: "N/A",
     },
-    checkbox:{
-      type:DataTypes.STRING(10),
+    checkbox: {
+      type: DataTypes.STRING(10),
       allowNull: true,
-      defaultValue:'false'
+      defaultValue: "false",
     },
     ShiftId: {
       type: DataTypes.STRING(5),
@@ -80,7 +80,7 @@ const TManualAttendance = sequelize.define(
       type: DataTypes.STRING(10),
       allowNull: false,
     },
-    
+
     InTime: {
       type: DataTypes.STRING(10),
       allowNull: true,
@@ -113,6 +113,10 @@ const TManualAttendance = sequelize.define(
     ModifiedOn: {
       type: DataTypes.DATE,
       allowNull: true,
+    },
+    TBSanctionBy: {
+      type: DataTypes.STRING(5),
+      allowNull: false,
     },
     ApprovalFlag: {
       type: DataTypes.STRING(1),

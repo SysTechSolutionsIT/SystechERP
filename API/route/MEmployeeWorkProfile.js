@@ -78,9 +78,8 @@ const MEmployeeWorkProfile = sequelize.define(
     },
     DesgId: { type: DataTypes.STRING(50), allowNull: true, defaultValue: null },
     ReportingTo: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING(5),
       allowNull: true,
-      defaultValue: null,
     },
     WeeklyOff: {
       type: DataTypes.STRING,
@@ -135,6 +134,8 @@ sequelize
   .catch((err) => {
     console.error(`Unable to connect to the database:`, err);
   });
+
+sequelize.sync();
 
 router.get(`/FnShowAllData`, authToken, async (req, res) => {
   try {
@@ -297,6 +298,30 @@ router.get(`/FnFetchWeeklyOff`, authToken, async (req, res) => {
       order: [[`EmployeeId`, `ASC`]],
     });
     res.json(employees);
+  } catch (error) {
+    console.error(`Error retrieving data:`, error);
+    res.status(500).send(`Internal Server Error`);
+  }
+});
+
+//Getting Reporting to employee
+router.get(`/FnFetchManager`, authToken, async (req, res) => {
+  const EmpId = req.query.EmployeeId;
+  try {
+    const manager = await MEmployeeWorkProfile.findOne({
+      where: {
+        EmployeeId: EmpId,
+      },
+      attributes: [`ReportingTo`],
+    });
+
+    // Check if manager is found
+    if (manager) {
+      const reportingTo = manager.ReportingTo; // Access the ReportingTo property
+      res.json(reportingTo); // Return only the ReportingTo value
+    } else {
+      res.status(404).send(`Manager not found`); // Send 404 if manager not found
+    }
   } catch (error) {
     console.error(`Error retrieving data:`, error);
     res.status(500).send(`Internal Server Error`);

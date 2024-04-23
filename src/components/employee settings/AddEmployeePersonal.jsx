@@ -6,14 +6,15 @@ import { useFormik } from "formik";
 import axios from "axios";
 import { useAuth } from "../Login";
 import TwoFieldsModal from "../company settings/TwoFieldsModal";
-
+import EmployeeTypeModal from "./EmployeeTypeModal";
 
 export default function AddEmployeePersonal() {
   const { token } = useAuth();
-  const [employeeTypes, setEmployeeTypes] = useState([])
+  const [employeeTypes, setEmployeeTypes] = useState([]);
   const [EmpTypeId, setEmpTypeId] = useState();
-  const [isModalOpen, setModalOpen] = useState(false)
+  const [isModalOpen, setModalOpen] = useState(false);
   const [MMId, setMMId] = useState();
+  const [empTypeModal, setEmpTypeModal] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -68,22 +69,24 @@ export default function AddEmployeePersonal() {
     onSubmit: (values, { resetForm }) => {
       console.log(values);
       addEmpPersonal();
-      addEmpWork()
-      addEmpSal()
-      addEmpPro()
-      addEmpAcademic()
-      addEmpFam()
-      alert("Employee Personal Details Added Successfully. Please add further details in the edit section.");
-      window.location.reload()
+      addEmpWork();
+      addEmpSal();
+      addEmpPro();
+      addEmpAcademic();
+      addEmpFam();
+      alert(
+        "Employee Personal Details Added Successfully. Please add further details in the edit section."
+      );
+      window.location.reload();
     },
   });
 
   formik.values.EmployeeName = `${formik.values.FirstName} ${formik.values.LastName}`;
 
-  useEffect(() =>{
-    setEmpTypeId(formik.values.EmployeeTypeId)
-    console.log('Current EMP TYPE ID', EmpTypeId)
-  }, [formik.values.EmployeeTypeId])
+  useEffect(() => {
+    setEmpTypeId(formik.values.EmployeeTypeId);
+    console.log("Current EMP TYPE ID", EmpTypeId);
+  }, [formik.values.EmployeeTypeId]);
 
   const addEmpPersonal = async () => {
     try {
@@ -91,7 +94,7 @@ export default function AddEmployeePersonal() {
         "http://localhost:5500/employee/personal/FnAddUpdateDeleteRecord",
         formik.values,
         {
-          params:{EmployeeTypeId: EmpTypeId},
+          params: { EmployeeTypeId: EmpTypeId },
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json", // Specify the content type
@@ -103,25 +106,25 @@ export default function AddEmployeePersonal() {
     }
   };
 
-  const addEmpWork = async () =>{
+  const addEmpWork = async () => {
     try {
       const work = await axios.post(
         "http://localhost:5500/employee/work/FnAddUpdateDeleteRecord",
         {
           DOJ: "",
           DOL: "",
-          ContractorId: "", 
-          DeptGroupId: "", 
-          DeptId: "", 
-          SubDeptId: "", 
-          DesgId: "", 
-          ReportingTo: "", 
-          WeeklyOff: "", 
-          ShiftId: "", 
-          BandId: "", 
-          ZoneId: "", 
-          GradeId: "", 
-          CostCenterId: "", 
+          ContractorId: "",
+          DeptGroupId: "",
+          DeptId: "",
+          SubDeptId: "",
+          DesgId: "",
+          ReportingTo: "",
+          WeeklyOff: "",
+          ShiftId: "",
+          BandId: "",
+          ZoneId: "",
+          GradeId: "",
+          CostCenterId: "",
           BondApplicable: "",
           BondAttachment: "",
           CurrentJob: "",
@@ -134,7 +137,7 @@ export default function AddEmployeePersonal() {
           ModifiedOn: "",
         },
         {
-          params:{EmployeeTypeId: EmpTypeId}, // Specify the content type
+          params: { EmployeeTypeId: EmpTypeId }, // Specify the content type
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
@@ -142,53 +145,52 @@ export default function AddEmployeePersonal() {
         }
       );
     } catch (error) {
-      console.error('Error Initializing work', error);
+      console.error("Error Initializing work", error);
     }
-  }
-  const addEmpSal = async () =>{
+  };
+  const addEmpSal = async () => {
     try {
       const salary = await axios.post(
         "http://localhost:5500/employee/salary/FnAddUpdateDeleteRecord",
         {
-            GradeId: "",
-            BandId: "",
-            CTC: "",
-            GrossSalary: "",
-            OTFlag: "",
-            OTAmount: "",
-            PFFlag: "",
-            PFNo: "",
-            PFDate: "",
-            ESICFlag: "",
-            ESICNo: "",
-            ESICDate: "",
-            UANNo: "",
-            MLWFFlag: "",
-            MLWFNo: "",
-            GratuityApplicable: "",
-            GratuityAmount: "",
-            Remark: "",
-            AcFlag: "Y",
-            IUFlag: "I",
-            CreatedBy: "",
-            CreatedOn: "",
-            ModifiedBy: "",
-            ModifiedOn: ""         
+          GradeId: "",
+          BandId: "",
+          CTC: "",
+          GrossSalary: "",
+          OTFlag: "",
+          OTAmount: "",
+          PFFlag: "",
+          PFNo: "",
+          PFDate: "",
+          ESICFlag: "",
+          ESICNo: "",
+          ESICDate: "",
+          UANNo: "",
+          MLWFFlag: "",
+          MLWFNo: "",
+          GratuityApplicable: "",
+          GratuityAmount: "",
+          Remark: "",
+          AcFlag: "Y",
+          IUFlag: "I",
+          CreatedBy: "",
+          CreatedOn: "",
+          ModifiedBy: "",
+          ModifiedOn: "",
         },
         {
-          params:{EmployeeTypeId: EmpTypeId}, // Specify the content type
+          params: { EmployeeTypeId: EmpTypeId }, // Specify the content type
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json", // Specify the content type
-
           },
         }
       );
     } catch (error) {
-      console.error('Error initializing salary', error);
+      console.error("Error initializing salary", error);
     }
-  }
-  const addEmpPro = async () =>{
+  };
+  const addEmpPro = async () => {
     try {
       const professional = await axios.post(
         "http://localhost:5500/employee/professional/FnAddUpdateDeleteRecord",
@@ -206,22 +208,21 @@ export default function AddEmployeePersonal() {
           CreatedBy: "",
           CreatedOn: "",
           ModifiedBy: "",
-          ModifiedOn: ""
+          ModifiedOn: "",
         },
         {
-          params:{EmployeeTypeId: EmpTypeId}, // Specify the content type
+          params: { EmployeeTypeId: EmpTypeId }, // Specify the content type
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json", // Specify the content type
-
           },
         }
       );
     } catch (error) {
-      console.error('Error initializing professional', error);
+      console.error("Error initializing professional", error);
     }
-  }
-  const addEmpAcademic = async () =>{
+  };
+  const addEmpAcademic = async () => {
     try {
       const academic = await axios.post(
         "http://localhost:5500/employee/academic/FnAddUpdateDeleteRecord",
@@ -237,22 +238,21 @@ export default function AddEmployeePersonal() {
           CreatedBy: "",
           CreatedOn: "",
           ModifiedBy: "",
-          ModifiedOn: ""
+          ModifiedOn: "",
         },
         {
-          params:{EmployeeTypeId: EmpTypeId}, // Specify the content type
+          params: { EmployeeTypeId: EmpTypeId }, // Specify the content type
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json", // Specify the content type
-
           },
         }
       );
     } catch (error) {
-      console.error('Error initializing academic', error);
+      console.error("Error initializing academic", error);
     }
-  }
-  const addEmpFam = async () =>{
+  };
+  const addEmpFam = async () => {
     try {
       const family = await axios.post(
         "http://localhost:5500/employee/family/FnAddUpdateDeleteRecord",
@@ -270,38 +270,37 @@ export default function AddEmployeePersonal() {
           CreatedBy: "",
           CreatedOn: "",
           ModifiedBy: "",
-          ModifiedOn: ""
+          ModifiedOn: "",
         },
         {
-          params:{EmployeeTypeId: EmpTypeId}, // Specify the content type
+          params: { EmployeeTypeId: EmpTypeId }, // Specify the content type
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json", // Specify the content type
-
           },
         }
       );
     } catch (error) {
-      console.error('Error intializing family', error);
+      console.error("Error intializing family", error);
     }
-  }
+  };
 
-
-  useEffect(() =>{
-    const fetchEmployeeTypes = async() =>{
-      try{
-        const response = await axios.get("http://localhost:5500/employee-type/FnShowActiveData",
-        { headers: { Authorization: `Bearer ${token}`}
-      })
-      const data = response.data
-      setEmployeeTypes(data)
-      console.log(response)
-      } catch (error){
-        console.error('Error', error);
+  useEffect(() => {
+    const fetchEmployeeTypes = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/employee-type/FnShowActiveData",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const data = response.data;
+        setEmployeeTypes(data);
+        console.log(response);
+      } catch (error) {
+        console.error("Error", error);
       }
-    }
-    fetchEmployeeTypes()
-  },[token, isModalOpen])
+    };
+    fetchEmployeeTypes();
+  }, [token, empTypeModal]);
 
   const [categories, setCategories] = useState([]);
   useEffect(() => {
@@ -390,7 +389,7 @@ export default function AddEmployeePersonal() {
       }
     };
     fetchReferenceData();
-  }, [token,isModalOpen ]);
+  }, [token, isModalOpen]);
 
   const [Caste, setCaste] = useState([]);
   useEffect(() => {
@@ -427,10 +426,11 @@ export default function AddEmployeePersonal() {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        console.log('Employee Group Response', response)
+        console.log("Employee Group Response", response);
         const groupData = response.data;
-  
-        if (Array.isArray(groupData)) { // Check if groupData is an array
+
+        if (Array.isArray(groupData)) {
+          // Check if groupData is an array
           setEmployeeTypeGroup(groupData);
         } else {
           console.error("API response is not an array:", groupData);
@@ -439,7 +439,7 @@ export default function AddEmployeePersonal() {
         console.error("Error fetching emptype:", error);
       }
     };
-  
+
     fetchEmpTypeData();
   }, [token, isModalOpen]);
 
@@ -462,20 +462,40 @@ export default function AddEmployeePersonal() {
             </div>
             <div className="py-1">
               <p className="mb-1 font-semibold text-[13px]">Employee Type *</p>
-              <select
-                id="EmployeeTypeId"
-                name="EmployeeTypeId"
-                className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
-                value={formik.values.EmployeeTypeId}
-                onChange={formik.handleChange}
-              >
+              <div className="flex items-center">
+                {employeeTypes.length > 0 ? (
+                  <select
+                    id="EmployeeTypeId"
+                    name="EmployeeTypeId"
+                    className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
+                    value={formik.values.EmployeeTypeId}
+                    onChange={formik.handleChange}
+                  >
                     <option value="">Select Type</option>
                     {employeeTypes.map((entry) => (
-                    <option key={entry.EmployeeTypeId} value={entry.EmployeeTypeId}>
-                      {entry.EmployeeType}
-                    </option>
+                      <option
+                        key={entry.EmployeeTypeId}
+                        value={entry.EmployeeTypeId}
+                      >
+                        {entry.EmployeeType}
+                      </option>
                     ))}
-              </select>
+                  </select>
+                ) : (
+                  <p className="flex-1 px-4 py-2 font-normal text-gray-500">
+                    No available entries
+                  </p>
+                )}
+                <Icon
+                  icon="flat-color-icons:plus"
+                  width="24"
+                  height="24"
+                  className="ml-1 cursor-pointer"
+                  onClick={() => {
+                    setEmpTypeModal(true);
+                  }}
+                />
+              </div>
             </div>
             <div className="py-1">
               <p className="mb-1 capitalize font-semibold text-[13px] ">
@@ -536,13 +556,14 @@ export default function AddEmployeePersonal() {
                   value={formik.values.EmployeeTypeGroupId}
                   className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
                   onChange={formik.handleChange}
-                  >
+                >
                   <option value="">Select Employee Type Group</option>
-                  {Array.isArray(employeeTypeGroup) &&  employeeTypeGroup.map((entry) => (
-                    <option key={entry.FieldId} value={entry.FieldId}>
-                      {entry.FieldDetails}
-                    </option>
-                  ))}
+                  {Array.isArray(employeeTypeGroup) &&
+                    employeeTypeGroup.map((entry) => (
+                      <option key={entry.FieldId} value={entry.FieldId}>
+                        {entry.FieldDetails}
+                      </option>
+                    ))}
                 </select>
                 <Icon
                   icon="flat-color-icons:plus"
@@ -1127,10 +1148,15 @@ export default function AddEmployeePersonal() {
         </div>
       </div>
       <TwoFieldsModal
-              visible={isModalOpen}
-              onClick={() => setModalOpen(false)}
-              MasterID={MMId}
-            />
+        visible={isModalOpen}
+        onClick={() => setModalOpen(false)}
+        MasterID={MMId}
+      />
+
+      <EmployeeTypeModal
+        visible={empTypeModal}
+        onClick={() => setEmpTypeModal(false)}
+      />
       <div className="flex justify-center gap-4">
         <button
           type="submit"

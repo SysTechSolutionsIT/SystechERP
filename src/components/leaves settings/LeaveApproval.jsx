@@ -155,7 +155,7 @@ const LeaveApproval = () => {
 
   useEffect(() => {
     const fetchLeaveApps = async () => {
-      if (role == "Admin") {
+      if (role === "Admin") {
         console.log("trying to fetch admin related data");
         try {
           const response = await axios.get(

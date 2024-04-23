@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { useAuth } from "../Login";
+import { useAuth, useDetails } from "../Login";
 import { useRef } from "react";
 import { Icon } from "@iconify/react";
 import axios from "axios";
@@ -17,34 +17,56 @@ const ManualAttendanceApproval = () => {
   //View and Edit
   const [MVE, setMVE] = useState(false);
   const [AttId, setAttId] = useState();
+  const [ApprovalFlag, setApprovalFlag] = useState("");
 
   const [employeeTypeMapping, setEmployeeTypes] = useState([]);
   const [employeeIdMapping, setDetails] = useState([]);
   const [shiftMapping, setShift] = useState([]);
   const [jobTypeMapping, setJobs] = useState([]);
 
-  useEffect(() => {
-    fetchRequestData();
-  }, [token, isModalOpen]);
+  const { role } = useDetails();
+  console.log("Role:", role);
+  const { empid } = useDetails();
 
-  const fetchRequestData = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:5500/manual-attendance/FnShowManualPendingData",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+  useEffect(() => {
+    const fetchManApps = async () => {
+      if (role == "Admin") {
+        console.log("trying to fetch admin related data");
+        try {
+          const response = await axios.get(
+            "http://localhost:5500/a5d3g2p6/FnFetchHRPendingLeaves",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          const data = response.data;
+          console.log("HR LA", data);
+          setManualAttendanceEntry(data);
+        } catch (error) {
+          console.error("HR admin error Error", error);
         }
-      );
-      console.log("Response Object", response);
-      const data = response.data;
-      console.log(data);
-      setManualAttendanceEntry(data);
-    } catch (error) {
-      console.log("Error while fetching course data: ", error);
-    }
-  };
+      } else {
+        try {
+          const response = await axios.get(
+            "http://localhost:5500/a5d3g2p6/FnShowManagerSanctionLeaves",
+            {
+              params: { TBSanctionBy: empid },
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          const data = response.data;
+          setManualAttendanceEntry(data);
+        } catch (error) {
+          console.error(" Other role Error", error);
+        }
+      }
+    };
+    fetchManApps();
+  }, [ApprovalFlag, token, isModalOpen]);
   console.log("data", manualAttendanceEntry);
 
   //Hamburger Menu
@@ -108,7 +130,7 @@ const ManualAttendanceApproval = () => {
 
       case "OutTime":
         return extractTimeFromDate(result[columnName]);
-          
+
       case "AcFlag":
         const acFlagValue = result[columnName] ? "Active" : "Inactive";
         return acFlagValue;
@@ -463,6 +485,9 @@ const ManualAttendanceApproval = () => {
                             onClick={() => {
                               setMVE(true); // Open VEModal
                               setAttId(result.AttendanceId); // Pass ID to VEModal
+                              setApprovalFlag(
+                                role === "HR" || "Admin" ? "A" : "HRP"
+                              );
                             }}
                           >
                             Approve
@@ -498,6 +523,9 @@ const ManualAttendanceApproval = () => {
                             onClick={() => {
                               setMVE(true); // Open VEModal
                               setAttId(result.AttendanceId); // Pass ID to VEModal
+                              setApprovalFlag(
+                                role === "HR" || "Admin" ? "A" : "HRP"
+                              );
                             }}
                           >
                             Approve
@@ -526,7 +554,12 @@ const ManualAttendanceApproval = () => {
           </table>
         </div>
       </div>
-      <MAModal visible={MVE} onClick={() => setMVE(false)} ID={AttId} />
+      <MAModal
+        visible={MVE}
+        onClick={() => setMVE(false)}
+        ID={AttId}
+        ApprovalFlag={ApprovalFlag}
+      />
     </div>
   );
 };

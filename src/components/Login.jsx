@@ -214,7 +214,7 @@ function Login() {
 
       // Redirect if token is available
       if (token) {
-        navigate('/j0hg2l4r');
+        navigate("/j0hg2l4r");
         console.log("Company Id", companyId);
         console.log("Branch Id", branchId);
         console.log("Fin year", fYear);

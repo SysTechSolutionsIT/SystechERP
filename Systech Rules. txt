@@ -13,4 +13,5 @@
 5. Job Type names should start with a capital letter, 'Present', 'Absent', 'Weekly Off', 'Leaves' should be defined in the given way. 
 Any other definition of these 4 might cause problems with the system.
 
-6. 
+6. The first user must be manually added into the database; with employee id 0000
+
