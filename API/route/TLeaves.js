@@ -377,6 +377,7 @@ router.post("/CalculatePresenty", authToken, async (req, res) => {
 
   const LeavePresentyObject = {
     LeaveApplicationId: LeaveBody.LeaveApplicationId,
+    EmployeeId: LeaveBody.EmployeeId,
     FYear: LeaveBody.FYear,
     Month: AMonth,
     Presenty: Presenty,

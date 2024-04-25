@@ -119,6 +119,7 @@ sequelize
   .catch((err) => {
     console.error("Unable to connect to the database:", err);
   });
+sequelize.sync();
 
 router.get("/FnShowAllData", authToken, async (req, res) => {
   try {
@@ -190,6 +191,25 @@ router.get("/FnShowPerticularData", authToken, async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
+// fetching employee name
+
+router.get("/FnFetchEmployeeName", authToken, async (req, res) => {
+  const employeeId = req.query.EmployeeId;
+  try {
+    const employeeName = await MEmployee.findOne({
+      where: {
+        EmployeeId: employeeId,
+      },
+      attributes: ["EmployeeName"],
+    });
+    res.json(employeeName);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 router.get("/FnShowImageData", authToken, async (req, res) => {
   const employeeId = req.query.EmployeeId;
   try {

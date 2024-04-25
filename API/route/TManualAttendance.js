@@ -201,52 +201,62 @@ router.get("/FnShowParticularEmployeeData", authToken, async (req, res) => {
   }
 });
 
-//showing pending entries
-router.get("/FnShowManualPendingData", authToken, async (req, res) => {
+//showing manager pending entries
+router.get("/FnFetchHRPendingLeaves", authToken, async (req, res) => {
   try {
-    const approvedRecords = await TManualAttendance.findAll({
+    const Attendance = await TManualAttendance.findAll({
       where: {
-        ApprovalFlag: "P",
-        OutTime: {
-          [Op.not]: null // Adding condition for OutTime not being null
-        }
-      },
-      attributes: {
-        exclude: ["IUFlag"],
+        ApprovalFlag: "HRP",
       },
       order: [["AttendanceId", "ASC"]],
     });
-    res.json(approvedRecords);
+    res.json(Attendance);
   } catch (error) {
-    console.error("Error retrieving approved data:", error);
+    console.error("Error retrieving data:", error);
     res.status(500).send("Internal Server Error");
   }
 });
 
+router.get("/FnShowManagerSanctionLeaves", authToken, async (req, res) => {
+  const SanctioningEMP = req.query.TBSanctionBy;
+  try {
+    const Attendance = await TManualAttendance.findAll({
+      where: {
+        TBSanctionBy: SanctioningEMP,
+        ApprovalFlag: "MP",
+      },
+      order: [["AttendanceId", "ASC"]],
+    });
+    res.json(Attendance);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 router.post("/FnApproveAll", authToken, async (req, res) => {
   try {
     const FromDate = req.query.FromDate;
     const ToDate = req.query.ToDate;
-    
+
     // Function to convert date format
     const convertDateFormat = (dateString) => {
       // Split the date string into parts based on the dash separator
       const parts = dateString.split("-");
-    
+
       // Rearrange the parts to format "yyyy-mm-dd" for proper comparison
       const formattedDate = parts[2] + "-" + parts[1] + "-" + parts[0];
-    
+
       return formattedDate;
     };
-    
+
     // Convert FromDate and ToDate to the desired format
     const fromDate = convertDateFormat(FromDate);
     const toDate = convertDateFormat(ToDate);
-    
+
     console.log("FromDate in yyyy-mm-dd format:", fromDate);
     console.log("ToDate in yyyy-mm-dd format:", toDate);
-    
+
     // Get the EmployeeName from request body or wherever it is available
     const sanctionBy = req.body.EmployeeName;
 
@@ -277,7 +287,6 @@ router.post("/FnApproveAll", authToken, async (req, res) => {
   }
 });
 
-
 // Middleware for generating Id
 const generateAttendanceId = async (req, res, next) => {
   try {
@@ -307,25 +316,31 @@ router.post(
   authToken,
   async (req, res) => {
     const attendance = Array.isArray(req.body) ? req.body : [req.body];
-    console.log(attendance)
+    console.log(attendance);
     try {
       const operations = attendance.map(async (attendances) => {
         const AttendanceId = attendances.AttendanceId || req.query.AttendanceId; // Access the AttendanceId from the request body or query
-        
+
         if (attendances.IUFlag === "D") {
           // "Soft-delete" operation
           const result = await TManualAttendance.update(
             { AcFlag: "N" },
             { where: { AttendanceId: AttendanceId } }
           );
-          return { message: result[0] ? "Record Deleted Successfully" : "Record Not Found" };
+          return {
+            message: result[0]
+              ? "Record Deleted Successfully"
+              : "Record Not Found",
+          };
         } else {
           // Add or update operation
           const result = await TManualAttendance.upsert(attendances, {
             where: { AttendanceId: AttendanceId }, // Specify the where condition for update
             returning: true,
           });
-          return { message: result ? "Operation successful" : "Operation failed" };
+          return {
+            message: result ? "Operation successful" : "Operation failed",
+          };
         }
       });
 
@@ -337,7 +352,6 @@ router.post(
     }
   }
 );
-
 
 //For Monthly Attendances
 

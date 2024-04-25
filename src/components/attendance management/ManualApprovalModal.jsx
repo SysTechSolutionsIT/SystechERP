@@ -3,32 +3,31 @@ import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Icon } from "@iconify/react";
-import { useAuth } from "../Login";
+import { useAuth, useDetails } from "../Login";
 
-const MAModal = ({ visible, onClick, ID }) => {
+const MAModal = ({ visible, onClick, ID, ApprovalFlag }) => {
   const [details, setDetails] = useState([]);
   const [personal, setPersonal] = useState([]);
   const [Shifts, setShift] = useState([]);
   const [Jobs, setJobs] = useState([]);
   const [employeeTypes, setEmployeeTypes] = useState([]);
   const [formattedDate, setFormattedDate] = useState("");
+  const { empid, fYear, name, role } = useDetails();
 
   const { token } = useAuth();
   const formik = useFormik({
     initialValues: {
       AttendanceId: ID,
       AttendanceDate: "",
-      FYear: "",
+      FYear: fYear,
       EmployeeTypeId: "",
       AMonth: "",
       AYear: "",
       EmployeeId: "",
       ShiftId: "",
-      InTime: "",
-      OutTime: "",
       JobTypeId: "",
       AttendanceFlag: "",
-      SanctionBy: "Sanction By",
+      SanctionBy: empid,
       Remark: "",
       AcFlag: "Y",
       IUFlag: "U",
@@ -38,9 +37,9 @@ const MAModal = ({ visible, onClick, ID }) => {
       // compData.push(values);
       const updatedData = {
         AttendanceId: ID,
-        ApprovalFlag: "A",
+        ApprovalFlag: ApprovalFlag,
         AttendanceDate: values.AttendanceDate,
-        FYear: values.FYear,
+        FYear: fYear,
         EmployeeTypeId: values.EmployeeTypeId,
         AMonth: formik.values.AMonth,
         AYear: formik.values.AYear,
@@ -49,7 +48,7 @@ const MAModal = ({ visible, onClick, ID }) => {
         InTime: values.InTime,
         OutTime: values.OutTime,
         JobTypeId: values.JobTypeId,
-        SanctionBy: values.SanctionBy,
+        SanctionBy: empid,
         Remark: values.Remark,
         AcFlag: "Y",
         IUFlag: "U",
@@ -198,14 +197,14 @@ const MAModal = ({ visible, onClick, ID }) => {
   }, [token]);
 
   const extractHoursMinutes = (datetimeString) => {
-    if (!datetimeString) return '';
+    if (!datetimeString) return "";
     // Split the datetime string by 'T' to separate date and time
-    const parts = datetimeString.split('T');
+    const parts = datetimeString.split("T");
     // Get the second part which contains the time
     const timePart = parts[1];
     // Extract only the time part (HH:MM)
-    const time = timePart.split('.')[0]; // Remove milliseconds if present
-    const [hours, minutes] = time.split(':');
+    const time = timePart.split(".")[0]; // Remove milliseconds if present
+    const [hours, minutes] = time.split(":");
     // Return the extracted hours and minutes
     return `${hours}:${minutes}`;
   };
@@ -250,7 +249,7 @@ const MAModal = ({ visible, onClick, ID }) => {
                     type="radio"
                     name="AttendanceFlag"
                     className="mr-2"
-                    checked={formik.values.AttendanceFlag = "M"}
+                    checked={(formik.values.AttendanceFlag = "M")}
                     onChange={formik.handleChange}
                   />
                   Manual Attendance
@@ -260,7 +259,7 @@ const MAModal = ({ visible, onClick, ID }) => {
                     type="radio"
                     name="AttendanceFlag"
                     className="mr-2 ml-2"
-                    checked={formik.values.AttendanceFlag = "O"}
+                    checked={(formik.values.AttendanceFlag = "O")}
                     onChange={formik.handleChange}
                   />
                   Out Door Duty
@@ -296,7 +295,7 @@ const MAModal = ({ visible, onClick, ID }) => {
                   id="FYear"
                   type="text"
                   className={`w-full px-4 py-2 font-normal bg-white focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  value={formik.values.FYear}
+                  value={fYear}
                   onChange={formik.handleChange}
                   disabled={true}
                 />
@@ -382,49 +381,20 @@ const MAModal = ({ visible, onClick, ID }) => {
                 </select>
               </div>
               <div>
-                <p className="text-[13px] font-semibold">In Time</p>
-                <input
-                  id="InTime"
-                  type="time" // Change the input type to handle date and time
-                  className={`w-full px-4 py-2 font-normal bg-white focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  value={extractHoursMinutes(formik.values.InTime)}
-                  onChange={formik.handleChange}
-                  disabled={true}
-                />
-              </div>
-              <div>
-                <p className="text-[13px] font-semibold">Out Time</p>
-                <input
-                  id="OutTime"
-                  type="time" // Change the input type to handle date and time
-                  className={`w-full px-4 py-2 font-normal bg-white focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
-                  value={extractHoursMinutes(formik.values.OutTime)}
-                  onChange={formik.handleChange}
-                  disabled={true}
-                />
-              </div>
-              <div>
-                <p className="text-[13px] font-semibold">Sanction By</p>
-                <select
-                  id="SanctionBy"
-                  name="SanctionBy"
-                  className="w-full px-4 py-2 font-normal bg-white text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
-                  value={formik.values.SanctionBy}
-                  onChange={formik.handleChange}
-                >
-                  <option value="">
-                    Sanctioned By
-                  </option>
-                  {personal.length > 0 &&
-                    personal.map((employee) => (
-                      <option
-                        key={employee.EmployeeId}
-                        value={employee.EmployeeId}
-                      >
-                        {employee.EmployeeName}
-                      </option>
-                    ))}
-                </select>
+                <label className="text-[13px] font-semibold">
+                  Sanctioned By
+                </label>
+                <div className="relative w-full">
+                  <textbox
+                    type="text"
+                    id="SanctionBy"
+                    name="SanctionBy"
+                    value={empid}
+                    disabled
+                  >
+                    {name}
+                  </textbox>
+                </div>
               </div>
               <div>
                 <p className="text-[13px] font-semibold">Remark</p>
@@ -440,7 +410,7 @@ const MAModal = ({ visible, onClick, ID }) => {
             </div>
             <div className="flex mt-5 gap-10 justify-center">
               <button
-                type="submit"
+                type=""
                 className="bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg w-36"
               >
                 Approve

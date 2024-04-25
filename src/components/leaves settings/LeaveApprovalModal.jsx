@@ -16,9 +16,10 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [LeavesEarned, setLeavesEarned] = useState(0);
   const [PresentyObject, setPresentyObject] = useState([]);
+  console.log("Approval flag:", ApprovalFlag);
 
   const { token } = useAuth();
-  const { empid } = useDetails();
+  const { empid, fYear, name } = useDetails();
 
   const handleInputChange = (event) => {
     const { value } = event.target;
@@ -32,8 +33,8 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
   const formik = useFormik({
     initialValues: {
       ApprovalFlag: "",
-      LeaveApplicationId: "",
-      FYear: "",
+      LeaveApplicationId: ID,
+      FYear: fYear,
       LeaveApplicationDate: "",
       EmployeeId: "",
       EmployeeName: "",
@@ -54,7 +55,7 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
       const updatedData = {
         ApprovalFlag: ApprovalFlag,
         LeaveApplicationId: ID,
-        FYear: values.FYear,
+        FYear: fYear,
         LeaveApplicationDate: values.LeaveApplicationDate,
         EmployeeId: values.EmployeeId,
         LeaveFromDate: values.LeaveFromDate,
@@ -74,7 +75,7 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
 
       //Call presenty absenty function
       console.log("Calling presenty logic");
-      if (ApprovalFlag == "A") {
+      if (ApprovalFlag === "A") {
         // Call AfterApproval function
         calculatePresenty(updatedData);
         await updateLeaveBalance(updatedData);
@@ -410,7 +411,8 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
                   id="FYear"
                   type="text"
                   placeholder="Enter Financial Year"
-                  value={formik.values.FYear}
+                  value={fYear}
+                  disabled
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
@@ -422,6 +424,7 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
                   type="text"
                   value={formik.values.EmployeeId}
                   className={`w-full px-4 py-2 font-normal bg-white focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  disabled
                   onChange={formik.handleChange}
                 />
               </div>
@@ -470,18 +473,18 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
               </div>
               <div>
                 <label className="text-[13px] font-semibold">
-                  Sanctioned By
+                  To be Sanctioned By
                 </label>
-                <div className="flex items-center">
-                  <div className="relative w-full">
-                    <input
-                      type="text"
-                      id="SanctionBy"
-                      value={empid}
-                      readOnly
-                      className="w-full px-4 py-2 font-normal bg-white focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
-                    />
-                  </div>
+                <div className="relative w-full">
+                  <textbox
+                    type="text"
+                    id="SanctionBy"
+                    name="SanctionBy"
+                    value={empid}
+                    disabled
+                  >
+                    {name}
+                  </textbox>
                 </div>
               </div>
               <div>
