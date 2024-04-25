@@ -39,7 +39,7 @@ import DesignationMaster from "./components/employee settings/DesignationMaster"
 import KRAMaster from "./components/employee settings/KRAMaster";
 import AdvanceRequest from "./components/payroll settings/AdvanceRequest";
 import EDImports from "./components/salary management/EDImports";
-import SalProcessing from "./components/salary management/SalProcess";
+import SalProcessing from "./components/salary management/SalaryProcessing";
 import JobsResponsibilityMaster from "./components/employee settings/JobsResponsibilityMaster";
 import LeaveTypeMaster from "./components/leaves settings/LeaveType";
 import Login from "./components/Login";

@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { Icon } from "@iconify/react";
+import { useAuth } from "../Login";
+import axios from "axios";
 
 const SalProcessing = () => {
+  const {token} = useAuth(
+  )
   const [details, setDetails] = useState([]);
+  const [employeeTypes, setEmployeeTypes] = useState([])
   const formik = useFormik({
     initialValues: {
       ApprovalFlag: "",
@@ -44,7 +49,6 @@ const SalProcessing = () => {
     "NetSalary",
     "BankSalary",
     "CashSalary",
-    "Remark",
   ];
 
   const months = [
@@ -65,56 +69,50 @@ const SalProcessing = () => {
 
   const salHead = ["Salary Head", "Earning Head", "Deduction Heads"];
 
+  useEffect(() =>{
+    const fetchEmployeeTypes = async() =>{
+      try{
+        const response = await axios.get("http://localhost:5500/employee-type/FnShowActiveData",
+        { headers: { Authorization: `Bearer ${token}`}
+      })
+      const data = response.data
+      setEmployeeTypes(data)
+      console.log(response)
+      } catch (error){
+        console.error('Error', error);
+      }
+    }
+    fetchEmployeeTypes()
+  },[token])
+
   return (
     <form onSubmit={formik.handleSubmit}>
-      <div className="flex justify-center items-center h-full">
+      <div className="flex h-full w-[80%] ml-4">
         <div className="bg-gray-200 p-8 rounded-lg">
           <div className="bg-blue-900 py-2 px-4 rounded-lg flex justify-between items-center">
             <p className="text-white text-[13px] font-semibold text-center">
               Import Employeewise Earning & Deduction Heads
             </p>
           </div>
-          <div className="grid grid-cols-3 gap-4">
-            <div className="col-span-1">
-              <label
-                htmlFor="employeeName"
-                className="text-[13px] font-semibold"
-              >
-                Employee Type
-              </label>
-              <div className="flex items-center">
-                <select
-                  id="employeeType"
-                  name="employeeType"
-                  value={formik.values.employeeType}
-                  onChange={formik.handleChange}
-                  className="w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
-                >
-                  <option value="">Select an Employee</option>
-                  <option value="Worker">Worker</option>
-                  <option value="Jane">Staff</option>
-                </select>
-                <button
-                  type="button"
-                  // onClick={addEmployee}
-                  className="ml-2 px-3 py-1 text-[11px] bg-blue-500 text-white rounded-md"
-                >
-                  +
-                </button>
-              </div>
-            </div>
-            <div className="col-span-1">
-              <p className="text-[13px] font-semibold">Process Id</p>
-              <input
-                id="ProcessID"
-                type="date"
-                placeholder="Enter Process ID"
-                value={formik.values.ProcessID}
-                className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+          <div className="grid grid-cols-3 gap-4 py-1">
+          <div className="">
+              <p className="font-semibold text-[13px]">Employee Type *</p>
+              <select
+                id="EmployeeTypeId"
+                name="EmployeeTypeId"
+                className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
+                value={formik.values.EmployeeTypeId}
                 onChange={formik.handleChange}
-              />
+              >
+                    <option value="">Select Type</option>
+                    {employeeTypes.map((entry) => (
+                    <option key={entry.EmployeeTypeId} value={entry.EmployeeTypeId}>
+                      {entry.EmployeeType}
+                    </option>
+                    ))}
+              </select>
             </div>
-            <div className="col-span-1">
+            <div className="">
               <p className="text-[13px] font-semibold">Process Date</p>
               <input
                 id="ProcessDate"
@@ -125,17 +123,16 @@ const SalProcessing = () => {
                 onChange={formik.handleChange}
               />
             </div>
-          </div>
-          <div className="grid grid-cols-3 gap-4">
-            <div className="col-span-1">
-              <label htmlFor="month" className="mb-1 font-semibold text-[13px]">
+          {/* <div className="grid grid-cols-3 gap-4"> */}
+            <div className="">
+              <label htmlFor="month" className="font-semibold text-[13px]">
                 Month
               </label>
               <select
                 id="month"
                 className="w-full text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
                 onChange={formik.handleChange}
-              >
+                >
                 {months.map((month, index) => (
                   <option key={index} value={month}>
                     {month}
@@ -143,15 +140,15 @@ const SalProcessing = () => {
                 ))}
               </select>
             </div>
-            <div className="col-span-1">
-              <label htmlFor="year" className="mb-1 font-semibold text-[13px]">
+            <div className="">
+              <label htmlFor="year" className="font-semibold text-[13px]">
                 Year
               </label>
               <select
                 id="year"
                 className="w-full text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
                 onChange={formik.handleChange}
-              >
+                >
                 {years.map((year, index) => (
                   <option key={index} value={year}>
                     {year}
