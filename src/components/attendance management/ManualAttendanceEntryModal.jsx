@@ -237,7 +237,7 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
       }
     };
     fetchManagerName();
-  }, [token, setManagerId]);
+  }, [token, managerId]);
 
   useEffect(() => {
     const fetchWeeklyOffCounts = async () => {
