@@ -151,7 +151,7 @@ export default function AddEmployeePersonal() {
   const addEmpSal = async () => {
     try {
       const salary = await axios.post(
-        "http://localhost:5500/employee/salary/FnAddUpdateDeleteRecord",
+        "http://localhost:5500/employee/salary-structure/FnAddUpdateDeleteRecord",
         {
           GradeId: "",
           BandId: "",

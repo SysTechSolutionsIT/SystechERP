@@ -341,7 +341,7 @@ const EmployeeMaster = () => {
   const delEmpSal = async (DeleteId) => {
     try {
       const response = await axios.post(
-        "http://localhost:5500/employee/salary/FnAddUpdateDeleteRecord",
+        "http://localhost:5500/employee/salary-structure/FnDeleteEmployeeSalary",
         {
           IUFlag: "D",
         },

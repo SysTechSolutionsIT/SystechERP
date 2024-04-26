@@ -75,7 +75,7 @@ app.use("/companies", MCompany);
 app.use("/financials", MFinancialYear);
 app.use("/employee/personal", MEmployee);
 app.use("/employee/work", MEmployeeWorkProfile);
-app.use("/employee/salary", MEmployeeSalary);
+app.use("/employee/salary-structure", MEmployeeSalary);
 app.use("/employee/professional", MEmployeeProfessional);
 app.use("/employee/academic", MEmployeeAcademic);
 app.use("/employee/family", MEmployeeFamily);

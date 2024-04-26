@@ -35,12 +35,10 @@ const MEmployeeSalary = sequelize.define(
   {
     CompanyId: {
       type: DataTypes.STRING(5),
-      allowNull: false,
       defaultValue: `00001`,
     },
     BranchId: {
       type: DataTypes.STRING(5),
-      allowNull: false,
       defaultValue: `00001`,
     },
     EmployeeId: {
@@ -50,12 +48,12 @@ const MEmployeeSalary = sequelize.define(
     },
     GradeId: {
       type: DataTypes.STRING(5),
-      // allowNull: false,
+      allowNull: true,
       defaultValue: `00001`,
     },
     BandId: {
       type: DataTypes.STRING(5),
-      // allowNull: false,
+      allowNull: true,
       defaultValue: `00001`,
     },
     CTC: { type: DataTypes.DECIMAL(10, 2), defaultValue: 0 },
@@ -208,13 +206,62 @@ const generateEmployeeId = async (req, res, next) => {
   }
 };
 
+router.post('/FnAddEmployeeSalary', authToken, async (req, res) => {
+  const salary = req.body;
+  console.log("Salary Body", req.body);
+
+  try {
+    const result = await MEmployeeSalary.create(salary, { returning: true });
+    res.json({ message: result ? 'Employee Salary Added Successfully' : 'Operation failed' });
+  } catch (error) {
+    console.error('Error adding employee salary:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+// Route for updation
+router.patch('/FnUpdateEmployeeSalary', authToken, async (req, res) => {
+  const employeeId = req.query.EmployeeId;
+  const salary = req.body;
+
+  try {
+    const result = await MEmployeeSalary.update(salary, {
+      where: { EmployeeId: employeeId },
+      returning: true,
+    });
+    res.json({ message: result ? 'Employee Salary Updated Successfully' : 'Operation failed' });
+  } catch (error) {
+    console.error('Error updating employee salary:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+// Route for deletion (soft delete)
+router.put('/FnDeleteEmployeeSalary', authToken, async (req, res) => {
+  const employeeId = req.query.EmployeeId;
+
+  try {
+    const result = await MEmployeeSalary.update(
+      { AcFlag: 'N' }, // Soft delete by setting AcFlag to 'N'
+      { where: { EmployeeId: employeeId } }
+    );
+    res.json({
+      message: result[0]
+        ? 'Employee Salary Deleted Successfully'
+        : 'Record Not Found',
+    });
+  } catch (error) {
+    console.error('Error deleting employee salary:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 router.post(
-  `/FnAddUpdateDeleteRecord`,
+  `/FnAddUpdateDeleteRecord`, // Change the HTTP method from POST to PATCH
   generateEmployeeId,
   authToken,
   async (req, res) => {
     const salary = req.body;
-    console.log(req.body)
     const EmployeeId = req.query.EmployeeId;
     try {
       if (salary.IUFlag === `D`) {
