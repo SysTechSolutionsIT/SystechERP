@@ -8,11 +8,9 @@ import { FormFloating } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import { useEmployeeType } from "./personal";
 
-
-const SalaryStructure = ({ID, name}) => {
+const SalaryStructure = ({ ID, name }) => {
   const { token } = useAuth();
-  const { employeeTypeId } = useEmployeeType()
-  console.log('Employee ID and Name in Salary Structure', ID, name)
+  const { employeeTypeId } = useEmployeeType();
   const [details, setDetails] = useState([]);
   const [isOTFlagChecked, setOTFlagChecked] = useState(false);
   const [isPFFlagChecked, setPFFlagChecked] = useState(false);
@@ -24,7 +22,7 @@ const SalaryStructure = ({ID, name}) => {
 
   const formik = useFormik({
     initialValues: {
-      EmployeeId: "",
+      EmployeeId: ID,
       GradeId: "",
       BandId: "",
       CTC: "",
@@ -43,14 +41,14 @@ const SalaryStructure = ({ID, name}) => {
       GratuityApplicable: "",
       GratuityAmount: "",
       Remark: "",
-      AcFlag: 'Y',
+      AcFlag: "Y",
       IUFlag: "U",
       CreatedBy: "",
       CreatedOn: "",
       ModifiedBy: "",
       ModifiedOn: "",
     },
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       const updatedData = {
         EmployeeId: ID,
         GradeId: values.GradeId,
@@ -71,32 +69,27 @@ const SalaryStructure = ({ID, name}) => {
         GratuityApplicable: values.GratuityApplicable,
         GratuityAmount: values.GratuityAmount,
         Remark: values.Remark,
-        AcFlag: "Y",
         IUFlag: "U",
-        
       };
-      console.log('save details', values);
-      updateEmpSalary(updatedData);
+      await updateEmpSalary(updatedData);
+      console.log("save details", updatedData);
     },
   });
 
   const updateEmpSalary = async (data) => {
     try {
       const response = await axios.post(
-        `http://localhost:5500/employee/salary/FnAddUpdateDeleteRecord`,
+        "http://localhost:5500/employee/salary/FnAddUpdateDeleteRecord",
         data,
         {
-          params: { EmployeeId: ID },
-          headers: {Authorization: `Bearer ${token}`},
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
       alert("Salary Details Updated");
-      console.log('response', response)
     } catch (error) {
-      console.error("Error", error)
+      console.error("Error", error);
     }
   };
-
 
   useEffect(() => {
     const fetchEmpSalary = async () => {
@@ -145,7 +138,6 @@ const SalaryStructure = ({ID, name}) => {
         CreatedOn: details.CreatedOn,
         ModifiedBy: details.ModifiedBy,
         ModifiedOn: details.ModifiedOn,
-        
       });
     }
   }, [details]);
@@ -196,7 +188,9 @@ const SalaryStructure = ({ID, name}) => {
               value={formik.values.GradeId}
               onChange={formik.handleChange}
             >
-              <option value={formik.values.GradeId}>{formik.values.GradeId}</option>
+              <option value={formik.values.GradeId}>
+                {formik.values.GradeId}
+              </option>
               <option value="">Select GradeId</option>
               <option value="Grade 1">Grade 1</option>
               <option value="Grade 2">Grade 2</option>
@@ -213,7 +207,9 @@ const SalaryStructure = ({ID, name}) => {
               value={formik.values.BandId}
               onChange={formik.handleChange}
             >
-              <option value={formik.values.BandId}>{formik.values.BandId}</option>
+              <option value={formik.values.BandId}>
+                {formik.values.BandId}
+              </option>
               <option value="">Select Band</option>
               <option value="Band 1">Band 1</option>
               <option value="Band 2">Band 2</option>
@@ -223,7 +219,9 @@ const SalaryStructure = ({ID, name}) => {
             </select>
           </div>
           <div className="py-1">
-            <p className="mb-1 capitalize font-semibold text-[13px]">Gross Salary (Per Month)</p>
+            <p className="mb-1 capitalize font-semibold text-[13px]">
+              Gross Salary (Per Month)
+            </p>
             <input
               id="GrossSalary"
               type="number"
@@ -440,12 +438,13 @@ const SalaryStructure = ({ID, name}) => {
           </div>
         </div>
         <div className="flex flex-wrap">
-          <EarningHeadsTable ID={ID}/>
-          <DeductionHeadsTable ID={ID}/>
+          <EarningHeadsTable ID={ID} />
+          <DeductionHeadsTable ID={ID} />
         </div>
         <div className="flex mt-5 justify-center gap-4">
           <button
             type="submit"
+            // onClick={updateEmpSalary}
             className="px-8 py-2 bg-blue-900 text-white text-lg rounded-md"
           >
             Submit Details

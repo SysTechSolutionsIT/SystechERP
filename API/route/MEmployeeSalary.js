@@ -98,11 +98,7 @@ sequelize
     console.error(`Unable to connect to the database:`, err);
   });
 
-  try {
-    MEmployeeSalary.sync()
-  } catch (error) {
-    
-  }
+MEmployeeSalary.sync();
 
 router.get(`/FnShowAllData`, authToken, async (req, res) => {
   try {
@@ -214,14 +210,14 @@ router.post(
   authToken,
   async (req, res) => {
     const salary = req.body;
-    console.log(req.body)
-    const EmployeeId = req.query.EmployeeId;
+    console.log("Salary Body", req.body);
+    const EmpId = salary.EmployeeId;
     try {
       if (salary.IUFlag === `D`) {
         // `Soft-delete` operation
         const result = await MEmployeeSalary.update(
           { AcFlag: `N` },
-          { where: { EmployeeId: salary.EmployeeId } }
+          { where: { EmployeeId: EmpId } }
         );
 
         res.json({
@@ -232,7 +228,7 @@ router.post(
       } else if (salary.IUFlag === `U`) {
         // Add or update operation
         const result = await MEmployeeSalary.update(salary, {
-          where: { EmployeeId: EmployeeId },
+          where: { EmployeeId: EmpId },
           returning: true,
         });
 

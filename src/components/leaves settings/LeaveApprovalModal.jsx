@@ -26,9 +26,9 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
     setSearchTerm(value);
   };
 
-  const filteredEmployees = Employees.filter((employee) =>
-    employee.EmployeeName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // const filteredEmployees = Employees.filter((employee) =>
+  //   employee.EmployeeName.toLowerCase().includes(searchTerm.toLowerCase())
+  // );
 
   const formik = useFormik({
     initialValues: {

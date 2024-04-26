@@ -5,7 +5,7 @@ import { Icon } from "@iconify/react";
 import { useAuth, useDetails } from "../Login";
 import axios from "axios";
 
-const LeaveBalance = ({ID, name}) => {
+const LeaveBalance = ({ ID, name }) => {
   const [LeaveTypes, setLeaveTypes] = useState([]);
   const [LeaveBalance, setLeaveBalance] = useState([]);
   const [employeeId, setEmployeeId] = useState("");
@@ -29,9 +29,9 @@ const LeaveBalance = ({ID, name}) => {
     setSearchTerm(value);
   };
 
-  const filteredEmployees = Employees.filter((employee) =>
-    employee.EmployeeName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // const filteredEmployees = Employees.filter((employee) =>
+  //   employee.EmployeeName.toLowerCase().includes(searchTerm.toLowerCase())
+  // );
 
   useEffect(() => {
     const selectedEmployeeType = employeeTypes.find(
@@ -376,9 +376,7 @@ const LeaveBalance = ({ID, name}) => {
                 </select>
               </div> */}
               <div>
-                <label className="text-[13px] font-semibold">
-                  Employee ID
-                </label>
+                <label className="text-[13px] font-semibold">Employee ID</label>
                 <div className="flex items-center">
                   <div className="relative w-full">
                     <input
@@ -387,7 +385,7 @@ const LeaveBalance = ({ID, name}) => {
                       name="EmployeeId"
                       className={`w-full bg-white px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                       value={ID}
-                      disabled='true'
+                      disabled="true"
                     />
                   </div>
                 </div>
@@ -404,7 +402,7 @@ const LeaveBalance = ({ID, name}) => {
                       name="EmployeeName"
                       className={`w-full bg-white px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                       value={name}
-                      disabled='true'
+                      disabled="true"
                     />
                   </div>
                 </div>
