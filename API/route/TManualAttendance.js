@@ -136,14 +136,14 @@ const sequelize = new Sequelize(
 
 // // Model synchronization
 
-// sequelize
-//   .sync()
-//   .then(() => {
-//     console.log("TManualAttendance model synchronized successfully.");
-//   })
-//   .catch((error) => {
-//     console.error("Error synchronizing TManualAttendance model:", error);
-//   });
+sequelize
+  .sync()
+  .then(() => {
+    console.log("TManualAttendance model synchronized successfully.");
+  })
+  .catch((error) => {
+    console.error("Error synchronizing TManualAttendance model:", error);
+  });
 
 router.get("/FnshowActiveData", authToken, async (req, res) => {
   try {
