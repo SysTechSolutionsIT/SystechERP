@@ -7,7 +7,6 @@ import axios from "axios";
 const ManualAttendanceEntryModal = ({ visible, onClick }) => {
   const { token } = useAuth();
   const [details, setDetails] = useState([]);
-  const [Fins, setFins] = useState([]);
   const [employeeTypes, setEmployeeTypes] = useState([]);
   const [Shifts, setShift] = useState([]);
   const [Jobs, setJobs] = useState([]);
@@ -19,12 +18,13 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
   const [FinalManualAttData, setFinalManualAttData] = useState([]);
   const [managerId, setManagerId] = useState();
   const [managerName, setManagerName] = useState();
+  const [selectedShiftId, setSelectedShiftId] = useState("");
 
   const [tableData, setTableData] = useState([]);
 
   const formik = useFormik({
     initialValues: {
-      ApprovalFlag: "P",
+      ApprovalFlag: "MP",
       AttendanceFlag: "",
       FromDate: "",
       ToDate: "",
@@ -40,7 +40,7 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
       OutTime: "",
       JobTypeId: "",
       SanctionBy: "",
-      TBSanctionBy: "",
+      TBSanctionBy: managerId,
       AcFlag: "Y",
       IUFlag: "I",
       Remark: "",
@@ -57,40 +57,20 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
         AMonth: formik.values.AMonth,
         AYear: formik.values.AYear,
         EmployeeTypeGroup: formik.values.EmployeeTypeGroup,
-        ShiftId: formik.values.ShiftId,
+        ShiftId: values.ShiftId,
         InTime: new Date(),
         OutTime: null,
         JobTypeId: formik.values.JobTypeId,
-        SanctionBy: formik.values.SanctionBy,
+        TBSanctionBy: managerId,
         ACFlag: "Y",
         IUFlag: "I",
         Remark: formik.values.Remark,
         CreatedOn: new Date(),
       };
-      console.log(updatedData);
-      addAttendance(updatedData);
+      console.log("Man Att data:", updatedData);
+      AddManualAttendance();
     },
   });
-
-  const addAttendance = async (data) => {
-    if (managerId == null) {
-      alert("No reporting manager found. Application not submitted.");
-    } else {
-      try {
-        const response = await axios.post(
-          "http://localhost:5500/manual-attendance/FnAddUpdateDeleteRecord",
-          data,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        console.log(response);
-        alert("Data Added Successfully");
-        onClick();
-        window.location.reload();
-      } catch (error) {
-        console.error("Error", error);
-      }
-    }
-  };
 
   const fetchPersonalData = async () => {
     try {
@@ -161,7 +141,7 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
         );
         const data = response.data;
         setShift(data);
-        console.log(response);
+        console.log("shifts", Shifts);
       } catch (error) {
         console.error("Error", error);
       }
@@ -210,14 +190,13 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
         );
         const data = response.data;
         console.log("Manager:", data);
-        setManagerId(data)
+        setManagerId(data);
       } catch (error) {
         console.error("Error", error);
       }
     };
     fetchManager();
   }, [token, visible]);
-  
 
   useEffect(() => {
     const fetchManagerName = async () => {
@@ -292,7 +271,7 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
       day: "2-digit",
     };
     const formatter = new Intl.DateTimeFormat("en-UK", options);
-    
+
     for (
       let AttendanceDate = fromDate;
       AttendanceDate <= toDate;
@@ -303,7 +282,7 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
         .replace(/\//g, "-");
       const [weekday, datePart] = formattedDate.split(", ");
       const JobType = highlightWeeklyOffRows(weekday).JobType;
-      
+
       const rowData = {
         checkbox: true,
         AttendanceDate: datePart,
@@ -312,26 +291,25 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
       };
       data.push(rowData);
     }
-  
+
     // Set the state with the generated table data
     setTableData(data);
-  
+
     // Map over the data to add additional fields and set the final data state
     const finalData = data.map((row) => ({
       ...row,
       EmployeeId: empid,
-      FYear: formik.values.FYear,
+      FYear: fYear,
       EmployeeTypeId: details?.EmployeeTypeId, // Use optional chaining to avoid errors if details is null or undefined
-      ShiftId: formik.values.ShiftId,
+      ShiftId: selectedShiftId,
       IUFlag: "I",
-      ApprovalFlag: "P",
+      ApprovalFlag: "MP",
     }));
-  
+
     setFinalManualAttData(finalData);
-  
+
     console.log("Final table data:", finalData);
   };
-  
 
   useEffect(() => {
     // useEffect to generate table data when FromDate or ToDate change
@@ -419,25 +397,26 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
   };
 
   const AddManualAttendance = async () => {
-    if (managerId == null) {
-      alert("No reporting manager found. Application not submitted.");
-    } else {
-      try {
-        const response = await axios.post(
-          "http://localhost:5500/manual-attendance/FnAddUpdateDeleteRecord",
-          FinalManualAttData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        alert("Manual Attendance Added Successfully");
-        onClick();
-      } catch (error) {
-        console.error("Error adding Manual Att", error);
-      }
-    }
+    // if (managerId == null) {
+    //   alert("No reporting manager found. Application not submitted.");
+    // } else {
+    //   try {
+    //     const response = await axios.post(
+    //       "http://localhost:5500/manual-attendance/FnAddUpdateDeleteRecord",
+    //       FinalManualAttData,
+    //       {
+    //         headers: {
+    //           Authorization: `Bearer ${token}`,
+    //         },
+    //       }
+    //     );
+    //     alert("Manual Attendance Added Successfully");
+    //     onClick();
+    //   } catch (error) {
+    //     console.error("Error adding Manual Att", error);
+    //   }
+    // }
+    console.log("Final Man Att data", FinalManualAttData);
   };
 
   const [maxDate] = useState(() => {
@@ -482,7 +461,6 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
                 <div className="flex items-center">
                   <input
                     id="FYear"
-                    name="FYear"
                     value={fYear}
                     disabled
                     className="w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
@@ -495,15 +473,15 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
                 </label>
                 <div className="flex items-center">
                   <div className="relative w-full text-[13px]">
-                    <input
+                    <textbox
                       type="text"
                       id="TBSanctionBy"
-                      name="TBSanctionBy"
-                      value={managerName}
-                      className='w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]'
+                      value={managerId}
+                      className="w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
                       disabled
                     >
-                    </input>
+                      {managerName}
+                    </textbox>
                   </div>
                 </div>
               </div>
@@ -544,10 +522,12 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
                 <p className="font-semibold text-[13px]">Shift</p>
                 <select
                   id="ShiftId"
-                  name="ShiftId"
                   className="w-full px-4 py-2 font-normal text-[11px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg"
                   value={formik.values.ShiftId}
-                  onChange={formik.handleChange}
+                  onChange={(e) => {
+                    formik.handleChange(e); // Update formik state
+                    setSelectedShiftId(e.target.value); // Update selectedShiftId state
+                  }}
                 >
                   <option value="">Select Shift</option>
                   {Shifts.map((entry) => (
@@ -581,9 +561,9 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
           <table className="w-full mt-4 text-center h-auto text-[11px] rounded-lg justify-center whitespace-normal">
             <thead>
               <tr>
-              <th className="text-[13px]  font-semibold border-r-2 border-white py-1 px-2 bg-blue-900 text-white">
-                Checkbox
-              </th>
+                <th className="text-[13px]  font-semibold border-r-2 border-white py-1 px-2 bg-blue-900 text-white">
+                  Checkbox
+                </th>
                 <th className="bg-blue-900 text-[13px] text-white font-semibold border-white border-2">
                   Date
                 </th>

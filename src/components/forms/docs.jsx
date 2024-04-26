@@ -111,16 +111,16 @@ const Documents = ({ ID, name }) => {
       },
       onSubmit: (values) => {
         console.log(values);
-        addDocs();
+        addDocs(values);
         // resetForm()
       },
     });
 
-    const addDocs = async () => {
+    const addDocs = async (values) => {
       try {
         const response = await axios.post(
           "http://localhost:5500/employee/documents/FnAddUpdateDeleteRecord",
-          formik.values,
+          values,
           {
             headers: {
               Authorization: `Bearer ${token}`,

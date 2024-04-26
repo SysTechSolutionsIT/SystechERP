@@ -96,11 +96,7 @@ sequelize
     console.error(`Unable to connect to the database:`, err);
   });
 
-  try {
-    MEmployeeSalary.sync()
-  } catch (error) {
-    
-  }
+MEmployeeSalary.sync();
 
 router.get(`/FnShowAllData`, authToken, async (req, res) => {
   try {
@@ -206,21 +202,25 @@ const generateEmployeeId = async (req, res, next) => {
   }
 };
 
-router.post('/FnAddEmployeeSalary', authToken, async (req, res) => {
+router.post("/FnAddEmployeeSalary", authToken, async (req, res) => {
   const salary = req.body;
   console.log("Salary Body", req.body);
 
   try {
     const result = await MEmployeeSalary.create(salary, { returning: true });
-    res.json({ message: result ? 'Employee Salary Added Successfully' : 'Operation failed' });
+    res.json({
+      message: result
+        ? "Employee Salary Added Successfully"
+        : "Operation failed",
+    });
   } catch (error) {
-    console.error('Error adding employee salary:', error);
-    res.status(500).send('Internal Server Error');
+    console.error("Error adding employee salary:", error);
+    res.status(500).send("Internal Server Error");
   }
 });
 
 // Route for updation
-router.patch('/FnUpdateEmployeeSalary', authToken, async (req, res) => {
+router.patch("/FnUpdateEmployeeSalary", authToken, async (req, res) => {
   const employeeId = req.query.EmployeeId;
   const salary = req.body;
 
@@ -229,30 +229,34 @@ router.patch('/FnUpdateEmployeeSalary', authToken, async (req, res) => {
       where: { EmployeeId: employeeId },
       returning: true,
     });
-    res.json({ message: result ? 'Employee Salary Updated Successfully' : 'Operation failed' });
+    res.json({
+      message: result
+        ? "Employee Salary Updated Successfully"
+        : "Operation failed",
+    });
   } catch (error) {
-    console.error('Error updating employee salary:', error);
-    res.status(500).send('Internal Server Error');
+    console.error("Error updating employee salary:", error);
+    res.status(500).send("Internal Server Error");
   }
 });
 
 // Route for deletion (soft delete)
-router.put('/FnDeleteEmployeeSalary', authToken, async (req, res) => {
+router.put("/FnDeleteEmployeeSalary", authToken, async (req, res) => {
   const employeeId = req.query.EmployeeId;
 
   try {
     const result = await MEmployeeSalary.update(
-      { AcFlag: 'N' }, // Soft delete by setting AcFlag to 'N'
+      { AcFlag: "N" }, // Soft delete by setting AcFlag to 'N'
       { where: { EmployeeId: employeeId } }
     );
     res.json({
       message: result[0]
-        ? 'Employee Salary Deleted Successfully'
-        : 'Record Not Found',
+        ? "Employee Salary Deleted Successfully"
+        : "Record Not Found",
     });
   } catch (error) {
-    console.error('Error deleting employee salary:', error);
-    res.status(500).send('Internal Server Error');
+    console.error("Error deleting employee salary:", error);
+    res.status(500).send("Internal Server Error");
   }
 });
 
@@ -268,7 +272,7 @@ router.post(
         // `Soft-delete` operation
         const result = await MEmployeeSalary.update(
           { AcFlag: `N` },
-          { where: { EmployeeId: salary.EmployeeId } }
+          { where: { EmployeeId: EmpId } }
         );
 
         res.json({
@@ -279,7 +283,7 @@ router.post(
       } else if (salary.IUFlag === `U`) {
         // Add or update operation
         const result = await MEmployeeSalary.update(salary, {
-          where: { EmployeeId: EmployeeId },
+          where: { EmployeeId: EmpId },
           returning: true,
         });
 

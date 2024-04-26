@@ -19,11 +19,11 @@ const SalaryStructure = ({ ID, name }) => {
   const [isMLWFFlagChecked, setMLWFFlagChecked] = useState(false);
   const [isGratuatyApplicableChecked, setGratuatyApplicableChecked] =
     useState(false);
-  const [isStatusChecked, setStatusCheched] = useState(false);  
+  const [isStatusChecked, setStatusCheched] = useState(false);
 
   const formik = useFormik({
     initialValues: {
-      EmployeeId: "",
+      EmployeeId: ID,
       GradeId: "",
       BandId: "",
       CTC: "",
@@ -49,7 +49,7 @@ const SalaryStructure = ({ ID, name }) => {
       ModifiedBy: "",
       ModifiedOn: "",
     },
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       const updatedData = {
         EmployeeId: values.EmployeeId,
         GradeId: values.GradeId,
@@ -76,13 +76,13 @@ const SalaryStructure = ({ ID, name }) => {
       updateEmpSalary(updatedData);
     },
   });
-  
+
   const updateEmpSalary = async (data) => {
     try {
-      console.log('Executing try block');
-      console.log('Inside api call');
-      console.log('Employee ID:', ID); // Check if ID is defined and has the correct value
-  
+      console.log("Executing try block");
+      console.log("Inside api call");
+      console.log("Employee ID:", ID); // Check if ID is defined and has the correct value
+
       const response = await axios.patch(
         `http://localhost:5500/employee/salary-structure/FnUpdateEmployeeSalary`,
         data,
@@ -91,16 +91,13 @@ const SalaryStructure = ({ ID, name }) => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      console.log('Finished executing');
+      console.log("Finished executing");
       alert("Salary Details Updated");
-  
     } catch (error) {
-      console.log('Error in salary updation');
+      console.log("Error in salary updation");
       console.error("Error", error);
     }
   };
-  
-  
 
   useEffect(() => {
     const fetchEmpSalary = async () => {
@@ -114,7 +111,7 @@ const SalaryStructure = ({ ID, name }) => {
         );
         const data = response.data;
         setDetails(data);
-        console.log('Salary Details', details)
+        console.log("Salary Details", details);
       } catch (error) {
         console.error("Error", error);
       }
@@ -198,7 +195,9 @@ const SalaryStructure = ({ ID, name }) => {
               value={formik.values.GradeId}
               onChange={formik.handleChange}
             >
-              <option value={formik.values.GradeId}>{formik.values.GradeId}</option>
+              <option value={formik.values.GradeId}>
+                {formik.values.GradeId}
+              </option>
               <option value="">Select GradeId</option>
               <option value="Grade 1">Grade 1</option>
               <option value="Grade 2">Grade 2</option>
@@ -215,7 +214,9 @@ const SalaryStructure = ({ ID, name }) => {
               value={formik.values.BandId}
               onChange={formik.handleChange}
             >
-              <option value={formik.values.BandId}>{formik.values.BandId}</option>
+              <option value={formik.values.BandId}>
+                {formik.values.BandId}
+              </option>
               <option value="">Select Band</option>
               <option value="Band 1">Band 1</option>
               <option value="Band 2">Band 2</option>
@@ -225,7 +226,9 @@ const SalaryStructure = ({ ID, name }) => {
             </select>
           </div>
           <div className="py-1">
-            <p className="mb-1 capitalize font-semibold text-[13px]">Gross Salary (Per Month)</p>
+            <p className="mb-1 capitalize font-semibold text-[13px]">
+              Gross Salary (Per Month)
+            </p>
             <input
               id="GrossSalary"
               type="number"
@@ -442,12 +445,13 @@ const SalaryStructure = ({ ID, name }) => {
           </div>
         </div>
         <div className="flex flex-wrap">
-          <EarningHeadsTable ID={ID}/>
-          <DeductionHeadsTable ID={ID}/>
+          <EarningHeadsTable ID={ID} />
+          <DeductionHeadsTable ID={ID} />
         </div>
         <div className="flex mt-5 justify-center gap-4">
           <button
             type="submit"
+            // onClick={updateEmpSalary}
             className="px-8 py-2 bg-blue-900 text-white text-lg rounded-md"
           >
             Submit Details

@@ -48,7 +48,6 @@ const TManualAttendance = sequelize.define(
     },
     FYear: {
       type: DataTypes.STRING(5),
-      allowNull: true,
     },
     EmployeeTypeId: {
       type: DataTypes.STRING(5),
@@ -66,7 +65,6 @@ const TManualAttendance = sequelize.define(
     },
     ShiftId: {
       type: DataTypes.STRING(5),
-      allowNull: true,
     },
     EmployeeId: {
       type: DataTypes.STRING(5),

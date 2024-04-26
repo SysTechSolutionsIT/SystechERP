@@ -617,25 +617,28 @@ const EmployeeMaster = () => {
                       {result.EmployeeId}
                     </td>
                     {selectedColumns.map((columnName) =>
-                    columnVisibility[columnName] ? (
-                      <td
-                        key={columnName}
-                        className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                      >
-                        {columnName === "EmployeeTypeGroupId" ? (
-                          // Check if columnName is EmployeeTypeGroupId
-                          employeeTypeGroup.find((item) => item.FieldId === result[columnName])?.FieldDetails || "Unknown FieldName"
-                        ) : (
-                          // If not EmployeeTypeGroupId, handle boolean and null values
-                          result[columnName] === true ? "Yes" :
-                          result[columnName] === false ? "No" :
-                          result[columnName] === null ? "N/A" :
-                          result[columnName]
-                        )}
-                      </td>
-                    ) : (
-                      <td key={columnName} className="hidden"></td>
-                    )
+                      columnVisibility[columnName] ? (
+                        <td
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                        >
+                          {columnName === "EmployeeTypeGroupId"
+                            ? // Check if columnName is EmployeeTypeGroupId
+                              employeeTypeGroup.find(
+                                (item) => item.FieldId === result[columnName]
+                              )?.FieldDetails || "Unknown FieldName"
+                            : // If not EmployeeTypeGroupId, handle boolean and null values
+                            result[columnName] === true
+                            ? "Yes"
+                            : result[columnName] === false
+                            ? "No"
+                            : result[columnName] === null
+                            ? "N/A"
+                            : result[columnName]}
+                        </td>
+                      ) : (
+                        <td key={columnName} className="hidden"></td>
+                      )
                     )}
                   </tr>
                 ))
@@ -680,25 +683,28 @@ const EmployeeMaster = () => {
                       {result.EmployeeId}
                     </td>
                     {selectedColumns.map((columnName) =>
-                    columnVisibility[columnName] ? (
-                      <td
-                        key={columnName}
-                        className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                      >
-                        {columnName === "EmployeeTypeGroupId" ? (
-                          // Check if columnName is EmployeeTypeGroupId
-                          employeeTypeGroup.find((item) => item.FieldId === result[columnName])?.FieldDetails || "Unknown FieldName"
-                        ) : (
-                          // If not EmployeeTypeGroupId, handle boolean and null values
-                          result[columnName] === true ? "Yes" :
-                          result[columnName] === false ? "No" :
-                          result[columnName] === null ? "N/A" :
-                          result[columnName]
-                        )}
-                      </td>
-                    ) : (
-                      <td key={columnName} className="hidden"></td>
-                    )
+                      columnVisibility[columnName] ? (
+                        <td
+                          key={columnName}
+                          className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                        >
+                          {columnName === "EmployeeTypeGroupId"
+                            ? // Check if columnName is EmployeeTypeGroupId
+                              employeeTypeGroup.find(
+                                (item) => item.FieldId === result[columnName]
+                              )?.FieldDetails || "Unknown FieldName"
+                            : // If not EmployeeTypeGroupId, handle boolean and null values
+                            result[columnName] === true
+                            ? "Yes"
+                            : result[columnName] === false
+                            ? "No"
+                            : result[columnName] === null
+                            ? "N/A"
+                            : result[columnName]}
+                        </td>
+                      ) : (
+                        <td key={columnName} className="hidden"></td>
+                      )
                     )}
                   </tr>
                 ))

@@ -61,13 +61,13 @@ const AdvanceInstallments = require("./route/TAdvanceInstallments");
 const CreateUserRoles = require("./route/CreateUserRoles");
 const BranchMaster = require("./route/MBranchMaster");
 const TMonthlyAttendance = require("./route/TMonthlyAttendance");
-const TSalaryProcessing = require('./route/TSalaryProcessing')
-const TMonthlyEarningImport = require('./route/TMonthlyEarningImport')
-const TMonthlyDeductionImport = require('./route/TMonthlyDeductionImport')
+const TSalaryProcessing = require("./route/TSalaryProcessing");
+const TMonthlyEarningImport = require("./route/TMonthlyEarningImport");
+const TMonthlyDeductionImport = require("./route/TMonthlyDeductionImport");
 
 // Apply the cors middleware to allow requests from any origin
 app.use(cors());
-app.use(express.static("public"));
+// app.use(express.static("public"));
 // Use the user routes
 app.use("/users", userRoutes);
 app.use("/nodemail", NodeMailer);
@@ -122,11 +122,14 @@ app.use("/create-user-roles", CreateUserRoles);
 app.use("/MLAttendance", MLAttendance);
 app.use("/l3r2o5v7", BranchMaster);
 app.use("/monthly-attendance", TMonthlyAttendance);
-app.use("/salary-processing", TSalaryProcessing)
-app.use('/monthly-earning-import', TMonthlyEarningImport)
-app.use('/monthly-deduction-import', TMonthlyDeductionImport)
+app.use("/salary-processing", TSalaryProcessing);
+app.use("/monthly-earning-import", TMonthlyEarningImport);
+app.use("/monthly-deduction-import", TMonthlyDeductionImport);
 
-
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  next();
+});
 // app.use(`file-upload`, HandleImage)
 
 // Start the server
