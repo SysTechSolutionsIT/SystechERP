@@ -4,13 +4,14 @@ import { useAuth } from "../Login";
 import DeductionHeadsTable from "./DeductionHeadsTable";
 import EarningHeadsTable from "./EarningHeadsTable";
 import axios from "axios";
-import { FormFloating } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import { useEmployeeType } from "./personal";
+import { FormFloating } from "react-bootstrap";
 
 const SalaryStructure = ({ ID, name }) => {
   const { token } = useAuth();
   const { employeeTypeId } = useEmployeeType();
+  console.log("Employee ID and Name in Salary Structure", ID, name);
   const [details, setDetails] = useState([]);
   const [isOTFlagChecked, setOTFlagChecked] = useState(false);
   const [isPFFlagChecked, setPFFlagChecked] = useState(false);
@@ -50,7 +51,7 @@ const SalaryStructure = ({ ID, name }) => {
     },
     onSubmit: async (values) => {
       const updatedData = {
-        EmployeeId: ID,
+        EmployeeId: values.EmployeeId,
         GradeId: values.GradeId,
         BandId: values.BandId,
         CTC: values.CTC,
@@ -71,22 +72,29 @@ const SalaryStructure = ({ ID, name }) => {
         Remark: values.Remark,
         IUFlag: "U",
       };
-      await updateEmpSalary(updatedData);
-      console.log("save details", updatedData);
+      console.log("save details", values);
+      updateEmpSalary(updatedData);
     },
   });
 
   const updateEmpSalary = async (data) => {
     try {
-      const response = await axios.post(
-        "http://localhost:5500/employee/salary/FnAddUpdateDeleteRecord",
+      console.log("Executing try block");
+      console.log("Inside api call");
+      console.log("Employee ID:", ID); // Check if ID is defined and has the correct value
+
+      const response = await axios.patch(
+        `http://localhost:5500/employee/salary-structure/FnUpdateEmployeeSalary`,
         data,
         {
+          params: { EmployeeId: ID }, // Passing EmployeeId as a query parameter
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+      console.log("Finished executing");
       alert("Salary Details Updated");
     } catch (error) {
+      console.log("Error in salary updation");
       console.error("Error", error);
     }
   };
@@ -95,7 +103,7 @@ const SalaryStructure = ({ ID, name }) => {
     const fetchEmpSalary = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5500/employee/salary/FnShowParticularData`,
+          `http://localhost:5500/employee/salary-structure/FnShowParticularData`,
           {
             params: { EmployeeId: ID },
             headers: { Authorization: `Bearer ${token}` },
@@ -103,6 +111,7 @@ const SalaryStructure = ({ ID, name }) => {
         );
         const data = response.data;
         setDetails(data);
+        console.log("Salary Details", details);
       } catch (error) {
         console.error("Error", error);
       }
@@ -132,8 +141,6 @@ const SalaryStructure = ({ ID, name }) => {
         GratuityApplicable: details.GratuityApplicable,
         GratuityAmount: details.GratuityAmount,
         Remark: details.Remark,
-        AcFlag: "Y",
-        IUFlag: "U",
         CreatedBy: details.CreatedBy,
         CreatedOn: details.CreatedOn,
         ModifiedBy: details.ModifiedBy,

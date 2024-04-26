@@ -39,7 +39,7 @@ const DeductionHeadsTable = ({ ID }) => {
     const fetchEmpSalary = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5500/employee/salary/FnShowParticularData`,
+          `http://localhost:5500/employee/salary-structure/FnShowParticularData`,
           {
             params: { EmployeeId: ID },
             headers: { Authorization: `Bearer ${token}` },

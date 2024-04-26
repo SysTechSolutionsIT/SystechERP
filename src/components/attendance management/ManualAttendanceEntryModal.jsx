@@ -6,7 +6,7 @@ import axios from "axios";
 
 const ManualAttendanceEntryModal = ({ visible, onClick }) => {
   const { token } = useAuth();
-  const [Details, setDetails] = useState([]);
+  const [details, setDetails] = useState([]);
   const [Fins, setFins] = useState([]);
   const [employeeTypes, setEmployeeTypes] = useState([]);
   const [Shifts, setShift] = useState([]);
@@ -210,20 +210,14 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
         );
         const data = response.data;
         console.log("Manager:", data);
-
-        if (data === null) {
-          // Display an alert to add a manager
-          alert("Please add a manager.");
-        } else {
-          // Set the manager data
-          setManagerId(data);
-        }
+        setManagerId(data)
       } catch (error) {
         console.error("Error", error);
       }
     };
     fetchManager();
   }, [token, visible]);
+  
 
   useEffect(() => {
     const fetchManagerName = async () => {
@@ -243,7 +237,7 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
       }
     };
     fetchManagerName();
-  }, [token, setManagerId]);
+  }, [token, managerId]);
 
   useEffect(() => {
     const fetchWeeklyOffCounts = async () => {
@@ -282,7 +276,7 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
     setSearchTerm(value);
   };
 
-  // const filteredEmployees = Details.filter((employee) =>
+  // const filteredEmployees = details.filter((employee) =>
   //   employee.EmployeeName.toLowerCase().includes(searchTerm.toLowerCase())
   // );
 
@@ -296,8 +290,9 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
-    }; // Use 'long' for full day names
+    };
     const formatter = new Intl.DateTimeFormat("en-UK", options);
+    
     for (
       let AttendanceDate = fromDate;
       AttendanceDate <= toDate;
@@ -305,32 +300,38 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
     ) {
       const formattedDate = formatter
         .format(AttendanceDate)
-        .replace(/\//g, "-"); // Replace slashes with dashes
-      const [weekday, datePart] = formattedDate.split(", "); // Extract weekday and AttendanceDate
-      const JobType = highlightWeeklyOffRows(weekday).JobType; // Determine JobType based on weekday
+        .replace(/\//g, "-");
+      const [weekday, datePart] = formattedDate.split(", ");
+      const JobType = highlightWeeklyOffRows(weekday).JobType;
+      
       const rowData = {
-        AttendanceDate: datePart, // Assign date
         checkbox: true,
-        AttendanceDay: weekday, // Assign weekday
-        JobType: JobType, // Set JobType based on highlightWeeklyOffRows logic
+        AttendanceDate: datePart,
+        AttendanceDay: weekday,
+        JobType: JobType,
       };
       data.push(rowData);
     }
+  
+    // Set the state with the generated table data
     setTableData(data);
+  
+    // Map over the data to add additional fields and set the final data state
     const finalData = data.map((row) => ({
       ...row,
       EmployeeId: empid,
       FYear: formik.values.FYear,
-      EmployeeTypeId: Details.EmployeeTypeId,
+      EmployeeTypeId: details?.EmployeeTypeId, // Use optional chaining to avoid errors if details is null or undefined
       ShiftId: formik.values.ShiftId,
       IUFlag: "I",
       ApprovalFlag: "P",
     }));
-
+  
     setFinalManualAttData(finalData);
-
+  
     console.log("Final table data:", finalData);
   };
+  
 
   useEffect(() => {
     // useEffect to generate table data when FromDate or ToDate change
@@ -494,15 +495,15 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
                 </label>
                 <div className="flex items-center">
                   <div className="relative w-full text-[13px]">
-                    <textbox
+                    <input
                       type="text"
                       id="TBSanctionBy"
                       name="TBSanctionBy"
-                      value={managerId}
+                      value={managerName}
+                      className='w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]'
                       disabled
                     >
-                      {managerName ? managerName : "Enter Reporting employee"}
-                    </textbox>
+                    </input>
                   </div>
                 </div>
               </div>
@@ -579,10 +580,10 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
           {/* Render the table */}
           <table className="w-full mt-4 text-center h-auto text-[11px] rounded-lg justify-center whitespace-normal">
             <thead>
+              <tr>
               <th className="text-[13px]  font-semibold border-r-2 border-white py-1 px-2 bg-blue-900 text-white">
                 Checkbox
               </th>
-              <tr>
                 <th className="bg-blue-900 text-[13px] text-white font-semibold border-white border-2">
                   Date
                 </th>
