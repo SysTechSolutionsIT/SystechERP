@@ -134,6 +134,7 @@ const EarningHeadsTable = ({ ID }) => {
           .replace("P2", totalEarning * (50 / 100))
           .replace("P3", totalEarning);
         const result = eval(modifiedFormula);
+        console.log('result', result)
         return result;
       }
     } catch (error) {
@@ -143,10 +144,20 @@ const EarningHeadsTable = ({ ID }) => {
   };
 
   const handleCalculationValueChange = (index, newValue) => {
+    console.log("New value:", newValue);
     const updatedHeads = [...heads];
-    updatedHeads[index].CalculationValue = newValue;
+    const calculatedValue = calculateValue(
+      updatedHeads[index].Formula,
+      details ? details.GrossSalary : 0,
+      parseFloat(newValue)
+    );
+    console.log("Calculated value:", calculatedValue);
+    updatedHeads[index].CalculationValue = calculatedValue;
+    console.log("Updated heads before state update:", updatedHeads);
     setHeads(updatedHeads);
   };
+  
+  
 
   const handleFormulaChange = (index, newValue) => {
     const updatedHeads = [...heads];
@@ -184,6 +195,7 @@ const EarningHeadsTable = ({ ID }) => {
         })
       );
     setSelectedHeads(selectedHeadsData);
+    console.log('Selected Heads', selectedHeads)
     // colsole.log(selectedHeads);
   }, [heads, employeeTypes, ID]);
 
@@ -192,13 +204,27 @@ const EarningHeadsTable = ({ ID }) => {
       const response = axios.post(
         "http://localhost:5500/employee-wise-earning/FnAddUpdateDeleteRecord",
         selectedHeads,
-        { headers: { Authorization: `Bearer ${token}` } }
+        { params: { EmployeeId: ID},
+          headers: { Authorization: `Bearer ${token}` } }
       );
       alert("Employee-wise Earning Heads Added");
     } catch (error) {
       console.error("Error", error);
     }
   };
+
+  useEffect(() => {
+    // Calculate and update CalculationValue for all heads when relevant dependencies change
+    const updatedHeads = heads.map((head) => ({
+      ...head,
+      CalculationValue: calculateValue(
+        head.Formula,
+        details ? details.GrossSalary : 0,
+        head.CalculationValue
+      )
+    }));
+    setHeads(updatedHeads);
+  }, [details]);
 
   return (
     <div className="gap-4 justify-between">
@@ -260,18 +286,12 @@ const EarningHeadsTable = ({ ID }) => {
                   {item.CalculationType}
                 </td>
                 <td className="px-2 border-2 whitespace-normal text-left text-[11px]">
-                  <input
-                    type="number"
-                    className="w-16 py-1 rounded-md text-center"
-                    value={calculateValue(
-                      item.Formula,
-                      details ? details.GrossSalary : 0,
-                      item.CalculationValue
-                    )}
-                    onChange={(e) =>
-                      handleCalculationValueChange(index, e.target.value)
-                    }
-                  />
+                <input
+                  type="number"
+                  className="w-16 py-1 rounded-md text-center"
+                  value={calculateValue(item.Formula, details ? details.GrossSalary : 0, item.CalculationValue)}
+                  onChange={(e) => handleCalculationValueChange(index, e.target.value)}
+                />
                 </td>
                 <td className="px-2 border-2 whitespace-normal text-left text-[11px]">
                   <input

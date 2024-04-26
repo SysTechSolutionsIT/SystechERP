@@ -180,7 +180,6 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
 });
 
 const generateEmployeewiseDeductionId = async (req, res, next) => {
-  console.log("Request body:", req.body);
   try {
     const employeeType = req.body[0]?.EmployeeType || "X"; // Use the EmployeeType from the first item in the array
     const totalRecords = await MEmployeewiseDeduction.count();
@@ -202,12 +201,14 @@ router.post(
   generateEmployeewiseDeductionId,
   authToken,
   async (req, res) => {
-    const EmployeewiseDeductions = req.body;
-    const EmployeewiseDeductionIds = EmployeewiseDeductions.map(
-      (item) => item.EmployeewiseDeductionId
-    );
-
     try {
+      const EmployeewiseDeductions = req.body;
+      const EmployeewiseDeductionIds = EmployeewiseDeductions.map(
+        (item) => item.EmployeewiseDeductionId
+      );
+
+      let results;
+
       if (EmployeewiseDeductions.some((item) => item.IUFlag === "D")) {
         // "Soft-delete" operation
         const result = await MEmployeewiseDeduction.update(
@@ -221,7 +222,14 @@ router.post(
             : "Record(s) Not Found",
         });
       } else {
-        const results = await Promise.all(
+
+        await MEmployeewiseDeduction.destroy({
+          where: {
+            EmployeeId: req.query.EmployeeId
+          }
+        });
+        
+        results = await Promise.all(
           EmployeewiseDeductions.map(async (item) => {
             const result = await MEmployeewiseDeduction.upsert(item, {
               updateOnDuplicate: true,
@@ -241,6 +249,7 @@ router.post(
     }
   }
 );
+
 
 process.on("SIGINT", () => {
   console.log("Received SIGINT. Closing Sequelize connection...");
