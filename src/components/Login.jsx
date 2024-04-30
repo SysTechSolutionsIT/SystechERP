@@ -380,6 +380,7 @@ function Login() {
             type="submit"
             onClick={userLogin}
             className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-800 transition duration-300 text-[13px] font-bold"
+            disabled={!companyId && !branchId && !fYear}
           >
             Login
           </button>

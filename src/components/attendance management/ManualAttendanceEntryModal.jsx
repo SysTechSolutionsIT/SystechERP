@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import { useAuth, useDetails } from "../Login";
 import axios from "axios";
+import moment from "moment";
 
 const ManualAttendanceEntryModal = ({ visible, onClick }) => {
   const { token } = useAuth();
@@ -19,6 +20,9 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
   const [managerId, setManagerId] = useState();
   const [managerName, setManagerName] = useState();
   const [selectedShiftId, setSelectedShiftId] = useState("");
+  const [leaves, setLeaves] = useState([]);
+  const [Holiday, setHoliday] = useState([]);
+
 
   const [tableData, setTableData] = useState([]);
 
@@ -71,6 +75,11 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
       AddManualAttendance();
     },
   });
+
+  useEffect(() => {
+    console.log("From Date", formik.values.FromDate);
+    console.log("To Date", formik.values.ToDate);
+  }, [formik.values.FromDate, formik.values.ToDate]);
 
   const fetchPersonalData = async () => {
     try {
@@ -158,7 +167,7 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
         );
         const data = response.data;
         setJobs(data);
-        console.log(response);
+        console.log('Jobs', data);
       } catch (error) {
         console.error("Error", error);
       }
@@ -303,6 +312,7 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
       EmployeeTypeId: details?.EmployeeTypeId, // Use optional chaining to avoid errors if details is null or undefined
       ShiftId: selectedShiftId,
       IUFlag: "I",
+      TBSanctionBy: managerId,
       ApprovalFlag: "MP",
     }));
 
@@ -325,56 +335,136 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
     setTableData(newData);
   };
 
-  const highlightWeeklyOffRows = (date, jobTypeFromDropdown) => {
+  const fetchLeaveApps = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5500/a5d3g2p6/FetchSanctionedLeaves",
+        {
+          params: {
+            EmployeeId: empid,
+            FromDate: formik.values.FromDate,
+            ToDate: formik.values.ToDate,
+          },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = response.data;
+      console.log("Leaves data", data);
+      setLeaves(data);
+    } catch (error) {
+      console.error("Error", error);
+    }
+  };
+  useEffect(() => {
+    fetchLeaveApps();
+    fetchHolidayData()
+  }, [token, visible, formik.values.FromDate, formik.values.ToDate]);
+
+
+  const fetchHolidayData = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5500/s3f9n7v2/fetch-holidays",
+        {
+          params: {
+            FromDate: formik.values.FromDate,
+            ToDate: formik.values.ToDate
+          },
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
+      );
+        const data = response.data;
+        setHoliday(data); 
+        console.log('Holiday Data', Holiday)
+    } catch (error) {
+      console.error("Error while fetching company data: ", error.message);
+    }
+  };
+  console.log(Holiday);
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Adding 1 because months are zero-based
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
+
+  const highlightWeeklyOffRows = (day, date, jobTypeFromDropdown) => {
     // Check if weeklyOffId is valid and WeekOffCounts is populated
-    console.log("Entering highlightWeeklyOffRows function with date:", date);
     if (weeklyOffId && WeekOffCounts && WeekOffCounts.length > 0) {
       // Find the work detail matching the weeklyOffId
       const workDetail = WeekOffCounts.find(
         (count) => count.WeeklyOffId === weeklyOffId
       );
-      console.log("workDetail:", workDetail);
       // Check if workDetail exists
       if (workDetail) {
         // Extract weekly off days for the found work detail
         const weeklyOffDays = workDetail.OffDays;
-        console.log("weeklyOffDays:", weeklyOffDays);
-        // Check if the given date is a weekly off day
-        const isWeeklyOff = weeklyOffDays && weeklyOffDays.includes(date);
-        console.log("isWeeklyOff:", isWeeklyOff);
-        // Determine the job type
-        let JobType = isWeeklyOff ? "Weekly Off" : "Present"; // Assuming 'Present' is the default JobType value
-        console.log("JobType:", JobType);
-        // If a job type is selected from the dropdown for an Absent day, use it
-        if (jobTypeFromDropdown && jobTypeFromDropdown !== "Present") {
-          JobType = jobTypeFromDropdown;
+        // Check if the given day is a weekly off day
+        const isWeeklyOff = weeklyOffDays && weeklyOffDays.includes(day);
+
+        // Assuming 'leaves' is an array of leave dates like ['Wednesday, 10-04-2024', 'Thursday, 11-04-2024', ...]
+        const LeaveDates = leaves.map((leave) => {
+          const [, date] = leave.split(", "); // Split the leave string and get the date part
+          return date; // Return only the date part
+        });
+
+        const isLeaveDay = leaves && LeaveDates.includes(date) ? true : false
+        console.log('Is Leave Day', isLeaveDay)
+
+        const isHoliday = Holiday && Holiday.includes(date) ? true : false
+        console.log('Is Holiday', isHoliday)
+
+        let JobType = '';
+
+        if (isLeaveDay) {
+          JobType = 'Leaves';
+        } else if (isWeeklyOff) {
+          JobType = 'Weekly Off';
+        } else if (isHoliday) {
+          JobType = 'Holiday';
+        } else {
+          // Ensure jobTypeFromDropdown has the correct value
+          JobType = jobTypeFromDropdown || 'Present';
         }
+        
         // Find the corresponding job from the Jobs array
         const job = Jobs.find((job) => job.JobTypeName === JobType);
-        console.log("job:", job);
-        console.log(job.JobTypeName);
-        // Return the appropriate style based on whether it's a weekly off day and JobType is present
-        if (isWeeklyOff) {
-          return {
-            backgroundColor: "rgb(205, 205, 0)",
-            JobType: job.JobTypeName,
-          };
+        
+        // Define default style
+        let style = {
+          JobType: JobType // Assigning the determined JobType
+        };
+        
+        // Return the appropriate style based on the day's status
+        if (isLeaveDay) {
+          JobType = 'Leaves'
+          style.backgroundColor = "rgb(191, 6, 171)";
+        } else if (isHoliday) {
+          JobType = 'Holiday'
+          style.backgroundColor = "rgb(253, 139, 0)";
+        } else if (isWeeklyOff) {
+          JobType = 'Weekly Off'
+          style.backgroundColor = "rgb(205, 205, 0)";
         } else if (job && job.JobTypeId === 1) {
           // Assuming JobTypeId 1 corresponds to 'Present'
-          return {
-            backgroundColor: "rgb(102, 204, 0)",
-            JobType: job.JobTypeName,
-          };
+          style.backgroundColor = "rgb(102, 204, 0)";
         } else if (job && job.JobTypeName === "Absent") {
-          // Condition for Absent job type
-          return { backgroundColor: "red", JobType: job.JobTypeName };
+          style.backgroundColor = "red";
         } else {
-          return { JobType: job.JobTypeName };
+          // Handle unexpected cases, maybe log an error
+          console.error("Unexpected condition occurred.");
         }
+        
+        return style;
       }
     }
     // Return empty style object if conditions are not met
-    console.log("Function did not execute the main logic.");
     return { JobType: "Present" }; // Assuming "Present" is the default JobType value
   };
 
@@ -397,25 +487,25 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
   };
 
   const AddManualAttendance = async () => {
-    // if (managerId == null) {
-    //   alert("No reporting manager found. Application not submitted.");
-    // } else {
-    //   try {
-    //     const response = await axios.post(
-    //       "http://localhost:5500/manual-attendance/FnAddUpdateDeleteRecord",
-    //       FinalManualAttData,
-    //       {
-    //         headers: {
-    //           Authorization: `Bearer ${token}`,
-    //         },
-    //       }
-    //     );
-    //     alert("Manual Attendance Added Successfully");
-    //     onClick();
-    //   } catch (error) {
-    //     console.error("Error adding Manual Att", error);
-    //   }
-    // }
+    if (managerId == null) {
+      alert("No reporting manager found. Application not submitted.");
+    } else {
+      try {
+        const response = await axios.post(
+          "http://localhost:5500/manual-attendance/FnAddUpdateDeleteRecord",
+          FinalManualAttData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        alert("Manual Attendance Added Successfully");
+        onClick();
+      } catch (error) {
+        console.error("Error adding Manual Att", error);
+      }
+    }
     console.log("Final Man Att data", FinalManualAttData);
   };
 
@@ -577,45 +667,55 @@ const ManualAttendanceEntryModal = ({ visible, onClick }) => {
               </tr>
             </thead>
             <tbody>
-              {tableData.map((row, index) => (
-                <tr
-                  key={index}
-                  style={highlightWeeklyOffRows(row.AttendanceDay, row.JobType)}
-                  className="bg-white"
-                >
-                  <td className="border-2 whitespace-normal text-[11px]">
-                    <label className="capitalize font-semibold text-[11px]">
-                      <input
-                        type="checkbox"
-                        className="w-3 h-3 mr-2 mt-2 focus:outline-gray-300 border border-blue-900 rounded-lg"
-                        checked={row.checkbox}
-                        onChange={() => handleCheckboxChange(index)}
-                      />
-                    </label>
-                  </td>
-                  <td className="border-2 whitespace-normal text-[11px]">
-                    {row.AttendanceDate}
-                  </td>
-                  <td className="border-2 whitespace-normal text-[11px]">
-                    {row.AttendanceDay}
-                  </td>
-                  <td className="border-2 whitespace-normal text-[11px]">
-                    <select
-                      className="border border-black rounded-md w-auto"
-                      value={row.JobType}
-                      onChange={(e) =>
-                        handleJobTypeChange(index, e.target.value)
-                      }
-                    >
-                      {Jobs.map((entry) => (
-                        <option key={entry.JobTypeId} value={entry.JobTypeName}>
-                          {entry.JobTypeName}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                </tr>
-              ))}
+              {tableData.map((row, index) => {
+                return (
+                  <tr
+                    key={index}
+                    style={highlightWeeklyOffRows(
+                      row.AttendanceDay,
+                      row.AttendanceDate,
+                      row.JobType,
+                    )} // Pass startDate and endDate if needed
+                    className="bg-white"
+                  >
+                    <td className="border-2 whitespace-normal text-[11px]">
+                      <label className="capitalize font-semibold text-[11px]">
+                        <input
+                          type="checkbox"
+                          className="w-3 h-3 mr-2 mt-2 focus:outline-gray-300 border border-blue-900 rounded-lg"
+                          checked={row.checkbox}
+                          onChange={() => handleCheckboxChange(index)}
+                        />
+                      </label>
+                    </td>
+                    <td className="border-2 whitespace-normal text-[11px]">
+                      {row.AttendanceDate}
+                    </td>
+                    <td className="border-2 whitespace-normal text-[11px]">
+                      {row.AttendanceDay}
+                    </td>
+                    <td className="border-2 whitespace-normal text-[11px]">
+                      <select
+                        className="border border-black rounded-md w-auto"
+                        value={row.JobType}
+                        onChange={(e) =>
+                          handleJobTypeChange(index, e.target.value)
+                        }
+                      >
+                        {Jobs.map((entry) => (
+                          <option
+                            key={entry.JobTypeId}
+                            value={entry.JobTypeName}
+                            selected={entry.JobTypeName === row.JobType}
+                          >
+                            {entry.JobTypeName}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
           {/* End of table */}

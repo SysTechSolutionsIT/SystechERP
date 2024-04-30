@@ -34,7 +34,7 @@ const ManualAttendanceApproval = () => {
         console.log("trying to fetch admin related data");
         try {
           const response = await axios.get(
-            "http://localhost:5500/a5d3g2p6/FnFetchHRPendingLeaves",
+            "http://localhost:5500/manual-attendance/FnFetchHRPendingAttendances",
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -50,7 +50,7 @@ const ManualAttendanceApproval = () => {
       } else {
         try {
           const response = await axios.get(
-            "http://localhost:5500/a5d3g2p6/FnShowManagerSanctionLeaves",
+            "http://localhost:5500/manual-attendance/FnShowManagerSanctionAttendances",
             {
               params: { TBSanctionBy: empid },
               headers: {

@@ -3,7 +3,6 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const { Sequelize, DataTypes } = require("sequelize");
-const { Op } = require("sequelize");
 const MHoliday = require("../model/HolidayModel");
 
 // Create an Express router
@@ -174,6 +173,45 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
+const { Op } = require('sequelize'); // Import Op from Sequelize
+
+const moment = require('moment');
+
+router.get("/fetch-holidays", async (req, res) => {
+  try {
+    // Extract start and end dates from query parameters
+    const startDate = req.query.FromDate;
+    const endDate = req.query.ToDate;
+
+    // Validate the presence of both startDate and endDate
+    if (!startDate || !endDate) {
+      return res.status(400).json({ message: "Both start date and end date are required." });
+    }
+
+    // Find holidays within the specified date range using Sequelize query
+    const holidays = await MHoliday.findAll({
+      where: {
+        HolidayDate: {
+          [Op.between]: [startDate, endDate],
+        },
+      },
+    });
+
+    // Extract and format the holiday dates
+    const formattedHolidays = holidays.map((holiday) => {
+      return moment(holiday.HolidayDate).format('DD-MM-YYYY');
+    });
+
+    // Return only the array of formatted holiday dates
+    res.json(formattedHolidays);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+
 
 // POST endpoint to add, update, or "soft-delete" a company
 const generateHolidayId = async (req, res, next) => {

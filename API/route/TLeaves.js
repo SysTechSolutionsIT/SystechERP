@@ -248,6 +248,69 @@ router.get("/FnShowManagerSanctionLeaves", authToken, async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+const { Op } = require('sequelize'); // Import Op from Sequelize
+
+const moment = require('moment');
+
+router.get("/FetchSanctionedLeaves", authToken, async (req, res) => {
+  const EmployeeId = req.query.EmployeeId;
+  const FromDate = moment(req.query.FromDate, 'YYYY-MM-DD').format('YYYY-MM-DD');
+  const ToDate = moment(req.query.ToDate, 'YYYY-MM-DD').format('YYYY-MM-DD');
+
+  console.log("FromDate:", FromDate);
+  console.log("ToDate:", ToDate);
+
+  try {
+    const Leaves = await TLeaves.findAll({
+      where: {
+        ApprovalFlag: "A",
+        EmployeeId: EmployeeId,
+        [Op.and]: [
+          sequelize.where(sequelize.col('SanctionFromDate'), '>=', moment(FromDate).startOf('day').toDate()),
+          sequelize.where(sequelize.col('SanctionToDate'), '<=', moment(ToDate).endOf('day').toDate())
+        ]
+      },
+      attributes: ['SanctionFromDate', 'SanctionToDate'],
+      order: [["SanctionFromDate", "ASC"]],
+    });
+
+    console.log("Leaves:", Leaves);
+
+    // Initialize an array to store day-date pairs
+    let dayDatePairs = [];
+
+    // Loop through each leave
+    Leaves.forEach(leave => {
+      const startDate = moment(leave.SanctionFromDate).startOf('day');
+      const endDate = moment(leave.SanctionToDate).endOf('day');
+
+      // If both sanction dates are the same, only return one day
+      if (startDate.isSame(endDate, 'day')) {
+        const dayOfWeek = startDate.format('dddd');
+        const date = startDate.format('DD-MM-YYYY');
+        dayDatePairs.push(`${dayOfWeek}, ${date}`);
+      } else {
+        // Otherwise, return all the days that leaves are taken on, including the starting and ending days
+        let currentDate = startDate;
+        while (currentDate.isSameOrBefore(endDate)) {
+          const dayOfWeek = currentDate.format('dddd');
+          const date = currentDate.format('DD-MM-YYYY');
+          dayDatePairs.push(`${dayOfWeek}, ${date}`);
+          currentDate.add(1, 'day');
+        }
+      }
+    });
+
+    console.log("Day-date pairs:", dayDatePairs);
+
+    res.json(dayDatePairs);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+
 
 const generateLeaveApplicationId = async (req, res, next) => {
   try {
