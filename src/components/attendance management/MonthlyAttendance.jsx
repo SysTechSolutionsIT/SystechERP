@@ -52,10 +52,12 @@ const MonthlyAttendance = () => {
 
   useEffect(() => {
     const fetchLeavesData = async () => {
+      const currentDate = new Date().getMonth() - 1;
       try {
         const response = await axios.get(
-          "http://localhost:5500/MLAttendance/FnshowActiveData",
+          "http://localhost:5500/MLAttendance/FnShowMonthlyData",
           {
+            params: { Month: currentDate },
             headers: { Authorization: `Bearer ${token}` },
           }
         );
@@ -160,7 +162,7 @@ const MonthlyAttendance = () => {
     const fetchEmployeeData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5500/employee/personal/FnShowEmpIds",
+          "http://localhost:5500/employee/personal/FnEmployeeNamesAndIds",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -200,7 +202,7 @@ const MonthlyAttendance = () => {
   useEffect(() => {
     const fetchMAttendanceData = async () => {
       const currentDate = new Date();
-      const month = currentDate.getMonth();
+      const month = currentDate.getMonth() - 1;
       console.log("Current Month", month);
       const currentYear = currentDate.getFullYear();
       try {
@@ -271,6 +273,7 @@ const MonthlyAttendance = () => {
       // Construct the object for the current employee
       const employeeData = {
         EmployeeId: employeeId,
+        EmployeeName: employee.EmployeeName,
         ManualAttendance: manualAttendance
           ? manualAttendance.ManualAttendance
           : 0,
@@ -285,10 +288,9 @@ const MonthlyAttendance = () => {
         TotalSalariedDays: totalSalariedDays,
         TotalDays: totalDays,
       };
-
       // Push the data for the current employee to the final array
       monthlyAttendanceData.push(employeeData);
-      console.log("EMployeee Data: ", employeeData);
+      console.log("Employee Data: ", employeeData);
     });
 
     return monthlyAttendanceData;
@@ -298,6 +300,7 @@ const MonthlyAttendance = () => {
 
   const columnNames = {
     EmployeeId: "Employee ID",
+    EmployeeName: "Employee Name",
     ManualAttendance: "Manual Attendance",
     PaidLeaves: "Paid Leaves",
     UnpaidLeaves: "Unpaid Leaves",
@@ -311,6 +314,7 @@ const MonthlyAttendance = () => {
 
   const [columnVisibility, setColumnVisibility] = useState({
     EmployeeId: true,
+    EmployeeName: true,
     ManualAttendance: true,
     PaidLeaves: true,
     UnpaidLeaves: true,

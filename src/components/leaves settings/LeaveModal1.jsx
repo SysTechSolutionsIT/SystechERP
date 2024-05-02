@@ -24,10 +24,6 @@ const LeaveModal1 = ({ visible, onClick }) => {
     setSearchTerm(value);
   };
 
-  const filteredEmployees = allEmployees.filter((employee) =>
-    employee.EmployeeName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   const formik = useFormik({
     initialValues: {
       ApprovalFlag: "",

@@ -210,6 +210,18 @@ router.get("/FnFetchEmployeeName", authToken, async (req, res) => {
   }
 });
 
+router.get("/FnEmployeeNamesAndIds", authToken, async (req, res) => {
+  try {
+    const employeeName = await MEmployee.findAll({
+      attributes: ["EmployeeId", "EmployeeName"],
+    });
+    res.json(employeeName);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 router.get("/FnShowImageData", authToken, async (req, res) => {
   const employeeId = req.query.EmployeeId;
   try {

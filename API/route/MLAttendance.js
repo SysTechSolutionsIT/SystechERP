@@ -116,6 +116,21 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+router.get("/FnShowMonthlyData", authToken, async (req, res) => {
+  const month = req.query.Month;
+  try {
+    const TField = await MLAttendance.findOne({
+      where: {
+        Month: month,
+      },
+      order: [["EmployeeId", "ASC"]],
+    });
+    res.json(TField);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
   const EmployeeId = req.body.EmployeeId;

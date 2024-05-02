@@ -7,9 +7,9 @@ import LMonthlyAtt from "./LMonthlyAtt";
 
 const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
   const [details, setDetails] = useState([]);
-  const [Employees, setEmployees] = useState([]);
   const [LeaveTypeData, setLeaveTypes] = useState("");
-  const [employeeTypes, setEmployeeTypes] = useState([]);
+  const [employeeTypeId, setEmployeeTypeId] = useState([]);
+  const [employeeTypeGroupId, setEmployeeTypeGroupId] = useState([]);
   const [previousLeaves, setPreviousLeaves] = useState([]);
   const [employeeId, setEmployeeId] = useState("");
   const [leaveTypeId, setLeaveTypeId] = useState("");
@@ -32,19 +32,20 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
 
   const formik = useFormik({
     initialValues: {
-      ApprovalFlag: "",
+      ApprovalFlag: ApprovalFlag,
       LeaveApplicationId: ID,
       FYear: fYear,
       LeaveApplicationDate: "",
       EmployeeId: "",
       EmployeeName: "",
-      EmployeeType: "",
-      EmployeeTypeGroup: "",
+      EmployeeType: employeeTypeId,
+      EmployeeTypeGroup: employeeTypeGroupId,
       LeaveTypeId: "",
       LeaveFromDate: "",
       LeaveToDate: "",
       Remark: "",
       SanctionBy: empid,
+      SanctionMonth: "",
       SanctionFromDate: "",
       SanctionToDate: "",
       SanctionLeaveDays: "",
@@ -59,12 +60,13 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
         LeaveApplicationDate: values.LeaveApplicationDate,
         EmployeeId: values.EmployeeId,
         LeaveFromDate: values.LeaveFromDate,
-        EmployeeType: values.EmployeeType,
+        EmployeeType: employeeTypeId,
         LeaveTypeId: values.LeaveTypeId,
-        EmployeeTypeGroup: values.EmployeeTypeGroup,
+        EmployeeTypeGroup: employeeTypeGroupId,
         LeaveToDate: values.LeaveToDate,
         Remark: values.Remark,
         SanctionBy: empid,
+        SanctionMonth: new Date(values.SanctionFromDate).getMonth(),
         SanctionFromDate: values.SanctionFromDate,
         SanctionToDate: values.SanctionToDate,
         SanctionLeaveDays: values.SanctionLeaveDays,
@@ -135,7 +137,7 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
     console.log("IN calculate Presenty");
     try {
       const response = await axios.post(
-        "http://localhost:5500/a5d3g2p6/CalculatePresenty",
+        "http://localhost:5500/a5d3g2p6/CalculatePresenty", // tleaves
         values,
         {
           params: { LeavesEarned: LeavesEarned },
@@ -215,12 +217,15 @@ const LeaveApprovalModal = ({ visible, onClick, ID, ApprovalFlag }) => {
     const fetchEmployees = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5500/employee/personal/FnShowActiveData",
-          { headers: { Authorization: `Bearer ${token}` } }
+          "http://localhost:5500/employee/personal/FnShowPerticularData",
+          {
+            params: { EmployeeId: ID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
         );
         const data = response.data;
-        console.log("Employees", data);
-        setEmployees(data);
+        setEmployeeTypeId(data.EmployeeType);
+        setEmployeeTypeGroupId(data.EmployeeTypeGroupId);
       } catch (error) {
         console.error("Error", error);
       }
