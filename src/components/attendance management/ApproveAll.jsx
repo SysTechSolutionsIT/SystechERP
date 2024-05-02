@@ -1,13 +1,15 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useAuth } from "../Login";
+import { useAuth, useDetails } from "../Login";
 import { Icon } from "@iconify/react";
 import { useFormik } from "formik";
 
 const ApproveAll = ({ visible, onClick }) => {
   const { token } = useAuth();
   const [Details, setDetails] = useState([]);
+  const { role } = useDetails()
+  console.log('Role', role)
 
   const formik = useFormik({
     initialValues:{
@@ -57,6 +59,7 @@ const ApproveAll = ({ visible, onClick }) => {
         data,
         {
           params: { 
+          UserRole: role,
           FromDate: fromDate,
           ToDate: toDate
         },

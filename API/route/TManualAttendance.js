@@ -202,7 +202,7 @@ router.get("/FnShowParticularEmployeeData", authToken, async (req, res) => {
 });
 
 //showing manager pending entries
-router.get("/FnFetchHRPendingLeaves", authToken, async (req, res) => {
+router.get("/FnFetchHRPendingAttendances", authToken, async (req, res) => {
   try {
     const Attendance = await TManualAttendance.findAll({
       where: {
@@ -217,7 +217,7 @@ router.get("/FnFetchHRPendingLeaves", authToken, async (req, res) => {
   }
 });
 
-router.get("/FnShowManagerSanctionLeaves", authToken, async (req, res) => {
+router.get("/FnShowManagerSanctionAttendances", authToken, async (req, res) => {
   const SanctioningEMP = req.query.TBSanctionBy;
   try {
     const Attendance = await TManualAttendance.findAll({
@@ -238,6 +238,8 @@ router.post("/FnApproveAll", authToken, async (req, res) => {
   try {
     const FromDate = req.query.FromDate;
     const ToDate = req.query.ToDate;
+    const UserRole = req.query.UserRole
+    console.log('User Role', UserRole)
 
     // Function to convert date format
     const convertDateFormat = (dateString) => {
@@ -260,20 +262,38 @@ router.post("/FnApproveAll", authToken, async (req, res) => {
     // Get the EmployeeName from request body or wherever it is available
     const sanctionBy = req.body.EmployeeName;
 
-    // Approve all attendances between FromDate and ToDate
-    const approvals = await TManualAttendance.update(
-      {
-        ApprovalFlag: "A",
-        SanctionBy: sanctionBy,
-      },
-      {
-        where: {
-          AttendanceDate: {
-            [Op.between]: [fromDate, toDate],
+    let approvals;
+
+    try {
+      if (UserRole == 'Admin') { // Use strict equality
+        approvals = await TManualAttendance.update({
+          ApprovalFlag: "A",
+          SanctionBy: sanctionBy,
+        }, {
+          where: {
+            AttendanceDate: {
+              [Op.between]: [fromDate, toDate],
+            },
           },
-        },
+        });
+        console.log('Admin Approval Done')
+
+      } else if (UserRole == 'Manager') {
+        approvals = await TManualAttendance.update({
+          ApprovalFlag: "HRP",
+          SanctionBy: sanctionBy,
+        }, {
+          where: {
+            AttendanceDate: {
+              [Op.between]: [fromDate, toDate],
+            },
+          },
+        });
+        console.log('Manager Approval Done')
       }
-    );
+    } catch (error) {
+      console.error('Error Approving Attendance', error);
+    }
 
     // Log the generated SQL query
     console.log("Generated SQL Query:", approvals[1]);
@@ -358,9 +378,8 @@ router.post(
 router.get("/MAttendance/count", async (req, res) => {
   try {
     // Calculate the date range for the previous month
-    const startDate = moment().subtract(1, "months").startOf("month");
-    const endDate = moment().subtract(1, "months").endOf("month");
-
+    const startDate = moment().subtract(1, "months").startOf("month").format("DD-MM-YYYY");
+    const endDate = moment().subtract(1, "months").endOf("month").format("DD-MM-YYYY");
     // Use Sequelize's aggregation functions to count instances and group them by EmployeeId
     const counts = await TManualAttendance.findAll({
       attributes: [
@@ -375,6 +394,7 @@ router.get("/MAttendance/count", async (req, res) => {
         AttendanceDate: {
           [Op.between]: [startDate, endDate],
         },
+        JobType: 'Present' // Filter records where JobType is 'Present'
       },
       group: ["EmployeeId"],
     });
@@ -385,6 +405,8 @@ router.get("/MAttendance/count", async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
+
 
 process.on("SIGINT", () => {
   console.log("Received SIGINT. Closing Sequelize connection...");

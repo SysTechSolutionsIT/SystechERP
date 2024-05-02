@@ -117,7 +117,7 @@ const TManualAttendance = sequelize.define(
       allowNull: false,
     },
     ApprovalFlag: {
-      type: DataTypes.STRING(1),
+      type: DataTypes.STRING(5),
       allowNull: true,
       defaultValue: "P",
     },

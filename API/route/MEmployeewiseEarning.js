@@ -197,12 +197,15 @@ router.post(
   generateEmployeewiseEarningId,
   authToken,
   async (req, res) => {
-    const employeewiseEarning = req.body;
-    const employeewiseEarningIds = employeewiseEarning.map(
-      (item) => item.EmployeewiseEarningId
-    );
-
     try {
+      const employeewiseEarning = req.body;
+      const EmployeeId = req.query.EmployeeId;
+      const employeewiseEarningIds = employeewiseEarning.map(
+        (item) => item.EmployeewiseEarningId
+      );
+
+      let results;
+
       if (employeewiseEarning.some((item) => item.IUFlag === "D")) {
         // "Soft-delete" operation
         const result = await MEmployeewiseEarning.update(
@@ -216,7 +219,13 @@ router.post(
             : "Record(s) Not Found",
         });
       } else {
-        const results = await Promise.all(
+        await MEmployeewiseEarning.destroy({
+          where: {
+            EmployeeId: req.query.EmployeeId
+          }
+        });
+
+        results = await Promise.all(
           employeewiseEarning.map(async (item) => {
             const result = await MEmployeewiseEarning.upsert(item, {
               updateOnDuplicate: true,
@@ -236,6 +245,7 @@ router.post(
     }
   }
 );
+
 
 process.on("SIGINT", () => {
   console.log("Received SIGINT. Closing Sequelize connection...");

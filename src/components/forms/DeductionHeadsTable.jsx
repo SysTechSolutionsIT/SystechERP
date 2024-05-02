@@ -33,7 +33,7 @@ const DeductionHeadsTable = ({ ID }) => {
       }
     };
     fetchHeadsData();
-  }, [token]);
+  }, [token, ID]);
 
   useEffect(() => {
     const fetchEmpSalary = async () => {
@@ -99,12 +99,26 @@ const DeductionHeadsTable = ({ ID }) => {
     const updatedHeads = heads.map((head) => ({
       ...head,
       Selected: caderwiseDeductions.some(
-        (deduction) => deduction.DeductionHeadID === head.DeductionHeadID
-      ),
+        (deduction) => deduction.DeductionHeadId === head.DeductionHeadID
+      ) || head.Selected // Also check if the head was previously selected
     }));
-
+  
     setHeads(updatedHeads);
   }, [caderwiseDeductions]);
+
+  useEffect(() => {
+    // Calculate and update CalculationValue for all heads when relevant dependencies change
+    const updatedHeads = heads.map((head) => ({
+      ...head,
+      CalculationValue: calculateValue(
+        head.Formula,
+        details ? details.GrossSalary : 0,
+        head.CalculationValue
+      )
+    }));
+    setHeads(updatedHeads);
+  }, [details]);
+  
 
   useEffect(() => {
     const fetchEmployeeTypes = async () => {
@@ -194,7 +208,8 @@ const DeductionHeadsTable = ({ ID }) => {
       const response = axios.post(
         "http://localhost:5500/employee-wise-deductions/FnAddUpdateDeleteRecord",
         selectedHeads,
-        { headers: { Authorization: `Bearer ${token}` } }
+        { params: { EmployeeId: ID},
+          headers: { Authorization: `Bearer ${token}` } }
       );
       alert("Employee-wise Deduction Heads Added");
     } catch (error) {
