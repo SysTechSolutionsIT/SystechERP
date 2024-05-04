@@ -112,7 +112,7 @@ const SalProcessing = () => {
   useEffect(() =>{
     const fetchEmployeeNames = async() =>{
       try{
-        const response = await axios.get("http://localhost:5500/employee/personal/FnFetchAllEmployeeNames",
+        const response = await axios.get("http://localhost:5500/employee/personal/FnEmployeeNamesAndIds",
         { headers: { Authorization: `Bearer ${token}`}
       })
       const data = response.data
