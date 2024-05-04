@@ -39,7 +39,7 @@ const TLeaves = sequelize.define(
       primaryKey: true,
     },
     LeaveApplicationDate: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: false,
     },
     EmployeeId: {
@@ -55,11 +55,11 @@ const TLeaves = sequelize.define(
       allowNull: false,
     },
     LeaveFromDate: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: false,
     },
     LeaveToDate: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: false,
     },
     LeaveTypeId: {
@@ -80,17 +80,20 @@ const TLeaves = sequelize.define(
       allowNull: true,
     },
     SanctionFromDate: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: true,
     },
     SanctionToDate: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: true,
     },
     SanctionLeaveDays: {
       type: DataTypes.INTEGER,
       allowNull: true,
       defaultValue: 0,
+    },
+    SanctionMonth: {
+      type: DataTypes.INTEGER, // Month of the leave
     },
     Remark: {
       type: DataTypes.STRING(1000),

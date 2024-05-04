@@ -193,9 +193,9 @@ const ApprovedAdd = ({ visible, onClick }) => {
     setSearchTerm(value);
   };
 
-  const filteredEmployees = Details.filter((employee) =>
-    employee.EmployeeName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // const filteredEmployees = Details.filter((employee) =>
+  //   employee.EmployeeName.toLowerCase().includes(searchTerm.toLowerCase())
+  // );
 
   if (!visible) return null;
   return (

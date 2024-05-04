@@ -235,7 +235,7 @@ const ManualAttendanceApproval = () => {
   const handleSearchChange = (title, searchWord) => {
     const newFilter = manualAttendanceEntry.filter((item) => {
       const value = item[title];
-      return value && value.toLowerCase().includes(searchWord.toLowerCase());
+      return value && value?.toLowerCase().includes(searchWord.toLowerCase());
     });
 
     if (searchWord === "") {

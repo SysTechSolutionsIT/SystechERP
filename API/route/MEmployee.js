@@ -211,12 +211,12 @@ router.get("/FnFetchEmployeeName", authToken, async (req, res) => {
   }
 });
 
-router.get("/FnFetchAllEmployeeNames", authToken, async (req, res) => {
+router.get("/FnEmployeeNamesAndIds", authToken, async (req, res) => {
   try {
-    const employees = await MEmployee.findAll({
-      attributes: ['EmployeeId', "EmployeeName"],
+    const employeeName = await MEmployee.findAll({
+      attributes: ["EmployeeId", "EmployeeName"],
     });
-    res.json(employees);
+    res.json(employeeName);
   } catch (error) {
     console.error("Error retrieving data:", error);
     res.status(500).send("Internal Server Error");
