@@ -5,7 +5,8 @@ const jwt = require(`jsonwebtoken`);
 const router = express.Router();
 const CompanyConfig = require(`./CompanyConfigModels`);
 const MEmployeeType = require(`../model/MEmployeeTypeModels`);
-
+const MEmployeeWorkProfile = require(`../model/MEmployeeWorkProfileModels`)
+ 
 const authToken = (req, res, next) => {
   const authHeader = req.headers[`authorization`];
   const token = authHeader && authHeader.split(` `)[1];
@@ -30,97 +31,97 @@ const sequelize = new Sequelize(
   }
 );
 
-const MEmployeeWorkProfile = sequelize.define(
-  `MEmployeeWorkProfile`,
-  {
-    CompanyId: {
-      type: DataTypes.STRING(5),
-      allowNull: false,
-      defaultValue: `00001`,
-    },
-    BranchId: {
-      type: DataTypes.STRING(5),
-      allowNull: false,
-      defaultValue: `00001`,
-    },
-    EmployeeId: {
-      type: DataTypes.STRING(5),
-      allowNull: false,
-      primaryKey: true,
-    },
-    DOJ: { type: DataTypes.DATEONLY, allowNull: true },
-    DOL: { type: DataTypes.DATEONLY, allowNull: true },
-    ContractorId: {
-      type: DataTypes.STRING(50),
-      allowNull: true,
-      defaultValue: null,
-    },
-    ContractorStartDate: {
-      type: DataTypes.DATEONLY,
-      allowNull: true,
-      defaultValue: null,
-    },
-    ContractorEndDate: {
-      type: DataTypes.DATEONLY,
-      allowNull: true,
-      defaultValue: null,
-    },
-    DeptGroupId: {
-      type: DataTypes.STRING(50),
-      allowNull: true,
-      defaultValue: null,
-    },
-    DeptId: { type: DataTypes.STRING(50), allowNull: true, defaultValue: null },
-    SubDeptId: {
-      type: DataTypes.STRING(50),
-      allowNull: true,
-      defaultValue: null,
-    },
-    DesgId: { type: DataTypes.STRING(50), allowNull: true, defaultValue: null },
-    ReportingTo: {
-      type: DataTypes.STRING(5),
-      allowNull: true,
-    },
-    WeeklyOff: {
-      type: DataTypes.STRING,
-      allowNull: true,
-      defaultValue: null,
-    },
-    ShiftId: {
-      type: DataTypes.STRING(50),
-      allowNull: true,
-      defaultValue: null,
-    },
-    BandId: { type: DataTypes.STRING(50), allowNull: true, defaultValue: null },
-    ZoneId: { type: DataTypes.STRING(50), allowNull: true, defaultValue: null },
-    GradeId: {
-      type: DataTypes.STRING(50),
-      allowNull: true,
-      defaultValue: null,
-    },
-    CostCenterId: {
-      type: DataTypes.STRING(50),
-      allowNull: true,
-      defaultValue: null,
-    },
-    BondApplicable: {
-      type: DataTypes.STRING(1),
-      allowNull: true,
-      defaultValue: `N`,
-    },
-    BondAttachment: { type: DataTypes.STRING(500), allowNull: true },
-    CurrentJob: { type: DataTypes.STRING(500), allowNull: true },
-    Remark: { type: DataTypes.STRING(100), allowNull: true },
-    AcFlag: { type: DataTypes.STRING(1), allowNull: true, defaultValue: `Y` },
-    CreatedBy: { type: DataTypes.STRING(50), allowNull: true },
-    CreatedOn: { type: DataTypes.STRING(50), allowNull: true },
-    ModifiedBy: { type: DataTypes.STRING(50), allowNull: true },
-    ModifiedOn: { type: DataTypes.STRING(50), allowNull: true },
-  },
-  {
-    timestamps: false,
-  }
-);
+// const MEmployeeWorkProfile = sequelize.define(
+//   `MEmployeeWorkProfile`,
+//   {
+//     CompanyId: {
+//       type: DataTypes.STRING(5),
+//       allowNull: false,
+//       defaultValue: `00001`,
+//     },
+//     BranchId: {
+//       type: DataTypes.STRING(5),
+//       allowNull: false,
+//       defaultValue: `00001`,
+//     },
+//     EmployeeId: {
+//       type: DataTypes.STRING(5),
+//       allowNull: false,
+//       primaryKey: true,
+//     },
+//     DOJ: { type: DataTypes.DATEONLY, allowNull: true },
+//     DOL: { type: DataTypes.DATEONLY, allowNull: true },
+//     ContractorId: {
+//       type: DataTypes.STRING(50),
+//       allowNull: true,
+//       defaultValue: null,
+//     },
+//     ContractorStartDate: {
+//       type: DataTypes.DATEONLY,
+//       allowNull: true,
+//       defaultValue: null,
+//     },
+//     ContractorEndDate: {
+//       type: DataTypes.DATEONLY,
+//       allowNull: true,
+//       defaultValue: null,
+//     },
+//     DeptGroupId: {
+//       type: DataTypes.STRING(50),
+//       allowNull: true,
+//       defaultValue: null,
+//     },
+//     DeptId: { type: DataTypes.STRING(50), allowNull: true, defaultValue: null },
+//     SubDeptId: {
+//       type: DataTypes.STRING(50),
+//       allowNull: true,
+//       defaultValue: null,
+//     },
+//     DesgId: { type: DataTypes.STRING(50), allowNull: true, defaultValue: null },
+//     ReportingTo: {
+//       type: DataTypes.STRING(5),
+//       allowNull: true,
+//     },
+//     WeeklyOff: {
+//       type: DataTypes.STRING,
+//       allowNull: true,
+//       defaultValue: null,
+//     },
+//     ShiftId: {
+//       type: DataTypes.STRING(50),
+//       allowNull: true,
+//       defaultValue: null,
+//     },
+//     BandId: { type: DataTypes.STRING(50), allowNull: true, defaultValue: null },
+//     ZoneId: { type: DataTypes.STRING(50), allowNull: true, defaultValue: null },
+//     GradeId: {
+//       type: DataTypes.STRING(50),
+//       allowNull: true,
+//       defaultValue: null,
+//     },
+//     CostCenterId: {
+//       type: DataTypes.STRING(50),
+//       allowNull: true,
+//       defaultValue: null,
+//     },
+//     BondApplicable: {
+//       type: DataTypes.STRING(1),
+//       allowNull: true,
+//       defaultValue: `N`,
+//     },
+//     BondAttachment: { type: DataTypes.STRING(500), allowNull: true },
+//     CurrentJob: { type: DataTypes.STRING(500), allowNull: true },
+//     Remark: { type: DataTypes.STRING(100), allowNull: true },
+//     AcFlag: { type: DataTypes.STRING(1), allowNull: true, defaultValue: `Y` },
+//     CreatedBy: { type: DataTypes.STRING(50), allowNull: true },
+//     CreatedOn: { type: DataTypes.STRING(50), allowNull: true },
+//     ModifiedBy: { type: DataTypes.STRING(50), allowNull: true },
+//     ModifiedOn: { type: DataTypes.STRING(50), allowNull: true },
+//   },
+//   {
+//     timestamps: false,
+//   }
+// );
 
 // Middleware for parsing JSON
 router.use(bodyParser.json());
@@ -158,7 +159,7 @@ router.get(`/FnShowActiveData`, authToken, async (req, res) => {
     const employees = await MEmployeeWorkProfile.findAll({
       where: {
         AcFlag: `Y`,
-      },
+      }, 
       attributes: {
         exclude: [`IUFlag`],
       },

@@ -99,7 +99,7 @@ const DeductionHeadsTable = ({ ID }) => {
     const updatedHeads = heads.map((head) => ({
       ...head,
       Selected: caderwiseDeductions.some(
-        (deduction) => deduction.DeductionHeadId === head.DeductionHeadID
+        (deduction) => deduction.DeductionHeadID === head.DeductionHeadID
       ) || head.Selected // Also check if the head was previously selected
     }));
   

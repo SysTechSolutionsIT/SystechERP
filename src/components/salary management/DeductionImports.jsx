@@ -117,7 +117,7 @@ const DeductionImports = () => {
   
     useEffect(() => {
       fetchHeadsData();
-    }, [token]);
+    }, [token, isModalOpen]);
   
     const fetchHeadsData = async () => {
       try {

@@ -101,7 +101,7 @@ const EarningHeadsTable = ({ ID }) => {
       }
     };
     fetchEmpSalary();
-  }, [ID, token]);
+  }, [ID, token, selectedHeads]);
 
   useEffect(() => {
     const fetchEmployeeTypes = async () => {
