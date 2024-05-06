@@ -165,7 +165,7 @@ const Sidebar = () => {
     { title: "Advance Management", path: "/advance-management" },
     { title: "Earning-Deduction Imports", path: "/l6t3z9d1" },
     { title: "Salary Processing", path: "/o5v2w1t8" },
-    { title: "Salary Corrections", path: "/salary-corrections" },
+    { title: "Salary Corrections", path: "/igfn84je" },
     { title: "Branch Master", path: "/l3r2o5v7" },
   ];
 
@@ -881,7 +881,9 @@ const Sidebar = () => {
                         />
                       )}
                       {rights.includes(141) && (
-                        <SubMenuEntry title="Salary Corrections" />
+                        <SubMenuEntry 
+                        title="Salary Corrections"
+                        onClick={() => navigate('igfn84je')} />
                       )}
                     </SubMenuGroup>
                   )}

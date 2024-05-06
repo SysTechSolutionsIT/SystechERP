@@ -192,6 +192,7 @@ router.get("/FnshowActiveData", authToken, async (req, res) => {
       res.status(500).send("Internal Server Error");
     }
   });
+  
 
   router.get("/FnShowParticularEmployeeData", authToken, async (req, res) => {
     const EmployeeId = req.query.EmployeeId;
@@ -211,6 +212,25 @@ router.get("/FnshowActiveData", authToken, async (req, res) => {
       res.status(500).send("Internal Server Error");
     }
   });
+
+  router.post('FnSalaryCorrections', authToken, async(req, res) =>{
+    const ProcessId = req.query.ProcessId
+    const SalaryCorrections = req.body
+    try {
+      const result = await TSalaryProcessing.update(SalaryCorrections,
+        {
+          where: { ProcessId: ProcessId },
+          returning: true
+        })
+
+        res.json({
+          message: result ? "Operation Successful" : "Operation Failed"
+        })
+    } catch (error) {
+      console.error("Error performing operation:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  })
 
   router.get("/month-wise-salary", authToken, async (req, res) => {
     const AMonth = req.query.AMonth;

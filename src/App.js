@@ -60,6 +60,7 @@ import DailyAttendanceProcessing from "./components/attendance management/DailyA
 import MonthlyAttendance from "./components/attendance management/MonthlyAttendance";
 import UserRoles from "./components/company settings/UserRoles";
 import BranchMaster from "./components/company settings/Branch Master";
+import SalaryCorrections from "./components/salary management/SalaryCorrections";
 
 function App() {
   return (
@@ -215,6 +216,10 @@ function App() {
                   path="/r9w7v3k1"
                   element={<GatePassApproval />}
                 />
+                <Route 
+                  path='igfn84je'
+                  element={<SalaryCorrections/>}
+                  />
               </Route>
             </Routes>
           </EmployeeTypeProvider>
