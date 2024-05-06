@@ -161,6 +161,9 @@ const SalaryStructure = ({ ID, name }) => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <div className="p-4 bg-white font-[Inter]">
+      <div className="mr-auto text-[15px] bg-red-600 text-white font-bold rounded-lg justify-center text-center p-1 whitespace-normal">
+          NOTE: Please submit salary details before assigning Earning or Deduction Heads
+        </div>
         <div className="grid grid-cols-3 gap-x-4">
           <div className="py-1">
             <p className="mb-1 capitalize font-semibold text-[13px]">
@@ -444,10 +447,6 @@ const SalaryStructure = ({ ID, name }) => {
             </label>
           </div>
         </div>
-        <div className="flex flex-wrap">
-          <EarningHeadsTable ID={ID} />
-          <DeductionHeadsTable ID={ID} />
-        </div>
         <div className="flex mt-5 justify-center gap-4">
           <button
             type="submit"
@@ -456,6 +455,10 @@ const SalaryStructure = ({ ID, name }) => {
           >
             Submit Details
           </button>
+        </div>
+        <div className="flex flex-wrap">
+          <EarningHeadsTable ID={ID} />
+          <DeductionHeadsTable ID={ID} />
         </div>
       </div>
     </form>
