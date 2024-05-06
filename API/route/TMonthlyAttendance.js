@@ -50,6 +50,10 @@ const TMonthlyAttendance = sequelize.define(
       type: DataTypes.STRING(5),
       allowNull: false,
     },
+    EmployeeName: {
+      type: DataTypes.STRING(500),
+      allowNull: false,
+    },
     ManualAttendance: {
       type: DataTypes.INTEGER,
       allowNull: true,
@@ -207,8 +211,6 @@ const generateMAttendanceId = async (req, res, next) => {
   }
 };
 
-
-
 router.post(
   `/FnAddUpdateDeleteRecord`,
   generateMAttendanceId,
@@ -265,8 +267,6 @@ router.post(
     }
   }
 );
-
-
 
 process.on(`SIGINT`, () => {
   console.log(`Received SIGINT. Closing Sequelize connection...`);
