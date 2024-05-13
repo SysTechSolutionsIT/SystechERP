@@ -15,3 +15,15 @@ Any other definition of these 4 might cause problems with the system.
 
 6. The first user must be manually added into the database; with employee id 0000
 
+7. Database tables that we have to provide: A. MasterNames
+B. Basic User roles
+C. Two Field
+D. User login -> Super User
+E. Leave Type Master -(?)
+
+8. For leave type master you need add the 3 basic leaves first, generate the same for all employees and 
+then you should add other leave types like maternal and paternal leaves, etc.
+
+
+
+

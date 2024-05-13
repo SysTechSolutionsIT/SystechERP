@@ -85,6 +85,11 @@ const mleavetype = sequelize.define(
       type: DataTypes.DATE,
       allowNull: true,
     },
+    AllEmployees: {
+      type: DataTypes.STRING(1),
+      allowNull: false,
+      defaultValue: "N",
+    },
   },
   {
     timestamps: false,

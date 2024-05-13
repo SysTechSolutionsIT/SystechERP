@@ -4,37 +4,37 @@ import React, { useState, useEffect, useRef } from "react";
 import { Button } from "react-bootstrap";
 import { useAuth, useDetails } from "../Login";
 import NoDataNotice from "../NoDataNotice";
-import LeaveModal1 from "./LeaveModal1";
+import LeaveModal1 from "./AddLeaveApplicationModal";
 import ViewLeaveApplication from "./ViewLeaveApplication";
 
 const LeaveApp = () => {
   const [isModalOpen, setModalOpen] = useState(false); //Add Modal
-  const [LeaveApps, setLeaveApps] = useState([])
+  const [LeaveApps, setLeaveApps] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
-  const [LeaveTypes, setLeaveTypes] = useState('')
-  const [Employees, setEmployees] = useState([])
-  const { token } = useAuth()
-  const { empid } = useDetails()
-  
+  const [LeaveTypes, setLeaveTypes] = useState("");
+  const [Employees, setEmployees] = useState([]);
+  const { token } = useAuth();
+  const { empid } = useDetails();
+
   const [columnVisibility, setColumnVisibility] = useState({
-      ApprovalFlag: true,
-      FYear: true,
-      LeaveApplicationDate: true,
-      EmployeeId: true,
-      EmployeeName:true,
-      EmployeeType:true,
-      EmployeeTypeGroup:false,
-      LeaveFromDate: true,
-      LeaveToDate: true,
-      Remark: false,
-      LeaveTypeId:true,
-      LeaveDays: true,
-      SanctionBy:true,
-      SanctionFromDate:false,
-      SanctionToDate:false,
-      SanctionLeaveDays:false,
+    ApprovalFlag: true,
+    FYear: true,
+    LeaveApplicationDate: true,
+    EmployeeId: true,
+    EmployeeName: true,
+    EmployeeType: true,
+    EmployeeTypeGroup: false,
+    LeaveFromDate: true,
+    LeaveToDate: true,
+    Remark: false,
+    LeaveTypeId: true,
+    LeaveDays: true,
+    SanctionBy: true,
+    SanctionFromDate: false,
+    SanctionToDate: false,
+    SanctionLeaveDays: false,
   });
-  
+
   const columnNames = {
     ApprovalFlag: "Approval Flag",
     FYear: "Financial Year",
@@ -51,8 +51,8 @@ const LeaveApp = () => {
     SanctionBy: "Sanctioned By",
     SanctionFromDate: "Sanction From Date",
     SanctionToDate: "Sanction To Date",
-    SanctionLeaveDays: "Sanctioned Leave Days",    
-  }
+    SanctionLeaveDays: "Sanctioned Leave Days",
+  };
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedColumns, setSelectedColumns] = useState([
@@ -80,7 +80,7 @@ const LeaveApp = () => {
       return updatedVisibility;
     });
   };
-  
+
   const deselectAllColumns = () => {
     setSelectedColumns([]);
     setColumnVisibility((prevVisibility) => {
@@ -112,132 +112,140 @@ const LeaveApp = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
-    //Menu click outside
-    useEffect(() => {
-      const handleClickOutside = (event) => {
-        if (menuRef.current && !menuRef.current.contains(event.target)) {
-          setMenuOpen(false);
-        }
-      };
-  
-      document.addEventListener("mousedown", handleClickOutside);
-  
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }, []);
-  
-    //Max Searchbar width
-    const getColumnMaxWidth = (columnName) => {
-      let maxWidth = 0;
-      const allRows = [...LeaveApps, ...filteredData];
-  
-      allRows.forEach((row) => {
-        const cellContent = row[columnName];
-        const cellWidth = getTextWidth(cellContent, "11px"); // You can adjust the font size here
-        maxWidth = Math.max(maxWidth, cellWidth);
-      });
-  
-      return maxWidth + 10; // Adding some padding to the width
-    };
-  
-    const getTextWidth = (text, fontSize) => {
-      const canvas = document.createElement("canvas");
-      const context = canvas.getContext("2d");
-      context.font = fontSize + " sans-serif";
-      return context.measureText(text).width;
+  //Menu click outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuOpen(false);
+      }
     };
 
+    document.addEventListener("mousedown", handleClickOutside);
 
-    const fetchLeaveApps = async () =>{
-      try {
-        const response = await axios.get('http://localhost:5500/a5d3g2p6/FnShowParticularEmployeeData', 
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  //Max Searchbar width
+  const getColumnMaxWidth = (columnName) => {
+    let maxWidth = 0;
+    const allRows = [...LeaveApps, ...filteredData];
+
+    allRows.forEach((row) => {
+      const cellContent = row[columnName];
+      const cellWidth = getTextWidth(cellContent, "11px"); // You can adjust the font size here
+      maxWidth = Math.max(maxWidth, cellWidth);
+    });
+
+    return maxWidth + 10; // Adding some padding to the width
+  };
+
+  const getTextWidth = (text, fontSize) => {
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+    context.font = fontSize + " sans-serif";
+    return context.measureText(text).width;
+  };
+
+  const fetchLeaveApps = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5500/a5d3g2p6/FnShowParticularEmployeeData",
         {
           params: {
-            EmployeeId: empid
+            EmployeeId: empid,
           },
-          headers:{
-            Authorization: `Bearer ${token}`
-          }
-        })
-        const data = response.data
-        // if(data.length > 1) { 
-        //   data.sort((a, b) => new Date(b.LeaveApplicationDate) - new Date(a.LeaveApplicationDate));
-        //  }
-        console.log(data)
-        setLeaveApps(data)
-      } catch (error) {
-        console.error('Error', error);
-      }
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = response.data;
+      // if(data.length > 1) {
+      //   data.sort((a, b) => new Date(b.LeaveApplicationDate) - new Date(a.LeaveApplicationDate));
+      //  }
+      console.log(data);
+      setLeaveApps(data);
+    } catch (error) {
+      console.error("Error", error);
     }
-    useEffect(() =>{
-  fetchLeaveApps()
-}, [token, isModalOpen])
+  };
+  useEffect(() => {
+    fetchLeaveApps();
+  }, [token, isModalOpen]);
 
-  useEffect(() =>{
-    const fetchEmployees = async () =>{
+  useEffect(() => {
+    const fetchEmployees = async () => {
       try {
-        const response = await axios.get('http://localhost:5500/employee/personal/FnShowActiveData',
-        { headers: { Authorization: `Bearer ${token}`}}
-        )
-        const data = response.data
-        console.log('Employees', data)
-        setEmployees(data)
+        const response = await axios.get(
+          "http://localhost:5500/employee/personal/FnShowActiveData",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const data = response.data;
+        console.log("Employees", data);
+        setEmployees(data);
       } catch (error) {
-        console.error('Error', error);
+        console.error("Error", error);
       }
-    }
-    fetchEmployees()
-  },[token])
+    };
+    fetchEmployees();
+  }, [token]);
 
-  useEffect(() =>{
-    const fetchLeaveType = async() =>{
-      try{
-        const response = await axios.get('http://localhost:5500/leave-type/FnShowActiveData',{
-          headers:{
-            Authorization: `Bearer ${token}`
+  useEffect(() => {
+    const fetchLeaveType = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/leave-type/FnShowActiveData",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        })
-        const data = response.data
-        console.log(data)
-        setLeaveTypes(data)
-      } catch(error){
-        console.error('Error', error);
+        );
+        const data = response.data;
+        console.log(data);
+        setLeaveTypes(data);
+      } catch (error) {
+        console.error("Error", error);
       }
-    }
+    };
 
-    fetchLeaveType()
-  }, [token])
+    fetchLeaveType();
+  }, [token]);
 
-  const deleteLeaveApplication = async(DeleteId) =>{
-    const confirmDelete = window.confirm('Are you sure you want to delete this Leave Application')
-    if(!confirmDelete) return
+  const deleteLeaveApplication = async (DeleteId) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this Leave Application"
+    );
+    if (!confirmDelete) return;
     try {
-      const response = await axios.post('http://localhost:5500/a5d3g2p6/FnAddUpdateDeleteRecord',
-        { 
+      const response = await axios.post(
+        "http://localhost:5500/a5d3g2p6/FnAddUpdateDeleteRecord",
+        {
           LeaveApplicationId: DeleteId,
-          IUFlag: 'D'
+          IUFlag: "D",
         },
         {
-          headers: {Authorization: `Bearer ${token}`}
+          headers: { Authorization: `Bearer ${token}` },
         }
-      )
-      alert("Leave Application Deleted")
-      fetchLeaveApps()
+      );
+      alert("Leave Application Deleted");
+      fetchLeaveApps();
     } catch (error) {
-      console.error('Error', error);
+      console.error("Error", error);
     }
-  }
+  };
 
   function formatDate(inputDate) {
     const date = new Date(inputDate);
-    
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-based
     const year = date.getFullYear();
 
     return `${year}-${month}-${day}`;
-}
+  }
 
   return (
     <div className="top-25 min-w-[40%]">
@@ -253,8 +261,9 @@ const LeaveApp = () => {
             Column Visibility
             <Icon
               icon="fe:arrow-down"
-              className={`mt-1.5 ml-2 ${showDropdown ? "rotate-180" : ""
-                } cursor-pointer`}
+              className={`mt-1.5 ml-2 ${
+                showDropdown ? "rotate-180" : ""
+              } cursor-pointer`}
             />
           </button>
           {showDropdown && (
@@ -287,9 +296,7 @@ const LeaveApp = () => {
                   />
                   <span
                     className={
-                      columnVisibility[columnName]
-                        ? "font-semibold"
-                        : ""
+                      columnVisibility[columnName] ? "font-semibold" : ""
                     }
                   >
                     {columnName}
@@ -298,281 +305,326 @@ const LeaveApp = () => {
               ))}
             </div>
           )}
-              <button
+          <button
             className="text-white font-semibold px-4 rounded-lg text-[13px] border border-white"
             onClick={() => setModalOpen(true)}
           >
             Add
           </button>
-      </div>
-      </div>
-      <div className="grid gap-4 justify-between">
-      <LeaveModal1
-        visible={isModalOpen}
-        onClick={()=> setModalOpen(false)}/>
-        
-        {LeaveApps.length === 0 ? (
-          <div className="flex justify-center items-center">
-          <NoDataNotice Text='No Leave Applications Yet' visible={isModalOpen}/>
-          </div>
-        ) : (
-      <div className="my-1 rounded-2xl bg-white p-2 pr-8">
-        <div className="my-1 rounded-2xl bg-white p-2 pr-8">
-          <table className="min-w-full text-center rounded-lg  whitespace-normal">
-            <thead>
-              <tr>
-                <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
-                  Actions
-                </th>
-                <th className="w-auto px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
-                  ID
-                </th>
-                {selectedColumns.map((columnName) => (
-                columnVisibility[columnName] ? (
-                  <th
-                    key={columnName}
-                    className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal`}
-                  >
-                    {columnNames[columnName]}
-                  </th>
-                ) : null
-              ))}
-              </tr>
-              <tr>
-                <th className="border-2" />
-                <th className="p-2 font-bold text-black border-2 whitespace-normal" />
-                {selectedColumns.map((columnName) => (
-                columnVisibility[columnName] ? (
-                  <th key={columnName} className="p-2 font-semibold text-black border-2">
-                    <input
-                      type="text"
-                      placeholder={`Search `}
-                      className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
-                      style={{ maxWidth: getColumnMaxWidth(columnName) + "px" }}
-                      onChange={(e) => handleSearchChange(columnName, e.target.value)}
-                    />
-                  </th>
-                ) : null
-              ))}
-              </tr>
-            </thead>
-            <tbody>
-              {filteredData.length > 0
-                ? filteredData.map((result, index) => (
-                  <tr key={index}>
-                    <td className="px-2 border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          className="cursor-pointer"
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          onClick={() => {
-                            setVeEType(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setid(result.LeaveApplicationId); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          className="cursor-pointer"
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          onClick={() => {
-                            setVeEType(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setid(result.LeaveApplicationId); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          className="cursor-pointer"
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          onClick={() => deleteLeaveApplication(result.LeaveApplicationId)}
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
-                      {result.LeaveApplicationId}
-                    </td>
-                    {selectedColumns.map((columnName) => {
-                      if (columnVisibility[columnName]) {
-                          if (columnName === 'EmployeeName') {
-                              const employee = Employees.find((employee) => employee.EmployeeId == result.EmployeeId);
-                              return (
-                                  <td
-                                      key={columnName}
-                                      className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                                  >
-                                      {employee?.EmployeeName}
-                                  </td>
-                              );
-                          } else if (columnName === 'LeaveTypeId') {
-                              const leaveType = LeaveTypes.length > 0 && LeaveTypes.find((type) => type.LeaveTypeId == result.LeaveTypeId);
-                              return (
-                                  <td
-                                      key={columnName}
-                                      className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                                  >
-                                      {leaveType?.LeaveType}
-                                  </td>
-                              );
-                          } else if (columnName === 'LeaveApplicationDate' || columnName === 'LeaveFromDate' || columnName === 'LeaveToDate') {
-                              return (
-                                  <td
-                                      key={columnName}
-                                      className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                                  >
-                                      {formatDate(result[columnName])}
-                                  </td>
-                              );
-                          } else {
-                              return (
-                                  <td
-                                      key={columnName}
-                                      className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                                  >
-                                      {result[columnName]}
-                                  </td>
-                              );
-                          }
-                      } else {
-                          return <td key={columnName} className="hidden"></td>;
-                      }
-                  })}
-                  </tr>
-                ))
-                : LeaveApps.map((result, index) => (
-                  <tr key={index}>
-                    <td className="px-2 text-[11px] border-2">
-                      <div className="flex items-center gap-2 text-center justify-center">
-                        <Icon
-                          className="cursor-pointer"
-                          icon="lucide:eye"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          onClick={() => {
-                            setVeEType(true); // Open VEModal
-                            setEdit(false); // Disable edit mode for VEModal
-                            setid(result.LeaveApplicationId); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          className="cursor-pointer"
-                          icon="mdi:edit"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          onClick={() => {
-                            setVeEType(true); // Open VEModal
-                            setEdit(true); // Disable edit mode for VEModal
-                            setid(result.LeaveApplicationId); // Pass ID to VEModal
-                          }}
-                        />
-                        <Icon
-                          className="cursor-pointer"
-                          icon="material-symbols:delete-outline"
-                          color="#556987"
-                          width="20"
-                          height="20"
-                          onClick={() => deleteLeaveApplication(result.LeaveApplicationId)}
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
-                      {result.LeaveApplicationId}
-                    </td>
-                    {selectedColumns.map((columnName) => {
-                    if (columnVisibility[columnName]) {
-                        if (columnName === 'EmployeeName') {
-                            const employee = Employees.find((employee) => employee.EmployeeId == result.EmployeeId);
-                            return (
-                                <td
-                                    key={columnName}
-                                    className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                                >
-                                    {employee?.EmployeeName}
-                                </td>
-                            );
-                        } else if (columnName === 'LeaveTypeId') {
-                            const leaveType = LeaveTypes.length > 0 && LeaveTypes.find((type) => type.LeaveTypeId == result.LeaveTypeId);
-                            return (
-                                <td
-                                    key={columnName}
-                                    className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                                >
-                                    {leaveType?.LeaveType}
-                                </td>
-                            );
-                        } else if (columnName === 'LeaveApplicationDate' || columnName === 'LeaveFromDate' || columnName === 'LeaveToDate') {
-                            return (
-                                <td
-                                    key={columnName}
-                                    className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                                >
-                                    {formatDate(result[columnName])}
-                                </td>
-                            );
-                        } 
-                        else if (columnName === 'ApprovalFlag') {
-                          let bgColorClass;
-                          switch (result[columnName]) {
-                            case 'P':
-                              bgColorClass = 'bg-yellow-500';
-                              break;
-                            case 'R':
-                              bgColorClass = 'bg-red-500';
-                              break;
-                            case 'A':
-                              bgColorClass = 'bg-green-600';
-                              break;
-                            default:
-                              bgColorClass = ''; // You can set a default background color here if needed
-                          }
-                        
-                          return (
-                            <td
-                              key={columnName}
-                              className={`px-4 border-2 whitespace-normal font-bold text-[15px] text-center capitalize ${bgColorClass}`}
-                            >
-                              {result[columnName]}
-                            </td>
-                          );
-                        }
-                        else {
-                            return (
-                                <td
-                                    key={columnName}
-                                    className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
-                                >
-                                    {result[columnName]}
-                                </td>
-                            );
-                        }
-                    } else {
-                        return <td key={columnName} className="hidden"></td>;
-                    }
-                })}
-                 </tr>
-                ))}
-            </tbody>
-          </table>
         </div>
       </div>
-          )}
+      <div className="grid gap-4 justify-between">
+        <LeaveModal1
+          visible={isModalOpen}
+          onClick={() => setModalOpen(false)}
+        />
+
+        {LeaveApps.length === 0 ? (
+          <div className="flex justify-center items-center">
+            <NoDataNotice
+              Text="No Leave Applications Yet"
+              visible={isModalOpen}
+            />
+          </div>
+        ) : (
+          <div className="my-1 rounded-2xl bg-white p-2 pr-8">
+            <div className="my-1 rounded-2xl bg-white p-2 pr-8">
+              <table className="min-w-full text-center rounded-lg  whitespace-normal">
+                <thead>
+                  <tr>
+                    <th className="px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
+                      Actions
+                    </th>
+                    <th className="w-auto px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal">
+                      ID
+                    </th>
+                    {selectedColumns.map((columnName) =>
+                      columnVisibility[columnName] ? (
+                        <th
+                          key={columnName}
+                          className={`px-1 font-bold text-black border-2 border-gray-400 text-[13px] whitespace-normal`}
+                        >
+                          {columnNames[columnName]}
+                        </th>
+                      ) : null
+                    )}
+                  </tr>
+                  <tr>
+                    <th className="border-2" />
+                    <th className="p-2 font-bold text-black border-2 whitespace-normal" />
+                    {selectedColumns.map((columnName) =>
+                      columnVisibility[columnName] ? (
+                        <th
+                          key={columnName}
+                          className="p-2 font-semibold text-black border-2"
+                        >
+                          <input
+                            type="text"
+                            placeholder={`Search `}
+                            className="w-auto h-6 border-2 border-slate-500 rounded-lg justify-center text-center text-[13px]"
+                            style={{
+                              maxWidth: getColumnMaxWidth(columnName) + "px",
+                            }}
+                            onChange={(e) =>
+                              handleSearchChange(columnName, e.target.value)
+                            }
+                          />
+                        </th>
+                      ) : null
+                    )}
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredData.length > 0
+                    ? filteredData.map((result, index) => (
+                        <tr key={index}>
+                          <td className="px-2 border-2">
+                            <div className="flex items-center gap-2 text-center justify-center">
+                              <Icon
+                                className="cursor-pointer"
+                                icon="lucide:eye"
+                                color="#556987"
+                                width="20"
+                                height="20"
+                                onClick={() => {
+                                  setVeEType(true); // Open VEModal
+                                  setEdit(false); // Disable edit mode for VEModal
+                                  setid(result.LeaveApplicationId); // Pass ID to VEModal
+                                }}
+                              />
+                              <Icon
+                                className="cursor-pointer"
+                                icon="mdi:edit"
+                                color="#556987"
+                                width="20"
+                                height="20"
+                                onClick={() => {
+                                  setVeEType(true); // Open VEModal
+                                  setEdit(true); // Disable edit mode for VEModal
+                                  setid(result.LeaveApplicationId); // Pass ID to VEModal
+                                }}
+                              />
+                              <Icon
+                                className="cursor-pointer"
+                                icon="material-symbols:delete-outline"
+                                color="#556987"
+                                width="20"
+                                height="20"
+                                onClick={() =>
+                                  deleteLeaveApplication(
+                                    result.LeaveApplicationId
+                                  )
+                                }
+                              />
+                            </div>
+                          </td>
+                          <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
+                            {result.LeaveApplicationId}
+                          </td>
+                          {selectedColumns.map((columnName) => {
+                            if (columnVisibility[columnName]) {
+                              if (columnName === "EmployeeName") {
+                                const employee = Employees.find(
+                                  (employee) =>
+                                    employee.EmployeeId == result.EmployeeId
+                                );
+                                return (
+                                  <td
+                                    key={columnName}
+                                    className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                                  >
+                                    {employee?.EmployeeName}
+                                  </td>
+                                );
+                              } else if (columnName === "LeaveTypeId") {
+                                const leaveType =
+                                  LeaveTypes.length > 0 &&
+                                  LeaveTypes.find(
+                                    (type) =>
+                                      type.LeaveTypeId == result.LeaveTypeId
+                                  );
+                                return (
+                                  <td
+                                    key={columnName}
+                                    className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                                  >
+                                    {leaveType?.LeaveType}
+                                  </td>
+                                );
+                              } else if (
+                                columnName === "LeaveApplicationDate" ||
+                                columnName === "LeaveFromDate" ||
+                                columnName === "LeaveToDate"
+                              ) {
+                                return (
+                                  <td
+                                    key={columnName}
+                                    className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                                  >
+                                    {formatDate(result[columnName])}
+                                  </td>
+                                );
+                              } else {
+                                return (
+                                  <td
+                                    key={columnName}
+                                    className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                                  >
+                                    {result[columnName]}
+                                  </td>
+                                );
+                              }
+                            } else {
+                              return (
+                                <td key={columnName} className="hidden"></td>
+                              );
+                            }
+                          })}
+                        </tr>
+                      ))
+                    : LeaveApps.map((result, index) => (
+                        <tr key={index}>
+                          <td className="px-2 text-[11px] border-2">
+                            <div className="flex items-center gap-2 text-center justify-center">
+                              <Icon
+                                className="cursor-pointer"
+                                icon="lucide:eye"
+                                color="#556987"
+                                width="20"
+                                height="20"
+                                onClick={() => {
+                                  setVeEType(true); // Open VEModal
+                                  setEdit(false); // Disable edit mode for VEModal
+                                  setid(result.LeaveApplicationId); // Pass ID to VEModal
+                                }}
+                              />
+                              <Icon
+                                className="cursor-pointer"
+                                icon="mdi:edit"
+                                color="#556987"
+                                width="20"
+                                height="20"
+                                onClick={() => {
+                                  setVeEType(true); // Open VEModal
+                                  setEdit(true); // Disable edit mode for VEModal
+                                  setid(result.LeaveApplicationId); // Pass ID to VEModal
+                                }}
+                              />
+                              <Icon
+                                className="cursor-pointer"
+                                icon="material-symbols:delete-outline"
+                                color="#556987"
+                                width="20"
+                                height="20"
+                                onClick={() =>
+                                  deleteLeaveApplication(
+                                    result.LeaveApplicationId
+                                  )
+                                }
+                              />
+                            </div>
+                          </td>
+                          <td className="px-4 text-[11px] text-center border-2 whitespace-normal">
+                            {result.LeaveApplicationId}
+                          </td>
+                          {selectedColumns.map((columnName) => {
+                            if (columnVisibility[columnName]) {
+                              if (columnName === "EmployeeName") {
+                                const employee = Employees.find(
+                                  (employee) =>
+                                    employee.EmployeeId == result.EmployeeId
+                                );
+                                return (
+                                  <td
+                                    key={columnName}
+                                    className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                                  >
+                                    {employee?.EmployeeName}
+                                  </td>
+                                );
+                              } else if (columnName === "LeaveTypeId") {
+                                const leaveType =
+                                  LeaveTypes.length > 0 &&
+                                  LeaveTypes.find(
+                                    (type) =>
+                                      type.LeaveTypeId == result.LeaveTypeId
+                                  );
+                                return (
+                                  <td
+                                    key={columnName}
+                                    className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                                  >
+                                    {leaveType?.LeaveType}
+                                  </td>
+                                );
+                              } else if (
+                                columnName === "LeaveApplicationDate" ||
+                                columnName === "LeaveFromDate" ||
+                                columnName === "LeaveToDate"
+                              ) {
+                                return (
+                                  <td
+                                    key={columnName}
+                                    className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                                  >
+                                    {formatDate(result[columnName])}
+                                  </td>
+                                );
+                              } else if (columnName === "ApprovalFlag") {
+                                let bgColorClass;
+                                switch (result[columnName]) {
+                                  case "P":
+                                    bgColorClass = "bg-yellow-500";
+                                    break;
+                                  case "R":
+                                    bgColorClass = "bg-red-500";
+                                    break;
+                                  case "A":
+                                    bgColorClass = "bg-green-600";
+                                    break;
+                                  default:
+                                    bgColorClass = ""; // You can set a default background color here if needed
+                                }
+
+                                return (
+                                  <td
+                                    key={columnName}
+                                    className={`px-4 border-2 whitespace-normal font-bold text-[15px] text-center capitalize ${bgColorClass}`}
+                                  >
+                                    {result[columnName]}
+                                  </td>
+                                );
+                              } else {
+                                return (
+                                  <td
+                                    key={columnName}
+                                    className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
+                                  >
+                                    {result[columnName]}
+                                  </td>
+                                );
+                              }
+                            } else {
+                              return (
+                                <td key={columnName} className="hidden"></td>
+                              );
+                            }
+                          })}
+                        </tr>
+                      ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
       </div>
       <ViewLeaveApplication
-      visible={veEType}
-                          onClick={() => setVeEType(false)}
-                          edit={edit}
-                          ID={id}
-                        />
-      </div>
+        visible={veEType}
+        onClick={() => setVeEType(false)}
+        edit={edit}
+        ID={id}
+      />
+    </div>
   );
 };
 
