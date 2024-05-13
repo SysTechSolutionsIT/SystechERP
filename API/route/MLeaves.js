@@ -4,6 +4,7 @@ const { Sequelize, DataTypes } = require("sequelize");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
 const LeaveTypeModel = require("../model/MLeaveTypeModel");
+const MLAttendance = require("../model/MLAttendanceModel");
 
 const authToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
@@ -342,18 +343,41 @@ router.patch("/FnLeaveApproved", authToken, async (req, res) => {
       const remainingLeaves =
         leaveRecord.LeaveBalance - LeaveDetails.SanctionLeaveDays;
       console.log(remainingLeaves);
-      // Update the LeavesTaken column
-      await MLeaves.update(
-        { LeaveBalance: remainingLeaves },
-        {
-          where: {
-            EmployeeId: EmployeeId,
-            LeaveTypeId: LeaveTypeId,
-            FYear: FYear,
-          },
-        }
-      );
 
+      if (remainingLeaves < 0) {
+        const absentyToAdd = Math.abs(remainingLeaves);
+
+        // Update the Absenty column in MLAttendance
+        let attendanceRecord = await MLAttendance.findOne({
+          where: { EmployeeId: EmployeeId, FYear: FYear },
+        });
+
+        if (attendanceRecord) {
+          const updatedAbsenty = attendanceRecord.Absenty + absentyToAdd;
+          await attendanceRecord.update({ Absenty: updatedAbsenty });
+        } else {
+          // Create a new attendance record if not found
+          await MLAttendance.create({
+            EmployeeId: EmployeeId,
+            Presenty: 0,
+            Absenty: absentyToAdd,
+            FYear: FYear,
+          });
+        }
+      }
+      // Update the LeavesTaken column
+      else {
+        await MLeaves.update(
+          { LeaveBalance: remainingLeaves },
+          {
+            where: {
+              EmployeeId: EmployeeId,
+              LeaveTypeId: LeaveTypeId,
+              FYear: FYear,
+            },
+          }
+        );
+      }
       res.status(200).send("Leave details updated successfully.");
     } else {
       res.status(404).send("Leave record not found.");
