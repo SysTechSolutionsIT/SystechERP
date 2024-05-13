@@ -33,7 +33,7 @@ export default function EMPTabs() {
       shiftFlag: "",
       jobApp: "",
       holiday: "",
-      ALockDay:"",
+      ALockDay: "",
       odFlag: "",
       otFlag: "",
       LAFlag: "",
@@ -142,7 +142,7 @@ export default function EMPTabs() {
         }
       );
       alert("Company Configuration Updated");
-      fetchCompanyConfig()
+      fetchCompanyConfig();
     } catch (error) {
       console.error("Error", error);
     }
@@ -152,22 +152,22 @@ export default function EMPTabs() {
     try {
       const response = await axios.get(
         `http://localhost:5500/company-config/FnShowAllData`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const data = response.data[0];
-        setDetails(data);
-        setCCID(details.CCID);
-        console.log(data);
-      } catch (error) {
-        console.log("Error in fetching Company Configurations", error);
-      }
-    };
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = response.data[0];
+      setDetails(data);
+      setCCID(details.CCID);
+      console.log(data);
+    } catch (error) {
+      console.log("Error in fetching Company Configurations", error);
+    }
+  };
 
-    useEffect(() => {
+  useEffect(() => {
     fetchCompanyConfig();
   }, [token]);
   console.log("CCID: ", ccid);
@@ -225,13 +225,13 @@ export default function EMPTabs() {
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <div className="p-4">
+      <div className="p-4 w-full">
         <div className="bg-blue-900 text-white font-semibold text-lg py-4 px-8 w-full rounded-lg">
           Company Configurations
         </div>
       </div>
-      <div className="flex font-[Inter] justify-center">
-        <div className="ml-0">
+      <div className="w-full flex font-[Inter] justify-between">
+        <div className="ml-8">
           <ul className="flex mb-0 list-none flex-wrap pt-3 pb-4 flex-row">
             <li className="-mb-px mr-2 ml-2 cursor-pointer">
               <p
