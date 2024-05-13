@@ -97,6 +97,12 @@ const sequelize = new Sequelize(
 //         type: DataTypes.DATE,
 //         allowNull: true,
 //       },
+//AllEmployees: {
+//         type: DataTypes.STRING(1),
+//         allowNull: false,
+//         defaultValue: 'N',
+//       },
+
 //     },
 //     {
 //       timestamps: false,
@@ -141,6 +147,23 @@ router.get("/FnShowActiveData", authToken, async (req, res) => {
     const LeaveType = await mleavetype.findAll({
       where: {
         AcFlag: "Y",
+      },
+      order: [["LeaveTypeId", "ASC"]],
+    });
+    res.json(LeaveType);
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// GET leaves types which should be generated for all employees
+router.get("/FnAllEmployeeLeaves", authToken, async (req, res) => {
+  try {
+    const LeaveType = await mleavetype.findAll({
+      where: {
+        AcFlag: "Y",
+        AllEmployees: "Y",
       },
       order: [["LeaveTypeId", "ASC"]],
     });

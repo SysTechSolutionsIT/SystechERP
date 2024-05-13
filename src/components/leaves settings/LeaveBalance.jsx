@@ -4,11 +4,11 @@ import { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import { useAuth, useDetails } from "../Login";
 import axios from "axios";
+import AddEmpLeave from "./EmpSpecificLeave";
 
 const LeaveBalance = ({ ID, name }) => {
   const [LeaveTypes, setLeaveTypes] = useState([]);
   const [LeaveBalance, setLeaveBalance] = useState([]);
-  const [employeeId, setEmployeeId] = useState("");
   const [employeeTypeId, setEmployeeTypeId] = useState("");
   const [employeeType, setEmployeeType] = useState("");
   const [employeeTypeGroup, setEmployeeTypeGroup] = useState("");
@@ -23,6 +23,7 @@ const LeaveBalance = ({ ID, name }) => {
   const [updatedArray, setUpdatedArray] = useState(
     LeaveBalance.map((item) => ({ ...item, IUFlag: "I" }))
   );
+  const [newLeaveModal, setNewLeaveModal] = useState(false);
 
   const handleInputChange = (event) => {
     const { value } = event.target;
@@ -85,7 +86,7 @@ const LeaveBalance = ({ ID, name }) => {
         {
           params: {
             EmployeeId: ID,
-            FYear: formik.values.FYear,
+            FYear: fYear,
           },
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -134,7 +135,7 @@ const LeaveBalance = ({ ID, name }) => {
         LeaveBalance,
         {
           params: {
-            EmployeeId: employeeId,
+            EmployeeId: ID,
             FYear: formik.values.FYear,
           },
           headers: { Authorization: `Bearer ${token}` },
@@ -204,7 +205,7 @@ const LeaveBalance = ({ ID, name }) => {
     try {
       const currentYear = new Date().getFullYear();
       const leaveTypePayloads = LeaveTypes.map(
-        ({ LeaveTypeId, ShortName }) => ({
+        ({ LeaveTypeId, ShortName, DefaultBalance }) => ({
           FYear: fYear,
           EmployeeId: ID,
           EmployeeTypeId: employeeTypeId,
@@ -216,7 +217,7 @@ const LeaveBalance = ({ ID, name }) => {
           Year: currentYear,
           LeaveBalanceDate: formattedDate,
           EmployeeName: employeeName,
-          OpeningBalance: 0,
+          OpeningBalance: DefaultBalance,
           LeaveEarned1: 0,
           LeaveEarned2: 0,
           LeaveEarned3: 0,
@@ -255,7 +256,7 @@ const LeaveBalance = ({ ID, name }) => {
     const fetchLeaveType = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5500/leave-type/FnShowActiveData",
+          "http://localhost:5500/leave-type/FnAllEmployeeLeaves",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -263,7 +264,7 @@ const LeaveBalance = ({ ID, name }) => {
           }
         );
         const data = response.data;
-        console.log(data);
+        console.log("Leave Type Data for all employee leaves", data);
         setLeaveTypes(data);
       } catch (error) {
         console.error("Error", error);
@@ -273,27 +274,6 @@ const LeaveBalance = ({ ID, name }) => {
     fetchLeaveType();
   }, [token]);
 
-  const [status, setStatus] = useState(false);
-
-  const handleStatusChange = () => {
-    setStatus(!status);
-  };
-
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-  const years = [2020, 2021, 2022, 2023, 2024, 2025];
   const columns = [
     "Employee ID",
     "Employee Name",
@@ -318,7 +298,7 @@ const LeaveBalance = ({ ID, name }) => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <div className="flex justify-center items-center h-full">
-        <div className="bg-gray-200 w-[90%] p-8 rounded-lg">
+        <div className="bg-gray-200 w-[99%] p-8 rounded-lg">
           <div className="bg-blue-900 py-2 px-4 rounded-lg flex justify-between items-center">
             <p className="text-white text-[13px] font-semibold text-center">
               Leave Update Balance
@@ -328,7 +308,7 @@ const LeaveBalance = ({ ID, name }) => {
               className="bg-white border-2 border-white text-blue-900 text-[13px] font-semibold py-1 px-4 rounded-lg hover:bg-blue-900 hover:text-white hover:ease-in-out"
               onClick={addLeaveBalance}
             >
-              Generate Leaves
+              Generate Leaves For New Employee
             </button>
           </div>
 
@@ -338,43 +318,14 @@ const LeaveBalance = ({ ID, name }) => {
                 <label className="text-[13px] font-semibold">
                   Financial Year
                 </label>
-                <div className="flex items-center">
-                  <select
-                    id="FYear"
-                    name="FYear"
-                    value={formik.values.FYear}
-                    onChange={formik.handleChange}
-                    className="w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
-                  >
-                    <option value="">Select a Financial Year</option>
-                    {FinancialYears.length > 0 &&
-                      FinancialYears.map((entry) => (
-                        <option key={entry.FYearId} value={entry.ShortName}>
-                          {entry.ShortName}
-                        </option>
-                      ))}
-                  </select>
-                </div>
-              </div>
-              {/* <div>
-                <label
-                  htmlFor="month"
-                  className="mb-1 font-semibold text-[13px]"
-                >
-                  Month
-                </label>
-                <select
-                  id="Month"
-                  className="w-full text-[13px] px-4 py-2 font-normal focus:outline-gray-300 border-2 rounded-lg"
+                <input
+                  id="FYear"
+                  name="FYear"
+                  value={fYear}
                   onChange={formik.handleChange}
-                >
-                  {months.map((month, index) => (
-                    <option key={index} value={index + 1}>
-                      {month}
-                    </option>
-                  ))}
-                </select>
-              </div> */}
+                  className="w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
+                />
+              </div>
               <div>
                 <label className="text-[13px] font-semibold">Employee ID</label>
                 <div className="flex items-center">
@@ -437,120 +388,148 @@ const LeaveBalance = ({ ID, name }) => {
             </button>
           </div>
           {showTable && (
-            <div className="grid gap-2 justify-between mt-2">
-              <div className="my-1 rounded-2xl p-2 pr-8">
-                <table className="min-w-full text-center whitespace-normal z-0">
-                  <thead>
-                    <tr>
-                      {columns.map((columnName) => (
-                        <th
-                          key={columnName}
-                          className={`px-1 text-[13px] whitespace-normal font-bold text-white bg-blue-900 rounded-lt-lg rounded-rt-lg border-2 border-white`}
-                        >
-                          {columnName}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {LeaveBalance.length > 0 &&
-                      LeaveBalance.map((item, index) => (
-                        <tr key={index}>
-                          <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
-                            {ID}
-                          </td>
-                          <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
-                            {name}
-                          </td>
-                          <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
-                            {item.LeaveTypeDesc}
-                          </td>
-                          <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
-                            <input
-                              type="number"
-                              className="whitespace-normal w-[40px]"
-                              value={item.OpeningBalance}
-                              onChange={(e) => {
-                                handleOpeningBalanceChange(
-                                  index,
-                                  e.target.value
-                                );
-                                handleLeaveBalanceChange(index, e.target.value);
-                              }}
-                            />
-                          </td>
-                          <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
-                            <input
-                              type="number"
-                              className="whitespace-normal w-[40px]"
-                              value={item.SanctionLeaveDays}
-                              onChange={(e) => {
-                                handleSanctionLeaveDaysChange(
-                                  index,
-                                  e.target.value
-                                );
-                                handleLeaveBalanceChange(index, e.target.value);
-                              }}
-                            />
-                          </td>
-                          <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
-                            <input
-                              type="number"
-                              className="whitespace-normal w-[40px]"
-                              value={calculateLeaveBalance(
-                                item.OpeningBalance,
-                                item.SanctionLeaveDays
-                              )}
-                              onChange={(e) =>
-                                handleLeaveBalanceChange(index, e.target.value)
-                              }
-                            />
-                          </td>
-                          <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
-                            {item.LeaveEarned1}
-                          </td>
-                          <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
-                            {item.LeaveEarned2}
-                          </td>
-                          <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
-                            {item.LeaveEarned3}
-                          </td>
-                          <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
-                            {item.LeaveEarned4}
-                          </td>
-                          <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
-                            {item.LeaveEarned5}
-                          </td>
-                          <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
-                            {item.LeaveEarned6}
-                          </td>
-                          <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
-                            {item.LeaveEarned7}
-                          </td>
-                          <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
-                            {item.LeaveEarned8}
-                          </td>
-                          <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
-                            {item.LeaveEarned9}
-                          </td>
-                          <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
-                            {item.LeaveEarned10}
-                          </td>
-                          <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
-                            {item.LeaveEarned11}
-                          </td>
-                          <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
-                            {item.LeaveEarned12}
-                          </td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
+            <div>
+              <div className="flex gap-10 justify-end">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setNewLeaveModal(true);
+                  }}
+                  className="bg-blue-900 text-white text-[13px] font-semibold py-2 px-4 rounded-lg w-36 l-8"
+                >
+                  Add Leave Type
+                </button>
+              </div>
+              <div className="grid gap-2 justify-between mt-2">
+                <div className="my-1 rounded-2xl p-2 pr-8">
+                  <table className="min-w-full text-center whitespace-normal z-0">
+                    <thead>
+                      <tr>
+                        {columns.map((columnName) => (
+                          <th
+                            key={columnName}
+                            className={`px-1 text-[13px] whitespace-normal font-bold text-white bg-blue-900 rounded-lt-lg rounded-rt-lg border-2 border-white`}
+                          >
+                            {columnName}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {LeaveBalance.length > 0 &&
+                        LeaveBalance.map((item, index) => (
+                          <tr key={index}>
+                            <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                              {ID}
+                            </td>
+                            <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                              {name}
+                            </td>
+                            <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                              {item.LeaveTypeDesc}
+                            </td>
+                            <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                              <input
+                                type="number"
+                                className="whitespace-normal w-[40px]"
+                                value={item.OpeningBalance}
+                                onChange={(e) => {
+                                  handleOpeningBalanceChange(
+                                    index,
+                                    e.target.value
+                                  );
+                                  handleLeaveBalanceChange(
+                                    index,
+                                    e.target.value
+                                  );
+                                }}
+                              />
+                            </td>
+                            <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                              <input
+                                type="number"
+                                className="whitespace-normal w-[40px]"
+                                value={item.SanctionLeaveDays}
+                                onChange={(e) => {
+                                  handleSanctionLeaveDaysChange(
+                                    index,
+                                    e.target.value
+                                  );
+                                  handleLeaveBalanceChange(
+                                    index,
+                                    e.target.value
+                                  );
+                                }}
+                              />
+                            </td>
+                            <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                              <input
+                                type="number"
+                                className="whitespace-normal w-[40px]"
+                                value={calculateLeaveBalance(
+                                  item.OpeningBalance,
+                                  item.SanctionLeaveDays
+                                )}
+                                onChange={(e) =>
+                                  handleLeaveBalanceChange(
+                                    index,
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            </td>
+                            <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                              {item.LeaveEarned1}
+                            </td>
+                            <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                              {item.LeaveEarned2}
+                            </td>
+                            <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                              {item.LeaveEarned3}
+                            </td>
+                            <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                              {item.LeaveEarned4}
+                            </td>
+                            <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                              {item.LeaveEarned5}
+                            </td>
+                            <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                              {item.LeaveEarned6}
+                            </td>
+                            <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                              {item.LeaveEarned7}
+                            </td>
+                            <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                              {item.LeaveEarned8}
+                            </td>
+                            <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                              {item.LeaveEarned9}
+                            </td>
+                            <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                              {item.LeaveEarned10}
+                            </td>
+                            <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                              {item.LeaveEarned11}
+                            </td>
+                            <td className="px-4 border-2 whitespace-normal bg-white text-left text-[11px]">
+                              {item.LeaveEarned12}
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           )}
         </div>
       </div>
+      <AddEmpLeave
+        visible={newLeaveModal}
+        onClick={() => setNewLeaveModal(false)}
+        ID={ID}
+        name={name}
+      />
     </form>
   );
 };

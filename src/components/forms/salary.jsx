@@ -11,7 +11,6 @@ import { FormFloating } from "react-bootstrap";
 const SalaryStructure = ({ ID, name }) => {
   const { token } = useAuth();
   const { employeeTypeId } = useEmployeeType();
-  console.log("Employee ID and Name in Salary Structure", ID, name);
   const [details, setDetails] = useState([]);
   const [isOTFlagChecked, setOTFlagChecked] = useState(false);
   const [isPFFlagChecked, setPFFlagChecked] = useState(false);
@@ -20,6 +19,7 @@ const SalaryStructure = ({ ID, name }) => {
   const [isGratuatyApplicableChecked, setGratuatyApplicableChecked] =
     useState(false);
   const [isStatusChecked, setStatusCheched] = useState(false);
+  const id = ID;
 
   const formik = useFormik({
     initialValues: {
@@ -79,10 +79,6 @@ const SalaryStructure = ({ ID, name }) => {
 
   const updateEmpSalary = async (data) => {
     try {
-      console.log("Executing try block");
-      console.log("Inside api call");
-      console.log("Employee ID:", ID); // Check if ID is defined and has the correct value
-
       const response = await axios.patch(
         `http://localhost:5500/employee/salary-structure/FnUpdateEmployeeSalary`,
         data,
@@ -91,7 +87,6 @@ const SalaryStructure = ({ ID, name }) => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      console.log("Finished executing");
       alert("Salary Details Updated");
     } catch (error) {
       console.log("Error in salary updation");
@@ -100,6 +95,8 @@ const SalaryStructure = ({ ID, name }) => {
   };
 
   useEffect(() => {
+    let isMounted = true;
+
     const fetchEmpSalary = async () => {
       try {
         const response = await axios.get(
@@ -110,14 +107,21 @@ const SalaryStructure = ({ ID, name }) => {
           }
         );
         const data = response.data;
-        setDetails(data);
-        console.log("Salary Details", details);
+        if (isMounted) {
+          setDetails(data); // Update state with fetched data only if component is mounted
+        }
       } catch (error) {
-        console.error("Error", error);
+        console.error("Error fetching salary details:", error);
       }
     };
-    fetchEmpSalary();
-  }, [ID, token]);
+
+    fetchEmpSalary(); // Call fetch function when ID changes
+
+    return () => {
+      // Cleanup function to run when component unmounts or ID changes
+      isMounted = false; // Set mounted flag to false to prevent state updates after unmount
+    };
+  }, [id, token]);
 
   useEffect(() => {
     if (details) {
@@ -161,8 +165,9 @@ const SalaryStructure = ({ ID, name }) => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <div className="p-4 bg-white font-[Inter]">
-      <div className="mr-auto text-[15px] bg-red-600 text-white font-bold rounded-lg justify-center text-center p-1 whitespace-normal">
-          NOTE: Please submit salary details before assigning Earning or Deduction Heads
+        <div className="mr-auto text-[15px] bg-red-600 text-white font-bold rounded-lg justify-center text-center p-1 whitespace-normal">
+          NOTE: Please submit salary details before assigning Earning or
+          Deduction Heads
         </div>
         <div className="grid grid-cols-3 gap-x-4">
           <div className="py-1">

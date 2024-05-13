@@ -41,7 +41,7 @@ import AdvanceRequest from "./components/payroll settings/AdvanceRequest";
 import EDImports from "./components/salary management/EDImports";
 import SalProcessing from "./components/salary management/SalaryProcessing";
 import JobsResponsibilityMaster from "./components/employee settings/JobsResponsibilityMaster";
-import LeaveTypeMaster from "./components/leaves settings/LeaveType";
+import LeaveTypeMaster from "./components/leaves settings/LeaveTypeMaster";
 import Login from "./components/Login";
 import Registration from "./components/Registration";
 import Dashboard from "./components/Dashboard";
@@ -87,46 +87,19 @@ function App() {
                 <Route path="/j0hg2l4r" element={<Dashboard />} />
                 <Route path="/y5ts9c4z" element={<CompMaster />} />
                 <Route path="/q8wn1g6k" element={<FinMaster />} />
-                <Route
-                  path="/r3fz7k5b"
-                  element={<CompConfig />}
-                />
+                <Route path="/r3fz7k5b" element={<CompConfig />} />
                 <Route path="/i2p8s6xq" element={<BankMaster />} />
-                <Route
-                  path="/e9u0b7h3"
-                  element={<CostCenterMaster />}
-                />
-                <Route
-                  path="/m4c8n2p1"
-                  element={<DepartmentMaster />}
-                />
-                <Route
-                  path="/o7l5m1d9"
-                  element={<DestinationMaster />}
-                />
-                <Route
-                  path="/f2q1r9z3"
-                  element={<ThreeFieldsMaster />}
-                />
+                <Route path="/e9u0b7h3" element={<CostCenterMaster />} />
+                <Route path="/m4c8n2p1" element={<DepartmentMaster />} />
+                <Route path="/o7l5m1d9" element={<DestinationMaster />} />
+                <Route path="/f2q1r9z3" element={<ThreeFieldsMaster />} />
                 <Route path="/a6o0w3x5" element={<TwoFieldsMaster />} />
                 <Route path="/h7b8n1y4" element={<EmployeeMaster />} />
-                <Route
-                  path="/g9f3c2v1"
-                  element={<LeaveBalance />}
-                />
-                <Route
-                  path="/t5p7e1i2"
-                  element={<EmployeeTypeMaster />}
-                />
+                <Route path="/g9f3c2v1" element={<LeaveBalance />} />
+                <Route path="/t5p7e1i2" element={<EmployeeTypeMaster />} />
                 <Route path="/l3r2o5v7" element={<BranchMaster />} />
-                <Route
-                  path="/u4y8i2x7"
-                  element={<EmployeeGradeMaster />}
-                />
-                <Route
-                  path="/d9e7x2a1"
-                  element={<DesignationMaster />}
-                />
+                <Route path="/u4y8i2x7" element={<EmployeeGradeMaster />} />
+                <Route path="/d9e7x2a1" element={<DesignationMaster />} />
                 <Route path="/b3i7w1y8" element={<KRAMaster />} />
                 <Route
                   path="/z6r4u2e9"
@@ -138,21 +111,12 @@ function App() {
                 <Route path="/x5r1c9j0" element={<WeeklyOffMaster />} />
                 <Route path="/p2l4o8n9" element={<DeviceMaster />} />
                 <Route path="/c7v2m8n5" element={<JobTypeMaster />} />
-                <Route
-                  path="/q1d9y3z6"
-                  element={<LeaveTypeMaster />}
-                />
+                <Route path="/q1d9y3z6" element={<LeaveTypeMaster />} />
 
-                <Route
-                  path="/v6w2s4h8/:employeeId"
-                  element={<EMPTabs />}
-                />
+                <Route path="/v6w2s4h8/:employeeId" element={<EMPTabs />} />
 
                 <Route path="/j5t9l4n2" element={<ShiftRoster />} />
-                <Route
-                  path="/r7e2p6g1"
-                  element={<ManualAttendanceEntry />}
-                />
+                <Route path="/r7e2p6g1" element={<ManualAttendanceEntry />} />
                 <Route
                   path="/f0t4r1n5"
                   element={<DailyAttendanceProcessing />}
@@ -161,30 +125,15 @@ function App() {
                   path="/z3x7y9b2"
                   element={<ManualAttendanceApproval />}
                 />
-                <Route
-                  path="/q8c2j4m6"
-                  element={<OutDoorAttendanceEntry />}
-                />
+                <Route path="/q8c2j4m6" element={<OutDoorAttendanceEntry />} />
                 <Route
                   path="/s5e1p3g7"
                   element={<OutDoorAttendanceApproval />}
                 />
-                <Route
-                  path="/i9u6l3b7"
-                  element={<EarningHeadsMaster />}
-                />
-                <Route
-                  path="/w2z8a6s3"
-                  element={<DeductionHeadsMaster />}
-                />
-                <Route
-                  path="/h7x4p8o3"
-                  element={<ProfesssionalTaxMaster />}
-                />
-                <Route
-                  path="/y9n2m4o7"
-                  element={<EmpTypeEarningDeduction />}
-                />
+                <Route path="/i9u6l3b7" element={<EarningHeadsMaster />} />
+                <Route path="/w2z8a6s3" element={<DeductionHeadsMaster />} />
+                <Route path="/h7x4p8o3" element={<ProfesssionalTaxMaster />} />
+                <Route path="/y9n2m4o7" element={<EmpTypeEarningDeduction />} />
                 <Route
                   path="/x8q5g2h1"
                   element={<EmployeeTypeEarningMaster />}
@@ -193,10 +142,7 @@ function App() {
                   path="/u3v9y4z6"
                   element={<EmployeeTypeDeductionMaster />}
                 />
-                <Route
-                  path="/k1j7o9r5"
-                  element={<MonthlyAttendance />}
-                />
+                <Route path="/k1j7o9r5" element={<MonthlyAttendance />} />
                 <Route path="/a0bdhs87t" element={<AdvanceRequest />} />
                 <Route path="/a5d3g2p6" element={<LeaveApp />} />
                 <Route path="/b8m4n9r1" element={<LeaveApproval />} />
@@ -204,22 +150,10 @@ function App() {
                 <Route path="/o5v2w1t8" element={<SalProcessing />} />
                 <Route path="/p7c9h3g2" element={<AdvanceApproval />} />
                 <Route path="/n1m5z7t8" element={<UserRoles />} />
-                <Route
-                  path="/e4d6j7r9"
-                  element={<GateEntryMaster />}
-                />
-                <Route
-                  path="/q0f8x6m3"
-                  element={<AdvanceRepayment />}
-                />
-                <Route
-                  path="/r9w7v3k1"
-                  element={<GatePassApproval />}
-                />
-                <Route 
-                  path='igfn84je'
-                  element={<SalaryCorrections/>}
-                  />
+                <Route path="/e4d6j7r9" element={<GateEntryMaster />} />
+                <Route path="/q0f8x6m3" element={<AdvanceRepayment />} />
+                <Route path="/r9w7v3k1" element={<GatePassApproval />} />
+                <Route path="igfn84je" element={<SalaryCorrections />} />
               </Route>
             </Routes>
           </EmployeeTypeProvider>

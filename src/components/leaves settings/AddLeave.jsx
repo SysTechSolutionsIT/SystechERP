@@ -1,56 +1,59 @@
 import { useFormik } from "formik";
 import React, { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
-import { leaveData } from "./LeaveType";
-import axios from 'axios'
+import { leaveData } from "./LeaveTypeMaster";
+import axios from "axios";
 import { useAuth } from "../Login";
 
 const AddLeave = ({ visible, onClick }) => {
-  const { token } = useAuth()
-  const [isStatusChecked, setStatusChecked] = useState(false)
+  const { token } = useAuth();
+  const [isStatusChecked, setStatusChecked] = useState(false);
 
   const formik = useFormik({
     initialValues: {
       LeaveType: "",
       ShortName: "",
-      DefaultBalance:"",
-      MaxPerMonth:"",
+      DefaultBalance: "",
+      MaxPerMonth: "",
       PaidFlag: "",
       CarryForwardFlag: "",
       Remark: "",
-      IUFlag:"I"
+      AllEmployees: "",
+      IUFlag: "I",
     },
-    onSubmit: (values, {resetForm}) => {
-      addLeave(values)
-      resetForm()
-      onClick()
+    onSubmit: (values, { resetForm }) => {
+      addLeave(values);
+      resetForm();
+      onClick();
     },
-  })
+  });
 
   const addLeave = async (data) => {
-    try{
-      const response = await axios.post('http://localhost:5500/leave-type/FnAddUpdateDeleteRecord', data,
-       {
-        headers:{
-          Authorization: `Bearer ${token}`
+    try {
+      const response = await axios.post(
+        "http://localhost:5500/leave-type/FnAddUpdateDeleteRecord",
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      })
-      alert('Leave Successfully Added')
-    } catch(error){
-      console.error('Error', error);
+      );
+      alert("Leave Successfully Added");
+    } catch (error) {
+      console.error("Error", error);
     }
-  }
+  };
 
-    const handleCheckboxChange = (fieldName, setChecked, event) => {
-      //This is how to use it (event) => handleCheckboxChange('Status', setStatusChecked, event)
-        const checked = event.target.checked;
-        setChecked(checked);
-        formik.setValues({
-          ...formik.values,
-          [fieldName]: checked.toString(),
-        });
-      };
-
+  const handleCheckboxChange = (fieldName, setChecked, event) => {
+    //This is how to use it (event) => handleCheckboxChange('Status', setStatusChecked, event)
+    const checked = event.target.checked;
+    setChecked(checked);
+    formik.setValues({
+      ...formik.values,
+      [fieldName]: checked.toString(),
+    });
+  };
 
   if (!visible) return null;
   return (
@@ -165,6 +168,35 @@ const AddLeave = ({ visible, onClick }) => {
                       id="CarryForwardFlag"
                       value="N"
                       checked={formik.values.CarryForwardFlag === "N"}
+                      onChange={formik.handleChange}
+                      className="mr-2"
+                    />
+                    No
+                  </label>
+                </div>
+              </div>
+              <div>
+                <p className="capitalize font-semibold text-[13px]">
+                  Assign to All Employees?
+                </p>
+                <div className="space-y-2 text-[11px]">
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      id="AllEmployees"
+                      value="Y"
+                      checked={formik.values.AllEmployees === "Y"}
+                      onChange={formik.handleChange}
+                      className="mr-2"
+                    />
+                    Yes
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      id="AllEmployees"
+                      value="N"
+                      checked={formik.values.AllEmployees === "N"}
                       onChange={formik.handleChange}
                       className="mr-2"
                     />

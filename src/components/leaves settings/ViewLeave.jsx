@@ -1,90 +1,98 @@
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { Icon } from "@iconify/react";
-import { leaveData } from "./LeaveType";
+import { leaveData } from "./LeaveTypeMaster";
 import axios from "axios";
 import { useAuth } from "../Login";
 import { GiCardKingClubs } from "react-icons/gi";
 
 const ViewLeave = ({ visible, onClick, edit, ID }) => {
   const [details, setDetails] = useState([]);
-  const {token} = useAuth()
+  const { token } = useAuth();
   const formik = useFormik({
     initialValues: {
-      LeaveTypeId:"",
+      LeaveTypeId: "",
       LeaveType: "",
       ShortName: "",
       ShortName: "",
       DefaultBalance: "",
       PaidFlag: "",
       CarryForwardFlag: "",
+      AllEmployees: "",
       Remark: "",
     },
-    onSubmit: (values, {resetForm}) => {
+    onSubmit: (values, { resetForm }) => {
       const updatedData = {
-      LeaveTypeId: values.LeaveTypeId,
-      LeaveType: values.LeaveType,
-      ShortName: values.ShortName,
-      ShortName: details.ShortName,
-      DefaultBalance: details.DefaultBalance,
-      PaidFlag: values.PaidFlag,
-      CarryForwardFlag: values.CarryForwardFlag,
-      Remark: values.Remark,
-      IUFlag: "U"
-      }
+        LeaveTypeId: values.LeaveTypeId,
+        LeaveType: values.LeaveType,
+        ShortName: values.ShortName,
+        ShortName: details.ShortName,
+        DefaultBalance: details.DefaultBalance,
+        PaidFlag: values.PaidFlag,
+        CarryForwardFlag: values.CarryForwardFlag,
+        Remark: values.Remark,
+        AllEmployees: "",
+        IUFlag: "U",
+      };
 
-      updateLeave(updatedData)
+      updateLeave(updatedData);
     },
   });
 
-  const updateLeave = async (data) =>{
+  const updateLeave = async (data) => {
     try {
-      const response = axios.post(`http://localhost:5500/leave-type/FnAddUpdateDeleteRecord`, data, 
-      {
-        params:{LeaveTypeId : ID},
-        headers:{
-          Authorization: `Bearer ${token}`
+      const response = axios.post(
+        `http://localhost:5500/leave-type/FnAddUpdateDeleteRecord`,
+        data,
+        {
+          params: { LeaveTypeId: ID },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      })
-      alert('Leave Data Updated')
-      onClick()
+      );
+      alert("Leave Data Updated");
+      onClick();
     } catch (error) {
-      console.error('Error', error);
+      console.error("Error", error);
     }
-  }
+  };
 
-  const fetchLeave = async () =>{
-    try{
-      const response = await axios.get(`http://localhost:5500/leave-type/FnShowParticularData`, {
-        params: { LeaveTypeId: ID },
-        headers:{ Authorization: `Bearer ${token}`}
-      })
-      const data = response.data
-      console.log(details)
-      setDetails(data)
-    }catch (error){
-      console.error('Error', error);
-  } 
-  }
+  const fetchLeave = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5500/leave-type/FnShowParticularData`,
+        {
+          params: { LeaveTypeId: ID },
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      const data = response.data;
+      console.log(details);
+      setDetails(data);
+    } catch (error) {
+      console.error("Error", error);
+    }
+  };
   useEffect(() => {
-
-    fetchLeave()
+    fetchLeave();
   }, [ID]);
 
-  useEffect(() =>{
-    if (details){
-        formik.setValues({
-          LeaveTypeId: details.LeaveTypeId,
-          LeaveType: details.LeaveType,
-          ShortName: details.ShortName,
-          DefaultBalance: details.DefaultBalance,
-          MaxPerMonth: details.MaxPerMonth,
-          PaidFlag: details.PaidFlag,
-          CarryForwardFlag: details.CarryForwardFlag,
-          Remark: details.Remark,
-        })
+  useEffect(() => {
+    if (details) {
+      formik.setValues({
+        LeaveTypeId: details.LeaveTypeId,
+        LeaveType: details.LeaveType,
+        ShortName: details.ShortName,
+        DefaultBalance: details.DefaultBalance,
+        MaxPerMonth: details.MaxPerMonth,
+        PaidFlag: details.PaidFlag,
+        CarryForwardFlag: details.CarryForwardFlag,
+        AllEmployees: details.AllEmployees,
+        Remark: details.Remark,
+      });
     }
-  }, [details])
+  }, [details]);
 
   if (!visible) return null;
   return (
@@ -218,6 +226,35 @@ const ViewLeave = ({ visible, onClick, edit, ID }) => {
                       onChange={formik.handleChange}
                       className="mr-2"
                       disabled={!edit}
+                    />
+                    No
+                  </label>
+                </div>
+              </div>
+              <div>
+                <p className="capitalize font-semibold text-[13px]">
+                  Assign to All Employees?
+                </p>
+                <div className="space-y-2 text-[11px]">
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      id="AllEmployees"
+                      value="Y"
+                      checked={formik.values.AllEmployees === "Y"}
+                      onChange={formik.handleChange}
+                      className="mr-2"
+                    />
+                    Yes
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      id="AllEmployees"
+                      value="N"
+                      checked={formik.values.AllEmployees === "N"}
+                      onChange={formik.handleChange}
+                      className="mr-2"
                     />
                     No
                   </label>

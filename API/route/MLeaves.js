@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const { Sequelize, DataTypes } = require("sequelize");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
+const LeaveTypeModel = require("../model/MLeaveTypeModel");
 
 const authToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
@@ -413,7 +414,45 @@ router.get("/FnFetchLeaveEarned", authToken, async (req, res) => {
   }
 });
 
-//Posting new data
+const generateSingleLeaveId = async (req, res, next) => {
+  try {
+    if (req.body.IUFlag === "I") {
+      const totalRecords = await MLeaves.count();
+      const newId = (totalRecords + 1).toString().padStart(5, "0");
+      req.body.LeaveBalanceId = newId;
+    }
+    next();
+  } catch (error) {
+    console.error("Error generating Leave Balance Id for one entry:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+router.post(
+  "/FnAddNewRecordEmp",
+  generateSingleLeaveId,
+  authToken,
+  async (req, res) => {
+    const LeaveBody = req.body;
+
+    try {
+      // Add or update operation
+      const result = await MLeaves.upsert(LeaveBody, {
+        where: { LeaveBalanceId: LeaveBody.LeaveBalanceId }, // Specify the where condition for update
+        returning: true,
+      });
+
+      res.json({
+        message: result ? "Operation successful" : "Operation failed",
+      });
+    } catch (error) {
+      console.error("Error performing operation:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  }
+);
+
+//Posting new array data
 router.post(
   "/FnAddUpdateDeleteRecord",
   generateLeaveBalanceId,

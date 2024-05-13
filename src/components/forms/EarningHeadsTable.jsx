@@ -6,7 +6,6 @@ import { useEmployeeType } from "./personal";
 const EarningHeadsTable = ({ ID }) => {
   const { token } = useAuth();
   const { employeeTypeId } = useEmployeeType();
-  console.log("Employee type id", employeeTypeId);
   const [details, setDetails] = useState([]);
   const [caderwiseEarnings, setCaderwiseEarnings] = useState([]);
   const [earningDetails, setEarningDetails] = useState([]);
@@ -45,7 +44,6 @@ const EarningHeadsTable = ({ ID }) => {
           }
         );
         const caderwiseData = response.data;
-        console.log("Caderwise data", caderwiseData);
 
         // Check if employee-wise entry exists
         const employeeWiseResponse = await axios.get(
@@ -56,16 +54,12 @@ const EarningHeadsTable = ({ ID }) => {
           }
         );
         const employeeWiseData = employeeWiseResponse.data;
-        console.log("Employee wise data", employeeWiseData);
 
         if (employeeWiseData.length > 0) {
-          console.log("Earning heads have already been defined");
           setCaderwiseEarnings(employeeWiseData);
         } else {
-          console.log("Mapping from Caderwise earnings");
           setCaderwiseEarnings(caderwiseData);
         }
-        console.log("Earning for the employee", caderwiseEarnings);
       } catch (error) {
         console.error("Error", error);
       }
@@ -85,6 +79,8 @@ const EarningHeadsTable = ({ ID }) => {
   }, [caderwiseEarnings]);
 
   useEffect(() => {
+    let isMounted = true;
+
     const fetchEmpSalary = async () => {
       try {
         const response = await axios.get(
@@ -95,13 +91,23 @@ const EarningHeadsTable = ({ ID }) => {
           }
         );
         const data = response.data;
-        setDetails(data);
+        if (isMounted) {
+          setDetails(data); // Update state with fetched data only if component is mounted
+        }
       } catch (error) {
-        console.error("Error", error);
+        console.error("Error fetching salary details:", error);
       }
     };
-    fetchEmpSalary();
-  }, [ID, token, selectedHeads]);
+
+    if (ID) {
+      fetchEmpSalary(); // Call fetch function when ID changes
+    }
+
+    return () => {
+      // Cleanup function to run when component unmounts or ID changes
+      isMounted = false; // Set mounted flag to false to prevent state updates after unmount
+    };
+  }, [ID, token]);
 
   useEffect(() => {
     const fetchEmployeeTypes = async () => {
@@ -134,7 +140,6 @@ const EarningHeadsTable = ({ ID }) => {
           .replace("P2", totalEarning * (50 / 100))
           .replace("P3", totalEarning);
         const result = eval(modifiedFormula);
-        console.log('result', result)
         return result;
       }
     } catch (error) {
@@ -144,20 +149,16 @@ const EarningHeadsTable = ({ ID }) => {
   };
 
   const handleCalculationValueChange = (index, newValue) => {
-    console.log("New value:", newValue);
     const updatedHeads = [...heads];
     const calculatedValue = calculateValue(
       updatedHeads[index].Formula,
       details ? details.GrossSalary : 0,
       parseFloat(newValue)
     );
-    console.log("Calculated value:", calculatedValue);
     updatedHeads[index].CalculationValue = calculatedValue;
     console.log("Updated heads before state update:", updatedHeads);
     setHeads(updatedHeads);
   };
-  
-  
 
   const handleFormulaChange = (index, newValue) => {
     const updatedHeads = [...heads];
@@ -195,8 +196,6 @@ const EarningHeadsTable = ({ ID }) => {
         })
       );
     setSelectedHeads(selectedHeadsData);
-    console.log('Selected Heads', selectedHeads)
-    // colsole.log(selectedHeads);
   }, [heads, employeeTypes, ID]);
 
   const addEmployeewiseEarning = async () => {
@@ -204,8 +203,10 @@ const EarningHeadsTable = ({ ID }) => {
       const response = axios.post(
         "http://localhost:5500/employee-wise-earning/FnAddUpdateDeleteRecord",
         selectedHeads,
-        { params: { EmployeeId: ID},
-          headers: { Authorization: `Bearer ${token}` } }
+        {
+          params: { EmployeeId: ID },
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
       alert("Employee-wise Earning Heads Added");
     } catch (error) {
@@ -221,7 +222,7 @@ const EarningHeadsTable = ({ ID }) => {
         head.Formula,
         details ? details.GrossSalary : 0,
         head.CalculationValue
-      )
+      ),
     }));
     setHeads(updatedHeads);
   }, [details]);
@@ -286,12 +287,18 @@ const EarningHeadsTable = ({ ID }) => {
                   {item.CalculationType}
                 </td>
                 <td className="px-2 border-2 whitespace-normal text-left text-[11px]">
-                <input
-                  type="number"
-                  className="w-16 py-1 rounded-md text-center"
-                  value={calculateValue(item.Formula, details ? details.GrossSalary : 0, item.CalculationValue)}
-                  onChange={(e) => handleCalculationValueChange(index, e.target.value)}
-                />
+                  <input
+                    type="number"
+                    className="w-16 py-1 rounded-md text-center"
+                    value={calculateValue(
+                      item.Formula,
+                      details ? details.GrossSalary : 0,
+                      item.CalculationValue
+                    )}
+                    onChange={(e) =>
+                      handleCalculationValueChange(index, e.target.value)
+                    }
+                  />
                 </td>
                 <td className="px-2 border-2 whitespace-normal text-left text-[11px]">
                   <input
