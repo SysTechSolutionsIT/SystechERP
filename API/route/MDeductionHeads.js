@@ -3,6 +3,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const { Sequelize, DataTypes } = require("sequelize");
+const MEmployeewiseEarning = require('../model/MEmployeewiseEarningModels')
+
 
 // Create an Express router
 const router = express.Router();
@@ -214,6 +216,65 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
+router.get("/FnFetchSalaryParameters", authToken, async (req, res) => {
+  const { EmployeeId } = req.query;
+
+  try {
+    // Fetch all earning heads for the given EmployeeId
+    const employeeEarnings = await MEmployeewiseEarning.findAll({
+      where: {
+        EmployeeId,
+      },
+      attributes: { exclude: ['id'] }, // Exclude the 'id' column
+    });
+    console.log("Employee Earnings:", employeeEarnings);
+
+    // Fetch all deduction heads
+    const deductionHeads = await MDeductionHeads.findAll();
+
+    console.log("Deduction Heads:", deductionHeads);
+
+    // Create a map of earning head ids to calculation values
+    const earningHeadMap = employeeEarnings.reduce((accumulator, earning) => {
+      accumulator[earning.EarningHeadId] = earning.ECalculationValue;
+      return accumulator;
+    }, {});
+
+    console.log("Earning Head Map:", earningHeadMap);
+
+    // Iterate over deduction heads and update salary parameters with calculation values
+    const formattedResult = deductionHeads.map((deductionHead) => {
+      const calculatedParams = {};
+      // Iterate over salary parameter columns to find matching earning head ids
+      for (let i = 1; i <= 10; i++) {
+        const parameterKey = `SalaryParameter${i}`;
+        const earningHeadId = deductionHead[parameterKey];
+        if (earningHeadId && earningHeadMap[earningHeadId] !== undefined) {
+          calculatedParams[parameterKey] = earningHeadMap[earningHeadId];
+        }
+      }
+      // If any non-null calculation values found, return with DeductionHeadID
+      if (Object.keys(calculatedParams).length > 0) {
+        return {
+          DeductionHeadID: deductionHead.DeductionHeadID,
+          ...calculatedParams,
+        };
+      }
+      // Otherwise, return null
+      return null;
+    }).filter(Boolean); // Filter out null entries
+
+    console.log("Formatted Result:", formattedResult);
+
+    res.json(formattedResult);
+  } catch (error) {
+    console.error("Error fetching salary parameters:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+
 
 // Middleware for generating deductionHeadId
 const generatedeductionHeadId = async (req, res, next) => {

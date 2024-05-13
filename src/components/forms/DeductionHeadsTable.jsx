@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../Login";
 import axios from "axios";
 import { useEmployeeType } from "./personal";
+import { useDebugValue } from "react";
 
 const DeductionHeadsTable = ({ ID }) => {
   console.log("ID in deduciton", ID);
@@ -15,6 +16,7 @@ const DeductionHeadsTable = ({ ID }) => {
   const [basicSalaryAmount, setBasicSalaryAmount] = useState()
   const [employeeTypes, setEmployeeTypes] = useState([]);
   const [Designation, setDesignation] = useState()
+  const [SalaryParameters, setSalaryParameters] = useState([])
 
   useEffect(() => {
     const fetchHeadsData = async () => {
@@ -109,17 +111,18 @@ const DeductionHeadsTable = ({ ID }) => {
   }, [caderwiseDeductions]);
 
   useEffect(() => {
-    // Calculate and update CalculationValue for all heads when relevant dependencies change
     const updatedHeads = heads.map((head) => ({
       ...head,
       CalculationValue: calculateValue(
         head.Formula,
         details ? details.GrossSalary : 0,
-        head.CalculationValue
+        head.DeductionHeadID,
+        SalaryParameters
       )
     }));
+    console.log('Updated heads:', updatedHeads); // Add this line
     setHeads(updatedHeads);
-  }, [details]);
+  }, [details, Designation, SalaryParameters]);  
   
 
   useEffect(() => {
@@ -162,6 +165,7 @@ const DeductionHeadsTable = ({ ID }) => {
     fetchBasicSalary();
   }, [token, ID]);
 
+
   useEffect(() => {
     const fetchDesignation = async() => {
       try {
@@ -181,75 +185,162 @@ const DeductionHeadsTable = ({ ID }) => {
     fetchDesignation()
   },[token, ID])
 
-  const calculateValue = (formula, salary, calculationValue, Designations) => {
-    try {
-      const totalEarning = salary;
-      if (formula === null) {
-        return calculationValue || 0;
-      } else {
-        const basicSalary = basicSalaryAmount; // Assuming basicSalaryAmount is defined elsewhere
-  
-        // Replace placeholders with actual values
-        const modifiedFormula = formula
-          .replace("P1", salary)
-          .replace("P2", basicSalary)
-          .replace("P3", totalEarning)
-          .replace("DESG", Designations);
-  
-        // Evaluate the modified formula
-        const result = evaluateFormula(modifiedFormula, salary, basicSalary);
-        console.log('result', result);
-        return result;
+  useEffect(() =>{
+    const fetchSalaryParameters = async() =>{
+      try {
+        const response = await axios.get('http://localhost:5500/deduction-heads/FnFetchSalaryParameters',
+        {
+          params: { EmployeeId: ID},
+          headers: { Authorization: `Bearer ${token}`}
+        })
+        const data = response.data
+        console.log('Salary Parameters', data)
+        setSalaryParameters(data)
+      } catch (error) {
+        console.error('Error', error);
       }
-    } catch (error) {
-      console.error("Error in formula calculation: ", error);
-      return "Error";
     }
-  };
+    fetchSalaryParameters()
+  }, [token, ID])
 
-  const evaluateFormula = (formula, P1, P2) => {
+
+  const calculateValue = (formula, salary, deductionHeadID, allSalaryParameters) => {
     try {
+        const totalEarning = salary;
+        if (formula === null) {
+            return 0; // or replace with appropriate default value
+        } else {
+            const basicSalary = basicSalaryAmount || 0; // Ensure basicSalaryAmount is defined and set it to 0 if not
+
+            // Find the salary parameters corresponding to the given DeductionHeadID
+            const salaryParameters = allSalaryParameters.find(params => params.DeductionHeadID === deductionHeadID);
+            if (!salaryParameters) {
+                console.error(`Salary parameters not found for DeductionHeadID: ${deductionHeadID}`);
+                return "Error";
+            }
+
+            // Replace placeholders with actual values
+            const modifiedFormula = formula
+            .replace("DESG", Designation)    
+            .replace(/SP\d+/g, match => {
+                const paramIndex = parseInt(match.slice(2)); // Extract the parameter index
+                if (paramIndex >= 1 && paramIndex <= Object.keys(salaryParameters).length) {
+                    const paramName = `SalaryParameter${paramIndex}`;
+                    const parameterValue = parseFloat(salaryParameters[paramName]) || 0; // Get the parameter value or 0 if not found
+                    console.log(`${match}: ${parameterValue}`); // Log the replaced parameter and its value
+                    return parameterValue;
+                } else {
+                    console.log(`${match}: Placeholder not replaced`); // Log if placeholder was not replaced
+                    return match; // If parameter index is out of range, keep the placeholder unchanged
+                }
+            })
+            .replace("P1", salary)
+            .replace("P2", basicSalary)
+            .replace("P3", totalEarning)
+
+            console.log(`P1: ${salary}`); // Log the value of P1
+            console.log(`P2: ${basicSalary}`); // Log the value of P2
+            console.log(`P3: ${totalEarning}`); // Log the value of P3
+
+            for (let i = 1; i <= Object.keys(salaryParameters).length; i++) {
+                const paramName = `SP${i}`;
+                const parameterValue = parseFloat(salaryParameters[`SalaryParameter${i}`]) || 0;
+                console.log(`${paramName}: ${parameterValue}`); // Log the value of SP1 to SP10
+            }
+
+            console.log('Modified Formula:', modifiedFormula); // Log the modified formula           
+
+            // Evaluate the modified formula
+            const result = evaluateFormula(modifiedFormula, salary, basicSalary, salaryParameters, Designation);
+            console.log('result', result);
+            return result;
+        }
+    } catch (error) {
+        console.error("Error in formula calculation: ", error);
+        return "Error";
+    }
+};
+
+
+
+const evaluateFormula = (formula, P1, P2, SalaryParameters, Designation) => {
+  try {
       console.log("Formula:", formula);
       const parts = formula.split(/:(?![^(]*\))/).map(part => part.trim()); // Split by ':' but ignore ':' inside parentheses
       console.log("Parts:", parts);
       const defaultCalculation = parts.pop().trim(); // Last part is default calculation
       console.log("Default Calculation:", defaultCalculation);
       const conditionCalculations = parts.map(part => {
-        const [condition, calculation] = part.split('?').map(item => item.trim());
-        return { condition, calculation };
+          const [condition, calculation] = part.split('?').map(item => item.trim());
+          return { condition, calculation };
       });
       console.log("Condition Calculations:", conditionCalculations);
-  
-      // Evaluating the conditions and returning the result
+
+      // Check if the condition contains a comparison with the employee's designation
       for (const { condition, calculation } of conditionCalculations) {
-        console.log("Current Condition:", condition);
-        console.log("Current Calculation:", calculation);
-        const designationMatch = condition.match(/DESG\s*=\s*'([^']+)'/);
-        if (designationMatch) {
-          const designation = designationMatch[1];
-          if (designation === P1) {
-            const result = eval(calculation.replace("P1", P1).replace("P2", P2));
-            console.log("Result:", result);
-            return result;
+          console.log("Current Condition:", condition);
+          console.log("Current Calculation:", calculation);
+
+          if (condition.includes("= '" + Designation + "'")) {
+              // If the condition matches the employee's designation exactly, evaluate the calculation and return the result
+              const result = eval(replacePlaceholders(calculation, P1, P2, SalaryParameters));
+              console.log("Result:", result);
+              return result;
           }
-        } else if (eval(condition.replace("P1", P1).replace("P2", P2))) {
-          const result = eval(calculation.replace("P1", P1).replace("P2", P2));
-          console.log("Result:", result);
-          return result;
-        }
       }
-  
+
+      // If no conditions match the employee's designation, evaluate other conditions
+      for (const { condition, calculation } of conditionCalculations) {
+          const conditionResult = eval(replacePlaceholders(condition, P1, P2, SalaryParameters));
+          if (conditionResult) {
+              // If the condition is true, evaluate the calculation and return the result
+              const result = eval(replacePlaceholders(calculation, P1, P2, SalaryParameters));
+              console.log("Result:", result);
+              return result;
+          }
+      }
+
       // If none of the conditions are met, return the default calculation
-      const defaultResult = eval(defaultCalculation.replace("P1", P1).replace("P2", P2));
+      const defaultResult = eval(replacePlaceholders(defaultCalculation, P1, P2, SalaryParameters));
       console.log("Default Result:", defaultResult);
       return defaultResult;
-    } catch (error) {
+  } catch (error) {
       console.error("Error in formula evaluation: ", error);
       return "Error";
+  }
+};
+
+
+
+
+
+const replacePlaceholders = (text, P1, P2, SalaryParameters) => {
+  // Replace placeholders P1, P2 with their values
+  let modifiedText = text.replace(/P1/g, P1).replace(/P2/g, P2);
+
+  // Replace SP1 to SP10 with their corresponding values from SalaryParameters
+  for (let i = 1; i <= 10; i++) {
+    const paramName = `SalaryParameter${i}`;
+    const placeholder = new RegExp(`SP${i}`, 'g'); // Create a regular expression to match SP1 to SP10 globally
+    const parameterValue = parseFloat(SalaryParameters[paramName]) || 0;
+    modifiedText = modifiedText.replace(placeholder, parameterValue);
+  }
+
+  return modifiedText;
+};
+
+
+
+
+const findParameterValue = (paramName, SalaryParameters, P1) => {
+    // Find the parameter value based on DeductionHeadID
+    const deductionHead = SalaryParameters.find(param => param.DeductionHeadID === P1);
+    if (deductionHead) {
+        return parseFloat(deductionHead[paramName]) || 0; // Get the parameter value or 0 if not found
+    } else {
+        return 0; // Return 0 if DeductionHeadID is not found in SalaryParameters
     }
-  };
-  
-  
+};
 
   const handleCalculationValueChange = (index, newValue) => {
     console.log("New value:", newValue);
@@ -257,7 +348,8 @@ const DeductionHeadsTable = ({ ID }) => {
     const calculatedValue = calculateValue(
       updatedHeads[index].Formula,
       details ? details.GrossSalary : 0,
-      parseFloat(newValue)
+      updatedHeads.DeductionHeadID,
+      SalaryParameters
     );
     console.log("Calculated value:", calculatedValue);
     updatedHeads[index].CalculationValue = calculatedValue;
@@ -384,7 +476,8 @@ const DeductionHeadsTable = ({ ID }) => {
                     value={calculateValue(
                       item.Formula,
                       details ? details.GrossSalary : 0,
-                      item.CalculationValue
+                      item.DeductionHeadID,
+                      SalaryParameters
                     )}
                     onChange={(e) =>
                       handleCalculationValueChange(index, e.target.value)
