@@ -200,7 +200,7 @@ const DeductionHeadsMaster = () => {
 
   useEffect(() => {
     fetchHeadsData();
-  }, [token]);
+  }, [token, isModalOpen]);
 
   const fetchHeadsData = async () => {
     try {

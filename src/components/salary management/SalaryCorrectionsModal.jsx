@@ -48,12 +48,13 @@ const SalaryCorrectionsModal = ({ visible, onClick, ID, empID, empTypeID }) => {
       };
       console.log(updatedData);
       UpdateSalaryData(updatedData)
+      onClick()
     },
   });
 
   const UpdateSalaryData = async(data) =>{
     try {
-        const response = await axios.post('http://localhost:5500/salary-processing/FnSalaryCorrections', data,{
+        const response = await axios.patch('http://localhost:5500/salary-processing/FnSalaryCorrections', data,{
             params: { ProcessId: ID},
             headers: {Authorization: `Bearer ${token}`}
         })

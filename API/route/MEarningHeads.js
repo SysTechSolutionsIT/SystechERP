@@ -3,6 +3,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const { Sequelize, DataTypes } = require("sequelize");
+const MEmployeeSalary = require("../model/MEmployeeSalaryModels");
+const MEarningHeads = require('../model/MEarningHeadModels')
 
 // Create an Express router
 const router = express.Router();
@@ -32,127 +34,123 @@ const sequelize = new Sequelize(
   }
 );
 
-const MEarningHeads = sequelize.define(
-  "MEarningHeads",
-  {
-    CompanyId: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      defaultValue: "00001",
-    },
-    BranchId: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      defaultValue: "00001",
-    },
-    EarningHeadId: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-      defaultValue: 'E0001'
-    },
-    EarningHead: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    EarningType: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    ShortName: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    HeadPosition: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    CalculationType: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    CalculationValue: {
-      type: DataTypes.DECIMAL(10, 2),
-      allowNull: false,
-    },
-    SalaryParameter1: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    SalaryParameter2: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    SalaryParameter3: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    SalaryParameter4: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    SalaryParameter5: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    SalaryParameter6: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    SalaryParameter7: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    SalaryParameter8: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    SalaryParameter9: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    SalaryParameter10: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    Formula: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    Remark: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    AcFlag: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      defaultValue: "Y",
-    },
-    IUFlag: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    CreatedBy: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    ModifiedBy: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    FieldId: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    FieldName: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-  },
-  {
-    timestamps: false,
-  }
-);
+// const MEarningHeads = sequelize.define(
+//   "MEarningHeads",
+//   {
+//     CompanyId: {
+//       type: DataTypes.STRING,
+//       allowNull: false,
+//       defaultValue: "00001",
+//     },
+//     BranchId: {
+//       type: DataTypes.STRING,
+//       allowNull: false,
+//       defaultValue: "00001",
+//     },
+//     EarningHeadId: {
+//       type: DataTypes.INTEGER,
+//       primaryKey: true,
+//       autoIncrement: true,
+//       defaultValue: 'E0001'
+//     },
+//     EarningHead: {
+//       type: DataTypes.STRING,
+//       allowNull: false,
+//     },
+//     EarningType: {
+//       type: DataTypes.STRING,
+//       allowNull: true,
+//     },
+//     ShortName: {
+//       type: DataTypes.STRING,
+//       allowNull: true,
+//     },
+//     HeadPosition: {
+//       type: DataTypes.INTEGER,
+//       allowNull: false,
+//     },
+//     CalculationType: {
+//       type: DataTypes.STRING,
+//       allowNull: true,
+//     },
+//     CalculationValue: {
+//       type: DataTypes.DECIMAL(10, 2),
+//       allowNull: false,
+//     },
+//     SalaryParameter1: {
+//       type: DataTypes.STRING,
+//       allowNull: true,
+//     },
+//     SalaryParameter2: {
+//       type: DataTypes.STRING,
+//       allowNull: true,
+//     },
+//     SalaryParameter3: {
+//       type: DataTypes.STRING,
+//       allowNull: true,
+//     },
+//     SalaryParameter4: {
+//       type: DataTypes.STRING,
+//       allowNull: true,
+//     },
+//     SalaryParameter5: {
+//       type: DataTypes.STRING,
+//       allowNull: true,
+//     },
+//     SalaryParameter6: {
+//       type: DataTypes.STRING,
+//       allowNull: true,
+//     },
+//     SalaryParameter7: {
+//       type: DataTypes.STRING,
+//       allowNull: true,
+//     },
+//     SalaryParameter8: {
+//       type: DataTypes.STRING,
+//       allowNull: true,
+//     },
+//     SalaryParameter9: {
+//       type: DataTypes.STRING,
+//       allowNull: true,
+//     },
+//     SalaryParameter10: {
+//       type: DataTypes.STRING,
+//       allowNull: true,
+//     },
+//     Formula: {
+//       type: DataTypes.STRING,
+//       allowNull: true,
+//     },
+//     Remark: {
+//       type: DataTypes.STRING,
+//       allowNull: true,
+//     },
+//     AcFlag: {
+//       type: DataTypes.STRING,
+//       allowNull: false,
+//       defaultValue: "Y",
+//     },
+//     CreatedBy: {
+//       type: DataTypes.STRING,
+//       allowNull: true,
+//     },
+//     ModifiedBy: {
+//       type: DataTypes.STRING,
+//       allowNull: true,
+//     },
+//     FieldId: {
+//       type: DataTypes.STRING,
+//       allowNull: true,
+//     },
+//     FieldName: {
+//       type: DataTypes.STRING,
+//       allowNull: true,
+//     },
+//   },
+//   {
+//     timestamps: false,
+//   }
+// );
 
 // Middleware for parsing JSON
 router.use(bodyParser.json());
@@ -221,6 +219,26 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
+router.get("/FnGetBasicSalary", authToken, async (req, res) => {
+  const empID = req.query.EmployeeId
+  try {
+    const basicSalary = await MEmployeeSalary.findOne({
+      where: {
+        EmployeeId: empID,
+      },
+      attributes: ["BasicSalary"], // Include CalculationType and CalculationValue
+      order: [["EmployeeId", "ASC"]],
+    });
+
+    res.json(basicSalary.BasicSalary)
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+
 
 // Middleware for generating EarningHeadId
 const generateEarningHeadId = async (req, res, next) => {

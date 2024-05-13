@@ -213,7 +213,7 @@ router.get("/FnshowActiveData", authToken, async (req, res) => {
     }
   });
 
-  router.post('FnSalaryCorrections', authToken, async(req, res) =>{
+  router.patch('/FnSalaryCorrections', authToken, async(req, res) =>{
     const ProcessId = req.query.ProcessId
     const SalaryCorrections = req.body
     try {

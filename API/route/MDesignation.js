@@ -114,7 +114,22 @@ router.get("/FnShowParticularData", authToken, async (req, res) => {
   }
 });
 
-router.post("/FnAddUpdateDeleteRecord", authToken, async (req, res) => {
+// Middleware for generating EarningHeadId
+const generateDesignationId = async (req, res, next) => {
+  try {
+    if (req.body.IUFlag === "I") {
+      const totalRecords = await MDesignation.count();
+      const newId = (totalRecords + 1).toString().padStart(3, "0");
+      req.body.DesignationId = newId;
+    }
+    next();
+  } catch (error) {
+    console.error("Error generating Designation ID:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+router.post("/FnAddUpdateDeleteRecord", generateDesignationId, authToken, async (req, res) => {
   const designation = req.body; // Access the DesignationId from query parameters
 
   try {

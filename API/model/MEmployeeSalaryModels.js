@@ -33,6 +33,10 @@ const MEmployeeSalary = sequelize.define(
       allowNull: false,
       primaryKey: true,
     },
+    DesignationId: {
+      type: DataTypes.STRING(50),
+      allowNull: true,
+    },
     GradeId: {
       type: DataTypes.STRING(5),
       allowNull: true,
@@ -45,6 +49,7 @@ const MEmployeeSalary = sequelize.define(
     },
     CTC: { type: DataTypes.DECIMAL(10, 2), defaultValue: 0 },
     GrossSalary: { type: DataTypes.DECIMAL(10, 2), defaultValue: 0 },
+    BasicSalary: { type: DataTypes.DECIMAL(10, 2), defaultValue: 0 },
     OTFlag: { type: DataTypes.STRING(1), defaultValue: `N` },
     OTAmount: { type: DataTypes.DECIMAL(10, 2), defaultValue: 0 },
     PFFlag: { type: DataTypes.STRING(1), defaultValue: `N` },

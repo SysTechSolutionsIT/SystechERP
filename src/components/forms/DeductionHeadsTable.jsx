@@ -12,7 +12,9 @@ const DeductionHeadsTable = ({ ID }) => {
   const [details, setDetails] = useState([]);
   const [heads, setHeads] = useState([]);
   const [checked, setChecked] = useState([]);
+  const [basicSalaryAmount, setBasicSalaryAmount] = useState()
   const [employeeTypes, setEmployeeTypes] = useState([]);
+  const [Designation, setDesignation] = useState()
 
   useEffect(() => {
     const fetchHeadsData = async () => {
@@ -140,17 +142,63 @@ const DeductionHeadsTable = ({ ID }) => {
     fetchEmployeeTypes();
   }, [token]);
 
-  const calculateValue = (formula, salary, calculationValue) => {
+  useEffect(() => {
+    const fetchBasicSalary = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/earning-heads/FnGetBasicSalary",
+          {
+            params: { EmployeeId: ID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        setBasicSalaryAmount(data)
+        console.log("Basic Salary", data);
+      } catch (error) {
+        console.error("Error", error);
+      }
+    };
+    fetchBasicSalary();
+  }, [token, ID]);
+
+  useEffect(() => {
+    const fetchDesignation = async() => {
+      try {
+        const response = await axios.get('http://localhost:5500/employee/salary-structure/FnGetEmployeeDesignation',
+        {
+          params: { EmployeeId: ID },
+          headers: { Authorization: `Bearer ${token}`}
+        }
+        )
+        const data = response.data
+        setDesignation(data)
+        console.log('Designation', data)
+      } catch (error) {
+        console.error('Error', error);
+      }
+    }
+    fetchDesignation()
+  },[token, ID])
+
+  const calculateValue = (formula, salary, calculationValue, Designations) => {
     try {
-      const totalDeduction = salary;
+      const totalEarning = salary;
       if (formula === null) {
         return calculationValue || 0;
       } else {
+        const basicSalary = basicSalaryAmount; // Assuming basicSalaryAmount is defined elsewhere
+  
+        // Replace placeholders with actual values
         const modifiedFormula = formula
           .replace("P1", salary)
-          .replace("P2", totalDeduction * (50 / 100))
-          .replace("P3", totalDeduction);
-        const result = eval(modifiedFormula);
+          .replace("P2", basicSalary)
+          .replace("P3", totalEarning)
+          .replace("DESG", Designations);
+  
+        // Evaluate the modified formula
+        const result = evaluateFormula(modifiedFormula, salary, basicSalary);
+        console.log('result', result);
         return result;
       }
     } catch (error) {
@@ -158,9 +206,62 @@ const DeductionHeadsTable = ({ ID }) => {
       return "Error";
     }
   };
+
+  const evaluateFormula = (formula, P1, P2) => {
+    try {
+      console.log("Formula:", formula);
+      const parts = formula.split(/:(?![^(]*\))/).map(part => part.trim()); // Split by ':' but ignore ':' inside parentheses
+      console.log("Parts:", parts);
+      const defaultCalculation = parts.pop().trim(); // Last part is default calculation
+      console.log("Default Calculation:", defaultCalculation);
+      const conditionCalculations = parts.map(part => {
+        const [condition, calculation] = part.split('?').map(item => item.trim());
+        return { condition, calculation };
+      });
+      console.log("Condition Calculations:", conditionCalculations);
+  
+      // Evaluating the conditions and returning the result
+      for (const { condition, calculation } of conditionCalculations) {
+        console.log("Current Condition:", condition);
+        console.log("Current Calculation:", calculation);
+        const designationMatch = condition.match(/DESG\s*=\s*'([^']+)'/);
+        if (designationMatch) {
+          const designation = designationMatch[1];
+          if (designation === P1) {
+            const result = eval(calculation.replace("P1", P1).replace("P2", P2));
+            console.log("Result:", result);
+            return result;
+          }
+        } else if (eval(condition.replace("P1", P1).replace("P2", P2))) {
+          const result = eval(calculation.replace("P1", P1).replace("P2", P2));
+          console.log("Result:", result);
+          return result;
+        }
+      }
+  
+      // If none of the conditions are met, return the default calculation
+      const defaultResult = eval(defaultCalculation.replace("P1", P1).replace("P2", P2));
+      console.log("Default Result:", defaultResult);
+      return defaultResult;
+    } catch (error) {
+      console.error("Error in formula evaluation: ", error);
+      return "Error";
+    }
+  };
+  
+  
+
   const handleCalculationValueChange = (index, newValue) => {
+    console.log("New value:", newValue);
     const updatedHeads = [...heads];
-    updatedHeads[index].CalculationValue = newValue;
+    const calculatedValue = calculateValue(
+      updatedHeads[index].Formula,
+      details ? details.GrossSalary : 0,
+      parseFloat(newValue)
+    );
+    console.log("Calculated value:", calculatedValue);
+    updatedHeads[index].CalculationValue = calculatedValue;
+    console.log("Updated heads before state update:", updatedHeads);
     setHeads(updatedHeads);
   };
 
@@ -191,7 +292,7 @@ const DeductionHeadsTable = ({ ID }) => {
           DeductionHeadId: DeductionHeadID,
           DeductionHead,
           DCalculationType: CalculationType,
-          DCalculationValue: CalculationValue,
+          DCalculationValue: CalculationType === 'Amount' ? CalculationValue : calculateValue(Formula, details ? details.GrossSalary : 0, 0),
           Formula,
           EmployeeId: ID,
           EmployeeTypeId: employeeTypes?.EmployeeTypeId,
