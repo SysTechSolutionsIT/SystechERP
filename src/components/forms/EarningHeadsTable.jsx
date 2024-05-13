@@ -13,6 +13,7 @@ const EarningHeadsTable = ({ ID }) => {
   const [heads, setHeads] = useState([]);
   const [selectedHeads, setSelectedHeads] = useState([]);
   const [employeeTypes, setEmployeeTypes] = useState([]);
+  const [basicSalaryAmount, setBasicSalaryAmount] = useState()
 
   useEffect(() => {
     const fetchHeadsData = async () => {
@@ -123,18 +124,42 @@ const EarningHeadsTable = ({ ID }) => {
     fetchEmployeeTypes();
   }, [token]);
 
+  useEffect(() => {
+    const fetchBasicSalary = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/earning-heads/FnGetBasicSalary",
+          {
+            params: { EmployeeId: ID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        setBasicSalaryAmount(data)
+        console.log("Basic Salary", data);
+      } catch (error) {
+        console.error("Error", error);
+      }
+    };
+    fetchBasicSalary();
+  }, [token, ID]);
+
   const calculateValue = (formula, salary, calculationValue) => {
     try {
       const totalEarning = salary;
       if (formula === null) {
         return calculationValue || 0;
       } else {
+        const basicSalary = basicSalaryAmount
+        // Replace placeholders with actual values
         const modifiedFormula = formula
           .replace("P1", salary)
-          .replace("P2", totalEarning * (50 / 100))
+          .replace("P2", basicSalary)
           .replace("P3", totalEarning);
-        const result = eval(modifiedFormula);
-        console.log('result', result)
+        
+        // Evaluate conditional formulas
+        const result = evaluateFormula(modifiedFormula, salary, basicSalary);
+        console.log('result', result);
         return result;
       }
     } catch (error) {
@@ -143,6 +168,40 @@ const EarningHeadsTable = ({ ID }) => {
     }
   };
 
+  const evaluateFormula = (formula, P1, P2) => {
+    try {
+      console.log("Formula:", formula);
+      const parts = formula.split(/:(?![^(]*\))/).map(part => part.trim()); // Split by ':' but ignore ':' inside parentheses
+      console.log("Parts:", parts);
+      const defaultCalculation = parts.pop().trim(); // Last part is default calculation
+      console.log("Default Calculation:", defaultCalculation);
+      const conditionCalculations = parts.map(part => {
+        const [condition, calculation] = part.split('?').map(item => item.trim());
+        return { condition, calculation };
+      });
+      console.log("Condition Calculations:", conditionCalculations);
+  
+      // Evaluating the conditions and returning the result
+      for (const { condition, calculation } of conditionCalculations) {
+        console.log("Current Condition:", condition);
+        console.log("Current Calculation:", calculation);
+        if (eval(condition.replace("P1", P1).replace("P2", P2))) {
+          const result = eval(calculation.replace("P1", P1).replace("P2", P2));
+          console.log("Result:", result);
+          return result;
+        }
+      }
+  
+      // If none of the conditions are met, return the default calculation
+      const defaultResult = eval(defaultCalculation.replace("P1", P1).replace("P2", P2));
+      console.log("Default Result:", defaultResult);
+      return defaultResult;
+    } catch (error) {
+      console.error("Error in formula evaluation: ", error);
+      return "Error";
+    }
+  };
+  
   const handleCalculationValueChange = (index, newValue) => {
     console.log("New value:", newValue);
     const updatedHeads = [...heads];
@@ -186,7 +245,7 @@ const EarningHeadsTable = ({ ID }) => {
           EarningHeadId,
           EarningHead,
           ECalculationType: CalculationType,
-          ECalculationValue: CalculationValue,
+          ECalculationValue: CalculationType === 'Amount' ? CalculationValue : calculateValue(Formula, details ? details.GrossSalary : 0, 0),
           Formula,
           EmployeeId: ID,
           EmployeeTypeId: employeeTypes?.EmployeeTypeId,
@@ -214,7 +273,6 @@ const EarningHeadsTable = ({ ID }) => {
   };
 
   useEffect(() => {
-    // Calculate and update CalculationValue for all heads when relevant dependencies change
     const updatedHeads = heads.map((head) => ({
       ...head,
       CalculationValue: calculateValue(
@@ -224,7 +282,7 @@ const EarningHeadsTable = ({ ID }) => {
       )
     }));
     setHeads(updatedHeads);
-  }, [details]);
+  }, [token, basicSalaryAmount]); // Add basicSalaryPercentage as a dependency
 
   return (
     <div className="gap-4 justify-between">

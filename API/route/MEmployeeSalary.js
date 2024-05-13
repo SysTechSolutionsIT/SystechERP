@@ -152,6 +152,22 @@ router.get(`/FnShowParticularData`, authToken, async (req, res) => {
   }
 });
 
+router.get(`/FnGetEmployeeDesignation`, authToken, async (req, res) =>{
+  const EmployeeId = req.query.EmployeeId
+  try {
+    const designation = await MEmployeeSalary.findOne({
+      where:{
+        EmployeeId: EmployeeId
+      },
+      order: [[`EmployeeId`, `ASC`]]
+    })
+    res.json(designation.DesignationId)
+  } catch (error) {
+    console.error(`Error retrieving data:`, error);
+    res.status(500).send(`Internal Server Error`);
+  }
+})
+
 const generateEmployeeId = async (req, res, next) => {
   try {
     if (req.body.IUFlag === `I`) {

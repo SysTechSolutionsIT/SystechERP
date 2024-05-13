@@ -30,7 +30,7 @@ const DeductionHeadsModal = ({ visible, onClick }) => {
       IUFlag: "I",
       Remark: "",
     },
-    onSubmit: (values) => {
+    onSubmit: (values, {resetForm}) => {
       const updatedData = {
         DeductionHead: values.DeductionHead,
         HeadPosition: values.HeadPosition,
@@ -57,6 +57,8 @@ const DeductionHeadsModal = ({ visible, onClick }) => {
         ModifiedOn: values.ModifiedOn,
       };
       addHead(updatedData);
+      resetForm()
+      onClick()
     },
   });
 

@@ -12,15 +12,17 @@ const DesignationModal = ({ visible, onClick }) => {
   const formik = useFormik({
     initialValues: {
       DesignationName: "",
-      ReportDesignationName: "",
+      ReportDesignationId: "",
       ShortName: "",
       DesignationPosition: "",
       Remark: "",
       IUFlag: "I",
     },
-    onSubmit: (values) => {
+    onSubmit: (values, {resetForm}) => {
       console.log(values);
       addDesignation(values);
+      resetForm()
+      onClick()
     },
   });
 
@@ -58,7 +60,7 @@ const DesignationModal = ({ visible, onClick }) => {
       }
     };
     fetchDesignations();
-  }, [token]);
+  }, [token, visible]);
 
   if (!visible) return null;
   return (
@@ -92,15 +94,12 @@ const DesignationModal = ({ visible, onClick }) => {
               <div>
                 <p className="text-[13px] font-semibold">Report Designation</p>
                 <select
-                  id="ReportDesignationName"
-                  value={formik.values.ReportDesignationName}
+                  id="ReportDesignationId"
+                  value={formik.values.ReportDesignationId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 >
-                  <option value={formik.values.ReportDesignationName}>
-                    {formik.values.ReportDesignationName}
-                  </option>
-                  <option value="None">None</option>
+                  <option value="NA">None</option>
                   {reportingDesignation.map((entry) => (
                     <option
                       key={entry.DesignationId}

@@ -20,14 +20,17 @@ const SalaryStructure = ({ ID, name }) => {
   const [isGratuatyApplicableChecked, setGratuatyApplicableChecked] =
     useState(false);
   const [isStatusChecked, setStatusCheched] = useState(false);
+  const [Designations, setDesignations] = useState([])
 
   const formik = useFormik({
     initialValues: {
       EmployeeId: ID,
+      DesignationId:"",
       GradeId: "",
       BandId: "",
       CTC: "",
       GrossSalary: "",
+      BasicSalary:"",
       OTFlag: "",
       OTAmount: "",
       PFFlag: "",
@@ -52,10 +55,12 @@ const SalaryStructure = ({ ID, name }) => {
     onSubmit: async (values) => {
       const updatedData = {
         EmployeeId: values.EmployeeId,
+        DesignationId: values.DesignationId,
         GradeId: values.GradeId,
         BandId: values.BandId,
         CTC: values.CTC,
         GrossSalary: values.GrossSalary,
+        BasicSalary: values.BasicSalary,
         OTFlag: values.OTFlag,
         OTAmount: values.OTAmount,
         PFFlag: values.PFFlag,
@@ -120,13 +125,35 @@ const SalaryStructure = ({ ID, name }) => {
   }, [ID, token]);
 
   useEffect(() => {
+    const fetchDesignations = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/d9e7x2a1/FnShowActiveData",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        console.log(data);
+        setDesignations(data);
+      } catch (error) {
+        console.error("Error fetching reporting to data", error);
+      }
+    };
+    fetchDesignations();
+  }, [ID, token]);
+
+
+  useEffect(() => {
     if (details) {
       formik.setValues({
         EmployeeId: details.EmployeeId,
+        DesignationId: details.DesignationId,
         GradeId: details.GradeId,
         BandId: details.BandId,
         CTC: details.CTC,
         GrossSalary: details.GrossSalary,
+        BasicSalary: details.BasicSalary,
         OTFlag: details.OTFlag,
         OTAmount: details.OTAmount,
         PFFlag: details.PFFlag,
@@ -191,6 +218,22 @@ const SalaryStructure = ({ ID, name }) => {
             />
           </div>
           <div className="py-1">
+            <p className="mb-0.5 capitalize font-semibold text-[13px]">Designation</p>
+            <select
+              id="DesignationId"
+              className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
+              value={formik.values.DesignationId}
+              onChange={formik.handleChange}
+            >
+              <option value={null}>Select Designation</option>
+              {Designations.map((item) => (
+                <option key={item.DesignationId} vlaue={item.DesignationName}>
+                  {item.DesignationName}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="py-1">
             <p className="mb-0.5 capitalize font-semibold text-[13px]">Grade</p>
             <select
               id="GradeId"
@@ -236,6 +279,18 @@ const SalaryStructure = ({ ID, name }) => {
               id="GrossSalary"
               type="number"
               value={formik.values.GrossSalary}
+              className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg `}
+              onChange={formik.handleChange}
+            />
+          </div>
+          <div className="py-1">
+            <p className="mb-1 capitalize font-semibold text-[13px]">
+              Basic Salary (Per Month)
+            </p>
+            <input
+              id="BasicSalary"
+              type="number"
+              value={formik.values.BasicSalary}
               className={`w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg `}
               onChange={formik.handleChange}
             />

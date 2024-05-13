@@ -200,7 +200,7 @@ const EarningHeadsMaster = () => {
 
   useEffect(() => {
     fetchHeadsData();
-  }, []);
+  }, [token, isModalOpen]);
 
   const fetchHeadsData = async () => {
     try {

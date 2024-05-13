@@ -30,7 +30,7 @@ const DesignationMaster = () => {
       }
     };
     fetchDesignations();
-  }, [token]);
+  }, [token, isModalOpen]);
 
   const deleteDesignation = async (DeleteId) => {
     const confirmDelete = window.confirm(

@@ -30,7 +30,7 @@ const EarningHeadsModal = ({ visible, onClick }) => {
       Formula: null,
       Remark: "",
     },
-    onSubmit: (values) => {
+    onSubmit: (values, {resetForm}) => {
       const updatedData = {
         EarningHead: values.EarningHead,
         HeadPosition: values.HeadPosition,
@@ -57,6 +57,8 @@ const EarningHeadsModal = ({ visible, onClick }) => {
         ModifiedOn: values.ModifiedOn,
       };
       addHead(updatedData);
+      resetForm()
+      onClick()
     },
   });
 
@@ -345,7 +347,7 @@ const EarningHeadsModal = ({ visible, onClick }) => {
                 </select>
               </div>
               <div className="col-span-2">
-                <p className="capatilize font-semibold  text-[13px]">Formula</p>
+              <p className="capatilize font-semibold  text-[13px]">Formula (Use P1 for calculations on Gross Salary and P2 for calculations on Basic Salary)  </p>
                 <input
                   id="Formula"
                   type="text"
