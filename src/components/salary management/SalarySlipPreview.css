@@ -1,0 +1,525 @@
+.pdfDetails-inner {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0px;
+  isolation: isolate;
+
+  width: 1200px;
+  height: 117px;
+
+  /* Inside auto layout */
+
+  flex: none;
+  order: 0;
+  align-self: stretch;
+  flex-grow: 0;
+  z-index: 0;
+}
+
+.pdfDetails-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 24px 20px;
+  isolation: isolate;
+
+  width: 1240px;
+  height: 165px;
+
+  /* Inside auto layout */
+
+  flex: none;
+  order: 0;
+  align-self: stretch;
+  flex-grow: 0;
+}
+
+.drname {
+  width: 350px;
+  height: 24px;
+
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 24px;
+  display: flex;
+  align-items: center;
+
+  /* Other/primary */
+
+  color: #20a0d8;
+
+  /* Inside auto layout */
+
+  flex: none;
+  order: 0;
+  align-self: stretch;
+  flex-grow: 0;
+}
+
+.pdftext {
+  width: 400px;
+  height: 19px;
+
+  /* Body text/Regular/16px */
+
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+
+  /* Grey/900 */
+
+  color: #2a3342;
+
+  /* Inside auto layout */
+
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+}
+
+.pdfDetails-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0px;
+  gap: 12px;
+  width: 350px;
+  height: 117px;
+  white-space: nowrap;
+  position: relative;
+  right: 400px;
+  top: 20px;
+  flex: none;
+  order: 1;
+  align-self: stretch;
+  flex-grow: 0;
+  z-index: 1;
+}
+
+.clinicLogo {
+  box-sizing: border-box;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 46px;
+  position: absolute;
+  width: 205px;
+  height: 130px;
+  left: 475px;
+  top: 55px;
+  flex: none;
+  order: 2;
+  flex-grow: 0;
+  z-index: 2;
+}
+
+.clinicImage {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2px 0px;
+  gap: 10px;
+
+  width: 100px;
+  height: 100px;
+
+  /* Inside auto layout */
+
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+}
+
+.pdf-patientDetails {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px;
+  gap: 30px;
+
+  width: 1240px;
+  height: 326px;
+
+  background: rgba(255, 255, 255, 0.4);
+
+  /* Inside auto layout */
+
+  flex: none;
+  order: 1;
+  align-self: stretch;
+  flex-grow: 0;
+}
+
+.qrCode {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px;
+  gap: 30px;
+
+  width: 1200px;
+  height: 63px;
+
+  /* Inside auto layout */
+
+  flex: none;
+  order: 0;
+  align-self: stretch;
+  flex-grow: 0;
+}
+
+.pdf-timestamp {
+  width: 261px;
+  height: 22px;
+
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 22px;
+  /* identical to box height */
+
+  display: flex;
+  align-items: center;
+  text-align: right;
+
+  /* Grey/900 */
+
+  color: #2a3342;
+
+  /* Inside auto layout */
+
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+}
+
+.pdf-qrcodeImg {
+  width: 85px;
+  height: 63px;
+
+  /* Inside auto layout */
+
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+}
+
+.pdf-patID {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0px;
+  gap: 12px;
+
+  width: 1200px;
+  height: auto;
+
+  /* Inside auto layout */
+
+  flex: none;
+  order: 1;
+  align-self: stretch;
+  flex-grow: 0;
+}
+
+.pdf-nameAndPatID {
+  width: 407px;
+  height: 29px;
+
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 29px;
+  /* identical to box height */
+
+  display: flex;
+  align-items: center;
+
+  /* Grey/900 */
+
+  color: #2a3342;
+
+  /* Inside auto layout */
+
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+}
+
+.pdf-drugAllergies {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0px;
+  gap: 30px;
+
+  width: 1200px;
+  height: auto;
+
+  /* Inside auto layout */
+
+  flex: none;
+  order: 2;
+  align-self: stretch;
+  flex-grow: 0;
+}
+
+.drugAllergyText {
+  width: 1200px;
+  height: 22px;
+
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 22px;
+  /* identical to box height */
+
+  display: flex;
+  align-items: center;
+
+  /* Grey/900 */
+
+  color: #2a3342;
+
+  /* Inside auto layout */
+
+  flex: none;
+  order: 0;
+  align-self: stretch;
+  flex-grow: 0;
+}
+
+.pdf-drugAllergies-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0px;
+  gap: 12px;
+
+  width: 1200px;
+  height: auto;
+
+  /* Inside auto layout */
+
+  flex: none;
+  order: 0;
+  align-self: stretch;
+  flex-grow: 0;
+}
+
+.pdf-prescriptionsDetails {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 50px;
+
+  width: 1240px;
+  height: 892px;
+
+  background: rgba(255, 255, 255, 0.4);
+
+  /* Inside auto layout */
+
+  flex: none;
+  order: 2;
+  align-self: stretch;
+  flex-grow: 0;
+}
+
+.pdf-prescriptions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0px;
+
+  width: 1180px;
+  height: 233px;
+
+  /* Inside auto layout */
+
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+}
+
+.pdf-prescriptionText {
+  width: 130px;
+  height: 24px;
+
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 24px;
+  display: flex;
+  align-items: center;
+
+  /* Other/primary */
+
+  color: #20a0d8;
+
+  /* Inside auto layout */
+
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+}
+
+.pdftextSpan {
+  width: 400px;
+  height: 19px;
+  display: inline-block;
+  /* Body text/Regular/16px */
+
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+
+  /* Grey/900 */
+
+  color: #2a3342;
+
+  /* Inside auto layout */
+
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+}
+
+.pdf-medTable {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0px;
+  border: 1px solid black;
+  width: 1200px;
+  height: auto;
+
+  /* Inside auto layout */
+
+  flex: none;
+  order: 1;
+  align-self: stretch;
+  flex-grow: 0;
+}
+
+.pdf-thead {
+  width: 200px;
+  height: 19px;
+  display: table-cell;
+  /* Body text/Regular/16px */
+  text-align: left;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+
+  /* Grey/900 */
+
+  color: #2a3342;
+
+  /* Inside auto layout */
+
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+}
+
+.pdf-index {
+  width: 70px;
+  height: 19px;
+  display: table-cell;
+  /* Body text/Regular/16px */
+  text-align: center;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+
+  /* Grey/900 */
+
+  color: #2a3342;
+
+  /* Inside auto layout */
+
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+}
+
+.pdf-borderbottom {
+  border-bottom: 1px solid black;
+  background-color: lightblue;
+}
+
+.printPDF {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 36px;
+  gap: 6px;
+  position: relative;
+  top: 1580px;
+  left: 700px;
+  width: 216px;
+  justify-self: center;
+  height: 46px;
+  background: #20a0d8;
+  border-radius: 6px;
+  flex: none;
+  order: 7;
+  border: none;
+  flex-grow: 0;
+}
+
+.btmtxt {
+  gap: 3px;
+  color: grey;
+  width: 120px;
+  height: 40px;
+  position: relative;
+  left: 20px;
+  top: 0px;
+  font-size: 12px;
+}
+.healtech {
+  left: 20px;
+  align-self: start;
+  position: absolute;
+  top: 50%;
+  bottom: 0px;
+}
+.bottomText {
+  top: 100%;
+  bottom: 0px;
+  width: 600px;
+  align-self: center;
+  left: 340px;
+  height: 30px;
+  display: flex;
+  font-family: "Times New Roman", Times, serif;
+}
+.docname {
+  top: 80%;
+  right: 0px;
+  left: 380px;
+  font-size: 20px;
+  position: relative;
+}
