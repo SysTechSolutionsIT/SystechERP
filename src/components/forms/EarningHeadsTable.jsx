@@ -32,7 +32,7 @@ const EarningHeadsTable = ({ ID }) => {
       }
     };
     fetchHeadsData();
-  }, [token]);
+  }, [token, ID]);
 
   useEffect(() => {
     const fetchCaderwiseEarning = async () => {
@@ -165,7 +165,7 @@ const EarningHeadsTable = ({ ID }) => {
 
         // Evaluate conditional formulas
         const result = evaluateFormula(modifiedFormula, salary, basicSalary);
-        console.log("result", result);
+        // console.log("result", result);
         return result;
       }
     } catch (error) {
