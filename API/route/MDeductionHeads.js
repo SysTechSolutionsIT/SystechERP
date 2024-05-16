@@ -3,8 +3,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const { Sequelize, DataTypes } = require("sequelize");
-const MEmployeewiseEarning = require('../model/MEmployeewiseEarningModels')
-
+const MEmployeewiseEarning = require("../model/MEmployeewiseEarningModels");
+const MDeductionHeads = require("../model/MDeductionHeadModel");
 
 // Create an Express router
 const router = express.Router();
@@ -34,133 +34,133 @@ const sequelize = new Sequelize(
   }
 );
 
-const MDeductionHeads = sequelize.define("MDeductionHeads", {
-  CompanyId: {
-    type: DataTypes.STRING(5),
-    allowNull: false,
-    defaultValue: "00001",
-  },
-  BranchId: {
-    type: DataTypes.STRING(5),
-    allowNull: false,
-    defaultValue: "00001",
-  },
-  DeductionHeadID: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    primaryKey: true,
-  },
-  DeductionHead: {
-    type: DataTypes.STRING(500),
-    allowNull: true,
-  },
-  DeductionType: {
-    type: DataTypes.STRING(100),
-    allowNull: true,
-    defaultValue: "Salary",
-  },
-  ShortName: {
-    type: DataTypes.STRING(3),
-    allowNull: true,
-  },
-  HeadPosition: {
-    type: DataTypes.INTEGER,
-    allowNull: true,
-  },
-  CalculationType: {
-    type: DataTypes.STRING(10),
-    allowNull: true,
-    defaultValue: "Amount",
-  },
-  CalculationValue: {
-    type: DataTypes.DECIMAL(10, 2),
-    allowNull: true,
-    defaultValue: 0,
-  },
-  SalaryParameter1: {
-    type: DataTypes.STRING(5),
-    allowNull: true,
-  },
-  SalaryParameter2: {
-    type: DataTypes.STRING(5),
-    allowNull: true,
-  },
-  SalaryParameter3: {
-    type: DataTypes.STRING(5),
-    allowNull: true,
-  },
-  SalaryParameter4: {
-    type: DataTypes.STRING(5),
-    allowNull: true,
-  },
-  SalaryParameter5: {
-    type: DataTypes.STRING(5),
-    allowNull: true,
-  },
-  SalaryParameter6: {
-    type: DataTypes.STRING(5),
-    allowNull: true,
-  },
-  SalaryParameter7: {
-    type: DataTypes.STRING(5),
-    allowNull: true,
-  },
-  SalaryParameter8: {
-    type: DataTypes.STRING(5),
-    allowNull: true,
-  },
-  SalaryParameter9: {
-    type: DataTypes.STRING(5),
-    allowNull: true,
-  },
-  SalaryParameter10: {
-    type: DataTypes.STRING(5),
-    allowNull: true,
-  },
-  Formula: {
-    type: DataTypes.STRING(500),
-    allowNull: true,
-  },
-  Remark: {
-    type: DataTypes.STRING(1000),
-    allowNull: true,
-  },
-  AcFlag: {
-    type: DataTypes.STRING(1),
-    allowNull: false,
-    defaultValue: "Y",
-  },
-  CreatedBy: {
-    type: DataTypes.STRING(500),
-    allowNull: true,
-  },
-  CreatedOn: {
-    type: DataTypes.DATE,
-    allowNull: true,
-  },
-  ModifiedBy: {
-    type: DataTypes.STRING(500),
-    allowNull: true,
-  },
-  ModifiedOn: {
-    type: DataTypes.DATE,
-    allowNull: true,
-  },
-}, {
-  timestamps:false
-});
-// Middleware for parsing JSON
-router.use(bodyParser.json());
+// const MDeductionHeads = sequelize.define("MDeductionHeads", {
+//   CompanyId: {
+//     type: DataTypes.STRING(5),
+//     allowNull: false,
+//     defaultValue: "00001",
+//   },
+//   BranchId: {
+//     type: DataTypes.STRING(5),
+//     allowNull: false,
+//     defaultValue: "00001",
+//   },
+//   DeductionHeadID: {
+//     type: DataTypes.INTEGER,
+//     allowNull: false,
+//     primaryKey: true,
+//   },
+//   DeductionHead: {
+//     type: DataTypes.STRING(500),
+//     allowNull: true,
+//   },
+//   DeductionType: {
+//     type: DataTypes.STRING(100),
+//     allowNull: true,
+//     defaultValue: "Salary",
+//   },
+//   ShortName: {
+//     type: DataTypes.STRING(3),
+//     allowNull: true,
+//   },
+//   HeadPosition: {
+//     type: DataTypes.INTEGER,
+//     allowNull: true,
+//   },
+//   CalculationType: {
+//     type: DataTypes.STRING(10),
+//     allowNull: true,
+//     defaultValue: "Amount",
+//   },
+//   CalculationValue: {
+//     type: DataTypes.DECIMAL(10, 2),
+//     allowNull: true,
+//     defaultValue: 0,
+//   },
+//   SalaryParameter1: {
+//     type: DataTypes.STRING(5),
+//     allowNull: true,
+//   },
+//   SalaryParameter2: {
+//     type: DataTypes.STRING(5),
+//     allowNull: true,
+//   },
+//   SalaryParameter3: {
+//     type: DataTypes.STRING(5),
+//     allowNull: true,
+//   },
+//   SalaryParameter4: {
+//     type: DataTypes.STRING(5),
+//     allowNull: true,
+//   },
+//   SalaryParameter5: {
+//     type: DataTypes.STRING(5),
+//     allowNull: true,
+//   },
+//   SalaryParameter6: {
+//     type: DataTypes.STRING(5),
+//     allowNull: true,
+//   },
+//   SalaryParameter7: {
+//     type: DataTypes.STRING(5),
+//     allowNull: true,
+//   },
+//   SalaryParameter8: {
+//     type: DataTypes.STRING(5),
+//     allowNull: true,
+//   },
+//   SalaryParameter9: {
+//     type: DataTypes.STRING(5),
+//     allowNull: true,
+//   },
+//   SalaryParameter10: {
+//     type: DataTypes.STRING(5),
+//     allowNull: true,
+//   },
+//   Formula: {
+//     type: DataTypes.STRING(500),
+//     allowNull: true,
+//   },
+//   Remark: {
+//     type: DataTypes.STRING(1000),
+//     allowNull: true,
+//   },
+//   AcFlag: {
+//     type: DataTypes.STRING(1),
+//     allowNull: false,
+//     defaultValue: "Y",
+//   },
+//   CreatedBy: {
+//     type: DataTypes.STRING(500),
+//     allowNull: true,
+//   },
+//   CreatedOn: {
+//     type: DataTypes.DATE,
+//     allowNull: true,
+//   },
+//   ModifiedBy: {
+//     type: DataTypes.STRING(500),
+//     allowNull: true,
+//   },
+//   ModifiedOn: {
+//     type: DataTypes.DATE,
+//     allowNull: true,
+//   },
+// }, {
+//   timestamps:false
+// });
+// // Middleware for parsing JSON
+// router.use(bodyParser.json());
 
-// Model synchronization
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log('Connection has been established successfully.');
-  })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
-  });
+// // Model synchronization
+// sequelize
+//   .authenticate()
+//   .then(() => {
+//     console.log('Connection has been established successfully.');
+//   })
+//   .catch(err => {
+//     console.error('Unable to connect to the database:', err);
+//   });
 
 // GET endpoint to retrieve all financial year entires
 router.get("/FnShowAllData", authToken, async (req, res) => {
@@ -226,7 +226,7 @@ router.get("/FnFetchSalaryParameters", authToken, async (req, res) => {
       where: {
         EmployeeId,
       },
-      attributes: { exclude: ['id'] }, // Exclude the 'id' column
+      attributes: { exclude: ["id"] }, // Exclude the 'id' column
     });
     console.log("Employee Earnings:", employeeEarnings);
 
@@ -244,26 +244,28 @@ router.get("/FnFetchSalaryParameters", authToken, async (req, res) => {
     console.log("Earning Head Map:", earningHeadMap);
 
     // Iterate over deduction heads and update salary parameters with calculation values
-    const formattedResult = deductionHeads.map((deductionHead) => {
-      const calculatedParams = {};
-      // Iterate over salary parameter columns to find matching earning head ids
-      for (let i = 1; i <= 10; i++) {
-        const parameterKey = `SalaryParameter${i}`;
-        const earningHeadId = deductionHead[parameterKey];
-        if (earningHeadId && earningHeadMap[earningHeadId] !== undefined) {
-          calculatedParams[parameterKey] = earningHeadMap[earningHeadId];
+    const formattedResult = deductionHeads
+      .map((deductionHead) => {
+        const calculatedParams = {};
+        // Iterate over salary parameter columns to find matching earning head ids
+        for (let i = 1; i <= 10; i++) {
+          const parameterKey = `SalaryParameter${i}`;
+          const earningHeadId = deductionHead[parameterKey];
+          if (earningHeadId && earningHeadMap[earningHeadId] !== undefined) {
+            calculatedParams[parameterKey] = earningHeadMap[earningHeadId];
+          }
         }
-      }
-      // If any non-null calculation values found, return with DeductionHeadID
-      if (Object.keys(calculatedParams).length > 0) {
-        return {
-          DeductionHeadID: deductionHead.DeductionHeadID,
-          ...calculatedParams,
-        };
-      }
-      // Otherwise, return null
-      return null;
-    }).filter(Boolean); // Filter out null entries
+        // If any non-null calculation values found, return with DeductionHeadID
+        if (Object.keys(calculatedParams).length > 0) {
+          return {
+            DeductionHeadID: deductionHead.DeductionHeadID,
+            ...calculatedParams,
+          };
+        }
+        // Otherwise, return null
+        return null;
+      })
+      .filter(Boolean); // Filter out null entries
 
     console.log("Formatted Result:", formattedResult);
 
@@ -274,16 +276,14 @@ router.get("/FnFetchSalaryParameters", authToken, async (req, res) => {
   }
 });
 
-
-
 // Middleware for generating deductionHeadId
 const generatedeductionHeadId = async (req, res, next) => {
   try {
     // Check if IUFlag is 'I'
-    if (req.body.IUFlag === 'I') {
+    if (req.body.IUFlag === "I") {
       const totalRecords = await MDeductionHeads.count();
       const newId = "D" + (totalRecords + 1).toString().padStart(4, "0");
-      req.body.DeductionHeadID= newId;
+      req.body.DeductionHeadID = newId;
     }
     next();
   } catch (error) {
@@ -292,33 +292,40 @@ const generatedeductionHeadId = async (req, res, next) => {
   }
 };
 
-router.post("/FnAddUpdateDeleteRecord", authToken, generatedeductionHeadId, async (req, res) => {
-  const deductionHead = req.body;
-  try {
-    if (deductionHead.IUFlag === "D") {
-      // "Soft-delete" operation
-      const result = await MDeductionHeads.update(
-        { AcFlag: "N" },
-        { where: { DeductionHeadID: deductionHead.DeductionHeadID } }
-      );
+router.post(
+  "/FnAddUpdateDeleteRecord",
+  authToken,
+  generatedeductionHeadId,
+  async (req, res) => {
+    const deductionHead = req.body;
+    try {
+      if (deductionHead.IUFlag === "D") {
+        // "Soft-delete" operation
+        const result = await MDeductionHeads.update(
+          { AcFlag: "N" },
+          { where: { DeductionHeadID: deductionHead.DeductionHeadID } }
+        );
 
-      res.json({
-        message: result[0] ? "Record Deleted Successfully" : "Record Not Found",
-      });
-    } else {
-      // Add or update operation
-      const result = await MDeductionHeads.upsert(deductionHead, {
-        returning: true,
-      });
+        res.json({
+          message: result[0]
+            ? "Record Deleted Successfully"
+            : "Record Not Found",
+        });
+      } else {
+        // Add or update operation
+        const result = await MDeductionHeads.upsert(deductionHead, {
+          returning: true,
+        });
 
-      res.json({
-        message: result ? "Operation successful" : "Operation failed",
-      });
+        res.json({
+          message: result ? "Operation successful" : "Operation failed",
+        });
+      }
+    } catch (error) {
+      console.error("Error performing operation:", error);
+      res.status(500).send("Internal Server Error");
     }
-  } catch (error) {
-    console.error("Error performing operation:", error);
-    res.status(500).send("Internal Server Error");
   }
-});
+);
 
 module.exports = router;

@@ -127,7 +127,7 @@ const SalarySlipPreview = (visible, handleClose, displayMonth, displayYear) => {
               <img src="./SalarySlipFooter.png" />
             </div>
             <footer className=" flex flex-col bg-[#495477] w-full px-4 justify-between">
-              <p className="text-white text-[18px]  text-center ">
+              <p className="text-white text-[18px] text-center ">
                 Flat No A/7, SuryaLok Nagri, Waiduwadi, Hadapsar, Pune 411013, |
                 Cell : 09850164441 | Land line : 020-26812190
               </p>

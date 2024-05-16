@@ -18,11 +18,11 @@ const DesignationModal = ({ visible, onClick }) => {
       Remark: "",
       IUFlag: "I",
     },
-    onSubmit: (values, {resetForm}) => {
+    onSubmit: (values, { resetForm }) => {
       console.log(values);
       addDesignation(values);
-      resetForm()
-      onClick()
+      resetForm();
+      onClick();
     },
   });
 
@@ -87,6 +87,19 @@ const DesignationModal = ({ visible, onClick }) => {
                   type="text"
                   placeholder="Enter Designation Name"
                   value={formik.values.DesignationName}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
+                  onChange={formik.handleChange}
+                />
+              </div>
+              <div>
+                <p className="text-[13px] font-semibold">
+                  Designation Short Name
+                </p>
+                <input
+                  id="ShortName"
+                  type="text"
+                  placeholder="Enter Designation Short Name"
+                  value={formik.values.ShortName}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />

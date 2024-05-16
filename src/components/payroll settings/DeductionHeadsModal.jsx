@@ -26,11 +26,12 @@ const DeductionHeadsModal = ({ visible, onClick }) => {
       SalaryParameter9: "",
       SalaryParameter10: "",
       Formula: null,
+      FormulaType: "",
       AcFlag: "Y",
       IUFlag: "I",
       Remark: "",
     },
-    onSubmit: (values, {resetForm}) => {
+    onSubmit: (values, { resetForm }) => {
       const updatedData = {
         DeductionHead: values.DeductionHead,
         HeadPosition: values.HeadPosition,
@@ -57,8 +58,8 @@ const DeductionHeadsModal = ({ visible, onClick }) => {
         ModifiedOn: values.ModifiedOn,
       };
       addHead(updatedData);
-      resetForm()
-      onClick()
+      resetForm();
+      onClick();
     },
   });
 
@@ -73,16 +74,16 @@ const DeductionHeadsModal = ({ visible, onClick }) => {
           },
         }
       );
-      alert('Deduction Head Added')
+      alert("Deduction Head Added");
     } catch (error) {
       console.log("Error: ", error.message);
       // Handle network error
     }
   };
 
-  const [ heads, setHeads ] = useState([])
+  const [heads, setHeads] = useState([]);
 
-  useEffect(() =>{
+  useEffect(() => {
     const fetchHeadsData = async () => {
       try {
         const response = await axios.get(
@@ -102,8 +103,8 @@ const DeductionHeadsModal = ({ visible, onClick }) => {
       }
     };
 
-    fetchHeadsData()
-  },[token])
+    fetchHeadsData();
+  }, [token]);
 
   function generateSelectWithOptions(optionsArray) {
     const optionsHTML = optionsArray.map((option) => (
@@ -111,9 +112,9 @@ const DeductionHeadsModal = ({ visible, onClick }) => {
         {option.EarningHead}
       </option>
     ));
-  
+
     return <>{optionsHTML}</>;
-  } 
+  }
 
   if (!visible) return null;
   return (
@@ -339,7 +340,10 @@ const DeductionHeadsModal = ({ visible, onClick }) => {
                 </select>
               </div>
               <div className="col-span-2">
-                <p className="capatilize font-semibold  text-[13px]">Formula  (Use Salary Parameter Gross as 'P1', Basic Salary As 'P2', TotalEarning As 'P3' for Creation of Formula)</p>
+                <p className="capatilize font-semibold  text-[13px]">
+                  Formula (Use Salary Parameter Gross as 'P1', Basic Salary As
+                  'P2', TotalEarning As 'P3' for Creation of Formula)
+                </p>
                 <input
                   id="Formula"
                   type="text"
@@ -347,6 +351,24 @@ const DeductionHeadsModal = ({ visible, onClick }) => {
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   onChange={formik.handleChange}
                 />
+              </div>
+              <div>
+                <p className="capitalize font-semibold text-[13px]">
+                  Formula Type
+                </p>
+                <select
+                  id="FormulaType"
+                  className="w-full px-4 py-2 font-normal text-[13px] border-gray-300 focus:outline-blue-900 border-2 rounded-lg "
+                  value={formik.values.FormulaType}
+                  onChange={formik.handleChange}
+                >
+                  <option value="">Select Formula Type</option>
+                  <option value="DC">
+                    Based on Designation and other conditions
+                  </option>
+                  <option value="CF">Conditional Formula</option>
+                  <option value="PF">Percentage based formula</option>
+                </select>
               </div>
               <div>
                 <p className="capatilize font-semibold  text-[13px]">Remark</p>
