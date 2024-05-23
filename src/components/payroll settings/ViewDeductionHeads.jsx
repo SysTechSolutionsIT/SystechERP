@@ -1,5 +1,4 @@
 import React from "react";
-import { DeductionHeads } from "./DeductionHeadsMaster";
 import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import { Icon } from "@iconify/react";
@@ -11,7 +10,7 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
   const { token } = useAuth();
   const formik = useFormik({
     initialValues: {
-      DeductionHeadID:"",
+      DeductionHeadId: "",
       DeductionHead: "",
       HeadPosition: "",
       ShortName: "",
@@ -44,17 +43,13 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
         `http://localhost:5500/deduction-heads/FnAddUpdateDeleteRecord`,
         values,
         {
-          params: { DeductionHeadID: ID },
+          params: { DeductionHeadId: ID },
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      if (response.data && response.data.success) {
-        alert(" details updated successfully");
-      } else {
-        console.error("Failed to update details. Response:", response.data);
-      }
+      alert(" details updated successfully");
     } catch (error) {
       console.error("Error:", error.message);
     }
@@ -69,7 +64,7 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
       const response = await axios.get(
         `http://localhost:5500/deduction-heads/FnShowParticularData`,
         {
-          params: { DeductionHeadID: ID },
+          params: { DeductionHeadId: ID },
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -100,9 +95,9 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
     });
   };
 
-  const [ heads, setHeads ] = useState([])
+  const [heads, setHeads] = useState([]);
 
-  useEffect(() =>{
+  useEffect(() => {
     const fetchHeadsData = async () => {
       try {
         const response = await axios.get(
@@ -113,7 +108,6 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
             },
           }
         );
-        console.log("Response Object", response);
         const data = response.data;
         console.log(data);
         setHeads(data);
@@ -122,8 +116,8 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
       }
     };
 
-    fetchHeadsData()
-  },[token])
+    fetchHeadsData();
+  }, [token]);
 
   function generateSelectWithOptions(optionsArray) {
     const optionsHTML = optionsArray.map((option) => (
@@ -131,18 +125,9 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
         {option.EarningHead}
       </option>
     ));
-  
-    return <>{optionsHTML}</>;
-  } 
 
-  useEffect(() => {
-    const selectedDeductionHead = DeductionHeads.find(
-      (entry) => entry.DeductionHeadID === ID
-    );
-    if (selectedDeductionHead) {
-      setDetails(selectedDeductionHead);
-    }
-  }, [ID]);
+    return <>{optionsHTML}</>;
+  }
 
   if (!visible) return null;
   return (
@@ -169,9 +154,9 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
                   Deduction Head ID
                 </p>
                 <input
-                  id="DeductionHeadID"
+                  id="DeductionHeadId"
                   type="text"
-                  value={details?.DeductionHeadID}
+                  value={details?.DeductionHeadId}
                   className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
                   disabled={true}
                   onChange={formik.handleChange}
@@ -396,7 +381,10 @@ const ViewDeductionHeads = ({ visible, onClick, edit, ID }) => {
                 </select>
               </div>
               <div className="col-span-2">
-                <p className="capatilize font-semibold  text-[13px]">Formula (Use Salary Parameter Gross as 'P1', Basic Salary As 'P2', TotalEarning As 'P3' for Creation of Formula)</p>
+                <p className="capatilize font-semibold  text-[13px]">
+                  Formula (Use Salary Parameter Gross as 'P1', Basic Salary As
+                  'P2', TotalEarning As 'P3' for Creation of Formula)
+                </p>
                 <input
                   id="Formula"
                   type="text"

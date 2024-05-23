@@ -1,36 +1,36 @@
-import { useFormik } from 'formik';
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '../Login';
-import axios from 'axios'; 
-import { Icon } from '@iconify/react';
+import { useFormik } from "formik";
+import React, { useState, useEffect } from "react";
+import { useAuth } from "../Login";
+import axios from "axios";
+import { Icon } from "@iconify/react";
 
 const DeductionImportModal = ({ visible, onClick, edit }) => {
-    const { token } = useAuth();
-    const [allEmployees, setAllEmployees] = useState([]);
-    const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  const { token } = useAuth();
+  const [allEmployees, setAllEmployees] = useState([]);
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const formik = useFormik({
     initialValues: {
       EmployeeId: "",
-      EmployeeName:'',
-      DeductionHeadID: "",
+      EmployeeName: "",
+      DeductionHeadId: "",
       AMonth: "",
       AYear: "",
       Amount: "",
     },
-    onSubmit: (values, {resetForm}) => {
+    onSubmit: (values, { resetForm }) => {
       const updatedData = {
         EmployeeId: values.EmployeeId,
-        DeductionHeadId: values.DeductionHeadID,
+        DeductionHeadId: values.DeductionHeadId,
         AMonth: values.AMonth,
         AYear: values.AYear,
         Amount: values.Amount,
-        IUFlag:'I'
+        IUFlag: "I",
       };
 
-      addMonthlyDeductionImport(updatedData)
-      resetForm()
-      onClick()
-    }
+      addMonthlyDeductionImport(updatedData);
+      resetForm();
+      onClick();
+    },
   });
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -70,14 +70,13 @@ const DeductionImportModal = ({ visible, onClick, edit }) => {
 
   function generateSelectWithOptions(optionsArray) {
     const optionsHTML = optionsArray.map((option) => (
-      <option key={option.DeductionHeadID} value={option.DeductionHeadID}>
+      <option key={option.DeductionHeadId} value={option.DeductionHeadId}>
         {option.DeductionHead}
       </option>
     ));
 
     return <>{optionsHTML}</>;
   }
-
 
   useEffect(() => {
     const fetchAllEmployees = async () => {
@@ -100,18 +99,20 @@ const DeductionImportModal = ({ visible, onClick, edit }) => {
     setCurrentYear(new Date().getFullYear());
   }, []);
 
-  const addMonthlyDeductionImport = async(data) =>{
+  const addMonthlyDeductionImport = async (data) => {
     try {
-        const response = await axios.post('http://localhost:5500/monthly-deduction-import/FnAddUpdateDeleteRecord',
+      const response = await axios.post(
+        "http://localhost:5500/monthly-deduction-import/FnAddUpdateDeleteRecord",
         data,
         {
-            headers: { Authorization: `Bearer ${token}`}
-        })
-        alert('Monthly Deduction Import Added')
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      alert("Monthly Deduction Import Added");
     } catch (error) {
-        console.error('Error', error);
+      console.error("Error", error);
     }
-  }
+  };
 
   if (!visible) return null;
 
@@ -171,7 +172,7 @@ const DeductionImportModal = ({ visible, onClick, edit }) => {
                                 formik.setValues({
                                   ...formik.values,
                                   EmployeeId: entry.EmployeeId,
-                                  EmployeeName: entry.EmployeeName
+                                  EmployeeName: entry.EmployeeName,
                                 });
                                 setSearchTerm("");
                               }}
@@ -190,24 +191,22 @@ const DeductionImportModal = ({ visible, onClick, edit }) => {
                   </div>
                 </div>
               </div>
-          <div className='mt-1'>
+              <div className="mt-1">
                 <p className="capitalize font-semibold text-[13px]">
                   Deduction Head
                 </p>
                 <select
-                  id="DeductionHeadID"
+                  id="DeductionHeadId"
                   className="w-full px-4 py-2 font-normal bg-white focus:outline-blue-900 border-gray-300 border rounded-lg text-[11px]"
-                  value={formik.values.DeductionHeadID}
+                  value={formik.values.DeductionHeadId}
                   onChange={formik.handleChange}
                 >
                   <option value="">Select Deduction Head to Import</option>
                   {generateSelectWithOptions(heads)}
                 </select>
-            </div>
-            <div>
-                <p className="capatilize font-semibold  text-[13px]">
-                  Amount
-                </p>
+              </div>
+              <div>
+                <p className="capatilize font-semibold  text-[13px]">Amount</p>
                 <input
                   id="Amount"
                   type="number"
@@ -248,9 +247,13 @@ const DeductionImportModal = ({ visible, onClick, edit }) => {
                   className="w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px]"
                 >
                   <option value="">Select Year</option>
-                  {Array.from({ length: 10 }, (_, i) => currentYear + i).map(year => (
-                    <option key={year} value={year}>{year}</option>
-                  ))}
+                  {Array.from({ length: 10 }, (_, i) => currentYear + i).map(
+                    (year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    )
+                  )}
                 </select>
               </div>
             </div>
@@ -273,6 +276,6 @@ const DeductionImportModal = ({ visible, onClick, edit }) => {
       </div>
     </form>
   );
-}
+};
 
 export default DeductionImportModal;

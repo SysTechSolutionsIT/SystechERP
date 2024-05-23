@@ -16,62 +16,70 @@ const sequelize = new Sequelize(
     dialect: "mysql",
     port: process.env.DB_PORT,
   }
-)
+);
 
-  const TMonthlyEmployeeDeductionUpload = sequelize.define('TMonthlyEmployeeDeductionUpload', {
+const TMonthlyEmployeeDeductionUpload = sequelize.define(
+  "TMonthlyEmployeeDeductionUpload",
+  {
     CompanyId: {
       type: DataTypes.STRING(5),
       allowNull: false,
-      defaultValue: '00001',
-      primaryKey: true
+      defaultValue: "00001",
+      primaryKey: true,
     },
     BranchId: {
       type: DataTypes.STRING(5),
       allowNull: false,
-      defaultValue: '00001',
-      primaryKey: true
+      defaultValue: "00001",
+      primaryKey: true,
     },
     MonthlyDeductionId: {
       type: DataTypes.STRING(5),
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
     },
     EmployeeId: {
       type: DataTypes.STRING(5),
-      allowNull: false
+      allowNull: false,
     },
     DeductionHeadId: {
       type: DataTypes.STRING(5),
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
     },
     AMonth: {
       type: DataTypes.STRING(2),
-      allowNull: true
+      allowNull: true,
     },
     AYear: {
       type: DataTypes.STRING(4),
-      allowNull: true
+      allowNull: true,
     },
     Amount: {
       type: DataTypes.DECIMAL(18, 2),
       allowNull: true,
-      defaultValue: 0
+      defaultValue: 0,
     },
     AcFlag: {
       type: DataTypes.STRING(1),
       allowNull: true,
-      defaultValue: 'Y'
+      defaultValue: "Y",
     },
-  })
+  }
+);
 
-  sequelize
+sequelize
   .sync()
   .then(() => {
-    console.log("TMonthlyEmployeeDeductionUpload model synchronized successfully.");
+    console.log(
+      "TMonthlyEmployeeDeductionUpload model synchronized successfully."
+    );
   })
   .catch((error) => {
-    console.error("Error synchronizing TMonthlyEmployeeDeductionUpload model:", error);
+    console.error(
+      "Error synchronizing TMonthlyEmployeeDeductionUpload model:",
+      error
+    );
   });
 
-  module.exports = TMonthlyEmployeeDeductionUpload
+module.exports = TMonthlyEmployeeDeductionUpload;

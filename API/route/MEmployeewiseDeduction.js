@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const { Sequelize, DataTypes } = require("sequelize");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
-const MEmployeewiseDeduction = require('../model/MEmployeewiseDeductionModels')
+const MEmployeewiseDeduction = require("../model/MEmployeewiseDeductionModels");
 
 const authToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
@@ -133,15 +133,16 @@ router.use(bodyParser.json());
     await MEmployeewiseDeduction.sync();
     console.log("MEmployeewiseDeduction model synchronized successfully.");
   } catch (error) {
-    console.error("Unable to connect to the database or synchronize model:", error);
+    console.error(
+      "Unable to connect to the database or synchronize model:",
+      error
+    );
   }
 })();
 
 try {
-  MEmployeewiseDeduction.sync()
-} catch (error) {
-  
-}
+  MEmployeewiseDeduction.sync();
+} catch (error) {}
 
 router.get("/FnshowActiveData", authToken, async (req, res) => {
   try {
@@ -223,13 +224,12 @@ router.post(
             : "Record(s) Not Found",
         });
       } else {
-
         await MEmployeewiseDeduction.destroy({
           where: {
-            EmployeeId: req.query.EmployeeId
-          }
+            EmployeeId: req.query.EmployeeId,
+          },
         });
-        
+
         results = await Promise.all(
           EmployeewiseDeductions.map(async (item) => {
             const result = await MEmployeewiseDeduction.upsert(item, {
@@ -250,7 +250,6 @@ router.post(
     }
   }
 );
-
 
 process.on("SIGINT", () => {
   console.log("Received SIGINT. Closing Sequelize connection...");

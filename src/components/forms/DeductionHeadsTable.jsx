@@ -2,21 +2,18 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../Login";
 import axios from "axios";
 import { useEmployeeType } from "./personal";
-import { useDebugValue } from "react";
 
 const DeductionHeadsTable = ({ ID }) => {
-  console.log("ID in deduciton", ID);
   const { token } = useAuth();
   const { employeeTypeId } = useEmployeeType();
   const [caderwiseDeductions, setCaderwiseDeductions] = useState([]);
   const [selectedHeads, setSelectedHeads] = useState([]);
   const [details, setDetails] = useState([]);
   const [heads, setHeads] = useState([]);
-  const [checked, setChecked] = useState([]);
-  const [basicSalaryAmount, setBasicSalaryAmount] = useState()
+  const [basicSalaryAmount, setBasicSalaryAmount] = useState();
   const [employeeTypes, setEmployeeTypes] = useState([]);
-  const [Designation, setDesignation] = useState()
-  const [SalaryParameters, setSalaryParameters] = useState([])
+  const [Designation, setDesignation] = useState();
+  const [SalaryParameters, setSalaryParameters] = useState([]);
 
   useEffect(() => {
     const fetchHeadsData = async () => {
@@ -30,7 +27,7 @@ const DeductionHeadsTable = ({ ID }) => {
           }
         );
         const data = response.data;
-        console.log(data);
+        console.log("Heads Data:", data); // Added logging
         setHeads(data);
       } catch (error) {
         console.log("Error while fetching course data: ", error);
@@ -51,7 +48,7 @@ const DeductionHeadsTable = ({ ID }) => {
         );
         const data = response.data;
         setDetails(data);
-        console.log(data);
+        console.log("Employee Salary Details:", data); // Added logging
       } catch (error) {
         console.error("Error", error);
       }
@@ -70,9 +67,8 @@ const DeductionHeadsTable = ({ ID }) => {
           }
         );
         const caderwiseData = response.data;
-        console.log("Caderwise data", caderwiseData);
+        console.log("Caderwise Data:", caderwiseData); // Added logging
 
-        // Check if employee-wise entry exists
         const employeeWiseResponse = await axios.get(
           "http://localhost:5500/employee-wise-deductions/FnShowParticularData",
           {
@@ -81,13 +77,11 @@ const DeductionHeadsTable = ({ ID }) => {
           }
         );
         const employeeWiseData = employeeWiseResponse.data;
-        console.log("Employee wise data", employeeWiseData);
+        console.log("Employee Wise Data:", employeeWiseData); // Added logging
 
         if (employeeWiseData.length > 0) {
-          console.log("Deduction heads have already been defined");
           setCaderwiseDeductions(employeeWiseData);
         } else {
-          console.log("Mapping from Caderwise deductions");
           setCaderwiseDeductions(caderwiseData);
         }
         console.log("Deduction for the employee", caderwiseDeductions);
@@ -95,38 +89,32 @@ const DeductionHeadsTable = ({ ID }) => {
         console.error("Error", error);
       }
     };
-
     fetchCaderwiseDeduction();
   }, [token, ID, employeeTypeId]);
 
   useEffect(() => {
-    const updatedHeads = heads.map((head) => ({
-      ...head,
-      Selected: caderwiseDeductions.some(
-        (deduction) => deduction.DeductionHeadID === head.DeductionHeadID
-      ) || head.Selected // Also check if the head was previously selected
-    }));
-  
-    setHeads(updatedHeads);
-  }, [caderwiseDeductions]);
-
-  useEffect(() => {
-    const updatedHeads = heads.map((head) => ({
-      ...head,
-      CalculationValue: calculateValue(
+    const updatedHeads = heads.map((head) => {
+      console.log("Mapping Head:", head); // Added logging
+      const calculationValue = calculateValue(
         head.Formula,
         details ? details.GrossSalary : 0,
         basicSalaryAmount,
         head.CalculationValue,
-        head.DeductionHeadID,
+        head.DeductionHeadId,
         SalaryParameters,
-        Designation
-      )
-    }));
-    console.log('Updated heads:', updatedHeads); // Add this line
+        Designation,
+        head.FormulaType
+      );
+
+      return {
+        ...head,
+        CalculationValue: calculationValue,
+      };
+    });
+
+    console.log("Updated Heads:", updatedHeads); // Added logging
     setHeads(updatedHeads);
-  }, [details, Designation, SalaryParameters]);  
-  
+  }, [details, Designation, SalaryParameters, token]);
 
   useEffect(() => {
     const fetchEmployeeTypes = async () => {
@@ -140,7 +128,7 @@ const DeductionHeadsTable = ({ ID }) => {
         );
         const data = response.data;
         setEmployeeTypes(data);
-        console.log("Employee Type Data", data);
+        console.log("Employee Type Data:", data); // Added logging
       } catch (error) {
         console.error("Error", error);
       }
@@ -159,8 +147,8 @@ const DeductionHeadsTable = ({ ID }) => {
           }
         );
         const data = response.data;
-        setBasicSalaryAmount(data)
-        console.log("Basic Salary", data);
+        setBasicSalaryAmount(data);
+        console.log("Basic Salary:", data); // Added logging
       } catch (error) {
         console.error("Error", error);
       }
@@ -168,108 +156,226 @@ const DeductionHeadsTable = ({ ID }) => {
     fetchBasicSalary();
   }, [token, ID]);
 
+  useEffect(() => {
+    const fetchDesignation = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/employee/salary-structure/FnGetEmployeeDesignation",
+          {
+            params: { EmployeeId: ID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        setDesignation(data);
+        console.log("Designation:", data); // Added logging
+      } catch (error) {
+        console.error("Error", error);
+      }
+    };
+    fetchDesignation();
+  }, [token, ID]);
 
   useEffect(() => {
-    const fetchDesignation = async() => {
+    const fetchSalaryParameters = async () => {
       try {
-        const response = await axios.get('http://localhost:5500/employee/salary-structure/FnGetEmployeeDesignation',
-        {
-          params: { EmployeeId: ID },
-          headers: { Authorization: `Bearer ${token}`}
-        }
-        )
-        const data = response.data
-        setDesignation(data)
-        console.log('Designation', data)
+        const response = await axios.get(
+          "http://localhost:5500/deduction-heads/FnFetchSalaryParameters",
+          {
+            params: { EmployeeId: ID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        console.log("Salary Parameters:", data); // Added logging
+        setSalaryParameters(data);
       } catch (error) {
-        console.error('Error', error);
+        console.error("Error", error);
       }
-    }
-    fetchDesignation()
-  },[token, ID])
+    };
+    fetchSalaryParameters();
+  }, [token, ID]);
 
-  useEffect(() =>{
-    const fetchSalaryParameters = async() =>{
-      try {
-        const response = await axios.get('http://localhost:5500/deduction-heads/FnFetchSalaryParameters',
-        {
-          params: { EmployeeId: ID},
-          headers: { Authorization: `Bearer ${token}`}
-        })
-        const data = response.data
-        console.log('Salary Parameters', data)
-        setSalaryParameters(data)
-      } catch (error) {
-        console.error('Error', error);
-      }
-    }
-    fetchSalaryParameters()
-  }, [token, ID])
+  const calculateValue = (
+    formula,
+    salary,
+    basicSalary,
+    calculationValue,
+    DeductionHeadId,
+    allSalaryParameters,
+    Designation,
+    FormulaType
+  ) => {
+    console.log("DeductionHeadId in calculate value:", DeductionHeadId); // Added logging
 
-  const calculateValue = (formula, salary, basicSalary, calculationValue, deductionHeadID, allSalaryParameters, Designation) => {
     try {
-        if (formula === null) {
-            return calculationValue || 0; // Return the current calculation value or 0 if it's null
-        } else {
-            const modifiedFormula = replacePlaceholders(formula, salary, basicSalary, calculationValue, deductionHeadID, allSalaryParameters, Designation);
-            const result = evaluateFormula(modifiedFormula);
-            return result;
-        }
+      if (formula === null) {
+        return calculationValue || 0;
+      } else {
+        const modifiedFormula = replacePlaceholders(
+          formula,
+          salary,
+          basicSalary,
+          calculationValue,
+          DeductionHeadId,
+          allSalaryParameters,
+          Designation
+        );
+        const result = evaluateFormula(modifiedFormula, FormulaType);
+        return result;
+      }
     } catch (error) {
-        console.error("Error in formula calculation: ", error);
-        return 0; // Return 0 in case of error
+      console.error("Error in formula calculation: ", error);
+      return 0;
     }
-}
+  };
 
-// Replace placeholders in the formula with actual values
-const replacePlaceholders = (formula, salary, basicSalary, calculationValue, deductionHeadID, allSalaryParameters, Designation) => {
-    let modifiedFormula = formula
-        .replace("Designation", `'${Designation}'`)
-        .replace(/SP\d+/g, match => {
-            const paramIndex = parseInt(match.slice(2)); // Extract the parameter index
-            const parameterValue = getSalaryParameter(paramIndex, allSalaryParameters); // Get the parameter value
-            return parameterValue !== undefined ? parameterValue : match; // If parameter value exists, replace the placeholder; otherwise, keep it unchanged
-        })
-        .replace("P1", salary)
-        .replace("P2", basicSalaryAmount)
-        .replace("P3", calculationValue);
-
-    return modifiedFormula;
-}
-
-// Evaluate the modified formula
-const evaluateFormula = (modifiedFormula) => {
-    const result = eval(modifiedFormula); // Evaluate the modified formula
-    return result;
-}
-
-// Helper function to get the salary parameter value by index
-const getSalaryParameter = (index, allSalaryParameters) => {
-    const salaryParameters = allSalaryParameters.find(params => params.DeductionHeadID === index);
-    if (salaryParameters) {
-        return parseFloat(salaryParameters[`SalaryParameter${index}`]) || 0; // Get the parameter value or 0 if not found
-    }
-    return undefined; // Return undefined if salary parameters not found for the given DeductionHeadID
-}
-
-
-
-
-const handleCalculationValueChange = (index, newValue) => {
-  const updatedHeads = [...heads];
-  const calculatedValue = calculateValue(
-    updatedHeads[index].Formula,
-    details ? details.GrossSalary : 0,
-    basicSalaryAmount,
-    newValue, // Use the new value instead of details.CalculationValue
-    updatedHeads[index].DeductionHeadID, // Use the DeductionHeadID from the updatedHeads array
-    SalaryParameters,
+  const replacePlaceholders = (
+    formula,
+    salary,
+    basicSalary,
+    calculationValue,
+    DeductionHeadId,
+    allSalaryParameters,
     Designation
-  );
-  updatedHeads[index].CalculationValue = calculatedValue;
-  setHeads(updatedHeads);
-};
+  ) => {
+    let modifiedFormula = formula
+      .replace("DESG", `'${Designation}'`)
+      .replace(/\bP1\b/g, salary)
+      .replace(/\bP2\b/g, basicSalary)
+      .replace(/\bP3\b/g, calculationValue);
 
+    const deductionHeadData = allSalaryParameters.find(
+      (param) => param.DeductionHeadId === DeductionHeadId
+    );
+
+    if (deductionHeadData) {
+      for (let i = 1; i <= 10; i++) {
+        const paramName = `SalaryParameter${i}`;
+        const value = deductionHeadData[paramName] || "0";
+        modifiedFormula = modifiedFormula.replace(
+          new RegExp(`SP${i}`, "g"),
+          value
+        );
+        // modifiedFormula = modifiedFormula.replace(/\bSP\b/g, value);
+      }
+    }
+
+    console.log("Modified Formula:", modifiedFormula); // Added logging
+    return modifiedFormula;
+  };
+
+  const evaluateFormula = (modifiedFormula, FormulaType) => {
+    let result;
+    let FlooredResult;
+    if (FormulaType == "DC") {
+      // Handle DC formula
+      result = evaluateDesgFormula(modifiedFormula);
+      console.log("Designation formula result:", result);
+    } else if (FormulaType == "CF") {
+      // Handle CF formula
+      result = eval(modifiedFormula);
+      console.log("Conditional formula result:", result);
+    } else if (FormulaType == "PF") {
+      // Handle PF formula
+      console.log("Percentage formula");
+      result = eval(modifiedFormula);
+      console.log("Result in percentage formula:", result);
+    } else {
+      console.error("Unknown formula type");
+    }
+    FlooredResult = Math.floor(result);
+    return FlooredResult;
+    // return result;
+  };
+  //Evaluating Designation formula
+
+  const evaluateExpression = (expression) => {
+    let parsedExpression = expression.replace(/'/g, '"'); // Replace single quotes with double quotes for JS compatibility
+
+    // Handle string equality comparisons
+    parsedExpression = parsedExpression.replace(/==/g, "==="); // Ensure strict equality
+    parsedExpression = parsedExpression.replace(/!=/g, "!=="); // Ensure strict inequality
+
+    // Safeguard against injection attacks by only allowing valid characters
+    // Adjust the regex to allow characters common in JavaScript expressions
+    if (/[^-()\d/*+.?!=<>"':\sA-Za-z]/.test(parsedExpression)) {
+      throw new Error("Invalid characters in expression");
+    }
+
+    try {
+      return new Function("return " + parsedExpression)(); // Evaluate the expression using Function constructor
+    } catch (error) {
+      throw new Error("Error evaluating expression: " + error.message);
+    }
+  };
+
+  // Revised evaluateDesgFormula function
+  const evaluateDesgFormula = (formula) => {
+    try {
+      const evaluatePart = (part) => {
+        // Split by the first occurrence of "?"
+        const questionMarkIndex = part.indexOf("?");
+        if (questionMarkIndex === -1) {
+          // No ternary operator found, evaluate the expression directly
+          return evaluateExpression(part);
+        }
+
+        // Split into condition, true case, and false case
+        const condition = part.substring(0, questionMarkIndex).trim();
+        const rest = part.substring(questionMarkIndex + 1).trim();
+
+        // Find the corresponding ":"
+        let colonIndex = rest.indexOf(":");
+        let openQuestionMarks = 0;
+        for (let i = 0; i < rest.length; i++) {
+          if (rest[i] === "?") openQuestionMarks++;
+          if (rest[i] === ":") {
+            if (openQuestionMarks === 0) {
+              colonIndex = i;
+              break;
+            } else {
+              openQuestionMarks--;
+            }
+          }
+        }
+
+        if (colonIndex === -1) {
+          throw new Error("Invalid ternary expression");
+        }
+
+        const trueCase = rest.substring(0, colonIndex).trim();
+        const falseCase = rest.substring(colonIndex + 1).trim();
+
+        if (evaluateExpression(condition)) {
+          return evaluatePart(trueCase); // Recursively evaluate true case
+        } else {
+          return evaluatePart(falseCase); // Recursively evaluate false case
+        }
+      };
+
+      return evaluatePart(formula);
+    } catch (error) {
+      console.error("Error evaluating formula:", error);
+      return 0; // Return 0 on error
+    }
+  };
+
+  const handleCalculationValueChange = (index, newValue) => {
+    const updatedHeads = [...heads];
+    const calculatedValue = calculateValue(
+      updatedHeads[index].Formula,
+      details ? details.GrossSalary : 0,
+      basicSalaryAmount,
+      newValue,
+      updatedHeads[index].DeductionHeadId,
+      SalaryParameters,
+      Designation,
+      updatedHeads[index].FormulaType
+    );
+    updatedHeads[index].CalculationValue = calculatedValue;
+    setHeads(updatedHeads);
+  };
 
   const handleFormulaChange = (index, newValue) => {
     const updatedHeads = [...heads];
@@ -288,25 +394,30 @@ const handleCalculationValueChange = (index, newValue) => {
       .filter((item) => item.Selected)
       .map(
         ({
-          DeductionHeadID,
+          DeductionHeadId,
           DeductionHead,
           CalculationType,
           CalculationValue,
           Formula,
+          FormulaType,
         }) => ({
           EmployeeType: employeeTypes?.ShortName,
-          DeductionHeadId: DeductionHeadID,
+          DeductionHeadId: DeductionHeadId,
           DeductionHead,
           DCalculationType: CalculationType,
-          DCalculationValue: CalculationType === 'Amount' ? 
-            CalculationValue : calculateValue(
-            Formula, 
-            details ? details.GrossSalary : 0, 
-            basicSalaryAmount,
-            details.CalculationValue,
-            details.DeductionHeadID,
-            SalaryParameters,
-            Designation),
+          DCalculationValue:
+            CalculationType === "Amount"
+              ? CalculationValue
+              : calculateValue(
+                  Formula,
+                  details ? details.GrossSalary : 0,
+                  basicSalaryAmount,
+                  details.CalculationValue,
+                  details.DeductionHeadId,
+                  SalaryParameters,
+                  Designation,
+                  FormulaType
+                ),
           Formula,
           EmployeeId: ID,
           EmployeeTypeId: employeeTypes?.EmployeeTypeId,
@@ -315,7 +426,7 @@ const handleCalculationValueChange = (index, newValue) => {
         })
       );
     setSelectedHeads(selectedHeadsData);
-    console.log("Selected Heads", selectedHeads);
+    console.log("Selected Heads", selectedHeadsData); // Added logging
   }, [heads, employeeTypes, ID]);
 
   const addEmployeewiseDeduction = async () => {
@@ -323,8 +434,10 @@ const handleCalculationValueChange = (index, newValue) => {
       const response = axios.post(
         "http://localhost:5500/employee-wise-deductions/FnAddUpdateDeleteRecord",
         selectedHeads,
-        { params: { EmployeeId: ID},
-          headers: { Authorization: `Bearer ${token}` } }
+        {
+          params: { EmployeeId: ID },
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
       alert("Employee-wise Deduction Heads Added");
     } catch (error) {
@@ -361,7 +474,7 @@ const handleCalculationValueChange = (index, newValue) => {
               <th className="text-[11px]  font-semibold border-r-2 border-white py-1 px-2 bg-blue-900 text-white">
                 Calculation <br /> Value
               </th>
-              <th className="text-[11px]  font-semibold border-r-2 border-white py-1 px-2 bg-blue-900 text-white">
+              <th className="text-[11px]  font-semibold border-r-2 border-white py-1 px-2 bg-blue-900 text-white w-40">
                 Formula
               </th>
             </tr>
@@ -399,10 +512,11 @@ const handleCalculationValueChange = (index, newValue) => {
                       item.Formula,
                       details ? details.GrossSalary : 0,
                       basicSalaryAmount,
-                      details.CalculationValue,
-                      details.DeductionHeadID,
+                      item.CalculationValue, // Use item's CalculationValue
+                      item.DeductionHeadId, // Use item's DeductionHeadId
                       SalaryParameters,
-                      Designation
+                      Designation,
+                      item.FormulaType
                     )}
                     onChange={(e) =>
                       handleCalculationValueChange(index, e.target.value)
@@ -412,7 +526,7 @@ const handleCalculationValueChange = (index, newValue) => {
                 <td className="px-2 border-2 whitespace-normal text-left text-[11px]">
                   <input
                     type="text"
-                    className=" w-20 py-1 rounded-md text-center"
+                    className=" w-50 py-1 px-2 rounded-md text-center"
                     value={item.Formula}
                     onChange={(e) => handleFormulaChange(index, e.target.value)}
                   />

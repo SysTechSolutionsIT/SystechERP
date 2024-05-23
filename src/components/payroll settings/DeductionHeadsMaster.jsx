@@ -6,70 +6,11 @@ import ViewDeductionHeads from "./ViewDeductionHeads";
 import axios from "axios";
 import { useAuth } from "../Login";
 
-export const DeductionHeads = [
-  {
-    DeductionHeadId: 1,
-    DeductionHead: "Income Tax",
-    ShortName: "IT",
-    CalculationType: "Percentage",
-    Status: true,
-  },
-  {
-    DeductionHeadId: 2,
-    DeductionHead: "Health Insurance",
-    ShortName: "HI",
-    CalculationType: "Fixed Amount",
-    Status: false,
-  },
-  {
-    DeductionHeadId: 3,
-    DeductionHead: "401(k) Contribution",
-    ShortName: "401(k)",
-    CalculationType: "Percentage",
-    Status: true,
-  },
-  {
-    DeductionHeadId: 4,
-    DeductionHead: "Life Insurance Premium",
-    ShortName: "Life Ins",
-    CalculationType: "Fixed Amount",
-    Status: true,
-  },
-  {
-    DeductionHeadId: 5,
-    DeductionHead: "Employee Stock Purchase Plan",
-    ShortName: "ESPP",
-    CalculationType: "Percentage",
-    Status: false,
-  },
-  {
-    DeductionHeadId: 6,
-    DeductionHead: "Union Dues",
-    ShortName: "Union",
-    CalculationType: "Fixed Amount",
-    Status: true,
-  },
-  {
-    DeductionHeadId: 7,
-    DeductionHead: "Childcare Expenses",
-    ShortName: "Childcare",
-    CalculationType: "Percentage",
-    Status: false,
-  },
-  {
-    DeductionHeadId: 8,
-    DeductionHead: "Student Loan Repayment",
-    ShortName: "Loan Repay",
-    CalculationType: "Fixed Amount",
-    Status: true,
-  },
-  // Add more deduction heads as needed
-];
-
 const DeductionHeadsMaster = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
   const { token } = useAuth();
+  const [heads, setHeads] = useState([]);
 
   // View and Edit
   const [veDeductionH, setVeDeductionH] = useState(false);
@@ -138,7 +79,7 @@ const DeductionHeadsMaster = () => {
   //Max Searchbar width
   const getColumnMaxWidth = (columnName) => {
     let maxWidth = 0;
-    const allRows = [...DeductionHeads];
+    const allRows = [...heads];
 
     allRows.forEach((row) => {
       const cellContent = row[columnName];
@@ -196,7 +137,6 @@ const DeductionHeadsMaster = () => {
   };
 
   // API
-  const [heads, setHeads] = useState([]);
 
   useEffect(() => {
     fetchHeadsData();
@@ -217,10 +157,9 @@ const DeductionHeadsMaster = () => {
       console.log(data);
       setHeads(data);
     } catch (error) {
-      console.log("Error while fetching course data: ", error);
+      console.log("Error while fetching deduction heads data: ", error);
     }
   };
-  console.log(heads);
 
   const handleSearchChange = (title, searchWord) => {
     const searchData = [...heads];
@@ -406,7 +345,7 @@ const DeductionHeadsMaster = () => {
                             onClick={() => {
                               setVeDeductionH(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setEHid(result.DeductionHeadID); // Pass ID to VEModal
+                              setEHid(result.DeductionHeadId); // Pass ID to VEModal
                             }}
                           />
                           <Icon
@@ -418,7 +357,7 @@ const DeductionHeadsMaster = () => {
                             onClick={() => {
                               setVeDeductionH(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setEHid(result.DeductionHeadID); // Pass ID to VEModal
+                              setEHid(result.DeductionHeadId); // Pass ID to VEModal
                             }}
                           />
                           <Icon
@@ -431,7 +370,7 @@ const DeductionHeadsMaster = () => {
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {result.DeductionHeadID}
+                        {result.DeductionHeadId}
                       </td>
                       {selectedColumns.map((columnName) =>
                         columnVisibility[columnName] ? (
@@ -463,7 +402,7 @@ const DeductionHeadsMaster = () => {
                             onClick={() => {
                               setVeDeductionH(true); // Open VEModal
                               setEdit(false); // Disable edit mode for VEModal
-                              setEHid(result.DeductionHeadID); // Pass ID to VEModal
+                              setEHid(result.DeductionHeadId); // Pass ID to VEModal
                             }}
                           />
                           <Icon
@@ -475,7 +414,7 @@ const DeductionHeadsMaster = () => {
                             onClick={() => {
                               setVeDeductionH(true); // Open VEModal
                               setEdit(true); // Disable edit mode for VEModal
-                              setEHid(result.DeductionHeadID); // Pass ID to VEModal
+                              setEHid(result.DeductionHeadId); // Pass ID to VEModal
                             }}
                           />
                           <Icon
@@ -488,7 +427,7 @@ const DeductionHeadsMaster = () => {
                         </div>
                       </td>
                       <td className="px-4 border-2 whitespace-normal text-center text-[11px]">
-                        {result.DeductionHeadID}
+                        {result.DeductionHeadId}
                       </td>
                       {selectedColumns.map((columnName) =>
                         columnVisibility[columnName] ? (
@@ -496,7 +435,7 @@ const DeductionHeadsMaster = () => {
                             key={columnName}
                             className={`px-4 border-2 whitespace-normal text-left text-[11px] capitalize`}
                           >
-                            {columnName === "ACFlag"
+                            {columnName === "AcFlag"
                               ? result[columnName] === "Y"
                                 ? "Active"
                                 : "Inactive"

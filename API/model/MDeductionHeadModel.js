@@ -128,7 +128,6 @@ const MDeductionHeads = sequelize.define(
     FormulaType: {
       type: DataTypes.STRING(5),
       allowNull: true,
-      defaultValue: "PF",
     },
     AcFlag: {
       type: DataTypes.STRING(1),
