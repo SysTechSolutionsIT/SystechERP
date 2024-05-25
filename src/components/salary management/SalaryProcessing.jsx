@@ -14,6 +14,12 @@ const SalProcessing = () => {
   const [employeeTypes, setEmployeeTypes] = useState([]);
   const [employees, setEmployees] = useState([]);
   const [departments, setDepartments] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState("");
+  const [selectedYear, setSelectedYear] = useState("");
+  const [displayMonth, setDisplayMonth] = useState("");
+  const [displayYear, setDisplayYear] = useState("");
+  const [EmployeeId, setEmployeeId] = useState()
+
   const formik = useFormik({
     initialValues: {
       ApprovalFlag: "",
@@ -36,6 +42,7 @@ const SalProcessing = () => {
 
   const [status, setStatus] = useState(false);
   const columnHeads = [
+    "Actions",
     "Process Id",
     "Process Date",
     "Employee Id",
@@ -52,11 +59,6 @@ const SalProcessing = () => {
     "TotalDeduction",
     "NetSalary",
   ];
-
-  const [selectedMonth, setSelectedMonth] = useState("");
-  const [selectedYear, setSelectedYear] = useState("");
-  const [displayMonth, setDisplayMonth] = useState("");
-  const [displayYear, setDisplayYear] = useState("");
 
   const handleDisplayMonthChange = (e) => {
     setDisplayMonth(e.target.value);
@@ -366,6 +368,22 @@ const SalProcessing = () => {
                     {salaryData.map((item) => (
                       <tr className="bg-white">
                         <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
+                        <Icon
+                            className="cursor-pointer"
+                            icon="lucide:eye"
+                            color="#556987"
+                            width="20"
+                            height="20"
+                            onClick={()=> {
+                              setDisplayMonth(displayMonth)
+                              setDisplayYear(displayYear)
+                              setEmployeeId(item.EmployeeId)
+                              setPreview(true)
+                              
+                            }}
+                          />
+                        </td>
+                        <td className="px-4 border-2 whitespace-normal text-left text-[11px]">
                           {item.ProcessId}
                         </td>
                         <td className="px-4 border-2 whitespace-nowrap text-left text-[11px]">
@@ -428,7 +446,7 @@ const SalProcessing = () => {
                   </tbody>
                 </table>
               </div>
-              <button
+              {/* <button
                 type="button"
                 className="bg-blue-900 text-white text-[13px] font-semibold py-2 px-4 rounded-lg"
                 onClick={() => {
@@ -437,7 +455,7 @@ const SalProcessing = () => {
                 }}
               >
                 Print Salary Slip
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
@@ -447,6 +465,8 @@ const SalProcessing = () => {
             handleClose={handlePreviewClose} // Wrap in an arrow function
             displayMonth={displayMonth}
             displayYear={displayYear}
+            EmployeeId={EmployeeId}
+            onClick={() => setPreview(false)}
           />
         )}
       </div>

@@ -213,6 +213,29 @@ router.get("/FnshowActiveData", authToken, async (req, res) => {
     }
   });
 
+  router.get("/FnSalraySlipData", authToken, async (req, res) => {
+    const EmployeeId = req.query.EmployeeId;
+    const AMonth = req.query.AMonth
+    const AYear = req.query.AYear
+    try {
+      const SalarySlip = await TSalaryProcessing.findAll({
+        where: {
+          EmployeeId: EmployeeId,
+          AMonth: AMonth,
+          AYear: AYear
+        },
+        attributes: {
+          exclude: ["IUFlag"],
+        },
+        order: [["EmployeeId", "ASC"]],
+      });
+      res.json(SalarySlip);
+    } catch (error) {
+      console.error("Error retrieving data:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  });
+
   router.patch('/FnSalaryCorrections', authToken, async(req, res) =>{
     const ProcessId = req.query.ProcessId
     const SalaryCorrections = req.body
