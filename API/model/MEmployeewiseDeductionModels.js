@@ -4,7 +4,6 @@ const { Sequelize, DataTypes } = require("sequelize");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
 
-
 // Configure Sequelize with database connection details
 const sequelize = new Sequelize(
   process.env.DB_NAME,
@@ -118,8 +117,11 @@ const MEmployeewiseDeduction = sequelize.define(
     await MEmployeewiseDeduction.sync();
     console.log("MEmployeewiseDeduction model synchronized successfully.");
   } catch (error) {
-    console.error("Unable to connect to the database or synchronize model:", error);
+    console.error(
+      "Unable to connect to the database or synchronize model:",
+      error
+    );
   }
 })();
 
-module.exports = MEmployeewiseDeduction
+module.exports = MEmployeewiseDeduction;

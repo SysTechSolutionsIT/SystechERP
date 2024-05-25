@@ -93,7 +93,8 @@ const TLeaves = sequelize.define(
       defaultValue: 0,
     },
     SanctionMonth: {
-      type: DataTypes.INTEGER, // Month of the leave
+      type: DataTypes.INTEGER,
+      allowNull: true, // Month of the leave
     },
     Remark: {
       type: DataTypes.STRING(1000),

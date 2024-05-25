@@ -45,7 +45,7 @@ const sequelize = new Sequelize(
 //     allowNull: false,
 //     defaultValue: "00001",
 //   },
-//   DeductionHeadID: {
+//   DeductionHeadId: {
 //     type: DataTypes.INTEGER,
 //     allowNull: false,
 //     primaryKey: true,
@@ -169,7 +169,7 @@ router.get("/FnShowAllData", authToken, async (req, res) => {
       attributes: {
         exclude: ["IUFlag"],
       },
-      order: [["DeductionHeadID", "ASC"]],
+      order: [["DeductionHeadId", "ASC"]],
     });
     res.json(years);
   } catch (error) {
@@ -188,7 +188,7 @@ router.get("/FnShowActiveData", async (req, res) => {
       attributes: {
         exclude: ["IUFlag"],
       },
-      order: [["DeductionHeadID", "ASC"]],
+      order: [["DeductionHeadId", "ASC"]],
     });
     res.json(years);
   } catch (error) {
@@ -199,16 +199,16 @@ router.get("/FnShowActiveData", async (req, res) => {
 
 // GET endpoint to retrieve a particular financial year entry by ID
 router.get("/FnShowParticularData", authToken, async (req, res) => {
-  const DeductionHeadID = req.query.DeductionHeadID;
+  const DeductionHeadId = req.query.DeductionHeadId;
   try {
     const years = await MDeductionHeads.findOne({
       where: {
-        DeductionHeadID: DeductionHeadID,
+        DeductionHeadId: DeductionHeadId,
       },
       attributes: {
         exclude: ["IUFlag"],
       },
-      order: [["DeductionHeadID", "ASC"]],
+      order: [["DeductionHeadId", "ASC"]],
     });
     res.json(years);
   } catch (error) {
@@ -255,10 +255,10 @@ router.get("/FnFetchSalaryParameters", authToken, async (req, res) => {
             calculatedParams[parameterKey] = earningHeadMap[earningHeadId];
           }
         }
-        // If any non-null calculation values found, return with DeductionHeadID
+        // If any non-null calculation values found, return with DeductionHeadId
         if (Object.keys(calculatedParams).length > 0) {
           return {
-            DeductionHeadID: deductionHead.DeductionHeadID,
+            DeductionHeadId: deductionHead.DeductionHeadId,
             ...calculatedParams,
           };
         }
@@ -276,14 +276,14 @@ router.get("/FnFetchSalaryParameters", authToken, async (req, res) => {
   }
 });
 
-// Middleware for generating deductionHeadId
-const generatedeductionHeadId = async (req, res, next) => {
+// Middleware for generating DeductionHeadId
+const generateDeductionHeadId = async (req, res, next) => {
   try {
     // Check if IUFlag is 'I'
     if (req.body.IUFlag === "I") {
       const totalRecords = await MDeductionHeads.count();
       const newId = "D" + (totalRecords + 1).toString().padStart(4, "0");
-      req.body.DeductionHeadID = newId;
+      req.body.DeductionHeadId = newId;
     }
     next();
   } catch (error) {
@@ -295,7 +295,7 @@ const generatedeductionHeadId = async (req, res, next) => {
 router.post(
   "/FnAddUpdateDeleteRecord",
   authToken,
-  generatedeductionHeadId,
+  generateDeductionHeadId,
   async (req, res) => {
     const deductionHead = req.body;
     try {
@@ -303,7 +303,7 @@ router.post(
         // "Soft-delete" operation
         const result = await MDeductionHeads.update(
           { AcFlag: "N" },
-          { where: { DeductionHeadID: deductionHead.DeductionHeadID } }
+          { where: { DeductionHeadId: deductionHead.DeductionHeadId } }
         );
 
         res.json({
