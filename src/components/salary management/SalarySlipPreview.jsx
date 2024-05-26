@@ -52,6 +52,12 @@ const SalarySlipPreview = ({ visible, EmployeeId, displayMonth, displayYear, onC
     if (loading) return;
   
     const input = document.getElementById("salary-slip-content");
+    const footerContent = `
+        <div id="footer" style="background-color: #495475; color: white; text-align: center; padding: 16px;">
+            <p>Flat No A/7, SuryaLok Nagri, Waiduwadi, Hadapsar, Pune 411013</p>
+            <p>Cell: 09850164441 | Land line: 020-26812190</p>
+            <p>E-Mail ID: Sandeep.patil@systechsolutions.co.in | Web: www.systechsolutions.co.in</p>
+        </div>`;
   
     // Get computed styles to calculate padding
     const computedStyle = window.getComputedStyle(input);
@@ -63,51 +69,59 @@ const SalarySlipPreview = ({ visible, EmployeeId, displayMonth, displayYear, onC
     // Calculate scale factor to fit content within page boundaries at high resolution
     const contentWidth = input.offsetWidth + paddingRight + paddingLeft;
     const contentHeight = input.offsetHeight + paddingTop + paddingBottom;
-    const resolution = 300; // Resolution in DPI (dots per inch)
-    const scaleFactor = resolution / 96; // Scale factor for high-resolution rendering
+    const pdfWidth = 210; // Width of A4 in mm
+    const pdfHeight = 297; // Height of A4 in mm
+    const pdfAspectRatio = pdfWidth / pdfHeight;
   
-    // Create a canvas for the content
+    const contentAspectRatio = contentWidth / contentHeight;
+    let imgWidth, imgHeight;
+  
+    if (contentAspectRatio > pdfAspectRatio) {
+      imgWidth = pdfWidth;
+      imgHeight = (pdfWidth / contentWidth) * contentHeight;
+    } else {
+      imgHeight = pdfHeight;
+      imgWidth = (pdfHeight / contentHeight) * contentWidth;
+    }
+  
     const canvas = await html2canvas(input, {
-      scale: scaleFactor, // Scale to render content at high resolution
+      scale: 2, // Scale to render content at high resolution
       logging: true, // Enable logging (optional)
-      useCORS: true // Enable CORS to handle image loading issues (optional)
+      useCORS: true, // Enable CORS to handle image loading issues (optional)
     });
   
     const pdf = new jsPDF("p", "mm", "a4");
     const imgData = canvas.toDataURL("image/jpeg", 1.0); // Use JPEG format for higher quality
-    const imgWidth = 210;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
   
-    // Calculate the height of the content, excluding the footer
-    const contentHeightWithoutFooter = contentHeight - (document.querySelector("footer").offsetHeight + 20); // Adjust 20 as needed
+    // Add the salary slip content image to the PDF
+    pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, imgHeight);
   
-    // If the content height exceeds the page height, split the content into multiple pages
-    let currentPosition = 0;
-    while (currentPosition < contentHeightWithoutFooter) {
-      // Add the image data to the PDF
-      pdf.addImage(imgData, "JPEG", 0, -currentPosition, imgWidth, imgHeight);
+    // Add footer content to PDF
+    const footerTempDiv = document.createElement('div');
+    footerTempDiv.innerHTML = footerContent;
+    document.body.appendChild(footerTempDiv);
   
-      // Add a new page if there is more content to render
-      currentPosition += imgHeight;
-      if (currentPosition < contentHeightWithoutFooter) {
-        pdf.addPage();
-      }
-    }
+    // Add footer content to PDF
+    const footerCanvas = await html2canvas(footerTempDiv, {
+      scale: 2, // Scale to render content at high resolution
+      logging: true, // Enable logging (optional)
+      useCORS: true, // Enable CORS to handle image loading issues (optional)
+    });
   
-    // Add the footer image to each page
-    const footerImgData = canvas.toDataURL("image/jpeg", 1.0); // Use JPEG format for higher quality
-    for (let i = 1; i <= pdf.internal.getNumberOfPages(); i++) {
-      pdf.setPage(i);
-      pdf.addImage(footerImgData, "JPEG", 0, 280, 210, 30); // Adjust coordinates as needed
-    }
+    const footerImgData = footerCanvas.toDataURL("image/jpeg", 1.0);
+    const footerImgHeight = footerCanvas.height * (pdfWidth / footerCanvas.width);
+  
+    // Remove footer content from document body
+    document.body.removeChild(footerTempDiv);
+  
+    // Add the footer image to the PDF
+    pdf.addImage(footerImgData, "JPEG", 0, pdfHeight - footerImgHeight, pdfWidth, footerImgHeight);
   
     // Save the PDF
     pdf.save(`${EmployeeId}_${EmployeeName}_${displayMonthName}_${displayYear}.pdf`);
-  };
-  
-  
+};
 
-
+    
   if (!visible) return null;
 
   return (
@@ -117,7 +131,7 @@ const SalarySlipPreview = ({ visible, EmployeeId, displayMonth, displayYear, onC
           <Icon icon="maki:cross" color="red" className="cursor-pointer" onClick={onClick} />
         </div>
         <div id="salary-slip-content" className="p-4">
-          <div className="flex justify-center mb-4 opacity-35">
+          <div className="flex justify-center mb-4">
             <img src="./SalarySlipHeader.png" alt="Header" className="h-40 w-full object-contain" />
           </div>
           <div className="text-center mb-4">
@@ -185,14 +199,11 @@ const SalarySlipPreview = ({ visible, EmployeeId, displayMonth, displayYear, onC
           <div className="text-left mt-4">
             <p className="font-bold">Net Pay: {salaryData.Net_Pay}</p>
           </div>
-          <div className="flex justify-end mt-4 ">
-            <img src="./SalarySlipFooter.png" alt="Footer" className="object-contain w-[20%] h[30%] opacity-20" />
-          </div>
-          <footer className="bg-[#495477] text-white text-center py-4 opacity-35">
-            <p>Flat No A/7, SuryaLok Nagri, Waiduwadi, Hadapsar, Pune 411013</p>
-            <p>Cell: 09850164441 | Land line: 020-26812190</p>
-            <p>E-Mail ID: Sandeep.patil@systechsolutions.co.in | Web: www.systechsolutions.co.in</p>
-          </footer>
+          {/* <div id="footer" className="bg-[#495475] text-white text-center py-4 ">
+          <p>Flat No A/7, SuryaLok Nagri, Waiduwadi, Hadapsar, Pune 411013</p>
+          <p>Cell: 09850164441 | Land line: 020-26812190</p>
+          <p>E-Mail ID: Sandeep.patil@systechsolutions.co.in | Web: www.systechsolutions.co.in</p>
+        </div> */}
         </div>
         <div className="flex justify-end mt-4">
           <button

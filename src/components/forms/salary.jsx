@@ -169,10 +169,30 @@ const SalaryStructure = ({ ID, name }) => {
     });
   };
 
+  useEffect(() => {
+    const fetchDesignations = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/d9e7x2a1/FnShowActiveData",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const data = response.data;
+        setDesignations(data);
+      } catch (error) {
+        console.error("Error", error);
+      }
+    };
+    fetchDesignations();
+  }, [token, ID]);
+
   return (
     <form onSubmit={formik.handleSubmit}>
-      <div className="p-4 bg-white font-[Inter]">
-        <div className="mr-auto text-[15px] bg-red-600 text-white font-bold rounded-lg justify-center text-center p-1 whitespace-normal">
+      <div className="bg-white font-[Inter]">
+        <div className="mr-auto text-[11px] text-white w-fit bg-blue-900 px-1 rounded-sm justify-start whitespace-normal">
           NOTE: Please submit salary details before assigning Earning or
           Deduction Heads
         </div>
@@ -214,7 +234,7 @@ const SalaryStructure = ({ ID, name }) => {
             >
               <option value={null}>Select Designation</option>
               {Designations.map((item) => (
-                <option key={item.DesignationId} vlaue={item.DesignationName}>
+                <option key={item.DesignationId} value={item.ShortName}>
                   {item.DesignationName}
                 </option>
               ))}
@@ -499,9 +519,17 @@ const SalaryStructure = ({ ID, name }) => {
           </button>
         </div>
         <div className="flex flex-wrap">
-          <EarningHeadsTable ID={ID} />
-          <DeductionHeadsTable ID={ID} />
+        <div className="ml-2 text-[11px] text-white w-fit bg-blue-900 px-1 rounded-sm justify-start whitespace-normal">
+          NOTE: Please submit Earning Head details before assigning Deduction Heads
         </div>
+  <div className="w-full">
+    <EarningHeadsTable ID={ID} />
+  </div>
+  <div className="w-full">
+    <DeductionHeadsTable ID={ID} />
+  </div>
+</div>
+
       </div>
     </form>
   );

@@ -99,6 +99,10 @@ const MEarningHeads = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    FormulaType: {
+      type: DataTypes.STRING(5),
+      allowNull: true,
+    },
     Formula: {
       type: DataTypes.STRING,
       allowNull: true,

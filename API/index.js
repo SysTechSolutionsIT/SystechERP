@@ -107,7 +107,7 @@ app.use("/a0bdhs87t", AdvanceRequest);
 // // app.use("/employeeid", EmployeeId);
 // app.use("/ed-imports", EDImports);
 // app.use("/currency", Currencies);
-app.use("/employee-wise-earning", MEmployeewiseEarning);
+app.use("/employee-wise-earnings", MEmployeewiseEarning);
 app.use("/employee-wise-deductions", MEmployeewiseDeduction);
 app.use("/caderwise-earning", MCaderwiseEarning);
 app.use("/caderwise-deduction", MCaderwiseDeduction);

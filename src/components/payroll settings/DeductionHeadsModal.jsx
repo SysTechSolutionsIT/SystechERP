@@ -339,19 +339,6 @@ const DeductionHeadsModal = ({ visible, onClick }) => {
                   {generateSelectWithOptions(heads)}
                 </select>
               </div>
-              <div className="col-span-2">
-                <p className="capatilize font-semibold  text-[13px]">
-                  Formula (Use Salary Parameter Gross as 'P1', Basic Salary As
-                  'P2', TotalEarning As 'P3' for Creation of Formula)
-                </p>
-                <input
-                  id="Formula"
-                  type="text"
-                  value={formik.values.Formula}
-                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
-                  onChange={formik.handleChange}
-                />
-              </div>
               <div>
                 <p className="capitalize font-semibold text-[13px]">
                   Formula Type
@@ -369,6 +356,19 @@ const DeductionHeadsModal = ({ visible, onClick }) => {
                   <option value="CF">Conditional Formula</option>
                   <option value="PF">Percentage based formula</option>
                 </select>
+              </div>
+              <div className="col-span-2">
+                <p className="capatilize font-semibold  text-[13px]">
+                  Formula (Use Salary Parameter Gross as 'P1', Basic Salary As
+                  'P2', TotalEarning As 'P3' for Creation of Formula)
+                </p>
+                <input
+                  id="Formula"
+                  type="text"
+                  value={formik.values.Formula}
+                  className={`w-full px-4 py-2 font-normal focus:outline-blue-900 border border-gray-300 rounded-lg text-[11px] `}
+                  onChange={formik.handleChange}
+                />
               </div>
               <div>
                 <p className="capatilize font-semibold  text-[13px]">Remark</p>

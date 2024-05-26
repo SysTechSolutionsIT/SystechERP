@@ -76,6 +76,7 @@ const DesignationMaster = () => {
   const [columnVisibility, setColumnVisibility] = useState({
     DesignationName: true,
     ReportDesignationId: true,
+    ShortName: true
   });
 
   const [showDropdown, setShowDropdown] = useState(false);

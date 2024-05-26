@@ -14,6 +14,8 @@ const DeductionHeadsTable = ({ ID }) => {
   const [employeeTypes, setEmployeeTypes] = useState([]);
   const [Designation, setDesignation] = useState();
   const [SalaryParameters, setSalaryParameters] = useState([]);
+  const [comparisonDone, setComparisonDone] = useState(false)
+
 
   useEffect(() => {
     const fetchHeadsData = async () => {
@@ -93,6 +95,20 @@ const DeductionHeadsTable = ({ ID }) => {
   }, [token, ID, employeeTypeId]);
 
   useEffect(() => {
+    if (!comparisonDone && heads.length > 0 && caderwiseDeductions.length > 0) {
+      // Compare EarningHeadId of heads with caderwiseDeductions
+      const updatedHeads = heads.map((head) => ({
+        ...head,
+        Selected: caderwiseDeductions.some(
+          (earning) => earning.EarningHeadId === head.EarningHeadId
+        ),
+      }));
+      setHeads(updatedHeads);
+      setComparisonDone(true); // Set comparisonDone to true after comparison
+    }
+  }, [heads, caderwiseDeductions, comparisonDone]);
+
+  useEffect(() => {
     const updatedHeads = heads.map((head) => {
       console.log("Mapping Head:", head); // Added logging
       const calculationValue = calculateValue(
@@ -157,6 +173,7 @@ const DeductionHeadsTable = ({ ID }) => {
   }, [token, ID]);
 
   useEffect(() => {
+    // Fetch designation data
     const fetchDesignation = async () => {
       try {
         const response = await axios.get(
@@ -168,13 +185,15 @@ const DeductionHeadsTable = ({ ID }) => {
         );
         const data = response.data;
         setDesignation(data);
-        console.log("Designation:", data); // Added logging
+        console.log("Designation:", data); // Log the designation value
+        console.log("Is DESG equal to 'TE'?", data === 'TE'); // Log the result of comparison
       } catch (error) {
         console.error("Error", error);
       }
     };
     fetchDesignation();
   }, [token, ID]);
+  
 
   useEffect(() => {
     const fetchSalaryParameters = async () => {
@@ -271,15 +290,18 @@ const DeductionHeadsTable = ({ ID }) => {
     if (FormulaType == "DC") {
       // Handle DC formula
       result = evaluateDesgFormula(modifiedFormula);
+      result = Math.floor(result)
       console.log("Designation formula result:", result);
     } else if (FormulaType == "CF") {
       // Handle CF formula
       result = eval(modifiedFormula);
+      result = Math.floor(result)
       console.log("Conditional formula result:", result);
     } else if (FormulaType == "PF") {
       // Handle PF formula
       console.log("Percentage formula");
       result = eval(modifiedFormula);
+      result = Math.floor(result)
       console.log("Result in percentage formula:", result);
     } else {
       console.error("Unknown formula type");
@@ -293,73 +315,80 @@ const DeductionHeadsTable = ({ ID }) => {
   const evaluateExpression = (expression) => {
     let parsedExpression = expression.replace(/'/g, '"'); // Replace single quotes with double quotes for JS compatibility
 
-    // Handle string equality comparisons
-    parsedExpression = parsedExpression.replace(/==/g, "==="); // Ensure strict equality
-    parsedExpression = parsedExpression.replace(/!=/g, "!=="); // Ensure strict inequality
+    // Log the parsed expression
+    console.log("Parsed Expression:", parsedExpression);
 
-    // Safeguard against injection attacks by only allowing valid characters
-    // Adjust the regex to allow characters common in JavaScript expressions
-    if (/[^-()\d/*+.?!=<>"':\sA-Za-z]/.test(parsedExpression)) {
-      throw new Error("Invalid characters in expression");
-    }
-
+    // Evaluate the expression
     try {
-      return new Function("return " + parsedExpression)(); // Evaluate the expression using Function constructor
+        const result = eval(parsedExpression);
+        console.log("Evaluation Result:", result); // Log the evaluation result
+        return result;
     } catch (error) {
-      throw new Error("Error evaluating expression: " + error.message);
+        throw new Error("Error evaluating expression: " + error.message);
     }
-  };
+};
 
-  // Revised evaluateDesgFormula function
-  const evaluateDesgFormula = (formula) => {
-    try {
-      const evaluatePart = (part) => {
-        // Split by the first occurrence of "?"
-        const questionMarkIndex = part.indexOf("?");
-        if (questionMarkIndex === -1) {
-          // No ternary operator found, evaluate the expression directly
-          return evaluateExpression(part);
-        }
 
-        // Split into condition, true case, and false case
-        const condition = part.substring(0, questionMarkIndex).trim();
-        const rest = part.substring(questionMarkIndex + 1).trim();
+const evaluateDesgFormula = (formula, designation) => {
+  try {
+      // Replace 'DESG' with the actual designation value
+      const replacedFormula = formula.replace(/'DESG'/g, `'${designation}'`);
+      
+      console.log("Comparison result:", replacedFormula == 'TE' ? 1 : 0); // Log the comparison result
 
-        // Find the corresponding ":"
-        let colonIndex = rest.indexOf(":");
-        let openQuestionMarks = 0;
-        for (let i = 0; i < rest.length; i++) {
-          if (rest[i] === "?") openQuestionMarks++;
-          if (rest[i] === ":") {
-            if (openQuestionMarks === 0) {
-              colonIndex = i;
-              break;
-            } else {
-              openQuestionMarks--;
-            }
-          }
-        }
+      if (replacedFormula !== 'TE') {
+          // Evaluate the next condition if the designation does not match 'TE'
+          const evaluatePart = (part) => {
+              // Split by the first occurrence of "?"
+              const questionMarkIndex = part.indexOf("?");
+              if (questionMarkIndex === -1) {
+                  // No ternary operator found, evaluate the expression directly
+                  return evaluateExpression(part);
+              }
 
-        if (colonIndex === -1) {
-          throw new Error("Invalid ternary expression");
-        }
+              // Split into condition, true case, and false case
+              const condition = part.substring(0, questionMarkIndex).trim();
+              const rest = part.substring(questionMarkIndex + 1).trim();
 
-        const trueCase = rest.substring(0, colonIndex).trim();
-        const falseCase = rest.substring(colonIndex + 1).trim();
+              // Find the corresponding ":"
+              let colonIndex = rest.indexOf(":");
+              let openQuestionMarks = 0;
+              for (let i = 0; i < rest.length; i++) {
+                  if (rest[i] === "?") openQuestionMarks++;
+                  if (rest[i] === ":") {
+                      if (openQuestionMarks === 0) {
+                          colonIndex = i;
+                          break;
+                      } else {
+                          openQuestionMarks--;
+                      }
+                  }
+              }
 
-        if (evaluateExpression(condition)) {
-          return evaluatePart(trueCase); // Recursively evaluate true case
-        } else {
-          return evaluatePart(falseCase); // Recursively evaluate false case
-        }
-      };
+              if (colonIndex === -1) {
+                  throw new Error("Invalid ternary expression");
+              }
 
-      return evaluatePart(formula);
-    } catch (error) {
+              const trueCase = rest.substring(0, colonIndex).trim();
+              const falseCase = rest.substring(colonIndex + 1).trim();
+
+              if (evaluateExpression(condition)) {
+                  return evaluatePart(trueCase); // Recursively evaluate true case
+              } else {
+                  return evaluatePart(falseCase); // Recursively evaluate false case
+              }
+          };
+
+          return evaluatePart(replacedFormula);
+      } else {
+          // Return 0 if the designation matches 'TE'
+          return 0;
+      }
+  } catch (error) {
       console.error("Error evaluating formula:", error);
       return 0; // Return 0 on error
-    }
-  };
+  }
+};
 
   const handleCalculationValueChange = (index, newValue) => {
     const updatedHeads = [...heads];
@@ -448,7 +477,7 @@ const DeductionHeadsTable = ({ ID }) => {
   return (
     <div className="gap-4 justify-between">
       <div className="my-1 rounded-2xl bg-white p-2 pr-8">
-        <table className="text-center h-auto text-[11px] rounded-lg justify-center whitespace-normal">
+        <table className="w-full text-center h-auto text-[11px] rounded-lg justify-center whitespace-normal">
           <thead>
             <tr>
               <th
@@ -474,7 +503,7 @@ const DeductionHeadsTable = ({ ID }) => {
               <th className="text-[11px]  font-semibold border-r-2 border-white py-1 px-2 bg-blue-900 text-white">
                 Calculation <br /> Value
               </th>
-              <th className="text-[11px]  font-semibold border-r-2 border-white py-1 px-2 bg-blue-900 text-white w-40">
+              <th className="text-[11px]  font-semibold border-r-2 border-white py-1 px-2 bg-blue-900 text-white w-[30%]">
                 Formula
               </th>
             </tr>
@@ -507,7 +536,7 @@ const DeductionHeadsTable = ({ ID }) => {
                 <td className="px-2 border-2 whitespace-normal text-left text-[11px]">
                   <input
                     type="number"
-                    className="w-16 py-1 rounded-md text-center"
+                    className="py-1 rounded-md text-center w-full"
                     value={calculateValue(
                       item.Formula,
                       details ? details.GrossSalary : 0,
@@ -526,7 +555,7 @@ const DeductionHeadsTable = ({ ID }) => {
                 <td className="px-2 border-2 whitespace-normal text-left text-[11px]">
                   <input
                     type="text"
-                    className=" w-50 py-1 px-2 rounded-md text-center"
+                    className=" w-full py-1 px-2 rounded-md text-center"
                     value={item.Formula}
                     onChange={(e) => handleFormulaChange(index, e.target.value)}
                   />

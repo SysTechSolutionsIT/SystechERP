@@ -1,18 +1,22 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../Login";
+import axios from "axios";
 import { useEmployeeType } from "./personal";
 
 const EarningHeadsTable = ({ ID }) => {
   const { token } = useAuth();
   const { employeeTypeId } = useEmployeeType();
-  const [details, setDetails] = useState([]);
   const [caderwiseEarnings, setCaderwiseEarnings] = useState([]);
-  const [earningDetails, setEarningDetails] = useState([]);
-  const [heads, setHeads] = useState([]);
   const [selectedHeads, setSelectedHeads] = useState([]);
-  const [employeeTypes, setEmployeeTypes] = useState([]);
+  const [details, setDetails] = useState([]);
+  const [heads, setHeads] = useState([]);
   const [basicSalaryAmount, setBasicSalaryAmount] = useState();
+  const [employeeTypes, setEmployeeTypes] = useState([]);
+  const [Designation, setDesignation] = useState();
+  const [SalaryParameters, setSalaryParameters] = useState([]);
+  const [comparisonDone, setComparisonDone] = useState(false)
+  const [isFilled, setIsFilled] = useState(Array(caderwiseEarnings.length).fill(false)); // Array to track whether each input is filled or not
+const [inputValues, setInputValues] = useState(Array(caderwiseEarnings.length).fill("")); // Array to track the input values
 
   useEffect(() => {
     const fetchHeadsData = async () => {
@@ -26,6 +30,7 @@ const EarningHeadsTable = ({ ID }) => {
           }
         );
         const data = response.data;
+        console.log("Heads Data:", data); // Added logging
         setHeads(data);
       } catch (error) {
         console.log("Error while fetching course data: ", error);
@@ -33,6 +38,26 @@ const EarningHeadsTable = ({ ID }) => {
     };
     fetchHeadsData();
   }, [token, ID]);
+
+  useEffect(() => {
+    const fetchEmpSalary = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5500/employee/salary-structure/FnShowParticularData`,
+          {
+            params: { EmployeeId: ID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        setDetails(data);
+        console.log("Employee Salary Details:", data); // Added logging
+      } catch (error) {
+        console.error("Error", error);
+      }
+    };
+    fetchEmpSalary();
+  }, [ID, token]);
 
   useEffect(() => {
     const fetchCaderwiseEarning = async () => {
@@ -45,70 +70,69 @@ const EarningHeadsTable = ({ ID }) => {
           }
         );
         const caderwiseData = response.data;
+        console.log("Caderwise Data:", caderwiseData); // Added logging
 
-        // Check if employee-wise entry exists
         const employeeWiseResponse = await axios.get(
-          "http://localhost:5500/employee-wise-earning/FnShowParticularData",
+          "http://localhost:5500/employee-wise-earnings/FnShowParticularData",
           {
             params: { EmployeeId: ID },
             headers: { Authorization: `Bearer ${token}` },
           }
         );
         const employeeWiseData = employeeWiseResponse.data;
+        console.log("Employee Wise Data:", employeeWiseData); // Added logging
 
         if (employeeWiseData.length > 0) {
           setCaderwiseEarnings(employeeWiseData);
         } else {
           setCaderwiseEarnings(caderwiseData);
         }
+        console.log("Earning for the employee", caderwiseEarnings);
       } catch (error) {
         console.error("Error", error);
       }
     };
-
     fetchCaderwiseEarning();
   }, [token, ID, employeeTypeId]);
 
+  
   useEffect(() => {
-    const updatedHeads = heads.map((head) => ({
-      ...head,
-      Selected: caderwiseEarnings.some(
-        (earnings) => earnings.EarningHeadId === head.EarningHeadId
-      ),
-    }));
-    setHeads(updatedHeads);
-  }, [caderwiseEarnings]);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    const fetchEmpSalary = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:5500/employee/salary-structure/FnShowParticularData`,
-          {
-            params: { EmployeeId: ID },
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        const data = response.data;
-        if (isMounted) {
-          setDetails(data); // Update state with fetched data only if component is mounted
-        }
-      } catch (error) {
-        console.error("Error fetching salary details:", error);
-      }
-    };
-
-    if (ID) {
-      fetchEmpSalary(); // Call fetch function when ID changes
+    if (!comparisonDone && heads.length > 0 && caderwiseEarnings.length > 0) {
+      // Compare EarningHeadId of heads with caderwiseEarnings
+      const updatedHeads = heads.map((head) => ({
+        ...head,
+        Selected: caderwiseEarnings.some(
+          (earning) => earning.EarningHeadId === head.EarningHeadId
+        ),
+      }));
+      setHeads(updatedHeads);
+      setComparisonDone(true); // Set comparisonDone to true after comparison
     }
+  }, [heads, caderwiseEarnings, comparisonDone]);
 
-    return () => {
-      // Cleanup function to run when component unmounts or ID changes
-      isMounted = false; // Set mounted flag to false to prevent state updates after unmount
-    };
-  }, [ID, token]);
+  useEffect(() => {
+    const updatedHeads = heads.map((head) => {
+      console.log("Mapping Head:", head); // Added logging
+      const calculationValue = calculateValue(
+        head.Formula,
+        details ? details.GrossSalary : 0,
+        basicSalaryAmount,
+        head.CalculationValue,
+        head.EarningHeadId,
+        SalaryParameters,
+        Designation,
+        head.FormulaType
+      );
+
+      return {
+        ...head,
+        CalculationValue: calculationValue,
+      };
+    });
+
+    console.log("Updated Heads:", updatedHeads); // Added logging
+    setHeads(updatedHeads);
+  }, [details, Designation, SalaryParameters, token]);
 
   useEffect(() => {
     const fetchEmployeeTypes = async () => {
@@ -122,7 +146,7 @@ const EarningHeadsTable = ({ ID }) => {
         );
         const data = response.data;
         setEmployeeTypes(data);
-        // colsole.log("Employee Type Data", data);
+        console.log("Employee Type Data:", data); // Added logging
       } catch (error) {
         console.error("Error", error);
       }
@@ -142,7 +166,7 @@ const EarningHeadsTable = ({ ID }) => {
         );
         const data = response.data;
         setBasicSalaryAmount(data);
-        console.log("Basic Salary", data);
+        console.log("Basic Salary:", data); // Added logging
       } catch (error) {
         console.error("Error", error);
       }
@@ -150,77 +174,238 @@ const EarningHeadsTable = ({ ID }) => {
     fetchBasicSalary();
   }, [token, ID]);
 
-  const calculateValue = (formula, salary, calculationValue) => {
+  useEffect(() => {
+    // Fetch designation data
+    const fetchDesignation = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/employee/salary-structure/FnGetEmployeeDesignation",
+          {
+            params: { EmployeeId: ID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        setDesignation(data);
+        console.log("Designation:", data); // Log the designation value
+        console.log("Is DESG equal to 'TE'?", data === 'TE'); // Log the result of comparison
+      } catch (error) {
+        console.error("Error", error);
+      }
+    };
+    fetchDesignation();
+  }, [token, ID]);
+  
+
+  useEffect(() => {
+    const fetchSalaryParameters = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5500/earning-heads/FnFetchSalaryParameters",
+          {
+            params: { EmployeeId: ID },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = response.data;
+        console.log("Salary Parameters:", data); // Added logging
+        setSalaryParameters(data);
+      } catch (error) {
+        console.error("Error", error);
+      }
+    };
+    fetchSalaryParameters();
+  }, [token, ID]);
+
+  const calculateValue = (
+    formula,
+    salary,
+    basicSalary,
+    calculationValue,
+    EarningHeadId,
+    allSalaryParameters,
+    Designation,
+    FormulaType
+  ) => {
+    console.log("EarningHeadId in calculate value:", EarningHeadId); // Added logging
+
     try {
-      const totalEarning = salary;
       if (formula === null) {
         return calculationValue || 0;
       } else {
-        const basicSalary = basicSalaryAmount;
-        // Replace placeholders with actual values
-        const modifiedFormula = formula
-          .replace("P1", salary)
-          .replace("P2", basicSalary)
-          .replace("P3", totalEarning);
-
-        // Evaluate conditional formulas
-        const result = evaluateFormula(modifiedFormula, salary, basicSalary);
-        // console.log("result", result);
+        const modifiedFormula = replacePlaceholders(
+          formula,
+          salary,
+          basicSalary,
+          calculationValue,
+          EarningHeadId,
+          allSalaryParameters,
+          Designation
+        );
+        const result = evaluateFormula(modifiedFormula, FormulaType);
         return result;
       }
     } catch (error) {
       console.error("Error in formula calculation: ", error);
-      return "Error";
+      return 0;
     }
   };
 
-  const evaluateFormula = (formula, P1, P2) => {
-    try {
-      console.log("Formula:", formula);
-      const parts = formula.split(/:(?![^(]*\))/).map((part) => part.trim()); // Split by ':' but ignore ':' inside parentheses
-      console.log("Parts:", parts);
-      const defaultCalculation = parts.pop().trim(); // Last part is default calculation
-      console.log("Default Calculation:", defaultCalculation);
-      const conditionCalculations = parts.map((part) => {
-        const [condition, calculation] = part
-          .split("?")
-          .map((item) => item.trim());
-        return { condition, calculation };
-      });
-      console.log("Condition Calculations:", conditionCalculations);
+  const replacePlaceholders = (
+    formula,
+    salary,
+    basicSalary,
+    calculationValue,
+    EarningHeadId,
+    allSalaryParameters,
+    Designation
+  ) => {
+    let modifiedFormula = formula
+      .replace("DESG", `'${Designation}'`)
+      .replace(/\bP1\b/g, salary)
+      .replace(/\bP2\b/g, basicSalary)
+      .replace(/\bP3\b/g, calculationValue);
 
-      // Evaluating the conditions and returning the result
-      for (const { condition, calculation } of conditionCalculations) {
-        console.log("Current Condition:", condition);
-        console.log("Current Calculation:", calculation);
-        if (eval(condition.replace("P1", P1).replace("P2", P2))) {
-          const result = eval(calculation.replace("P1", P1).replace("P2", P2));
-          console.log("Result:", result);
-          return result;
-        }
+    const earningHeadData = allSalaryParameters.find(
+      (param) => param.EarningHeadId === EarningHeadId
+    );
+
+    if (earningHeadData) {
+      for (let i = 1; i <= 10; i++) {
+        const paramName = `SalaryParameter${i}`;
+        const value = earningHeadData[paramName] || "0";
+        modifiedFormula = modifiedFormula.replace(
+          new RegExp(`SP${i}`, "g"),
+          value
+        );
+        // modifiedFormula = modifiedFormula.replace(/\bSP\b/g, value);
       }
-
-      // If none of the conditions are met, return the default calculation
-      const defaultResult = eval(
-        defaultCalculation.replace("P1", P1).replace("P2", P2)
-      );
-      console.log("Default Result:", defaultResult);
-      return defaultResult;
-    } catch (error) {
-      console.error("Error in formula evaluation: ", error);
-      return "Error";
     }
+
+    console.log("Modified Formula:", modifiedFormula); // Added logging
+    return modifiedFormula;
   };
+
+  const evaluateFormula = (modifiedFormula, FormulaType) => {
+    let result;
+    let FlooredResult;
+    if (FormulaType == "DC") {
+      // Handle DC formula
+      result = evaluateDesgFormula(modifiedFormula);
+      result = Math.ceil(result)
+      console.log("Designation formula result:", result);
+    } else if (FormulaType == "CF") {
+      // Handle CF formula
+      result = eval(modifiedFormula);
+      result = Math.ceil(result)
+      console.log("Conditional formula result:", result);
+    } else if (FormulaType == "PF") {
+      // Handle PF formula
+      console.log("Percentage formula");
+      result = eval(modifiedFormula);
+      result = Math.ceil(result); // Round to ceiling value
+      console.log("Result in percentage formula:", result);
+      
+    } else {
+      console.error("Unknown formula type");
+    }
+    FlooredResult = Math.floor(result);
+    return FlooredResult;
+    // return result;
+  };
+  //Evaluating Designation formula
+
+  const evaluateExpression = (expression) => {
+    let parsedExpression = expression.replace(/'/g, '"'); // Replace single quotes with double quotes for JS compatibility
+
+    // Log the parsed expression
+    console.log("Parsed Expression:", parsedExpression);
+
+    // Evaluate the expression
+    try {
+        const result = eval(parsedExpression);
+        console.log("Evaluation Result:", result); // Log the evaluation result
+        return result;
+    } catch (error) {
+        throw new Error("Error evaluating expression: " + error.message);
+    }
+};
+
+
+const evaluateDesgFormula = (formula, designation) => {
+  try {
+      // Replace 'DESG' with the actual designation value
+      const replacedFormula = formula.replace(/'DESG'/g, `'${designation}'`);
+      
+      console.log("Comparison result:", replacedFormula == 'TE' ? 1 : 0); // Log the comparison result
+
+      if (replacedFormula !== 'TE') {
+          // Evaluate the next condition if the designation does not match 'TE'
+          const evaluatePart = (part) => {
+              // Split by the first occurrence of "?"
+              const questionMarkIndex = part.indexOf("?");
+              if (questionMarkIndex === -1) {
+                  // No ternary operator found, evaluate the expression directly
+                  return evaluateExpression(part);
+              }
+
+              // Split into condition, true case, and false case
+              const condition = part.substring(0, questionMarkIndex).trim();
+              const rest = part.substring(questionMarkIndex + 1).trim();
+
+              // Find the corresponding ":"
+              let colonIndex = rest.indexOf(":");
+              let openQuestionMarks = 0;
+              for (let i = 0; i < rest.length; i++) {
+                  if (rest[i] === "?") openQuestionMarks++;
+                  if (rest[i] === ":") {
+                      if (openQuestionMarks === 0) {
+                          colonIndex = i;
+                          break;
+                      } else {
+                          openQuestionMarks--;
+                      }
+                  }
+              }
+
+              if (colonIndex === -1) {
+                  throw new Error("Invalid ternary expression");
+              }
+
+              const trueCase = rest.substring(0, colonIndex).trim();
+              const falseCase = rest.substring(colonIndex + 1).trim();
+
+              if (evaluateExpression(condition)) {
+                  return evaluatePart(trueCase); // Recursively evaluate true case
+              } else {
+                  return evaluatePart(falseCase); // Recursively evaluate false case
+              }
+          };
+
+          return evaluatePart(replacedFormula);
+      } else {
+          // Return 0 if the designation matches 'TE'
+          return 0;
+      }
+  } catch (error) {
+      console.error("Error evaluating formula:", error);
+      return 0; // Return 0 on error
+  }
+};
 
   const handleCalculationValueChange = (index, newValue) => {
     const updatedHeads = [...heads];
     const calculatedValue = calculateValue(
       updatedHeads[index].Formula,
       details ? details.GrossSalary : 0,
-      parseFloat(newValue)
+      basicSalaryAmount,
+      newValue,
+      updatedHeads[index].EarningHeadId,
+      SalaryParameters,
+      Designation,
+      updatedHeads[index].FormulaType
     );
     updatedHeads[index].CalculationValue = calculatedValue;
-    console.log("Updated heads before state update:", updatedHeads);
     setHeads(updatedHeads);
   };
 
@@ -246,15 +431,25 @@ const EarningHeadsTable = ({ ID }) => {
           CalculationType,
           CalculationValue,
           Formula,
+          FormulaType,
         }) => ({
           EmployeeType: employeeTypes?.ShortName,
-          EarningHeadId,
+          EarningHeadId: EarningHeadId,
           EarningHead,
           ECalculationType: CalculationType,
           ECalculationValue:
             CalculationType === "Amount"
               ? CalculationValue
-              : calculateValue(Formula, details ? details.GrossSalary : 0, 0),
+              : calculateValue(
+                  Formula,
+                  details ? details.GrossSalary : 0,
+                  basicSalaryAmount,
+                  details.CalculationValue,
+                  details.EarningHeadId,
+                  SalaryParameters,
+                  Designation,
+                  FormulaType
+                ),
           Formula,
           EmployeeId: ID,
           EmployeeTypeId: employeeTypes?.EmployeeTypeId,
@@ -263,12 +458,13 @@ const EarningHeadsTable = ({ ID }) => {
         })
       );
     setSelectedHeads(selectedHeadsData);
+    console.log("Selected Heads", selectedHeadsData); // Added logging
   }, [heads, employeeTypes, ID]);
 
   const addEmployeewiseEarning = async () => {
     try {
       const response = axios.post(
-        "http://localhost:5500/employee-wise-earning/FnAddUpdateDeleteRecord",
+        "http://localhost:5500/employee-wise-earnings/FnAddUpdateDeleteRecord",
         selectedHeads,
         {
           params: { EmployeeId: ID },
@@ -281,22 +477,10 @@ const EarningHeadsTable = ({ ID }) => {
     }
   };
 
-  useEffect(() => {
-    const updatedHeads = heads.map((head) => ({
-      ...head,
-      CalculationValue: calculateValue(
-        head.Formula,
-        details ? details.GrossSalary : 0,
-        head.CalculationValue
-      ),
-    }));
-    setHeads(updatedHeads);
-  }, [token, basicSalaryAmount]); // Add basicSalaryPercentage as a dependency
-
   return (
-    <div className="gap-4 justify-between">
+    <div className="justify-between">
       <div className="my-1 rounded-2xl bg-white p-2 pr-8">
-        <table className="text-center h-auto text-[11px] rounded-lg justify-center whitespace-normal">
+        <table className="w-full text-center h-auto text-[11px] rounded-lg justify-center whitespace-normal">
           <thead>
             <tr>
               <th
@@ -322,7 +506,7 @@ const EarningHeadsTable = ({ ID }) => {
               <th className="text-[11px]  font-semibold border-r-2 border-white py-1 px-2 bg-blue-900 text-white">
                 Calculation <br /> Value
               </th>
-              <th className="text-[11px]  font-semibold border-r-2 border-white py-1 px-2 bg-blue-900 text-white">
+              <th className="text-[11px]  font-semibold border-r-2 border-white py-1 px-2 bg-blue-900 text-white w-[30%]">
                 Formula
               </th>
             </tr>
@@ -353,23 +537,58 @@ const EarningHeadsTable = ({ ID }) => {
                   {item.CalculationType}
                 </td>
                 <td className="px-2 border-2 whitespace-normal text-left text-[11px]">
-                  <input
-                    type="number"
-                    className="w-16 py-1 rounded-md text-center"
-                    value={calculateValue(
-                      item.Formula,
-                      details ? details.GrossSalary : 0,
-                      item.CalculationValue
-                    )}
-                    onChange={(e) =>
-                      handleCalculationValueChange(index, e.target.value)
-                    }
-                  />
-                </td>
+  {caderwiseEarnings.length > 0 && item.CalculationType === "Amount" ? (
+    <input
+      type="number"
+      className="py-1 rounded-md text-center w-full"
+      value={
+        isFilled[index]
+          ? inputValues[index]
+          : caderwiseEarnings.find(
+              (earning) => earning.EarningHeadId === item.EarningHeadId
+            )?.ECalculationValue || ""
+      }
+      onChange={(e) => {
+        const newValue = e.target.value !== "" ? parseFloat(e.target.value) : 0;
+        const newInputValues = [...inputValues];
+        newInputValues[index] = newValue;
+        setInputValues(newInputValues);
+        if (!isFilled[index]) {
+          const newIsFilled = [...isFilled];
+          newIsFilled[index] = true;
+          setIsFilled(newIsFilled);
+        }
+        handleCalculationValueChange(index, newValue);
+      }}
+    />
+  ) : (
+    <input
+      type="number"
+      className="py-1 rounded-md text-center w-full"
+      value={calculateValue(
+        item.Formula,
+        details ? details.GrossSalary : 0,
+        basicSalaryAmount,
+        item.CalculationValue,
+        item.EarningHeadId,
+        SalaryParameters,
+        Designation,
+        item.FormulaType
+      )}
+      onChange={(e) =>
+        handleCalculationValueChange(
+          index,
+          e.target.value !== "" ? parseFloat(e.target.value) : 0 // Convert to float and set to 0 if empty
+        )
+      }
+    />
+  )}
+</td>
+
                 <td className="px-2 border-2 whitespace-normal text-left text-[11px]">
                   <input
                     type="text"
-                    className=" w-20 py-1 rounded-md text-center"
+                    className=" w-full py-1 px-2 rounded-md text-center"
                     value={item.Formula}
                     onChange={(e) => handleFormulaChange(index, e.target.value)}
                   />
@@ -391,5 +610,4 @@ const EarningHeadsTable = ({ ID }) => {
     </div>
   );
 };
-
 export default EarningHeadsTable;
